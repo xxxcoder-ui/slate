@@ -4,30 +4,35 @@ import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as SearchManager from "~/node_common/managers/search";
 
-import { Buckets, PrivateKey } from "@textile/hub";
-
-import JWT from "jsonwebtoken";
-
-const TEXTILE_KEY_INFO = {
-  key: Environment.TEXTILE_HUB_KEY,
-  secret: Environment.TEXTILE_HUB_SECRET,
-};
-
-export const deleteUser = async (user) => {
-  // NOTE(jim): remove their slates from the live site cache.
-  let slates = await Data.getSlatesByUserId({ userId: user.id, publicOnly: true });
-  for (let slate of slates) {
-    SearchManager.updateSlate(slate, "REMOVE");
+export default async (req, res) => {
+  const id = Utilities.getIdFromCookie(req);
+  if (!id) {
+    return res.status(500).send({ decorator: "SERVER_USER_DELETE", error: true });
   }
 
-  // NOTE(jim): revoke all of their API keys
-  await Data.deleteAPIKeysForUserId({ userId: user.id });
+  const user = await Data.getUserById({ id, includeFiles: true });
+
+  if (!user) {
+    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
+  }
+
+  if (user.error) {
+    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
+  }
+
+  // NOTE(jim): remove their public slates and files from the search cache.
+  let slates = await Data.getSlatesByUserId({ ownerId: user.id, publicOnly: true });
+  SearchManager.updateSlate(slates, "REMOVE");
+
+  let files = await Data.getFilesByUserId({ id: user.id, publicOnly: true });
+  SearchManager.updateFile(files, "REMOVE");
 
   // NOTE(jim): delete all of their public and private slates.
-  await Data.deleteSlatesForUserId({ userId: user.id });
+  await Data.deleteSlatesByUserId({ ownerId: user.id });
 
-  const i = await PrivateKey.fromString(user.data.tokens.api);
-  const b = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+  // NOTE(martina): delete all of their public and private files.
+  await Data.deleteFilesByUserId({ ownerId: user.id });
+
   const defaultData = await Utilities.getBucketAPIFromUserToken({ user });
 
   // NOTE(jim): delete every bucket
@@ -47,7 +52,6 @@ export const deleteUser = async (user) => {
     });
   }
 
-  // NOTE(jim): remove user from live site cache.
   SearchManager.updateUser(user, "REMOVE");
 
   // NOTE(jim): remove orphan
@@ -55,33 +59,8 @@ export const deleteUser = async (user) => {
     data: { token: user.data.tokens.api },
   });
 
-  // NOTE(jim): finally delete user by username (irreversible)
-  const deleted = await Data.deleteUserByUsername({
-    username: user.username,
-  });
-
-  return deleted;
-};
-
-export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(500).send({ decorator: "SERVER_USER_DELETE", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_DELETE_USER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_DELETE_USER_NOT_FOUND", error: true });
-  }
-
-  const deleted = await deleteUser(user);
+  // NOTE(jim): finally delete user by id (irreversible)
+  const deleted = await Data.deleteUserById({ id: user.id });
 
   if (!deleted || deleted.error) {
     return res.status(500).send({ decorator: "SERVER_USER_DELETE", error: true });

@@ -10,7 +10,7 @@ import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
-import CircleButtonGray from "~/components/core/CircleButtonGray";
+import SquareButtonGray from "~/components/core/SquareButtonGray";
 import EmptyState from "~/components/core/EmptyState";
 
 // TODO(jim): Slates design.
@@ -31,17 +31,13 @@ export default class SceneSlates extends React.Component {
   };
 
   render() {
-    let subscriptions = this.props.viewer.subscriptions
-      .filter((each) => {
-        return !!each.target_slate_id;
-      })
-      .map((relation) => relation.slate);
+    let subscriptions = this.props.viewer.subscriptions;
 
     return (
       <ScenePage>
         <ScenePageHeader
           title={
-            this.props.mobile ? (
+            this.props.isMobile ? (
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
@@ -68,13 +64,13 @@ export default class SceneSlates extends React.Component {
           }
           actions={
             <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
-              <CircleButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
+              <SquareButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
                 <SVG.Plus height="16px" />
-              </CircleButtonGray>
+              </SquareButtonGray>
               <SecondaryTabGroup
                 tabs={[
                   { title: "My Slates", value: "NAV_SLATES" },
-                  { title: "Following", value: "NAV_SLATES_FOLLOWING" },
+                  { title: "Subscribed", value: "NAV_SLATES_FOLLOWING" },
                 ]}
                 value={this.props.tab}
                 onAction={this.props.onAction}
@@ -87,9 +83,9 @@ export default class SceneSlates extends React.Component {
           title="Slates"
           actions={
             this.props.tab === 0 ? (
-              <CircleButtonGray onClick={this._handleAdd} style={{ marginLeft: 12 }}>
+              <SquareButtonGray onClick={this._handleAdd} style={{ marginLeft: 12 }}>
                 <SVG.Plus height="16px" />
-              </CircleButtonGray>
+              </SquareButtonGray>
             ) : null
           }
         /> */}

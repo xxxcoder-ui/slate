@@ -4,9 +4,7 @@ import * as Utilities from "~/node_common/utilities";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_FILECOIN_NETWORK_DEALS_FAILURE", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const data = await ViewerManager.getDealHistory({ id });

@@ -1,15 +1,17 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
 import * as Content from "./Views/content";
+import * as Strings from "~/common/strings";
 
 import { generateNumberByStep } from "~/common/utilities";
 
-export const useFont = ({ url, name }, deps) => {
+export const useFont = ({ cid }, deps) => {
+  const url = Strings.getURLfromCID(cid);
   const [fetchState, setFetchState] = React.useState({ loading: false, error: null });
-  const prevName = React.useRef(name);
+  const prevName = React.useRef(cid);
 
   if (!window.$SLATES_LOADED_FONTS) window.$SLATES_LOADED_FONTS = [];
-  const alreadyLoaded = window.$SLATES_LOADED_FONTS.includes(name);
+  const alreadyLoaded = window.$SLATES_LOADED_FONTS.includes(cid);
 
   React.useEffect(() => {
     if (alreadyLoaded) {
@@ -18,15 +20,15 @@ export const useFont = ({ url, name }, deps) => {
     }
 
     setFetchState((prev) => ({ ...prev, error: null, loading: true }));
-    const customFonts = new FontFace(name, `url(${url})`);
+    const customFonts = new FontFace(cid, `url(${url})`);
     customFonts
       .load()
       .then((loadedFont) => {
         document.fonts.add(loadedFont);
-        prevName.current = name;
+        prevName.current = cid;
 
         setFetchState((prev) => ({ ...prev, loading: false }));
-        window.$SLATES_LOADED_FONTS.push(name);
+        window.$SLATES_LOADED_FONTS.push(cid);
       })
       .catch((err) => {
         setFetchState({ loading: false, error: err });
@@ -37,7 +39,7 @@ export const useFont = ({ url, name }, deps) => {
     isFontLoading: fetchState.loading,
     error: fetchState.error,
     // NOTE(Amine): show previous font while we load the new one.
-    fontName: alreadyLoaded ? name : prevName.current,
+    fontName: alreadyLoaded ? cid : prevName.current,
   };
 };
 

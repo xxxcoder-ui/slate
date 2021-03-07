@@ -91,8 +91,8 @@ const STYLES_STATUS_INDICATOR = css`
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  border: 2px solid ${Constants.system.gray50};
-  background-color: ${Constants.system.white};
+  border: 2px solid ${Constants.system.active};
+  background-color: ${Constants.system.active};
 `;
 
 const STYLES_MESSAGE = css`
@@ -119,13 +119,7 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
     <div key={user.username} css={STYLES_USER_ENTRY}>
       <div css={STYLES_USER} onClick={onClick}>
         <div css={STYLES_PROFILE_IMAGE} style={{ backgroundImage: `url(${user.data.photo})` }}>
-          <div
-            css={STYLES_STATUS_INDICATOR}
-            style={{
-              borderColor: isOnline && `${Constants.system.active}`,
-              backgroundColor: isOnline && `${Constants.system.active}`,
-            }}
-          />
+          {isOnline ? <div css={STYLES_STATUS_INDICATOR} /> : null}
         </div>
         <span css={STYLES_NAME}>
           {user.data.name || `@${user.username}`}
@@ -200,56 +194,7 @@ export default class SceneDirectory extends React.Component {
   };
 
   render() {
-    let following = this.props.viewer.subscriptions
-      .filter((relation) => {
-        return !!relation.target_user_id;
-      })
-      .map((relation) => {
-        let button = (
-          <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
-            <SVG.MoreHorizontal height="24px" />
-            {this.state.contextMenu === relation.id ? (
-              <Boundary
-                captureResize={true}
-                captureScroll={false}
-                enabled
-                onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
-              >
-                <PopoverNavigation
-                  style={{
-                    top: "40px",
-                    right: "0px",
-                  }}
-                  navigation={[
-                    {
-                      text: "Unfollow",
-                      onClick: (e) => this._handleFollow(e, relation.user.id),
-                    },
-                  ]}
-                />
-              </Boundary>
-            ) : null}
-          </div>
-        );
-        return (
-          <UserEntry
-            key={relation.id}
-            user={relation.user}
-            button={button}
-            checkStatus={this.checkStatus}
-            onClick={() => {
-              this.props.onAction({
-                type: "NAVIGATE",
-                value: this.props.sceneId,
-                scene: "PROFILE",
-                data: relation.user,
-              });
-            }}
-          />
-        );
-      });
-
-    let followers = this.props.viewer.subscribers.map((relation) => {
+    let following = this.props.viewer.following.map((relation) => {
       let button = (
         <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
           <SVG.MoreHorizontal height="24px" />
@@ -267,12 +212,8 @@ export default class SceneDirectory extends React.Component {
                 }}
                 navigation={[
                   {
-                    text: this.props.viewer.subscriptions.filter((subscription) => {
-                      return subscription.target_user_id === relation.owner.id;
-                    }).length
-                      ? "Unfollow"
-                      : "Follow",
-                    onClick: (e) => this._handleFollow(e, relation.owner.id),
+                    text: "Unfollow",
+                    onClick: (e) => this._handleFollow(e, relation.id),
                   },
                 ]}
               />
@@ -283,7 +224,7 @@ export default class SceneDirectory extends React.Component {
       return (
         <UserEntry
           key={relation.id}
-          user={relation.owner}
+          user={relation}
           button={button}
           checkStatus={this.checkStatus}
           onClick={() => {
@@ -291,7 +232,56 @@ export default class SceneDirectory extends React.Component {
               type: "NAVIGATE",
               value: this.props.sceneId,
               scene: "PROFILE",
-              data: relation.owner,
+              data: relation,
+            });
+          }}
+        />
+      );
+    });
+
+    let followers = this.props.viewer.followers.map((relation) => {
+      let button = (
+        <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
+          <SVG.MoreHorizontal height="24px" />
+          {this.state.contextMenu === relation.id ? (
+            <Boundary
+              captureResize={true}
+              captureScroll={false}
+              enabled
+              onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
+            >
+              <PopoverNavigation
+                style={{
+                  top: "40px",
+                  right: "0px",
+                }}
+                navigation={[
+                  {
+                    text: this.props.viewer.following.some((user) => {
+                      return user.id === relation.id;
+                    })
+                      ? "Unfollow"
+                      : "Follow",
+                    onClick: (e) => this._handleFollow(e, relation.id),
+                  },
+                ]}
+              />
+            </Boundary>
+          ) : null}
+        </div>
+      );
+      return (
+        <UserEntry
+          key={relation.id}
+          user={relation}
+          button={button}
+          checkStatus={this.checkStatus}
+          onClick={() => {
+            this.props.onAction({
+              type: "NAVIGATE",
+              value: this.props.sceneId,
+              scene: "PROFILE",
+              data: relation,
             });
           }}
         />

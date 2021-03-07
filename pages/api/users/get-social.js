@@ -2,52 +2,57 @@ import * as Data from "~/node_common/data";
 import * as Serializers from "~/node_common/serializers";
 
 export default async (req, res) => {
-  if (!req.body.data.userId) {
-    return res.status(404).send({ decorator: "SERVER_USER_SUBSCRIPTIONS_NOT_FOUND", error: true });
+  let id = req.body.data.id;
+  if (!id) {
+    return res.status(404).send({ decorator: "SERVER_USER_SOCIAL_NO_USER_ID", error: true });
   }
 
-  const subscriptions = await Data.getSubscriptionsByUserId({ userId: req.body.data.userId });
+  const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
 
   if (!subscriptions) {
-    return res.status(404).send({ decorator: "SERVER_USER_SUBSCRIPTIONS_NOT_FOUND", error: true });
+    return res
+      .status(404)
+      .send({ decorator: "SERVER_USER_SOCIAL_SUBSCRIPTIONS_NOT_FOUND", error: true });
   }
 
   if (subscriptions.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_SUBSCRIPTIONS_NOT_FOUND", error: true });
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_USER_SOCIAL_SUBSCRIPTIONS_NOT_FOUND", error: true });
   }
 
-  const subscribers = await Data.getSubscribersByUserId({ userId: req.body.data.userId });
+  const following = await Data.getFollowingByUserId({ ownerId: id });
 
-  if (!subscribers) {
-    return res.status(404).send({ decorator: "SERVER_USER_SUBSCRIBERS_NOT_FOUND", error: true });
+  if (!following) {
+    return res
+      .status(404)
+      .send({ decorator: "SERVER_USER_SOCIAL_FOLLOWING_NOT_FOUND", error: true });
   }
 
-  if (subscribers.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_SUBSCRIBERS_NOT_FOUND", error: true });
+  if (following.error) {
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_USER_SOCIAL_FOLLOWING_NOT_FOUND", error: true });
   }
 
-  let serializedUsersMap = { [req.body.data.userId]: req.body.data };
-  let serializedSlatesMap = {};
+  const followers = await Data.getFollowersByUserId({ userId: id });
 
-  const serializedSubscriptions = await Serializers.doSubscriptions({
-    users: [],
-    slates: [],
-    subscriptions,
-    serializedUsersMap,
-    serializedSlatesMap,
-  });
+  if (!followers) {
+    return res
+      .status(404)
+      .send({ decorator: "SERVER_USER_SOCIAL_FOLLOWERS_NOT_FOUND", error: true });
+  }
 
-  const serializedSubscribers = await Serializers.doSubscribers({
-    users: [],
-    slates: [],
-    subscribers,
-    serializedUsersMap: serializedSubscriptions.serializedUsersMap,
-    serializedSlatesMap: serializedSubscriptions.serializedSlatesMap,
-  });
+  if (followers.error) {
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_USER_SOCIAL_FOLLOWERS_NOT_FOUND", error: true });
+  }
 
   return res.status(200).send({
     decorator: "SERVER_USER_SOCIAL",
-    subscriptions: serializedSubscriptions.serializedSubscriptions,
-    subscribers: serializedSubscribers.serializedSubscribers,
+    following,
+    followers,
+    subscriptions,
   });
 };

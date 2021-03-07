@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
@@ -44,8 +45,9 @@ const FontLoader = () => (
     <p>loading...</p>
   </div>
 );
-export default function FontFrame({ cid, url, fallback, ...props }) {
-  const { isFontLoading, error, fontName } = useFont({ url, name: cid }, [cid, url]);
+export default function FontFrame({ cid, fallback, ...props }) {
+  const url = Strings.getURLfromCID(cid);
+  const { isFontLoading, error, fontName } = useFont({ cid }, [cid, url]);
 
   const [
     currentState,

@@ -156,6 +156,7 @@ export const addExistingCIDToData = async ({ buckets, key, path, cid }) => {
 // NOTE(jim): Requires @textile/hub
 export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = false }) => {
   const token = user.data.tokens.api;
+  console.log(token);
   const name = Strings.isEmpty(bucketName) ? BUCKET_NAME : bucketName;
   const identity = await PrivateKey.fromString(token);
   let buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);

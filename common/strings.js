@@ -40,7 +40,7 @@ export const zeroPad = (num, places) => {
   return Array(+(zero > 0 && zero)).join("0") + num;
 };
 
-export const getCIDGatewayURL = (cid) => {
+export const getURLfromCID = (cid) => {
   return `${Constants.gateways.ipfs}/${cid}`;
 };
 
@@ -55,15 +55,15 @@ export const toDateSinceEpoch = (epoch) => {
   return toDate(new Date().getTime() - epoch);
 };
 
-export const getCIDGatewayURLWithExtension = (cid, name) => {
-  const url = getCIDGatewayURL(cid);
-  const extension = getFileExtension(name);
-  if (!isEmpty(extension)) {
-    return `${url}.${getFileExtension(name)}`;
-  }
+// export const getURLfromCIDWithExtension = (cid, name) => {
+//   const url = getURLfromCID(cid);
+//   const extension = getFileExtension(name);
+//   if (!isEmpty(extension)) {
+//     return `${url}.${getFileExtension(name)}`;
+//   }
 
-  return url;
-};
+//   return url;
+// };
 
 export const getURLFromPath = (path) => {
   return `${window.location.protocol}//${window.location.hostname}${
@@ -210,6 +210,7 @@ export const urlToCid = (url) => {
   return url
     .replace(`${Constants.gateways.ipfs}/`, "")
     .replace("https://", "")
+    .replace("undefined", "")
     .replace(".ipfs.slate.textile.io", "")
     .replace("hub.textile.io/ipfs/", "");
 };

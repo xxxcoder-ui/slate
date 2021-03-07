@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 import { Table } from "~/components/system/components/Table";
 import { StatUpload, StatDownload } from "~/components/system/components/Stat";
 
-let genericImg = Strings.getCIDGatewayURL(
+let genericImg = Strings.getURLfromCID(
   "bafybeiblly23jomdjjiq7ilth667npcfm5llqb5xfstodbbfa5pxtoek7u"
 );
 

@@ -32,7 +32,7 @@ export default async (req, res) => {
   }
 
   let user = await Data.getUserById({
-    id: key.owner_id,
+    id: key.ownerId,
   });
 
   if (!user) {
@@ -43,14 +43,20 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "V1_GET_SLATE_USER_NOT_FOUND", error: true });
   }
 
-  let slates = await Data.getSlatesByUserId({
-    userId: user.id,
-    publicOnly: req.body.data && req.body.data.private ? false : true,
-  });
+  let reformattedUser = {
+    username: user.username,
+    data: {
+      name: user.data.name,
+      photo: user.data.photo,
+      body: user.data.body,
+    },
+  };
 
-  slates = slates.map((each) => {
-    each.data.url = `https://slate.host/${user.username}/${each.slatename}`;
-    return each;
+  let slates = await Data.getSlatesByUserId({
+    ownerId: user.id,
+    sanitize: true,
+    includeFiles: true,
+    publicOnly: req.body.data && req.body.data.private ? false : true,
   });
 
   if (!slates) {
@@ -67,16 +73,38 @@ export default async (req, res) => {
     });
   }
 
-  const { name, photo } = user.data;
-  const username = user.username;
+  let reformattedSlates = slates.map((slate) => {
+    let reformattedObjects = slate.objects.map((file) => {
+      return {
+        id: file.id,
+        name: file.filename,
+        title: file.data.name,
+        ownerId: file.ownerId,
+        body: file.data.body,
+        author: file.data.author,
+        source: file.data.source,
+        url: Strings.getURLfromCID(file.cid),
+      };
+    });
 
-  user = {
-    username: username,
-    data: {
-      name: name,
-      photo: photo,
-    },
-  };
+    return {
+      id: slate.id,
+      updated_at: slate.updatedAt,
+      created_at: slate.createdAt,
+      published_at: null,
+      slatename: slate.slatename,
+      url: `https://slate.host/${user.username}/${each.slatename}`,
+      data: {
+        name: slate.data.name,
+        public: slate.isPublic,
+        objects: reformattedObjects,
+        ownerId: slate.ownerId,
+        layouts: slate.data.layouts,
+      },
+    };
+  });
 
-  return res.status(200).send({ decorator: "V1_GET", slates, user });
+  return res
+    .status(200)
+    .send({ decorator: "V1_GET", slates: reformattedSlates, user: reformattedUser });
 };

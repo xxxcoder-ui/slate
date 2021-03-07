@@ -220,8 +220,9 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         <div>
           <System.P>Horizontal</System.P>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {["far-left", "left", "center", "right", "far-right"].map((dir) => (
+            {["far-left", "left", "center", "right", "far-right"].map((dir, i) => (
               <System.ButtonPrimary
+                key={i}
                 style={{ width: "100px" }}
                 onClick={(e) => {
                   this._handleClick(e, "horizontal", dir);
@@ -256,8 +257,9 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
                   height: "300px",
                 }}
               >
-                {["above", "up", "center", "down", "below"].map((dir) => (
+                {["above", "up", "center", "down", "below"].map((dir, i) => (
                   <System.ButtonPrimary
+                    key={i}
                     style={{ width: "100px" }}
                     onClick={(e) => {
                       this._handleClick(e, "vertical", dir);

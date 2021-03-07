@@ -6,7 +6,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_DELETE_API_KEY_AUTH", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -15,21 +15,21 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "SERVER_DELETE_API_KEY_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "SERVER_DELETE_API_KEY_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   const key = await Data.getAPIKey({ id: req.body.data.id });
 
-  if (!key || key.owner_id !== user.id) {
+  if (!key || key.ownerId !== user.id) {
     return res.status(403).send({
       decorator: "SERVER_DELETE_API_KEY_NOT_FOUND",
       error: true,
@@ -50,7 +50,7 @@ export default async (req, res) => {
     });
   }
 
-  const response = await Data.deleteAPIKeyById({ id: key.id });
+  const response = await Data.deleteAPIKeyById({ id: req.body.data.id });
 
   if (!response) {
     return res.status(404).send({
@@ -66,8 +66,10 @@ export default async (req, res) => {
     });
   }
 
-  let keys = await Data.getAPIKeysByUserId({ userId: user.id });
-  ViewerManager.hydratePartialKeys(keys, user.id);
+  // let keys = await Data.getAPIKeysByUserId({ userId: user.id });
+  // ViewerManager.hydratePartialKeys(keys, user.id);
+
+  ViewerManager.hydratePartial(id, { keys: true });
 
   return res.status(200).send({ decorator: "SERVER_DELETE_API_KEY" });
 };

@@ -20,7 +20,6 @@ import SceneFile from "~/scenes/SceneFile";
 import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
-import SceneLocalData from "~/scenes/SceneLocalData";
 import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
 import SceneSignIn from "~/scenes/SceneSignIn";
 import SceneSlate from "~/scenes/SceneSlate";
@@ -87,7 +86,6 @@ const SCENES = {
   SETTINGS: <SceneEditAccount />,
   SLATES: <SceneSlates tab={0} />,
   SLATES_FOLLOWING: <SceneSlates tab={1} />,
-  LOCAL_DATA: <SceneLocalData />,
   DIRECTORY: <SceneDirectory tab={0} />,
   DIRECTORY_FOLLOWERS: <SceneDirectory tab={1} />,
   FILECOIN: <SceneArchive />,
@@ -105,7 +103,7 @@ export default class ApplicationPage extends React.Component {
     data: null,
     sidebar: null,
     online: null,
-    mobile: this.props.mobile,
+    isMobile: this.props.isMobile,
     loaded: false,
     activeUsers: null,
   };
@@ -172,10 +170,7 @@ export default class ApplicationPage extends React.Component {
     const current = NavigationData.getCurrent(page);
 
     let slate = null;
-    if (
-      current.target.id === "NAV_SLATE" &&
-      this.state.data?.data?.ownerId === this.state.viewer?.id
-    ) {
+    if (current.target.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
       slate = this.state.data;
     }
 
@@ -186,7 +181,7 @@ export default class ApplicationPage extends React.Component {
     });
   };
 
-  _handleUpdateViewer = (newViewerState) => {
+  _handleUpdateViewer = (newViewerState, callback) => {
     // let setAsyncState = (newState) =>
     //   new Promise((resolve) =>
     //     this.setState(
@@ -207,7 +202,7 @@ export default class ApplicationPage extends React.Component {
       if (!page || !page.id) {
         page = { id: "NAV_DATA", scrollTop: 0, data: null };
       }
-      if (page.id === "NAV_SLATE" && this.state.data?.data?.ownerId === this.state.viewer.id) {
+      if (page.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer.id) {
         let data = this.state.data;
         for (let slate of newViewerState.slates) {
           if (slate.id === data.id) {
@@ -215,21 +210,39 @@ export default class ApplicationPage extends React.Component {
             break;
           }
         }
-        this.setState({
-          viewer: { ...this.state.viewer, ...newViewerState, type: "VIEWER" },
-          data,
-        });
+        this.setState(
+          {
+            viewer: { ...this.state.viewer, ...newViewerState },
+            data,
+          },
+          () => {
+            if (callback) {
+              callback();
+            }
+          }
+        );
         return;
       }
     }
-    this.setState({
-      viewer: { ...this.state.viewer, ...newViewerState, type: "VIEWER" },
-    });
+    this.setState(
+      {
+        viewer: { ...this.state.viewer, ...newViewerState },
+      },
+      () => {
+        if (callback) {
+          callback();
+        }
+      }
+    );
   };
 
-  _handleUpdateData = ({ data }) => {
+  _handleUpdateData = (data, callback) => {
     //TODO(martina): maybe add a default window.history.replacestate where it pushes the new data to browser?
-    this.setState({ data });
+    this.setState({ data }, () => {
+      if (callback) {
+        callback();
+      }
+    });
   };
 
   _handleSetupWebsocket = async () => {
@@ -243,7 +256,7 @@ export default class ApplicationPage extends React.Component {
         console.log("WEBSOCKET: NOT AUTHENTICATED");
         return;
       }
-
+      console.log("inside handle setup websocket in application.js");
       wsclient = Websockets.init({
         resource: this.props.resources.pubsub,
         viewer: this.state.viewer,
@@ -269,12 +282,12 @@ export default class ApplicationPage extends React.Component {
 
     // (1) is Window.isMobileBrowser checks, that one holds.
     // (2) then if the viewport is smaller than the width
-    let mobile = width > Constants.sizes.mobile ? this.props.mobile : true;
+    let isMobile = width > Constants.sizes.mobile ? this.props.isMobile : true;
 
     // only change if necessary.
-    if (this.state.mobile !== mobile) {
-      console.log("changing to mobile?", mobile);
-      this.setState({ mobile });
+    if (this.state.isMobile !== isMobile) {
+      console.log("changing to mobile?", isMobile);
+      this.setState({ isMobile });
     }
   };
 
@@ -308,10 +321,7 @@ export default class ApplicationPage extends React.Component {
     const current = NavigationData.getCurrent(page);
 
     let slate = null;
-    if (
-      current.target.id === "NAV_SLATE" &&
-      this.state.data?.data?.ownerId === this.state.viewer?.id
-    ) {
+    if (current.target.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
       slate = this.state.data;
     }
 
@@ -331,9 +341,10 @@ export default class ApplicationPage extends React.Component {
     });
   };
 
-  _handleUpload = async ({ files, slate, keys, numFailed }) => {
+  _handleUpload = async ({ files, slate, keys, numFailed = 0 }) => {
     if (!files || !files.length) {
-      return null;
+      this._handleRegisterLoadingFinished({ keys });
+      return;
     }
 
     const resolvedFiles = [];
@@ -346,7 +357,7 @@ export default class ApplicationPage extends React.Component {
       await Window.delay(3000);
 
       // NOTE(jim): Sends XHR request.
-      let response = null;
+      let response;
       try {
         response = await FileUtilities.upload({
           file: files[i],
@@ -364,34 +375,53 @@ export default class ApplicationPage extends React.Component {
     }
 
     if (!resolvedFiles.length) {
-      this.setState({ fileLoading: {} });
-      return null;
-    }
-
-    let responses = await Promise.allSettled(resolvedFiles);
-    let succeeded = responses
-      .filter((res) => {
-        return res.status === "fulfilled" && res.value && !res.value.error;
-      })
-      .map((res) => res.value);
-
-    if (slate && slate.id) {
-      await FileUtilities.uploadToSlate({ responses: succeeded, slate });
-    }
-
-    let processResponse = await Actions.processPendingFiles();
-    if (Events.hasError(processResponse)) {
+      this._handleRegisterLoadingFinished({ keys });
       return;
     }
+    //NOTE(martina): this commented out portion is only for if parallel uploading
+    // let responses = await Promise.allSettled(resolvedFiles);
+    // let succeeded = responses
+    //   .filter((res) => {
+    //     return res.status === "fulfilled" && res.value && !res.value.error;
+    //   })
+    //   .map((res) => res.value);
 
-    if (!slate) {
-      const { added, skipped } = processResponse.data;
-      let message = Strings.formatAsUploadMessage(added, skipped + numFailed);
-      Events.dispatchMessage({ message, status: !added ? null : "INFO" });
+    let createResponse = await Actions.createFile({ files: resolvedFiles });
+
+    if (Events.hasError(createResponse)) {
+      this._handleRegisterLoadingFinished({ keys });
+      return;
+    }
+    console.log("no error in actions.createFile");
+
+    console.log(createResponse);
+    let uploadedFiles = createResponse.data;
+
+    let added, skipped;
+    if (slate && slate.id) {
+      console.log(slate);
+      console.log(uploadedFiles);
+      const addResponse = await Actions.addFileToSlate({
+        slate,
+        files: uploadedFiles,
+      });
+
+      if (Events.hasError(addResponse)) {
+        this._handleRegisterLoadingFinished({ keys });
+        return;
+      }
+
+      added = addResponse.added;
+      skipped = addResponse.skipped;
+    } else {
+      added = resolvedFiles.length;
+      skipped = files.length - resolvedFiles.length;
     }
 
+    let message = Strings.formatAsUploadMessage(added, skipped + numFailed);
+    Events.dispatchMessage({ message, status: !added ? null : "INFO" });
+
     this._handleRegisterLoadingFinished({ keys });
-    return null;
   };
 
   _handleRegisterFileLoading = ({ fileLoading }) => {
@@ -473,10 +503,11 @@ export default class ApplicationPage extends React.Component {
 
     let unseenAnnouncements = [];
     for (let feature of announcements) {
-      if (!Object.keys(viewer.onboarding).includes(feature)) {
+      if (!viewer.data.onboarding || !Object.keys(viewer.data.onboarding).includes(feature)) {
         unseenAnnouncements.push(feature);
       }
     }
+    console.log(unseenAnnouncements);
 
     if (newAccount || unseenAnnouncements.length) {
       Events.dispatchCustomEvent({
@@ -622,6 +653,7 @@ export default class ApplicationPage extends React.Component {
   };
 
   render() {
+    console.log(this.state.viewer);
     // NOTE(jim): Not authenticated.
     if (!this.state.viewer) {
       return (
@@ -661,8 +693,8 @@ export default class ApplicationPage extends React.Component {
         navigation={NavigationData.navigation}
         activeIds={current.activeIds}
         onAction={this._handleAction}
-        mobile={this.state.mobile}
-        mac={this.props.mac}
+        isMobile={this.state.isMobile}
+        isMac={this.props.isMac}
       />
     );
 
@@ -679,8 +711,8 @@ export default class ApplicationPage extends React.Component {
       onUpdateData: this._handleUpdateData,
       onUpdateViewer: this._handleUpdateViewer,
       sceneId: current.target.id,
-      mobile: this.state.mobile,
-      mac: this.props.mac,
+      isMobile: this.state.isMobile,
+      isMac: this.props.isMac,
       resources: this.props.resources,
       activeUsers: this.state.activeUsers,
       userBucketCID: this.state.userBucketCID,
@@ -737,8 +769,8 @@ export default class ApplicationPage extends React.Component {
             onDismissSidebar={this._handleDismissSidebar}
             fileLoading={this.state.fileLoading}
             filecoin={current.target.filecoin}
-            mobile={this.state.mobile}
-            mac={this.props.mac}
+            isMobile={this.state.isMobile}
+            isMac={this.props.isMac}
             viewer={this.state.viewer}
             onUpdateViewer={this._handleUpdateViewer}
           >
@@ -748,7 +780,7 @@ export default class ApplicationPage extends React.Component {
           <SearchModal
             viewer={this.state.viewer}
             onAction={this._handleAction}
-            mobile={this.state.mobile}
+            isMobile={this.props.isMobile}
             resourceURI={this.props.resources.search}
           />
           {!this.state.loaded ? (

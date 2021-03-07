@@ -30,8 +30,9 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       return null;
     }
 
-    const payload = { type: "SUBSCRIBE_VIEWER", data: viewer };
-
+    const payload = { type: "SUBSCRIBE_VIEWER", data: { id: viewer.id } };
+    console.log(payload);
+    console.log("inside browser websockets init");
     client.send(JSON.stringify(payload));
   });
 

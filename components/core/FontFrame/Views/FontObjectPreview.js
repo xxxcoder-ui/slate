@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { css } from "@emotion/react";
-import { useFont } from "../hooks";
+import { useFont } from "~/components/core/FontFrame/hooks";
 
 const withView = (Component) => (props) => {
   const ref = React.useRef(null);
@@ -35,7 +35,7 @@ const STYLES_LETTER = (theme) => css`
 
 const FontObjectPreview = React.memo(
   ({ url, cid, fallback }) => {
-    const { isFontLoading, error, fontName } = useFont({ url, name: cid }, [cid]);
+    const { isFontLoading, error, fontName } = useFont({ cid }, [cid]);
     if (error || isFontLoading) {
       return fallback;
     }

@@ -20,7 +20,6 @@ import ProcessedText from "~/components/core/ProcessedText";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
-import SlateMediaObject from "~/components/core/SlateMediaObject";
 import CTATransition from "~/components/core/CTATransition";
 
 const SIZE_LIMIT = 1000000; //NOTE(martina): 1mb limit for twitter preview images
@@ -157,18 +156,17 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-export const FileTypeDefaultPreview = () => {
-  if (props.type && props.type.startsWith("video/")) {
-    return DEFAULT_VIDEO;
-  }
-  if (props.type && props.type.startsWith("audio/")) {
-    return DEFAULT_AUDIO;
-  }
-  if (props.type && props.type.startsWith("application/epub")) {
-    return DEFAULT_BOOK;
-  }
-  if (props.type && props.type.startsWith("application/pdf")) {
-    return DEFAULT_DOCUMENT;
+export const FileTypeDefaultPreview = (props) => {
+  if (props.type) {
+    if (Validations.isVideoType(type)) {
+      return DEFAULT_VIDEO;
+    } else if (Validations.isAudioType(type)) {
+      return DEFAULT_AUDIO;
+    } else if (Validations.isPdfType(type)) {
+      return DEFAULT_DOCUMENT;
+    } else if (Validations.isEpubType(type)) {
+      return DEFAULT_BOOK;
+    }
   }
   return DEFAULT_DATA;
 };
@@ -184,7 +182,7 @@ export default class SlatePage extends React.Component {
     }
 
     if (!Strings.isEmpty(this.props.cid)) {
-      let files = this.props.slate.data.objects || [];
+      let files = this.props.slate.objects || [];
       let index = files.findIndex((object) => object.cid === this.props.cid);
       if (index !== -1) {
         Events.dispatchCustomEvent({
@@ -203,10 +201,9 @@ export default class SlatePage extends React.Component {
   };
 
   _handleSave = async (layouts) => {
-    await Actions.updateSlate({
+    await Actions.updateSlateLayout({
       id: this.props.slate.id,
-      layoutOnly: true,
-      data: { layouts },
+      layouts,
     });
   };
 
@@ -225,38 +222,37 @@ export default class SlatePage extends React.Component {
     let url = `https://slate.host/${this.props.creator.username}/${this.props.slate.slatename}`;
     let headerURL = `https://slate.host/${this.props.creator.username}`;
 
-    let { objects, layouts, body, preview } = this.props.slate.data;
-    let isPublic = this.props.slate.data.public;
+    let { objects, isPublic } = this.props.slate;
+    let { layouts, body, preview } = this.props.slate.data;
     let image;
     if (Strings.isEmpty(this.props.cid)) {
       image = preview;
       if (Strings.isEmpty(image)) {
         for (let i = 0; i < objects.length; i++) {
           if (
-            objects[i].type &&
-            Validations.isPreviewableImage(objects[i].type) &&
-            objects[i].size &&
-            objects[i].size < SIZE_LIMIT
+            objects[i].data.type &&
+            Validations.isPreviewableImage(objects[i].data.type) &&
+            objects[i].data.size &&
+            objects[i].data.size < SIZE_LIMIT
           ) {
-            image = objects[i].url;
+            image = Strings.getURLfromCID(objects[i].cid);
             break;
           }
         }
       }
     } else {
+      const cid = Strings.getCIDFromIPFS(each.cid);
       let object = objects.find((each) => {
-        const url = each.url;
-        const cid = Strings.getCIDFromIPFS(url);
         return cid === this.props.cid;
       });
 
       if (object) {
-        title = !Strings.isEmpty(object.title) ? object.title : this.props.cid;
-        body = !Strings.isEmpty(object.body) ? Strings.elide(object.body) : `An object on ${url}`;
-        image = object.type.includes("image/") ? (
-          object.url
+        title = object.data.name || object.filename;
+        body = !Strings.isEmpty(object.data.body) ? Strings.elide(object.data.body) : "";
+        image = object.data.type.includes("image/") ? (
+          Strings.getURLfromCID(object.cid)
         ) : (
-          <FileTypeDefaultPreview type={object.type} />
+          <FileTypeDefaultPreview type={object.data.type} />
         );
         url = `${url}/cid:${this.props.cid}`;
       }
@@ -296,7 +292,7 @@ export default class SlatePage extends React.Component {
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.medium}` }}>
-                    {this.props.slate.data.objects.length}{" "}
+                    {this.props.slate.objects.length}{" "}
                     <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
                   </div>
                 </div>
@@ -324,14 +320,15 @@ export default class SlatePage extends React.Component {
           </div>
           <div css={STYLES_SLATE}>
             <GlobalCarousel
+              current={this.props.slate}
               carouselType="SLATE"
               viewer={this.props.viewer}
               objects={objects}
-              mobile={this.props.mobile}
+              isMobile={this.props.isMobile}
               isOwner={false}
               external
             />
-            {this.props.mobile ? (
+            {this.props.isMobile ? (
               <SlateLayoutMobile
                 isOwner={false}
                 items={objects}

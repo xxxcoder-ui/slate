@@ -77,7 +77,7 @@ export default class SidebarEditTags extends React.Component {
       return { id: this.props.viewer.id, data: objects[checkedIndex] };
     });
 
-    const response = await Actions.updateData(update);
+    const response = await Actions.updateFile(update);
     Events.hasError(response);
   };
 

@@ -9,9 +9,7 @@ export default async (req, res) => {
   });
 
   if (!user || user.error) {
-    return res
-      .status(403)
-      .send({ decorator: "SERVER_GET_ZIP_FILES_PATHS_USER_NOT_FOUND", error: true });
+    return res.status(403).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   let { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
@@ -20,7 +18,7 @@ export default async (req, res) => {
 
   if (!buckets) {
     return res.status(500).send({
-      decorator: "SERVER_GET_BUCKET_DATA",
+      decorator: "SERVER_NO_BUCKET_DATA",
       error: true,
     });
   }

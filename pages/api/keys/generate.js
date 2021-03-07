@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_GENERATE_API_KEY_AUTH", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -17,14 +17,14 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "SERVER_GENERATE_API_KEY_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "SERVER_GENERATE_API_KEY_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
@@ -38,7 +38,7 @@ export default async (req, res) => {
     });
   }
 
-  const key = await Data.createAPIKeyForUserId({
+  const key = await Data.createAPIKey({
     userId: user.id,
     key: `SLA${uuid()}TE`,
   });
@@ -57,8 +57,10 @@ export default async (req, res) => {
     });
   }
 
-  keys = await Data.getAPIKeysByUserId({ userId: user.id });
-  ViewerManager.hydratePartialKeys(keys, user.id);
+  // keys = await Data.getAPIKeysByUserId({ userId: user.id });
+  // ViewerManager.hydratePartialKeys(keys, user.id);
+
+  ViewerManager.hydratePartial(id, { keys: true });
 
   return res.status(200).send({ decorator: "SERVER_GENERATE_API_KEY", key });
 };

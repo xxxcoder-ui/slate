@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
+import * as Strings from "~/common/strings";
 
 import UnityFrame from "~/components/core/UnityFrame";
 import FontFrame from "~/components/core/FontFrame/index.js";
@@ -68,35 +69,35 @@ const typeMap = {
 
 export default class SlateMediaObject extends React.Component {
   openLink = (url) => {
-    let { isMobile, data } = this.props;
-    const isPDF = data.type && data.type.startsWith("application/pdf");
-
-    if (isPDF && isMobile) {
-      window.open(url, "_blank");
-      Events.dispatchCustomEvent({ name: "slate-global-close-carousel", detail: {} });
-
-      return;
-    }
+    window.open(url, "_blank");
   };
 
   componentDidMount() {
-    const url = this.props.data.url;
-    this.openLink(url);
+    if (this.props.isMobile) {
+      const file = this.props.file;
+      if (file.data.type && file.data.type.startsWith("application/pdf")) {
+        const url = Strings.getURLfromCID(file.cid);
+        this.openLink(url);
+      }
+    }
   }
 
   render() {
-    const url = this.props.data.url;
-    const type = this.props.data.type ? this.props.data.type : "LEGACY_NO_TYPE";
+    const { file, isMobile } = this.props;
+    const url = Strings.getURLfromCID(file.cid);
+    const type = file.data.type || "";
     const playType = typeMap[type] ? typeMap[type] : type;
-
-    let { isMobile } = this.props;
 
     let element = <div css={STYLES_FAILURE}>No Preview</div>;
 
     if (type.startsWith("application/pdf")) {
       return (
         <>
-          {!isMobile && (
+          {isMobile ? (
+            <a href={url} target="_blank">
+              <div css={STYLES_FAILURE}>Tap to open PDF in new tab</div>
+            </a>
+          ) : (
             <object
               css={STYLES_OBJECT}
               style={{ width: "calc(100% - 64px)" }}
@@ -113,12 +114,11 @@ export default class SlateMediaObject extends React.Component {
     }
 
     if (type.startsWith("video/")) {
-      const autoPlay = this.props?.data?.settings?.autoPlay || false;
       return (
         <video
           playsInline
           controls
-          autoPlay={autoPlay}
+          autoPlay={false}
           name="media"
           type={playType}
           css={STYLES_OBJECT}
@@ -128,7 +128,7 @@ export default class SlateMediaObject extends React.Component {
           }}
         >
           <source src={url} type={playType} />
-          {/** Note(Amine): fallback if video type isn't supported (example .mov) */}
+          {/** NOTE(amine): fallback if video type isn't supported (example .mov) */}
           <source src={url} type="video/mp4" />
         </video>
       );
@@ -155,12 +155,11 @@ export default class SlateMediaObject extends React.Component {
       return <iframe src={url} css={STYLES_IFRAME} />;
     }
 
-    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], this.props.data.name)) {
+    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], file.filename)) {
       return (
         <FontFrame
-          name={this.props.data.file || this.props.data.name}
-          cid={this.props.data.cid}
-          url={url}
+          name={file.data.name || file.filename}
+          cid={file.cid}
           fallback={element}
           onClick={(e) => {
             e.stopPropagation();
@@ -169,8 +168,8 @@ export default class SlateMediaObject extends React.Component {
       );
     }
 
-    if (this.props.data.name.endsWith(".md") || type.startsWith("text/plain")) {
-      return <MarkdownFrame date={this.props.data.date} url={this.props.data.url} />;
+    if (file.filename.endsWith(".md") || type.startsWith("text/plain")) {
+      return <MarkdownFrame date={file.data.date} url={url} />;
     }
 
     if (Validations.isPreviewableImage(type)) {
@@ -189,17 +188,9 @@ export default class SlateMediaObject extends React.Component {
 
     // TODO(jim): We will need to revisit this later.
     if (type.startsWith("application/unity")) {
-      const unityGameConfig = this.props.data.unityGameConfig;
-      const unityGameLoader = this.props.data.unityGameLoader;
+      const { config, loader } = file.data.unity;
 
-      return (
-        <UnityFrame
-          url={url}
-          unityGameConfig={unityGameConfig}
-          unityGameLoader={unityGameLoader}
-          key={url}
-        />
-      );
+      return <UnityFrame url={url} unityGameConfig={config} unityGameLoader={loader} key={url} />;
     }
 
     return element;

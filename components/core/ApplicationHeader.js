@@ -128,7 +128,7 @@ const STYLES_STATIC = css`
 
 export default class ApplicationHeader extends React.Component {
   keysPressed = {};
-  searchModKey = this.props.mac ? (
+  searchModKey = this.props.isMac ? (
     <SVG.MacCommand height="12px" style={{ display: "block", paddingLeft: 8, paddingRight: 8 }} />
   ) : (
     <span style={{ display: "block", paddingLeft: 8, paddingRight: 8 }}>Ctrl</span>

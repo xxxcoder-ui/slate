@@ -8,7 +8,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_STATUS_UPDATE", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -17,40 +17,40 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "SERVER_STATUS_UPDATE_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "SERVER_STATUS_UPDATE_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   let updateResponse;
-  if (req.body.data && req.body.data.onboarding && req.body.data.onboarding.length) {
+  if (req.body.data?.onboarding) {
     let onboarding = user.data.onboarding;
     if (!onboarding) {
       onboarding = {};
     }
-    for (let item of req.body.data.onboarding) {
-      onboarding[item] = true;
+    for (let key of req.body.data.onboarding) {
+      onboarding[key] = true;
     }
 
     updateResponse = await Data.updateUserById({
       id: user.id,
-      data: { ...user.data, onboarding },
+      data: { onboarding },
     });
 
     if (!updateResponse || updateResponse.error) {
-      return res.status(404).send({
-        decorator: "SERVER_STATUS_UPDATE_USER_NOT_FOUND",
+      return res.status(500).send({
+        decorator: "SERVER_STATUS_UPDATE_FAILED",
         error: true,
       });
     }
-  } else if (req.body.data && req.body.data.status) {
+  } else if (req.body.data?.status) {
     let status = user.data.status;
     if (!status) {
       status = {};
@@ -61,23 +61,23 @@ export default async (req, res) => {
 
     updateResponse = await Data.updateUserById({
       id: user.id,
-      data: { ...user.data, status },
+      data: { status },
     });
 
     if (!updateResponse || updateResponse.error) {
       return res.status(404).send({
-        decorator: "SERVER_STATUS_UPDATE_USER_NOT_FOUND",
+        decorator: "SERVER_STATUS_UPDATE_FAILED",
         error: true,
       });
     }
-
-    ViewerManager.hydratePartialStatus(status, user.id);
   } else {
     return res.status(500).send({
       decorator: "SERVER_STATUS_UPDATE_MUST_PROVIDE_UPDATE",
       error: true,
     });
   }
+
+  ViewerManager.hydratePartial(id, { viewer: true });
 
   return res.status(200).send({
     decorator: "SERVER_STATUS_UPDATE",

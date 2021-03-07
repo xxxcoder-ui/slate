@@ -81,12 +81,12 @@ export class CreateFilecoinStorageDeal extends React.Component {
         {this.state.file ? (
           <div style={{ marginBottom: 24 }}>
             <div css={STYLES_ITEM}>
-              <div css={STYLES_FOCUS}>{this.state.file.name}</div>
+              <div css={STYLES_FOCUS}>{this.state.file.data.name}</div>
               <div css={STYLES_SUBTEXT}>Name</div>
             </div>
 
             <div css={STYLES_ITEM}>
-              <div css={STYLES_FOCUS}>{this.state.file.size}</div>
+              <div css={STYLES_FOCUS}>{this.state.file.data.size}</div>
               <div css={STYLES_SUBTEXT}>File size</div>
             </div>
           </div>

@@ -124,7 +124,7 @@ export default class SceneFilesFolder extends React.Component {
     },
     filtersActive: false,
     privacy: "ALL",
-    filteredFiles: this.props.viewer?.library[0].children,
+    filteredFiles: this.props.viewer?.library,
     keyboardTooltip: false,
   };
 
@@ -133,7 +133,7 @@ export default class SceneFilesFolder extends React.Component {
   };
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.viewer.library[0].children !== this.props.viewer.library[0].children) {
+    if (prevProps.viewer.library !== this.props.viewer.library) {
       if (this.state.filtersActive) {
         this._filterFiles();
       }
@@ -155,7 +155,7 @@ export default class SceneFilesFolder extends React.Component {
     let filter = this.state.privacy;
     const viewer = this.props.viewer;
     if (filter === "ALL") {
-      return viewer.library[0].children;
+      return viewer.library;
     }
 
     const filtered = getPublicAndPrivateFiles({ viewer });
@@ -188,7 +188,7 @@ export default class SceneFilesFolder extends React.Component {
 
     let filteredFiles = this._getPrivacyFilteredFiles();
 
-    if (fileTypeFiltersActive && this.props.viewer?.library[0].children?.length) {
+    if (fileTypeFiltersActive && this.props.viewer?.library?.length) {
       filteredFiles = filteredFiles.filter((file) => {
         return (
           (filters.image && file.type.startsWith("image/")) ||
@@ -213,7 +213,7 @@ export default class SceneFilesFolder extends React.Component {
       if (page?.index) {
         index = page.index;
       } else {
-        let library = this.props.viewer.library[0]?.children || [];
+        let library = this.props.viewer.library || [];
         for (let i = 0; i < library.length; i++) {
           let obj = library[i];
           if ((obj.cid && obj.cid === page?.cid) || (obj.id && obj.id === page?.fileId)) {
@@ -233,16 +233,14 @@ export default class SceneFilesFolder extends React.Component {
   };
 
   render() {
-    let files = this.state.filtersActive
-      ? this.state.filteredFiles
-      : this.props.viewer?.library[0].children;
+    let files = this.state.filtersActive ? this.state.filteredFiles : this.props.viewer?.library;
     files = files || [];
 
     return (
       <ScenePage>
         <ScenePageHeader
           title={
-            this.props.mobile ? (
+            this.props.isMobile ? (
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
@@ -268,7 +266,7 @@ export default class SceneFilesFolder extends React.Component {
             )
           }
           actions={
-            this.props.mobile ? null : (
+            this.props.isMobile ? null : (
               <SecondaryTabGroup
                 tabs={[
                   <SVG.GridView height="24px" style={{ display: "block" }} />,
@@ -288,7 +286,7 @@ export default class SceneFilesFolder extends React.Component {
           viewer={this.props.viewer}
           objects={files}
           onAction={this.props.onAction}
-          mobile={this.props.mobile}
+          isMobile={this.props.isMobile}
           isOwner={true}
         />
         <DataMeter
@@ -484,6 +482,7 @@ export default class SceneFilesFolder extends React.Component {
 
         {files.length ? (
           <DataView
+            key="scene-files-folder"
             onAction={this.props.onAction}
             viewer={this.props.viewer}
             items={files}

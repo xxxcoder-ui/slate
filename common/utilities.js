@@ -5,16 +5,16 @@
 export const getPublicAndPrivateFiles = ({ viewer }) => {
   let publicFileIds = [];
   for (let slate of viewer.slates) {
-    if (slate.data.public) {
-      publicFileIds.push(...slate.data.objects.map((obj) => obj.id));
+    if (slate.isPublic) {
+      publicFileIds.push(...slate.objects.map((obj) => obj.id));
     }
   }
 
   let publicFiles = [];
   let privateFiles = [];
-  let library = viewer.library[0]?.children || [];
+  let library = viewer.library || [];
   for (let file of library) {
-    if (file.public || publicFileIds.includes(file.id)) {
+    if (file.isPublic || publicFileIds.includes(file.id)) {
       publicFiles.push(file);
     } else {
       privateFiles.push(file);

@@ -173,7 +173,7 @@ export class SlatePicker extends React.Component {
                       {Strings.getPresentationSlateName(slate)}
                     </div>
                   </div>
-                  {slate.data.public ? (
+                  {slate.isPublic ? (
                     <div style={{ flexShrink: 0, marginLeft: 16 }}>
                       <SVG.Globe height="24px" />
                     </div>

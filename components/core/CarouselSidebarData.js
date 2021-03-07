@@ -362,7 +362,7 @@ class CarouselSidebarData extends React.Component {
 
     json.data.url = Strings.getCIDGatewayURL(json.data.cid);
 
-    let updateReponse = await Actions.updateData({
+    let updateReponse = await Actions.updateFile({
       data: {
         id: this.props.data.id,
         coverImage: json.data,

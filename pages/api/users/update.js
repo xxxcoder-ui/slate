@@ -1,6 +1,7 @@
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
+import * as Serializers from "~/node_common/serializers";
 import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
@@ -11,7 +12,7 @@ import BCrypt from "bcrypt";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_USER_UPDATE", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -19,20 +20,31 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_UPDATE_USER_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_UPDATE_USER_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
-  if (req.body.data.username) {
+  let updates = req.body.data;
+
+  if (updates.username && updates.username !== user.username) {
+    if (!Validations.username(req.body.data.username)) {
+      return res.status(400).send({
+        decorator: "SERVER_USER_UPDATE_INVALID_USERNAME",
+        error: true,
+      });
+    }
+
     const existing = await Data.getUserByUsername({
       username: req.body.data.username.toLowerCase(),
     });
 
     if (existing && existing.id !== id) {
-      return res.status(500).send({ decorator: "SERVER_USERNAME_IS_TAKEN", error: true });
+      return res
+        .status(500)
+        .send({ decorator: "SERVER_USER_UPDATE_USERNAME_IS_TAKEN", error: true });
     }
   }
 
@@ -53,7 +65,7 @@ export default async (req, res) => {
         functionName: `Utilities.getBucketAPIFromUserToken`,
       });
 
-      return res.status(500).send({ decorator: "SERVER_FAILED_TO_GET_BUCKET", error: true });
+      return res.status(500).send({ decorator: "SERVER_NO_BUCKET_DATA", error: true });
     }
 
     try {
@@ -71,38 +83,30 @@ export default async (req, res) => {
         functionName: `b.buckets.setDefaultArchiveConfig`,
       });
 
-      return res.status(500).send({ decorator: "SERVER_DEFAULT_ARCHIVE_CONFIG", error: true });
+      return res
+        .status(500)
+        .send({ decorator: "SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG", error: true });
     }
   }
 
-  let unsafeResponse;
-  if (req.body.data.password) {
+  if (req.body.data.type === "CHANGE_PASSWORD" && req.body.data.password) {
     if (!Validations.password(req.body.data.password)) {
-      return res.status(500).send({ decorator: "SERVER_INVALID_PASSWORD", error: true });
+      return res
+        .status(500)
+        .send({ decorator: "SERVER_USER_UPDATE_INVALID_PASSWORD", error: true });
     }
 
     const rounds = Number(Environment.LOCAL_PASSWORD_ROUNDS);
     const salt = await BCrypt.genSalt(rounds);
     const hash = await Utilities.encryptPassword(req.body.data.password, salt);
 
-    unsafeResponse = await Data.updateUserById({
-      id: user.id,
-      salt,
-      password: hash,
-      username: req.body.data.username ? req.body.data.username.toLowerCase() : user.username,
-      data: req.body.data.data ? { ...user.data, ...req.body.data.data } : user.data,
-    });
-  } else {
-    unsafeResponse = await Data.updateUserById({
-      id: user.id,
-      username: req.body.data.username ? req.body.data.username.toLowerCase() : user.username,
-      data: req.body.data.data ? { ...user.data, ...req.body.data.data } : user.data,
-    });
+    updates.salt = salt;
+    updates.password = hash;
   }
 
-  if (unsafeResponse && !unsafeResponse.error) {
-    ViewerManager.hydratePartialViewer(unsafeResponse);
+  let unsafeResponse = await Data.updateUserById({ id, ...updates });
 
+  if (unsafeResponse && !unsafeResponse.error) {
     if (
       user.username !== unsafeResponse.username ||
       user.data.name !== unsafeResponse.data.name ||
@@ -111,6 +115,8 @@ export default async (req, res) => {
       SearchManager.updateUser(unsafeResponse, "EDIT");
     }
   }
+
+  ViewerManager.hydratePartial(id, { viewer: true });
 
   return res.status(200).send({ decorator: "SERVER_USER_UPDATE" });
 };

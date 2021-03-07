@@ -58,7 +58,7 @@ const run = async () => {
   });
 
   Logs.taskTimeless(`Fetching every user ...`);
-  const response = await Data.getEveryUser(false);
+  const response = await Data.getEveryUser();
 
   let storageUsers = [];
   let bytes = 0;
@@ -70,12 +70,12 @@ const run = async () => {
   for (let i = 0; i < response.length; i++) {
     const user = response[i];
 
-    if (user.data.allow_automatic_data_storage) {
+    if (user.data.settings?.allow_automatic_data_storage) {
       storageUsers.unshift(user);
       dealUsers = dealUsers + 1;
     }
 
-    if (user.data.allow_encrypted_data_storage) {
+    if (user.data.settings?.allow_encrypted_data_storage) {
       encryptedUsers = encryptedUsers + 1;
     }
 
@@ -87,7 +87,7 @@ const run = async () => {
     const printData = {
       username: storageUsers[i].username,
       slateURL: `https://slate.host/${storageUsers[i].username}`,
-      isForcingEncryption: user.data.allow_encrypted_data_storage,
+      isForcingEncryption: user.data.settings?.allow_encrypted_data_storage,
     };
     let buckets;
 
@@ -187,7 +187,7 @@ const run = async () => {
           time: o.time,
           pending: o.pending,
           createdAt: Strings.toDateSinceEpoch(o.time),
-          userEncryptsDeals: !!user.data.allow_encrypted_data_storage,
+          userEncryptsDeals: !!user.data.settings?.allow_encrypted_data_storage,
           miner: minerMap[o.dealInfo.miner] ? minerMap[o.dealInfo.miner] : { id: o.dealInfo.miner },
           phase: "MARCH",
           user: {
@@ -231,7 +231,7 @@ const run = async () => {
 
         Logs.note(`Inserting ${dealToSave.dealId} ...`);
         await delay(1000);
-        await db.insert({ data: dealToSave, owner_user_id: user.id }).into("deals").returning("*");
+        await db.insert({ data: dealToSave, ownerId: user.id }).into("deals").returning("*");
         Logs.task(`Inserted ${dealToSave.dealId} !!!`);
       }
     }
@@ -343,7 +343,7 @@ const run = async () => {
         userBuckets.length < BUCKET_LIMIT
       ) {
         key = null;
-        encrypt = !!user.data.allow_encrypted_data_storage;
+        encrypt = !!user.data.settings?.allow_encrypted_data_storage;
 
         // NOTE(jim): Create a new bucket
         const newBucketName = encrypt ? `encrypted-data-${uuid()}` : `open-data-${uuid()}`;

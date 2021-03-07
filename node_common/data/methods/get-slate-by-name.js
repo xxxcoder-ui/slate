@@ -1,15 +1,14 @@
+import * as Serializers from "~/node_common/serializers";
+
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ slatename, ownerId, username }) => {
+export default async ({ slatename, ownerId, username, sanitize = false, includeFiles = false }) => {
   return await runQuery({
     label: "GET_SLATE_BY_NAME",
     queryFn: async (DB) => {
       let id = ownerId;
       if (username && !ownerId) {
-        const user = await DB.select("*")
-          .from("users")
-          .where({ username })
-          .first();
+        const user = await DB.select("id").from("users").where({ username }).first();
 
         if (!user || user.error) {
           return null;
@@ -18,24 +17,50 @@ export default async ({ slatename, ownerId, username }) => {
         id = user.id;
       }
 
-      const query = await DB.select("*").from("slates").where({ slatename });
+      // const slateFiles = () =>
+      //   DB.raw("json_agg(?? order by ?? asc) as ??", ["files", "slate_files.createdAt", "objects"]);
+
+      const slateFiles = () =>
+        DB.raw("coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??", [
+          "files",
+          "slate_files.createdAt",
+          "files.id",
+          "objects",
+        ]);
+
+      let query;
+
+      if (includeFiles) {
+        query = await DB.select(
+          "slates.id",
+          "slates.slatename",
+          "slates.data",
+          "slates.ownerId",
+          "slates.isPublic",
+          slateFiles()
+        )
+          .from("slates")
+          .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
+          .leftJoin("files", "slate_files.fileId", "=", "files.id")
+          .where({ "slates.slatename": slatename, "slates.ownerId": id })
+          .groupBy("slates.id")
+          .first();
+      } else {
+        query = await DB.select("id", "slatename", "data", "ownerId", "isPublic")
+          .from("slates")
+          .where({ slatename, ownerId: id })
+          .first();
+      }
 
       if (!query || query.error) {
         return null;
       }
 
-      let foundSlate;
-      for (let slate of query) {
-        if (slate.data.ownerId && slate.data.ownerId === id) {
-          foundSlate = slate;
-        }
+      if (sanitize) {
+        query = Serializers.sanitizeSlate(query);
       }
 
-      if (foundSlate && foundSlate.id) {
-        return JSON.parse(JSON.stringify(foundSlate));
-      }
-
-      return null;
+      return JSON.parse(JSON.stringify(query));
     },
     errorFn: async (e) => {
       return {

@@ -3,14 +3,11 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Serializers from "~/node_common/serializers";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as AnalyticsManager from "~/node_common/managers/analytics";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as NodeLogging from "~/node_common/node-logging";
 import * as Validations from "~/common/validations";
 import * as Window from "~/common/window";
 import * as Strings from "~/common/strings";
-
-import ApiV1GetSlateObjects from "~/pages/api/v1/get-slate-objects";
 
 import limit from "express-rate-limit";
 import express from "express";
@@ -81,10 +78,15 @@ const fetchExploreSlates = async () => {
         "a0d6e2f2-564d-47ed-bf56-13c42634703d",
         "0ba92c73-92e7-4b00-900e-afae4856c9ea",
       ],
+      includeFiles: true,
+      sanitize: true,
     });
 
     for (let exploreSlate of exploreSlates) {
-      let user = await Data.getUserById({ id: exploreSlate.data.ownerId });
+      let user = await Data.getUserById({
+        id: exploreSlate.ownerId,
+        sanitize: true,
+      });
       exploreSlate.username = user.username;
     }
   }
@@ -99,10 +101,12 @@ const fetchExploreSlates = async () => {
   //       "435035e6-dee4-4bbf-9521-64c219a527e7",
   //       "ac907aa3-2fb2-46fd-8eba-ec8ceb87b5eb",
   //     ],
+  //     includeFiles: true,
+  //     sanitize: true,
   //   });
 
   //   for (let exploreSlate of exploreSlates) {
-  //     let user = await Data.getUserById({ id: exploreSlate.data.ownerId });
+  //     let user = await Data.getUserById({ id: exploreSlate.ownerId });
   //     exploreSlate.username = user.username;
   //   }
   // }
@@ -126,11 +130,6 @@ app.prepare().then(async () => {
   server.get("/system/:c", async (r, s) => s.redirect(`/_/system/${r.params.c}`));
   server.get("/experiences/:m", async (r, s) => s.redirect(`/_/experiences/${r.params.m}`));
 
-  // NOTE(jim): Example of simple query to query slates by CID.
-  server.get("/api/v1/cid::cid", async (r, s) => {
-    return await ApiV1GetSlateObjects(r, s);
-  });
-
   server.all("/api/users/create", createLimiter, async (r, s, next) => {
     return handler(r, s, r.url);
   });
@@ -152,8 +151,8 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     const isBucketsAvailable = await Utilities.checkTextile();
 
@@ -170,13 +169,10 @@ app.prepare().then(async () => {
       });
     }
 
-    let analytics = await AnalyticsManager.get();
-
     return app.render(req, res, "/_", {
       viewer,
-      analytics,
-      mobile,
-      mac,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
     });
   });
@@ -184,15 +180,15 @@ app.prepare().then(async () => {
   server.get("/_/integration-page", async (req, res) => {
     const id = Utilities.getIdFromCookie(req);
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     return app.render(req, res, "/_/integration-page", {
-      viewer,
+      viewer: null,
     });
   });
 
@@ -202,6 +198,8 @@ app.prepare().then(async () => {
   server.get("/[$]/slate/:id", async (req, res) => {
     const slate = await Data.getSlateById({
       id: req.params.id,
+      includeFiles: true,
+      sanitize: true,
     });
 
     if (!slate) {
@@ -212,11 +210,14 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    if (!slate.data.public) {
+    if (!slate.isPublic) {
       return res.redirect("/403");
     }
 
-    const creator = await Data.getUserById({ id: slate.data.ownerId });
+    const creator = await Data.getUserById({
+      id: slate.ownerId,
+      sanitize: true,
+    });
 
     if (!creator) {
       return res.redirect("/404");
@@ -230,7 +231,12 @@ app.prepare().then(async () => {
   });
 
   server.get("/[$]/user/:id", async (req, res) => {
-    const creator = await Data.getUserById({ id: req.params.id });
+    const creator = await Data.getUserById({
+      id: req.params.id,
+      includeFiles: true,
+      publicOnly: true,
+      sanitize: true,
+    });
 
     if (!creator) {
       return res.redirect("/404");
@@ -244,11 +250,13 @@ app.prepare().then(async () => {
   });
 
   server.get("/[$]/:id", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     const slate = await Data.getSlateById({
       id: req.params.id,
+      includeFiles: true,
+      sanitize: true,
     });
 
     if (!slate) {
@@ -259,11 +267,14 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    if (!slate.data.public) {
+    if (!slate.isPublic) {
       return res.redirect("/403");
     }
 
-    const creator = await Data.getUserById({ id: slate.data.ownerId });
+    const creator = await Data.getUserById({
+      id: slate.ownerId,
+      sanitize: true,
+    });
 
     if (!creator) {
       return res.redirect("/404");
@@ -275,31 +286,31 @@ app.prepare().then(async () => {
 
     const id = Utilities.getIdFromCookie(req);
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     return app.render(req, res, "/_/slate", {
-      viewer,
-      creator: Serializers.user(creator),
+      viewer: null,
+      creator,
       slate,
-      mobile,
-      mac,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
     });
   });
 
   server.get("/:username", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
     if (!Validations.userRoute(req.params.username)) {
       return handler(req, res, req.url, {
-        mobile,
+        isMobile,
         resources: EXTERNAL_RESOURCES,
       });
     }
@@ -315,15 +326,18 @@ app.prepare().then(async () => {
       );
     }
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     let creator = await Data.getUserByUsername({
-      username: req.params.username,
+      username: req.params.username.toLowerCase(),
+      includeFiles: true,
+      sanitize: true,
+      publicOnly: true,
     });
 
     if (!creator) {
@@ -334,39 +348,20 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
-      user: creator,
-    });
-
-    let library = creator.data.library;
-
-    creator = Serializers.user(creator);
-
     const slates = await Data.getSlatesByUserId({
-      userId: creator.id,
+      ownerId: creator.id,
+      sanitize: true,
+      includeFiles: true,
       publicOnly: true,
     });
 
-    let publicFileIds = [];
-    for (let slate of slates) {
-      publicFileIds.push(...slate.data.objects.map((obj) => obj.id));
-    }
-
     creator.slates = slates;
 
-    if (library && library.length) {
-      library[0].children = library[0].children.filter((file) => {
-        return file.public || publicFileIds.includes(file.id);
-      });
-    }
-
-    creator.library = library;
-
     return app.render(req, res, "/_/profile", {
-      viewer,
+      viewer: null,
       creator,
-      mobile,
-      mac,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
       exploreSlates,
       userBucketCID: bucketRoot?.path,
@@ -374,8 +369,8 @@ app.prepare().then(async () => {
   });
 
   server.get("/:username/cid::cid", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
     if (!Validations.userRoute(req.params.username)) {
@@ -394,15 +389,18 @@ app.prepare().then(async () => {
       );
     }
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     let creator = await Data.getUserByUsername({
-      username: req.params.username,
+      username: req.params.username.toLowerCase(),
+      includeFiles: true,
+      sanitize: true,
+      publicOnly: true,
     });
 
     if (!creator) {
@@ -413,48 +411,33 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    let library = creator.data.library;
-
-    creator = Serializers.user(creator);
-
     const slates = await Data.getSlatesByUserId({
-      userId: creator.id,
+      ownerId: creator.id,
+      sanitize: true,
+      includeFiles: true,
       publicOnly: true,
     });
 
-    let publicFileIds = [];
-    for (let slate of slates) {
-      publicFileIds.push(...slate.data.objects.map((obj) => obj.id));
-    }
-
     creator.slates = slates;
 
-    if (library && library.length) {
-      library[0].children = library[0].children.filter((file) => {
-        return file.public || publicFileIds.includes(file.id);
-      });
-    }
-
-    creator.library = library;
-
     return app.render(req, res, "/_/profile", {
-      viewer,
-      creator: Serializers.user(creator),
-      mobile,
-      mac,
+      viewer: null,
+      creator,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
       cid: req.params.cid,
     });
   });
 
   server.get("/:username/:slatename", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
     if (!Validations.userRoute(req.params.username)) {
       return handler(req, res, req.url, {
-        mobile,
+        isMobile,
         resources: EXTERNAL_RESOURCES,
       });
     }
@@ -474,6 +457,8 @@ app.prepare().then(async () => {
     const slate = await Data.getSlateByName({
       slatename: req.params.slatename,
       username: req.params.username,
+      includeFiles: true,
+      sanitize: true,
     });
 
     if (!slate) {
@@ -484,11 +469,14 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    if (!slate.data.public && slate.data.ownerId !== id) {
+    if (!slate.isPublic && slate.ownerId !== id) {
       return res.redirect("/403");
     }
 
-    const creator = await Data.getUserById({ id: slate.data.ownerId });
+    const creator = await Data.getUserById({
+      id: slate.ownerId,
+      sanitize: true,
+    });
 
     if (!creator) {
       return res.redirect("/404");
@@ -502,26 +490,26 @@ app.prepare().then(async () => {
       return res.redirect("/403");
     }
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     return app.render(req, res, "/_/slate", {
-      viewer,
-      creator: Serializers.user(creator),
+      viewer: null,
+      creator,
       slate,
-      mobile,
-      mac,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
     });
   });
 
   server.get("/:username/:slatename/cid::cid", async (req, res) => {
-    let mobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let mac = Window.isMac(req.headers["user-agent"]);
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
     if (!Validations.userRoute(req.params.username)) {
@@ -545,6 +533,8 @@ app.prepare().then(async () => {
     const slate = await Data.getSlateByName({
       slatename: req.params.slatename,
       username: req.params.username,
+      includeFiles: true,
+      sanitize: true,
     });
 
     if (!slate) {
@@ -555,11 +545,14 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
-    if (!slate.data.public && slate.data.ownerId !== id) {
+    if (!slate.isPublic && slate.ownerId !== id) {
       return res.redirect("/403");
     }
 
-    const creator = await Data.getUserById({ id: slate.data.ownerId });
+    const creator = await Data.getUserById({
+      id: slate.ownerId,
+      sanitize: true,
+    });
 
     if (!creator) {
       return res.redirect("/404");
@@ -573,19 +566,19 @@ app.prepare().then(async () => {
       return res.redirect("/403");
     }
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await ViewerManager.getById({
+    //     id,
+    //   });
+    // }
 
     return app.render(req, res, "/_/slate", {
-      viewer,
-      creator: Serializers.user(creator),
+      viewer: null,
+      creator,
       slate,
-      mobile,
-      mac,
+      isMobile,
+      isMac,
       resources: EXTERNAL_RESOURCES,
       cid: req.params.cid,
     });

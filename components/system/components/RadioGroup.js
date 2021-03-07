@@ -102,14 +102,25 @@ export class RadioGroup extends React.Component {
             return (
               <label
                 css={STYLES_RADIO}
-                style={this.props.containerStyle}
+                style={{
+                  ...this.props.containerStyle,
+                  border: this.props.dark ? "1px solid #3c3c3c" : "inherit",
+                }}
                 key={`radio-${radio.value}`}
               >
                 <span css={STYLES_RADIO_LABEL} style={this.props.labelStyle}>
                   {radio.label}
                 </span>
-                <span css={STYLES_RADIO_CUSTOM}>
-                  <span css={STYLES_RADIO_CUSTOM_SELECTED} style={{ opacity: checked ? 1 : 0 }} />
+                <span
+                  css={STYLES_RADIO_CUSTOM}
+                  style={this.props.dark ? { backgroundColor: Constants.system.grayBlack } : null}
+                >
+                  <span
+                    css={STYLES_RADIO_CUSTOM_SELECTED}
+                    style={{
+                      opacity: checked ? 1 : 0,
+                    }}
+                  />
                 </span>
                 <input
                   css={STYLES_RADIO_INPUT}

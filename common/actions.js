@@ -69,7 +69,7 @@ export const sendFilecoin = async (data) => {
 };
 
 export const checkUsername = async (data) => {
-  return await returnJSON(`/api/users/check`, {
+  return await returnJSON(`/api/users/check-username`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -88,13 +88,6 @@ export const removeFromBucket = async (data) => {
   return await returnJSON(`/api/data/bucket-remove`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
-  });
-};
-
-export const getNetworkDirectory = async () => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/directory`, {
-    ...DEFAULT_OPTIONS,
   });
 };
 
@@ -167,25 +160,18 @@ export const search = async (data) => {
   });
 };
 
-export const createPendingFiles = async (data) => {
+export const createFile = async (data) => {
   await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/create-pending`, {
+  return await returnJSON(`/api/data/create`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
-export const processPendingFiles = async () => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/process-pending`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify(),
-  });
-};
-
 export const addFileToSlate = async (data) => {
+  console.log(data);
   await Websockets.checkWebsocket();
-  return await returnJSON(`/api/slates/add-url`, {
+  return await returnJSON(`/api/slates/add-file`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -241,12 +227,12 @@ export const updateSearch = async (data) => {
   });
 };
 
-export const checkCIDStatus = async (data) => {
-  return await returnJSON(`/api/data/cid-status`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
+// export const checkCIDStatus = async (data) => {
+//   return await returnJSON(`/api/data/cid-status`, {
+//     ...DEFAULT_OPTIONS,
+//     body: JSON.stringify({ data }),
+//   });
+// };
 
 export const createSlate = async (data) => {
   await Websockets.checkWebsocket();
@@ -264,6 +250,14 @@ export const updateSlate = async (data) => {
   });
 };
 
+export const updateSlateLayout = async (data) => {
+  await Websockets.checkWebsocket();
+  return await returnJSON(`/api/slates/update-layout`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const deleteSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/delete`, {
@@ -274,7 +268,7 @@ export const deleteSlate = async (data) => {
 
 export const removeFileFromSlate = async (data) => {
   await Websockets.checkWebsocket();
-  return await returnJSON(`/api/slates/remove`, {
+  return await returnJSON(`/api/slates/remove-file`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -295,15 +289,15 @@ export const deleteAPIKey = async (data) => {
   });
 };
 
-export const addCIDToData = async (data) => {
+export const saveCopy = async (data) => {
   await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/add`, {
+  return await returnJSON(`/api/data/save-copy`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
-export const updateData = async (data) => {
+export const updateFile = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/update`, {
     ...DEFAULT_OPTIONS,
@@ -319,9 +313,9 @@ export const toggleFilePrivacy = async (data) => {
   });
 };
 
-export const deleteBucketItems = async (data) => {
+export const deleteFiles = async (data) => {
   await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/remove`, {
+  return await returnJSON(`/api/data/delete`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -349,7 +343,14 @@ export const createSupportMessage = async (data) => {
 };
 
 export const getActivity = async (data) => {
-  return await returnJSON(`/api/activity/get`, {
+  return await returnJSON(`/api/activity/get-activity`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const getExplore = async (data) => {
+  return await returnJSON(`/api/activity/get-explore`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });

@@ -52,7 +52,7 @@ const generateLayout = (items) => {
         w: SIZE,
         h: 0,
         z: 0,
-        id: item.id,
+        id: item.id.replace("data-", ""),
       };
     }) || []
   );
@@ -60,7 +60,7 @@ const generateLayout = (items) => {
 
 const preload = (item) =>
   new Promise((resolve, reject) => {
-    if (!item.type || !Validations.isPreviewableImage(item.type)) {
+    if (!item.data.type || !Validations.isPreviewableImage(item.data.type)) {
       resolve(200);
     }
     const img = new Image();
@@ -68,7 +68,7 @@ const preload = (item) =>
       resolve((200 * img.height) / img.width);
     };
     img.onerror = reject;
-    const url = item.url;
+    const url = Strings.getURLfromCID(item.cid);
     img.src = url;
   });
 
@@ -431,7 +431,7 @@ export class SlateLayout extends React.Component {
     let defaultLayout = layouts ? layouts.defaultLayout : this.state.defaultLayout;
     let fileNames = layouts ? layouts.fileNames : this.state.fileNames;
     let layout = layouts ? this.cloneLayout(layouts.layout) : this.cloneLayout(this.state.layout);
-    let layoutIds = layout.map((pos) => pos.id);
+    let layoutIds = layout.map((pos) => pos.id.replace("data-", ""));
     let repairNeeded = false;
     if (items.length !== layout.length) {
       repairNeeded = true;
@@ -444,7 +444,7 @@ export class SlateLayout extends React.Component {
       }
     }
     if (!repairNeeded && items.length === layout.length) {
-      let itemIds = items.map((item) => item.id);
+      let itemIds = items.map((item) => item.id.replace("data-", ""));
       for (let i = 0; i < itemIds.length; i++) {
         if (itemIds[i] !== layoutIds[i]) {
           repairNeeded = true;
@@ -457,7 +457,7 @@ export class SlateLayout extends React.Component {
     }
     let newLayout = new Array(items.length);
     for (let i = 0; i < items.length; i++) {
-      let layoutIndex = layoutIds.indexOf(items[i].id);
+      let layoutIndex = layoutIds.indexOf(items[i].id.replace("data-", ""));
       if (layoutIndex === -1) {
         continue;
       } else if (defaultLayout && layoutIndex >= 5 && !layout[layoutIndex].y) {
@@ -509,7 +509,7 @@ export class SlateLayout extends React.Component {
           h: height,
           w: SIZE,
           z: 0,
-          id: items[i].id,
+          id: items[i].id.replace("data-", ""),
         };
         h += 1;
       }
@@ -544,7 +544,7 @@ export class SlateLayout extends React.Component {
         w: SIZE,
         h: oldLayout && oldLayout.length > i ? oldLayout[i].h || height : height,
         z: 0,
-        id: this.state.items[i].id,
+        id: this.state.items[i].id.replace("data-", ""),
       };
     }
     return layout;
@@ -957,7 +957,7 @@ export class SlateLayout extends React.Component {
   _handleSetPreview = (e, i) => {
     e.stopPropagation();
     e.preventDefault();
-    let url = this.state.items[i].url;
+    let url = Strings.getURLfromCID(this.state.items[i].cid);
     if (this.props.preview === url) return;
     this.props.onSavePreview(url);
   };
@@ -982,7 +982,7 @@ export class SlateLayout extends React.Component {
         items.push(this.state.items[i]);
       }
     }
-    UserBehaviors.addToDataFromSlate({ files: items });
+    UserBehaviors.saveCopy({ files: items });
   };
 
   _handleAddToSlate = (e, i) => {
@@ -1009,10 +1009,10 @@ export class SlateLayout extends React.Component {
     e.preventDefault();
     let ids = [];
     if (i !== undefined) {
-      ids = [this.state.items[i].id];
+      ids = [this.state.items[i].id.replace("data-", "")];
     } else {
       for (let index of Object.keys(this.state.checked)) {
-        ids.push(this.state.items[index].id);
+        ids.push(this.state.items[index].id.replace("data-", ""));
       }
       this.setState({ checked: {} });
     }
@@ -1021,7 +1021,7 @@ export class SlateLayout extends React.Component {
     let slateId = this.props.current.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
-        slate.data.objects = slate.data.objects.filter((obj) => !ids.includes(obj.id));
+        slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id.replace("data-", "")));
         this.props.onUpdateViewer({ slates });
         break;
       }
@@ -1043,9 +1043,9 @@ export class SlateLayout extends React.Component {
   };
 
   _handleDragToDesktop = (e, object) => {
-    const url = Strings.getCIDGatewayURL(object.cid);
-    const title = object.file || object.name;
-    const type = object.type;
+    const url = Strings.getURLfromCID(object.cid);
+    const title = object.filename || object.data.name;
+    const type = object.data.type;
     console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
@@ -1060,32 +1060,25 @@ export class SlateLayout extends React.Component {
     e.preventDefault();
     let ids = [];
     if (i !== undefined) {
-      ids = [this.state.items[i].id];
+      ids = [this.state.items[i].id.replace("data-", "")];
     } else {
       for (let index of Object.keys(this.state.checked)) {
-        ids.push(this.state.items[index].id);
+        ids.push(this.state.items[index].id.replace("data-", ""));
       }
     }
-    let cids = [];
-    for (let file of this.props.viewer.library[0].children) {
-      if (ids.includes(file.id)) {
-        cids.push(file.cid);
-      }
-    }
-
     let slates = this.props.viewer.slates;
     let slateId = this.props.current.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
-        slate.data.objects = slate.data.objects.filter(
-          (obj) => !ids.includes(obj.id) && !cids.includes(obj.cid)
+        slate.objects = slate.objects.filter(
+          (obj) => !ids.includes(obj.id.replace("data-", "")) && !cids.includes(obj.cid)
         );
         this.props.onUpdateViewer({ slates });
         break;
       }
     }
 
-    await UserBehaviors.deleteFiles(cids, ids);
+    await UserBehaviors.deleteFiles(ids);
     this.setState({ checked: {} });
   };
 
@@ -1305,16 +1298,9 @@ export class SlateLayout extends React.Component {
                     }}
                   >
                     <SlateMediaObjectPreview
-                      blurhash={this.state.items[i].blurhash}
+                      file={this.state.items[i]}
                       iconOnly={this.state.fileNames}
                       charCap={70}
-                      type={this.state.items[i].type}
-                      url={this.state.items[i].url}
-                      cid={this.state.items[i].cid}
-                      title={this.state.items[i].title || this.state.items[i].name}
-                      coverImage={this.state.items[i].coverImage}
-                      height={pos.h * unit}
-                      width={pos.w * unit}
                       style={{
                         height: pos.h * unit,
                         width: pos.w * unit,
@@ -1530,7 +1516,7 @@ export class SlateLayout extends React.Component {
                                   : this.state.tooltip === `${i}-download`
                                   ? "Download"
                                   : this.state.tooltip === `${i}-preview`
-                                  ? "Make preview image"
+                                  ? "Make cover image"
                                   : "Save copy"}
                               </Tooltip>
                             ) : null}
@@ -1565,34 +1551,6 @@ export class SlateLayout extends React.Component {
                                   : "24px",
                               }}
                             >
-                              {/* <DynamicIcon
-                                onClick={(e) => {
-                                  this._handleCopy(e, this.state.items[i].url);
-                                }}
-                                onMouseDown={this._stopProp}
-                                onMouseUp={this._stopProp}
-                                onMouseEnter={() => this.setState({ tooltip: `${i}-copy` })}
-                                onMouseLeave={() => this.setState({ tooltip: null })}
-                                successState={
-                                  <SVG.CheckBox height="16px" style={{ color: "#4b4a4d" }} />
-                                }
-                                style={{
-                                  height: 24,
-                                  width: 24,
-                                  borderRadius: "50%",
-                                  backgroundColor: "rgba(248, 248, 248, 0.6)",
-                                  color: "#4b4a4d",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                  margin: "0 8px",
-                                  WebkitBackdropFilter: "blur(25px)",
-                                  backdropFilter: "blur(25px)",
-                                }}
-                              >
-                                <SVG.DeepLink height="16px" style={{ color: "#4b4a4d" }} />
-                              </DynamicIcon> */}
                               <div
                                 css={STYLES_ICON_CIRCLE}
                                 onMouseDown={this._stopProp}
@@ -1619,22 +1577,27 @@ export class SlateLayout extends React.Component {
                                   onClick={
                                     this.props.external
                                       ? this._handleLoginModal
-                                      : this.state.items[i].type &&
-                                        Validations.isPreviewableImage(this.state.items[i].type) &&
-                                        this.state.items[i].size &&
-                                        this.state.items[i].size < SIZE_LIMIT
+                                      : this.state.items[i].data.type &&
+                                        Validations.isPreviewableImage(
+                                          this.state.items[i].data.type
+                                        ) &&
+                                        this.state.items[i].data.size &&
+                                        this.state.items[i].data.size < SIZE_LIMIT
                                       ? (e) => this._handleSetPreview(e, i)
                                       : () => {}
                                   }
                                   style={
-                                    this.props.preview === this.state.items[i].url
+                                    this.props.preview ===
+                                    Strings.getURLfromCID(this.state.items[i].cid)
                                       ? {
                                           backgroundColor: "rgba(0, 97, 187, 0.75)",
                                         }
-                                      : this.state.items[i].type &&
-                                        Validations.isPreviewableImage(this.state.items[i].type) &&
-                                        this.state.items[i].size &&
-                                        this.state.items[i].size < SIZE_LIMIT
+                                      : this.state.items[i].data.type &&
+                                        Validations.isPreviewableImage(
+                                          this.state.items[i].data.type
+                                        ) &&
+                                        this.state.items[i].data.size &&
+                                        this.state.items[i].data.size < SIZE_LIMIT
                                       ? {}
                                       : {
                                           color: "#999999",
@@ -1643,10 +1606,7 @@ export class SlateLayout extends React.Component {
                                   }
                                 >
                                   {this.props.preview ===
-                                  this.state.items[i].url.replace(
-                                    "https://undefined",
-                                    "https://"
-                                  ) ? (
+                                  Strings.getURLfromCID(this.state.items[i].cid) ? (
                                     <SVG.DesktopEye
                                       height="16px"
                                       style={{
@@ -1687,10 +1647,10 @@ export class SlateLayout extends React.Component {
                         }}
                       >
                         <span css={STYLES_FILE_NAME}>
-                          {this.state.items[i].title || this.state.items[i].name}
+                          {this.state.items[i].data.name || this.state.items[i].filename}
                         </span>
                         <span css={STYLES_FILE_TYPE}>
-                          {Strings.getFileExtension(this.state.items[i].file)}
+                          {Strings.getFileExtension(this.state.items[i].filename)}
                         </span>
                       </div>
                     ) : null}

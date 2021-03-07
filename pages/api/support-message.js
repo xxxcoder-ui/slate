@@ -6,7 +6,7 @@ import * as Support from "~/node_common/support";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_SUPPORT", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -14,11 +14,11 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).send({ decorator: "SERVER_SUPPORT_USER_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_SUPPORT_USER_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (!req.body.data) {
@@ -43,10 +43,7 @@ export default async (req, res) => {
   }
 
   if (!req.body.data.username) {
-    return res.status(500).send({
-      decorator: "SERVER_SUPPORT_NO_DATA_PROVIDED",
-      error: true,
-    });
+    req.body.data.username = user.username;
   }
 
   let status = await Support.sendSlackMessage(req.body.data);

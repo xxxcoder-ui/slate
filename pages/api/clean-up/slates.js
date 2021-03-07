@@ -4,7 +4,7 @@ import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
 
 export default async (req, res) => {
-  const slates = await Data.getEverySlate(false);
+  const slates = await Data.getEverySlate();
   for (let slate of slates) {
     //NOTE(martina): uncomment to test
     let newObjs = [];
@@ -65,11 +65,11 @@ export default async (req, res) => {
         return false;
       }
       if (obj.cid) {
-        obj.url = Strings.getCIDGatewayURL(obj.cid);
+        obj.url = Strings.getURLfromCID(obj.cid);
       } else {
         if (!obj.url.includes(Constants.gateways.ipfs)) {
           obj.cid = Strings.urlToCid(obj.url);
-          obj.url = Strings.getCIDGatewayURL(obj.cid);
+          obj.url = Strings.getURLfromCID(obj.cid);
         }
         obj.url = obj.url.replace("https://undefined", "https://");
       }

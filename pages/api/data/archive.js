@@ -12,7 +12,7 @@ const STAGING_DEAL_BUCKET = "stage-deal";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(403).send({ decorator: "SERVER_REMOVE_DATA_NOT_ALLOWED", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -21,14 +21,14 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "SERVER_BUCKET_ARCHIVE_DEAL_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "SERVER_BUCKET_ARCHIVE_DEAL_USER_NOT_FOUND",
+      decorator: "SERVER_USER_NOT_FOUND",
       error: true,
     });
   }
@@ -45,14 +45,12 @@ export default async (req, res) => {
 
   if (!buckets) {
     return res.status(500).send({
-      decorator: "SERVER_BUCKET_INIT_FAILURE",
+      decorator: "SERVER_NO_BUCKET_DATA",
       error: true,
     });
   }
 
-  // NOTE(jim):
-  //
-  // Getting the appropriate bucket key
+  // NOTE(jim): Getting the appropriate bucket key
 
   let items = null;
   let bucketSizeBytes = 0;
@@ -62,7 +60,7 @@ export default async (req, res) => {
     bucketSizeBytes = path.item.size;
   } catch (e) {
     Social.sendTextileSlackMessage({
-      file: "/node_common/managers/viewer.js",
+      file: "/pages/api/data/archive.js",
       user,
       message: e.message,
       code: e.code,
@@ -72,7 +70,7 @@ export default async (req, res) => {
 
   if (!items) {
     return res.status(500).send({
-      decorator: "STORAGE_DEAL_MAKING_NO_BUCKET",
+      decorator: "SERVER_NO_BUCKET_DATA",
       error: true,
     });
   }
@@ -80,7 +78,7 @@ export default async (req, res) => {
   console.log(`[ deal ] will make a deal for ${items.items.length} items`);
   if (items.items.length < 2) {
     return res.status(500).send({
-      decorator: "STORAGE_DEAL_MAKING_NO_FILES",
+      decorator: "SERVER_ARCHIVE_NO_FILES",
       error: true,
     });
   }
@@ -88,7 +86,7 @@ export default async (req, res) => {
   console.log(`[ deal ] deal size: ${Strings.bytesToSize(bucketSizeBytes)}`);
   if (bucketSizeBytes < MIN_ARCHIVE_SIZE_BYTES) {
     return res.status(500).send({
-      decorator: "STORAGE_BUCKET_TOO_SMALL",
+      decorator: "SERVER_ARCHIVE_BUCKET_TOO_SMALL",
       message: `Your deal size of ${Strings.bytesToSize(
         bucketSizeBytes
       )} is too small. You must provide at least 100MB.`,
@@ -96,9 +94,8 @@ export default async (req, res) => {
     });
   }
 
-  // NOTE(jim):
-  //
-  // Make sure that you haven't hit the MAX_BUCKET_COUNT
+  // NOTE(jim): Make sure that you haven't hit the MAX_BUCKET_COUNT
+
   let userBuckets = [];
   try {
     userBuckets = await buckets.list();
@@ -112,7 +109,7 @@ export default async (req, res) => {
     });
 
     return res.status(500).send({
-      decorator: "BUCKET_SPAWN_VERIFICATION_FAILED_FOR_BUCKET_COUNT",
+      decorator: "SERVER_ARCHIVE_BUCKET_COUNT_VERIFICATION_FAILED",
       error: true,
     });
   }
@@ -122,16 +119,14 @@ export default async (req, res) => {
   );
   if (userBuckets.length >= MAX_BUCKET_COUNT) {
     return res.status(500).send({
-      decorator: "TOO_MANY_BUCKETS",
+      decorator: "SERVER_ARCHIVE_MAX_NUMBER_BUCKETS",
       error: true,
     });
   }
 
-  // NOTE(jim):
-  //
-  // Either encrypt the bucket or don't encrypt the bucket.
+  // NOTE(jim): Either encrypt the bucket or don't encrypt the bucket.
   let encryptThisDeal = false;
-  if (bucketName !== STAGING_DEAL_BUCKET && user.data.allow_encrypted_data_storage) {
+  if (bucketName !== STAGING_DEAL_BUCKET && user.data.settings?.allow_encrypted_data_storage) {
     encryptThisDeal = true;
   }
 
@@ -141,7 +136,7 @@ export default async (req, res) => {
 
   let key = bucketRoot.key;
   let encryptedBucketName = null;
-  if (user.data.allow_encrypted_data_storage || req.body.data.forceEncryption) {
+  if (user.data.settings.allow_encrypted_data_storage || req.body.data.forceEncryption) {
     encryptedBucketName = req.body.data.forceEncryption
       ? `encrypted-deal-${uuid()}`
       : `encrypted-data-${uuid()}`;
@@ -150,7 +145,6 @@ export default async (req, res) => {
 
     try {
       const newBucket = await buckets.create(encryptedBucketName, true, items.cid);
-
       key = newBucket.root.key;
     } catch (e) {
       Social.sendTextileSlackMessage({
@@ -162,7 +156,7 @@ export default async (req, res) => {
       });
 
       return res.status(500).send({
-        decorator: "FORCED_ENCRYPTION_FAILED_FOR_DATA",
+        decorator: "SERVER_ARCHIVE_ENCRYPTION_FAILED",
         error: true,
       });
     }
@@ -174,7 +168,6 @@ export default async (req, res) => {
 
     try {
       const newBucket = await buckets.create(newDealBucketName, false, items.cid);
-
       key = newBucket.root.key;
     } catch (e) {
       Social.sendTextileSlackMessage({
@@ -186,7 +179,7 @@ export default async (req, res) => {
       });
 
       return res.status(500).send({
-        decorator: "BUCKET_CLONING_FAILED",
+        decorator: "SERVER_ARCHIVE_BUCKET_CLONING_FAILED",
         error: true,
       });
     }
@@ -195,9 +188,7 @@ export default async (req, res) => {
     console.log(`[ normal ] ${key}`);
   }
 
-  // NOTE(jim):
-  //
-  // Finally make the deal
+  // NOTE(jim): Finally make the deal
 
   let response = {};
   let error = {};
@@ -237,14 +228,14 @@ export default async (req, res) => {
     });
 
     return res.status(500).send({
-      decorator: "STORAGE_DEAL_MAKING_NOT_SANITARY",
+      decorator: "SERVER_ARCHIVE_DEAL_FAILED",
       error: true,
       message: e.message,
     });
   }
 
   return res.status(200).send({
-    decorator: "SERVER_DEAL_MAKING_PURE",
+    decorator: "SERVER_ARCHIVE",
     data: { response, error },
   });
 };

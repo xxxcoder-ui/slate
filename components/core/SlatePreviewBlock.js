@@ -48,9 +48,10 @@ const STYLES_PLACEHOLDER = css`
 export class SlatePreviewRow extends React.Component {
   render() {
     let numItems = this.props.numItems || 4;
-    let objects;
-    if (this.props.slate.data.objects.length === 0) {
-      objects = [
+    let objects = this.props.slate.objects;
+    let components;
+    if (objects.length === 0) {
+      components = [
         <div
           css={STYLES_PLACEHOLDER}
           style={{
@@ -61,29 +62,22 @@ export class SlatePreviewRow extends React.Component {
       ];
     } else {
       let trimmed =
-        this.props.slate.data.objects.length > numItems
-          ? this.props.slate.data.objects.slice(1, numItems)
-          : this.props.slate.data.objects.slice(1, this.props.slate.data.objects.length);
-      objects = trimmed.map((each) => (
+        objects.length > numItems ? objects.slice(1, numItems) : objects.slice(1, objects.length);
+      components = trimmed.map((each) => (
         <div key={each.id} css={STYLES_ITEM_BOX}>
           <SlateMediaObjectPreview
-            blurhash={each.blurhash}
+            file={each}
             charCap={30}
             centeredImage
-            type={each.type}
-            url={each.url}
             style={this.props.previewStyle}
-            cid={each.cid}
-            title={each.title || each.name}
             iconOnly={this.props.small}
-            coverImage={each.coverImage}
           />
         </div>
       ));
     }
     return (
       <div css={STYLES_IMAGE_ROW} style={{ height: `100%`, ...this.props.containerStyle }}>
-        {objects}
+        {components}
       </div>
     );
   }
@@ -251,11 +245,11 @@ export class SlatePreviewBlock extends React.Component {
 
   render() {
     let count = 0;
-    const { objects } = this.props.slate.data;
-    if (objects.length >= 4) {
-      const set = this.props.slate.data.objects.slice(0, 4);
+    const objects = this.props.slate.objects || [];
+    if (objects && objects.length >= 4) {
+      const set = objects.slice(0, 4);
       for (let object of set) {
-        if (object.type.startsWith("image/") && !object.type.startsWith("image/svg")) {
+        if (object.data.type.startsWith("image/") && !object.data.type.startsWith("image/svg")) {
           count++;
         }
       }
@@ -299,9 +293,9 @@ export class SlatePreviewBlock extends React.Component {
           <div css={STYLES_TITLE_LINE}>
             <div css={STYLES_TITLE} style={{ width: "85%" }}>
               {this.props.slate.data.name}
-              {this.props.isOwner && !this.props.isPublic && (
-                <span style={{ marginLeft: 12, position: "relative", top: 2 }}>
-                  <SVG.SecurityLock height="20px" style={{ color: Constants.system.darkGray }} />
+              {this.props.isOwner && !this.props.slate.isPublic && (
+                <span style={{ marginLeft: 8 }}>
+                  <SVG.SecurityLock height="20px" />
                 </span>
               )}
             </div>
@@ -335,15 +329,7 @@ export class SlatePreviewBlock extends React.Component {
                 height: 320,
               }}
             >
-              <SlateMediaObjectPreview
-                blurhash={first.blurhash}
-                centeredImage
-                charCap={30}
-                type={first.type}
-                url={first.url}
-                title={first.title || first.name}
-                coverImage={first.coverImage}
-              />
+              <SlateMediaObjectPreview file={first} centeredImage charCap={30} />
             </div>
           ) : first ? (
             <div css={STYLES_PREVIEW}>
@@ -353,16 +339,7 @@ export class SlatePreviewBlock extends React.Component {
                   height: 320,
                 }}
               >
-                <SlateMediaObjectPreview
-                  blurhash={first.blurhash}
-                  centeredImage
-                  charCap={30}
-                  type={first.type}
-                  url={first.url}
-                  cid={first.cid}
-                  title={first.title || first.name}
-                  coverImage={first.coverImage}
-                />
+                <SlateMediaObjectPreview file={first} centeredImage charCap={30} />
               </div>
               <div
                 style={{
@@ -386,11 +363,9 @@ export class SlatePreviewBlock extends React.Component {
         <span css={STYLES_MOBILE_ONLY}>
           <div css={STYLES_TITLE_LINE}>
             <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
-            {this.props.isOwner && (
+            {this.props.isOwner && !this.props.slate.isPublic && (
               <div style={{ color: Constants.system.darkGray, margin: `2px 0 0 0` }}>
-                {this.props.isPublic ? null : (
-                  <SVG.SecurityLock height="20px" style={{ color: Constants.system.darkGray }} />
-                )}
+                <SVG.SecurityLock height="20px" />
               </div>
             )}
           </div>
@@ -409,13 +384,10 @@ export class SlatePreviewBlock extends React.Component {
           >
             {first ? (
               <SlateMediaObjectPreview
+                file={first}
                 blurhash={first.blurhash}
                 centeredImage
                 charCap={30}
-                type={first.type}
-                url={first.url}
-                title={first.title || first.name}
-                coverImage={first.coverImage}
               />
             ) : (
               <div
@@ -469,7 +441,6 @@ export default class SlatePreviewBlocks extends React.Component {
                   username={this.props.username}
                   slate={slate}
                   external={this.props.external}
-                  isPublic={slate.data.public}
                 />
               </a>
             ))
@@ -489,7 +460,6 @@ export default class SlatePreviewBlocks extends React.Component {
                   username={this.props.username}
                   slate={slate}
                   external={this.props.external}
-                  isPublic={slate.data.public}
                 />
               </div>
             ))}

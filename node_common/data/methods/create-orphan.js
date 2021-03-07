@@ -5,7 +5,7 @@ export default async ({ data }) => {
     label: "CREATE_ORPHAN",
     queryFn: async (DB) => {
       const query = await DB.insert({
-        created_at: new Date(),
+        createdAt: new Date(),
         data,
       })
         .into("orphans")
