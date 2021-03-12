@@ -189,8 +189,6 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
 
   const dropdownEl = React.useRef();
 
-  const isActiveTag = (index) => tags.includes(allTagsOnSlates[index]);
-
   const filterTags = (allTags) => {
     let matches = allTags.filter((tag) => {
       const regex = new RegExp(`${value}`, "gi");
@@ -199,6 +197,9 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
 
     return matches;
   };
+
+  const filteredTags = filterTags(allTagsOnSlates);
+  const isActiveTag = (index) => tags.includes(filteredTags[index]);
 
   const _handleClickOutside = (e) => {
     if (dropdownEl.current.contains(e.target)) {
@@ -232,7 +233,7 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
           </li>
         ) : (
           <>
-            {(filterTags(allTagsOnSlates) || []).map((tag, index) => (
+            {(filteredTags || []).map((tag, index) => (
               <li
                 key={tag}
                 css={STYLES_DROPDOWN_ITEM}
