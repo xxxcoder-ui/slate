@@ -1,6 +1,5 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
-import * as Strings from "~/common/strings";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -28,11 +27,11 @@ export default async (req, res) => {
 
   const response = await Data.getSlatesByUserId({ userId: id });
   if (!response) {
-    return res.status(404).send({ decorator: "SERVER_GET_SLATES_TAG_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_GET_SLATES_NOT_FOUND", error: true });
   }
 
   if (response.error) {
-    return res.status(500).send({ decorator: "SERVER_GET_SLATES_TAG_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_GET_SLATES_NOT_FOUND", error: true });
   }
 
   const filteredTags = response

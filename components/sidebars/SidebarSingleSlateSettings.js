@@ -8,7 +8,6 @@ import * as Events from "~/common/custom-events";
 import * as SVG from "~/common/svg";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
-import { Tag } from "~/components/core/Tag";
 import { css } from "@emotion/react";
 
 const SIZE_LIMIT = 1000000;
@@ -51,7 +50,13 @@ export default class SidebarSingleSlateSettings extends React.Component {
     body: this.props.data.data.body,
     name: this.props.data.data.name,
     tags: this.props.data.data.tags,
+    suggestions: [],
   };
+
+  async componentDidMount() {
+    const res = await Actions.getTagsByUserId();
+    this.setState({ suggestions: res.tags });
+  }
 
   _handleSubmit = async () => {
     let slates = this.props.viewer.slates;
@@ -108,6 +113,18 @@ export default class SidebarSingleSlateSettings extends React.Component {
     const response = await Actions.deleteSlate({
       id: this.props.data.id,
     });
+
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  _handleTagDelete = async (tag) => {
+    const response = await Actions.deleteTag({ tag });
+
+    if (response.success) {
+      this.setState({ suggestions: response.tags });
+    }
 
     if (Events.hasError(response)) {
       return;
@@ -210,12 +227,14 @@ export default class SidebarSingleSlateSettings extends React.Component {
           >
             Add tags to a slate to categorize it.
           </System.P>
-          <Tag
+          <System.Tag
             name="tags"
             placeholder={`Edit tag for ${this.state.slatename}`}
             tags={this.state.tags}
+            suggestions={this.state.suggestions}
             style={{ marginTop: 12 }}
             onChange={this._handleChange}
+            handleTagDelete={this._handleTagDelete}
           />
         </div>
 

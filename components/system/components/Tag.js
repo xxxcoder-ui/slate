@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
-import * as Actions from "~/common/actions";
 
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
@@ -66,11 +65,27 @@ const STYLES_DROPDOWN_ITEM = css`
       color: ${Constants.system.newBlack};
     }
   }
+
+  div.active {
+    background: linear-gradient(105.04deg, #e3e3e3 7.95%, #f3f3f3 92.61%);
+    border-radius: 50px;
+  }
 `;
 
 const STYLES_DROPDOWN_ITEM_ICON = css`
   line-height: 0;
   color: ${Constants.system.gray70};
+  display: flex;
+  align-items: center;
+
+  span {
+    line-height: 1;
+    padding: 2.5px 2px;
+  }
+
+  span + span {
+    margin: 0;
+  }
 `;
 
 const STYLES_DROPDOWN_ADD_ITEM = css`
@@ -177,20 +192,65 @@ const STYLES_TAG = css`
   }
 `;
 
-const STYLES_REMOVE_BUTTON = css`
-  cursor: pointer;
-  margin-left: 8px;
-  opacity: 0;
-`;
+const DeleteConfirmation = ({ tag, handleDelete }) => {
+  const [deleteConfirmed, setDeleteConfirmation] = React.useState(false);
 
-const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
-  const [hasLoaded, setLoadingStatus] = React.useState(false);
-  const [allTagsOnSlates, setAllTagsOnSlate] = React.useState([]);
+  return (
+    <div
+      css={STYLES_DROPDOWN_ITEM_ICON}
+      style={{
+        marginLeft: "auto",
+      }}
+      className={`dismiss ${deleteConfirmed && "active"}`}
+      onMouseLeave={() => setDeleteConfirmation(false)}
+    >
+      {deleteConfirmed ? (
+        <>
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(tag);
+            }}
+          >
+            <SVG.Trash height="16px" />
+          </span>
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteConfirmation(false);
+            }}
+          >
+            <SVG.Dismiss height="16px" />
+          </span>
+        </>
+      ) : (
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            setDeleteConfirmation(true);
+          }}
+        >
+          <SVG.Trash height="16px" />
+        </span>
+      )}
+    </div>
+  );
+};
 
+const Dropdown = ({
+  open,
+  setOpen,
+  tags,
+  value,
+  suggestions,
+  handleAdd,
+  handleRemove,
+  handleTagDelete,
+}) => {
   const dropdownEl = React.useRef();
 
-  const filterTags = (allTags) => {
-    let matches = allTags.filter((tag) => {
+  const filterTags = (suggestions) => {
+    let matches = suggestions.filter((tag) => {
       const regex = new RegExp(`${value}`, "gi");
       return tag.match(regex);
     });
@@ -198,7 +258,7 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
     return matches;
   };
 
-  const filteredTags = filterTags(allTagsOnSlates);
+  const filteredTags = filterTags(suggestions);
   const isActiveTag = (index) => tags.includes(filteredTags[index]);
 
   const _handleClickOutside = (e) => {
@@ -217,17 +277,10 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
     };
   }, []);
 
-  React.useEffect(async () => {
-    const results = await Actions.getTagsByUserId();
-
-    setAllTagsOnSlate(results.tags);
-    setLoadingStatus(true);
-  }, []);
-
   return (
     <div ref={dropdownEl}>
       <ul css={STYLES_DROPDOWN} style={{ display: open ? "block" : "none" }}>
-        {!hasLoaded ? (
+        {!suggestions.length ? (
           <li css={STYLES_DROPDOWN_ITEM}>
             <LoaderSpinner style={{ height: "24px", width: "24px", margin: "0 auto" }} />
           </li>
@@ -245,21 +298,30 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
                   </div>
                 )}
                 <span>{tag}</span>
-                <div
-                  css={STYLES_DROPDOWN_ITEM_ICON}
-                  style={{ marginLeft: "auto" }}
-                  className="dismiss"
-                  onClick={() => handleRemove(tag)}
-                >
-                  <SVG.Dismiss height="16px" />
-                </div>
+                {isActiveTag(index) ? (
+                  <div
+                    css={STYLES_DROPDOWN_ITEM_ICON}
+                    style={{ marginLeft: "auto" }}
+                    className="dismiss"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove(tag);
+                    }}
+                  >
+                    <SVG.Dismiss height="16px" />
+                  </div>
+                ) : (
+                  <DeleteConfirmation tag={tag} handleDelete={handleTagDelete} />
+                )}
               </li>
             ))}
             <li
               css={STYLES_DROPDOWN_ADD_ITEM}
               onClick={() => {
-                handleAdd(value);
-                setOpen(false);
+                if (value) {
+                  handleAdd(value);
+                  setOpen(false);
+                }
               }}
             >
               <SVG.Plus height="16px" />
@@ -277,11 +339,19 @@ const Dropdown = ({ open, setOpen, tags, value, handleAdd, handleRemove }) => {
   );
 };
 
-export const Tag = ({ tags, onChange, style, placeholder }) => {
+export const Tag = ({
+  name,
+  tags,
+  suggestions = [],
+  style,
+  placeholder,
+  handleTagDelete,
+  onChange,
+}) => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
-  const removeTag = (tag) => {
+  const _handleRemove = (tag) => {
     const newTags = [...tags];
     const tagIndex = tags.indexOf(tag);
 
@@ -293,7 +363,7 @@ export const Tag = ({ tags, onChange, style, placeholder }) => {
   };
 
   const _handleAdd = (value) => {
-    if (value && (tags || []).find((tag) => tag.toLowerCase() === value.toLowerCase())) {
+    if ((tags || []).find((tag) => tag.toLowerCase() === value.toLowerCase())) {
       return;
     }
 
@@ -304,7 +374,7 @@ export const Tag = ({ tags, onChange, style, placeholder }) => {
     }
   };
 
-  const _handleChange = (e) => setValue(e.target.value);
+  const _handleChange = (e) => setValue(e.target.value.toLowerCase());
 
   const _handleFocus = () => setOpen(true);
 
@@ -312,9 +382,10 @@ export const Tag = ({ tags, onChange, style, placeholder }) => {
     <div css={STYLES_TAG_CONTAINER} style={{ ...style }}>
       <div css={STYLES_INPUT_CONTAINER}>
         <input
+          name={name}
           type="text"
           css={STYLES_INPUT}
-          placeholder={placeholder}
+          placeholder={placeholder ? placeholder : null}
           value={value}
           onChange={_handleChange}
           onFocus={_handleFocus}
@@ -323,9 +394,11 @@ export const Tag = ({ tags, onChange, style, placeholder }) => {
           open={open}
           setOpen={setOpen}
           tags={tags}
+          suggestions={suggestions}
           value={value}
           handleAdd={_handleAdd}
-          handleRemove={removeTag}
+          handleRemove={_handleRemove}
+          handleTagDelete={handleTagDelete}
         />
       </div>
 

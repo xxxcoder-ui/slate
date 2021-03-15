@@ -77,6 +77,7 @@ import {
   TableContent,
   TableColumn,
 } from "~/components/system/components/fragments/TableComponents";
+import { Tag } from "~/components/system/components/Tag";
 
 import { AvatarGroup } from "~/components/system/components/AvatarGroup";
 
@@ -136,6 +137,7 @@ export {
   Table,
   Textarea,
   Toggle,
+  Tag,
   H1,
   H2,
   H3,
