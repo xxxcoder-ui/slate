@@ -192,6 +192,20 @@ const STYLES_TAG = css`
   }
 `;
 
+const STYLES_SHOW_MORE = css`
+  font-family: ${Constants.font.text};
+  color: ${Constants.system.textGray};
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0 0;
+  cursor: pointer;
+
+  span {
+    margin: 0 0 0 8px;
+  }
+`;
+
 const DeleteConfirmation = ({ tag, handleDelete }) => {
   const [deleteConfirmed, setDeleteConfirmation] = React.useState(false);
 
@@ -350,6 +364,9 @@ export const Tag = ({
 }) => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [showMore, setShowMore] = React.useState(false);
+
+  const numToDisplay = showMore ? tags.length : 15;
 
   const _handleRemove = (tag) => {
     const newTags = [...tags];
@@ -404,12 +421,23 @@ export const Tag = ({
 
       <ul css={STYLES_LIST}>
         {tags &&
-          tags.map((tag) => (
+          tags.slice(0, numToDisplay).map((tag) => (
             <li key={tag} css={STYLES_TAG}>
               <span>{tag}</span>
             </li>
           ))}
       </ul>
+
+      {tags.length > 15 && (
+        <p css={STYLES_SHOW_MORE} onClick={() => setShowMore(!showMore)}>
+          <SVG.ChevronDown
+            height="16px"
+            style={{ transform: `rotate(${showMore ? 180 : 0}deg)`, transition: "200ms ease all" }}
+          />
+
+          <span>{!showMore ? "show all" : "show less"}</span>
+        </p>
+      )}
     </div>
   );
 };
