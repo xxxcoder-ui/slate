@@ -287,7 +287,7 @@ const STYLES_EXPANDED_TOOLTIP_TITLE = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "inter-medium", -apple-system, BlinkMacSystemFont, arial, sans-serif;
+  font-family: ${Constants.font.medium};
   font-weight: 400;
   padding: 8px 16px;
   box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05);
