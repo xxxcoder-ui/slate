@@ -35,10 +35,11 @@ export class GlobalTooltip extends React.Component {
   getStyle = (rect, bubbleRect, vertical, horizontal) => {
     let yOffset = this.props.elementRef ? this.props.elementRef.scrollTop : window.pageYOffset;
     let xOffset = this.props.elementRef ? this.props.elementRef.scrollLeft : window.pageXOffset;
+    let padding = 8;
     let style = { position: "absolute" };
     switch (vertical) {
       case "above":
-        style.top = `${rect.top - bubbleRect.height + yOffset}px`;
+        style.top = `${rect.top - bubbleRect.height + yOffset - padding}px`;
         break;
       case "up":
         style.top = `${rect.bottom - bubbleRect.height + yOffset}px`;
@@ -50,12 +51,12 @@ export class GlobalTooltip extends React.Component {
         style.top = `${rect.top + yOffset}px`;
         break;
       case "below":
-        style.top = `${rect.bottom + yOffset}px`;
+        style.top = `${rect.bottom + yOffset + padding}px`;
         break;
     }
     switch (horizontal) {
       case "far-left":
-        style.left = `${rect.left - bubbleRect.width + xOffset}px`;
+        style.left = `${rect.left - bubbleRect.width + xOffset - padding}px`;
         break;
       case "left":
         style.left = `${rect.right - bubbleRect.width + xOffset}px`;
@@ -67,7 +68,7 @@ export class GlobalTooltip extends React.Component {
         style.left = `${rect.left + xOffset}px`;
         break;
       case "far-right":
-        style.left = `${rect.right + xOffset}px`;
+        style.left = `${rect.right + xOffset + padding}px`;
         break;
     }
     return style;
@@ -272,6 +273,30 @@ const STYLES_TOOLTIP_BUBBLE = css`
   animation: ${fadein} 200ms ease-out 1;
 `;
 
+const STYLES_EXPANDED_TOOLTIP = css`
+  box-sizing: border-box;
+  max-width: 256px;
+  font-size: 0.75rem;
+  border-radius: 2px;
+  background-color: ${Constants.system.white};
+  color: ${Constants.system.black};
+  animation: ${fadein} 200ms ease-out 1;
+  box-shadow: 0px 8px 24px rgba(178, 178, 178, 0.2);
+`;
+const STYLES_EXPANDED_TOOLTIP_TITLE = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "inter-medium", -apple-system, BlinkMacSystemFont, arial, sans-serif;
+  font-weight: 400;
+  padding: 8px 16px;
+  box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05);
+`;
+
+const STYLES_EXPANDED_TOOLTIP_CONTENT = css`
+  padding: 8px 16px 12px;
+`;
+
 const STYLES_TOOLTIP_ANCHOR = css`
   box-sizing: border-box;
   display: inline-flex;
@@ -281,6 +306,53 @@ const STYLES_TOOLTIP_ANCHOR = css`
   width: 32px;
   cursor: pointer;
 `;
+
+export class ExpandedTooltip extends React.Component {
+  _handleMouseEnter = (e) => {
+    Events.dispatchCustomEvent({
+      name: "show-tooltip",
+      detail: {
+        id: this.props.id,
+        type: this.props.type,
+      },
+    });
+  };
+
+  _handleClick = (e) => {
+    Events.dispatchCustomEvent({
+      name: "hide-tooltip",
+      detail: {
+        id: this.props.id,
+        type: this.props.type,
+      },
+    });
+  };
+
+  render() {
+    let content = (
+      <div css={STYLES_EXPANDED_TOOLTIP}>
+        <div css={STYLES_EXPANDED_TOOLTIP_TITLE}>
+          <div>{this.props.title}</div>
+          <div onClick={this._handleClick}>
+            <SVG.Dismiss height="12px" style={{ padding: "4px", marginRight: "-4px" }} />
+          </div>
+        </div>
+        <div css={STYLES_EXPANDED_TOOLTIP_CONTENT}>{this.props.content}</div>
+      </div>
+    );
+    return (
+      <TooltipWrapper
+        id={this.props.id}
+        content={content}
+        horizontal={this.props.horizontal}
+        vertical={this.props.vertical}
+        type={this.props.type}
+      >
+        <span onMouseEnter={this._handleMouseEnter}>{this.props.children}</span>
+      </TooltipWrapper>
+    );
+  }
+}
 
 export class TooltipAnchor extends React.Component {
   _handleMouseEnter = (e) => {
