@@ -32,12 +32,99 @@ export class GlobalTooltip extends React.Component {
     window.removeEventListener("resize", this._handleResize);
   };
 
-  getStyle = (rect, bubbleRect, vertical, horizontal) => {
-    let yOffset = this.props.elementRef ? this.props.elementRef.scrollTop : window.pageYOffset;
+  _isOffScreenHorizontally = (leftPosition, rightPosition) =>
+    leftPosition < 0 || rightPosition > window.innerWidth;
+
+  _isOffScreenVertically = (position) => {
+    const body = document.body;
+    const documentHeight = Math.max(body.scrollHeight, body.offsetHeight);
+
+    return position < 0 || position > documentHeight;
+  };
+
+  getXPosition = (rect, bubbleRect, horizontal) => {
+    let currentHorizontalProp = horizontal;
     let xOffset = this.props.elementRef ? this.props.elementRef.scrollLeft : window.pageXOffset;
     let padding = 8;
+
+    const getFarLeft = () => rect.left - bubbleRect.width + xOffset - padding;
+    const getLeft = () => rect.right - bubbleRect.width + xOffset;
+    const getCenter = () => rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset;
+    const getRight = () => rect.left + xOffset;
+    const getFarRight = () => rect.right + xOffset + padding;
+    const getDefault = () => padding;
+
+    const getResponsiveCoord = (directions) => {
+      for (const [i, direction] of directions.entries()) {
+        const currentOption = direction[0];
+        const getPosition = direction[1];
+        if (currentOption !== currentHorizontalProp) continue;
+
+        const calculatedCoord = getPosition();
+
+        if (!this._isOffScreenHorizontally(calculatedCoord, calculatedCoord + bubbleRect.width))
+          return { horizontal: currentHorizontalProp, coord: calculatedCoord };
+
+        /** NOTE(Amine): if all horizontal options are offscreen 
+                         then we return 0px */
+        if (i + 1 >= directions.length)
+          return { horizontal: currentHorizontalProp, coord: getDefault() };
+        /**NOTE(Amine): if the current horizontal is off screen
+         *              and there is still more option then we check for the next option*/
+        currentHorizontalProp = directions[i + 1][0];
+      }
+    };
+
+    if (["far-left", "left"].includes(horizontal)) {
+      return getResponsiveCoord([
+        ["far-left", getFarLeft],
+        ["left", getLeft],
+        ["center", getCenter],
+        ["right", getRight],
+        ["far-right", getFarRight],
+      ]);
+    }
+
+    if (horizontal === "center") {
+      return getResponsiveCoord([
+        ["center", getCenter],
+        ["left", getLeft],
+        ["right", getRight],
+      ]);
+    }
+
+    return getResponsiveCoord([
+      ["far-right", getFarRight],
+      ["right", getRight],
+      ["center", getCenter],
+      ["left", getLeft],
+      ["far-left", getFarLeft],
+    ]);
+  };
+
+  getStyle = (rect, bubbleRect, vertical, horizontal) => {
+    console.log("yo", bubbleRect);
+    let yOffset = this.props.elementRef ? this.props.elementRef.scrollTop : window.pageYOffset;
+    let padding = 8;
     let style = { position: "absolute" };
+
+    const xPosition = this.getXPosition(rect, bubbleRect, horizontal);
+
+    style.left = xPosition.coord;
+    /** NOTE(Amine): if we updated the horizontal prop then
+     *               we should update the vertical as well */
+    if (xPosition.horizontal !== horizontal && horizontal !== "above") {
+      vertical = "below";
+    }
+
     switch (vertical) {
+      case "below":
+        const position = rect.bottom + yOffset + padding;
+        // NOTE(Amine): if below position is offscreen then go to 'above' position
+        if (!this._isOffScreenVertically(position)) {
+          style.top = `${position}px`;
+          break;
+        }
       case "above":
         style.top = `${rect.top - bubbleRect.height + yOffset - padding}px`;
         break;
@@ -50,27 +137,25 @@ export class GlobalTooltip extends React.Component {
       case "down":
         style.top = `${rect.top + yOffset}px`;
         break;
-      case "below":
-        style.top = `${rect.bottom + yOffset + padding}px`;
-        break;
     }
-    switch (horizontal) {
-      case "far-left":
-        style.left = `${rect.left - bubbleRect.width + xOffset - padding}px`;
-        break;
-      case "left":
-        style.left = `${rect.right - bubbleRect.width + xOffset}px`;
-        break;
-      case "center":
-        style.left = `${rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset}px`;
-        break;
-      case "right":
-        style.left = `${rect.left + xOffset}px`;
-        break;
-      case "far-right":
-        style.left = `${rect.right + xOffset + padding}px`;
-        break;
-    }
+
+    // switch (horizontal) {
+    //   case "far-left":
+    //     style.left = `${rect.left - bubbleRect.width + xOffset - padding}px`;
+    //     break;
+    //   case "left":
+    //     style.left = `${rect.right - bubbleRect.width + xOffset}px`;
+    //     break;
+    //   case "center":
+    //     style.left = `${rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset}px`;
+    //     break;
+    //   case "right":
+    //     style.left = `${rect.left + xOffset}px`;
+    //     break;
+    //   case "far-right":
+    //     style.left = `${rect.right + xOffset + padding}px`;
+    //     break;
+    // }
     return style;
   };
 
