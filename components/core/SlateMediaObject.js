@@ -53,6 +53,14 @@ const STYLES_IMAGE = css`
   max-height: 100%;
 `;
 
+const STYLES_IFRAME = (theme) => css`
+  display: block;
+  width: 100%;
+  height: 100%;
+  // NOTE(Amine): lightbackground as fallback when html file doesn't have any
+  background-color: ${theme.system.wallLight};
+`;
+
 const typeMap = {
   "video/quicktime": "video/mp4",
 };
@@ -140,6 +148,10 @@ export default class SlateMediaObject extends React.Component {
           </audio>
         </div>
       );
+    }
+
+    if (type.startsWith("text/html")) {
+      return <iframe src={url} css={STYLES_IFRAME} />;
     }
 
     if (this.props.data.name.endsWith(".ttf")) {
