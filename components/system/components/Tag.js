@@ -26,16 +26,49 @@ const STYLES_DROPDOWN = css`
   width: 100%;
   z-index: 30;
   box-shadow: 0px 12px 24px rgba(178, 178, 178, 0.3);
+
+  li[data-item-active="true"] {
+    background: ${Constants.system.gray80};
+
+    span,
+    svg {
+      color: ${Constants.system.white};
+    }
+  }
 `;
 
-const STYLES_DROPDOWN_ITEM = css`
+const DROPDOWN_ITEM_STYLES = `
   list-style-type: none;
   padding: 8px 12px;
-  background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
   cursor: pointer;
   display: flex;
   align-items: center;
+
+  span {
+    font-size: 14px;
+    line-height: 1.5;
+    color: ${Constants.system.textGray};
+    font-family: ${Constants.font.text};
+    margin: 0 0 0 8px;
+  }
+
+
+  div.dismiss {
+    opacity: 0;
+
+    &:hover {
+      color: ${Constants.system.newBlack};
+    }
+  }
+
+  
+`;
+
+const STYLES_DROPDOWN_ITEM = css`
+  ${DROPDOWN_ITEM_STYLES};
+
+  background: ${Constants.system.white};
+  border: 0.5px solid ${Constants.system.gray20};
 
   &:hover {
     background: ${Constants.system.gray10};
@@ -50,25 +83,40 @@ const STYLES_DROPDOWN_ITEM = css`
     }
   }
 
-  span {
-    font-size: 14px;
-    line-height: 1.5;
-    color: ${Constants.system.textGray};
-    font-family: ${Constants.font.text};
-    margin: 0 0 0 8px;
+  div.active {
+    background: linear-gradient(105.04deg, #e3e3e3 7.95%, #f3f3f3 92.61%);
+    border-radius: 50px;
   }
+`;
 
-  div.dismiss {
-    opacity: 0;
+const STYLES_DROPDOWN_ITEM_DARK = css`
+  ${DROPDOWN_ITEM_STYLES};
 
-    &:hover {
-      color: ${Constants.system.newBlack};
+  background: ${Constants.system.bgBlurGray};
+  border: 0.5px solid ${Constants.system.bgBlurGray};
+
+  &:hover {
+    background: ${Constants.system.gray80};
+
+    span,
+    div:not(.dismiss) {
+      color: ${Constants.system.white};
+    }
+
+    div.dismiss {
+      opacity: 1;
     }
   }
 
   div.active {
-    background: linear-gradient(105.04deg, #e3e3e3 7.95%, #f3f3f3 92.61%);
+    background: linear-gradient(90deg, rgba(134, 134, 136, 1) 0%, rgba(134, 134, 136, 0.2) 80%);
     border-radius: 50px;
+
+    span {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+    }
   }
 `;
 
@@ -88,11 +136,9 @@ const STYLES_DROPDOWN_ITEM_ICON = css`
   }
 `;
 
-const STYLES_DROPDOWN_ADD_ITEM = css`
+const DROPDOWN_ITEM_ADD_STYLES = `
   list-style-type: none;
   padding: 8px 12px;
-  background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -100,8 +146,18 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   span {
     font-size: 14px;
     line-height: 1.5;
-    color: ${Constants.system.newBlack};
     font-family: ${Constants.font.text};
+  }
+`;
+
+const STYLES_DROPDOWN_ADD_ITEM = css`
+  ${DROPDOWN_ITEM_ADD_STYLES};
+
+  background: ${Constants.system.white};
+  border: 0.5px solid ${Constants.system.gray20};
+
+  span {
+    color: ${Constants.system.newBlack};
   }
 
   span.value {
@@ -117,14 +173,39 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   }
 `;
 
+const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
+  ${DROPDOWN_ITEM_ADD_STYLES};
+
+  background: ${Constants.system.bgBlurGray};
+  border: 0.5px solid ${Constants.system.bgBlurGray};
+
+  span,
+  svg {
+    color: ${Constants.system.textGray};
+  }
+
+  span.value {
+    background: ${Constants.system.gray70};
+    color: ${Constants.system.white};
+  }
+
+  &:hover {
+    background: ${Constants.system.gray80};
+
+    span,
+    svg {
+      color: ${Constants.system.white};
+    }
+  }
+`;
+
 const INPUT_STYLES = `
   box-sizing: border-box;
   font-family: ${Constants.font.text};
   -webkit-appearance: none;
-  background: ${Constants.system.white};
-  color: ${Constants.system.black};
   border-radius: 4px;
   display: flex;
+  padding: 8px 12px;
   font-size: 14px;
   align-items: center;
   justify-content: flex-start;
@@ -138,10 +219,11 @@ const STYLES_INPUT = css`
   ${INPUT_STYLES};
 
   width: 100%;
-  padding: 8px 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  background: ${Constants.system.white};
+  color: ${Constants.system.black};
 
   :focus {
     outline: 0;
@@ -166,6 +248,17 @@ const STYLES_INPUT = css`
   }
 `;
 
+const STYLES_INPUT_DARK = css`
+  ${INPUT_STYLES};
+
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px #3c3c3c inset;
+  background: ${Constants.system.blurBlack};
+  color: ${Constants.system.white};
+`;
+
 const STYLES_LIST = css`
   display: inline-flex;
   flex-wrap: wrap;
@@ -173,11 +266,9 @@ const STYLES_LIST = css`
   border-radius: 4px;
 `;
 
-const STYLES_TAG = css`
+const TAG_STYLES = `
   list-style-type: none;
   border-radius: 4px;
-  background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;
@@ -186,9 +277,27 @@ const STYLES_TAG = css`
     line-height: 1.5;
     font-size: 14px;
   }
+`;
+
+const STYLES_TAG = css`
+  ${TAG_STYLES};
+
+  background: ${Constants.system.bgGray};
+  color: ${Constants.system.newBlack};
 
   &:hover {
     background: ${Constants.system.gray30};
+  }
+`;
+
+const STYLES_TAG_DARK = css`
+  ${TAG_STYLES};
+
+  background: ${Constants.system.gray80};
+  color: ${Constants.system.textGray};
+
+  &:hover {
+    background: ${Constants.system.gray80};
   }
 `;
 
@@ -252,11 +361,13 @@ const DeleteConfirmation = ({ tag, handleDelete }) => {
 };
 
 const Dropdown = ({
+  type,
   open,
   setOpen,
   tags,
   value,
   suggestions,
+  dropdownStyles,
   handleAdd,
   handleRemove,
   handleTagDelete,
@@ -293,9 +404,16 @@ const Dropdown = ({
 
   return (
     <div ref={dropdownEl}>
-      <ul css={STYLES_DROPDOWN} style={{ display: open ? "block" : "none" }}>
+      <ul
+        css={STYLES_DROPDOWN}
+        style={{
+          display: open ? "block" : "none",
+          boxShadow: type === "dark" && "0px 12px 24px rgba(0, 0, 0, 0.2)",
+          ...dropdownStyles,
+        }}
+      >
         {!suggestions.length ? (
-          <li css={STYLES_DROPDOWN_ITEM}>
+          <li css={type === "dark" ? STYLES_DROPDOWN_ITEM_DARK : STYLES_DROPDOWN_ITEM}>
             <LoaderSpinner style={{ height: "24px", width: "24px", margin: "0 auto" }} />
           </li>
         ) : (
@@ -303,8 +421,9 @@ const Dropdown = ({
             {(filteredTags || []).map((tag, index) => (
               <li
                 key={tag}
-                css={STYLES_DROPDOWN_ITEM}
+                css={type === "dark" ? STYLES_DROPDOWN_ITEM_DARK : STYLES_DROPDOWN_ITEM}
                 onClick={isActiveTag(index) ? () => handleRemove(tag) : () => handleAdd(tag)}
+                data-item-active={isActiveTag(index)}
               >
                 {isActiveTag(index) && (
                   <div css={STYLES_DROPDOWN_ITEM_ICON}>
@@ -330,7 +449,7 @@ const Dropdown = ({
               </li>
             ))}
             <li
-              css={STYLES_DROPDOWN_ADD_ITEM}
+              css={type === "dark" ? STYLES_DROPDOWN_ADD_ITEM_DARK : STYLES_DROPDOWN_ADD_ITEM}
               onClick={() => {
                 if (value) {
                   handleAdd(value);
@@ -341,7 +460,11 @@ const Dropdown = ({
               <SVG.Plus height="16px" />
               <span style={{ margin: "0 8px" }}>create new tag</span>
               {value && (
-                <span css={STYLES_TAG} className="value" style={{ margin: 0 }}>
+                <span
+                  css={type === "dark" ? STYLES_TAG_DARK : STYLES_TAG}
+                  className="value"
+                  style={{ margin: 0 }}
+                >
                   {value}
                 </span>
               )}
@@ -354,10 +477,13 @@ const Dropdown = ({
 };
 
 export const Tag = ({
+  type,
   name,
   tags,
   suggestions = [],
   style,
+  inputStyles,
+  dropdownStyles,
   placeholder,
   handleTagDelete,
   onChange,
@@ -401,18 +527,21 @@ export const Tag = ({
         <input
           name={name}
           type="text"
-          css={STYLES_INPUT}
+          css={type === "dark" ? STYLES_INPUT_DARK : STYLES_INPUT}
+          style={{ ...inputStyles }}
           placeholder={placeholder ? placeholder : null}
           value={value}
           onChange={_handleChange}
           onFocus={_handleFocus}
         />
         <Dropdown
+          type={type}
           open={open}
           setOpen={setOpen}
           tags={tags}
           suggestions={suggestions}
           value={value}
+          dropdownStyles={dropdownStyles}
           handleAdd={_handleAdd}
           handleRemove={_handleRemove}
           handleTagDelete={handleTagDelete}
@@ -422,7 +551,7 @@ export const Tag = ({
       <ul css={STYLES_LIST}>
         {tags &&
           tags.slice(0, numToDisplay).map((tag) => (
-            <li key={tag} css={STYLES_TAG}>
+            <li key={tag} css={type === "dark" ? STYLES_TAG_DARK : STYLES_TAG}>
               <span>{tag}</span>
             </li>
           ))}

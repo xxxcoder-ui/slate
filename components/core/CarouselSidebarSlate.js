@@ -12,6 +12,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { SlatePicker } from "~/components/core/SlatePicker";
 import { Input } from "~/components/system/components/Input";
 import { Textarea } from "~/components/system/components/Textarea";
+import { Tag } from "~/components/system/components/Tag";
 
 import ProcessedText from "~/components/core/ProcessedText";
 
@@ -186,6 +187,11 @@ export default class CarouselSidebarSlate extends React.Component {
     body: Strings.isEmpty(this.props.data.body) ? "" : this.props.data.body,
     source: Strings.isEmpty(this.props.data.source) ? "" : this.props.data.source,
     author: Strings.isEmpty(this.props.data.author) ? "" : this.props.data.author,
+    tags:
+      !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
+        ? []
+        : this.props.data.tags,
+    suggestions: [],
     selected: {},
     isPublic: false,
     copyValue: "",
@@ -213,6 +219,8 @@ export default class CarouselSidebarSlate extends React.Component {
       }
       this.setState({ selected, isPublic });
     }
+
+    this.fetchSuggestions();
   };
 
   _handleClose = () => {
@@ -228,6 +236,7 @@ export default class CarouselSidebarSlate extends React.Component {
       body: this.state.body,
       source: this.state.source,
       author: this.state.author,
+      tags: this.state.tags,
     };
     this.props.onSave(data, this.props.index);
     this.setState({ unsavedChanges: false });
@@ -321,6 +330,23 @@ export default class CarouselSidebarSlate extends React.Component {
     }
   };
 
+  _handleTagDelete = async (tag) => {
+    const response = await Actions.deleteTag({ tag });
+
+    if (response.success) {
+      this.setState({ suggestions: response.tags });
+    }
+
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  fetchSuggestions = async () => {
+    const res = await Actions.getTagsByUserId();
+    this.setState({ suggestions: res.tags });
+  };
+
   render() {
     let isUnityGame = false;
     if (this.props.data.type === "application/unity") {
@@ -349,6 +375,18 @@ export default class CarouselSidebarSlate extends React.Component {
               value={this.state.body}
               onChange={this._handleChange}
               style={STYLES_INPUT}
+            />
+            <Tag
+              type="dark"
+              name="tags"
+              placeholder={`Edit tags for ${this.state.title}`}
+              tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              style={{ margin: "0 0 16px" }}
+              inputStyles={{ padding: "16px" }}
+              dropdownStyles={{ top: "50px" }}
+              onChange={this._handleChange}
+              handleTagDelete={this._handleTagDelete}
             />
             <Input
               full

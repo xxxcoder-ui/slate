@@ -16,6 +16,7 @@ import { SlatePicker } from "~/components/core/SlatePicker";
 import { Input } from "~/components/system/components/Input";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { Toggle } from "~/components/system/components/Toggle";
+import { Tag } from "~/components/system/components/Tag";
 
 const DEFAULT_BOOK =
   "https://slate.textile.io/ipfs/bafkreibk32sw7arspy5kw3p5gkuidfcwjbwqyjdktd5wkqqxahvkm2qlyi";
@@ -260,6 +261,11 @@ class CarouselSidebarData extends React.Component {
     unsavedChanges: false,
     isEditing: false,
     isDownloading: false,
+    tags:
+      !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
+        ? []
+        : this.props.data.tags,
+    suggestions: [],
   };
 
   componentDidMount = () => {
@@ -279,6 +285,8 @@ class CarouselSidebarData extends React.Component {
       }
       this.setState({ selected, inPublicSlates, isPublic: this.props.data.public });
     }
+
+    this.fetchSuggestions();
   };
 
   _handleDarkMode = async (e) => {
@@ -296,8 +304,8 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleSave = async () => {
-    let name = { name: this.state.name };
-    this.props.onSave(name, this.props.index);
+    let data = { name: this.state.name, tags: this.state.tags };
+    this.props.onSave(data, this.props.index);
     await setTimeout(() => {
       this.setState({ unsavedChanges: false });
     }, 500);
@@ -458,6 +466,23 @@ class CarouselSidebarData extends React.Component {
     }
   };
 
+  _handleTagDelete = async (tag) => {
+    const response = await Actions.deleteTag({ tag });
+
+    if (response.success) {
+      this.setState({ suggestions: response.tags });
+    }
+
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  fetchSuggestions = async () => {
+    const res = await Actions.getTagsByUserId();
+    this.setState({ suggestions: res.tags });
+  };
+
   render() {
     const isVisible = this.state.inPublicSlates || this.state.isPublic;
     const { cid, file, name, coverImage, type, size, url, blurhash } = this.props.data;
@@ -547,6 +572,27 @@ class CarouselSidebarData extends React.Component {
             </div>
           ) : null}
         </div>
+        {this.props.isOwner ? (
+          <React.Fragment>
+            <div css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+              Tags
+            </div>
+            <div css={STYLES_OPTIONS_SECTION}>
+              <Tag
+                type="dark"
+                name="tags"
+                placeholder={`Edit tags for ${this.state.name}`}
+                tags={this.state.tags}
+                suggestions={this.state.suggestions}
+                style={{ margin: "0 0 16px" }}
+                inputStyles={{ padding: "16px" }}
+                dropdownStyles={{ top: "50px" }}
+                onChange={this._handleChange}
+                handleTagDelete={this._handleTagDelete}
+              />
+            </div>
+          </React.Fragment>
+        ) : null}
         {this.props.external ? null : (
           <React.Fragment>
             <div css={STYLES_SECTION_HEADER}>Connected Slates</div>

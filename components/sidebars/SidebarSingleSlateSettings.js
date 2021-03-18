@@ -53,9 +53,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     suggestions: [],
   };
 
-  async componentDidMount() {
-    const res = await Actions.getTagsByUserId();
-    this.setState({ suggestions: res.tags });
+  componentDidMount() {
+    this.fetchSuggestions();
   }
 
   _handleSubmit = async () => {
@@ -129,6 +128,11 @@ export default class SidebarSingleSlateSettings extends React.Component {
     if (Events.hasError(response)) {
       return;
     }
+  };
+
+  fetchSuggestions = async () => {
+    const res = await Actions.getTagsByUserId();
+    this.setState({ suggestions: res.tags });
   };
 
   render() {
@@ -229,7 +233,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           </System.P>
           <System.Tag
             name="tags"
-            placeholder={`Edit tag for ${this.state.slatename}`}
+            placeholder={`Edit tags for ${this.state.slatename}`}
             tags={this.state.tags}
             suggestions={this.state.suggestions}
             style={{ marginTop: 12 }}
