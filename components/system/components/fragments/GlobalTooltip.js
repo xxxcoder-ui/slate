@@ -54,16 +54,16 @@ export class GlobalTooltip extends React.Component {
     const getFarRight = () => rect.right + xOffset + padding;
     const getDefault = () => padding;
 
-    const getResponsiveCoord = (directions) => {
+    const getResponsivePosition = (directions) => {
       for (const [i, direction] of directions.entries()) {
         const currentOption = direction[0];
         const getPosition = direction[1];
         if (currentOption !== currentHorizontalProp) continue;
 
-        const calculatedCoord = getPosition();
+        const position = getPosition();
 
-        if (!this._isOffScreenHorizontally(calculatedCoord, calculatedCoord + bubbleRect.width))
-          return { horizontal: currentHorizontalProp, coord: calculatedCoord };
+        if (!this._isOffScreenHorizontally(position, position + bubbleRect.width))
+          return { horizontal: currentHorizontalProp, coord: position };
 
         /** NOTE(Amine): if all horizontal options are offscreen 
                          then we return 0px */
@@ -76,7 +76,7 @@ export class GlobalTooltip extends React.Component {
     };
 
     if (["far-left", "left"].includes(horizontal)) {
-      return getResponsiveCoord([
+      return getResponsivePosition([
         ["far-left", getFarLeft],
         ["left", getLeft],
         ["center", getCenter],
@@ -86,14 +86,14 @@ export class GlobalTooltip extends React.Component {
     }
 
     if (horizontal === "center") {
-      return getResponsiveCoord([
+      return getResponsivePosition([
         ["center", getCenter],
         ["left", getLeft],
         ["right", getRight],
       ]);
     }
 
-    return getResponsiveCoord([
+    return getResponsivePosition([
       ["far-right", getFarRight],
       ["right", getRight],
       ["center", getCenter],
