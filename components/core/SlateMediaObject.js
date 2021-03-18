@@ -4,6 +4,7 @@ import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 
 import UnityFrame from "~/components/core/UnityFrame";
+import FontFrame from "~/components/core/FontFrame";
 import MarkdownFrame from "~/components/core/MarkdownFrame";
 
 import { css } from "@emotion/react";
@@ -138,6 +139,16 @@ export default class SlateMediaObject extends React.Component {
             <source src={url} type={playType} />
           </audio>
         </div>
+      );
+    }
+
+    if (this.props.data.name.endsWith(".ttf")) {
+      return (
+        <FontFrame
+          name={this.props.data.file || this.props.data.name}
+          cid={this.props.data.cid}
+          url={url}
+        />
       );
     }
 
