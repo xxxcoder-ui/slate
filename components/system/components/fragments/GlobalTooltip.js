@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 
+import { v4 as uuid } from "uuid";
 import { css, keyframes } from "@emotion/react";
 
 const STYLES_TOOLTIP = css`
@@ -35,11 +36,11 @@ export class GlobalTooltip extends React.Component {
   _isOffScreenHorizontally = (leftPosition, rightPosition) =>
     leftPosition < 0 || rightPosition > window.innerWidth;
 
-  _isOffScreenVertically = (position) => {
+  _isOffScreenVertically = (topPosition, bottomPosition) => {
     const body = document.body;
     const documentHeight = Math.max(body.scrollHeight, body.offsetHeight);
 
-    return position < 0 || position > documentHeight;
+    return topPosition < 0 || bottomPosition > documentHeight;
   };
 
   getXPosition = (rect, bubbleRect, horizontal) => {
@@ -103,7 +104,6 @@ export class GlobalTooltip extends React.Component {
   };
 
   getStyle = (rect, bubbleRect, vertical, horizontal) => {
-    console.log("yo", bubbleRect);
     let yOffset = this.props.elementRef ? this.props.elementRef.scrollTop : window.pageYOffset;
     let padding = 8;
     let style = { position: "absolute" };
@@ -121,7 +121,9 @@ export class GlobalTooltip extends React.Component {
       case "below":
         const position = rect.bottom + yOffset + padding;
         // NOTE(Amine): if below position is offscreen then go to 'above' position
-        if (!this._isOffScreenVertically(position)) {
+        if (
+          !this._isOffScreenVertically(position + bubbleRect.height, position + bubbleRect.height)
+        ) {
           style.top = `${position}px`;
           break;
         }
@@ -393,11 +395,16 @@ const STYLES_TOOLTIP_ANCHOR = css`
 `;
 
 export class ExpandedTooltip extends React.Component {
+  constructor() {
+    super();
+    this._id = uuid();
+  }
+
   _handleMouseEnter = (e) => {
     Events.dispatchCustomEvent({
       name: "show-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -407,7 +414,7 @@ export class ExpandedTooltip extends React.Component {
     Events.dispatchCustomEvent({
       name: "hide-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -427,7 +434,7 @@ export class ExpandedTooltip extends React.Component {
     );
     return (
       <TooltipWrapper
-        id={this.props.id}
+        id={this._id}
         content={content}
         horizontal={this.props.horizontal}
         vertical={this.props.vertical}
@@ -440,11 +447,16 @@ export class ExpandedTooltip extends React.Component {
 }
 
 export class TooltipAnchor extends React.Component {
+  constructor() {
+    super();
+    this._id = uuid();
+  }
+
   _handleMouseEnter = (e) => {
     Events.dispatchCustomEvent({
       name: "show-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -454,7 +466,7 @@ export class TooltipAnchor extends React.Component {
     Events.dispatchCustomEvent({
       name: "hide-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -468,7 +480,7 @@ export class TooltipAnchor extends React.Component {
     );
     return (
       <TooltipWrapper
-        id={this.props.id}
+        id={this._id}
         content={content}
         horizontal={this.props.horizontal}
         vertical={this.props.vertical}

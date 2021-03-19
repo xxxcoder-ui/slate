@@ -189,17 +189,16 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         <br />
         <System.P>
           For a pre-styled tooltip that accepts a string and handles dispatchCustomEvent and styling
-          for you, use the <System.CodeText>TooltipAnchor</System.CodeText> component. Be sure to
-          give it a unique id.
+          for you, use the <System.CodeText>TooltipAnchor</System.CodeText>
         </System.P>
         <br />
-        <System.TooltipAnchor type="body" id="another-unique-tooltip-id" tooltip="Hello friends!" />
+        <System.TooltipAnchor type="body" tooltip="Hello friends!" />
         <br />
         <br />
         <CodeBlock>
           {`class ExampleTwo extends React.Component {
   render() {
-    return <TooltipAnchor id="another-unique-tooltip-id" tooltip="Hello friends!" />;
+    return <TooltipAnchor tooltip="Hello friends!" />;
   }
 }`}
         </CodeBlock>
@@ -210,8 +209,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         <hr />
         <br />
         <System.P>
-          For expanded tooltip that accepts a title component and content component. Be sure to give
-          it a unique id.
+          For expanded tooltip that accepts a title component and content component.
         </System.P>
         <br />
         <System.ExpandedTooltip
@@ -235,7 +233,6 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
   render() {
     return (
        <System.ExpandedTooltip
-          id="expanded-tooltip"
           horizontal="far-left"
           vertical="center"
           title={<div>This is a tooltip title </div>}
@@ -352,41 +349,34 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
               rows: [
                 {
                   id: 1,
-                  a: <span style={{ fontFamily: Constants.font.semiBold }}>id</span>,
-                  b: "string",
-                  c: "null",
-                  d: "Unique id to identify the tooltip.",
-                },
-                {
-                  id: 2,
                   a: "tooltip",
                   b: "string",
                   c: "null",
                   d: "Output text on the tooltip bubble.",
                 },
                 {
-                  id: 3,
+                  id: 2,
                   a: "height",
                   b: "number",
                   c: "24px",
                   d: "Height of the tooltip anchor icon.",
                 },
                 {
-                  id: 4,
+                  id: 3,
                   a: "style",
                   b: "Object",
                   c: "null",
                   d: "Style applied to the tooltip bubble.",
                 },
                 {
-                  id: 5,
+                  id: 4,
                   a: "anchorStyle",
                   b: "Object",
                   c: "null",
                   d: "Style applied to the tooltip anchor.",
                 },
                 {
-                  id: 6,
+                  id: 5,
                   a: "children",
                   b: "Object",
                   c: "null",
@@ -394,7 +384,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
                     "Will be rendered instead of the default question mark SVG as the tooltip anchor.",
                 },
                 {
-                  id: 7,
+                  id: 6,
                   a: "horizontal",
                   b: "string",
                   c: "center",
@@ -402,7 +392,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
                     "Horizontal positioning of the tooltip relative to the anchor (far-left, left, center, right, far-right)",
                 },
                 {
-                  id: 8,
+                  id: 7,
                   a: "vertical",
                   b: "string",
                   c: "above",
@@ -427,41 +417,34 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
               rows: [
                 {
                   id: 1,
-                  a: <span style={{ fontFamily: Constants.font.semiBold }}>id</span>,
-                  b: "string",
-                  c: "null",
-                  d: "Unique id to identify the tooltip.",
-                },
-                {
-                  id: 2,
                   a: "tooltip",
                   b: "string",
                   c: "null",
                   d: "Output text on the tooltip bubble.",
                 },
                 {
-                  id: 3,
+                  id: 2,
                   a: "title",
                   b: "Component",
                   c: "null",
                   d: "Component rendered as the tooltip title",
                 },
                 {
-                  id: 4,
+                  id: 3,
                   a: "contents",
                   b: "Component",
                   c: "null",
                   d: "Component rendered as the tooltip body",
                 },
                 {
-                  id: 5,
+                  id: 4,
                   a: "children",
                   b: "Object",
                   c: "null",
                   d: "Expanded tooltip anchor",
                 },
                 {
-                  id: 4,
+                  id: 5,
                   a: "horizontal",
                   b: "string",
                   c: "center",
