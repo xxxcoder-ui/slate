@@ -520,6 +520,12 @@ export const Tag = ({
 
   const _handleChange = (e) => setValue(e.target.value.toLowerCase());
 
+  const _handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      _handleAdd(value);
+    }
+  };
+
   const _handleFocus = () => setOpen(true);
 
   return (
@@ -533,6 +539,7 @@ export const Tag = ({
           placeholder={placeholder ? placeholder : null}
           value={value}
           onChange={_handleChange}
+          onKeyDown={_handleKeyDown}
           onFocus={_handleFocus}
         />
         <Dropdown
