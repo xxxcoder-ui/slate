@@ -18,6 +18,8 @@ import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { Toggle } from "~/components/system/components/Toggle";
 import { Tag } from "~/components/system/components/Tag";
 
+import isEqual from "lodash/isEqual";
+
 const DEFAULT_BOOK =
   "https://slate.textile.io/ipfs/bafkreibk32sw7arspy5kw3p5gkuidfcwjbwqyjdktd5wkqqxahvkm2qlyi";
 const DEFAULT_DATA =
@@ -285,6 +287,17 @@ class CarouselSidebarData extends React.Component {
       }
       this.setState({ selected, inPublicSlates, isPublic: this.props.data.public });
     }
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!isEqual(prevState.tags, this.state.tags)) {
+      this.updateSuggestions();
+    }
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleDarkMode = async (e) => {

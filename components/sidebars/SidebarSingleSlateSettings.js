@@ -10,6 +10,8 @@ import * as SVG from "~/common/svg";
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
 
+import isEqual from "lodash/isEqual";
+
 const SIZE_LIMIT = 1000000;
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
@@ -51,6 +53,15 @@ export default class SidebarSingleSlateSettings extends React.Component {
     name: this.props.data.data.name,
     tags: this.props.data.data.tags,
     suggestions: this.props.viewer.tags,
+  };
+
+  componentDidMount = () => {
+    this.updateSuggestions();
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleSubmit = async () => {

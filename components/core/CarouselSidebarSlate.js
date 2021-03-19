@@ -14,6 +14,7 @@ import { Input } from "~/components/system/components/Input";
 import { Textarea } from "~/components/system/components/Textarea";
 import { Tag } from "~/components/system/components/Tag";
 
+import isEqual from "lodash/isEqual";
 import ProcessedText from "~/components/core/ProcessedText";
 
 const STYLES_NO_VISIBLE_SCROLL = css`
@@ -219,6 +220,17 @@ export default class CarouselSidebarSlate extends React.Component {
       }
       this.setState({ selected, isPublic });
     }
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!isEqual(prevState.tags, this.state.tags)) {
+      this.updateSuggestions();
+    }
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleClose = () => {
