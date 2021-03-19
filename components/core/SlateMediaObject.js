@@ -6,6 +6,7 @@ import * as Events from "~/common/custom-events";
 import UnityFrame from "~/components/core/UnityFrame";
 import FontFrame from "~/components/core/FontFrame";
 import MarkdownFrame from "~/components/core/MarkdownFrame";
+import { endsWithAny } from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
@@ -154,7 +155,7 @@ export default class SlateMediaObject extends React.Component {
       return <iframe src={url} css={STYLES_IFRAME} />;
     }
 
-    if (this.props.data.name.endsWith(".ttf")) {
+    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], this.props.data.name)) {
       return (
         <FontFrame
           name={this.props.data.file || this.props.data.name}

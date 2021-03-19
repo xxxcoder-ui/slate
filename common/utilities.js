@@ -22,3 +22,5 @@ export const getPublicAndPrivateFiles = ({ viewer }) => {
   }
   return { publicFiles, privateFiles };
 };
+
+export const endsWithAny = (options, string) => options.some((option) => string.endsWith(option));
