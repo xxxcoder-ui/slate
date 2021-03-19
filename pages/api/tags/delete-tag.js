@@ -6,7 +6,7 @@ import * as SearchManager from "~/node_common/managers/search";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_GET_SLATES_TAGS", error: true });
+    return res.status(500).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -15,25 +15,25 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "SERVER_GET_SLATE_USER_NOT_FOUND",
+      decorator: "SERVER_DELETE_TAG_USER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "SERVER_GET_SLATE_USER_NOT_FOUND",
+      decorator: "SERVER_DELETE_TAG_USER_NOT_FOUND",
       error: true,
     });
   }
 
   let response = await Data.getSlatesByUserId({ userId: id });
   if (!response) {
-    return res.status(404).send({ decorator: "SERVER_GET_SLATES_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_DELETE_TAG_SLATES_NOT_FOUND", error: true });
   }
 
   if (response.error) {
-    return res.status(500).send({ decorator: "SERVER_GET_SLATES_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_DELETE_TAG_SLATES_NOT_FOUND", error: true });
   }
 
   const tagToDelete = req.body.data.tag;

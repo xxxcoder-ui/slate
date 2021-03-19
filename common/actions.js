@@ -368,12 +368,6 @@ export const cleanDatabase = async () => {
   });
 };
 
-export const getTagsByUserId = async () => {
-  return await returnJSON(`/api/tags/get-all-tags`, {
-    ...DEFAULT_OPTIONS,
-  });
-};
-
 export const deleteTag = async (data) => {
   return await returnJSON(`/api/tags/delete-tag`, {
     ...DEFAULT_OPTIONS,
