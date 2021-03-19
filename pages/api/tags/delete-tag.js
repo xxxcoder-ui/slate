@@ -69,13 +69,7 @@ export default async (req, res) => {
     let slates = await Data.getSlatesByUserId({ userId: id });
     ViewerManager.hydratePartialSlates(slates, id);
 
-    const filteredTags = slates
-      .map((slate) => slate.data.tags)
-      .flat()
-      .filter((item) => Boolean(item));
-
-    const dedupedTags = new Set(filteredTags);
-    tags = Array.from(dedupedTags);
+    tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
   }
 
   return res.status(200).send({ decorator: "SERVER_DELETE_TAGS", success: true, tags });

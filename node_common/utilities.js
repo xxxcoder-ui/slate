@@ -221,3 +221,28 @@ export const updateStateData = async (state, newState) => {
     ...newState,
   };
 };
+
+// NOTE(daniel): get all tags on slates and files
+export const getUserTags = ({ library, slates }) => {
+  let tags = new Set();
+
+  const isNotEmptyArray = (arr) => Array.isArray(arr) && arr?.length > 0;
+
+  library.forEach((item) => {
+    if (isNotEmptyArray(item.tags)) {
+      for (let tag of item.tags) {
+        tags.add(tag);
+      }
+    }
+  });
+
+  slates.forEach((slate) => {
+    if (isNotEmptyArray(slate.data.tags)) {
+      for (let tag of slate.data.tags) {
+        tags.add(tag);
+      }
+    }
+  });
+
+  return Array.from(tags);
+};

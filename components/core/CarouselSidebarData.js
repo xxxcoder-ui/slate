@@ -265,7 +265,7 @@ class CarouselSidebarData extends React.Component {
       !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
         ? []
         : this.props.data.tags,
-    suggestions: [],
+    suggestions: this.props.viewer.tags,
   };
 
   componentDidMount = () => {
@@ -285,8 +285,6 @@ class CarouselSidebarData extends React.Component {
       }
       this.setState({ selected, inPublicSlates, isPublic: this.props.data.public });
     }
-
-    this.fetchSuggestions();
   };
 
   _handleDarkMode = async (e) => {
@@ -476,11 +474,6 @@ class CarouselSidebarData extends React.Component {
     if (Events.hasError(response)) {
       return;
     }
-  };
-
-  fetchSuggestions = async () => {
-    const res = await Actions.getTagsByUserId();
-    this.setState({ suggestions: res.tags });
   };
 
   render() {

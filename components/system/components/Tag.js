@@ -315,7 +315,7 @@ const STYLES_SHOW_MORE = css`
   }
 `;
 
-const DeleteConfirmation = ({ tag, handleDelete }) => {
+const DeleteConfirmation = ({ tag, handleDelete, setOpen }) => {
   const [deleteConfirmed, setDeleteConfirmation] = React.useState(false);
 
   return (
@@ -333,6 +333,7 @@ const DeleteConfirmation = ({ tag, handleDelete }) => {
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(tag);
+              setOpen(false);
             }}
           >
             <SVG.Trash height="16px" />
@@ -423,7 +424,7 @@ const Dropdown = ({
                 key={tag}
                 css={type === "dark" ? STYLES_DROPDOWN_ITEM_DARK : STYLES_DROPDOWN_ITEM}
                 onClick={isActiveTag(index) ? () => handleRemove(tag) : () => handleAdd(tag)}
-                data-item-active={isActiveTag(index)}
+                data-item-active={type === "dark" && isActiveTag(index)}
               >
                 {isActiveTag(index) && (
                   <div css={STYLES_DROPDOWN_ITEM_ICON}>
@@ -444,7 +445,7 @@ const Dropdown = ({
                     <SVG.Dismiss height="16px" />
                   </div>
                 ) : (
-                  <DeleteConfirmation tag={tag} handleDelete={handleTagDelete} />
+                  <DeleteConfirmation tag={tag} handleDelete={handleTagDelete} setOpen={setOpen} />
                 )}
               </li>
             ))}

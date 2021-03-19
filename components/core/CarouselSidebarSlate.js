@@ -191,7 +191,7 @@ export default class CarouselSidebarSlate extends React.Component {
       !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
         ? []
         : this.props.data.tags,
-    suggestions: [],
+    suggestions: this.props.viewer.tags,
     selected: {},
     isPublic: false,
     copyValue: "",
@@ -219,8 +219,6 @@ export default class CarouselSidebarSlate extends React.Component {
       }
       this.setState({ selected, isPublic });
     }
-
-    this.fetchSuggestions();
   };
 
   _handleClose = () => {
@@ -340,11 +338,6 @@ export default class CarouselSidebarSlate extends React.Component {
     if (Events.hasError(response)) {
       return;
     }
-  };
-
-  fetchSuggestions = async () => {
-    const res = await Actions.getTagsByUserId();
-    this.setState({ suggestions: res.tags });
   };
 
   render() {

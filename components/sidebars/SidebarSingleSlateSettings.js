@@ -50,12 +50,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     body: this.props.data.data.body,
     name: this.props.data.data.name,
     tags: this.props.data.data.tags,
-    suggestions: [],
+    suggestions: this.props.viewer.tags,
   };
-
-  componentDidMount() {
-    this.fetchSuggestions();
-  }
 
   _handleSubmit = async () => {
     let slates = this.props.viewer.slates;
@@ -128,11 +124,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
     if (Events.hasError(response)) {
       return;
     }
-  };
-
-  fetchSuggestions = async () => {
-    const res = await Actions.getTagsByUserId();
-    this.setState({ suggestions: res.tags });
   };
 
   render() {
