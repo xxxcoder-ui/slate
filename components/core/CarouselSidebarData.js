@@ -263,6 +263,7 @@ class CarouselSidebarData extends React.Component {
     unsavedChanges: false,
     isEditing: false,
     isDownloading: false,
+    subject: "",
     tags:
       !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
         ? []
@@ -287,6 +288,8 @@ class CarouselSidebarData extends React.Component {
       }
       this.setState({ selected, inPublicSlates, isPublic: this.props.data.public });
     }
+
+    this.updateSuggestions();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -310,9 +313,21 @@ class CarouselSidebarData extends React.Component {
   _handleChange = (e) => {
     if (this.props.isOwner && !this.props.external) {
       this.debounceInstance();
-      this.setState({ [e.target.name]: e.target.value, unsavedChanges: true });
+      this.setState({
+        [e.target.name]: e.target.value,
+        unsavedChanges: true,
+        subject: this._handleCapitalization(e.target.name),
+      });
+
+      if (e.target.name === "Tags") {
+        this.updateSuggestions();
+      }
     }
   };
+
+  _handleCapitalization(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   _handleSave = async () => {
     let data = { name: this.state.name, tags: this.state.tags };
@@ -323,6 +338,8 @@ class CarouselSidebarData extends React.Component {
     await setTimeout(() => {
       this.setState({ unsavedChanges: true });
     }, 4000);
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
   };
 
   _handleToggleAutoPlay = async (e) => {
@@ -478,10 +495,11 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleTagDelete = async (tag) => {
-    const response = await Actions.deleteTag({ tag });
+    const response = UserBehaviors.deleteTag(tag);
 
     if (response.success) {
-      this.setState({ suggestions: response.tags });
+      /* this.setState({ suggestions: response.tags }); */
+      this.props.onUpdateViewer({ tags: response.tags });
     }
 
     if (Events.hasError(response)) {
@@ -536,7 +554,7 @@ class CarouselSidebarData extends React.Component {
             {this.state.unsavedChanges == false ? (
               <div css={STYLES_AUTOSAVE}>
                 <SVG.Check height="14px" style={{ marginRight: 4 }} />
-                Filename saved
+                {this.state.subject} saved
               </div>
             ) : null}
           </div>

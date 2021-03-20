@@ -41,11 +41,14 @@ export default async (req, res) => {
 
   let refreshSlates = false;
 
+  // NOTE(daniel): Remove tag from slate
   for (const slate of slates) {
+    if (!slate.data.tags) continue;
+
     let tags = slate.data.tags;
     let tagIndex = tags.indexOf(tagToDelete);
 
-    if (tagIndex > -1) {
+    if (tagIndex && tagIndex > -1) {
       tags.splice(tagIndex, 1);
     }
 
@@ -64,12 +67,24 @@ export default async (req, res) => {
     SearchManager.updateSlate(newSlate, "EDIT");
   }
 
+  // NOTE(daniel): Remove tag from object
+  for (const item of user.data.library[0].children) {
+    if (!item.tags) continue;
+
+    let tags = item.tags;
+    let tagIndex = tags.indexOf(tagToDelete);
+    if (tagIndex > -1) {
+      tags.splice(tagIndex, 1);
+    }
+  }
+
   let tags;
   if (refreshSlates) {
     let slates = await Data.getSlatesByUserId({ userId: id });
     ViewerManager.hydratePartialSlates(slates, id);
 
     tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
+    console.log(tags);
   }
 
   return res.status(200).send({ decorator: "SERVER_DELETE_TAGS", success: true, tags });

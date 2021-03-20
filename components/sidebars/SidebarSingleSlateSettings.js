@@ -60,8 +60,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   updateSuggestions = () => {
-    let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
+    if (this.state.tags) {
+      let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
+      this.setState({ suggestions: Array.from(newSuggestions) });
+    }
   };
 
   _handleSubmit = async () => {
@@ -73,7 +75,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.body = this.state.body;
         slate.data.tags = this.state.tags;
 
-        this.props.onUpdateViewer({ slates });
+        this.props.onUpdateViewer({ slates, tags: this.state.suggestions });
         break;
       }
     }

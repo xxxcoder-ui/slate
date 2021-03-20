@@ -419,3 +419,13 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
 //   });
 //   return response;
 // }
+
+export const deleteTag = async (tag) => {
+  const response = await Actions.deleteTag({ tag });
+
+  if (Events.hasError(response)) {
+    return false;
+  }
+
+  return response;
+};

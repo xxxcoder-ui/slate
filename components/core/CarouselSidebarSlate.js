@@ -220,6 +220,8 @@ export default class CarouselSidebarSlate extends React.Component {
       }
       this.setState({ selected, isPublic });
     }
+
+    this.updateSuggestions();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -250,6 +252,8 @@ export default class CarouselSidebarSlate extends React.Component {
     };
     this.props.onSave(data, this.props.index);
     this.setState({ unsavedChanges: false });
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
   };
 
   _handleCreateSlate = async () => {
@@ -269,6 +273,10 @@ export default class CarouselSidebarSlate extends React.Component {
       unsavedChanges: true,
       subject: e.target.name == "body" ? "Description" : this._handleCapitalization(e.target.name),
     });
+
+    if (e.target.name === "Tags") {
+      this.updateSuggestions();
+    }
   };
 
   _handleCapitalization(str) {

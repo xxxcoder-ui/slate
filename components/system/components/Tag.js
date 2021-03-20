@@ -413,11 +413,7 @@ const Dropdown = ({
           ...dropdownStyles,
         }}
       >
-        {!suggestions.length ? (
-          <li css={type === "dark" ? STYLES_DROPDOWN_ITEM_DARK : STYLES_DROPDOWN_ITEM}>
-            <LoaderSpinner style={{ height: "24px", width: "24px", margin: "0 auto" }} />
-          </li>
-        ) : (
+        {
           <>
             {(filteredTags || []).map((tag, index) => (
               <li
@@ -471,7 +467,7 @@ const Dropdown = ({
               )}
             </li>
           </>
-        )}
+        }
       </ul>
     </div>
   );
@@ -480,7 +476,7 @@ const Dropdown = ({
 export const Tag = ({
   type,
   name,
-  tags,
+  tags = [],
   suggestions = [],
   style,
   inputStyles,
@@ -565,7 +561,7 @@ export const Tag = ({
           ))}
       </ul>
 
-      {tags.length > 15 && (
+      {tags?.length > 15 && (
         <p css={STYLES_SHOW_MORE} onClick={() => setShowMore(!showMore)}>
           <SVG.ChevronDown
             height="16px"
