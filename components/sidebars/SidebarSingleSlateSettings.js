@@ -6,6 +6,7 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as SVG from "~/common/svg";
+import * as UserBehaviors from "~/common/user-behaviors";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
