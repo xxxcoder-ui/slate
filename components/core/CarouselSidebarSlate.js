@@ -349,10 +349,10 @@ export default class CarouselSidebarSlate extends React.Component {
   };
 
   _handleTagDelete = async (tag) => {
-    const response = await Actions.deleteTag({ tag });
-
+    const response = await UserBehaviors.deleteTag(tag);
     if (response.success) {
-      this.setState({ suggestions: response.tags });
+      this.props.onUpdateViewer({ tags: response.tags });
+      this.updateSuggestions();
     }
 
     if (Events.hasError(response)) {

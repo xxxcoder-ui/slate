@@ -76,9 +76,12 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.tags = this.state.tags;
 
         this.props.onUpdateViewer({ slates, tags: this.state.suggestions });
+
         break;
       }
     }
+
+    this.updateSuggestions();
 
     this.props.onCancel();
     const response = await Actions.updateSlate({
@@ -128,10 +131,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   _handleTagDelete = async (tag) => {
-    const response = await Actions.deleteTag({ tag });
-
+    const response = await UserBehaviors.deleteTag(tag);
     if (response.success) {
-      this.setState({ suggestions: response.tags });
+      this.props.onUpdateViewer({ tags: response.tags });
+      this.updateSuggestions();
     }
 
     if (Events.hasError(response)) {
