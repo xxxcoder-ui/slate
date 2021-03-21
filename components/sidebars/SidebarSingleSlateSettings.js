@@ -11,8 +11,6 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
 
-import isEqual from "lodash/isEqual";
-
 const SIZE_LIMIT = 1000000;
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
