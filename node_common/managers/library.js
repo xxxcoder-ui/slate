@@ -134,3 +134,19 @@ export const editItem = ({ user, update }) => {
   }
   return user.data;
 };
+
+export const removeTagFromItems = ({ user, tag }) => {
+  const { library } = user.data;
+  for (let i = 0; i < library[0].children.length; i++) {
+    let item = library[0].children[i];
+
+    if (!item.tags) continue;
+
+    let tagIndex = item.tags.indexOf(tag);
+    if (tagIndex > -1) {
+      item.tags.splice(tagIndex, 1);
+    }
+  }
+
+  return user.data;
+};

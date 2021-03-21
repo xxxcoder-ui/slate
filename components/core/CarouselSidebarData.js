@@ -498,8 +498,8 @@ class CarouselSidebarData extends React.Component {
     const response = UserBehaviors.deleteTag(tag);
 
     if (response.success) {
-      /* this.setState({ suggestions: response.tags }); */
       this.props.onUpdateViewer({ tags: response.tags });
+      this.updateSuggestions();
     }
 
     if (Events.hasError(response)) {

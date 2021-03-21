@@ -2,6 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as LibraryManager from "~/node_common/managers/library";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -48,7 +49,7 @@ export default async (req, res) => {
     let tags = slate.data.tags;
     let tagIndex = tags.indexOf(tagToDelete);
 
-    if (tagIndex && tagIndex > -1) {
+    if (tagIndex > -1) {
       tags.splice(tagIndex, 1);
     }
 
@@ -67,15 +68,15 @@ export default async (req, res) => {
     SearchManager.updateSlate(newSlate, "EDIT");
   }
 
-  // NOTE(daniel): Remove tag from object
-  for (const item of user.data.library[0].children) {
-    if (!item.tags) continue;
+  // NOTE(daniel): Remove tag from all data objects
+  let newUserData = LibraryManager.removeTagFromItems({ user, tag: tagToDelete });
+  let updateResponse = await Data.updateUserById({
+    id: user.id,
+    data: newUserData,
+  });
 
-    let tags = item.tags;
-    let tagIndex = tags.indexOf(tagToDelete);
-    if (tagIndex > -1) {
-      tags.splice(tagIndex, 1);
-    }
+  if (!updateResponse || updateResponse.error) {
+    return res.status(500).send({ decorator: "SERVER_EDIT_DATA_NOT_UPDATED", error: true });
   }
 
   let tags;
@@ -84,7 +85,6 @@ export default async (req, res) => {
     ViewerManager.hydratePartialSlates(slates, id);
 
     tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
-    console.log(tags);
   }
 
   return res.status(200).send({ decorator: "SERVER_DELETE_TAGS", success: true, tags });
