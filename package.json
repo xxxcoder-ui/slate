@@ -57,6 +57,7 @@
     "morgan": "^1.10.0",
     "next": "^10.0.7",
     "pg": "^8.5.1",
+    "prism-react-renderer": "^1.2.0",
     "prismjs": "^1.23.0",
     "react": "^17.0.1",
     "react-blurhash": "github:zeroxme/react-blurhash#master",

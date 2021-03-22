@@ -11,6 +11,9 @@ import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import CodeBlock from "~/components/system/CodeBlock";
 
+import APIDocsGet from "~/components/api/get";
+import APIDocsGetSlate from "~/components/api/get-slate.js";
+
 const STYLES_KEY = css`
   display: flex;
   align-items: center;
@@ -56,6 +59,76 @@ const STYLES_CIRCLE_BUTTON = css`
   :hover {
     background: ${Constants.system.brand};
     color: ${Constants.system.white};
+  }
+`;
+
+//NOTE(toast): overrides ScenePage from AppLayout
+const STYLES_PAGE = css`
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto 0 auto;
+  padding: 88px 24px 128px 0px;
+
+  @media (max-width: 568px) {
+    padding: 88px 24px 128px 24px;
+  }
+`;
+
+const STYLES_SIDEBAR = css`
+  padding: 132px 24px 128px 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 224px;
+  background-color: ${Constants.system.foreground};
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${Constants.system.gray};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${Constants.system.darkGray};
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${Constants.system.brand};
+  }
+
+  @media (max-width: 568px) {
+    width: 100%;
+    position: relative;
+    overflow-y: auto;
+  }
+`;
+
+const STYLES_LABEL = css`
+  font-family: ${Constants.font.semiBold};
+  display: block;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: ${Constants.system.darkGray};
+  letter-spacing: 0.6px;
+  margin-top: 32px;
+`;
+
+const STYLES_LINK = css`
+  font-family: ${Constants.font.semiBold};
+  color: ${Constants.system.pitchBlack};
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 400;
+  display: block;
+  margin-top: 8px;
+
+  :hover {
+    color: ${Constants.system.brand};
+    cursor: pointer;
   }
 `;
 
@@ -221,6 +294,8 @@ console.log(json);`;
 export default class SceneSettingsDeveloper extends React.Component {
   state = {
     loading: false,
+    language: "language-javascript",
+    docs: "introduction",
   };
 
   _handleSave = async (e) => {
@@ -248,6 +323,42 @@ export default class SceneSettingsDeveloper extends React.Component {
     this.setState({ loading: false });
   };
 
+  //handles language changes
+  _handleChangeLanguage = (newLanguage) => {
+    this.setState({ language: newLanguage });
+  };
+
+  //handles doc changes
+  _changeDoc = (newExample) => {
+    this.setState({ example: newExample }, this._getCurrentExample);
+  };
+
+  _getCurrentDocs = () => {
+    let example = this.state.example;
+    if (example === "INTRO") {
+      console.log("intro");
+      console.log(this.props.viewer.keys);
+      console.log(this.props.viewer.slates);
+      return;
+    }
+    if (example === "GET") {
+      console.log("get");
+      return;
+    }
+    if (example === "GET_SLATE") {
+      console.log("get slate");
+      return;
+    }
+    if (example === "UPDATE_SLATE") {
+      console.log("update slate");
+      return;
+    }
+    if (example === "UPLOAD") {
+      console.log("upload slate");
+      return;
+    }
+  };
+
   async componentDidMount() {
     if (!this.props.viewer.keys) {
       return;
@@ -269,10 +380,12 @@ export default class SceneSettingsDeveloper extends React.Component {
   }
 
   render() {
-    let key;
+    let APIKey;
     if (this.props.viewer.keys) {
       if (this.props.viewer.keys.length) {
-        key = this.props.viewer.keys[0].key;
+        APIKey = this.props.viewer.keys[0].key;
+      } else {
+        APIKey = "YOUR-API-KEY-HERE";
       }
     }
 
@@ -284,7 +397,27 @@ export default class SceneSettingsDeveloper extends React.Component {
     }
 
     return (
-      <ScenePage>
+      <ScenePage css={STYLES_PAGE}>
+        <div css={STYLES_SIDEBAR}>
+          <span css={STYLES_LINK} onClick={() => this._changeExample("INTRO")}>
+            Introduction
+          </span>
+          <span css={STYLES_LABEL}>reference</span>
+          <div>
+            <span css={STYLES_LINK} onClick={() => this._changeExample("GET")}>
+              Get all slates
+            </span>
+            <span css={STYLES_LINK} onClick={() => this._changeExample("GET_SLATE")}>
+              Get slate by ID
+            </span>
+            <span css={STYLES_LINK} onClick={() => this._changeExample("UPDATE_SLATE")}>
+              Upload to slate by ID
+            </span>
+            <span css={STYLES_LINK} onClick={() => this._changeExample("UPLOAD")}>
+              Update slate
+            </span>
+          </div>
+        </div>
         <ScenePageHeader title="Developer API">
           You can use your API key to get slates and add images to slates. You can have a total of
           10 keys at any given time.
@@ -302,51 +435,28 @@ export default class SceneSettingsDeveloper extends React.Component {
           </System.ButtonPrimary>
         </div>
 
-        {key ? (
-          <React.Fragment>
-            <System.DescriptionGroup
-              style={{ marginTop: 48 }}
-              label="Get all slates"
-              description="This API request will return all of your public slates."
-            />
-            <CodeBlock children={EXAMPLE_GET(key)} style={{ maxWidth: "768px" }} />
-            <br />
-            <br />
-            <System.DescriptionGroup
-              style={{ marginTop: 48 }}
-              label="Get slate by ID"
-              description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate."
-            />
-            <CodeBlock children={EXAMPLE_GET_SLATE(key, slateId)} style={{ maxWidth: "768px" }} />
-            <System.DescriptionGroup
-              style={{ marginTop: 48, marginBottom: 16 }}
-              label="Get slate by ID: Response"
-              description="This is the shape of the response. Save it locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
-            />
-            <CodeBlock
-              children={EXAMPLE_GET_SLATE_RESPONSE(key, slateId)}
-              style={{ maxWidth: "768px" }}
-            />
-            <System.DescriptionGroup
-              style={{ marginTop: 48 }}
-              label="Upload data to slate by ID"
-              description="This API endpoint will add a JavaScript file object to your slate."
-            />
-            <CodeBlock
-              children={EXAMPLE_UPLOAD_TO_SLATE(key, slateId)}
-              style={{ maxWidth: "768px" }}
-            />
-            <System.DescriptionGroup
-              style={{ marginTop: 48 }}
-              label="Update slate"
-              description="This API endpoint will allow you to update a slate by sending your current locally modified version. This API endpoint allows for full customization so be careful."
-            />
-            <CodeBlock
-              children={EXAMPLE_UPDATE_SLATE(key, slateId)}
-              style={{ maxWidth: "768px" }}
-            />
-          </React.Fragment>
-        ) : null}
+        <React.Fragment>
+          <APIDocsGet language="javascript" APIKey={APIKey} />
+          <APIDocsGetSlate language="javascript" APIKey={APIKey} slateId={slateId} />
+          <System.DescriptionGroup
+            style={{ marginTop: 48 }}
+            label="Upload data to slate by ID"
+            description="This API endpoint will add a JavaScript file object to your slate."
+          />
+          <CodeBlock
+            children={EXAMPLE_UPLOAD_TO_SLATE(APIKey, slateId)}
+            style={{ maxWidth: "768px" }}
+          />
+          <System.DescriptionGroup
+            style={{ marginTop: 48 }}
+            label="Update slate"
+            description="This API endpoint will allow you to update a slate by sending your current locally modified version. This API endpoint allows for full customization so be careful."
+          />
+          <CodeBlock
+            children={EXAMPLE_UPDATE_SLATE(APIKey, slateId)}
+            style={{ maxWidth: "768px" }}
+          />
+        </React.Fragment>
       </ScenePage>
     );
   }
