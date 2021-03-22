@@ -9,14 +9,14 @@ import { css } from "@emotion/react";
 
 const customTheme = {
   plain: {
-    backgroundColor: "#2a2734",
+    backgroundColor: "#1f212a",
     color: "#6f7278",
   },
   styles: [
     {
       types: ["comment", "prolog", "doctype", "cdata"],
       style: {
-        color: "#6c6783",
+        color: "#6c6783eeebff",
       },
     },
     {
@@ -46,11 +46,11 @@ const customTheme = {
     {
       types: ["property", "function"],
       style: {
-        color: "#9a86fd",
+        color: "#eeebff",
       },
     },
     {
-      types: ["tag-id", "selector", "atrule-id"],
+      types: ["tag-id", "selector", "atrul-id"],
       style: {
         color: "#eeebff",
       },
@@ -63,23 +63,30 @@ const customTheme = {
     },
     {
       types: [
-        "boolean",
-        "string",
         "entity",
-        "url",
         "attr-value",
         "keyword",
         "control",
         "directive",
         "unit",
         "statement",
-        "regex",
         "at-rule",
         "placeholder",
         "variable",
       ],
       style: {
         color: "#99ceff",
+      },
+    },
+    {
+      types: [
+        "boolean",
+        "string",
+        "url",
+        "regex",
+      ],
+      style: {
+        color: "#b5ffff",
       },
     },
     {
@@ -155,7 +162,7 @@ const STYLES_PRE = css`
 
 const STYLES_CODE = css`
   box-sizing: border-box;
-  background-color: #1f212a;
+  user-select: text;
   font-family: ${Constants.font.code};
   color: ${Constants.system.gray};
   width: 100%;
@@ -163,6 +170,7 @@ const STYLES_CODE = css`
 `;
 
 class CodeBlock extends React.Component {
+  //defaults to js
   language = this.props.language ? this.props.language : "javascript";
   render() {
     return (
