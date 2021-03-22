@@ -1,11 +1,126 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import Highlight, { defaultProps } from "prism-react-renderer";
 
 import { css } from "@emotion/react";
 
 // TODO:
 // Refactor to https://github.com/FormidableLabs/prism-react-renderer
-import Prism from "prismjs";
+
+const customTheme = {
+  plain: {
+    backgroundColor: "#2a2734",
+    color: "#6f7278",
+  },
+  styles: [
+    {
+      types: ["comment", "prolog", "doctype", "cdata"],
+      style: {
+        color: "#6c6783",
+      },
+    },
+    {
+      types: ["punctuation"],
+      style: {
+        color: "#adadad",
+      },
+    },
+    {
+      types: ["namespace"],
+      style: {
+        opacity: 0.7,
+      },
+    },
+    {
+      types: ["tag", "operator", "number"],
+      style: {
+        color: "#e09142",
+      },
+    },
+    {
+      types: ["operator"],
+      style: {
+        color: "#adadad",
+      },
+    },
+    {
+      types: ["property", "function"],
+      style: {
+        color: "#eeebff",
+      },
+    },
+    {
+      types: ["tag-id", "selector", "atrul-id"],
+      style: {
+        color: "#eeebff",
+      },
+    },
+    {
+      types: ["attr-name"],
+      style: {
+        color: "#c4b9fe",
+      },
+    },
+    {
+      types: [
+        "entity",
+        "attr-value",
+        "keyword",
+        "control",
+        "directive",
+        "unit",
+        "statement",
+        "at-rule",
+        "placeholder",
+        "variable",
+      ],
+      style: {
+        color: "#99ceff",
+      },
+    },
+    {
+      types: [
+        "boolean",
+        "string",
+        "url",
+        "regex",
+      ],
+      style: {
+        color: "#b5ffff",
+      },
+    },
+    {
+      types: ["deleted"],
+      style: {
+        textDecorationLine: "line-through",
+      },
+    },
+    {
+      types: ["inserted"],
+      style: {
+        textDecorationLine: "underline",
+      },
+    },
+    {
+      types: ["italic"],
+      style: {
+        fontStyle: "italic",
+      },
+    },
+    {
+      types: ["important", "bold"],
+      style: {
+        fontWeight: "bold",
+      },
+    },
+    {
+      types: ["important"],
+      style: {
+        color: "#c4b9fe",
+      },
+    },
+  ],
+};
 
 const STYLES_CODE_BLOCK = css`
   box-sizing: border-box;
@@ -47,40 +162,42 @@ const STYLES_PRE = css`
 
 const STYLES_CODE = css`
   box-sizing: border-box;
-  background-color: ${Constants.system.pitchBlack};
+  background-color: #1f212a;
+  user-select: text;
   font-family: ${Constants.font.code};
   color: ${Constants.system.gray};
   width: 100%;
   padding-left: 16px;
 `;
 
-// TODO:
-// Refactor to https://github.com/FormidableLabs/prism-react-renderer
 class CodeBlock extends React.Component {
-  componentDidMount() {
-    Prism.highlightAll();
-  }
-
+  language = this.props.language ? this.props.language : "javascript";
   render() {
-    const codeBlockContent = this.props.children + "";
-    const codeBlockToken = codeBlockContent.split("\n");
-    const textMap = codeBlockToken;
-
     return (
-      <div css={STYLES_CODE_BLOCK} className="language-javascript" style={this.props.style}>
-        {textMap.map((element, index) => {
-          return (
-            <div css={STYLES_LINE} key={`${element}-${index}`}>
-              <div css={STYLES_PRE}>{index}</div>
-              <pre css={STYLES_CODE}>
-                <code>{element}</code>
-              </pre>
-            </div>
-          );
-        })}
+      <div css={STYLES_CODE_BLOCK} style={this.props.style}>
+        <Highlight
+          {...defaultProps}
+          theme={customTheme}
+          code={this.props.children}
+          language={this.language}
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <pre className={className} css={STYLES_PRE}>
+              {tokens.map((line, i) => (
+                <div key={i} {...getLineProps({ line, key: i })}>
+                  <span>{i + 1}</span>
+                  <span css={STYLES_CODE}>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token, key })} />
+                    ))}
+                  </span>
+                </div>
+              ))}
+            </pre>
+          )}
+        </Highlight>
       </div>
     );
   }
 }
-
 export default CodeBlock;
