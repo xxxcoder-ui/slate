@@ -4,7 +4,7 @@ import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 
 import UnityFrame from "~/components/core/UnityFrame";
-import FontFrame from "~/components/core/FontFrame";
+import FontFrame from "~/components/core/FontFrame/index.js";
 import MarkdownFrame from "~/components/core/MarkdownFrame";
 import { endsWithAny } from "~/common/utilities";
 
@@ -161,6 +161,9 @@ export default class SlateMediaObject extends React.Component {
           name={this.props.data.file || this.props.data.name}
           cid={this.props.data.cid}
           url={url}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         />
       );
     }
