@@ -291,6 +291,7 @@ export default class SceneSettingsDeveloper extends React.Component {
 
   render() {
     let APIKey = "YOUR-API-KEY-HERE";
+    let lang = this.state.language;
     if (this.props.viewer.keys) {
       if (this.props.viewer.keys.length) {
         APIKey = this.props.viewer.keys[0].key;
@@ -306,7 +307,8 @@ export default class SceneSettingsDeveloper extends React.Component {
     let docsPage = this._getCurrentDocs({ APIKey, slateId });
 
     return (
-      <ScenePage css={STYLES_PAGE}>
+      <ScenePage>
+        {/*
         <div css={STYLES_SIDEBAR}>
           <span css={STYLES_LINK} onClick={() => this._changeDocs("INTRO")}>
             Introduction
@@ -346,6 +348,7 @@ export default class SceneSettingsDeveloper extends React.Component {
           </div>
           <span css={STYLES_LABEL}>guides</span>
         </div>
+        */}
         <ScenePageHeader title="Developer Documentation">
           You can use your API key to get slates and add images to slates. You can have a total of
           10 keys at any given time.
@@ -367,6 +370,7 @@ export default class SceneSettingsDeveloper extends React.Component {
             </ScenePageHeader>
           ) : null}
         </div>
+    {/*
         <div css={STYLES_LANGUAGE_CONTAINER}>
           <div
             css={STYLES_LANGUAGE_TILE}
@@ -385,7 +389,13 @@ export default class SceneSettingsDeveloper extends React.Component {
             <span>Python3</span>
           </div>
         </div>
-        {docsPage}
+        */}
+        <React.Fragment>
+          <APIDocsGet language={lang} APIKey={APIKey} />
+          <APIDocsGetSlate language={lang} APIKey={APIKey} slateId={slateId} />
+          <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />
+          <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
+        </React.Fragment>
       </ScenePage>
     );
   }
