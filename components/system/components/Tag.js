@@ -113,9 +113,14 @@ const STYLES_DROPDOWN_ITEM_DARK = css`
     border-radius: 50px;
 
     span {
-      padding: 5px;
-      display: flex;
-      align-items: center;
+      padding: 2.5px 2px;
+      line-height: 1;
+    }
+  }
+
+  div.false {
+    span {
+      line-height: 1;
     }
   }
 `;
