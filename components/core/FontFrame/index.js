@@ -1,9 +1,10 @@
 import * as React from "react";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 
-import Controls from "./Controls";
 import { useFont, useFontControls } from "./hooks";
+import { FixedControls, Controls } from "./Controls";
 
 const Glyphs = ({ dark }) => (
   <div>
@@ -14,88 +15,114 @@ const Glyphs = ({ dark }) => (
   </div>
 );
 
-const GET_STYLES_CONTAINER = (dark) => (theme) => css`
+const GET_STYLES_CONTAINER = (theme) => css`
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: ${dark ? theme.system.pitchBlack : theme.system.white};
-  padding: 14px 32px 28px;
+  background-color: ${theme.fontPreviewDarkMode ? theme.system.pitchBlack : theme.system.white};
+  padding-top: 14px;
 `;
 
 export default function FontFrame({ cid, url, ...props }) {
   const { isFontLoading, fontName } = useFont({ url, name: cid }, [cid]);
-  const [currentState, { setLightMode, setDarkMode, toggleSettings }] = useFontControls();
+  const [
+    currentState,
+    {
+      setLightMode,
+      setDarkMode,
+      toggleSettings,
+      updateFontSize,
+      updateLineHeight,
+      updateTracking,
+      updateColumn,
+      updateTextAlign,
+      updateVerticalAlign,
+    },
+  ] = useFontControls();
 
   return (
-    <div
-      css={GET_STYLES_CONTAINER(currentState.context.darkmode)}
-      style={{ fontFamily: fontName }}
-      {...props}
-    >
-      <Controls
+    <div css={GET_STYLES_CONTAINER} style={{ fontFamily: fontName }} {...props}>
+      <FixedControls
         onDarkMode={setDarkMode}
         onLightMode={setLightMode}
         onToggleSettings={toggleSettings}
         isDarkMode={currentState.context.darkmode}
         isSettingsVisible={currentState.context.showSettings}
       />
-      {isFontLoading && (
-        <div
-          css={css({
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.4)",
-          })}
-        >
-          <p>loading...</p>
-        </div>
-      )}
-      <Sentence
-        content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy"
-        valign={currentState.context.settings.valign}
-        textAlign={currentState.context.settings.textAlign}
-        fontSize={currentState.context.settings.fontSize}
-        lineHeight={currentState.context.settings.lineHeight}
-        letterSpacing={currentState.context.settings.tracking}
+      <div style={{ position: "relative", flexGrow: 1 }}>
+        {isFontLoading && (
+          <div
+            css={css({
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.4)",
+            })}
+          >
+            <p>loading...</p>
+          </div>
+        )}
+        <Sentence
+          content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy"
+          valign={currentState.context.settings.valign}
+          textAlign={currentState.context.settings.textAlign}
+          fontSize={currentState.context.settings.fontSize}
+          lineHeight={currentState.context.settings.lineHeight}
+          tracking={currentState.context.settings.tracking}
+        />
+      </div>
+      <Controls
         dark={currentState.context.darkmode}
+        settings={currentState.context.settings}
+        updateFontSize={updateFontSize}
+        updateLineHeight={updateLineHeight}
+        updateTracking={updateTracking}
+        updateColumn={updateColumn}
+        updateTextAlign={updateTextAlign}
+        updateVerticalAlign={updateVerticalAlign}
       />
     </div>
   );
 }
 
-const Sentence = ({ content, valign, textAlign, fontSize, lineHeight, tracking, dark }) => {
+const STYLES_SENTENCE = (theme) => css`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 12px;
+  overflow-y: scroll;
+  color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.pitchBlack};
+  padding: 0px 32px 28px;
+  &:focus {
+    outline: none;
+  }
+`;
+const Sentence = ({ content, valign, textAlign, fontSize, lineHeight, tracking }) => {
   const [value, setValue] = React.useState(`<p>${content}</p>`);
+  const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
   return (
     <div
       contentEditable="true"
       suppressContentEditableWarning={true}
-      dangerouslySetInnerHTML={{ __html: value }}
-      onInput={(e) => setValue(e.target.innerText)}
-      css={(theme) =>
-        css({
-          display: "flex",
-          flexGrow: 1,
-          flexDirection: "column",
-          width: "100%",
-          marginTop: "12px",
-          overflowY: "scroll",
-          color: dark ? theme.system.white : theme.system.pitchBlack,
-          justifyContent: valign,
-          textAlign,
-          fontSize,
-          lineHeight,
-          letterSpacing: tracking,
-        })
-      }
+      style={{
+        fontSize: `${fontSize}px`,
+        lineHeight: `${lineHeight}%`,
+        letterSpacing: `${tracking}em`,
+        justifyContent: mapAlignToFlex[valign],
+        textAlign,
+      }}
+      css={STYLES_SENTENCE}
       onKeyDown={(e) => {
         e.stopPropagation();
       }}
-    ></div>
+    >
+      {content}
+    </div>
   );
 };

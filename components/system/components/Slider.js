@@ -17,9 +17,8 @@ const STYLES_CONTAINER = css`
 
 const STYLES_BAR_CONTAINER = css`
   height: 24px;
-  width: calc(100% - 12px);
+  width: calc(100%);
   position: absolute;
-  left: 12px;
 `;
 
 const STYLES_SLIDER_BAR = css`
@@ -63,7 +62,7 @@ const STYLES_SLIDER_HANDLE = css`
   background-color: ${Constants.system.brand};
   cursor: pointer;
   position: relative;
-  bottom: 16px;
+  bottom: 18px;
   right: 12px;
 
   :hover {
