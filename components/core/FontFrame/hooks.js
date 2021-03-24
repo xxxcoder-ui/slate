@@ -38,7 +38,7 @@ const initialState = {
       tracking: 0,
     },
   },
-  view: "paragraph",
+  view: "sentence",
 };
 
 const reducer = (state, action) => {
@@ -68,6 +68,8 @@ const reducer = (state, action) => {
       return updateSettingsField("textAlign", action.value);
     case "UPDATE_VERTICAL_ALIGN":
       return updateSettingsField("valign", action.value);
+    case "UPDATE_VIEW":
+      return { ...state, view: action.value };
     default:
       return state;
   }
@@ -80,16 +82,20 @@ export const useFontControls = () => {
       name: "set-slate-theme",
       detail: { fontPreviewDarkMode: state },
     });
-  const handlers = React.useMemo(() => ({
-    setDarkMode: () => handleDarkMode(true),
-    setLightMode: () => handleDarkMode(false),
-    toggleSettings: () => send({ type: "TOGGLE_SETTINGS_VISIBILITY" }),
-    updateFontSize: (v) => send({ type: "UPDATE_FONT_SIZE", value: v }),
-    updateLineHeight: (v) => send({ type: "UPDATE_LINE_HEIGHT", value: v }),
-    updateTracking: (v) => send({ type: "UPDATE_TRACKING", value: v }),
-    updateColumn: (v) => send({ type: "UPDATE_COLUMN", value: v }),
-    updateTextAlign: (v) => send({ type: "UPDATE_TEXT_ALIGN", value: v }),
-    updateVerticalAlign: (v) => send({ type: "UPDATE_VERTICAL_ALIGN", value: v }),
-  }));
+  const handlers = React.useMemo(
+    () => ({
+      setDarkMode: () => handleDarkMode(true),
+      setLightMode: () => handleDarkMode(false),
+      toggleSettings: () => send({ type: "TOGGLE_SETTINGS_VISIBILITY" }),
+      updateFontSize: (v) => send({ type: "UPDATE_FONT_SIZE", value: v }),
+      updateLineHeight: (v) => send({ type: "UPDATE_LINE_HEIGHT", value: v }),
+      updateTracking: (v) => send({ type: "UPDATE_TRACKING", value: v }),
+      updateColumn: (v) => send({ type: "UPDATE_COLUMN", value: v }),
+      updateTextAlign: (v) => send({ type: "UPDATE_TEXT_ALIGN", value: v }),
+      updateVerticalAlign: (v) => send({ type: "UPDATE_VERTICAL_ALIGN", value: v }),
+      updateView: (v) => send({ type: "UPDATE_VIEW", value: v }),
+    }),
+    []
+  );
   return [current, handlers];
 };

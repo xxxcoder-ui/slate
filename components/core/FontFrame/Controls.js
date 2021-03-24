@@ -108,13 +108,17 @@ const STYLES_CONTROLLER_WRAPPER = (theme) =>
   `;
 
 const STYLES_CONTENT_SELECT = (theme) => css`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   border: 1px solid ${theme.fontPreviewDarkMode ? Constants.system.gray80 : Constants.system.gray20};
   padding: 8px 12px;
   border-radius: 4px;
 `;
 export const Controls = ({
+  view,
   settings,
+  updateView,
   updateFontSize,
   updateLineHeight,
   updateTracking,
@@ -134,8 +138,12 @@ export const Controls = ({
         <p css={STYLES_LABEL}>Content</p>
         <Select
           inputStyle={STYLES_CONTENT_SELECT}
-          options={[{ value: "custom", name: "Custom" }]}
-          value={"Custom"}
+          options={[
+            { value: "sentence", name: "Sentence" },
+            { value: "paragraph", name: "Paragraph" },
+          ]}
+          value={view}
+          onChange={(e) => updateView(e.target.value)}
         />
       </div>
       <AlignmentControl
@@ -313,6 +321,7 @@ const Controller = ({ value, options, onChange, selectSuffix = "", label, min, m
         />
         <div style={{ width: "100%" }}>
           <Slider
+            discrete
             min={min}
             max={max}
             step={step}

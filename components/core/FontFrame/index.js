@@ -30,6 +30,7 @@ export default function FontFrame({ cid, url, ...props }) {
   const [
     currentState,
     {
+      updateView,
       setLightMode,
       setDarkMode,
       toggleSettings,
@@ -51,7 +52,7 @@ export default function FontFrame({ cid, url, ...props }) {
         isDarkMode={currentState.context.darkmode}
         isSettingsVisible={currentState.context.showSettings}
       />
-      <div style={{ position: "relative", flexGrow: 1 }}>
+      <div style={{ position: "relative", flexGrow: 1, overflowY: "scroll" }}>
         {isFontLoading && (
           <div
             css={css({
@@ -67,36 +68,51 @@ export default function FontFrame({ cid, url, ...props }) {
             <p>loading...</p>
           </div>
         )}
-        <Sentence
-          content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy"
-          valign={currentState.context.settings.valign}
-          textAlign={currentState.context.settings.textAlign}
-          fontSize={currentState.context.settings.fontSize}
-          lineHeight={currentState.context.settings.lineHeight}
-          tracking={currentState.context.settings.tracking}
-        />
+        {currentState.view === "sentence" && (
+          <Sentence
+            content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy"
+            valign={currentState.context.settings.valign}
+            textAlign={currentState.context.settings.textAlign}
+            fontSize={currentState.context.settings.fontSize}
+            lineHeight={currentState.context.settings.lineHeight}
+            tracking={currentState.context.settings.tracking}
+          />
+        )}
+        {currentState.view === "paragraph" && (
+          <Paragraph
+            content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I think I'm just happy My heart is broke but I have some glue Help me inhale and mend it with you We'll float around and hang out on clouds Then we'll come down and have a hangover We'll have a hangover We'll have a hangover We'll have a hangover Skin the sun, fall asleep
+            The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I think I'm just happy My heart is broke but I have some glue Help me inhale and mend it with you We'll float around and hang out on clouds Then we'll come down and have a hangover We'll have a hangover We'll have a hangover We'll have a hangover Skin the sun, fall asleep
+            The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I think I'm just happy My heart is broke but I have some glue Help me inhale and mend it with you We'll float around and hang out on clouds Then we'll come down and have a hangover We'll have a hangover We'll have a hangover We'll have a hangover Skin the sun, fall asleep
+            "
+            valign={currentState.context.settings.valign}
+            textAlign={currentState.context.settings.textAlign}
+            fontSize={currentState.context.settings.fontSize}
+            lineHeight={currentState.context.settings.lineHeight}
+            tracking={currentState.context.settings.tracking}
+            column={currentState.context.settings.column}
+          />
+        )}
       </div>
-      <Controls
-        dark={currentState.context.darkmode}
-        settings={currentState.context.settings}
-        updateFontSize={updateFontSize}
-        updateLineHeight={updateLineHeight}
-        updateTracking={updateTracking}
-        updateColumn={updateColumn}
-        updateTextAlign={updateTextAlign}
-        updateVerticalAlign={updateVerticalAlign}
-      />
+      {currentState.context.showSettings && (
+        <Controls
+          view={currentState.view}
+          updateView={updateView}
+          settings={currentState.context.settings}
+          updateFontSize={updateFontSize}
+          updateLineHeight={updateLineHeight}
+          updateTracking={updateTracking}
+          updateColumn={updateColumn}
+          updateTextAlign={updateTextAlign}
+          updateVerticalAlign={updateVerticalAlign}
+        />
+      )}
     </div>
   );
 }
 
 const STYLES_SENTENCE = (theme) => css`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
   width: 100%;
   margin-top: 12px;
-  overflow-y: scroll;
   color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.pitchBlack};
   padding: 0px 32px 28px;
   &:focus {
@@ -107,22 +123,56 @@ const Sentence = ({ content, valign, textAlign, fontSize, lineHeight, tracking }
   const [value, setValue] = React.useState(`<p>${content}</p>`);
   const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
   return (
-    <div
-      contentEditable="true"
-      suppressContentEditableWarning={true}
-      style={{
-        fontSize: `${fontSize}px`,
-        lineHeight: `${lineHeight}%`,
-        letterSpacing: `${tracking}em`,
-        justifyContent: mapAlignToFlex[valign],
-        textAlign,
-      }}
-      css={STYLES_SENTENCE}
-      onKeyDown={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      {content}
+    <div style={{ display: "flex", alignItems: mapAlignToFlex[valign], height: "100%" }}>
+      <div
+        contentEditable="true"
+        suppressContentEditableWarning={true}
+        style={{
+          fontSize: `${fontSize}px`,
+          lineHeight: `${lineHeight}%`,
+          letterSpacing: `${tracking}em`,
+          textAlign,
+        }}
+        css={STYLES_SENTENCE}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {content}
+      </div>
+    </div>
+  );
+};
+
+const Paragraph = ({ content, valign, textAlign, fontSize, lineHeight, tracking, column }) => {
+  const [value, setValue] = React.useState(`<p>${content}</p>`);
+  const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
+  return (
+    <div style={{ display: "flex", alignItems: mapAlignToFlex[valign], height: "100%" }}>
+      <div
+        contentEditable="true"
+        suppressContentEditableWarning={true}
+        style={{
+          fontSize: `${fontSize}px`,
+          lineHeight: `${lineHeight}%`,
+          letterSpacing: `${tracking}em`,
+          textAlign,
+          whiteSpace: "pre-wrap",
+        }}
+        css={[
+          STYLES_SENTENCE,
+          css`
+            width: 100%;
+            column-count: ${column};
+            column-gap: 24px;
+          `,
+        ]}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {content}
+      </div>
     </div>
   );
 };

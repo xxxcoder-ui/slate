@@ -35,10 +35,10 @@ export default function Select({
           dark
           css={css`
             font-size: 14px;
+            white-space: pre;
           `}
         >
-          {value}
-          {placeholderSuffix}
+          {options[value]?.name || `${value} ${placeholderSuffix}`}
         </P>
         <SVG.ChevronDown height="16px" display="block" />
       </div>
