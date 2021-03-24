@@ -13,6 +13,8 @@ import CodeBlock from "~/components/system/CodeBlock";
 
 import APIDocsGet from "~/components/api/get";
 import APIDocsGetSlate from "~/components/api/get-slate.js";
+import APIDocsUpdateSlate from "~/components/api/update-slate.js";
+import APIDocsUploadToSlate from "~/components/api/upload.js";
 
 const STYLES_KEY = css`
   display: flex;
@@ -62,6 +64,30 @@ const STYLES_CIRCLE_BUTTON = css`
   }
 `;
 
+const STYLES_LANGUAGE_CONTAINER = css`
+  display: flex;
+  width: 240px;
+  flex-direction: row;
+  position: relative;
+  justify-self: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+`;
+
+const STYLES_LANGUAGE_TILE = css`
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  width: 100px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: flex-end;
+  user-select: pointer;
+  border: 2px solid #1a1a1a;
+  cursor: pointer;
+`;
+
 //NOTE(toast): overrides ScenePage from AppLayout
 const STYLES_PAGE = css`
   max-width: 960px;
@@ -75,12 +101,12 @@ const STYLES_PAGE = css`
 `;
 
 const STYLES_SIDEBAR = css`
-  padding: 132px 24px 128px 24px;
+  padding: 160px 24px 128px 24px;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 224px;
+  width: 236px;
   background-color: ${Constants.system.foreground};
   overflow-y: scroll;
 
@@ -110,7 +136,7 @@ const STYLES_SIDEBAR = css`
 const STYLES_LABEL = css`
   font-family: ${Constants.font.semiBold};
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: uppercase;
   color: ${Constants.system.darkGray};
   letter-spacing: 0.6px;
@@ -120,7 +146,7 @@ const STYLES_LABEL = css`
 const STYLES_LINK = css`
   font-family: ${Constants.font.semiBold};
   color: ${Constants.system.pitchBlack};
-  font-size: 14px;
+  font-size: 16px;
   text-decoration: none;
   font-weight: 400;
   display: block;
@@ -176,126 +202,11 @@ class Key extends React.Component {
   }
 }
 
-const EXAMPLE_UPDATE_SLATE = (key, slateId) => {
-  return `const slateAPIResponseData = ${EXAMPLE_GET_SLATE_RESPONSE(key, slateId)};
-
-// NOTE(jim)
-// Make any modifications you want!
-// Be careful because if you modify too many things, your Slate may not work
-// With https://slate.host
-const slate = slateAPIResponseData.data;
-slate.data.objects[0].title = "Julie Was Here."
-
-const response = await fetch('https://slate.host/api/v1/update-slate', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    // NOTE: your API key
-    Authorization: 'Basic ${key}',
-  },
-  body: JSON.stringify({ data: slate })
-});
-
-const json = await response.json();
-console.log(json);`;
-};
-
-const EXAMPLE_GET_SLATE = (
-  key,
-  slateId
-) => `const response = await fetch('https://slate.host/api/v1/get-slate', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    // NOTE: your API key
-    Authorization: 'Basic ${key}',
-  },
-  body: JSON.stringify({ data: {
-    // NOTE: your slate ID
-    id: '${slateId}'
-  }})
-});
-
-const json = await response.json();
-console.log(json);`;
-
-const EXAMPLE_GET = (key) => `const response = await fetch('https://slate.host/api/v1/get', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    // NOTE: your API key
-    Authorization: 'Basic ${key}',
-  },
-  body: JSON.stringify({ data: {
-    // NOTE: optional, if you want your private slates too.
-    private: false
-  }})
-});
-
-const json = await response.json();
-console.log(json);`;
-
-const EXAMPLE_GET_SLATE_RESPONSE = (key, slateId) => `{
-  data: {
-    id: '${slateId}',
-    updated_at: '2020-07-27T09:04:53.007Z',
-    created_at: '2020-07-27T09:04:53.007Z',
-    published_at: '2020-07-27T09:04:53.007Z',
-    slatename: 'slatename',
-    // NOTE(jim)
-    // This 'data' property is JSONB in our postgres database
-    // so every child is customizable.
-    data: {
-      name: "slatename",
-      public: true,
-      objects: [
-        {
-          id: "data-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-          name: "Name Example",
-          ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-          title: "The Final Storage System",
-          body: "You can store 4GB on Slate",
-          author: "Jason Leyser",
-          source: "https://google.com",
-          anything: "you-want",
-          // NOTE(jim)
-          // When you use the API you can make these API fields anything.
-          url: "https://slate.host/static/art-v2-social.png"
-        }
-      ],
-      ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    }
-  }
-}`;
-
-const EXAMPLE_UPLOAD_TO_SLATE = (
-  key,
-  slateId
-) => `const url = 'https://uploads.slate.host/api/public/${slateId}';
-
-let file = e.target.files[0];
-let data = new FormData();
-data.append("data", file);
-
-const response = await fetch(url, {
-  method: 'POST',
-  headers: {
-    // NOTE: your API key
-    Authorization: 'Basic ${key}',
-  },
-  body: data
-});
-
-const json = await response.json();
-
-// NOTE: the URL to your asset will be available in the JSON response.
-console.log(json);`;
-
 export default class SceneSettingsDeveloper extends React.Component {
   state = {
     loading: false,
-    language: "language-javascript",
-    docs: "introduction",
+    language: "javascript",
+    docs: "GET",
   };
 
   _handleSave = async (e) => {
@@ -329,33 +240,33 @@ export default class SceneSettingsDeveloper extends React.Component {
   };
 
   //handles doc changes
-  _changeDoc = (newExample) => {
-    this.setState({ example: newExample }, this._getCurrentExample);
+  _changeDocs = (newDocs) => {
+    this.setState({ docs: newDocs });
   };
 
-  _getCurrentDocs = () => {
-    let example = this.state.example;
-    if (example === "INTRO") {
+  _getCurrentDocs = ({ APIKey, slateId }) => {
+    let lang = this.state.language;
+    let docs = this.state.docs;
+
+    if (docs === "INTRO") {
       console.log("intro");
-      console.log(this.props.viewer.keys);
-      console.log(this.props.viewer.slates);
       return;
     }
-    if (example === "GET") {
+    if (docs === "GET") {
       console.log("get");
-      return;
+      return <APIDocsGet language={lang} APIKey={APIKey} />;
     }
-    if (example === "GET_SLATE") {
+    if (docs === "GET_SLATE") {
       console.log("get slate");
-      return;
+      return <APIDocsGetSlate language={lang} APIKey={APIKey} slateId={slateId} />;
     }
-    if (example === "UPDATE_SLATE") {
+    if (docs === "UPDATE_SLATE") {
       console.log("update slate");
-      return;
+      return <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />;
     }
-    if (example === "UPLOAD") {
+    if (docs === "UPLOAD_TO_SLATE") {
       console.log("upload slate");
-      return;
+      return <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />;
     }
   };
 
@@ -363,7 +274,6 @@ export default class SceneSettingsDeveloper extends React.Component {
     if (!this.props.viewer.keys) {
       return;
     }
-
     if (!this.props.viewer.keys.length) {
       return;
     }
@@ -380,45 +290,63 @@ export default class SceneSettingsDeveloper extends React.Component {
   }
 
   render() {
-    let APIKey;
+    let APIKey = "YOUR-API-KEY-HERE";
     if (this.props.viewer.keys) {
       if (this.props.viewer.keys.length) {
         APIKey = this.props.viewer.keys[0].key;
-      } else {
-        APIKey = "YOUR-API-KEY-HERE";
       }
     }
 
-    let slateId = "your-slate-uuid-v4-value";
+    let slateId = "YOUR-SLATE-ID-VALUE";
     if (this.props.viewer.slates) {
       if (this.props.viewer.slates.length) {
         slateId = this.props.viewer.slates[0].id;
       }
     }
+    let docsPage = this._getCurrentDocs({ APIKey, slateId });
 
     return (
       <ScenePage css={STYLES_PAGE}>
         <div css={STYLES_SIDEBAR}>
-          <span css={STYLES_LINK} onClick={() => this._changeExample("INTRO")}>
+          <span css={STYLES_LINK} onClick={() => this._changeDocs("INTRO")}>
             Introduction
           </span>
-          <span css={STYLES_LABEL}>reference</span>
+          <span css={STYLES_LABEL}>api</span>
           <div>
-            <span css={STYLES_LINK} onClick={() => this._changeExample("GET")}>
+            <span
+              css={STYLES_LINK}
+              style={{ color: this.state.docs === "GET" ? Constants.system.brand : null }}
+              onClick={() => this._changeDocs("GET")}
+            >
               Get all slates
             </span>
-            <span css={STYLES_LINK} onClick={() => this._changeExample("GET_SLATE")}>
+            <span
+              css={STYLES_LINK}
+              style={{ color: this.state.docs === "GET_SLATE" ? Constants.system.brand : null }}
+              onClick={() => this._changeDocs("GET_SLATE")}
+            >
               Get slate by ID
             </span>
-            <span css={STYLES_LINK} onClick={() => this._changeExample("UPDATE_SLATE")}>
+            <span
+              css={STYLES_LINK}
+              style={{
+                color: this.state.docs === "UPLOAD_TO_SLATE" ? Constants.system.brand : null,
+              }}
+              onClick={() => this._changeDocs("UPLOAD_TO_SLATE")}
+            >
               Upload to slate by ID
             </span>
-            <span css={STYLES_LINK} onClick={() => this._changeExample("UPLOAD")}>
+            <span
+              css={STYLES_LINK}
+              style={{ color: this.state.docs === "UPDATE_SLATE" ? Constants.system.brand : null }}
+              onClick={() => this._changeDocs("UPDATE_SLATE")}
+            >
               Update slate
             </span>
           </div>
+          <span css={STYLES_LABEL}>guides</span>
         </div>
-        <ScenePageHeader title="Developer API">
+        <ScenePageHeader title="Developer Documentation">
           You can use your API key to get slates and add images to slates. You can have a total of
           10 keys at any given time.
         </ScenePageHeader>
@@ -433,30 +361,31 @@ export default class SceneSettingsDeveloper extends React.Component {
           <System.ButtonPrimary onClick={this._handleSave} loading={this.state.loading}>
             Generate
           </System.ButtonPrimary>
+          {APIKey === "YOUR-API-KEY-HERE" ? (
+            <ScenePageHeader title="">
+              Generate an API key to have it appear in the code examples
+            </ScenePageHeader>
+          ) : null}
         </div>
-
-        <React.Fragment>
-          <APIDocsGet language="javascript" APIKey={APIKey} />
-          <APIDocsGetSlate language="javascript" APIKey={APIKey} slateId={slateId} />
-          <System.DescriptionGroup
-            style={{ marginTop: 48 }}
-            label="Upload data to slate by ID"
-            description="This API endpoint will add a JavaScript file object to your slate."
-          />
-          <CodeBlock
-            children={EXAMPLE_UPLOAD_TO_SLATE(APIKey, slateId)}
-            style={{ maxWidth: "768px" }}
-          />
-          <System.DescriptionGroup
-            style={{ marginTop: 48 }}
-            label="Update slate"
-            description="This API endpoint will allow you to update a slate by sending your current locally modified version. This API endpoint allows for full customization so be careful."
-          />
-          <CodeBlock
-            children={EXAMPLE_UPDATE_SLATE(APIKey, slateId)}
-            style={{ maxWidth: "768px" }}
-          />
-        </React.Fragment>
+        <div css={STYLES_LANGUAGE_CONTAINER}>
+          <div
+            css={STYLES_LANGUAGE_TILE}
+            style={{ color: this.state.language === "javascript" ? Constants.system.brand : null }}
+            onClick={() => this._handleChangeLanguage("javascript")}
+          >
+            <span style={{ marginBottom: 32 }}>JS ICON</span>
+            <span>Node.js</span>
+          </div>
+          <div
+            css={STYLES_LANGUAGE_TILE}
+            style={{ color: this.state.language === "python" ? Constants.system.brand : null }}
+            onClick={() => this._handleChangeLanguage("python")}
+          >
+            <span style={{ marginBottom: 32 }}>PY ICON</span>
+            <span>Python3</span>
+          </div>
+        </div>
+        {docsPage}
       </ScenePage>
     );
   }

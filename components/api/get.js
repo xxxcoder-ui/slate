@@ -5,7 +5,7 @@ import CodeBlock from "~/components/system/CodeBlock";
 
 import { css } from "@emotion/react";
 
-const EXAMPLE_CODE_JS_1 = (key) => `const response = await fetch('https://slate.host/api/v1/get', {
+const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v1/get', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +13,6 @@ const EXAMPLE_CODE_JS_1 = (key) => `const response = await fetch('https://slate.
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    // NOTE: optional, if you want your private slates too.
     private: false
   }})
 });
@@ -21,8 +20,22 @@ const EXAMPLE_CODE_JS_1 = (key) => `const response = await fetch('https://slate.
 const json = await response.json();
 console.log(json);`;
 
+const EXAMPLE_CODE_PY = (key) => `import requests
+url = 'https://slate.host/api/v1/get'
+headers = {
+  'content-type': 'application/json',
+  'Authorization': '${key}'
+  }
+
+json = {'private': 'true'}
+
+r = requests.post(url, headers=headers, json=json)
+
+print(r.text)`;
+
 const DocPage = (props) => {
   let language = props.language;
+  let APIKey = props.APIKey;
   if (language === "javascript") {
     return (
       <React.Fragment>
@@ -32,21 +45,33 @@ const DocPage = (props) => {
           description="This API request returns all of your public slates"
         />
         <CodeBlock
-          children={EXAMPLE_CODE_JS_1(props.APIKey)}
+          children={EXAMPLE_CODE_JS(APIKey)}
           language={language}
           style={{ maxWidth: 768 }}
         />
       </React.Fragment>
     );
   }
+
   if (language === "python") {
-    return;
+    return (
+      <React.Fragment>
+        <System.DescriptionGroup
+          style={{ marginTop: 48 }}
+          label="Get all slates"
+          description="This API request returns all of your public slates"
+        />
+        <CodeBlock
+          children={EXAMPLE_CODE_PY(APIKey)}
+          language={language}
+          style={{ maxWidth: 768 }}
+        />
+      </React.Fragment>
+    );
   }
 };
 
 export default class APIDocsGet extends React.Component {
-
-
   render() {
     return <DocPage language={this.props.language} APIKey={this.props.APIKey} />;
   }
