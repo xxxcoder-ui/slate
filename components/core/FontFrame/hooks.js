@@ -33,7 +33,7 @@ const initialState = {
       valign: "center",
       textAlign: "left",
       fontSize: 24,
-      column: 1,
+      column: 2,
       lineHeight: 100,
       tracking: 0,
     },

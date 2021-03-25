@@ -189,11 +189,11 @@ const STYLES_GLYPHS_GRID = css`
   grid-template-rows: repeat(12, 1fr);
   grid-column-gap: 28px;
   grid-auto-rows: 0px;
-  overflow-y: hidden;
+  overflow: hidden;
 `;
 const Glyphs = ({}) => {
   const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?()@$#%*[]{}\:;_""-`;
-  const glyphs = React.useMemo(() => new Array(5).fill(content).join("").split(""), []);
+  const glyphs = React.useMemo(() => new Array(6).fill(content).join("").split(""), []);
   return (
     <div css={STYLES_GLYPHS_WRAPPER}>
       <div css={STYLES_GLYPHS_LETTER}>Aa</div>
