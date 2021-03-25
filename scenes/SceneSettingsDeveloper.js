@@ -239,37 +239,6 @@ export default class SceneSettingsDeveloper extends React.Component {
     this.setState({ language: newLanguage });
   };
 
-  //handles doc changes
-  _changeDocs = (newDocs) => {
-    this.setState({ docs: newDocs });
-  };
-
-  _getCurrentDocs = ({ APIKey, slateId }) => {
-    let lang = this.state.language;
-    let docs = this.state.docs;
-
-    if (docs === "INTRO") {
-      console.log("intro");
-      return;
-    }
-    if (docs === "GET") {
-      console.log("get");
-      return <APIDocsGet language={lang} APIKey={APIKey} />;
-    }
-    if (docs === "GET_SLATE") {
-      console.log("get slate");
-      return <APIDocsGetSlate language={lang} APIKey={APIKey} slateId={slateId} />;
-    }
-    if (docs === "UPDATE_SLATE") {
-      console.log("update slate");
-      return <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />;
-    }
-    if (docs === "UPLOAD_TO_SLATE") {
-      console.log("upload slate");
-      return <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />;
-    }
-  };
-
   async componentDidMount() {
     if (!this.props.viewer.keys) {
       return;
@@ -304,7 +273,6 @@ export default class SceneSettingsDeveloper extends React.Component {
         slateId = this.props.viewer.slates[0].id;
       }
     }
-    let docsPage = this._getCurrentDocs({ APIKey, slateId });
 
     return (
       <ScenePage>
@@ -370,7 +338,7 @@ export default class SceneSettingsDeveloper extends React.Component {
             </ScenePageHeader>
           ) : null}
         </div>
-    {/*
+        {/*
         <div css={STYLES_LANGUAGE_CONTAINER}>
           <div
             css={STYLES_LANGUAGE_TILE}
@@ -389,12 +357,18 @@ export default class SceneSettingsDeveloper extends React.Component {
             <span>Python3</span>
           </div>
         </div>
-        */}
-        <React.Fragment>
+
           <APIDocsGet language={lang} APIKey={APIKey} />
-          <APIDocsGetSlate language={lang} APIKey={APIKey} slateId={slateId} />
           <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />
           <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
+        */}
+        <React.Fragment>
+          <APIDocsGetSlate
+            language={lang}
+            APIKey={APIKey}
+            slateId={slateId}
+            onLanguageChange={this._handleChangeLanguage}
+          />
         </React.Fragment>
       </ScenePage>
     );

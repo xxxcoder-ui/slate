@@ -24,8 +24,7 @@ const EXAMPLE_CODE_JS = (
 const json = await response.json();
 console.log(json);`;
 
-const EXAMPLE_CODE_PY = (key, slateId) => `
-import requests
+const EXAMPLE_CODE_PY = (key, slateId) => `import requests
 import json
 url = 'https://slate.host/api/v1/get'
 headers = {
@@ -93,35 +92,16 @@ const EXAMPLE_RESPONSE = (key, slateId) => `
 }`;
 
 export default class APIDocsGetSlate extends React.Component {
-  _getCodeFromLanguage = () => {
-    let language = this.props.language;
-    let key = this.props.key;
-    let slateId = this.props.slateId;
-    if (language === "javascript") {
-      return (
-        <CodeBlock
-          children={EXAMPLE_CODE_JS(key, slateId)}
-          style={{ maxWidth: "840px" }}
-          language={language}
-          topBar="true"
-          title="Get slate by ID"
-        />
-      );
-    }
-    if (language === "python") {
-      return (
-        <CodeBlock
-          children={EXAMPLE_CODE_PY(key, slateId)}
-          style={{ maxWidth: "840px" }}
-          language={language}
-          topBar="true"
-          title="Get slate by ID"
-        />
-      );
-    }
-  };
-
   render() {
+    let APIKey = this.props.APIKey;
+    let slateId = this.props.slateId;
+    let language = this.props.language;
+
+    let code = {
+      javascript: EXAMPLE_CODE_JS(APIKey, slateId),
+      python: EXAMPLE_CODE_PY(APIKey, slateId),
+    };
+
     return (
       <React.Fragment>
         <System.DescriptionGroup
@@ -129,14 +109,18 @@ export default class APIDocsGetSlate extends React.Component {
           label="Get slate by ID"
           description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
-        {this._getCodeFromLanguage}
+        <CodeBlock
+          children={code}
+          style={{ maxWidth: "840px" }}
+          language={language}
+          title="Get slate by ID"
+          onLanguageChange={this.props.onLanguageChange}
+        />
         <br />
         <CodeBlock
-          children={EXAMPLE_RESPONSE(this.props.key, this.props.slateId)}
+          children={EXAMPLE_RESPONSE(APIKey, slateId)}
           style={{ maxWidth: "840px" }}
           language="json"
-          topBar="false"
-          response="true"
           title="Get slate by ID response"
         />
       </React.Fragment>

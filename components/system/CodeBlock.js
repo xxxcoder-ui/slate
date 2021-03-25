@@ -140,7 +140,7 @@ const STYLES_CODE_BLOCK = css`
   }
 `;
 
-const STYLES_CODE_BLOCK_RESPONSE = css`
+const STYLES_CODE_BLOCK_PLAIN = css`
   box-sizing: border-box;
   font-family: ${Constants.font.code};
   background-color: ${Constants.system.foreground};
@@ -206,7 +206,7 @@ const STYLES_TOPBAR = css`
   box-sizing: border-box;
 `;
 
-const STYLES_TOPBAR_RESPONSE = css`
+const STYLES_TOPBAR_PLAIN = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -308,8 +308,7 @@ class CodeBlock extends React.Component {
     copyValue: "",
     tooltip: false,
     copied: false,
-    //NOTE(toast):defaults to javascript to stay backwards compatible
-    lang: this.props.language ? this.props.language : "javascript",
+    language: this.props.language ? this.props.language : "javascript",
   };
 
   _handleCopy = (value) => {
@@ -324,32 +323,35 @@ class CodeBlock extends React.Component {
 
   _handleSwitchLang = (language) => {
     this.setState({ lang: language });
+    this.props.onLanguageChange(language);
   };
   render() {
-    let language = this.state.lang;
-
-    let langswitcher = language && !this.props.response;
+    let availableLanguages = Object.keys(this.props.children);
+    let showTopBar = this.props.title || availableLanguages.length > 1;
+    if (this.props.title) {
+    }
     let copyText = this.state.copied ? "Copied" : "Copy code";
 
     return (
       <React.Fragment>
-        {this.props.topBar && (
+        {showTopBar && (
           <div css={STYLES_TOPBAR} style={this.props.style}>
-            <div css={STYLES_TOPBAR_TITLE}>{this.props.title}</div>
-            {langswitcher && (
+            {this.props.title && <div css={STYLES_TOPBAR_TITLE}>{this.props.title}</div>}
+            {availableLanguages.length > 1 && (
               <div css={STYLES_LANGSWITCHER}>
-                <div
-                  css={language === "javascript" ? STYLES_LANG_SELECTED : STYLES_LANG}
-                  onClick={() => this._handleSwitchLang("javascript")}
-                >
-                  Javascript
-                </div>
-                <div
-                  css={language === "python" ? STYLES_LANG_SELECTED : STYLES_LANG}
-                  onClick={() => this._handleSwitchLang("python")}
-                >
-                  Python
-                </div>
+                {availableLanguages.map((language, index) => {
+                  return (
+                    <div
+                      key={index}
+                      css={language === this.state.language ? STYLES_LANG_SELECTED : STYLES_LANG}
+                      onClick={() => {
+                        this._handleSwitchLang(language);
+                      }}
+                    >
+                      {language}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <div
@@ -375,8 +377,12 @@ class CodeBlock extends React.Component {
           <Highlight
             {...defaultProps}
             theme={customTheme}
-            code={this.props.children}
-            language={language}
+            code={
+              availableLanguages.length > 1
+                ? this.props.children[this.state.language]
+                : this.props.children
+            }
+            language={this.state.language}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <pre className={className} css={STYLES_CODE_BODY}>
