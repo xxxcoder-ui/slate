@@ -100,24 +100,25 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Get slate by ID"
-          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate."
+          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
         <CodeBlock
           children={EXAMPLE_CODE_JS(key, slateId)}
           style={{ maxWidth: "840px" }}
           language={language}
+          topBar="true"
+          title="Get slate by ID"
         />
-        <System.DescriptionGroup
-          style={{ marginTop: 48, marginBottom: 16 }}
-          label="Get slate by ID: Response"
-          description="This is the shape of the response. Save it locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
-        />
+        <br />
         <CodeBlock
           children={EXAMPLE_RESPONSE(key, slateId)}
           style={{ maxWidth: "840px" }}
           language="jsx"
+          topBar="true"
+          response="true"
+          title="Get slate by ID response"
         />
       </React.Fragment>
     );
@@ -126,19 +127,14 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Get slate by ID"
-          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate."
+          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
         <CodeBlock
           children={EXAMPLE_CODE_PY(key, slateId)}
           style={{ maxWidth: "840px" }}
           language={language}
-        />
-        <System.DescriptionGroup
-          style={{ marginTop: 48, marginBottom: 16 }}
-          label="Get slate by ID: Response"
-          description="This is the shape of the response. Save it locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
         <CodeBlock
           children={EXAMPLE_RESPONSE(key, slateId)}

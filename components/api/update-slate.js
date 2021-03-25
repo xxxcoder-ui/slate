@@ -5,7 +5,8 @@ import CodeBlock from "~/components/system/CodeBlock";
 
 import { css } from "@emotion/react";
 
-const EXAMPLE_CODE_JS = (key, slateId) => { return `
+const EXAMPLE_CODE_JS = (key, slateId) => {
+  return `
 const SLATE_ID = "${slateId}"
 
 const slateResponseData = getSlateById(SLATE_ID);
@@ -37,14 +38,16 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Update slate by ID"
           description="This API endpoint will allow you to update a slate by sending your current locally modified version. This API endpoint allows for full customization so be careful."
         />
         <CodeBlock
           children={EXAMPLE_CODE_JS(key, slateId)}
-          style={{ maxWidth: "768px" }}
+          style={{ maxWidth: "840px" }}
           language={language}
+          topBar="true"
+          title="Update slate by ID"
         />
       </React.Fragment>
     );
@@ -53,13 +56,13 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Update slate by ID"
           description="This API endpoint will allow you to update a slate by sending your current locally modified version. This API endpoint allows for full customization so be careful."
         />
         <CodeBlock
           children={EXAMPLE_CODE_PY(key, slateId)}
-          style={{ maxWidth: "768px" }}
+          style={{ maxWidth: "840px" }}
           language={language}
         />
       </React.Fragment>

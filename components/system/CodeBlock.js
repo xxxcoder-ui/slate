@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import * as SVG from "~/common/svg";
 import Highlight, { defaultProps } from "prism-react-renderer";
 
 import { css } from "@emotion/react";
@@ -79,12 +80,7 @@ const customTheme = {
       },
     },
     {
-      types: [
-        "boolean",
-        "string",
-        "url",
-        "regex",
-      ],
+      types: ["boolean", "string", "url", "regex"],
       style: {
         color: "#b5ffff",
       },
@@ -131,7 +127,7 @@ const STYLES_CODE_BLOCK = css`
   font-size: 12px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  padding: 24px;
+  padding: 20px 24px;
 
   * {
     white-space: pre-wrap;
@@ -144,15 +140,29 @@ const STYLES_CODE_BLOCK = css`
   }
 `;
 
-const STYLES_LINE = css`
+const STYLES_CODE_BLOCK_RESPONSE = css`
   box-sizing: border-box;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  font-family: ${Constants.font.code};
+  background-color: ${Constants.system.foreground};
+  color: ${Constants.system.black};
+  border-color: ${Constants.system.yellow};
+  font-size: 12px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 20px 24px;
+
+  * {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    ::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 0;
+      height: 0;
+    }
+  }
 `;
 
-const STYLES_PRE = css`
-  box-sizing: border-box;
+const STYLES_CODE_BODY = css`
   color: #666;
   font-family: ${Constants.font.code};
   flex-shrink: 0;
@@ -166,37 +176,177 @@ const STYLES_CODE = css`
   font-family: ${Constants.font.code};
   color: ${Constants.system.gray};
   width: 100%;
-  padding-left: 16px;
+  flex-grow: 1;
+  overflow-x: auto;
+`;
+
+const STYLES_LINE_NUMBER = css`
+  text-align: right;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 32px;
+  padding-right: 16px;
+`;
+
+const STYLES_LINE = css`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const STYLES_TOPBAR = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px 16px 20px;
+  background: ${Constants.system.black};
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  margin-bottom: -4px;
+  box-sizing: border-box;
+`;
+
+const STYLES_TOPBAR_RESPONSE = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px 16px 20px;
+  background: ${Constants.system.green};
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  margin-bottom: -4px;
+  box-sizing: border-box;
+`;
+
+const STYLES_TOPBAR_TITLE = css`
+  text-transform: uppercase;
+  color: ${Constants.system.textGray};
+  font-size: ${Constants.typescale.lvlN1};
+  font-family: ${Constants.font.medium};
+  user-select: none;
+  pointer-events: none;
+`;
+
+const STYLES_LANGSWITCHER = css`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: ${Constants.system.textGray};
+  font-size: ${Constants.typescale.lvlN1};
+  margin-right: 12px;
+  border: 1px solid ${Constants.system.gray80};
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const STYLES_LANG = css`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: ${Constants.system.textGray};
+  border-radius: 3px;
+  padding: 4px 8px;
+`;
+
+const STYLES_LANG_SELECTED = css`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: ${Constants.system.white};
+  background: ${Constants.system.gray80};
+  border-radius: 3px;
+  padding: 4px 8px;
+`;
+
+const STYLES_COPY_BUTTON = css`
+  display: flex;
+  align-items: center;
+  color: ${Constants.system.textGray};
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+
+  :hover {
+    background: ${Constants.system.gray80};
+    color: ${Constants.system.white};
+  }
+`;
+
+const STYLES_HIDDEN = css`
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 `;
 
 class CodeBlock extends React.Component {
+  _ref = null;
+
+  state = {
+    copyValue: "",
+  };
+
+  _handleCopy = (value) => {
+    this.setState({ copyValue: value }, () => {
+      this._ref.select();
+      document.execCommand("copy");
+    });
+  };
   //defaults to js
-  language = this.props.language ? this.props.language : "javascript";
+  language = this.props.language ? this.props.language : "Javascript";
   render() {
+    let styleTopBar = this.props.response ? STYLES_TOPBAR_RESPONSE : STYLES_TOPBAR;
+    let styleCodeBlock = this.props.response ? STYLES_CODE_BLOCK_RESPONSE : STYLES_CODE_BLOCK;
+    let langswitcher = this.language && !this.props.response;
     return (
-      <div css={STYLES_CODE_BLOCK} style={this.props.style}>
-        <Highlight
-          {...defaultProps}
-          theme={customTheme}
-          code={this.props.children}
-          language={this.language}
-        >
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre className={className} css={STYLES_PRE}>
-              {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line, key: i })}>
-                  <span>{i + 1}</span>
-                  <span css={STYLES_CODE}>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
-                    ))}
-                  </span>
-                </div>
-              ))}
-            </pre>
-          )}
-        </Highlight>
-      </div>
+      <React.Fragment>
+        {this.props.topBar && (
+          <div css={STYLES_TOPBAR} style={this.props.style}>
+            <div css={STYLES_TOPBAR_TITLE}>{this.props.title}</div>
+            {langswitcher && (
+              <div css={STYLES_LANGSWITCHER}>
+                <div css={STYLES_LANG}>Python</div>
+                <div css={STYLES_LANG_SELECTED}>Javascript</div>
+              </div>
+            )}
+            <div css={STYLES_COPY_BUTTON}>
+              <SVG.CopyAndPaste height="16px" />
+            </div>
+            {/* <input
+              css={STYLES_HIDDEN}
+              ref={(c) => {
+                this._ref = c;
+              }}
+              readOnly
+              value={this.state.copyValue}
+            /> */}
+          </div>
+        )}
+        <div css={STYLES_CODE_BLOCK} style={this.props.style}>
+          <Highlight
+            {...defaultProps}
+            theme={customTheme}
+            code={this.props.children}
+            language={this.language}
+          >
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre className={className} css={STYLES_CODE_BODY}>
+                {tokens.map((line, i) => (
+                  <div css={STYLES_LINE} key={i} {...getLineProps({ line, key: i })}>
+                    <div css={STYLES_LINE_NUMBER}>{i + 1}</div>
+                    <div css={STYLES_CODE}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token, key })} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
+        </div>
+      </React.Fragment>
     );
   }
 }

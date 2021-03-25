@@ -40,14 +40,16 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Get all slates"
           description="This API request returns all of your public slates"
         />
         <CodeBlock
           children={EXAMPLE_CODE_JS(APIKey)}
           language={language}
-          style={{ maxWidth: 768 }}
+          style={{ maxWidth: "840px" }}
+          topBar="true"
+          title="Get all slates"
         />
       </React.Fragment>
     );
@@ -57,14 +59,14 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Get all slates"
           description="This API request returns all of your public slates"
         />
         <CodeBlock
           children={EXAMPLE_CODE_PY(APIKey)}
           language={language}
-          style={{ maxWidth: 768 }}
+          style={{ maxWidth: "840px" }}
         />
       </React.Fragment>
     );

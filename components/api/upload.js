@@ -45,14 +45,16 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Upload to slate by Id"
           description="This API endpoint will add a file object to your slate."
         />
         <CodeBlock
           children={EXAMPLE_CODE_JS(key, slateId)}
-          style={{ maxWidth: "768px" }}
+          style={{ maxWidth: "840px" }}
           language={language}
+          topBar="true"
+          title="Upload to slate by Id"
         />
       </React.Fragment>
     );
@@ -61,13 +63,13 @@ const DocPage = (props) => {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 48 }}
+          style={{ marginTop: 64 }}
           label="Upload to slate by Id"
           description="This API endpoint will add a file object to your slate."
         />
         <CodeBlock
           children={EXAMPLE_CODE_PY(key, slateId)}
-          style={{ maxWidth: "768px" }}
+          style={{ maxWidth: "840px" }}
           language={language}
         />
       </React.Fragment>
