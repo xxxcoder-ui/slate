@@ -141,6 +141,7 @@ export const Controls = ({
           options={[
             { value: "sentence", name: "Sentence" },
             { value: "paragraph", name: "Paragraph" },
+            { value: "glyphs", name: "Glyphs" },
           ]}
           value={view}
           onChange={(e) => updateView(e.target.value)}

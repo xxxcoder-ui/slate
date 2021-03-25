@@ -1,19 +1,9 @@
 import * as React from "react";
-import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 
 import { useFont, useFontControls } from "./hooks";
 import { FixedControls, Controls } from "./Controls";
-
-const Glyphs = ({ dark }) => (
-  <div>
-    <div>ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
-    <div>abcdefghijklmnopqrstuvwxyz</div>
-    <div>0123456789</div>
-    <div>!?()[]{}@$#%</div>
-  </div>
-);
 
 const GET_STYLES_CONTAINER = (theme) => css`
   position: relative;
@@ -68,6 +58,7 @@ export default function FontFrame({ cid, url, ...props }) {
             <p>loading...</p>
           </div>
         )}
+        {currentState.view === "glyphs" && <Glyphs />}
         {currentState.view === "sentence" && (
           <Sentence
             content="The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy I think I'm just happy I think I'm just happy I'm not like them but I can pretend The sun is gone but I have a light The day is done but I'm having fun I think I'm dumb or maybe I'm just happy"
@@ -172,6 +163,45 @@ const Paragraph = ({ content, valign, textAlign, fontSize, lineHeight, tracking,
         }}
       >
         {content}
+      </div>
+    </div>
+  );
+};
+
+const STYLES_GLYPHS_WRAPPER = (theme) => css`
+  padding: 0px 32px 28px;
+  color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.pitchBlack};
+`;
+const STYLES_GLYPHS_LETTER = css`
+  font-size: 128px;
+  line-height: 192px;
+  margin-bottom: 16px;
+`;
+const STYLES_GLYPHS_GRID = css`
+  margin-top: -16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12px, 1fr));
+  grid-template-rows: repeat(12, 1fr);
+  grid-column-gap: 28px;
+  grid-auto-rows: 0px;
+  overflow-y: hidden;
+`;
+const Glyphs = ({}) => {
+  const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?()@$#%*[]{}\:;_""-`;
+  const glyphs = React.useMemo(() => new Array(5).fill(content).join("").split(""), []);
+  return (
+    <div css={STYLES_GLYPHS_WRAPPER}>
+      <div css={STYLES_GLYPHS_LETTER}>Aa</div>
+      <div css={STYLES_GLYPHS_GRID}>
+        {glyphs.map((letter) => (
+          <div
+            css={css`
+              margin-top: 16px;
+            `}
+          >
+            {letter}
+          </div>
+        ))}
       </div>
     </div>
   );
