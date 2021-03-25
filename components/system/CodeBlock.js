@@ -239,6 +239,7 @@ const STYLES_LANGSWITCHER = css`
   border: 1px solid ${Constants.system.gray80};
   border-radius: 4px;
   cursor: pointer;
+  user-select: none;
 `;
 
 const STYLES_LANG = css`
@@ -307,6 +308,7 @@ class CodeBlock extends React.Component {
     copyValue: "",
     tooltip: false,
     copied: false,
+    js: true,
   };
 
   _handleCopy = (value) => {
@@ -318,13 +320,22 @@ class CodeBlock extends React.Component {
       this.setState({ copied: false });
     }, 1500);
   };
-  //defaults to js
-  language = this.props.language ? this.props.language : "Javascript";
+
+  _handleSwitchLang = (lang) => {
+    if (lang === "js") {
+      this.setState({ js: true });
+    } else {
+      this.setState({ js: false });
+    }
+  };
   render() {
+    //defaults to js
+    let language = this.props.language ? this.props.language : "Javascript";
     let styleTopBar = this.props.response ? STYLES_TOPBAR_RESPONSE : STYLES_TOPBAR;
     let styleCodeBlock = this.props.response ? STYLES_CODE_BLOCK_RESPONSE : STYLES_CODE_BLOCK;
-    let langswitcher = this.language && !this.props.response;
+    let langswitcher = language && !this.props.response;
     let copyText = this.state.copied ? "Copied" : "Copy code";
+    let js = this.state.js;
     return (
       <React.Fragment>
         {this.props.topBar && (
@@ -332,8 +343,18 @@ class CodeBlock extends React.Component {
             <div css={STYLES_TOPBAR_TITLE}>{this.props.title}</div>
             {langswitcher && (
               <div css={STYLES_LANGSWITCHER}>
-                <div css={STYLES_LANG}>Python</div>
-                <div css={STYLES_LANG_SELECTED}>Javascript</div>
+                <div
+                  css={js ? STYLES_LANG : STYLES_LANG_SELECTED}
+                  onClick={() => this._handleSwitchLang("python")}
+                >
+                  Python
+                </div>
+                <div
+                  css={js ? STYLES_LANG_SELECTED : STYLES_LANG}
+                  onClick={() => this._handleSwitchLang("js")}
+                >
+                  Javascript
+                </div>
               </div>
             )}
             <div
@@ -360,7 +381,7 @@ class CodeBlock extends React.Component {
             {...defaultProps}
             theme={customTheme}
             code={this.props.children}
-            language={this.language}
+            language={language}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <pre className={className} css={STYLES_CODE_BODY}>
