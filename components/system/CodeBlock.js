@@ -267,6 +267,7 @@ const STYLES_COPY_BUTTON = css`
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
+  position: relative;
 
   :hover {
     background: ${Constants.system.gray80};
@@ -280,18 +281,42 @@ const STYLES_HIDDEN = css`
   pointer-events: none;
 `;
 
+const STYLES_TOOLTIP = css`
+  position: absolute;
+  top: 32px;
+  left: 0;
+  z-index: ${Constants.zindex.tooltip};
+  padding: 12px;
+  background-color: ${Constants.system.bgBlurGrayBlack};
+  border-radius: 4px;
+  color: ${Constants.system.white};
+  font-size: ${Constants.typescale.lvlN1};
+  font-family: ${Constants.font.text};
+  min-width: 88px;
+
+  @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+  }
+`;
+
 class CodeBlock extends React.Component {
   _ref = null;
 
   state = {
     copyValue: "",
+    tooltip: false,
+    copied: false,
   };
 
   _handleCopy = (value) => {
-    this.setState({ copyValue: value }, () => {
+    this.setState({ copyValue: value, copied: true }, () => {
       this._ref.select();
       document.execCommand("copy");
     });
+    setTimeout(() => {
+      this.setState({ copied: false });
+    }, 1500);
   };
   //defaults to js
   language = this.props.language ? this.props.language : "Javascript";
@@ -299,6 +324,7 @@ class CodeBlock extends React.Component {
     let styleTopBar = this.props.response ? STYLES_TOPBAR_RESPONSE : STYLES_TOPBAR;
     let styleCodeBlock = this.props.response ? STYLES_CODE_BLOCK_RESPONSE : STYLES_CODE_BLOCK;
     let langswitcher = this.language && !this.props.response;
+    let copyText = this.state.copied ? "Copied" : "Copy code";
     return (
       <React.Fragment>
         {this.props.topBar && (
@@ -310,17 +336,23 @@ class CodeBlock extends React.Component {
                 <div css={STYLES_LANG_SELECTED}>Javascript</div>
               </div>
             )}
-            <div css={STYLES_COPY_BUTTON}>
+            <div
+              css={STYLES_COPY_BUTTON}
+              onClick={() => this._handleCopy(this.props.children)}
+              onMouseEnter={() => this.setState({ tooltip: true })}
+              onMouseLeave={() => this.setState({ tooltip: false })}
+            >
               <SVG.CopyAndPaste height="16px" />
+              {this.state.tooltip && <div css={STYLES_TOOLTIP}>{copyText}</div>}
             </div>
-            {/* <input
+            <input
               css={STYLES_HIDDEN}
               ref={(c) => {
                 this._ref = c;
               }}
               readOnly
               value={this.state.copyValue}
-            /> */}
+            />
           </div>
         )}
         <div css={STYLES_CODE_BLOCK} style={this.props.style}>
