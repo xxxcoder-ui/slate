@@ -308,7 +308,8 @@ class CodeBlock extends React.Component {
     copyValue: "",
     tooltip: false,
     copied: false,
-    js: true,
+    //NOTE(toast):defaults to javascript to stay backwards compatible
+    lang: this.props.language ? this.props.language : "javascript",
   };
 
   _handleCopy = (value) => {
@@ -321,21 +322,15 @@ class CodeBlock extends React.Component {
     }, 1500);
   };
 
-  _handleSwitchLang = (lang) => {
-    if (lang === "js") {
-      this.setState({ js: true });
-    } else {
-      this.setState({ js: false });
-    }
+  _handleSwitchLang = (language) => {
+    this.setState({ lang: language });
   };
   render() {
-    //defaults to js
-    let language = this.props.language ? this.props.language : "Javascript";
-    let styleTopBar = this.props.response ? STYLES_TOPBAR_RESPONSE : STYLES_TOPBAR;
-    let styleCodeBlock = this.props.response ? STYLES_CODE_BLOCK_RESPONSE : STYLES_CODE_BLOCK;
+    let language = this.state.lang;
+
     let langswitcher = language && !this.props.response;
     let copyText = this.state.copied ? "Copied" : "Copy code";
-    let js = this.state.js;
+
     return (
       <React.Fragment>
         {this.props.topBar && (
@@ -344,16 +339,16 @@ class CodeBlock extends React.Component {
             {langswitcher && (
               <div css={STYLES_LANGSWITCHER}>
                 <div
-                  css={js ? STYLES_LANG : STYLES_LANG_SELECTED}
+                  css={language === "javascript" ? STYLES_LANG_SELECTED : STYLES_LANG}
+                  onClick={() => this._handleSwitchLang("javascript")}
+                >
+                  Javascript
+                </div>
+                <div
+                  css={language === "python" ? STYLES_LANG_SELECTED : STYLES_LANG}
                   onClick={() => this._handleSwitchLang("python")}
                 >
                   Python
-                </div>
-                <div
-                  css={js ? STYLES_LANG_SELECTED : STYLES_LANG}
-                  onClick={() => this._handleSwitchLang("js")}
-                >
-                  Javascript
                 </div>
               </div>
             )}

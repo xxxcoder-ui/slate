@@ -92,18 +92,13 @@ const EXAMPLE_RESPONSE = (key, slateId) => `
   }
 }`;
 
-const DocPage = (props) => {
-  let language = props.language;
-  let key = props.APIKey;
-  let slateId = props.slateId;
-  if (language === "javascript") {
-    return (
-      <React.Fragment>
-        <System.DescriptionGroup
-          style={{ marginTop: 64 }}
-          label="Get slate by ID"
-          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
-        />
+export default class APIDocsGetSlate extends React.Component {
+  _getCodeFromLanguage = () => {
+    let language = this.props.language;
+    let key = this.props.key;
+    let slateId = this.props.slateId;
+    if (language === "javascript") {
+      return (
         <CodeBlock
           children={EXAMPLE_CODE_JS(key, slateId)}
           style={{ maxWidth: "840px" }}
@@ -111,19 +106,22 @@ const DocPage = (props) => {
           topBar="true"
           title="Get slate by ID"
         />
-        <br />
+      );
+    }
+    if (language === "python") {
+      return (
         <CodeBlock
-          children={EXAMPLE_RESPONSE(key, slateId)}
+          children={EXAMPLE_CODE_PY(key, slateId)}
           style={{ maxWidth: "840px" }}
-          language="jsx"
+          language={language}
           topBar="true"
-          response="true"
-          title="Get slate by ID response"
+          title="Get slate by ID"
         />
-      </React.Fragment>
-    );
-  }
-  if (language === "python") {
+      );
+    }
+  };
+
+  render() {
     return (
       <React.Fragment>
         <System.DescriptionGroup
@@ -131,29 +129,17 @@ const DocPage = (props) => {
           label="Get slate by ID"
           description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
+        {this._getCodeFromLanguage}
+        <br />
         <CodeBlock
-          children={EXAMPLE_CODE_PY(key, slateId)}
+          children={EXAMPLE_RESPONSE(this.props.key, this.props.slateId)}
           style={{ maxWidth: "840px" }}
-          language={language}
-        />
-        <CodeBlock
-          children={EXAMPLE_RESPONSE(key, slateId)}
-          style={{ maxWidth: "840px" }}
-          language="jsx"
+          language="json"
+          topBar="false"
+          response="true"
+          title="Get slate by ID response"
         />
       </React.Fragment>
-    );
-  }
-};
-
-export default class APIDocsGetSlate extends React.Component {
-  render() {
-    return (
-      <DocPage
-        language={this.props.language}
-        APIKey={this.props.APIKey}
-        slateId={this.props.slateId}
-      />
     );
   }
 }
