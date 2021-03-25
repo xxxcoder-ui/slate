@@ -45,15 +45,20 @@ export default function FontFrame({ cid, url, ...props }) {
       <div style={{ position: "relative", flexGrow: 1, overflowY: "scroll" }}>
         {isFontLoading && (
           <div
-            css={css({
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.4)",
-            })}
+            css={(theme) =>
+              css({
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                color: theme.fontPreviewDarkMode ? "#fff" : "#000",
+                backgroundColor: theme.fontPreviewDarkMode
+                  ? "rgba(0,0,0,0.5)"
+                  : "rgba(255,255,255,0.8)",
+              })
+            }
           >
             <p>loading...</p>
           </div>

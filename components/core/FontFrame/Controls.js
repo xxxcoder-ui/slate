@@ -135,7 +135,7 @@ export const Controls = ({
   return (
     <div css={STYLES_CONTROLLER_WRAPPER}>
       <div>
-        <p css={STYLES_LABEL}>Content</p>
+        <P css={STYLES_LABEL}>Content</P>
         <Select
           inputStyle={STYLES_CONTENT_SELECT}
           options={[
@@ -153,6 +153,7 @@ export const Controls = ({
         textAlign={settings.textAlign}
         onChange={(e) => updateVerticalAlign(e.target.value)}
         updateTextAlign={updateTextAlign}
+        disabled={view === "glyphs"}
       />
       <Controller
         selectSuffix="px"
@@ -168,6 +169,7 @@ export const Controls = ({
         onChange={(e) => {
           updateFontSize(e.target.value);
         }}
+        disabled={view === "glyphs"}
       />
       <Controller
         label="Line Height"
@@ -183,6 +185,7 @@ export const Controls = ({
         ]}
         value={settings.lineHeight}
         onChange={(e) => updateLineHeight(e.target.value)}
+        disabled={view === "glyphs"}
       />
       <Controller
         label="Tracking"
@@ -198,6 +201,7 @@ export const Controls = ({
         ]}
         value={settings.tracking}
         onChange={(e) => updateTracking(e.target.value)}
+        disabled={view === "glyphs"}
       />
       <Controller
         label="Column"
@@ -212,6 +216,7 @@ export const Controls = ({
         ]}
         value={settings.column}
         onChange={(e) => updateColumn(e.target.value)}
+        disabled={view !== "paragraph"}
       />
     </div>
   );
@@ -272,10 +277,18 @@ const STYLES_ALIGN_BUTTON = (isActive) => (theme) => css`
   }
 `;
 
-const AlignmentControl = ({ vAlign, textAlign, options, onChange, updateTextAlign }) => {
+const AlignmentControl = ({ vAlign, textAlign, options, onChange, updateTextAlign, disabled }) => {
   return (
-    <div>
-      <p css={STYLES_LABEL}>Alignment</p>
+    <div
+      css={
+        disabled &&
+        css`
+          opacity: 0.3;
+          pointer-events: none;
+        `
+      }
+    >
+      <P css={STYLES_LABEL}>Alignment</P>
       <div css={css({ display: "flex", alignItems: "center" })}>
         <Select options={options} value={vAlign} onChange={onChange} />
         <div css={STYLES_ALIGNEMENT_BUTTON}>
@@ -309,9 +322,27 @@ const STYLES_LABEL = (theme) => css`
   margin-bottom: 4px;
 `;
 
-const Controller = ({ value, options, onChange, selectSuffix = "", label, min, max, step }) => {
+const Controller = ({
+  value,
+  options,
+  onChange,
+  selectSuffix = "",
+  label,
+  min,
+  max,
+  step,
+  disabled,
+}) => {
   return (
-    <div>
+    <div
+      css={
+        disabled &&
+        css`
+          opacity: 0.3;
+          pointer-events: none;
+        `
+      }
+    >
       <P css={STYLES_LABEL}>{label}</P>
       <div css={css({ display: "flex", alignItems: "center" })}>
         <Select
