@@ -188,13 +188,13 @@ export class Slider extends React.Component {
           <div style={{ position: "relative" }}>
             <div css={STYLES_BAR_CONTAINER}>
               <div
-                css={STYLES_SLIDER_BAR}
+                css={[STYLES_SLIDER_BAR, this.props.sliderBarStyle]}
                 ref={(c) => {
                   this._bar = c;
                 }}
               />
               <div
-                css={STYLES_ACTIVE_SLIDER_BAR}
+                css={[STYLES_ACTIVE_SLIDER_BAR, this.props.activeBarStyle]}
                 style={{
                   width: `${this.state.value}px`,
                 }}
@@ -215,7 +215,7 @@ export class Slider extends React.Component {
                   }}
                 >
                   <strong>
-                    <div css={STYLES_SLIDER_HANDLE} />
+                    <div css={[STYLES_SLIDER_HANDLE, this.props.handleStyle]} />
                   </strong>
                   {this.props.bubble ? <div css={STYLES_BUBBLE}>{this.props.value}</div> : null}
                 </div>

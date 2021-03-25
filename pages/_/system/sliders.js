@@ -21,19 +21,13 @@ export default class SystemPageSliders extends React.Component {
 
   render() {
     return (
-      <SystemPage
-        title="SDS: Sliders"
-        description="..."
-        url="https://slate.host/_/system/sliders"
-      >
+      <SystemPage title="SDS: Sliders" description="..." url="https://slate.host/_/system/sliders">
         <System.H1>
           Sliders <ViewSourceLink file="system/sliders.js" />
         </System.H1>
         <br />
         <br />
-        <System.P>
-          The Slider component is used to select from a range of numeric values.
-        </System.P>
+        <System.P>The Slider component is used to select from a range of numeric values.</System.P>
         <br />
         <br />
         <br />
@@ -74,12 +68,10 @@ import { Slider } from "slate-react-system";`}
         />
         <br />
         <System.P>
-          Declare the Slider component, specifying a{" "}
-          <System.CodeText>min</System.CodeText>,{" "}
-          <System.CodeText>max</System.CodeText>, and{" "}
-          <System.CodeText>step</System.CodeText>. Declaring{" "}
-          <System.CodeText>discrete</System.CodeText> true will yield a slider
-          that snaps to each step.
+          Declare the Slider component, specifying a <System.CodeText>min</System.CodeText>,{" "}
+          <System.CodeText>max</System.CodeText>, and <System.CodeText>step</System.CodeText>.
+          Declaring <System.CodeText>discrete</System.CodeText> true will yield a slider that snaps
+          to each step.
         </System.P>
         <br />
         <br />
@@ -149,11 +141,10 @@ import { Slider } from "slate-react-system";`}
         />
         <br />
         <System.P>
-          You can declare the Slider component with{" "}
-          <System.CodeText>inputBox</System.CodeText> or{" "}
-          <System.CodeText>bubble</System.CodeText> to include a display of the
-          value. Values can be entered in the input box and the input box can be
-          styled with <System.CodeText>inputStyle</System.CodeText>.
+          You can declare the Slider component with <System.CodeText>inputBox</System.CodeText> or{" "}
+          <System.CodeText>bubble</System.CodeText> to include a display of the value. Values can be
+          entered in the input box and the input box can be styled with{" "}
+          <System.CodeText>inputStyle</System.CodeText>.
         </System.P>
         <br />
         <br />
@@ -213,22 +204,14 @@ import { Slider } from "slate-react-system";`}
               rows: [
                 {
                   id: 1,
-                  a: (
-                    <span style={{ fontFamily: Constants.font.semiBold }}>
-                      onChange
-                    </span>
-                  ),
+                  a: <span style={{ fontFamily: Constants.font.semiBold }}>onChange</span>,
                   b: "function",
                   c: "null",
                   d: "Function called upon an onChange event",
                 },
                 {
                   id: 2,
-                  a: (
-                    <span style={{ fontFamily: Constants.font.semiBold }}>
-                      value
-                    </span>
-                  ),
+                  a: <span style={{ fontFamily: Constants.font.semiBold }}>value</span>,
                   b: "number",
                   c: "null",
                   d:
@@ -312,8 +295,7 @@ import { Slider } from "slate-react-system";`}
                   a: "inputStyle",
                   b: "Object",
                   c: "null",
-                  d:
-                    "Style applied to the input box (useful for specifying width, etc).",
+                  d: "Style applied to the input box (useful for specifying width, etc).",
                 },
                 {
                   id: 14,
@@ -322,6 +304,28 @@ import { Slider } from "slate-react-system";`}
                   c: "null",
                   d:
                     "Style applied to the container holding the slider and input box (useful for specifying margin or height, etc).",
+                },
+                ,
+                {
+                  id: 15,
+                  a: "sliderBarStyle",
+                  b: "Object",
+                  c: "null",
+                  d: "Style applied to the base slider bar (useful for specifying color  etc).",
+                },
+                {
+                  id: 16,
+                  a: "activeBarStyle",
+                  b: "Object",
+                  c: "null",
+                  d: "Style applied to the active slider bar (useful for specifying color  etc).",
+                },
+                {
+                  id: 17,
+                  a: "handleStyle",
+                  b: "Object",
+                  c: "null",
+                  d: "Style applied to the slider handle (useful for specifying color  etc).",
                 },
               ],
             }}

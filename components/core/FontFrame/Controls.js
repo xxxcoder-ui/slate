@@ -329,6 +329,34 @@ const Controller = ({ value, options, onChange, selectSuffix = "", label, min, m
             value={value}
             onChange={onChange}
             containerStyle={{ height: "auto", marginLeft: "18px" }}
+            sliderBarStyle={(theme) => css`
+              background-color: ${theme.fontPreviewDarkMode
+                ? theme.system.gray70
+                : theme.system.gray30};
+            `}
+            activeBarStyle={(theme) => css`
+              background-color: ${theme.fontPreviewDarkMode
+                ? theme.system.white
+                : theme.system.gray80};
+            `}
+            handleStyle={(theme) => css`
+              background-color: ${theme.fontPreviewDarkMode
+                ? theme.system.white
+                : theme.system.gray80};
+
+              :hover {
+                box-shadow: 0 0 0 4px
+                  ${theme.fontPreviewDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(75, 74, 77, 0.1)"};
+              }
+              :active {
+                box-shadow: 0 0 0 8px
+                  ${theme.fontPreviewDarkMode
+                    ? "rgba(255, 255, 255, 0.2)"
+                    : "rgba(75, 74, 77, 0.2)"};
+              }
+            `}
           />
         </div>
       </div>
