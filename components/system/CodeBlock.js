@@ -326,7 +326,7 @@ class CodeBlock extends React.Component {
     this.props.onLanguageChange(language);
   };
   render() {
-    let availableLanguages = Object.keys(this.props.children);
+    let availableLanguages = this.props.multiLang ? Object.keys(this.props.children) : 1;
     let showTopBar = this.props.title || availableLanguages.length > 1;
     if (this.props.title) {
     }

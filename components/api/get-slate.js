@@ -115,6 +115,7 @@ export default class APIDocsGetSlate extends React.Component {
           language={language}
           title="Get slate by ID"
           onLanguageChange={this.props.onLanguageChange}
+          multiLang="true"
         />
         <br />
         <CodeBlock
