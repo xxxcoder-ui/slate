@@ -140,6 +140,25 @@ const STYLES_CODE_BLOCK = css`
   }
 `;
 
+
+const STYLES_CODE_BODY = css`
+  color: #666;
+  font-family: ${Constants.font.code};
+  flex-shrink: 0;
+  min-width: 32px;
+  user-select: none;
+`;
+
+const STYLES_CODE = css`
+  box-sizing: border-box;
+  user-select: text;
+  font-family: ${Constants.font.code};
+  color: ${Constants.system.gray};
+  width: 100%;
+  flex-grow: 1;
+  overflow-x: auto;
+`;
+
 const STYLES_CODE_BLOCK_PLAIN = css`
   box-sizing: border-box;
   font-family: ${Constants.font.code};
@@ -160,24 +179,6 @@ const STYLES_CODE_BLOCK_PLAIN = css`
       height: 0;
     }
   }
-`;
-
-const STYLES_CODE_BODY = css`
-  color: #666;
-  font-family: ${Constants.font.code};
-  flex-shrink: 0;
-  min-width: 32px;
-  user-select: none;
-`;
-
-const STYLES_CODE = css`
-  box-sizing: border-box;
-  user-select: text;
-  font-family: ${Constants.font.code};
-  color: ${Constants.system.gray};
-  width: 100%;
-  flex-grow: 1;
-  overflow-x: auto;
 `;
 
 const STYLES_LINE_NUMBER = css`
@@ -321,15 +322,13 @@ class CodeBlock extends React.Component {
     }, 1500);
   };
 
-  _handleSwitchLang = (language) => {
-    this.setState({ lang: language });
-    this.props.onLanguageChange(language);
+  _handleSwitchLang = (lang) => {
+    this.setState({ language: lang });
+    this.props.onLanguageChange(lang);
   };
   render() {
     let availableLanguages = this.props.multiLang ? Object.keys(this.props.children) : 1;
     let showTopBar = this.props.title || availableLanguages.length > 1;
-    if (this.props.title) {
-    }
     let copyText = this.state.copied ? "Copied" : "Copy code";
 
     return (
