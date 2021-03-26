@@ -1,99 +1,13 @@
 import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Constants from "~/common/constants";
+import * as Strings from "~/common/strings";
 
 import { P } from "~/components/system/components/Typography";
 import { Slider } from "~/components/system/components/Slider";
 import { css } from "@emotion/react";
 
-import Select from "./Select";
-
-const CONTROLS_STYLES_WRAPPER = (theme) => css`
-  width: fit-content;
-  display: flex;
-  margin: 0 auto;
-  & > * + * {
-    margin-left: 8px;
-  }
-  path {
-    stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
-  }
-`;
-
-const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
-  display: flex;
-  border-radius: 4px;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
-  button {
-    display: block;
-    box-sizing: border-box;
-    cursor: pointer;
-    padding: 8px 12px;
-    margin: 0;
-    background: none;
-    border: none;
-  }
-  button:focus {
-    outline: none;
-  }
-  svg {
-    display: block;
-  }
-  .lightmode_btn {
-    path {
-      stroke: ${theme.fontPreviewDarkMode ? theme.system.gray50 : theme.system.black};
-    }
-    background-color: ${!theme.fontPreviewDarkMode ? theme.system.gray20 : "none"};
-  }
-  .darkmode_btn {
-    path {
-      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGray};
-    }
-    background-color: ${theme.fontPreviewDarkMode ? theme.system.gray80 : "none"};
-  }
-`;
-
-const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
-  padding: 8px 12px;
-  margin: 0;
-  border-radius: 4px;
-  background: none;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
-  cursor: pointer;
-  ${isActive &&
-  css`
-    background-color: ${theme.fontPreviewDarkMode ? theme.system.gray80 : theme.system.gray20};
-  `};
-  path {
-    ${isActive
-      ? css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
-        `
-      : css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.gray50 : theme.system.textGray};
-        `}
-  }
-`;
-
-export const FixedControls = ({ onDarkMode, onLightMode, onToggleSettings, isSettingsVisible }) => {
-  return (
-    <div css={CONTROLS_STYLES_WRAPPER}>
-      <div>
-        <button css={CONTROLS_SETTINGS_BUTTON(isSettingsVisible)} onClick={onToggleSettings}>
-          <SVG.Sliders />
-        </button>
-      </div>
-      <div css={CONTROLS_DARKMODE_WRAPPER}>
-        <button onClick={onLightMode} className="lightmode_btn">
-          <SVG.Sun />
-        </button>
-        <button onClick={onDarkMode} className="darkmode_btn">
-          <SVG.Moon />
-        </button>
-      </div>
-    </div>
-  );
-};
+import Select from "../Select";
 
 const STYLES_CONTROLLER_WRAPPER = (theme) =>
   css`
@@ -115,9 +29,43 @@ const STYLES_CONTENT_SELECT = (theme) => css`
   padding: 8px 12px;
   border-radius: 4px;
 `;
+
+const STYLES_FEELING_LUCKY = (theme) => css`
+  box-sizing: border-box;
+  display: flex;
+  border-radius: 4px;
+  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  justify-content: space-between;
+  overflow: hidden;
+  button {
+    display: block;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 8px 12px;
+    margin: 0;
+    border: none;
+    background: none;
+    color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGrayDark};
+  }
+  button:focus {
+    outline: none;
+  }
+
+  svg {
+    display: block;
+    path {
+      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGrayDark};
+    }
+  }
+  .reset_button {
+    border-left: 1px solid
+      ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  }
+`;
 export const Controls = ({
   view,
   settings,
+  defaultOptions,
   updateView,
   updateFontSize,
   updateLineHeight,
@@ -125,30 +73,39 @@ export const Controls = ({
   updateColumn,
   updateTextAlign,
   updateVerticalAlign,
+  getRandomLayout,
+  resetLayout,
 }) => {
-  const VerticalOptions = [
-    { value: "top", name: "Top" },
-    { value: "center", name: "Center" },
-    { value: "bottom", name: "Bottom" },
-  ];
+  const arrayToSelectOptions = (arr) =>
+    arr.reduce((acc, option) => [...acc, { value: option, name: Strings.capitalize(option) }], []);
 
   return (
     <div css={STYLES_CONTROLLER_WRAPPER}>
       <div>
-        <P css={STYLES_LABEL}>Content</P>
-        <Select
-          inputStyle={STYLES_CONTENT_SELECT}
-          options={[
-            { value: "sentence", name: "Sentence" },
-            { value: "paragraph", name: "Paragraph" },
-            { value: "glyphs", name: "Glyphs" },
-          ]}
-          value={view}
-          onChange={(e) => updateView(e.target.value)}
-        />
+        <P css={STYLES_LABEL}>Settings</P>
+        <div css={STYLES_FEELING_LUCKY}>
+          <button onClick={getRandomLayout}>
+            <P
+              css={css`
+                font-size: 14px;
+                white-space: pre;
+              `}
+            >
+              I’m feeling lucky
+            </P>
+          </button>
+          <button className="reset_button" onClick={resetLayout}>
+            <SVG.RotateCcw />
+          </button>
+        </div>
       </div>
+      <ContentControl
+        value={view}
+        options={arrayToSelectOptions(defaultOptions.VIEW_OPTIONS)}
+        onChange={(e) => updateView(e.target.value)}
+      />
       <AlignmentControl
-        options={VerticalOptions}
+        options={arrayToSelectOptions(defaultOptions.VALIGN_OPTIONS)}
         vAlign={settings.valign}
         textAlign={settings.textAlign}
         onChange={(e) => updateVerticalAlign(e.target.value)}
@@ -158,9 +115,7 @@ export const Controls = ({
       <Controller
         selectSuffix="px"
         label="Size"
-        min={12}
-        max={72}
-        step={2}
+        {...defaultOptions.SIZE_OPTIONS}
         options={[
           { value: 12, name: "12px" },
           { value: 14, name: "14px" },
@@ -174,9 +129,7 @@ export const Controls = ({
       <Controller
         label="Line Height"
         selectSuffix="%"
-        min={40}
-        max={400}
-        step={20}
+        {...defaultOptions.LINE_HEIGHT_OPTIONS}
         options={[
           { value: 100, name: "100%" },
           { value: 200, name: "200%" },
@@ -190,9 +143,7 @@ export const Controls = ({
       <Controller
         label="Tracking"
         selectSuffix="em"
-        min={-1}
-        max={1.5}
-        step={0.05}
+        {...defaultOptions.TRACKING_OPTIONS}
         options={[
           { value: -1, name: "-1em" },
           { value: 0, name: "0em" },
@@ -205,9 +156,7 @@ export const Controls = ({
       />
       <Controller
         label="Column"
-        min={1}
-        max={6}
-        step={1}
+        {...defaultOptions.COLUMN_OPTIONS}
         options={[
           { value: 1, name: "1" },
           { value: 2, name: "2" },
@@ -277,6 +226,23 @@ const STYLES_ALIGN_BUTTON = (isActive) => (theme) => css`
   }
 `;
 
+export const ContentControl = ({ options, value, onChange, showLabel = true }) => {
+  return (
+    <div
+      css={css`
+        width: 100%;
+      `}
+    >
+      {showLabel && <P css={STYLES_LABEL}>Content</P>}
+      <Select
+        inputStyle={STYLES_CONTENT_SELECT}
+        options={options}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
 const AlignmentControl = ({ vAlign, textAlign, options, onChange, updateTextAlign, disabled }) => {
   return (
     <div

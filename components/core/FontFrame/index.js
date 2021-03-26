@@ -3,7 +3,8 @@ import * as React from "react";
 import { css } from "@emotion/react";
 
 import { useFont, useFontControls } from "./hooks";
-import { FixedControls, Controls } from "./Controls";
+import { Controls } from "./Controls/index";
+import { FixedControls, MobileFixedControls } from "./Controls/FixedControls";
 
 const GET_STYLES_CONTAINER = (theme) => css`
   position: relative;
@@ -13,6 +14,17 @@ const GET_STYLES_CONTAINER = (theme) => css`
   height: 100%;
   background-color: ${theme.fontPreviewDarkMode ? theme.system.pitchBlack : theme.system.white};
   padding-top: 14px;
+`;
+const STYLES_MOBILE_HIDDEN = (theme) => css`
+  @media (max-width: ${theme.sizes.mobile}px) {
+    display: none;
+  }
+`;
+
+const STYLES_MOBILE_ONLY = (theme) => css`
+  @media (min-width: ${theme.sizes.mobile}px) {
+    display: none;
+  }
 `;
 
 export default function FontFrame({ cid, url, ...props }) {
@@ -30,18 +42,22 @@ export default function FontFrame({ cid, url, ...props }) {
       updateColumn,
       updateTextAlign,
       updateVerticalAlign,
+      resetLayout,
+      getRandomLayout,
     },
   ] = useFontControls();
 
   return (
     <div css={GET_STYLES_CONTAINER} style={{ fontFamily: fontName }} {...props}>
-      <FixedControls
-        onDarkMode={setDarkMode}
-        onLightMode={setLightMode}
-        onToggleSettings={toggleSettings}
-        isDarkMode={currentState.context.darkmode}
-        isSettingsVisible={currentState.context.showSettings}
-      />
+      <div css={STYLES_MOBILE_HIDDEN}>
+        <FixedControls
+          onDarkMode={setDarkMode}
+          onLightMode={setLightMode}
+          onToggleSettings={toggleSettings}
+          isDarkMode={currentState.context.darkmode}
+          isSettingsVisible={currentState.context.showSettings}
+        />
+      </div>
       <div style={{ position: "relative", flexGrow: 1, overflowY: "scroll" }}>
         {isFontLoading && (
           <div
@@ -89,19 +105,33 @@ export default function FontFrame({ cid, url, ...props }) {
           />
         )}
       </div>
-      {currentState.context.showSettings && (
-        <Controls
+      <div css={STYLES_MOBILE_HIDDEN}>
+        {currentState.context.showSettings && (
+          <Controls
+            view={currentState.view}
+            defaultOptions={currentState.defaultOptions}
+            resetLayout={resetLayout}
+            updateView={updateView}
+            settings={currentState.context.settings}
+            updateFontSize={updateFontSize}
+            updateLineHeight={updateLineHeight}
+            updateTracking={updateTracking}
+            updateColumn={updateColumn}
+            updateTextAlign={updateTextAlign}
+            updateVerticalAlign={updateVerticalAlign}
+            getRandomLayout={getRandomLayout}
+          />
+        )}
+      </div>
+      <div css={STYLES_MOBILE_ONLY}>
+        <MobileFixedControls
           view={currentState.view}
+          defaultOptions={currentState.defaultOptions}
           updateView={updateView}
-          settings={currentState.context.settings}
-          updateFontSize={updateFontSize}
-          updateLineHeight={updateLineHeight}
-          updateTracking={updateTracking}
-          updateColumn={updateColumn}
-          updateTextAlign={updateTextAlign}
-          updateVerticalAlign={updateVerticalAlign}
+          onDarkMode={setDarkMode}
+          onLightMode={setLightMode}
         />
-      )}
+      </div>
     </div>
   );
 }
@@ -198,8 +228,9 @@ const Glyphs = ({}) => {
     <div css={STYLES_GLYPHS_WRAPPER}>
       <div css={STYLES_GLYPHS_LETTER}>Aa</div>
       <div css={STYLES_GLYPHS_GRID}>
-        {glyphs.map((letter) => (
+        {glyphs.map((letter, i) => (
           <div
+            key={letter + i}
             css={css`
               margin-top: 16px;
             `}

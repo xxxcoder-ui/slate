@@ -1,6 +1,16 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
 
+const generateNumberByStep = ({ min, max, step = 1 }) => {
+  var numbers = [];
+  for (var n = min; n <= max; n += step) {
+    numbers.push(n);
+  }
+
+  const randomIndex = Math.floor(Math.random() * numbers.length);
+  return numbers[randomIndex];
+};
+
 export const useFont = ({ url, name }, deps) => {
   const [loading, setLoading] = React.useState(false);
   const prevName = React.useRef(name);
@@ -41,6 +51,14 @@ const initialState = {
   view: "sentence",
 };
 
+const VIEW_OPTIONS = ["custom", "glyphs", "sentence", "paragraph"];
+const VALIGN_OPTIONS = ["top", "center", "bottom"];
+const ALIGN_OPTIONS = ["left", "center", "right"];
+const SIZE_OPTIONS = { min: 12, max: 72, step: 2 };
+const LINE_HEIGHT_OPTIONS = { min: 40, max: 400, step: 20 };
+const TRACKING_OPTIONS = { min: -1, max: 1.5, step: 0.05 };
+const COLUMN_OPTIONS = { min: 1, max: 6, step: 1 };
+
 const reducer = (state, action) => {
   const updateSettingsField = (field, newValue) => ({
     ...state,
@@ -70,6 +88,32 @@ const reducer = (state, action) => {
       return updateSettingsField("valign", action.value);
     case "UPDATE_VIEW":
       return { ...state, view: action.value };
+    case "RESET":
+      return { ...initialState };
+    case "FEELING_LUCKY":
+      const generateOption = (options) =>
+        options[generateNumberByStep({ min: 0, max: options.length - 1, step: 1 })];
+      const generatedView = generateOption(VIEW_OPTIONS.slice(1));
+      console.log(generatedView);
+      if (generatedView === "glyphs") {
+        return { ...state, view: generatedView };
+      }
+      console.log("VALIGN", generateOption(VALIGN_OPTIONS));
+      return {
+        ...state,
+        view: generatedView,
+        context: {
+          ...state.context,
+          settings: {
+            valign: generateOption(VALIGN_OPTIONS),
+            textAlign: generateOption(ALIGN_OPTIONS),
+            fontSize: generateNumberByStep(SIZE_OPTIONS),
+            column: generateNumberByStep(COLUMN_OPTIONS),
+            lineHeight: generateNumberByStep(LINE_HEIGHT_OPTIONS),
+            tracking: generateNumberByStep(TRACKING_OPTIONS).toPrecision(2),
+          },
+        },
+      };
     default:
       return state;
   }
@@ -94,8 +138,24 @@ export const useFontControls = () => {
       updateTextAlign: (v) => send({ type: "UPDATE_TEXT_ALIGN", value: v }),
       updateVerticalAlign: (v) => send({ type: "UPDATE_VERTICAL_ALIGN", value: v }),
       updateView: (v) => send({ type: "UPDATE_VIEW", value: v }),
+      resetLayout: () => send({ type: "RESET" }),
+      getRandomLayout: () => send({ type: "FEELING_LUCKY" }),
     }),
     []
   );
-  return [current, handlers];
+  return [
+    {
+      ...current,
+      defaultOptions: {
+        VIEW_OPTIONS,
+        VALIGN_OPTIONS,
+        ALIGN_OPTIONS,
+        SIZE_OPTIONS,
+        LINE_HEIGHT_OPTIONS,
+        TRACKING_OPTIONS,
+        COLUMN_OPTIONS,
+      },
+    },
+    handlers,
+  ];
 };

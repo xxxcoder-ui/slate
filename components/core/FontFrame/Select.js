@@ -39,6 +39,7 @@ export default function Select({
           css={css`
             font-size: 14px;
             white-space: pre;
+            line-height: 21px;
           `}
         >
           {label}
