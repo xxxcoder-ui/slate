@@ -6,8 +6,8 @@ export const FILE_STORAGE_URL = "./public/static/files/";
 export const GITHUB_URL = "https://github.com/filecoin-project/slate";
 export const ANALYTICS_URL = "https://slate-stats-dev.azurewebsites.net/";
 
-// NOTE(toast): 30 GB from jim/martina/ignacio
-export const TEXTILE_ACCOUNT_BYTE_LIMIT = 1073741824 * 30;
+// NOTE(toast): 4 GB from jim/martina/ignacio
+export const TEXTILE_ACCOUNT_BYTE_LIMIT = 1073741824 * 4;
 
 // NOTE(jim): 4 GB - minus .textileseed
 export const TEXTILE_BUCKET_LIMIT = TEXTILE_ACCOUNT_BYTE_LIMIT - 234;
