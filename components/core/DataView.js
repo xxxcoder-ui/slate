@@ -201,6 +201,38 @@ const STYLES_MOBILE_HIDDEN = css`
   }
 `;
 
+const STYLES_TAGS_WRAPPER = css`
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+`;
+
+const STYLES_LIST = css`
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+`;
+
+const STYLES_TAG = css`
+  list-style-type: none;
+  border-radius: 4px;
+  background: ${Constants.system.bgGray};
+  color: ${Constants.system.newBlack};
+  font-family: ${Constants.font.text};
+  padding: 2px 8px;
+  margin: 8px 8px 0 0;
+
+  span {
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  &:hover {
+    background: ${Constants.system.gray30};
+  }
+`;
+
 export default class DataView extends React.Component {
   _mounted = false;
 
@@ -482,6 +514,55 @@ export default class DataView extends React.Component {
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
+  _checkTagsOverflow = (i) => {
+    let nodes = document.querySelectorAll(`[data-tag-list="${i}"]`)[0]?.childNodes;
+    if (nodes) {
+      let items = Array.from(nodes);
+
+      let total = 0;
+      let sliceIndex;
+
+      for (let [index, item] of Object.entries(items)) {
+        if (total >= 220) {
+          sliceIndex = index;
+          break;
+        }
+
+        total += item.offsetWidth;
+      }
+
+      return sliceIndex;
+    }
+  };
+
+  getCommonTagFromSelectedItems = () => {
+    const { items } = this.props;
+    const { checked } = this.state;
+
+    if (!Object.keys(checked).length) {
+      return;
+    }
+
+    let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
+      items[index].tags ? items[index].tags : []
+    );
+
+    let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
+    if (sortedItems.length <= 1) {
+      return [];
+    }
+
+    let commonTags = sortedItems.shift().reduce((acc, cur) => {
+      if (acc.indexOf(cur) === -1 && sortedItems.every((item) => item.indexOf(cur) !== -1)) {
+        acc.push(cur);
+      }
+
+      return acc;
+    }, []);
+
+    return commonTags;
+  };
+
   render() {
     let numChecked = Object.keys(this.state.checked).length || 0;
     // const header = (
@@ -535,6 +616,25 @@ export default class DataView extends React.Component {
                   onClick={this._handleAddToSlate}
                 >
                   Add to slate
+                </ButtonPrimary>
+                <ButtonPrimary
+                  transparent
+                  style={{ color: Constants.system.white }}
+                  onClick={() => {
+                    this.props.onAction({
+                      type: "SIDEBAR",
+                      value: "SIDEBAR_EDIT_TAGS",
+                      data: {
+                        numChecked,
+                        commonTags: this.getCommonTagFromSelectedItems(),
+                        suggestions: this.props.viewer.tags,
+                        objects: this.props.items,
+                        checked: this.state.checked,
+                      },
+                    });
+                  }}
+                >
+                  Edit tags
                 </ButtonPrimary>
                 <ButtonWarning
                   transparent
@@ -743,6 +843,11 @@ export default class DataView extends React.Component {
         width: "100%",
       },
       {
+        key: "tags",
+        name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Tags</div>,
+        width: "341px",
+      },
+      {
         key: "size",
         name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Size</div>,
         width: "104px",
@@ -753,6 +858,7 @@ export default class DataView extends React.Component {
         width: "48px",
       },
     ];
+
     const rows = this.props.items.slice(0, this.state.viewLimit).map((each, index) => {
       const cid = each.cid;
 
@@ -793,6 +899,21 @@ export default class DataView extends React.Component {
               </div>
             </FilePreviewBubble>
           </Selectable>
+        ),
+        tags: (
+          <>
+            {each.tags && (
+              <div css={STYLES_TAGS_WRAPPER}>
+                <ul css={STYLES_LIST} data-tag-list={index}>
+                  {each.tags.map((tag, i) => (
+                    <li key={tag} css={STYLES_TAG}>
+                      <span>{tag}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
         ),
         size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
         more: (
