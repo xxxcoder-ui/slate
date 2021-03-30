@@ -20,7 +20,7 @@ const STYLES_GROUPING = css`
 
 export default class SidebarEditTags extends React.Component {
   state = {
-    newTags:
+    tags:
       !Array.isArray(this.props.sidebarData.commonTags) ||
       this.props.sidebarData.commonTags?.length === 0
         ? []
@@ -38,10 +38,10 @@ export default class SidebarEditTags extends React.Component {
     });
   };
 
-  /* updateSuggestions = () => {
-    let newSuggestions = new Set([...this.props.sidebarData.suggestions, ...this.state.newTags]);
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.props.sidebarData.suggestions, ...this.state.tags]);
     this.setState({ suggestions: Array.from(newSuggestions) });
-  }; */
+  };
 
   _handleSave = async (details, index) => {
     let { objects } = this.props.sidebarData;
@@ -51,40 +51,55 @@ export default class SidebarEditTags extends React.Component {
       id: this.props.viewer.id,
       data: objects[index],
     });
-    console.log(response);
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
+
     Events.hasError(response);
   };
 
   _handleSubmit = async () => {
-    let { checked, objects, commonTags } = this.props.sidebarData;
+    this.props.onCancel();
 
+    let { checked, objects, commonTags } = this.props.sidebarData;
     const checkedIndexes = Object.keys(checked);
-    /* data must be fixed */
-    /* let data = { tags: this.state.newTags }; */
+    let data;
 
     await Promise.all(
       checkedIndexes.map(async (checkedIndex) => {
-        let prevTags = objects[checkedIndex]?.tags;
-        console.log({ prevTags });
-        let newTags = this.state.newTags;
-        console.log({ newTags });
-        console.log({ commonTags });
-        /* commonTags */
+        let objectTags = Array.isArray(objects[checkedIndex]?.tags)
+          ? objects[checkedIndex].tags
+          : [];
+        let newTags = this.state.tags;
 
-        /* 
-          1. If there is an item in newTags which is not in commonTag, add to prevTags;
-          2. If there is an item in commonTag which is not in newTags, remove it from prevTags;
-         */
-        let data;
-
-        if (newTags.length > commonTags.length) {
-          let update = new Set([...prevTags, ...newTags, ...commonTags]);
-          data = { tags: Array.from(update) };
+        /* NOTE(daniel): since there are no common tags, we are simply adding new tags to the files */
+        if (!commonTags.length) {
+          data = { tags: [...new Set([...objectTags, ...newTags])] };
+          return await this._handleSave(data, checkedIndex);
         }
 
-        this._handleSave(data, checkedIndex);
+        /* NOTE(daniel): symmetrical difference between new tags and common tags */
+        let diff = newTags
+          .filter((i) => !commonTags.includes(i))
+          .concat(commonTags.filter((i) => !newTags.includes(i)));
+
+        let update = diff.reduce((acc, cur) => {
+          if (!commonTags.includes(cur) && newTags.includes(cur)) {
+            acc.push(cur);
+          } else if (commonTags.includes(cur) && !newTags.includes(cur)) {
+            let removalIndex = acc.findIndex((item) => item === cur);
+            acc.splice(removalIndex, 1);
+          }
+
+          return acc;
+        }, objectTags);
+
+        data = { tags: update };
+
+        return await this._handleSave(data, checkedIndex);
       })
     );
+
+    this.updateSuggestions();
   };
 
   render() {
@@ -125,9 +140,8 @@ export default class SidebarEditTags extends React.Component {
           <Tag
             name="tags"
             placeholder={`Edit tags for ${`${numChecked} file${numChecked === 1 ? "" : "s"}`} `}
-            tags={this.state.newTags}
+            tags={this.state.tags}
             suggestions={this.state.suggestions}
-            style={{ margin: "0 0 16px" }}
             onChange={this._handleChange}
             /* handleTagDelete={this._handleTagDelete} */
           />

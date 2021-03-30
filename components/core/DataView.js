@@ -19,6 +19,7 @@ import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
 
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 import FilePreviewBubble from "~/components/core/FilePreviewBubble";
+import isEqual from "lodash/isEqual";
 
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
@@ -232,6 +233,70 @@ const STYLES_TAG = css`
     background: ${Constants.system.gray30};
   }
 `;
+
+class Tags extends React.Component {
+  state = {
+    isTruncated: false,
+    truncateIndex: 0,
+  };
+
+  listWrapper = React.createRef();
+  listEl = React.createRef();
+
+  componentDidMount() {
+    this._handleTruncate();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!isEqual(prevProps.tags, this.props.tags)) {
+      this._handleTruncate();
+    }
+  }
+
+  _handleTruncate = () => {
+    const listWrapper = this.listWrapper.current?.getBoundingClientRect();
+    const tagNodes = this.listEl.current?.querySelectorAll("li");
+    const tagElems = Array.from(tagNodes);
+
+    let total = 0;
+    const truncateIndex = tagElems.findIndex((tagElem) => {
+      const { width } = tagElem?.getBoundingClientRect();
+      total += width;
+
+      if (total >= listWrapper.width - 50) {
+        return true;
+      }
+    });
+
+    if (truncateIndex > 0) {
+      this.setState({ isTruncated: true, truncateIndex });
+      return;
+    }
+
+    this.setState({ isTruncated: false, truncateIndex: tagElems.length });
+  };
+
+  render() {
+    const { tags } = this.props;
+
+    return (
+      <div css={STYLES_TAGS_WRAPPER}>
+        <div ref={this.listWrapper} style={{ width: 340 }}>
+          <ul css={STYLES_LIST} ref={this.listEl}>
+            {(this.state.isTruncated ? tags.slice(0, this.state.truncateIndex) : tags).map(
+              (tag) => (
+                <li key={tag} css={STYLES_TAG}>
+                  <span>{tag}</span>
+                </li>
+              )
+            )}
+          </ul>
+          {this.state.isTruncated && <span>...</span>}
+        </div>
+      </div>
+    );
+  }
+}
 
 export default class DataView extends React.Component {
   _mounted = false;
@@ -514,27 +579,6 @@ export default class DataView extends React.Component {
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
-  _checkTagsOverflow = (i) => {
-    let nodes = document.querySelectorAll(`[data-tag-list="${i}"]`)[0]?.childNodes;
-    if (nodes) {
-      let items = Array.from(nodes);
-
-      let total = 0;
-      let sliceIndex;
-
-      for (let [index, item] of Object.entries(items)) {
-        if (total >= 220) {
-          sliceIndex = index;
-          break;
-        }
-
-        total += item.offsetWidth;
-      }
-
-      return sliceIndex;
-    }
-  };
-
   getCommonTagFromSelectedItems = () => {
     const { items } = this.props;
     const { checked } = this.state;
@@ -634,7 +678,7 @@ export default class DataView extends React.Component {
                     });
                   }}
                 >
-                  Edit tags
+                  Edit tag{numChecked > 1 ? "s" : ""}
                 </ButtonPrimary>
                 <ButtonWarning
                   transparent
@@ -845,7 +889,7 @@ export default class DataView extends React.Component {
       {
         key: "tags",
         name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Tags</div>,
-        width: "341px",
+        width: "360px",
       },
       {
         key: "size",
@@ -900,21 +944,7 @@ export default class DataView extends React.Component {
             </FilePreviewBubble>
           </Selectable>
         ),
-        tags: (
-          <>
-            {each.tags && (
-              <div css={STYLES_TAGS_WRAPPER}>
-                <ul css={STYLES_LIST} data-tag-list={index}>
-                  {each.tags.map((tag, i) => (
-                    <li key={tag} css={STYLES_TAG}>
-                      <span>{tag}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </>
-        ),
+        tags: <>{each.tags && <Tags tags={each.tags} />}</>,
         size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
         more: (
           <div
