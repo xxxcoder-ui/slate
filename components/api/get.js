@@ -9,7 +9,6 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    // NOTE: your API key
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
@@ -21,60 +20,46 @@ const json = await response.json();
 console.log(json);`;
 
 const EXAMPLE_CODE_PY = (key) => `import requests
-url = 'https://slate.host/api/v1/get'
+import json as JSON
+
+url = "https://slate.host/api/v1/get"
 headers = {
-  'content-type': 'application/json',
-  'Authorization': '${key}'
-  }
+    "content-type": "application/json",
+    "Authorization": "SLA8d5a9c28-cb14-4886-b4ac-5575da2d90aaTE",
+}
 
-json = {'private': 'true'}
+json = {"private": "false"}
 
-r = requests.post(url, headers=headers, json=json)
+get = requests.post(url, headers=headers, json=json)
 
-print(r.text)`;
-
-const DocPage = (props) => {
-  let language = props.language;
-  let APIKey = props.APIKey;
-  if (language === "javascript") {
-    return (
-      <React.Fragment>
-        <System.DescriptionGroup
-          style={{ marginTop: 64 }}
-          label="Get all slates"
-          description="This API request returns all of your public slates"
-        />
-        <CodeBlock
-          children={EXAMPLE_CODE_JS(APIKey)}
-          language={language}
-          style={{ maxWidth: "840px" }}
-          topBar="true"
-          title="Get all slates"
-        />
-      </React.Fragment>
-    );
-  }
-
-  if (language === "python") {
-    return (
-      <React.Fragment>
-        <System.DescriptionGroup
-          style={{ marginTop: 64 }}
-          label="Get all slates"
-          description="This API request returns all of your public slates"
-        />
-        <CodeBlock
-          children={EXAMPLE_CODE_PY(APIKey)}
-          language={language}
-          style={{ maxWidth: "840px" }}
-        />
-      </React.Fragment>
-    );
-  }
-};
+print(JSON.dumps(get.json(), indent=2))`;
 
 export default class APIDocsGet extends React.Component {
   render() {
-    return <DocPage language={this.props.language} APIKey={this.props.APIKey} />;
+    let APIKey = this.props.APIKey;
+    let language = this.props.language;
+
+    let code = {
+      javascript: EXAMPLE_CODE_JS(APIKey),
+      python: EXAMPLE_CODE_PY(APIKey),
+    };
+
+    return (
+      <React.Fragment>
+        <System.DescriptionGroup
+          style={{ maxWidth: 640, marginTop: 64 }}
+          label="Get all slates"
+          description="This API request returns all of your slates, and can optionally return your private slates as well. If the request body is omitted, the request will return only your public slates by default."
+        />
+        <CodeBlock
+          children={code}
+          language={language}
+          style={{ maxWidth: "820px" }}
+          title="Get all slates"
+          multiLang="true"
+          onLanguageChange={this.props.onLanguageChange}
+        />
+      </React.Fragment>
+    );
   }
 }

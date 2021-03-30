@@ -363,7 +363,24 @@ export default class SceneSettingsDeveloper extends React.Component {
           <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
         */}
         <React.Fragment>
+          <APIDocsGet
+            language={lang}
+            APIKey={APIKey}
+            onLanguageChange={this._handleChangeLanguage}
+          />
           <APIDocsGetSlate
+            language={lang}
+            APIKey={APIKey}
+            slateId={slateId}
+            onLanguageChange={this._handleChangeLanguage}
+          />
+          <APIDocsUpdateSlate
+            language={lang}
+            APIKey={APIKey}
+            slateId={slateId}
+            onLanguageChange={this._handleChangeLanguage}
+          />
+          <APIDocsUploadToSlate
             language={lang}
             APIKey={APIKey}
             slateId={slateId}

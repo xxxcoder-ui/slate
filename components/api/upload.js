@@ -17,7 +17,6 @@ data.append("data", file);
 const response = await fetch(url, {
   method: 'POST',
   headers: {
-    // NOTE: your API key
     Authorization: 'Basic ${key}',
   },
   body: data
@@ -25,66 +24,42 @@ const response = await fetch(url, {
 
 const json = await response.json();
 
-// NOTE: the URL to your asset will be available in the JSON response.
 console.log(json);`;
 
-const EXAMPLE_CODE_PY = (key, slateId) => `import requests
+const EXAMPLE_CODE_PY = (key, slateId) => `url = "https://uploads.slate.host/api/public/${slateId}"
+files = {"file": open("example-file.txt", "rb")}
+headers = {"Authorization": "Basic ${key}"}
 
-url = 'https://uploads.slate.host/api/public/${slateId}'
-files = {'file': open('example-file.txt', 'rb')}
-headers = {'Authorization': 'Basic ${key}'}
-
-r = requests.post(url, headers=headers, files=files)
-print(r.text)`;
-
-const DocPage = (props) => {
-  let language = props.language;
-  let key = props.APIKey;
-  let slateId = props.slateId;
-  if (language === "javascript") {
-    return (
-      <React.Fragment>
-        <System.DescriptionGroup
-          style={{ marginTop: 64 }}
-          label="Upload to slate by Id"
-          description="This API endpoint will add a file object to your slate."
-        />
-        <CodeBlock
-          children={EXAMPLE_CODE_JS(key, slateId)}
-          style={{ maxWidth: "840px" }}
-          language={language}
-          topBar="true"
-          title="Upload to slate by Id"
-        />
-      </React.Fragment>
-    );
-  }
-  if (language === "python") {
-    return (
-      <React.Fragment>
-        <System.DescriptionGroup
-          style={{ marginTop: 64 }}
-          label="Upload to slate by Id"
-          description="This API endpoint will add a file object to your slate."
-        />
-        <CodeBlock
-          children={EXAMPLE_CODE_PY(key, slateId)}
-          style={{ maxWidth: "840px" }}
-          language={language}
-        />
-      </React.Fragment>
-    );
-  }
-};
+r = requests.post(url, headers=headers, files=files)`;
 
 export default class APIDocsUploadToSlate extends React.Component {
   render() {
+    let language = this.props.language;
+    let key = this.props.APIKey;
+    let slateId = this.props.slateId;
+
+    let code = {
+      javascript: EXAMPLE_CODE_JS(key, slateId),
+      python: EXAMPLE_CODE_PY(key, slateId),
+    };
     return (
-      <DocPage
-        language={this.props.language}
-        APIKey={this.props.APIKey}
-        slateId={this.props.slateId}
-      />
+      <React.Fragment>
+        <System.DescriptionGroup
+          style={{ maxWidth: 640, marginTop: 64 }}
+          label="Upload to slate by Id"
+          description={
+            'This API endpoint allows you to upload file(s) to your slate. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network.'
+          }
+        />
+        <CodeBlock
+          children={code}
+          style={{ maxWidth: "820px" }}
+          language={language}
+          title="Upload to slate by ID"
+          multiLang="true"
+          onLanguageChange={this.props.onLanguageChange}
+        />
+      </React.Fragment>
     );
   }
 }

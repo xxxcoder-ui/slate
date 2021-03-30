@@ -12,11 +12,9 @@ const EXAMPLE_CODE_JS = (
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    // NOTE: your API key
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    // NOTE: your slate ID
     id: '${slateId}'
   }})
 });
@@ -33,15 +31,14 @@ headers = {
 }
 json = {'id': '${slateId}'}
 r = requests.post(url, headers=headers, json=json)
-print(r.text)
-`;
+print(r.text)`;
 
 const EXAMPLE_RESPONSE = (key, slateId) => `
 {
   "decorator": "V1_GET",
   "slates": [
     {
-      "id": "8eb2d471-9abf-4eae-a461-c62ebeb529b0",
+      "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "created_at": "2021-03-24T00:51:21.007Z",
       "updated_at": "2021-03-24T02:58:21.728Z",
       "published_at": null,
@@ -67,18 +64,18 @@ const EXAMPLE_RESPONSE = (key, slateId) => `
         },
         "objects": [
           {
-            "id": "data-fce946be-7212-4f62-a74c-adfafd8d0d15",
+            "id": "data-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             "cid": "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a",
-            "url": "https://slate.textile.io/ipfs/bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v355ykcgzylvsfljcv3s3a",
-            "name": "4.jpg",
+            "url": "https://slate.textile.io/ipfs/cid-goes-here",
+            "name": "door.jpg",
             "size": 33676,
             "type": "image/jpeg",
-            "title": "4.jpg",
-            "ownerId": "8b2bfac4-9c57-4cba-ae13-81da293fabc5",
+            "title": "door.jpg",
+            "ownerId": ""xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,
             "blurhash": "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7"
           }
         ],
-        "ownerId": "8b2bfac4-9c57-4cba-ae13-81da293fabc5",
+        "ownerId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "url": "https://slate.host/devexamples/public-example"
       }
     }
@@ -86,7 +83,7 @@ const EXAMPLE_RESPONSE = (key, slateId) => `
   "user": {
     "username": "devexamples",
     "data": {
-      "photo": "https://slate.textile.io/ipfs/bafkreiardkkfxj3ip373ee2tf6ffivjqclq7ionemt6pw55e6hv7ws5pvu"
+      "photo": "https://slate.textile.io/ipfs/cid-goes-here"
     }
   }
 }`;
@@ -105,13 +102,13 @@ export default class APIDocsGetSlate extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 64 }}
           label="Get slate by ID"
-          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. Save the response locally because you can send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
+          description="This API request will return a specific slate. If you don't provide an ID argument the response will contain the most recently modified slate. You can save the response locally and send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
         />
         <CodeBlock
           children={code}
-          style={{ maxWidth: "840px" }}
+          style={{ maxWidth: "820px" }}
           language={language}
           title="Get slate by ID"
           onLanguageChange={this.props.onLanguageChange}
@@ -120,7 +117,7 @@ export default class APIDocsGetSlate extends React.Component {
         <br />
         <CodeBlock
           children={EXAMPLE_RESPONSE(APIKey, slateId)}
-          style={{ maxWidth: "840px" }}
+          style={{ maxWidth: "820px" }}
           language="json"
           title="Get slate by ID response"
         />
