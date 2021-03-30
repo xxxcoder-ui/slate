@@ -23,4 +23,14 @@ export const getPublicAndPrivateFiles = ({ viewer }) => {
   return { publicFiles, privateFiles };
 };
 
+export const generateNumberByStep = ({ min, max, step = 1 }) => {
+  var numbers = [];
+  for (var n = min; n <= max; n += step) {
+    numbers.push(n);
+  }
+
+  const randomIndex = Math.floor(Math.random() * numbers.length);
+  return numbers[randomIndex];
+};
+
 export const endsWithAny = (options, string) => options.some((option) => string.endsWith(option));

@@ -4,7 +4,7 @@ import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
-import { ContentControl } from "./";
+import { ContentControl } from "./Controls";
 
 const CONTROLS_STYLES_WRAPPER = (theme) => css`
   width: fit-content;

@@ -1,15 +1,7 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
 
-const generateNumberByStep = ({ min, max, step = 1 }) => {
-  var numbers = [];
-  for (var n = min; n <= max; n += step) {
-    numbers.push(n);
-  }
-
-  const randomIndex = Math.floor(Math.random() * numbers.length);
-  return numbers[randomIndex];
-};
+import { generateNumberByStep } from "~/common/utilities";
 
 export const useFont = ({ url, name }, deps) => {
   const [loading, setLoading] = React.useState(false);
@@ -39,6 +31,7 @@ const initialState = {
   context: {
     darkmode: true,
     showSettings: true,
+    customViewContent: "",
     settings: {
       valign: "center",
       textAlign: "left",
@@ -49,6 +42,7 @@ const initialState = {
     },
   },
   view: "sentence",
+  customView: "sentence",
 };
 
 const VIEW_OPTIONS = ["custom", "glyphs", "sentence", "paragraph"];
@@ -88,17 +82,22 @@ const reducer = (state, action) => {
       return updateSettingsField("valign", action.value);
     case "UPDATE_VIEW":
       return { ...state, view: action.value };
+    case "UPDATE_CUSTOM_VIEW":
+      return {
+        ...state,
+        view: "custom",
+        customView: action.payload.customView,
+        context: { ...state.context, customViewContent: action.payload.customViewContent },
+      };
     case "RESET":
       return { ...initialState };
     case "FEELING_LUCKY":
       const generateOption = (options) =>
         options[generateNumberByStep({ min: 0, max: options.length - 1, step: 1 })];
       const generatedView = generateOption(VIEW_OPTIONS.slice(1));
-      console.log(generatedView);
       if (generatedView === "glyphs") {
         return { ...state, view: generatedView };
       }
-      console.log("VALIGN", generateOption(VALIGN_OPTIONS));
       return {
         ...state,
         view: generatedView,
@@ -138,6 +137,8 @@ export const useFontControls = () => {
       updateTextAlign: (v) => send({ type: "UPDATE_TEXT_ALIGN", value: v }),
       updateVerticalAlign: (v) => send({ type: "UPDATE_VERTICAL_ALIGN", value: v }),
       updateView: (v) => send({ type: "UPDATE_VIEW", value: v }),
+      updateCustomView: ({ customView, customViewContent }) =>
+        send({ type: "UPDATE_CUSTOM_VIEW", payload: { customView, customViewContent } }),
       resetLayout: () => send({ type: "RESET" }),
       getRandomLayout: () => send({ type: "FEELING_LUCKY" }),
     }),

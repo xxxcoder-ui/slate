@@ -1,5 +1,5 @@
-import * as React from "react";
 import * as SVG from "~/common/svg";
+import * as React from "react";
 
 import { css } from "@emotion/react";
 import { P } from "~/components/system/components/Typography";

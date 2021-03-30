@@ -17,12 +17,12 @@ const STYLES_CONTAINER = css`
 
 const STYLES_BAR_CONTAINER = css`
   height: 24px;
-  width: calc(100%);
+  width: 100%;
   position: absolute;
 `;
 
 const STYLES_SLIDER_BAR = css`
-  width: calc(100% - 24px);
+  width: 100%;
   height: 4px;
   border-radius: 2px;
   background-color: ${Constants.system.gray};
