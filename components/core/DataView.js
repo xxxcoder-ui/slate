@@ -418,12 +418,12 @@ export default class DataView extends React.Component {
     });
   };
 
-  _handleCheckBoxMouseEnter = (i, isOwner) => {
-    isOwner && this.setState({ hover: i });
+  _handleCheckBoxMouseEnter = (i) => {
+    this.props.isOwner && this.setState({ hover: i });
   };
 
-  _handleCheckBoxMouseLeave = (i, isOwner) => {
-    isOwner && this.setState({ hover: null });
+  _handleCheckBoxMouseLeave = (i) => {
+    this.props.isOwner && this.setState({ hover: null });
   };
 
   _handleCopy = (e, value) => {
@@ -484,7 +484,6 @@ export default class DataView extends React.Component {
 
   render() {
     let numChecked = Object.keys(this.state.checked).length || 0;
-    let isOwner = this.props.isOwner;
     // const header = (
     //   <div css={STYLES_HEADER_LINE}>
     //     <span css={STYLES_MOBILE_HIDDEN}>
@@ -593,8 +592,8 @@ export default class DataView extends React.Component {
                         : "",
                     }}
                     onClick={() => this._handleSelect(i)}
-                    onMouseEnter={() => this._handleCheckBoxMouseEnter(i, isOwner)}
-                    onMouseLeave={() => this._handleCheckBoxMouseLeave(i, isOwner)}
+                    onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
+                    onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                   >
                     <SlateMediaObjectPreview
                       blurhash={each.blurhash}
