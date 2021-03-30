@@ -140,7 +140,6 @@ const STYLES_CODE_BLOCK = css`
   }
 `;
 
-
 const STYLES_CODE_BODY = css`
   color: #666;
   font-family: ${Constants.font.code};
@@ -355,7 +354,13 @@ class CodeBlock extends React.Component {
             )}
             <div
               css={STYLES_COPY_BUTTON}
-              onClick={() => this._handleCopy(this.props.children)}
+              onClick={() =>
+                this._handleCopy(
+                  availableLanguages.length > 1
+                    ? this.props.children[this.state.language]
+                    : this.props.children
+                )
+              }
               onMouseEnter={() => this.setState({ tooltip: true })}
               onMouseLeave={() => this.setState({ tooltip: false })}
             >
