@@ -24,7 +24,11 @@ export const useFont = ({ url, name }, deps) => {
     });
   }, deps);
 
-  return { isFontLoading: loading, fontName: alreadyLoaded ? name : prevName.current };
+  return {
+    isFontLoading: loading,
+    // NOTE(Amine): show previous font while we load the new one.
+    fontName: alreadyLoaded ? name : prevName.current,
+  };
 };
 
 const initialState = {
@@ -32,6 +36,7 @@ const initialState = {
     darkmode: true,
     showSettings: true,
     customViewContent: "",
+    shouldUpdateView: false,
     settings: {
       valign: "center",
       textAlign: "left",
@@ -62,6 +67,9 @@ const reducer = (state, action) => {
     },
   });
   switch (action.type) {
+    case "INITIATE_STATE": {
+      return action.value;
+    }
     case "SET_DARK_MODE":
       return { ...state, context: { ...state.context, darkmode: true } };
     case "SET_LIGHT_MODE":
@@ -81,13 +89,21 @@ const reducer = (state, action) => {
     case "UPDATE_VERTICAL_ALIGN":
       return updateSettingsField("valign", action.value);
     case "UPDATE_VIEW":
-      return { ...state, view: action.value };
+      return {
+        ...state,
+        view: action.value,
+        context: { ...state.context, shouldUpdateView: true },
+      };
     case "UPDATE_CUSTOM_VIEW":
       return {
         ...state,
         view: "custom",
         customView: action.payload.customView,
-        context: { ...state.context, customViewContent: action.payload.customViewContent },
+        context: {
+          ...state.context,
+          customViewContent: action.payload.customViewContent,
+          shouldUpdateView: false,
+        },
       };
     case "RESET":
       return { ...initialState };
@@ -129,6 +145,7 @@ export const useFontControls = () => {
     () => ({
       setDarkMode: () => handleDarkMode(true),
       setLightMode: () => handleDarkMode(false),
+      initialState: (state) => send({ type: "INITIATE_STATE", value: state }),
       toggleSettings: () => send({ type: "TOGGLE_SETTINGS_VISIBILITY" }),
       updateFontSize: (v) => send({ type: "UPDATE_FONT_SIZE", value: v }),
       updateLineHeight: (v) => send({ type: "UPDATE_LINE_HEIGHT", value: v }),
@@ -144,6 +161,19 @@ export const useFontControls = () => {
     }),
     []
   );
+
+  const FONT_PREVIEW_STORAGE_TOKEN = "SLATE_FONT_PREVIEW_SETTINGS";
+
+  React.useLayoutEffect(() => {
+    const initialState = JSON.parse(localStorage.getItem(FONT_PREVIEW_STORAGE_TOKEN));
+    console.log("initialstaate", initialState);
+    if (initialState) handlers.initialState(initialState);
+  }, []);
+
+  React.useEffect(() => {
+    localStorage.setItem(FONT_PREVIEW_STORAGE_TOKEN, JSON.stringify(current));
+  }, [current]);
+
   return [
     {
       ...current,

@@ -81,6 +81,7 @@ export default function FontFrame({ cid, url, ...props }) {
         <FontView
           view={currentState.view}
           customView={currentState.customView}
+          shouldUpdateView={currentState.context.shouldUpdateView}
           customViewContent={currentState.context.customViewContent}
           settings={currentState.context.settings}
           updateCustomView={updateCustomView}

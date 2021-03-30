@@ -12,14 +12,23 @@ const STYLES_SENTENCE = (theme) => css`
     outline: none;
   }
 `;
-const STYLES_TYPE_TO_EDIT = (theme) => css`
+const STYLES_TYPE_TO_EDIT = (isFocused) => (theme) => css`
   ::after {
     content: " type to edit";
     color: ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.textGrayLight};
+    opacity: ${isFocused ? 0 : 1};
   }
 `;
 
+const MemoizedChild = React.memo(
+  ({ children }) => {
+    return <>{children}</>;
+  },
+  (prevProps, nextProps) => !nextProps.shouldUpdateView
+);
+
 export default function Sentence({
+  shouldUpdateView,
   content,
   valign,
   textAlign,
@@ -33,11 +42,6 @@ export default function Sentence({
   const handleBlur = () => setFocus(false);
 
   const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
-  const value = React.useRef(null);
-  const handleChange = () => {
-    if (!value.current) return;
-    onChange(value.current);
-  };
 
   return (
     <div style={{ display: "flex", alignItems: mapAlignToFlex[valign], height: "100%" }}>
@@ -50,20 +54,17 @@ export default function Sentence({
           letterSpacing: `${tracking}em`,
           textAlign,
         }}
-        css={[STYLES_SENTENCE, !isFocused && STYLES_TYPE_TO_EDIT]}
+        css={[STYLES_SENTENCE, STYLES_TYPE_TO_EDIT(isFocused)]}
         onKeyDown={(e) => {
           e.stopPropagation();
         }}
         onInput={(e) => {
-          value.current = e.currentTarget.innerText;
+          onChange(e.currentTarget.innerHTML);
         }}
         onFocus={handleFocus}
-        onBlur={() => {
-          handleChange();
-          handleBlur();
-        }}
+        onBlur={handleBlur}
       >
-        {content}
+        <MemoizedChild shouldUpdateView={shouldUpdateView}>{content}</MemoizedChild>
       </div>
     </div>
   );

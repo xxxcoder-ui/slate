@@ -14,14 +14,23 @@ const STYLES_PARAGRAPH = (theme) => css`
     outline: none;
   }
 `;
-const STYLES_TYPE_TO_EDIT = (theme) => css`
+const STYLES_TYPE_TO_EDIT = (isFocused) => (theme) => css`
   ::after {
     content: " type to edit";
     color: ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.textGrayLight};
+    opacity: ${isFocused ? 0 : 1};
   }
 `;
 
+const MemoizedChild = React.memo(
+  ({ children }) => {
+    return <div>{children}</div>;
+  },
+  (prevProps, nextProps) => !nextProps.shouldUpdateView
+);
+
 export default function Paragraph({
+  shouldUpdateView,
   content,
   valign,
   textAlign,
@@ -37,41 +46,36 @@ export default function Paragraph({
 
   const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
 
-  const value = React.useRef(null);
-  const handleChange = () => {
-    if (!value.current) return;
-    onChange(value.current);
-  };
-
   return (
-    <div style={{ display: "flex", height: "100%", alignItems: mapAlignToFlex[valign] }}>
-      <div
-        style={{
-          fontSize: `${fontSize}px`,
-          lineHeight: `${lineHeight}%`,
-          letterSpacing: `${tracking}em`,
-          textAlign,
-        }}
-        css={[
-          STYLES_PARAGRAPH,
-          !isFocused && STYLES_TYPE_TO_EDIT,
-          css`
-            width: 100%;
-            column-count: ${column};
-            column-gap: 24px;
-          `,
-        ]}
-        onKeyDown={(e) => e.stopPropagation()}
-        onInput={(e) => (value.current = e.currentTarget.innerText)}
-        onFocus={handleFocus}
-        onBlur={() => {
-          handleChange();
-          handleBlur();
-        }}
-        contentEditable="true"
-        suppressContentEditableWarning={true}
-      >
-        {content}
+    <div>
+      <div style={{ display: "flex", height: "100%", alignItems: mapAlignToFlex[valign] }}>
+        <div
+          contentEditable="true"
+          suppressContentEditableWarning={true}
+          style={{
+            fontSize: `${fontSize}px`,
+            lineHeight: `${lineHeight}%`,
+            letterSpacing: `${tracking}em`,
+            textAlign,
+          }}
+          css={[
+            STYLES_PARAGRAPH,
+            STYLES_TYPE_TO_EDIT(isFocused),
+            css`
+              width: 100%;
+              column-count: ${column};
+              column-gap: 24px;
+            `,
+          ]}
+          onKeyDown={(e) => e.stopPropagation()}
+          onInput={(e) => {
+            onChange(e.currentTarget.innerText);
+          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        >
+          <MemoizedChild shouldUpdateView={shouldUpdateView}>{content}</MemoizedChild>
+        </div>
       </div>
     </div>
   );
