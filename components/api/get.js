@@ -30,9 +30,9 @@ headers = {
 
 json = {"private": "false"}
 
-get = requests.post(url, headers=headers, json=json)
+r = requests.post(url, headers=headers, json=json)
 
-print(JSON.dumps(get.json(), indent=2))`;
+print(JSON.dumps(r.json(), indent=2))`;
 
 export default class APIDocsGet extends React.Component {
   render() {

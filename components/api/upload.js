@@ -20,11 +20,7 @@ const response = await fetch(url, {
     Authorization: 'Basic ${key}',
   },
   body: data
-});
-
-const json = await response.json();
-
-console.log(json);`;
+});`;
 
 const EXAMPLE_CODE_PY = (key, slateId) => `url = "https://uploads.slate.host/api/public/${slateId}"
 files = {"file": open("example-file.txt", "rb")}

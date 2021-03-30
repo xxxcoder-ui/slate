@@ -23,15 +23,19 @@ const json = await response.json();
 console.log(json);`;
 
 const EXAMPLE_CODE_PY = (key, slateId) => `import requests
-import json
+import json as JSON
+
 url = 'https://slate.host/api/v1/get'
 headers = {
   'content-type': 'application/json',
   'Authorization': 'Basic ${key}'
 }
+
 json = {'id': '${slateId}'}
+
 r = requests.post(url, headers=headers, json=json)
-print(r.text)`;
+
+print(JSON.dumps(r.json(), indent=2))`;
 
 const EXAMPLE_RESPONSE = (key, slateId) => `
 {

@@ -20,32 +20,33 @@ const response = await fetch('https://slate.host/api/v1/update-slate', {
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: slate })
-});
-
-const json = await response.json();
-console.log(json);`;
+});`;
 };
 
 const EXAMPLE_CODE_PY = (key, slateId) =>
-  `headers = {
+  `import requests
+
+headers = {
     "content-type": "application/json",
     "Authorization": "Basic ${key}",
 }
+
 json = {"id": "${slateId}"}
+
 get_slate = requests.post(
     "https://slate.host/api/v1/get-slate", headers=headers, json=json
 )
 
 get_slate_response = get_slate.json()
 
-slate = get_slate_response["slate"]
-# change a field in the slate response
-slate["data"]["objects"][0]["title"] = "i changed the title"
 
-url = "https://slate.host/api/v1/update-slate"
+slate = get_slate_response["slate"]
+slate["data"]["objects"][0]["title"] = "i changed the title"
 updated_data = {"data": slate}
 
-update_slate = requests.post(url, headers=headers, json=updated_data)`;
+url = "https://slate.host/api/v1/update-slate"
+
+r = requests.post(url, headers=headers, json=updated_data)`;
 
 export default class APIDocsUpdateSlate extends React.Component {
   render() {
