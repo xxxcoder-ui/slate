@@ -299,8 +299,13 @@ class CarouselSidebarData extends React.Component {
   };
 
   updateSuggestions = () => {
-    let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
+    if (Array.isArray(this.props.viewer.tags)) {
+      let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
+      this.setState({ suggestions: Array.from(newSuggestions) });
+      return;
+    }
+
+    this.setState({ suggestions: this.state.tag });
   };
 
   _handleDarkMode = async (e) => {
