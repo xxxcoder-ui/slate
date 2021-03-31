@@ -59,10 +59,11 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   updateSuggestions = () => {
-    if (this.state.tags) {
-      let newSuggestions = new Set([...this.props.viewer.tags, ...this.state.tags]);
-      this.setState({ suggestions: Array.from(newSuggestions) });
-    }
+    let suggestions = this.props.viewer.tags || [];
+    let tags = this.state.tags || [];
+
+    let newSuggestions = new Set([...suggestions, ...tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleSubmit = async () => {

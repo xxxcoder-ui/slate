@@ -2,7 +2,6 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 
-import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 
 const STYLES_TAG_CONTAINER = css`
@@ -277,6 +276,7 @@ const TAG_STYLES = `
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;
+  cursor: pointer;
 
   span {
     line-height: 1.5;
@@ -439,6 +439,7 @@ export const Tag = ({
   dropdownStyles,
   placeholder,
   onChange,
+  handleClick,
 }) => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -509,7 +510,11 @@ export const Tag = ({
       <ul css={STYLES_LIST}>
         {tags &&
           tags.slice(0, numToDisplay).map((tag) => (
-            <li key={tag} css={type === "dark" ? STYLES_TAG_DARK : STYLES_TAG}>
+            <li
+              key={tag}
+              css={type === "dark" ? STYLES_TAG_DARK : STYLES_TAG}
+              onClick={handleClick}
+            >
               <span>{tag}</span>
             </li>
           ))}

@@ -39,7 +39,10 @@ export default class SidebarEditTags extends React.Component {
   };
 
   updateSuggestions = () => {
-    let newSuggestions = new Set([...this.props.sidebarData.suggestions, ...this.state.tags]);
+    let suggestions = this.props.sidebarData.suggestions || [];
+    let tags = this.state.tags || [];
+
+    let newSuggestions = new Set([...suggestions, ...tags]);
     this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
