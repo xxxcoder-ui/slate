@@ -188,11 +188,8 @@ export default class CarouselSidebarSlate extends React.Component {
     body: Strings.isEmpty(this.props.data.body) ? "" : this.props.data.body,
     source: Strings.isEmpty(this.props.data.source) ? "" : this.props.data.source,
     author: Strings.isEmpty(this.props.data.author) ? "" : this.props.data.author,
-    tags:
-      !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
-        ? []
-        : this.props.data.tags,
-    suggestions: this.props.viewer.tags,
+    tags: this.props.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
     selected: {},
     isPublic: false,
     copyValue: "",

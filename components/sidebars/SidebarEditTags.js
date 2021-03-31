@@ -20,16 +20,8 @@ const STYLES_GROUPING = css`
 
 export default class SidebarEditTags extends React.Component {
   state = {
-    tags:
-      !Array.isArray(this.props.sidebarData.commonTags) ||
-      this.props.sidebarData.commonTags?.length === 0
-        ? []
-        : this.props.sidebarData.commonTags,
-    suggestions:
-      !Array.isArray(this.props.sidebarData.suggestions) ||
-      this.props.sidebarData.suggestions?.length === 0
-        ? []
-        : this.props.sidebarData.suggestions,
+    tags: this.props.sidebarData?.commonTags || [],
+    suggestions: this.props.sidebarData?.suggestions || [],
   };
 
   _handleChange = (e) => {

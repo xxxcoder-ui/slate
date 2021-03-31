@@ -264,11 +264,8 @@ class CarouselSidebarData extends React.Component {
     isEditing: false,
     isDownloading: false,
     subject: "",
-    tags:
-      !Array.isArray(this.props.data.tags) || this.props.data.tags?.length === 0
-        ? []
-        : this.props.data.tags,
-    suggestions: this.props.viewer.tags,
+    tags: this.props.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
   };
 
   componentDidMount = () => {
