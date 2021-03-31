@@ -320,52 +320,6 @@ const STYLES_SHOW_MORE = css`
   }
 `;
 
-const DeleteConfirmation = ({ tag, handleDelete, setOpen }) => {
-  const [deleteConfirmed, setDeleteConfirmation] = React.useState(false);
-
-  return (
-    <div
-      css={STYLES_DROPDOWN_ITEM_ICON}
-      style={{
-        marginLeft: "auto",
-      }}
-      className={`dismiss ${deleteConfirmed && "active"}`}
-      onMouseLeave={() => setDeleteConfirmation(false)}
-    >
-      {deleteConfirmed ? (
-        <>
-          <span
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(tag);
-              setOpen(false);
-            }}
-          >
-            <SVG.Trash height="16px" />
-          </span>
-          <span
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteConfirmation(false);
-            }}
-          >
-            <SVG.Dismiss height="16px" />
-          </span>
-        </>
-      ) : (
-        <span
-          onClick={(e) => {
-            e.stopPropagation();
-            setDeleteConfirmation(true);
-          }}
-        >
-          <SVG.Trash height="16px" />
-        </span>
-      )}
-    </div>
-  );
-};
-
 const Dropdown = ({
   type,
   open,
@@ -376,7 +330,6 @@ const Dropdown = ({
   dropdownStyles,
   handleAdd,
   handleRemove,
-  handleTagDelete,
 }) => {
   const dropdownEl = React.useRef();
 
@@ -433,7 +386,7 @@ const Dropdown = ({
                   </div>
                 )}
                 <span>{tag}</span>
-                {isActiveTag(index) ? (
+                {isActiveTag(index) && (
                   <div
                     css={STYLES_DROPDOWN_ITEM_ICON}
                     style={{ marginLeft: "auto" }}
@@ -445,8 +398,6 @@ const Dropdown = ({
                   >
                     <SVG.Dismiss height="16px" />
                   </div>
-                ) : (
-                  <DeleteConfirmation tag={tag} handleDelete={handleTagDelete} setOpen={setOpen} />
                 )}
               </li>
             ))}
@@ -487,7 +438,6 @@ export const Tag = ({
   inputStyles,
   dropdownStyles,
   placeholder,
-  handleTagDelete,
   onChange,
 }) => {
   const [value, setValue] = React.useState("");
@@ -553,7 +503,6 @@ export const Tag = ({
           dropdownStyles={dropdownStyles}
           handleAdd={_handleAdd}
           handleRemove={_handleRemove}
-          handleTagDelete={handleTagDelete}
         />
       </div>
 

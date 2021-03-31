@@ -499,18 +499,6 @@ class CarouselSidebarData extends React.Component {
     }
   };
 
-  _handleTagDelete = async (tag) => {
-    const response = await UserBehaviors.deleteTag(tag);
-    if (response.success) {
-      this.props.onUpdateViewer({ tags: response.tags });
-      this.updateSuggestions();
-    }
-
-    if (Events.hasError(response)) {
-      return;
-    }
-  };
-
   render() {
     const isVisible = this.state.inPublicSlates || this.state.isPublic;
     const { cid, file, name, coverImage, type, size, url, blurhash } = this.props.data;
@@ -616,7 +604,6 @@ class CarouselSidebarData extends React.Component {
                 inputStyles={{ padding: "16px" }}
                 dropdownStyles={{ top: "50px" }}
                 onChange={this._handleChange}
-                handleTagDelete={this._handleTagDelete}
               />
             </div>
           </React.Fragment>

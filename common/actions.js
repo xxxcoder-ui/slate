@@ -367,10 +367,3 @@ export const cleanDatabase = async () => {
     ...DEFAULT_OPTIONS,
   });
 };
-
-export const deleteTag = async (data) => {
-  return await returnJSON(`/api/tags/delete-tag`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};

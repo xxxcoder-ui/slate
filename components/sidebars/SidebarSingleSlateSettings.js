@@ -129,18 +129,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
     }
   };
 
-  _handleTagDelete = async (tag) => {
-    const response = await UserBehaviors.deleteTag(tag);
-    if (response.success) {
-      this.props.onUpdateViewer({ tags: response.tags });
-      this.updateSuggestions();
-    }
-
-    if (Events.hasError(response)) {
-      return;
-    }
-  };
-
   render() {
     const slug = Strings.createSlug(this.state.name);
     const url = `/${this.props.viewer.username}/${slug}`;
@@ -244,7 +232,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
             suggestions={this.state.suggestions}
             style={{ marginTop: 12 }}
             onChange={this._handleChange}
-            handleTagDelete={this._handleTagDelete}
           />
         </div>
 

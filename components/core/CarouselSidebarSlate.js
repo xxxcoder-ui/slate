@@ -353,18 +353,6 @@ export default class CarouselSidebarSlate extends React.Component {
     }
   };
 
-  _handleTagDelete = async (tag) => {
-    const response = await UserBehaviors.deleteTag(tag);
-    if (response.success) {
-      this.props.onUpdateViewer({ tags: response.tags });
-      this.updateSuggestions();
-    }
-
-    if (Events.hasError(response)) {
-      return;
-    }
-  };
-
   render() {
     let isUnityGame = false;
     if (this.props.data.type === "application/unity") {
@@ -404,7 +392,6 @@ export default class CarouselSidebarSlate extends React.Component {
               inputStyles={{ padding: "16px" }}
               dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
-              handleTagDelete={this._handleTagDelete}
             />
             <Input
               full
