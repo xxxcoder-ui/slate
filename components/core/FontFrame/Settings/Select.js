@@ -9,15 +9,16 @@ export default function Select({
   value,
   placeholderSuffix = "",
   inputStyle,
+  minWidth = "none",
   ...props
 }) {
   const label =
-    options.find((option) => option.value === value)?.name || `${value} ${placeholderSuffix}`;
+    options.find((option) => option.value === value)?.name || `${value}${placeholderSuffix}`;
   return (
     <div
       css={css`
         position: relative;
-        min-width: 69px;
+        min-width: ${minWidth};
       `}
     >
       <div
@@ -44,7 +45,7 @@ export default function Select({
         >
           {label}
         </P>
-        <SVG.ChevronDown height="16px" display="block" />
+        <SVG.ChevronDown height="16px" width="16px" display="block" />
       </div>
       <select
         css={css`

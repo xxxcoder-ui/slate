@@ -55,13 +55,25 @@ export const Controls = ({
         label="Size"
         {...defaultOptions.SIZE_OPTIONS}
         options={[
+          { value: 8, name: "8px" },
           { value: 12, name: "12px" },
           { value: 14, name: "14px" },
+          { value: 20, name: "20px" },
+          { value: 24, name: "24px" },
+          { value: 32, name: "32px" },
+          { value: 40, name: "40px" },
+          { value: 64, name: "64px" },
+          { value: 96, name: "96px" },
+          { value: 120, name: "120px" },
+          { value: 184, name: "184px" },
+          { value: 280, name: "280px" },
+          { value: 320, name: "320px" },
         ]}
         value={settings.fontSize}
         onChange={(e) => {
           updateFontSize(e.target.value);
         }}
+        selectMinWidth="67px"
         disabled={view === "glyphs"}
       />
       <Controller
@@ -69,13 +81,16 @@ export const Controls = ({
         selectSuffix="%"
         {...defaultOptions.LINE_HEIGHT_OPTIONS}
         options={[
+          { value: 50, name: "50%" },
           { value: 100, name: "100%" },
+          { value: 130, name: "130%" },
+          { value: 150, name: "150%" },
           { value: 200, name: "200%" },
           { value: 300, name: "300%" },
-          { value: 400, name: "400%" },
         ]}
         value={settings.lineHeight}
         onChange={(e) => updateLineHeight(e.target.value)}
+        selectMinWidth="63px"
         disabled={view === "glyphs"}
       />
       <Controller
@@ -83,13 +98,14 @@ export const Controls = ({
         selectSuffix="em"
         {...defaultOptions.TRACKING_OPTIONS}
         options={[
-          { value: -1, name: "-1em" },
+          { value: -0.1, name: "-0.1em" },
           { value: 0, name: "0em" },
           { value: 1, name: "1em" },
-          { value: 2, name: "2em" },
+          { value: 1.5, name: "1.5em" },
         ]}
         value={settings.tracking}
         onChange={(e) => updateTracking(e.target.value)}
+        selectMinWidth="82px"
         disabled={view === "glyphs"}
       />
       <Controller
@@ -103,6 +119,7 @@ export const Controls = ({
         ]}
         value={settings.column}
         onChange={(e) => updateColumn(e.target.value)}
+        selectMinWidth="none"
         disabled={view !== "paragraph"}
       />
     </div>

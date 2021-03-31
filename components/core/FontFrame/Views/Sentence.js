@@ -41,10 +41,13 @@ export default function Sentence({
   const handleFocus = () => setFocus(true);
   const handleBlur = () => setFocus(false);
 
-  const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
-
+  const mapAlignToFlex = {
+    center: { marginTop: "auto", marginBottom: "auto" },
+    top: { marginBottom: "auto" },
+    bottom: { marginTop: "auto" },
+  };
   return (
-    <div style={{ display: "flex", alignItems: mapAlignToFlex[valign], height: "100%" }}>
+    <div style={{ display: "flex", height: "100%" }}>
       <div
         contentEditable="true"
         suppressContentEditableWarning={true}
@@ -53,6 +56,7 @@ export default function Sentence({
           lineHeight: `${lineHeight}%`,
           letterSpacing: `${tracking}em`,
           textAlign,
+          ...mapAlignToFlex[valign],
         }}
         css={[STYLES_SENTENCE, STYLES_TYPE_TO_EDIT(isFocused)]}
         onKeyDown={(e) => {

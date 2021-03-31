@@ -80,9 +80,13 @@ export default function FontFrame({ cid, url, ...props }) {
         {isFontLoading && <FontLoader />}
         <FontView
           view={currentState.view}
+          content={{
+            paragraph: currentState.context.paragraph,
+            sentence: currentState.context.sentence,
+            custom: currentState.context.customViewContent,
+          }}
           customView={currentState.customView}
           shouldUpdateView={currentState.context.shouldUpdateView}
-          customViewContent={currentState.context.customViewContent}
           settings={currentState.context.settings}
           updateCustomView={updateCustomView}
         />

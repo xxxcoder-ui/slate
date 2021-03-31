@@ -21,7 +21,7 @@ const STYLES_GLYPHS_GRID = css`
   overflow: hidden;
 `;
 export default function Glyphs() {
-  const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?()@$#%*[]{}\:;_""-`;
+  const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 ?!()[]{}&*^%$#@~`;
   const glyphs = React.useMemo(() => new Array(6).fill(content).join("").split(""), []);
   return (
     <div css={STYLES_GLYPHS_WRAPPER}>

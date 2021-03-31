@@ -16,6 +16,9 @@ const CONTROLS_STYLES_WRAPPER = (theme) => css`
   path {
     stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
   }
+  svg {
+    display: block;
+  }
 `;
 
 const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
@@ -34,9 +37,7 @@ const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
   button:focus {
     outline: none;
   }
-  svg {
-    display: block;
-  }
+
   .lightmode_btn {
     path {
       stroke: ${theme.fontPreviewDarkMode ? theme.system.gray50 : theme.system.black};

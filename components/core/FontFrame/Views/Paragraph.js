@@ -44,38 +44,41 @@ export default function Paragraph({
   const handleFocus = () => setFocus(true);
   const handleBlur = () => setFocus(false);
 
-  const mapAlignToFlex = { center: "center", top: "flex-start", bottom: "flex-end" };
+  const mapAlignToFlex = {
+    center: { marginTop: "auto", marginBottom: "auto" },
+    top: { marginBottom: "auto" },
+    bottom: { marginTop: "auto" },
+  };
 
   return (
-    <div>
-      <div style={{ display: "flex", height: "100%", alignItems: mapAlignToFlex[valign] }}>
-        <div
-          contentEditable="true"
-          suppressContentEditableWarning={true}
-          style={{
-            fontSize: `${fontSize}px`,
-            lineHeight: `${lineHeight}%`,
-            letterSpacing: `${tracking}em`,
-            textAlign,
-          }}
-          css={[
-            STYLES_PARAGRAPH,
-            STYLES_TYPE_TO_EDIT(isFocused),
-            css`
-              width: 100%;
-              column-count: ${column};
-              column-gap: 24px;
-            `,
-          ]}
-          onKeyDown={(e) => e.stopPropagation()}
-          onInput={(e) => {
-            onChange(e.currentTarget.innerText);
-          }}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        >
-          <MemoizedChild shouldUpdateView={shouldUpdateView}>{content}</MemoizedChild>
-        </div>
+    <div style={{ display: "flex", height: "100%" }}>
+      <div
+        contentEditable="true"
+        suppressContentEditableWarning={true}
+        style={{
+          fontSize: `${fontSize}px`,
+          lineHeight: `${lineHeight}%`,
+          letterSpacing: `${tracking}em`,
+          textAlign,
+          ...mapAlignToFlex[valign],
+        }}
+        css={[
+          STYLES_PARAGRAPH,
+          STYLES_TYPE_TO_EDIT(isFocused),
+          css`
+            width: 100%;
+            column-count: ${column};
+            column-gap: 24px;
+          `,
+        ]}
+        onKeyDown={(e) => e.stopPropagation()}
+        onInput={(e) => {
+          onChange(e.currentTarget.innerText);
+        }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
+        <MemoizedChild shouldUpdateView={shouldUpdateView}>{content}</MemoizedChild>
       </div>
     </div>
   );

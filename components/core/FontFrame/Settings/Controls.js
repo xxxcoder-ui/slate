@@ -19,6 +19,8 @@ export const Controller = ({
   options,
   onChange,
   selectSuffix = "",
+  //NOTE(Amine): minWidth will remove junk when Select value change
+  selectMinWidth,
   label,
   min,
   max,
@@ -42,6 +44,7 @@ export const Controller = ({
           value={value}
           onChange={onChange}
           placeholderSuffix={selectSuffix}
+          minWidth={selectMinWidth}
         />
         <div style={{ width: "100%" }}>
           <Slider
@@ -203,7 +206,7 @@ export const AlignmentControl = ({
   );
 };
 
-const STYLES_FEELING_LUCKY = (theme) => css`
+const STYLES_SETTINGS_WRAPPER = (theme) => css`
   box-sizing: border-box;
   display: flex;
   border-radius: 4px;
@@ -236,11 +239,16 @@ const STYLES_FEELING_LUCKY = (theme) => css`
   }
 `;
 
+const STYLES_FEELING_LUCKY = css`
+  width: 100%;
+  text-align: left;
+`;
+
 export const SettingsControl = ({ getRandomLayout, resetLayout }) => (
   <div>
     <P css={STYLES_LABEL}>Settings</P>
-    <div css={STYLES_FEELING_LUCKY}>
-      <button onClick={getRandomLayout}>
+    <div css={STYLES_SETTINGS_WRAPPER}>
+      <button css={STYLES_FEELING_LUCKY} onClick={getRandomLayout}>
         <P
           css={css`
             font-size: 14px;
@@ -251,7 +259,7 @@ export const SettingsControl = ({ getRandomLayout, resetLayout }) => (
         </P>
       </button>
       <button className="reset_button" onClick={resetLayout}>
-        <SVG.RotateCcw />
+        <SVG.RotateCcw height={16} width={16} />
       </button>
     </div>
   </div>

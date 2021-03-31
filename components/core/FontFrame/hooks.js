@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
+import * as Content from "./Views/content";
 
 import { generateNumberByStep } from "~/common/utilities";
 
@@ -35,6 +36,8 @@ const initialState = {
   context: {
     darkmode: true,
     showSettings: true,
+    sentence: Content.sentences[0],
+    paragraph: Content.paragraphs[4],
     customViewContent: "",
     shouldUpdateView: false,
     settings: {
@@ -53,10 +56,10 @@ const initialState = {
 const VIEW_OPTIONS = ["custom", "glyphs", "sentence", "paragraph"];
 const VALIGN_OPTIONS = ["top", "center", "bottom"];
 const ALIGN_OPTIONS = ["left", "center", "right"];
-const SIZE_OPTIONS = { min: 12, max: 72, step: 2 };
-const LINE_HEIGHT_OPTIONS = { min: 40, max: 400, step: 20 };
-const TRACKING_OPTIONS = { min: -1, max: 1.5, step: 0.05 };
-const COLUMN_OPTIONS = { min: 1, max: 6, step: 1 };
+const SIZE_OPTIONS = { min: 8, max: 320, step: 1 };
+const LINE_HEIGHT_OPTIONS = { min: 50, max: 300, step: 10 };
+const TRACKING_OPTIONS = { min: -0.1, max: 0.2, step: 0.01 };
+const COLUMN_OPTIONS = { min: 1, max: 4, step: 1 };
 
 const reducer = (state, action) => {
   const updateSettingsField = (field, newValue) => ({
@@ -68,7 +71,15 @@ const reducer = (state, action) => {
   });
   switch (action.type) {
     case "INITIATE_STATE": {
-      return action.value;
+      return {
+        ...state,
+        ...action.value,
+        context: {
+          ...state.context,
+          ...action.value.context,
+          settings: { ...state.context.settings, ...action.value.context.settings },
+        },
+      };
     }
     case "SET_DARK_MODE":
       return { ...state, context: { ...state.context, darkmode: true } };
@@ -119,13 +130,15 @@ const reducer = (state, action) => {
         view: generatedView,
         context: {
           ...state.context,
+          sentence: generateOption(Content.sentences),
+          paragraph: generateOption(Content.paragraphs),
           settings: {
             valign: generateOption(VALIGN_OPTIONS),
             textAlign: generateOption(ALIGN_OPTIONS),
-            fontSize: generateNumberByStep(SIZE_OPTIONS),
-            column: generateNumberByStep(COLUMN_OPTIONS),
-            lineHeight: generateNumberByStep(LINE_HEIGHT_OPTIONS),
-            tracking: generateNumberByStep(TRACKING_OPTIONS).toPrecision(2),
+            fontSize: generateNumberByStep({ min: 16, max: 72, step: 1 }),
+            column: generateNumberByStep({ min: 1, max: 4, step: 1 }),
+            lineHeight: generateNumberByStep({ min: 100, max: 200, step: 10 }),
+            tracking: generateNumberByStep({ min: 0, max: 0.1, step: 0.01 }).toPrecision(1),
           },
         },
       };
