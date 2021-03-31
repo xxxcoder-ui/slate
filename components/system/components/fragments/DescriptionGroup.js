@@ -8,10 +8,11 @@ import { TooltipAnchor } from "~/components/system/components/fragments/TooltipA
 
 const STYLES_DESCRIPTION_GROUP_LABEL = css`
   box-sizing: border-box;
-  font-family: ${Constants.font.semiBold};
-  font-size: 14px;
+  font-family: ${Constants.font.medium};
+  font-size: ${Constants.typescale.lvl1};
+  color: ${Constants.system.black};
   padding: 0;
-  margin-bottom: 8px;
+  margin: 16px 0 8px 0;
   display: block;
   width: 100%;
   white-space: pre-wrap;
@@ -21,8 +22,9 @@ const STYLES_DESCRIPTION_GROUP_LABEL = css`
 const STYLES_DESCRIPTION_GROUP_DESCRIPTION = css`
   box-sizing: border-box;
   font-family: ${Constants.font.text};
-  font-size: 14px;
-  margin-bottom: 12px;
+  font-size: ${Constants.typescale.lvl0};
+  color: ${Constants.system.textGray};
+  margin-bottom: 16px;
   line-height: 1.5;
   display: block;
   width: 100%;
