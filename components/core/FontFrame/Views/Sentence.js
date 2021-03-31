@@ -21,9 +21,7 @@ const STYLES_TYPE_TO_EDIT = (isFocused) => (theme) => css`
 `;
 
 const MemoizedChild = React.memo(
-  ({ children }) => {
-    return <>{children}</>;
-  },
+  ({ children }) => children,
   (prevProps, nextProps) => !nextProps.shouldUpdateView
 );
 

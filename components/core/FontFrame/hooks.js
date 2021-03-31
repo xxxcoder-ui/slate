@@ -179,7 +179,6 @@ export const useFontControls = () => {
 
   React.useLayoutEffect(() => {
     const initialState = JSON.parse(localStorage.getItem(FONT_PREVIEW_STORAGE_TOKEN));
-    console.log("initialstaate", initialState);
     if (initialState) handlers.initialState(initialState);
   }, []);
 

@@ -61,7 +61,7 @@ export default function Select({
         {...props}
       >
         {options.map((item) => (
-          <option value={item.value} key={item}>
+          <option value={item.value} key={item.value}>
             {item.name}
           </option>
         ))}
