@@ -419,11 +419,15 @@ export default class DataView extends React.Component {
   };
 
   _handleCheckBoxMouseEnter = (i) => {
-    this.setState({ hover: i });
+    if (this.props.isOwner) {
+      this.setState({ hover: i });
+    }
   };
 
   _handleCheckBoxMouseLeave = (i) => {
-    this.setState({ hover: null });
+    if (this.props.isOwner) {
+      this.setState({ hover: null });
+    }
   };
 
   _handleCopy = (e, value) => {
