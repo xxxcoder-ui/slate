@@ -37,8 +37,8 @@ const initialState = {
     darkmode: true,
     showSettings: true,
     sentence: Content.sentences[0],
-    paragraph: Content.paragraphs[4],
-    customViewContent: "",
+    paragraph: Content.paragraphs[0],
+    customViewContent: Content.sentences[1],
     shouldUpdateView: false,
     settings: {
       valign: "center",
