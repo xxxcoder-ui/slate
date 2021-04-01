@@ -25,6 +25,8 @@ const STYLES_DROPDOWN = css`
   width: 100%;
   z-index: 30;
   box-shadow: 0px 12px 24px rgba(178, 178, 178, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
 
   li[data-item-active="true"] {
     background: ${Constants.system.gray80};
@@ -459,12 +461,12 @@ export const Tag = ({
   };
 
   const _handleAdd = (value) => {
-    if ((tags || []).find((tag) => tag.toLowerCase() === value.toLowerCase())) {
+    if ((tags || []).find((tag) => tag.toLowerCase() === value.toLowerCase().trim())) {
       return;
     }
 
     if (onChange) {
-      onChange({ target: { name: "tags", value: [...tags, value] } });
+      onChange({ target: { name: "tags", value: [...tags, value.trim()] } });
 
       setValue("");
     }
@@ -472,9 +474,14 @@ export const Tag = ({
 
   const _handleChange = (e) => setValue(e.target.value.toLowerCase());
 
-  const _handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+  const _handleKeyPress = (e) => {
+    let regex = /[a-z0-9\s-]/i;
+
+    if (e.key === "Enter" && value.length) {
       _handleAdd(value);
+    } else if (!regex.test(e.key)) {
+      e.preventDefault();
+      return false;
     }
   };
 
@@ -491,7 +498,7 @@ export const Tag = ({
           placeholder={placeholder ? placeholder : null}
           value={value}
           onChange={_handleChange}
-          onKeyDown={_handleKeyDown}
+          onKeyPress={_handleKeyPress}
           onFocus={_handleFocus}
         />
         <Dropdown
