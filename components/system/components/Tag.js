@@ -475,7 +475,7 @@ export const Tag = ({
   const _handleChange = (e) => setValue(e.target.value.toLowerCase());
 
   const _handleKeyPress = (e) => {
-    let regex = /[a-z0-9\s-]/i;
+    let regex = /[a-z0-9\s]/i;
 
     if (e.key === "Enter" && value.length) {
       _handleAdd(value);
