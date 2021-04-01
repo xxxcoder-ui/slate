@@ -90,6 +90,28 @@ export class Slider extends React.Component {
   };
 
   componentDidMount = () => {
+    updateStateFromPropValue();
+    window.addEventListener("resize", this.updateDimensions);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("resize", this.updateDimensions);
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) updateStateFromPropValue();
+  }
+
+  updateDimensions = () => {
+    let conversion = (this.props.max - this.props.min) / this._bar.offsetWidth;
+    this.setState({
+      width: this._bar.offsetWidth,
+      conversion,
+      step: this.props.step / conversion,
+    });
+  };
+
+  updateStateFromPropValue = () => {
     this.setState(
       {
         decimals: this.getDecimals(),
@@ -99,20 +121,6 @@ export class Slider extends React.Component {
       },
       this.updateDimensions
     );
-    window.addEventListener("resize", this.updateDimensions);
-  };
-
-  componentWillUnmount = () => {
-    window.removeEventListener("resize", this.updateDimensions);
-  };
-
-  updateDimensions = () => {
-    let conversion = (this.props.max - this.props.min) / this._bar.offsetWidth;
-    this.setState({
-      width: this._bar.offsetWidth,
-      conversion,
-      step: this.props.step / conversion,
-    });
   };
 
   // NOTE(martina): Gets how many decimal places the step has. To help deal with javascript rounding errors.

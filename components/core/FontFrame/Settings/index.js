@@ -103,8 +103,8 @@ export const Controls = ({
         options={[
           { value: -0.1, name: "-0.1em" },
           { value: 0, name: "0em" },
-          { value: 1, name: "1em" },
-          { value: 1.5, name: "1.5em" },
+          { value: 0.1, name: "0.1em" },
+          { value: 0.2, name: "0.2em" },
         ]}
         value={settings.tracking}
         onChange={(e) => updateTracking(e.target.value)}
