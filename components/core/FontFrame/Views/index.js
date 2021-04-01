@@ -7,7 +7,6 @@ export default function FontView({
   view,
   customView,
   content: { sentence, paragraph, custom },
-  shouldUpdateView,
   updateCustomView,
 }) {
   const isCustomView = (value) => view === "custom" && customView === value;
@@ -19,7 +18,6 @@ export default function FontView({
   if (view === "paragraph" || isCustomView("paragraph")) {
     return (
       <Paragraph
-        shouldUpdateView={shouldUpdateView}
         content={view === "custom" ? custom : paragraph}
         valign={settings.valign}
         textAlign={settings.textAlign}
@@ -34,7 +32,6 @@ export default function FontView({
 
   return (
     <Sentence
-      shouldUpdateView={shouldUpdateView}
       content={view === "custom" ? custom : sentence}
       valign={settings.valign}
       textAlign={settings.textAlign}

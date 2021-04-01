@@ -39,7 +39,6 @@ const initialState = {
     sentence: Content.sentences[0],
     paragraph: Content.paragraphs[0],
     customViewContent: Content.sentences[1],
-    shouldUpdateView: false,
     settings: {
       valign: "center",
       textAlign: "left",
@@ -103,7 +102,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         view: action.value,
-        context: { ...state.context, shouldUpdateView: true },
+        context: { ...state.context },
       };
     case "UPDATE_CUSTOM_VIEW":
       return {
@@ -113,7 +112,6 @@ const reducer = (state, action) => {
         context: {
           ...state.context,
           customViewContent: action.payload.customViewContent,
-          shouldUpdateView: false,
         },
       };
     case "RESET":

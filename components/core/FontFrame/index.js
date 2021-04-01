@@ -86,7 +86,6 @@ export default function FontFrame({ cid, url, ...props }) {
             custom: currentState.context.customViewContent,
           }}
           customView={currentState.customView}
-          shouldUpdateView={currentState.context.shouldUpdateView}
           settings={currentState.context.settings}
           updateCustomView={updateCustomView}
         />
@@ -95,6 +94,7 @@ export default function FontFrame({ cid, url, ...props }) {
         {currentState.context.showSettings && (
           <Controls
             view={currentState.view}
+            customView={currentState.customView}
             defaultOptions={currentState.defaultOptions}
             resetLayout={resetLayout}
             updateView={updateView}

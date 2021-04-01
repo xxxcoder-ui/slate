@@ -19,6 +19,7 @@ const STYLES_CONTROLLER_WRAPPER = (theme) =>
 
 export const Controls = ({
   view,
+  customView,
   settings,
   defaultOptions,
   updateView,
@@ -31,6 +32,8 @@ export const Controls = ({
   getRandomLayout,
   resetLayout,
 }) => {
+  const isCustomView = (value) => view === "custom" && customView === value;
+
   const arrayToSelectOptions = (arr) =>
     arr.reduce((acc, option) => [...acc, { value: option, name: Strings.capitalize(option) }], []);
 
@@ -120,7 +123,7 @@ export const Controls = ({
         value={settings.column}
         onChange={(e) => updateColumn(e.target.value)}
         selectMinWidth="none"
-        disabled={view !== "paragraph"}
+        disabled={!(view === "paragraph" || isCustomView("paragraph"))}
       />
     </div>
   );
