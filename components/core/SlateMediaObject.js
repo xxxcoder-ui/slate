@@ -4,7 +4,9 @@ import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 
 import UnityFrame from "~/components/core/UnityFrame";
+import FontFrame from "~/components/core/FontFrame/index.js";
 import MarkdownFrame from "~/components/core/MarkdownFrame";
+import { endsWithAny } from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
@@ -50,6 +52,14 @@ const STYLES_IMAGE = css`
   display: block;
   max-width: 100%;
   max-height: 100%;
+`;
+
+const STYLES_IFRAME = (theme) => css`
+  display: block;
+  width: 100%;
+  height: 100%;
+  // NOTE(Amine): lightbackground as fallback when html file doesn't have any
+  background-color: ${theme.system.wallLight};
 `;
 
 const typeMap = {
@@ -141,7 +151,24 @@ export default class SlateMediaObject extends React.Component {
       );
     }
 
-    if (this.props.data.name.endsWith(".md")) {
+    if (type.startsWith("text/html")) {
+      return <iframe src={url} css={STYLES_IFRAME} />;
+    }
+
+    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], this.props.data.name)) {
+      return (
+        <FontFrame
+          name={this.props.data.file || this.props.data.name}
+          cid={this.props.data.cid}
+          url={url}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        />
+      );
+    }
+
+    if (this.props.data.name.endsWith(".md") || type.startsWith("text/plain")) {
       return <MarkdownFrame date={this.props.data.date} url={this.props.data.url} />;
     }
 

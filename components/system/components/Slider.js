@@ -17,13 +17,12 @@ const STYLES_CONTAINER = css`
 
 const STYLES_BAR_CONTAINER = css`
   height: 24px;
-  width: calc(100% - 12px);
+  width: 100%;
   position: absolute;
-  left: 12px;
 `;
 
 const STYLES_SLIDER_BAR = css`
-  width: calc(100% - 24px);
+  width: 100%;
   height: 4px;
   border-radius: 2px;
   background-color: ${Constants.system.gray};
@@ -63,7 +62,7 @@ const STYLES_SLIDER_HANDLE = css`
   background-color: ${Constants.system.brand};
   cursor: pointer;
   position: relative;
-  bottom: 16px;
+  bottom: 18px;
   right: 12px;
 
   :hover {
@@ -91,6 +90,28 @@ export class Slider extends React.Component {
   };
 
   componentDidMount = () => {
+    this.updateStateFromPropValue();
+    window.addEventListener("resize", this.updateDimensions);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("resize", this.updateDimensions);
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) this.updateStateFromPropValue();
+  }
+
+  updateDimensions = () => {
+    let conversion = (this.props.max - this.props.min) / this._bar.offsetWidth;
+    this.setState({
+      width: this._bar.offsetWidth,
+      conversion,
+      step: this.props.step / conversion,
+    });
+  };
+
+  updateStateFromPropValue = () => {
     this.setState(
       {
         decimals: this.getDecimals(),
@@ -100,20 +121,6 @@ export class Slider extends React.Component {
       },
       this.updateDimensions
     );
-    window.addEventListener("resize", this.updateDimensions);
-  };
-
-  componentWillUnmount = () => {
-    window.removeEventListener("resize", this.updateDimensions);
-  };
-
-  updateDimensions = () => {
-    let conversion = (this.props.max - this.props.min) / this._bar.offsetWidth;
-    this.setState({
-      width: this._bar.offsetWidth,
-      conversion,
-      step: this.props.step / conversion,
-    });
   };
 
   // NOTE(martina): Gets how many decimal places the step has. To help deal with javascript rounding errors.
@@ -189,13 +196,13 @@ export class Slider extends React.Component {
           <div style={{ position: "relative" }}>
             <div css={STYLES_BAR_CONTAINER}>
               <div
-                css={STYLES_SLIDER_BAR}
+                css={[STYLES_SLIDER_BAR, this.props.sliderBarStyle]}
                 ref={(c) => {
                   this._bar = c;
                 }}
               />
               <div
-                css={STYLES_ACTIVE_SLIDER_BAR}
+                css={[STYLES_ACTIVE_SLIDER_BAR, this.props.activeBarStyle]}
                 style={{
                   width: `${this.state.value}px`,
                 }}
@@ -216,7 +223,7 @@ export class Slider extends React.Component {
                   }}
                 >
                   <strong>
-                    <div css={STYLES_SLIDER_HANDLE} />
+                    <div css={[STYLES_SLIDER_HANDLE, this.props.handleStyle]} />
                   </strong>
                   {this.props.bubble ? <div css={STYLES_BUBBLE}>{this.props.value}</div> : null}
                 </div>

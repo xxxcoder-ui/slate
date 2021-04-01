@@ -4,7 +4,10 @@ import * as Constants from "~/common/constants";
 import { ThemeProvider as EmotionTP } from "@emotion/react";
 
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useLocalStorage("slate-theme", { darkmode: true });
+  const [theme, setTheme] = useLocalStorage("slate-theme", {
+    darkmode: true,
+    fontPreviewDarkMode: true,
+  });
   const handleSlateTheme = (e) => setTheme((prev) => ({ ...prev, ...e.detail }));
 
   React.useEffect(() => {
@@ -18,13 +21,13 @@ export default function ThemeProvider({ children }) {
 
   const value = React.useMemo(
     () => ({
-      ...theme,
       sizes: Constants.sizes,
       system: Constants.system,
       shadow: Constants.shadow,
       zindex: Constants.zindex,
       font: Constants.font,
       typescale: Constants.typescale,
+      ...theme,
     }),
     [theme]
   );
