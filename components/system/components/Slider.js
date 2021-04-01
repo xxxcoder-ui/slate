@@ -90,7 +90,7 @@ export class Slider extends React.Component {
   };
 
   componentDidMount = () => {
-    updateStateFromPropValue();
+    this.updateStateFromPropValue();
     window.addEventListener("resize", this.updateDimensions);
   };
 
@@ -99,7 +99,7 @@ export class Slider extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value) updateStateFromPropValue();
+    if (prevProps.value !== this.props.value) this.updateStateFromPropValue();
   }
 
   updateDimensions = () => {
