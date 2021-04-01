@@ -121,6 +121,23 @@ export const addData = ({ user, files }) => {
 
 export const editItem = ({ user, update }) => {
   const { library } = user.data;
+
+  // NOTE(daniel): handle multiple data updates to user library
+  if (Array.isArray(update)) {
+    update.forEach((item) => {
+      for (let i = 0; i < library[0].children.length; i++) {
+        if (library[0].children[i].id === item.data.id) {
+          library[0].children[i] = {
+            ...library[0].children[i],
+            ...item.data,
+          };
+        }
+      }
+    });
+
+    return user.data;
+  }
+
   for (let i = 0; i < library[0].children.length; i++) {
     if (library[0].children[i].id === update.data.id) {
       library[0].children[i] = {

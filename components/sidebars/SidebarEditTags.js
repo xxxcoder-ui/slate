@@ -38,7 +38,7 @@ export default class SidebarEditTags extends React.Component {
     this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
-  _handleSave = async (details, index) => {
+  /* _handleSave = async (details, index) => {
     let { objects } = this.props.sidebarData;
 
     objects[index] = { ...objects[index], ...details };
@@ -50,6 +50,17 @@ export default class SidebarEditTags extends React.Component {
     this.props.onUpdateViewer({ tags: this.state.suggestions });
 
     Events.hasError(response);
+  }; */
+
+  _handleSave = async (update) => {
+    /* let { objects } = this.props.sidebarData; */
+
+    /* objects[index] = { ...objects[index], ...details }; */
+    const response = await Actions.updateData(update);
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
+
+    Events.hasError(response);
   };
 
   _handleSubmit = async () => {
@@ -57,42 +68,46 @@ export default class SidebarEditTags extends React.Component {
 
     let { checked, objects, commonTags } = this.props.sidebarData;
     const checkedIndexes = Object.keys(checked);
-    let data;
 
-    await Promise.all(
-      checkedIndexes.map(async (checkedIndex) => {
-        let objectTags = Array.isArray(objects[checkedIndex]?.tags)
-          ? objects[checkedIndex].tags
-          : [];
-        let newTags = this.state.tags;
+    let update = checkedIndexes.map((checkedIndex) => {
+      let objectTags = objects[checkedIndex]?.tags || [];
+      let newTags = this.state.tags;
 
-        /* NOTE(daniel): since there are no common tags, we are simply adding new tags to the files */
-        if (!commonTags.length) {
-          data = { tags: [...new Set([...objectTags, ...newTags])] };
-          return await this._handleSave(data, checkedIndex);
+      /* NOTE(daniel): since there are no common tags, we are simply adding new tags to the files */
+      if (!commonTags.length) {
+        let data = { tags: [...new Set([...objectTags, ...newTags])] };
+        objects[checkedIndex] = { ...objects[checkedIndex], ...data };
+
+        return { id: this.props.viewer.id, data: objects[checkedIndex] };
+      }
+
+      /* NOTE(daniel): symmetrical difference between new tags and common tags */
+      let diff = newTags
+        .filter((i) => !commonTags.includes(i))
+        .concat(commonTags.filter((i) => !newTags.includes(i)));
+
+      let update = diff.reduce((acc, cur) => {
+        if (!commonTags.includes(cur) && newTags.includes(cur)) {
+          acc.push(cur);
+        } else if (commonTags.includes(cur) && !newTags.includes(cur)) {
+          let removalIndex = acc.findIndex((item) => item === cur);
+          acc.splice(removalIndex, 1);
         }
 
-        /* NOTE(daniel): symmetrical difference between new tags and common tags */
-        let diff = newTags
-          .filter((i) => !commonTags.includes(i))
-          .concat(commonTags.filter((i) => !newTags.includes(i)));
+        return acc;
+      }, objectTags);
 
-        let update = diff.reduce((acc, cur) => {
-          if (!commonTags.includes(cur) && newTags.includes(cur)) {
-            acc.push(cur);
-          } else if (commonTags.includes(cur) && !newTags.includes(cur)) {
-            let removalIndex = acc.findIndex((item) => item === cur);
-            acc.splice(removalIndex, 1);
-          }
+      let data = { tags: update };
+      objects[checkedIndex] = { ...objects[checkedIndex], ...data };
 
-          return acc;
-        }, objectTags);
+      return { id: this.props.viewer.id, data: objects[checkedIndex] };
+    });
 
-        data = { tags: update };
+    const response = await Actions.updateData(update);
 
-        return await this._handleSave(data, checkedIndex);
-      })
-    );
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
+
+    Events.hasError(response);
 
     this.updateSuggestions();
   };
