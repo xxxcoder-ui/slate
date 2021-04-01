@@ -21,8 +21,12 @@ const STYLES_GROUPING = css`
 export default class SidebarEditTags extends React.Component {
   state = {
     tags: this.props.sidebarData?.commonTags || [],
-    suggestions: this.props.sidebarData?.suggestions || [],
+    suggestions: this.props.viewer?.tags || [],
   };
+
+  componentDidMount() {
+    this.updateSuggestions();
+  }
 
   _handleChange = (e) => {
     this.setState({
@@ -31,41 +35,11 @@ export default class SidebarEditTags extends React.Component {
   };
 
   updateSuggestions = () => {
-    let suggestions = this.props.sidebarData.suggestions || [];
-    let tags = this.state.tags || [];
-
-    let newSuggestions = new Set([...suggestions, ...tags]);
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
     this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
-  /* _handleSave = async (details, index) => {
-    let { objects } = this.props.sidebarData;
-
-    objects[index] = { ...objects[index], ...details };
-    const response = await Actions.updateData({
-      id: this.props.viewer.id,
-      data: objects[index],
-    });
-
-    this.props.onUpdateViewer({ tags: this.state.suggestions });
-
-    Events.hasError(response);
-  }; */
-
-  _handleSave = async (update) => {
-    /* let { objects } = this.props.sidebarData; */
-
-    /* objects[index] = { ...objects[index], ...details }; */
-    const response = await Actions.updateData(update);
-
-    this.props.onUpdateViewer({ tags: this.state.suggestions });
-
-    Events.hasError(response);
-  };
-
-  _handleSubmit = async () => {
-    this.props.onCancel();
-
+  _handleSave = async () => {
     let { checked, objects, commonTags } = this.props.sidebarData;
     const checkedIndexes = Object.keys(checked);
 
@@ -104,12 +78,16 @@ export default class SidebarEditTags extends React.Component {
     });
 
     const response = await Actions.updateData(update);
-
-    this.props.onUpdateViewer({ tags: this.state.suggestions });
-
     Events.hasError(response);
+  };
 
-    this.updateSuggestions();
+  _handleSubmit = () => {
+    this.props.onCancel();
+
+    this._handleSave();
+
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+    this.props.onUpdateViewer({ tags: Array.from(newSuggestions) });
   };
 
   render() {
@@ -153,7 +131,6 @@ export default class SidebarEditTags extends React.Component {
             tags={this.state.tags}
             suggestions={this.state.suggestions}
             onChange={this._handleChange}
-            /* handleTagDelete={this._handleTagDelete} */
           />
         </div>
 

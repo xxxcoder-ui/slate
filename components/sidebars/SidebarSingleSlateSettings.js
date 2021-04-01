@@ -50,8 +50,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     public: this.props.data.data.public,
     body: this.props.data.data.body,
     name: this.props.data.data.name,
-    tags: this.props.data.data.tags,
-    suggestions: this.props.viewer.tags,
+    tags: this.props.data.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
   };
 
   componentDidMount = () => {
@@ -59,10 +59,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   updateSuggestions = () => {
-    let suggestions = this.props.viewer.tags || [];
-    let tags = this.state.tags || [];
-
-    let newSuggestions = new Set([...suggestions, ...tags]);
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
     this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
@@ -75,13 +72,12 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.body = this.state.body;
         slate.data.tags = this.state.tags;
 
-        this.props.onUpdateViewer({ slates, tags: this.state.suggestions });
+        let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+        this.props.onUpdateViewer({ slates, tags: Array.from(newSuggestions) });
 
         break;
       }
     }
-
-    this.updateSuggestions();
 
     this.props.onCancel();
     const response = await Actions.updateSlate({
@@ -105,6 +101,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
   _handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+
+    if (e.target.name === "tags") {
+      this.updateSuggestions();
+    }
   };
 
   _handleDelete = async (e) => {

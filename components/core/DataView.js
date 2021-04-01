@@ -592,7 +592,7 @@ export default class DataView extends React.Component {
     );
 
     let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
-    if (sortedItems.length <= 1) {
+    if (sortedItems.length === 0) {
       return [];
     }
 
@@ -671,7 +671,6 @@ export default class DataView extends React.Component {
                       data: {
                         numChecked,
                         commonTags: this.getCommonTagFromSelectedItems(),
-                        suggestions: this.props.viewer.tags,
                         objects: this.props.items,
                         checked: this.state.checked,
                       },
