@@ -484,6 +484,17 @@ export const Tag = ({
     }
   };
 
+  const _handlePaste = (e) => {
+    let regex = /[^a-z\d\s]/i;
+    let value = e.clipboardData.getData("text/plain").toLowerCase();
+    if (regex.test(value)) {
+      e.preventDefault();
+      return;
+    }
+
+    setValue(value);
+  };
+
   const _handleFocus = () => setOpen(true);
 
   return (
@@ -498,6 +509,7 @@ export const Tag = ({
           value={value}
           onChange={_handleChange}
           onKeyPress={_handleKeyPress}
+          onPaste={_handlePaste}
           onFocus={_handleFocus}
         />
         <Dropdown
