@@ -469,7 +469,7 @@ class CarouselSidebarData extends React.Component {
         </div>
       );
     }
-    console.log(Validations.isPreviewableImage(type));
+
     elements.push(
       <div key="s-2" style={{ marginBottom: 80 }}>
         <div css={STYLES_META}>
@@ -583,6 +583,9 @@ class CarouselSidebarData extends React.Component {
             )}
             {this.props.isOwner && (
               <React.Fragment>
+                <System.P css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+                  Preview image
+                </System.P>
                 <System.P css={STYLES_TEXT}>Add a cover image for your file.</System.P>
 
                 <div style={{ marginTop: 16 }}>
