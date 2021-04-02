@@ -472,16 +472,15 @@ export const Tag = ({
     }
   };
 
-  const _handleChange = (e) => setValue(e.target.value.toLowerCase());
+  const _handleChange = (e) => {
+    let regex = /[^a-z\d\s]/i;
+    let value = e.target.value.toLowerCase().replace(regex, "");
+    setValue(value);
+  };
 
   const _handleKeyPress = (e) => {
-    let regex = /[a-z0-9\s]/i;
-
     if (e.key === "Enter" && value.length) {
       _handleAdd(value);
-    } else if (!regex.test(e.key)) {
-      e.preventDefault();
-      return false;
     }
   };
 
