@@ -22,7 +22,9 @@ const response = await fetch(url, {
   body: data
 });`;
 
-const EXAMPLE_CODE_PY = (key, slateId) => `url = "https://uploads.slate.host/api/public/${slateId}"
+const EXAMPLE_CODE_PY = (key, slateId) => `import requests
+
+url = "https://uploads.slate.host/api/public/${slateId}"
 files = {"file": open("example-file.txt", "rb")}
 headers = {"Authorization": "Basic ${key}"}
 
