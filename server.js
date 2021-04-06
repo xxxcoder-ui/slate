@@ -171,12 +171,27 @@ app.prepare().then(async () => {
     }
 
     let analytics = await AnalyticsManager.get();
+
+    const user = await Data.getUserById({
+      id,
+    });
+
+    let bucketRootCID = null;
+    if (user) {
+      const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+        user,
+      });
+
+      bucketRootCID = bucketRoot?.path;
+    }
+
     return app.render(req, res, "/_", {
       viewer,
       analytics,
       mobile,
       mac,
       resources: EXTERNAL_RESOURCES,
+      userBucketCID: bucketRootCID,
     });
   });
 
@@ -333,6 +348,10 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
+    const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+      user: creator,
+    });
+
     let library = creator.data.library;
 
     creator = Serializers.user(creator);
@@ -364,6 +383,7 @@ app.prepare().then(async () => {
       mac,
       resources: EXTERNAL_RESOURCES,
       exploreSlates,
+      userBucketCID: bucketRoot?.path,
     });
   });
 

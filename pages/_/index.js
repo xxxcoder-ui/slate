@@ -10,6 +10,7 @@ export const getServerSideProps = async ({ query }) => {
       mobile: query.mobile,
       mac: query.mac,
       resources: query.resources,
+      userBucketCID: query.userBucketCID,
     },
   };
 };
@@ -23,6 +24,7 @@ export default class ApplicationPage extends React.Component {
         mobile={this.props.mobile}
         mac={this.props.mac}
         resources={this.props.resources}
+        userBucketCID={this.props.userBucketCID}
       />
     );
   }

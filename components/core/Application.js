@@ -683,6 +683,7 @@ export default class ApplicationPage extends React.Component {
       mac: this.props.mac,
       resources: this.props.resources,
       activeUsers: this.state.activeUsers,
+      userBucketCID: this.props.userBucketCID,
     });
 
     let sidebarElement;
