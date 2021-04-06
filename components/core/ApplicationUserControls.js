@@ -135,7 +135,7 @@ export default class ApplicationUserControls extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     this.props.onTogglePopup();
-    UserBehaviors.signOut();
+    UserBehaviors.signOut({ viewer: this.props.viewer });
   };
 
   render() {

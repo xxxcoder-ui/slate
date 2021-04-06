@@ -85,12 +85,15 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
   });
 
   client.addEventListener("close", (e) => {
-    setTimeout(() => {
-      client = null;
-      console.log(`Auto reconnecting dropped websocket`);
-      init({ resource, viewer, onUpdate });
-    }, 1000);
-
+    if (e.reason === "SIGN_OUT") {
+      window.location.replace("/_");
+    } else {
+      setTimeout(() => {
+        client = null;
+        console.log(`Auto reconnecting dropped websocket`);
+        init({ resource, viewer, onUpdate });
+      }, 1000);
+    }
     if (!client) {
       return null;
     }
