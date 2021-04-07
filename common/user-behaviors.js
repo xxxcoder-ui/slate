@@ -49,9 +49,11 @@ export const authenticate = async (state) => {
 };
 
 // NOTE(jim): Signs a user out and redirects to the sign in screen.
-export const signOut = async () => {
+export const signOut = async ({ viewer }) => {
   let wsclient = Websockets.getClient();
   if (wsclient) {
+    wsclient.send(JSON.stringify({ type: "UNSUBSCRIBE_VIEWER", data: viewer }));
+
     await Websockets.deleteClient();
     wsclient = null;
   }
