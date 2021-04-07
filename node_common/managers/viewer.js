@@ -292,12 +292,15 @@ export const getById = async ({ id }) => {
     bytes += each.size;
   });
 
+  const tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
+
   return {
     ...Serializers.user(user),
     type: "VIEWER",
     library: user.data.library,
     onboarding: user.data.onboarding || {},
     status: user.data.status || {},
+    tags,
 
     // TODO(jim): Move this elsewhere.
     allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing

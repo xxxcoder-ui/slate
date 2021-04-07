@@ -109,6 +109,7 @@ export default async (req, res) => {
               type: each.type,
               name: each.name,
               title: each.title,
+              tags: each.tags,
             },
           },
         },
@@ -128,6 +129,7 @@ export default async (req, res) => {
       unityGameConfig: each.unityGameConfig,
       unityGameLoader: each.unityGameLoader,
       url,
+      tags: each.tags,
     };
   });
 

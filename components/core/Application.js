@@ -43,6 +43,7 @@ import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlate
 import SidebarFilecoinArchive from "~/components/sidebars/SidebarFilecoinArchive";
 import SidebarHelp from "~/components/sidebars/SidebarHelp";
 import SidebarFAQ from "~/components/sidebars/SidebarFAQ";
+import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 
 // NOTE(jim):
 // Core components to the application structure.
@@ -69,6 +70,7 @@ const SIDEBARS = {
   SIDEBAR_SINGLE_SLATE_SETTINGS: <SidebarSingleSlateSettings />,
   SIDEBAR_HELP: <SidebarHelp />,
   SIDEBAR_FAQ: <SidebarFAQ />,
+  SIDEBAR_EDIT_TAGS: <SidebarEditTags />,
 };
 
 const SCENES = {

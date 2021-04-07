@@ -6,6 +6,7 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as SVG from "~/common/svg";
+import * as UserBehaviors from "~/common/user-behaviors";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
@@ -49,6 +50,17 @@ export default class SidebarSingleSlateSettings extends React.Component {
     public: this.props.data.data.public,
     body: this.props.data.data.body,
     name: this.props.data.data.name,
+    tags: this.props.data.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
+  };
+
+  componentDidMount = () => {
+    this.updateSuggestions();
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleSubmit = async () => {
@@ -58,7 +70,11 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.name = this.state.name;
         slate.data.public = this.state.public;
         slate.data.body = this.state.body;
-        this.props.onUpdateViewer({ slates });
+        slate.data.tags = this.state.tags;
+
+        let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+        this.props.onUpdateViewer({ slates, tags: Array.from(newSuggestions) });
+
         break;
       }
     }
@@ -70,6 +86,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
         name: this.state.name,
         public: this.state.public,
         body: this.state.body,
+        tags: this.state.tags,
       },
     });
 
@@ -84,6 +101,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
   _handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+
+    if (e.target.name === "tags") {
+      this.updateSuggestions();
+    }
   };
 
   _handleDelete = async (e) => {
@@ -156,7 +177,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           <System.Input
             placeholder="Slate name..."
             style={{ marginTop: 12 }}
-            name="name"
+            name="tags"
             value={this.state.name}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
@@ -192,6 +213,26 @@ export default class SidebarSingleSlateSettings extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
+          />
+        </div>
+
+        <div css={STYLES_GROUPING}>
+          <System.P css={STYLES_HEADER}>Tags</System.P>
+          <System.P
+            css={STYLES_TEXT}
+            style={{
+              marginTop: 12,
+            }}
+          >
+            Add tags to a slate to categorize it.
+          </System.P>
+          <System.Tag
+            name="tags"
+            placeholder={`Edit tags for ${this.state.slatename}`}
+            tags={this.state.tags}
+            suggestions={this.state.suggestions}
+            style={{ marginTop: 12 }}
+            onChange={this._handleChange}
           />
         </div>
 

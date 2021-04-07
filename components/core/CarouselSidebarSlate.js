@@ -12,7 +12,9 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { SlatePicker } from "~/components/core/SlatePicker";
 import { Input } from "~/components/system/components/Input";
 import { Textarea } from "~/components/system/components/Textarea";
+import { Tag } from "~/components/system/components/Tag";
 
+import isEqual from "lodash/isEqual";
 import ProcessedText from "~/components/core/ProcessedText";
 
 const STYLES_NO_VISIBLE_SCROLL = css`
@@ -186,6 +188,8 @@ export default class CarouselSidebarSlate extends React.Component {
     body: Strings.isEmpty(this.props.data.body) ? "" : this.props.data.body,
     source: Strings.isEmpty(this.props.data.source) ? "" : this.props.data.source,
     author: Strings.isEmpty(this.props.data.author) ? "" : this.props.data.author,
+    tags: this.props.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
     selected: {},
     isPublic: false,
     copyValue: "",
@@ -213,6 +217,19 @@ export default class CarouselSidebarSlate extends React.Component {
       }
       this.setState({ selected, isPublic });
     }
+
+    this.updateSuggestions();
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!isEqual(prevState.tags, this.state.tags)) {
+      this.updateSuggestions();
+    }
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleClose = () => {
@@ -228,9 +245,12 @@ export default class CarouselSidebarSlate extends React.Component {
       body: this.state.body,
       source: this.state.source,
       author: this.state.author,
+      tags: this.state.tags,
     };
     this.props.onSave(data, this.props.index);
     this.setState({ unsavedChanges: false });
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
   };
 
   _handleCreateSlate = async () => {
@@ -250,6 +270,10 @@ export default class CarouselSidebarSlate extends React.Component {
       unsavedChanges: true,
       subject: e.target.name == "body" ? "Description" : this._handleCapitalization(e.target.name),
     });
+
+    if (e.target.name === "Tags") {
+      this.updateSuggestions();
+    }
   };
 
   _handleCapitalization(str) {
@@ -349,6 +373,17 @@ export default class CarouselSidebarSlate extends React.Component {
               value={this.state.body}
               onChange={this._handleChange}
               style={STYLES_INPUT}
+            />
+            <Tag
+              type="dark"
+              name="tags"
+              placeholder={`Edit tags for ${this.state.title}`}
+              tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              style={{ margin: "0 0 16px" }}
+              inputStyles={{ padding: "16px" }}
+              dropdownStyles={{ top: "50px" }}
+              onChange={this._handleChange}
             />
             <Input
               full

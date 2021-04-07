@@ -35,6 +35,8 @@ export default class SidebarCreateSlate extends React.Component {
     name: "",
     public: true,
     body: "",
+    tags: [],
+    suggestions: this.props.viewer?.tags || [],
     loading: false,
   };
 
@@ -56,6 +58,7 @@ export default class SidebarCreateSlate extends React.Component {
       name: this.state.name,
       public: this.state.public,
       body: this.state.body,
+      tags: this.state.tags,
     });
 
     if (Events.hasError(response)) {
@@ -173,6 +176,26 @@ export default class SidebarCreateSlate extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
+          />
+        </div>
+
+        <div css={STYLES_GROUPING}>
+          <System.P css={STYLES_HEADER}>Tags</System.P>
+          <System.P
+            css={STYLES_TEXT}
+            style={{
+              marginTop: 12,
+            }}
+          >
+            Add tags to a slate to categorize it.
+          </System.P>
+          <System.Tag
+            name="tags"
+            placeholder={`Edit tags for ${this.state.name ? this.state.name : "this slate"}`}
+            tags={this.state.tags}
+            suggestions={this.state.suggestions}
+            style={{ marginTop: 12 }}
+            onChange={this._handleChange}
           />
         </div>
 

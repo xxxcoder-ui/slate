@@ -19,6 +19,7 @@ import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
 
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 import FilePreviewBubble from "~/components/core/FilePreviewBubble";
+import isEqual from "lodash/isEqual";
 
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
@@ -200,6 +201,102 @@ const STYLES_MOBILE_HIDDEN = css`
     display: none;
   }
 `;
+
+const STYLES_TAGS_WRAPPER = css`
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+`;
+
+const STYLES_LIST = css`
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+`;
+
+const STYLES_TAG = css`
+  list-style-type: none;
+  border-radius: 4px;
+  background: ${Constants.system.bgGray};
+  color: ${Constants.system.newBlack};
+  font-family: ${Constants.font.text};
+  padding: 2px 8px;
+  margin: 8px 8px 0 0;
+
+  span {
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  &:hover {
+    background: ${Constants.system.gray30};
+  }
+`;
+
+class Tags extends React.Component {
+  state = {
+    isTruncated: false,
+    truncateIndex: 0,
+  };
+
+  listWrapper = React.createRef();
+  listEl = React.createRef();
+
+  componentDidMount() {
+    this._handleTruncate();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!isEqual(prevProps.tags, this.props.tags)) {
+      this._handleTruncate();
+    }
+  }
+
+  _handleTruncate = () => {
+    const listWrapper = this.listWrapper.current?.getBoundingClientRect();
+    const tagNodes = this.listEl.current?.querySelectorAll("li");
+    const tagElems = Array.from(tagNodes);
+
+    let total = 0;
+    const truncateIndex = tagElems.findIndex((tagElem) => {
+      const { width } = tagElem?.getBoundingClientRect();
+      total += width;
+
+      if (total >= listWrapper.width - 50) {
+        return true;
+      }
+    });
+
+    if (truncateIndex > 0) {
+      this.setState({ isTruncated: true, truncateIndex });
+      return;
+    }
+
+    this.setState({ isTruncated: false, truncateIndex: tagElems.length });
+  };
+
+  render() {
+    const { tags } = this.props;
+
+    return (
+      <div css={STYLES_TAGS_WRAPPER}>
+        <div ref={this.listWrapper} style={{ width: 340 }}>
+          <ul css={STYLES_LIST} ref={this.listEl}>
+            {(this.state.isTruncated ? tags.slice(0, this.state.truncateIndex) : tags).map(
+              (tag) => (
+                <li key={tag} css={STYLES_TAG}>
+                  <span>{tag}</span>
+                </li>
+              )
+            )}
+          </ul>
+          {this.state.isTruncated && <span>...</span>}
+        </div>
+      </div>
+    );
+  }
+}
 
 export default class DataView extends React.Component {
   _mounted = false;
@@ -486,6 +583,34 @@ export default class DataView extends React.Component {
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
+  getCommonTagFromSelectedItems = () => {
+    const { items } = this.props;
+    const { checked } = this.state;
+
+    if (!Object.keys(checked).length) {
+      return;
+    }
+
+    let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
+      items[index].tags ? items[index].tags : []
+    );
+
+    let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
+    if (sortedItems.length === 0) {
+      return [];
+    }
+
+    let commonTags = sortedItems.shift().reduce((acc, cur) => {
+      if (acc.indexOf(cur) === -1 && sortedItems.every((item) => item.indexOf(cur) !== -1)) {
+        acc.push(cur);
+      }
+
+      return acc;
+    }, []);
+
+    return commonTags;
+  };
+
   render() {
     let numChecked = Object.keys(this.state.checked).length || 0;
     // const header = (
@@ -539,6 +664,24 @@ export default class DataView extends React.Component {
                   onClick={this._handleAddToSlate}
                 >
                   Add to slate
+                </ButtonPrimary>
+                <ButtonPrimary
+                  transparent
+                  style={{ color: Constants.system.white }}
+                  onClick={() => {
+                    this.props.onAction({
+                      type: "SIDEBAR",
+                      value: "SIDEBAR_EDIT_TAGS",
+                      data: {
+                        numChecked,
+                        commonTags: this.getCommonTagFromSelectedItems(),
+                        objects: this.props.items,
+                        checked: this.state.checked,
+                      },
+                    });
+                  }}
+                >
+                  Edit tag{numChecked > 1 ? "s" : ""}
                 </ButtonPrimary>
                 <ButtonWarning
                   transparent
@@ -747,6 +890,11 @@ export default class DataView extends React.Component {
         width: "100%",
       },
       {
+        key: "tags",
+        name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Tags</div>,
+        width: "360px",
+      },
+      {
         key: "size",
         name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Size</div>,
         width: "104px",
@@ -757,6 +905,7 @@ export default class DataView extends React.Component {
         width: "48px",
       },
     ];
+
     const rows = this.props.items.slice(0, this.state.viewLimit).map((each, index) => {
       const cid = each.cid;
 
@@ -798,6 +947,7 @@ export default class DataView extends React.Component {
             </FilePreviewBubble>
           </Selectable>
         ),
+        tags: <>{each.tags && <Tags tags={each.tags} />}</>,
         size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
         more: (
           <div

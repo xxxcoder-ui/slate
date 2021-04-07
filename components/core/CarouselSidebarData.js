@@ -16,6 +16,9 @@ import { SlatePicker } from "~/components/core/SlatePicker";
 import { Input } from "~/components/system/components/Input";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { Toggle } from "~/components/system/components/Toggle";
+import { Tag } from "~/components/system/components/Tag";
+
+import isEqual from "lodash/isEqual";
 
 const DEFAULT_BOOK =
   "https://slate.textile.io/ipfs/bafkreibk32sw7arspy5kw3p5gkuidfcwjbwqyjdktd5wkqqxahvkm2qlyi";
@@ -260,6 +263,9 @@ class CarouselSidebarData extends React.Component {
     unsavedChanges: false,
     isEditing: false,
     isDownloading: false,
+    subject: "",
+    tags: this.props.data?.tags || [],
+    suggestions: this.props.viewer?.tags || [],
   };
 
   componentDidMount = () => {
@@ -279,6 +285,19 @@ class CarouselSidebarData extends React.Component {
       }
       this.setState({ selected, inPublicSlates, isPublic: this.props.data.public });
     }
+
+    this.updateSuggestions();
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!isEqual(prevState.tags, this.state.tags)) {
+      this.updateSuggestions();
+    }
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleDarkMode = async (e) => {
@@ -291,19 +310,33 @@ class CarouselSidebarData extends React.Component {
   _handleChange = (e) => {
     if (this.props.isOwner && !this.props.external) {
       this.debounceInstance();
-      this.setState({ [e.target.name]: e.target.value, unsavedChanges: true });
+      this.setState({
+        [e.target.name]: e.target.value,
+        unsavedChanges: true,
+        subject: this._handleCapitalization(e.target.name),
+      });
+
+      if (e.target.name === "Tags") {
+        this.updateSuggestions();
+      }
     }
   };
 
+  _handleCapitalization(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   _handleSave = async () => {
-    let name = { name: this.state.name };
-    this.props.onSave(name, this.props.index);
+    let data = { name: this.state.name, tags: this.state.tags };
+    this.props.onSave(data, this.props.index);
     await setTimeout(() => {
       this.setState({ unsavedChanges: false });
     }, 500);
     await setTimeout(() => {
       this.setState({ unsavedChanges: true });
     }, 4000);
+
+    this.props.onUpdateViewer({ tags: this.state.suggestions });
   };
 
   _handleToggleAutoPlay = async (e) => {
@@ -505,7 +538,7 @@ class CarouselSidebarData extends React.Component {
             {this.state.unsavedChanges == false ? (
               <div css={STYLES_AUTOSAVE}>
                 <SVG.Check height="14px" style={{ marginRight: 4 }} />
-                Filename saved
+                {this.state.subject} saved
               </div>
             ) : null}
           </div>
@@ -547,6 +580,26 @@ class CarouselSidebarData extends React.Component {
             </div>
           ) : null}
         </div>
+        {this.props.isOwner ? (
+          <React.Fragment>
+            <div css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+              Tags
+            </div>
+            <div css={STYLES_OPTIONS_SECTION}>
+              <Tag
+                type="dark"
+                name="tags"
+                placeholder={`Edit tags for ${this.state.name}`}
+                tags={this.state.tags}
+                suggestions={this.state.suggestions}
+                style={{ margin: "0 0 16px" }}
+                inputStyles={{ padding: "16px" }}
+                dropdownStyles={{ top: "50px" }}
+                onChange={this._handleChange}
+              />
+            </div>
+          </React.Fragment>
+        ) : null}
         {this.props.external ? null : (
           <React.Fragment>
             <div css={STYLES_SECTION_HEADER}>Connected Slates</div>

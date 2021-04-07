@@ -187,6 +187,7 @@ export default class SystemPage extends React.Component {
           <SidebarLink url={url} href="/_/system/stats" title="Stats" />
           <SidebarLink url={url} href="/_/system/tables" title="Tables" />
           <SidebarLink url={url} href="/_/system/tabs" title="Tabs" />
+          <SidebarLink url={url} href="/_/system/tags" title="Tags" />
           <SidebarLink url={url} href="/_/system/toggles" title="Toggles" />
           <SidebarLink url={url} href="/_/system/tooltips" title="Tooltips" />
           <SidebarLink url={url} href="/_/system/typography" title="Typography" />

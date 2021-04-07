@@ -346,4 +346,9 @@ export const error = {
   // Unity game download
   UNITY_ZIP_DOWNLOAD_FAILED:
     "We're having trouble downloading you Unity game file. Please try again",
+
+  // Delete tag
+  SERVER_DELETE_TAG_USER_NOT_FOUND:
+    "We're having trouble retrieving that slate's owner right now. Please try again",
+  SERVER_DELETE_TAG_SLATES_NOT_FOUND: "We weren't able to locate the slates for that user",
 };
