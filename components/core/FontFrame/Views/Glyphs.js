@@ -14,22 +14,24 @@ const STYLES_GLYPHS_LETTER = css`
 const STYLES_GLYPHS_GRID = css`
   margin-top: -16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
   grid-template-rows: repeat(12, 1fr);
   grid-column-gap: 28px;
   grid-auto-rows: 0px;
   overflow: hidden;
+  font-size: 32px;
 `;
 export default function Glyphs() {
-  const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 ?!()[]{}&*^%$#@~`;
-  const glyphs = React.useMemo(() => new Array(6).fill(content).join("").split(""), []);
+  const content = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890?!()[]{}&*^%$#@~`.split(
+    ""
+  );
   return (
     <div css={STYLES_GLYPHS_WRAPPER}>
       <div css={STYLES_GLYPHS_LETTER}>Aa</div>
       <div css={STYLES_GLYPHS_GRID}>
-        {glyphs.map((letter, i) => (
+        {content.map((letter) => (
           <div
-            key={letter + i}
+            key={letter}
             css={css`
               margin-top: 16px;
             `}
