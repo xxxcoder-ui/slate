@@ -563,34 +563,49 @@ class CarouselSidebarData extends React.Component {
         )}
         {type && Validations.isPreviewableImage(type) ? null : (
           <div>
-            <System.P css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
-              Preview image
-            </System.P>
-            {coverImage ? (
+            {coverImage && (
               <React.Fragment>
-                <System.P css={STYLES_TEXT}>This is the preview image of your file.</System.P>
-                <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
-                  <img
-                    src={coverImage.url}
-                    alt=""
-                    style={{ maxWidth: "368px", maxHeight: "368px" }}
+                <System.P css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+                  Preview image
+                </System.P>
+
+                <React.Fragment>
+                  <System.P css={STYLES_TEXT}>This is the preview image of your file.</System.P>
+                  <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
+                    <img
+                      src={coverImage?.url}
+                      alt=""
+                      style={{ maxWidth: "368px", maxHeight: "368px" }}
+                    />
+                  </div>
+                </React.Fragment>
+              </React.Fragment>
+            )}
+            {this.props.isOwner && (
+              <React.Fragment>
+                <System.P css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+                  Preview image
+                </System.P>
+                <System.P css={STYLES_TEXT}>Add a cover image for your file.</System.P>
+
+                <div style={{ marginTop: 16 }}>
+                  <input
+                    css={STYLES_FILE_HIDDEN}
+                    type="file"
+                    id="file"
+                    onChange={this._handleUpload}
                   />
+                  <System.ButtonPrimary
+                    full
+                    type="label"
+                    htmlFor="file"
+                    loading={this.state.changingPreview}
+                  >
+                    Upload image
+                  </System.ButtonPrimary>
                 </div>
               </React.Fragment>
-            ) : (
-              <System.P css={STYLES_TEXT}>Add a cover image for your file.</System.P>
             )}
-            <div style={{ marginTop: 16 }}>
-              <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleUpload} />
-              <System.ButtonPrimary
-                full
-                type="label"
-                htmlFor="file"
-                loading={this.state.changingPreview}
-              >
-                Upload image
-              </System.ButtonPrimary>
-            </div>
           </div>
         )}
         {this.props.isOwner ? (
