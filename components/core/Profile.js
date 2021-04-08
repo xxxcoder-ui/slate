@@ -421,7 +421,6 @@ export default class Profile extends React.Component {
     let isOwner = this.props.isOwner;
     let creator = this.props.creator;
     let username = this.state.slateTab === 0 ? creator.username : null;
-    let userBucketCID = this.props.userBucketCID ? this.props.userBucketCID : null;
     let subscriptions = this.state.subscriptions;
     let subscribers = this.state.subscribers;
     let slates = [];
@@ -598,9 +597,6 @@ export default class Profile extends React.Component {
             </div>
             <div css={STYLES_INFO}>
               <div css={STYLES_NAME}>{Strings.getPresentationName(creator)}</div>
-              {userBucketCID && (
-                <p style={{ marginBottom: 16 }}>{`https://ipfs.io${userBucketCID}`}</p>
-              )}
               {!isOwner && (
                 <div css={STYLES_BUTTON}>
                   {this.state.isFollowing ? (

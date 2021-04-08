@@ -367,10 +367,3 @@ export const cleanDatabase = async () => {
     ...DEFAULT_OPTIONS,
   });
 };
-
-export const getUserBucketCID = async (data) => {
-  return await returnJSON(`/api/users/get-bucket-cid`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};

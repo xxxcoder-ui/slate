@@ -294,6 +294,10 @@ export const getById = async ({ id }) => {
 
   const tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
 
+  const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+    user,
+  });
+
   return {
     ...Serializers.user(user),
     type: "VIEWER",
@@ -301,6 +305,7 @@ export const getById = async ({ id }) => {
     onboarding: user.data.onboarding || {},
     status: user.data.status || {},
     tags,
+    userBucketCID: bucketRoot?.path,
 
     // TODO(jim): Move this elsewhere.
     allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing
