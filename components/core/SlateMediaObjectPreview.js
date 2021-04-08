@@ -8,6 +8,9 @@ import { css } from "@emotion/react";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
+import { endsWithAny } from "~/common/utilities";
+
+import FontObjectPreview from "~/components/core/FontFrame/Views/FontObjectPreview";
 
 const STYLES_IMAGE_CONTAINER = css`
   background-color: ${Constants.system.white};
@@ -189,6 +192,51 @@ export default class SlateMediaObjectPreview extends React.Component {
         style={{ color: Constants.system.textGray }}
       />
     );
+
+    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], this.props.title)) {
+      return (
+        <article
+          css={STYLES_ENTITY}
+          style={{
+            ...this.props.style,
+            border: this.props.previewPanel ? `1px solid ${Constants.system.bgGray}` : "auto",
+          }}
+        >
+          <FontObjectPreview
+            url={this.props.url}
+            cid={this.props.cid}
+            fallback={
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <img
+                  src="https://slate.textile.io/ipfs/bafkreib5mnvds3cpe7ot7ibrakmrnja2hv5tast3giiarpl5nun7jpdt5m"
+                  alt=""
+                  height={this.props.previewPanel ? "80" : "64"}
+                />
+                <div style={{ position: "absolute" }}>{element}</div>
+              </div>
+            }
+          />
+          {this.props.title && !this.props.iconOnly && !this.props.previewPanel ? (
+            <div style={{ position: "absolute", bottom: 16, left: 16, width: "inherit" }}>
+              <div css={STYLES_TITLE}>{title}</div>
+              {extension ? (
+                <div
+                  css={STYLES_TITLE}
+                  style={{
+                    fontSize: 12,
+                    color: Constants.system.textGrayLight,
+                    fontFamily: Constants.font.medium,
+                  }}
+                >
+                  {extension}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </article>
+      );
+    }
+
     return (
       <article
         css={STYLES_ENTITY}

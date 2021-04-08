@@ -747,6 +747,7 @@ export default class DataView extends React.Component {
                       url={Strings.getCIDGatewayURL(each.cid)}
                       title={each.name || each.file}
                       type={each.type}
+                      cid={each.cid}
                       coverImage={each.coverImage}
                       dataView={true}
                     />

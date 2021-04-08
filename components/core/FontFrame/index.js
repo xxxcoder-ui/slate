@@ -44,8 +44,9 @@ const FontLoader = () => (
     <p>loading...</p>
   </div>
 );
-export default function FontFrame({ cid, url, ...props }) {
-  const { isFontLoading, fontName } = useFont({ url, name: cid }, [cid]);
+export default function FontFrame({ cid, url, fallback, ...props }) {
+  const { isFontLoading, error, fontName } = useFont({ url, name: cid }, [cid, url]);
+
   const [
     currentState,
     {
@@ -64,6 +65,10 @@ export default function FontFrame({ cid, url, ...props }) {
       getRandomLayout,
     },
   ] = useFontControls();
+
+  if (error) {
+    return fallback;
+  }
 
   return (
     <div css={GET_STYLES_CONTAINER} style={{ fontFamily: fontName }} {...props}>

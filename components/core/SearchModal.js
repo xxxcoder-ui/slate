@@ -274,6 +274,7 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
           url={file.url ? file.url : Strings.getCIDGatewayURL(file.cid)}
           title={file.title || file.name || file.file}
           type={file.type}
+          cid={file.cide}
           coverImage={file.coverImage}
         />
       </div>

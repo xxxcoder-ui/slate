@@ -73,6 +73,7 @@ export class SlatePreviewRow extends React.Component {
             type={each.type}
             url={each.url}
             style={this.props.previewStyle}
+            cid={each.cid}
             title={each.title || each.name}
             iconOnly={this.props.small}
             coverImage={each.coverImage}
@@ -358,6 +359,7 @@ export class SlatePreviewBlock extends React.Component {
                   charCap={30}
                   type={first.type}
                   url={first.url}
+                  cid={first.cid}
                   title={first.title || first.name}
                   coverImage={first.coverImage}
                 />

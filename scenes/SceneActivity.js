@@ -130,6 +130,7 @@ class ActivitySquare extends React.Component {
           title={item.file.title || item.file.name}
           type={item.file.type}
           style={{ border: "none" }}
+          cid={item.file.cid}
           imageStyle={{ border: "none" }}
         />
         {isImage && (this.state.showText || this.props.mobile) ? (
