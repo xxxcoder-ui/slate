@@ -328,7 +328,7 @@ export default class SceneSettingsDeveloper extends React.Component {
           <System.DescriptionGroup
             style={{ maxWidth: 640, marginTop: 34 }}
             label="Bucket CID"
-            description={`https://ipfs.io${userBucketCID}`}
+            description={`${userBucketCID}`}
           />
         )}
         <br />
