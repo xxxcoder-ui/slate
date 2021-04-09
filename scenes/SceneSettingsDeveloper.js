@@ -274,7 +274,7 @@ export default class SceneSettingsDeveloper extends React.Component {
       }
     }
 
-    let userBucketCID = this.props.viewer?.userBucketCID || null;
+    let userBucketCID = this.props.viewer?.userBucketCID;
 
     return (
       <ScenePage>
