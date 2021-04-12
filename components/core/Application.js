@@ -347,6 +347,9 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
+    await this._handleOptimisticUpload({ files });
+    return;
+    // TODO(daniel): figure out how to handle successful and unsuccessful uploads
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
       if (Store.checkCancelled(`${files[i].lastModified}-${files[i].name}`)) {
@@ -423,6 +426,46 @@ export default class ApplicationPage extends React.Component {
 
     this._handleRegisterLoadingFinished({ keys });
   };
+
+  _handleOptimisticUpload = async ({ files }) => {
+    let optimisticFiles = [];
+    for (let file of files) {
+      if (!file.type.startsWith("image")) {
+        continue;
+      }
+
+      let dataURL = await this._handleLoadDataURL(file);
+      let data = {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        decorator: "OPTIMISTIC-IMAGE-FILE",
+        dataURL,
+      };
+
+      optimisticFiles.push(data);
+    }
+
+    let update = [...optimisticFiles, ...this.props.viewer?.library[0].children];
+    let library = this.props.viewer.library;
+    library[0].children = update;
+    this._handleUpdateViewer({ library });
+  };
+
+  _handleLoadDataURL = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = () => {
+        reject({ error: true });
+        reader.abort();
+      };
+
+      reader.readAsDataURL(file);
+    });
 
   _handleRegisterFileLoading = ({ fileLoading }) => {
     if (this.state.fileLoading) {
