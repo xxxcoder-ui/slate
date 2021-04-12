@@ -171,6 +171,7 @@ app.prepare().then(async () => {
     }
 
     let analytics = await AnalyticsManager.get();
+
     return app.render(req, res, "/_", {
       viewer,
       analytics,
@@ -333,6 +334,10 @@ app.prepare().then(async () => {
       return res.redirect("/404");
     }
 
+    const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+      user: creator,
+    });
+
     let library = creator.data.library;
 
     creator = Serializers.user(creator);
@@ -364,6 +369,7 @@ app.prepare().then(async () => {
       mac,
       resources: EXTERNAL_RESOURCES,
       exploreSlates,
+      userBucketCID: bucketRoot?.path,
     });
   });
 

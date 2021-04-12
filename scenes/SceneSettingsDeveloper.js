@@ -274,6 +274,8 @@ export default class SceneSettingsDeveloper extends React.Component {
       }
     }
 
+    let userBucketCID = this.props.viewer?.userBucketCID;
+
     return (
       <ScenePage>
         {/*
@@ -321,9 +323,16 @@ export default class SceneSettingsDeveloper extends React.Component {
           You can use your API key to get slates and add images to slates. You can have a total of
           10 keys at any given time.
         </ScenePageHeader>
-        <br />
-        <br />
 
+        {userBucketCID && (
+          <System.DescriptionGroup
+            style={{ maxWidth: 640, marginTop: 34 }}
+            label="Bucket CID"
+            description={`${userBucketCID}`}
+          />
+        )}
+        <br />
+        <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 34 }} label="API Keys" />
         {this.props.viewer.keys.map((k) => {
           return <Key key={k.id} data={k} onDelete={this._handleDelete} />;
         })}
