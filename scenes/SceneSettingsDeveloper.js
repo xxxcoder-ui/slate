@@ -332,6 +332,7 @@ export default class SceneSettingsDeveloper extends React.Component {
           />
         )}
         <br />
+        <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 34 }} label="API Keys" />
         {this.props.viewer.keys.map((k) => {
           return <Key key={k.id} data={k} onDelete={this._handleDelete} />;
         })}
