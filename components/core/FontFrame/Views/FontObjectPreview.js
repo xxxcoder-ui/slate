@@ -36,12 +36,12 @@ const STYLES_LETTER = (theme) => css`
 const FontObjectPreview = React.memo(
   ({ url, cid, fallback }) => {
     const { isFontLoading, error, fontName } = useFont({ url, name: cid }, [cid]);
-    if (error) {
+    if (error || isFontLoading) {
       return fallback;
     }
     return (
       <div style={{ fontFamily: fontName }}>
-        {isFontLoading ? <div>loading</div> : <div css={STYLES_LETTER}>Aa</div>}
+        <div css={STYLES_LETTER}>Aa</div>
       </div>
     );
   },
