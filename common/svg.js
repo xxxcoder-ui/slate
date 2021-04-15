@@ -433,7 +433,7 @@ export const OldWallet = (props) => (
 );
 
 export const NavigationArrow = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={props.style} {...props}>
     <g
       fill="none"
       stroke="currentColor"

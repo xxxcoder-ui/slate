@@ -159,6 +159,7 @@ export class Input extends React.Component {
           full={this.props.full}
           tooltip={this.props.tooltip}
           label={this.props.label}
+          labelStyle={{ fontSize: Constants.typescale.lvl0 }}
           style={this.props.descriptionStyle}
           description={this.props.description}
         />

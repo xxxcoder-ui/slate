@@ -1,9 +1,5 @@
 export const Logo = (props) => (
-  <svg
-    {...props}
-    fill="none"
-    viewBox="0 0 236 79"
-    xmlns="http://www.w3.org/2000/svg">
+  <svg {...props} fill="none" viewBox="0 0 236 79" xmlns="http://www.w3.org/2000/svg">
     <g clipRule="evenodd" fill="currentColor" fillRule="evenodd">
       <path d="m217.464 54.8607c-6.06 0-11.06-4.3753-11.135-11.3369h28.241s.214-1.6208.214-3.6082c0-6.7976-1.92-12.0386-5.208-15.5818-3.289-3.5441-7.93-5.3723-13.337-5.3723-5.41 0-10.078 1.9779-13.392 5.6963-3.312 3.7168-5.258 9.1582-5.258 16.0648 0 6.9044 1.846 12.336 5.259 16.0428 3.414 3.7083 8.377 5.6701 14.567 5.6704 5.635.1002 11.16-1.6208 15.742-5.1302l.111-.0854-3.782-6.5418c-1.598 1.2996-3.652 2.3167-5.031 2.9079-1.778.7631-3.915 1.2744-6.991 1.2744zm6.112-25.5668c1.681 1.7391 2.622 4.2517 2.653 7.3749h-19.896c.109-2.7752 1.009-5.2854 2.644-7.1105 1.665-1.8584 3.948-3.0185 7.272-3.0185 3.28 0 5.618.9862 7.327 2.7541z" />
       <path d="m196.252 61.3278v-7.7171c-1.658.634-3.09 1.0078-4.02 1.1408-.81.1157-1.407.1123-1.907.1095-1.222 0-2.185-.1755-2.646-.7613-.234-.2976-.406-.7148-.518-1.3028-.113-.588-.164-1.3367-.164-2.2886v-22.8095h9.255v-7.9531h-9.255v-15.40329l-8.724 4.93807v42.30672c0 3.8975.938 6.6181 2.647 8.3634 1.709 1.7459 4.162 2.4879 7.129 2.4879 1.936 0 3.349-.0295 8.203-1.1107z" />
@@ -17,17 +13,77 @@ export const Logo = (props) => (
 
 export const Symbol = (props) => {
   return (
-    <svg
-      {...props}
-      viewBox="0 0 447 516"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} viewBox="0 0 447 516" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M446.353 386.57L362.353 435.038V391.124L408.353 364.528V269.318L222.853 162.225V118.312L446.353 247.363V386.57ZM408.353 151.624V204.624L446.353 226.624V129.624L222.853 0.624146L102.353 70.1241V210.463L306.353 328.124V423.455L222.853 471.624L38.3531 365.124V312.124L0.353149 290.124V387.124L222.853 515.624L344.353 445.43V306.277L140.353 188.456V92.0493L222.853 44.4236L408.353 151.624ZM0.353149 129.124L84.3531 80.4781V124.419L38.3531 151.124V247.369L222.853 353.863V397.789L0.353149 269.323V129.124Z"
         fill="currentColor"
       />
+    </svg>
+  );
+};
+
+export const DarkSymbol = ({ width = 40, ...props }) => {
+  return (
+    <svg
+      width={width}
+      height={width}
+      viewBox={`${width - 2} ${width / 2} ${width} ${width}`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <g filter="url(#prefix__filter0_d)">
+        <path
+          d="M56 21.155a4 4 0 014 0l13.32 7.69a4 4 0 012 3.464v15.382a4 4 0 01-2 3.464L60 58.845a4 4 0 01-4 0l-13.32-7.69a4 4 0 01-2-3.464V32.309a4 4 0 012-3.464L56 21.155z"
+          fill="#2C2C2E"
+        />
+        <g filter="url(#prefix__filter1_d)">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M65.183 46.823v2.388l4.484-2.56v-7.237l-11.748-6.713v2.388l9.66 5.52v4.844l-2.395 1.37zm2.396-12.28v2.73l2.088 1.197v-5.124l-11.693-6.68-6.33 3.614v7.295l10.623 6.064v4.85l-4.293 2.452-9.553-5.458v-2.731l-2.088-1.197v5.125l11.641 6.653 6.381-3.648V42.45l-10.622-6.072v-4.906l4.24-2.423 9.606 5.493zM50.817 33.14v-2.39l-4.484 2.57v7.288l11.696 6.684v-2.389l-9.608-5.489v-4.897l2.396-1.377z"
+            fill="#D1D1D6"
+          />
+        </g>
+      </g>
+      <defs>
+        <filter
+          id="prefix__filter0_d"
+          x={-2}
+          y={0}
+          width={120}
+          height={120}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset dy={20} />
+          <feGaussianBlur stdDeviation={20} />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter1_d"
+          x={41.333}
+          y={24.667}
+          width={33.333}
+          height={36.667}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset dy={3} />
+          <feGaussianBlur stdDeviation={2.5} />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
     </svg>
   );
 };

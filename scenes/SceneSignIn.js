@@ -9,10 +9,13 @@ import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { SignIn } from "~/components/core/SignIn";
+import Signup from "~/components/core/Signup";
 
 import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
 
+const background_image =
+  "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
 const STYLES_ROOT = css`
   display: flex;
   flex-direction: column;
@@ -25,14 +28,13 @@ const STYLES_ROOT = css`
   width: 100vw;
   position: absolute;
   overflow: hidden;
-  background-size: cover;
-  background-position: 50% 50%:
+  background-image: url(${background_image});
 `;
 
 const STYLES_MIDDLE = css`
   position: relative;
   min-height: 10%;
-  height: 100%;
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,11 +162,12 @@ export default class SceneSignIn extends React.Component {
   render() {
     return (
       <div css={STYLES_ROOT}>
-        <WebsitePrototypeHeader style={{ background: `none` }} />
+        {/* <WebsitePrototypeHeader style={{ background: `none` }} /> */}
         <div css={STYLES_MIDDLE}>
-          <SignIn {...this.props} />
+          {/* <SignIn {...this.props} /> */}
+          <Signup {...this.props} />
         </div>
-        <WebsitePrototypeFooter />
+        {/* <WebsitePrototypeFooter /> */}
       </div>
     );
   }
