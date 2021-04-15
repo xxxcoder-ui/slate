@@ -101,7 +101,6 @@ const suggestions = [
         <br />
         <CodeBlock>
           {`<Tag 
-  placeholder="Add your tags" 
   tags={tags} 
   suggestions={suggestions} 
 />`}
@@ -111,7 +110,7 @@ const suggestions = [
         <System.H2>Output</System.H2>
         <hr />
         <br />
-        <System.Tag placeholder="Add your tags" tags={tags} suggestions={suggestions} />
+        <System.Tag tags={tags} suggestions={suggestions} />
         <br />
         <br />
         <br />

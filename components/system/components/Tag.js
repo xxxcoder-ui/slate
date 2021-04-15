@@ -433,13 +433,11 @@ const Dropdown = ({
 
 export const Tag = ({
   type,
-  name,
   tags = [],
   suggestions = [],
   style,
   inputStyles,
   dropdownStyles,
-  placeholder,
   onChange,
   handleClick,
 }) => {
@@ -501,11 +499,11 @@ export const Tag = ({
     <div css={STYLES_TAG_CONTAINER} style={{ ...style }}>
       <div css={STYLES_INPUT_CONTAINER}>
         <input
-          name={name}
+          name="tags"
           type="text"
           css={type === "dark" ? STYLES_INPUT_DARK : STYLES_INPUT}
           style={{ ...inputStyles }}
-          placeholder={placeholder ? placeholder : null}
+          placeholder="Edit tags"
           value={value}
           onChange={_handleChange}
           onKeyPress={_handleKeyPress}

@@ -376,8 +376,6 @@ export default class CarouselSidebarSlate extends React.Component {
             />
             <Tag
               type="dark"
-              name="tags"
-              placeholder={`Edit tags for ${this.state.title}`}
               tags={this.state.tags}
               suggestions={this.state.suggestions}
               style={{ margin: "0 0 16px" }}

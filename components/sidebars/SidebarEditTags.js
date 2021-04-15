@@ -126,8 +126,6 @@ export default class SidebarEditTags extends React.Component {
             Add or remove common tags on your files
           </System.P>
           <Tag
-            name="tags"
-            placeholder={`Edit tags for ${`${numChecked} file${numChecked === 1 ? "" : "s"}`} `}
             tags={this.state.tags}
             suggestions={this.state.suggestions}
             onChange={this._handleChange}

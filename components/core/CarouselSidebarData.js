@@ -588,8 +588,6 @@ class CarouselSidebarData extends React.Component {
             <div css={STYLES_OPTIONS_SECTION}>
               <Tag
                 type="dark"
-                name="tags"
-                placeholder={`Edit tags for ${this.state.name}`}
                 tags={this.state.tags}
                 suggestions={this.state.suggestions}
                 style={{ margin: "0 0 16px" }}
