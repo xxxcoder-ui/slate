@@ -50,6 +50,7 @@ import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
+import { v4 as uuid } from "uuid";
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
 import { SearchModal } from "~/components/core/SearchModal";
@@ -106,6 +107,7 @@ export default class ApplicationPage extends React.Component {
     isMobile: this.props.isMobile,
     loaded: false,
     activeUsers: null,
+    optimisticFiles: [],
   };
 
   async componentDidMount() {
@@ -223,6 +225,35 @@ export default class ApplicationPage extends React.Component {
         );
         return;
       }
+    }
+
+    if (newViewerState.library?.length) {
+      let oldViewerState = this.state.viewer;
+      let oldLibrary = oldViewerState.library;
+
+      let update = newViewerState.library[0].children.map((child) => {
+        let optimisticFileIndex = oldLibrary[0].children.findIndex(
+          (item) => item.id === child.id && item.decorator.startsWith("OPTMISTIC")
+        );
+        if (optimisticFileIndex > -1) {
+          return { ...oldLibrary[0].children[optimisticFileIndex], ...child };
+        }
+
+        return child;
+      });
+
+      oldViewerState.library[0].children = update;
+
+      this.setState(
+        {
+          viewer: { ...oldViewerState, ...newViewerState, type: "VIEWER" },
+        },
+        () => {
+          if (callback) {
+            callback();
+          }
+        }
+      );
     }
     this.setState(
       {
@@ -347,9 +378,8 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    await this._handleOptimisticUpload({ files });
-    return;
-    // TODO(daniel): figure out how to handle successful and unsuccessful uploads
+    files = await this._handleOptimisticUpload({ files });
+
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
       if (Store.checkCancelled(`${files[i].lastModified}-${files[i].name}`)) {
@@ -363,6 +393,7 @@ export default class ApplicationPage extends React.Component {
       let response;
       try {
         response = await FileUtilities.upload({
+          fileId: files[i]?.id,
           file: files[i],
           context: this,
           routes: this.props.resources,
@@ -429,27 +460,35 @@ export default class ApplicationPage extends React.Component {
 
   _handleOptimisticUpload = async ({ files }) => {
     let optimisticFiles = [];
-    for (let file of files) {
-      if (!file.type.startsWith("image")) {
+    for (let i = 0; i < files.length; i++) {
+      if (!files[i].type.startsWith("image")) {
         continue;
       }
 
-      let dataURL = await this._handleLoadDataURL(file);
+      let id = `data-${uuid()}`;
+      let dataURL = await this._handleLoadDataURL(files[i]);
       let data = {
-        name: file.name,
-        type: file.type,
-        size: file.size,
+        id,
+        name: files[i].name,
+        type: files[i].type,
+        size: files[i].size,
         decorator: "OPTIMISTIC-IMAGE-FILE",
         dataURL,
       };
 
       optimisticFiles.push(data);
+
+      files[i].id = id;
     }
+
+    this.setState({ optimisticFiles });
 
     let update = [...optimisticFiles, ...this.props.viewer?.library[0].children];
     let library = this.props.viewer.library;
     library[0].children = update;
     this._handleUpdateViewer({ library });
+
+    return files;
   };
 
   _handleLoadDataURL = (file) =>
@@ -466,6 +505,32 @@ export default class ApplicationPage extends React.Component {
 
       reader.readAsDataURL(file);
     });
+
+  _handleSuccessfulUpload = ({ succeeded }) => {
+    let optimisticFiles = this.state.optimisticFiles;
+    // let optimisticFilesNames = this.state.optimisticFiles.map(item => item.name);
+    let library = this.state.viewer.library;
+    let update = succeeded.map((item) => {
+      let data = item.json?.data;
+
+      let itemToUpdateIndex = library[0].children.findIndex((item) => item.id === data.id);
+      if (itemToUpdateIndex > -1) {
+        let updatedItem = { ...library[0].children[itemToUpdateIndex], ...data };
+
+        let optimisticFileIndex = optimisticFiles.findIndex((item) => item.id === data.id);
+        optimisticFiles.splice(optimisticFileIndex, 1);
+
+        return updatedItem;
+      }
+    });
+
+    this.setState({ optimisticFiles });
+
+    update = [...update, ...library[0].children];
+    library[0].children = update;
+
+    this._handleUpdateViewer({ library });
+  };
 
   _handleRegisterFileLoading = ({ fileLoading }) => {
     if (this.state.fileLoading) {
