@@ -3,7 +3,7 @@ name: New Issue
 about: Use this template when creating a new issue.
 title: ''
 labels: ''
-assignees: jimmylee
+assignees: martinalong
 
 ---
 
