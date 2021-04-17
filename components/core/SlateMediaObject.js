@@ -161,6 +161,7 @@ export default class SlateMediaObject extends React.Component {
           name={this.props.data.file || this.props.data.name}
           cid={this.props.data.cid}
           url={url}
+          fallback={element}
           onClick={(e) => {
             e.stopPropagation();
           }}

@@ -5,28 +5,37 @@ import * as Content from "./Views/content";
 import { generateNumberByStep } from "~/common/utilities";
 
 export const useFont = ({ url, name }, deps) => {
-  const [loading, setLoading] = React.useState(false);
+  const [fetchState, setFetchState] = React.useState({ loading: false, error: null });
   const prevName = React.useRef(name);
 
   if (!window.$SLATES_LOADED_FONTS) window.$SLATES_LOADED_FONTS = [];
   const alreadyLoaded = window.$SLATES_LOADED_FONTS.includes(name);
 
   React.useEffect(() => {
-    if (alreadyLoaded) return;
+    if (alreadyLoaded) {
+      setFetchState((prev) => ({ ...prev, error: null }));
+      return;
+    }
 
-    setLoading(true);
+    setFetchState((prev) => ({ ...prev, error: null, loading: true }));
     const customFonts = new FontFace(name, `url(${url})`);
-    customFonts.load().then((loadedFont) => {
-      document.fonts.add(loadedFont);
-      prevName.current = name;
-      setLoading(false);
+    customFonts
+      .load()
+      .then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        prevName.current = name;
 
-      window.$SLATES_LOADED_FONTS.push(name);
-    });
+        setFetchState((prev) => ({ ...prev, loading: false }));
+        window.$SLATES_LOADED_FONTS.push(name);
+      })
+      .catch((err) => {
+        setFetchState({ loading: false, error: err });
+      });
   }, deps);
 
   return {
-    isFontLoading: loading,
+    isFontLoading: fetchState.loading,
+    error: fetchState.error,
     // NOTE(Amine): show previous font while we load the new one.
     fontName: alreadyLoaded ? name : prevName.current,
   };

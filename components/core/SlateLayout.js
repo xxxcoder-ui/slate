@@ -1310,6 +1310,7 @@ export class SlateLayout extends React.Component {
                       charCap={70}
                       type={this.state.items[i].type}
                       url={this.state.items[i].url}
+                      cid={this.state.items[i].cid}
                       title={this.state.items[i].title || this.state.items[i].name}
                       coverImage={this.state.items[i].coverImage}
                       height={pos.h * unit}
