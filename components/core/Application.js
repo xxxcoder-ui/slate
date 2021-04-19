@@ -228,6 +228,7 @@ export default class ApplicationPage extends React.Component {
     }
 
     if (newViewerState.library?.length) {
+      // NOTE(daniel): update optimistic files with upload data
       let oldViewerState = this.state.viewer;
       let oldLibrary = oldViewerState.library;
 
@@ -380,7 +381,7 @@ export default class ApplicationPage extends React.Component {
     }
 
     files = await this._handleOptimisticUpload({ files });
-    return;
+
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
       if (Store.checkCancelled(`${files[i].lastModified}-${files[i].name}`)) {
