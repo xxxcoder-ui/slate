@@ -255,6 +255,7 @@ export default class ApplicationPage extends React.Component {
         }
       );
     }
+
     this.setState(
       {
         viewer: { ...this.state.viewer, ...newViewerState },
@@ -379,7 +380,7 @@ export default class ApplicationPage extends React.Component {
     }
 
     files = await this._handleOptimisticUpload({ files });
-
+    return;
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
       if (Store.checkCancelled(`${files[i].lastModified}-${files[i].name}`)) {
