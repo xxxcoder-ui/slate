@@ -583,6 +583,7 @@ class CarouselSidebar extends React.Component {
             value={this.state.name}
             name="name"
             onChange={this._handleChange}
+            autoHighlight
             id={`sidebar-label-name`}
             style={{
               fontSize: Constants.typescale.lvl1,

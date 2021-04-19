@@ -34,9 +34,11 @@ const STYLES_LETTER = (theme) => css`
 `;
 
 const FontObjectPreview = React.memo(
-  ({ url, cid, fallback }) => {
+  ({ cid, fallback }) => {
     const { isFontLoading, error, fontName } = useFont({ cid }, [cid]);
     if (error || isFontLoading) {
+      console.log(error);
+      console.log(isFontLoading);
       return fallback;
     }
     return (
@@ -45,6 +47,6 @@ const FontObjectPreview = React.memo(
       </div>
     );
   },
-  (prevProps, nextProps) => prevProps.cid === nextProps.cid && prevProps.url == nextProps.url
+  (prevProps, nextProps) => prevProps.cid === nextProps.cid
 );
 export default withView(FontObjectPreview);

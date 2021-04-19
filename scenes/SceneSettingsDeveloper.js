@@ -1,39 +1,45 @@
 import * as React from "react";
 import * as Actions from "~/common/actions";
+import * as Window from "~/common/window";
 import * as Constants from "~/common/constants";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
+import { TabGroup, PrimaryTabGroup, SecondaryTabGroup } from "~/components/core/TabGroup";
 
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
-import CodeBlock from "~/components/system/CodeBlock";
+import SquareButtonGray from "~/components/core/SquareButtonGray";
 
 import APIDocsGet from "~/components/api/get";
 import APIDocsGetSlate from "~/components/api/get-slate.js";
 import APIDocsUpdateSlate from "~/components/api/update-slate.js";
 import APIDocsUploadToSlate from "~/components/api/upload.js";
 
-const STYLES_KEY = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 416px;
-  background-color: ${Constants.system.foreground};
-  color: ${Constants.system.pitchBlack};
-  border-radius: 4px;
-  height: 40px;
-`;
+// const STYLES_KEY = css`
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   width: 380px;
+//   background-color: ${Constants.system.white};
+//   color: ${Constants.system.pitchBlack};
+//   border-radius: 4px;
+//   height: 40px;
+// `;
 
-const STYLES_KEY_LEFT = css`
-  min-width: 10%;
-  width: 100%;
+const STYLES_API_KEY = css`
+  height: 40px;
+  border-radius: 4px;
+  cursor: copy;
+  background-color: ${Constants.system.white};
+  outline: none;
+  border: none;
+  width: 380px;
   font-family: ${Constants.font.code};
   padding: 0 16px;
-  font-size: 11px;
+  font-size: 14px;
 `;
 
 const STYLES_KEY_CONTAINER = css`
@@ -44,169 +50,68 @@ const STYLES_KEY_CONTAINER = css`
   margin-bottom: 8px;
 `;
 
-const STYLES_CIRCLE_BUTTON = css`
-  height: 40px;
-  width: 40px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  background: ${Constants.system.gray};
-  color: ${Constants.system.black};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-  cursor: pointer;
-  transition: 200ms ease all;
-
-  :hover {
-    background: ${Constants.system.brand};
-    color: ${Constants.system.white};
-  }
-`;
-
-const STYLES_LANGUAGE_CONTAINER = css`
-  display: flex;
-  width: 240px;
-  flex-direction: row;
-  position: relative;
-  justify-self: center;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 48px;
-`;
-
-const STYLES_LANGUAGE_TILE = css`
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  width: 100px;
-  border-radius: 4px;
-  align-items: center;
-  justify-content: flex-end;
-  user-select: pointer;
-  border: 2px solid #1a1a1a;
-  cursor: pointer;
-`;
-
-//NOTE(toast): overrides ScenePage from AppLayout
-const STYLES_PAGE = css`
-  max-width: 960px;
-  width: 100%;
-  margin: 0 auto 0 auto;
-  padding: 88px 24px 128px 0px;
-
-  @media (max-width: 568px) {
-    padding: 88px 24px 128px 24px;
-  }
-`;
-
-const STYLES_SIDEBAR = css`
-  padding: 160px 24px 128px 24px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 236px;
-  background-color: ${Constants.system.foreground};
-  overflow-y: scroll;
-
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: ${Constants.system.gray};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${Constants.system.darkGray};
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${Constants.system.brand};
-  }
-
-  @media (max-width: 568px) {
-    width: 100%;
-    position: relative;
-    overflow-y: auto;
-  }
-`;
-
-const STYLES_LABEL = css`
-  font-family: ${Constants.font.semiBold};
-  display: block;
-  font-size: 16px;
-  text-transform: uppercase;
-  color: ${Constants.system.darkGray};
-  letter-spacing: 0.6px;
-  margin-top: 32px;
-`;
-
-const STYLES_LINK = css`
-  font-family: ${Constants.font.semiBold};
-  color: ${Constants.system.pitchBlack};
-  font-size: 16px;
-  text-decoration: none;
-  font-weight: 400;
-  display: block;
-  margin-top: 8px;
-
-  :hover {
-    color: ${Constants.system.brand};
-    cursor: pointer;
-  }
-`;
-
 class Key extends React.Component {
-  state = { visible: false };
+  _input;
 
-  _handleToggleVisible = () => {
-    this.setState({ visible: !this.state.visible });
-  };
+  state = { visible: false, copying: false };
 
   _handleDelete = async (id) => {
     await this.props.onDelete(id);
   };
 
+  _handleCopy = async () => {
+    this._input.select();
+    document.execCommand("copy");
+    await this.setState({ copying: true });
+    await Window.delay(1000);
+    await this.setState({ copying: false });
+  };
+
   render() {
     return (
       <div css={STYLES_KEY_CONTAINER}>
-        <div css={STYLES_KEY}>
-          {this.state.visible ? (
-            <div css={STYLES_KEY_LEFT}>{this.props.data.key}</div>
-          ) : (
-            <div css={STYLES_KEY_LEFT}>XXXXXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXXXX</div>
-          )}
-        </div>
-        <span
-          css={STYLES_CIRCLE_BUTTON}
-          onClick={this._handleToggleVisible}
-          style={{
-            marginLeft: 8,
+        <input
+          ref={(c) => {
+            this._input = c;
           }}
-        >
-          <SVG.Privacy height="16px" />
-        </span>
-        <span
-          css={STYLES_CIRCLE_BUTTON}
+          value={this.state.copying ? "Copied!" : this.props.data.key}
+          readOnly
+          type={this.state.visible || this.state.copying ? "text" : "password"}
+          css={STYLES_API_KEY}
+          onClick={this._handleCopy}
+          onMouseEnter={() => this.setState({ visible: true })}
+          onMouseLeave={() => this.setState({ visible: false })}
+        />
+        <SquareButtonGray
           onClick={() => this._handleDelete(this.props.data.id)}
           style={{
             marginLeft: 8,
           }}
         >
-          <SVG.Dismiss height="16px" />
-        </span>
+          <SVG.Trash height="16px" />
+        </SquareButtonGray>
       </div>
     );
   }
 }
 
 export default class SceneSettingsDeveloper extends React.Component {
+  _bucketCID;
+
   state = {
     loading: false,
     language: "javascript",
     docs: "GET",
+    copying: false,
+    tab: 0,
+  };
+
+  _handleCopy = async () => {
+    this._bucketCID.select();
+    document.execCommand("copy");
+    await this.setState({ copying: true });
+    await Window.delay(1000);
+    await this.setState({ copying: false });
   };
 
   _handleSave = async (e) => {
@@ -222,7 +127,11 @@ export default class SceneSettingsDeveloper extends React.Component {
   _handleDelete = async (id) => {
     this.setState({ loading: true });
 
-    if (!window.confirm("Are you sure you want to delete this key? This action is irreversible")) {
+    if (
+      !window.confirm(
+        "Are you sure you want to revoke this API key? Any services using it will no longer be able to access your Slate account"
+      )
+    ) {
       this.setState({ loading: false });
       return;
     }
@@ -255,7 +164,6 @@ export default class SceneSettingsDeveloper extends React.Component {
       },
     });
     const json = await response.json();
-    console.log(json);
   }
 
   render() {
@@ -275,6 +183,9 @@ export default class SceneSettingsDeveloper extends React.Component {
     }
 
     let userBucketCID = this.props.viewer?.userBucketCID;
+    if (userBucketCID) {
+      userBucketCID = userBucketCID.replace("/ipfs/", "");
+    }
 
     return (
       <ScenePage>
@@ -319,34 +230,55 @@ export default class SceneSettingsDeveloper extends React.Component {
           <span css={STYLES_LABEL}>guides</span>
         </div>
         */}
-        <ScenePageHeader title="Developer Documentation">
-          You can use your API key to get slates and add images to slates. You can have a total of
-          10 keys at any given time.
+        <ScenePageHeader title="API Keys">
+          You can use your API keys to access your account information outside of Slate and upload
+          files to Slate. You can have a maximum of 10 keys at any given time.
         </ScenePageHeader>
 
         {userBucketCID && (
-          <System.DescriptionGroup
-            style={{ maxWidth: 640, marginTop: 34 }}
-            label="Bucket CID"
-            description={`${userBucketCID}`}
-          />
+          <div style={{ marginTop: 34, marginBottom: 24 }}>
+            <System.DescriptionGroup
+              style={{ maxWidth: 640 }}
+              label="Bucket CID"
+              description={
+                "This is your bucket CID. Use this to access your Slate files on other platforms"
+              }
+            />
+            <input
+              value={this.state.copying ? "Copied!" : userBucketCID}
+              css={STYLES_API_KEY}
+              style={{ textOverflow: "ellipsis" }}
+              type="text"
+              readOnly
+              ref={(c) => {
+                this._bucketCID = c;
+              }}
+              onClick={this._handleCopy}
+            />
+          </div>
         )}
         <br />
-        <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 34 }} label="API Keys" />
+
+        <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 24 }} label="API Keys" />
         {this.props.viewer.keys.map((k) => {
           return <Key key={k.id} data={k} onDelete={this._handleDelete} />;
         })}
 
         <div style={{ marginTop: 24 }}>
-          <System.ButtonPrimary onClick={this._handleSave} loading={this.state.loading}>
-            Generate
-          </System.ButtonPrimary>
-          {APIKey === "YOUR-API-KEY-HERE" ? (
+          {this.props.viewer.keys.length < 10 ? (
+            <System.ButtonPrimary onClick={this._handleSave} loading={this.state.loading}>
+              Generate
+            </System.ButtonPrimary>
+          ) : (
+            <System.ButtonDisabled>Generate</System.ButtonDisabled>
+          )}
+          {this.props.viewer.keys.length === 0 ? (
             <ScenePageHeader title="">
               Generate an API key to have it appear in the code examples
             </ScenePageHeader>
           ) : null}
         </div>
+
         {/*
         <div css={STYLES_LANGUAGE_CONTAINER}>
           <div
@@ -371,31 +303,46 @@ export default class SceneSettingsDeveloper extends React.Component {
           <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />
           <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
         */}
-        <React.Fragment>
-          <APIDocsGet
-            language={lang}
-            APIKey={APIKey}
-            onLanguageChange={this._handleChangeLanguage}
-          />
-          <APIDocsGetSlate
-            language={lang}
-            APIKey={APIKey}
-            slateId={slateId}
-            onLanguageChange={this._handleChangeLanguage}
-          />
-          <APIDocsUpdateSlate
-            language={lang}
-            APIKey={APIKey}
-            slateId={slateId}
-            onLanguageChange={this._handleChangeLanguage}
-          />
-          <APIDocsUploadToSlate
-            language={lang}
-            APIKey={APIKey}
-            slateId={slateId}
-            onLanguageChange={this._handleChangeLanguage}
-          />
-        </React.Fragment>
+        <ScenePageHeader title="Developer Documentation" style={{ marginTop: 96 }}>
+          Slate is currently on v2.0 of the API. While prior versions are still supported, we
+          recommend using the most up to date version.
+        </ScenePageHeader>
+
+        <SecondaryTabGroup
+          tabs={["Version 2.0", "Version 1.0"]}
+          value={this.state.tab}
+          onChange={(tab) => this.setState({ tab })}
+        />
+
+        {this.state.tab === 0 ? (
+          <></>
+        ) : (
+          <React.Fragment>
+            <APIDocsGet
+              language={lang}
+              APIKey={APIKey}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsGetSlate
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsUpdateSlate
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsUploadToSlate
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+          </React.Fragment>
+        )}
       </ScenePage>
     );
   }

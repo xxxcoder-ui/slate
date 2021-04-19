@@ -209,8 +209,7 @@ export default class SlateMediaObjectPreview extends React.Component {
           }}
         >
           <FontObjectPreview
-            url={this.props.url}
-            cid={this.props.cid}
+            cid={file.cid}
             fallback={
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <img
@@ -222,9 +221,9 @@ export default class SlateMediaObjectPreview extends React.Component {
               </div>
             }
           />
-          {this.props.title && !this.props.iconOnly && !this.props.previewPanel ? (
+          {name && !this.props.iconOnly && !this.props.previewPanel ? (
             <div style={{ position: "absolute", bottom: 16, left: 16, width: "inherit" }}>
-              <div css={STYLES_TITLE}>{title}</div>
+              <div css={STYLES_TITLE}>{name}</div>
               {extension ? (
                 <div
                   css={STYLES_TITLE}

@@ -42,7 +42,7 @@ const STYLES_IMAGE_BOX = css`
 
 const STYLES_TEXT_AREA = css`
   position: absolute;
-  bottom: 0px;
+  top: 16px;
   left: 0px;
 `;
 
@@ -61,14 +61,12 @@ const STYLES_TITLE = css`
 const STYLES_SECONDARY = css`
   ${STYLES_TITLE}
   font-size: ${Constants.typescale.lvlN1};
-  margin-bottom: 16px;
   width: 100%;
 `;
 
 const STYLES_SECONDARY_HOVERABLE = css`
   ${STYLES_SECONDARY}
   padding: 8px 16px;
-  margin-bottom: 8px;
 
   :hover {
     color: ${Constants.system.brand} !important;
@@ -78,15 +76,15 @@ const STYLES_SECONDARY_HOVERABLE = css`
 const STYLES_GRADIENT = css`
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 0%,
     rgba(0, 0, 0, 0.2) 26.56%,
-    rgba(0, 0, 0, 0.3) 100%
+    rgba(0, 0, 0, 0) 100%
   );
   backdrop-filter: blur(2px);
   width: 100%;
   height: 72px;
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   left: 0px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -120,23 +118,20 @@ class ActivitySquare extends React.Component {
       <div
         css={STYLES_IMAGE_BOX}
         style={{ width: size, height: size }}
-        onMouseEnter={isImage ? () => this.setState({ showText: true }) : () => {}}
-        onMouseLeave={isImage ? () => this.setState({ showText: false }) : () => {}}
+        onMouseEnter={() => this.setState({ showText: true })}
+        onMouseLeave={() => this.setState({ showText: false })}
       >
         <SlateMediaObjectPreview
           file={item.file}
           centeredImage
-          iconOnly
+          // iconOnly
           style={{ border: "none" }}
-          cid={item.file.cid}
           imageStyle={{ border: "none" }}
         />
-        {isImage && (this.state.showText || this.props.isMobile) ? (
-          <div css={STYLES_GRADIENT} />
-        ) : null}
-        {this.state.showText || !isImage || this.props.isMobile ? (
+        {this.state.showText || this.props.isMobile ? <div css={STYLES_GRADIENT} /> : null}
+        {this.state.showText || this.props.isMobile ? (
           <div css={STYLES_TEXT_AREA} style={{ width: this.props.size }}>
-            {isImage ? null : (
+            {/* {isImage ? null : (
               <div
                 css={STYLES_TITLE}
                 style={{
@@ -145,10 +140,10 @@ class ActivitySquare extends React.Component {
               >
                 {item.file.data.name || item.file.filename}
               </div>
-            )}
-            <div
+            )} */}
+            <span
               style={{
-                color: isImage ? Constants.system.white : Constants.system.textGrayLight,
+                color: Constants.system.white,
               }}
               css={this.props.onClick ? STYLES_SECONDARY_HOVERABLE : STYLES_SECONDARY}
               onClick={(e) => {
@@ -156,14 +151,12 @@ class ActivitySquare extends React.Component {
                 this.props.onClick();
               }}
             >
-              {isImage ? (
-                <SVG.ArrowDownLeft
-                  height="10px"
-                  style={{ transform: "scaleX(-1)", marginRight: 4 }}
-                />
-              ) : null}
+              <SVG.ArrowDownLeft
+                height="10px"
+                style={{ transform: "scaleX(-1)", marginRight: 4 }}
+              />
               {item.slate.data.name || item.slate.slatename}
-            </div>
+            </span>
           </div>
         ) : null}
       </div>
