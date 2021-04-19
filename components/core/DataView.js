@@ -736,9 +736,7 @@ export default class DataView extends React.Component {
                     onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
                     onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                   >
-                    <SlateMediaObjectPreview
-                      file={each}
-                    />
+                    <SlateMediaObjectPreview file={each} />
                     <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
                       {numChecked || this.state.hover === i || this.state.menu === each.id ? (
                         <React.Fragment>
@@ -936,8 +934,8 @@ export default class DataView extends React.Component {
             </FilePreviewBubble>
           </Selectable>
         ),
-        tags: <>{each.tags && <Tags tags={each.tags} />}</>,
-        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
+        tags: <>{each.data.tags?.length && <Tags tags={each.data.tags} />}</>,
+        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.data.size)}</div>,
         more: (
           <div
             css={STYLES_ICON_BOX_HOVER}
