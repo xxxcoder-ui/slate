@@ -159,7 +159,7 @@ export default class SceneEditAccount extends React.Component {
 
     await Window.delay(100);
 
-    await UserBehaviors.deleteMe();
+    await UserBehaviors.deleteMe({ viewer: this.props.viewer });
     this.setState({ deleting: false });
   };
 
