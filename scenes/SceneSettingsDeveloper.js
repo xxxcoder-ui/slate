@@ -13,10 +13,10 @@ import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SquareButtonGray from "~/components/core/SquareButtonGray";
 
-import APIDocsGet from "~/components/api/get";
-import APIDocsGetSlate from "~/components/api/get-slate.js";
-import APIDocsUpdateSlate from "~/components/api/update-slate.js";
-import APIDocsUploadToSlate from "~/components/api/upload.js";
+import APIDocsGetV1 from "~/components/api-docs/v1/get";
+import APIDocsGetSlateV1 from "~/components/api-docs/v1/get-slate.js";
+import APIDocsUpdateSlateV1 from "~/components/api-docs/v1/update-slate.js";
+import APIDocsUploadToSlateV1 from "~/components/api-docs/v1/upload.js";
 
 // const STYLES_KEY = css`
 //   display: flex;
@@ -317,31 +317,31 @@ export default class SceneSettingsDeveloper extends React.Component {
         {this.state.tab === 0 ? (
           <></>
         ) : (
-          <React.Fragment>
-            <APIDocsGet
+          <>
+            <APIDocsGetV1
               language={lang}
               APIKey={APIKey}
               onLanguageChange={this._handleChangeLanguage}
             />
-            <APIDocsGetSlate
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUpdateSlate
+            <APIDocsGetSlateV1
               language={lang}
               APIKey={APIKey}
               slateId={slateId}
               onLanguageChange={this._handleChangeLanguage}
             />
-            <APIDocsUploadToSlate
+            <APIDocsUpdateSlateV1
               language={lang}
               APIKey={APIKey}
               slateId={slateId}
               onLanguageChange={this._handleChangeLanguage}
             />
-          </React.Fragment>
+            <APIDocsUploadToSlateV1
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+          </>
         )}
       </ScenePage>
     );

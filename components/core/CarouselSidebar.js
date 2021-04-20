@@ -322,7 +322,6 @@ class CarouselSidebar extends React.Component {
   };
 
   calculateSelected = () => {
-    console.log("calculate selected");
     let inPublicSlates = 0;
     let selected = {};
     const id = this.props.data.id;
@@ -387,7 +386,7 @@ class CarouselSidebar extends React.Component {
 
   _handleSaveCopy = async (data) => {
     this.setState({ loading: "savingCopy" });
-    console.log(data);
+
     await UserBehaviors.saveCopy({ files: [data] });
     this.setState({ loading: false });
   };
@@ -547,17 +546,17 @@ class CarouselSidebar extends React.Component {
 
     if (this.props.carouselType === "SLATE" && this.props.current.isPublic) {
       const slateId = this.props.current.id;
-      let slates = this.props.viewer.slates;
+      let slates = cloneDeep(this.props.viewer.slates);
       for (let slate of slates) {
         if (slate.id === slateId) {
-          slate.objects = slate.objects.filter((obj) => obj.id !== id);
+          slate.objects = slate.objects.filter((obj) => obj.id !== this.props.data.id);
           break;
         }
       }
       this.props.onUpdateViewer({ slates });
     }
 
-    let response = await Actions.toggleFilePrivacy(this.props.data);
+    let response = await Actions.toggleFilePrivacy({ ...this.props.data, isPublic: !isVisible });
     Events.hasError(response);
     if (isVisible) {
       this.setState({ inPublicSlates: 0, isPublic: false, selected });

@@ -701,7 +701,6 @@ export class SearchModal extends React.Component {
         query: this.state.inputValue,
         type: this.state.typeFilter,
       });
-      console.log(response);
       this.setState({ unfilteredResults: response.data.results });
       res = response.data.results;
     } else {

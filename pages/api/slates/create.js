@@ -64,7 +64,6 @@ export default async (req, res) => {
   if (slate.isPublic) {
     Monitor.createSlate({ user, slate });
   }
-  console.log(slate);
 
   return res.status(200).send({ decorator: "SERVER_CREATE_SLATE", slate });
 };

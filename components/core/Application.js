@@ -653,7 +653,6 @@ export default class ApplicationPage extends React.Component {
   };
 
   render() {
-    console.log(this.state.viewer);
     // NOTE(jim): Not authenticated.
     if (!this.state.viewer) {
       return (

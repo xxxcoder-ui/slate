@@ -19,18 +19,29 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
-  let updates = req.body.data;
-  if (!updates?.id) {
+  if (!req.body.data) {
     return res.status(500).send({ decorator: "SERVER_EDIT_DATA_NO_FILE", error: true });
   }
 
-  let response = await Data.updateFileById(updates);
+  let updates = Array.isArray(req.body.data) ? req.body.data : [req.body.data];
 
-  if (!response || response.error) {
+  let responses = [];
+  for (let update of updates) {
+    let response = await Data.updateFileById(update);
+
+    if (response && !response.error) {
+      responses.push(response);
+    }
+  }
+
+  if (responses.length === 0) {
     return res.status(500).send({ decorator: "SERVER_EDIT_DATA_FAILED", error: true });
   }
 
-  const publicFiles = await Data.getFilesByIds({ ids: [response.id], publicOnly: true });
+  const publicFiles = await Data.getFilesByIds({
+    ids: responses.map((file) => file.id),
+    publicOnly: true,
+  });
 
   if (publicFiles.length) {
     SearchManager.updateFile(publicFiles, "EDIT");
@@ -40,6 +51,6 @@ export default async (req, res) => {
 
   return res.status(200).send({
     decorator: "SERVER_EDIT_DATA",
-    data: {},
+    data: responses,
   });
 };

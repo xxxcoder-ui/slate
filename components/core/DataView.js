@@ -491,9 +491,7 @@ export default class DataView extends React.Component {
       });
     }
 
-    let library = this.props.viewer.library.filter(
-      (obj) => !ids.includes(obj.id) && !cids.includes(obj.cid)
-    );
+    let library = this.props.viewer.library.filter((obj) => !ids.includes(obj.id));
     this.props.onUpdateViewer({ library });
 
     UserBehaviors.deleteFiles(ids);
@@ -584,7 +582,7 @@ export default class DataView extends React.Component {
     }
 
     let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
-      items[index].tags ? items[index].tags : []
+      items[index].data.tags ? items[index].data.tags : []
     );
 
     let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
@@ -929,7 +927,7 @@ export default class DataView extends React.Component {
                 <div css={STYLES_ICON_BOX_HOVER} style={{ paddingLeft: 0, paddingRight: 18 }}>
                   <FileTypeIcon type={each.data.type} height="24px" />
                 </div>
-                <div css={STYLES_LINK}>{each.filename || each.data.name}</div>
+                <div css={STYLES_LINK}>{each.data.name || each.filename}</div>
               </div>
             </FilePreviewBubble>
           </Selectable>

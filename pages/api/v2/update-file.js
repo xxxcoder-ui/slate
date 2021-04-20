@@ -4,7 +4,7 @@ import * as SearchManager from "~/node_common/managers/search";
 export default async (req, res) => {
   if (Strings.isEmpty(req.headers.authorization)) {
     return res.status(404).send({
-      decorator: "SERVER_API_KEY_MISSING",
+      decorator: "NO_API_KEY_PROVIDED",
       error: true,
     });
   }
@@ -17,14 +17,14 @@ export default async (req, res) => {
 
   if (!key) {
     return res.status(403).send({
-      decorator: "V2_UPDATE_FILE_NOT_FOUND",
+      decorator: "NO_MATCHING_API_KEY_FOUND",
       error: true,
     });
   }
 
   if (key.error) {
     return res.status(500).send({
-      decorator: "V2_UPDATE_FILE_NOT_FOUND",
+      decorator: "ERROR_WHILE_VERIFYING_API_KEY",
       error: true,
     });
   }
@@ -35,20 +35,20 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "V2_UPDATE_FILE_USER_NOT_FOUND",
+      decorator: "API_KEY_OWNER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "V2_UPDATE_FILE_USER_NOT_FOUND",
+      decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER",
       error: true,
     });
   }
 
   if (!req.body.data?.id) {
-    return res.status(500).send({ decorator: "V2_UPDATE_FILE_NO_FILE_PROVIDED", error: true });
+    return res.status(500).send({ decorator: "NO_FILE_ID_PROVIDED", error: true });
   }
 
   //NOTE(martina): cleans the input to remove fields they should not be changing like ownerId, createdAt, filename, size, type etc.
@@ -73,7 +73,7 @@ export default async (req, res) => {
     });
 
     if (!response || response.error) {
-      return res.status(500).send({ decorator: "V2_UPDATE_FILE_PRIVACY_FAILED", error: true });
+      return res.status(500).send({ decorator: "UPDATE_FILE_PRIVACY_FAILED", error: true });
     }
 
     if (response.isPublic) {
@@ -86,7 +86,7 @@ export default async (req, res) => {
   let response = await Data.updateFileById(updates);
 
   if (!response || response.error) {
-    return res.status(500).send({ decorator: "V2_UPDATE_FILE_FAILED", error: true });
+    return res.status(500).send({ decorator: "UPDATE_FILE_FAILED", error: true });
   }
 
   if (response.isPublic) {

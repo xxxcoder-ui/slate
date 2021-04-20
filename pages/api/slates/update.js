@@ -122,7 +122,6 @@ export default async (req, res) => {
   if (response.error) {
     return res.status(500).send({ decorator: "SERVER_UPDATE_SLATE_FAILED", error: true });
   }
-  console.log(response);
 
   ViewerManager.hydratePartial(id, { slates: true });
 

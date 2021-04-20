@@ -1,9 +1,7 @@
 import * as React from "react";
-import * as Constants from "~/common/constants";
 import * as System from "~/components/system";
-import CodeBlock from "~/components/system/CodeBlock";
 
-import { css } from "@emotion/react";
+import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (
   key,
@@ -46,7 +44,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           style={{ maxWidth: 640, marginTop: 64 }}
           label="Upload to slate by Id"
           description={
-            'This API endpoint allows you to upload file(s) to your slate. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network.'
+            "This API endpoint allows you to upload file(s) to your slate. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network."
           }
         />
         <CodeBlock

@@ -169,7 +169,6 @@ export const createFile = async (data) => {
 };
 
 export const addFileToSlate = async (data) => {
-  console.log(data);
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/add-file`, {
     ...DEFAULT_OPTIONS,

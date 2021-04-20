@@ -110,8 +110,6 @@ export const password = (text) => {
 };
 
 export const isFileTypeAllowed = (type = "") => {
-  console.log({ type });
-
   if (type.startsWith("text/")) {
     return true;
   }

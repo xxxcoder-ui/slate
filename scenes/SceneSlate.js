@@ -176,7 +176,6 @@ export default class SceneSlate extends React.Component {
   };
 
   render() {
-    console.log(this.props.data);
     if (this.state.notFound || this.state.accessDenied) {
       return (
         <ScenePage>
@@ -341,8 +340,6 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    console.log(this.props.current);
-    console.log(this.props.data);
     const { user, data } = this.props.current;
     const { body = "", preview } = data;
     let objects = this.props.current.objects;

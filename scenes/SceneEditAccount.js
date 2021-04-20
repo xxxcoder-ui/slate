@@ -137,15 +137,12 @@ export default class SceneEditAccount extends React.Component {
     }
 
     this.setState({ changingPassword: true });
-    console.log("got here");
 
     let response = await Actions.updateViewer({
       type: "CHANGE_PASSWORD",
       password: this.state.password,
     });
 
-    console.log("after response");
-    console.log(response);
     if (Events.hasError(response)) {
       this.setState({ changingPassword: false });
       return;

@@ -37,8 +37,6 @@ const FontObjectPreview = React.memo(
   ({ cid, fallback }) => {
     const { isFontLoading, error, fontName } = useFont({ cid }, [cid]);
     if (error || isFontLoading) {
-      console.log(error);
-      console.log(isFontLoading);
       return fallback;
     }
     return (

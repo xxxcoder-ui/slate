@@ -6,7 +6,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 export default async (req, res) => {
   if (Strings.isEmpty(req.headers.authorization)) {
     return res.status(404).send({
-      decorator: "SERVER_API_KEY_MISSING",
+      decorator: "NO_API_KEY_PROVIDED",
       error: true,
     });
   }
@@ -19,14 +19,14 @@ export default async (req, res) => {
 
   if (!key) {
     return res.status(403).send({
-      decorator: "V1_UPDATE_SLATE_NOT_FOUND",
+      decorator: "NO_MATCHING_API_KEY_FOUND",
       error: true,
     });
   }
 
   if (key.error) {
     return res.status(500).send({
-      decorator: "V1_UPDATE_SLATE_NOT_FOUND",
+      decorator: "ERROR_WHILE_VERIFYING_API_KEY",
       error: true,
     });
   }
@@ -37,21 +37,21 @@ export default async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      decorator: "V1_UPDATE_SLATE_USER_NOT_FOUND",
+      decorator: "API_KEY_OWNER_NOT_FOUND",
       error: true,
     });
   }
 
   if (user.error) {
     return res.status(500).send({
-      decorator: "V1_UPDATE_SLATE_USER_NOT_FOUND",
+      decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER",
       error: true,
     });
   }
 
   if (!req.body.data?.id) {
     return res.status(500).send({
-      decorator: "V1_UPDATE_SLATE_MUST_PROVIDE_DATA",
+      decorator: "NO_ID_PROVIDED",
       error: true,
     });
   }
@@ -59,16 +59,16 @@ export default async (req, res) => {
   const slate = await Data.getSlateById({ id: req.body.data.id });
 
   if (!slate) {
-    return res.status(404).send({ decorator: "V1_UPDATE_SLATE_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SLATE_NOT_FOUND", error: true });
   }
 
   if (slate.error) {
-    return res.status(500).send({ decorator: "V1_UPDATE_SLATE_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SLATE_NOT_FOUND", error: true });
   }
 
   if (slate.ownerId !== user.id) {
     return res.status(400).send({
-      decorator: "V1_UPDATE_NOT_PERMITTED",
+      decorator: "NOT_SLATE_OWNER_UPDATE_NOT_PERMITTED",
       error: true,
     });
   }
@@ -91,15 +91,11 @@ export default async (req, res) => {
     });
 
     if (!privacyResponse) {
-      return res
-        .status(404)
-        .send({ decorator: "SERVER_UPDATE_SLATE_UPDATE_PRIVACY_FAILED", error: true });
+      return res.status(404).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
     }
 
     if (privacyResponse.error) {
-      return res
-        .status(500)
-        .send({ decorator: "SERVER_UPDATE_SLATE_UPDATE_PRIVACY_FAILED", error: true });
+      return res.status(500).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
     }
 
     if (!updates.isPublic) {
@@ -128,7 +124,7 @@ export default async (req, res) => {
   if (updates.data.name && updates.data.name !== slate.data.name) {
     if (!Validations.slatename(slate.data.name)) {
       return res.status(400).send({
-        decorator: "SERVER_UPDATE_SLATE_INVALID_NAME",
+        decorator: "UPDATE_SLATE_INVALID_NAME",
         error: true,
       });
     }
@@ -140,7 +136,7 @@ export default async (req, res) => {
 
     if (existingSlate) {
       return res.status(500).send({
-        decorator: "SERVER_UPDATE_SLATE_NAME_TAKEN",
+        decorator: "UPDATE_SLATE_NAME_TAKEN",
         error: true,
       });
     } else {
@@ -151,11 +147,11 @@ export default async (req, res) => {
   let updatedSlate = await Data.updateSlateById(updates);
 
   if (!updatedSlate) {
-    return res.status(404).send({ decorator: "SERVER_UPDATE_SLATE_FAILED", error: true });
+    return res.status(404).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
   }
 
   if (updatedSlate.error) {
-    return res.status(500).send({ decorator: "SERVER_UPDATE_SLATE_FAILED", error: true });
+    return res.status(500).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
   }
 
   if (slate.isPublic && !updates.isPublic) {

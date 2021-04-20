@@ -7,7 +7,6 @@ export default async ({ id, ownerId, isPublic }) => {
       if (isPublic === false) {
         //NOTE(martina): if making a file private, remove any activity items involving it
         const activity = await DB("activity").where("fileId", id).del();
-        console.log(activity);
 
         //NOTE(martina): and nullify the fileId in any reposted slates to indicate it is no longer available
         // const repostedSlateFiles = await DB.from("slate_files")

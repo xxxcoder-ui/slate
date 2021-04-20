@@ -309,7 +309,6 @@ export default class Profile extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props.user);
     this._handleUpdatePage();
   };
 

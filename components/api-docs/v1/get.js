@@ -1,9 +1,7 @@
 import * as React from "react";
-import * as Constants from "~/common/constants";
 import * as System from "~/components/system";
-import CodeBlock from "~/components/system/CodeBlock";
 
-import { css } from "@emotion/react";
+import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v1/get', {
   method: 'POST',
@@ -12,7 +10,7 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    private: false
+    private: false // set this to true to only return your private slates
   }})
 });
 
@@ -48,14 +46,14 @@ export default class APIDocsGet extends React.Component {
       <React.Fragment>
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
-          label="Get all slates"
-          description="This API request returns all of your slates, and can optionally return your private slates as well. If the request body is omitted, the request will return only your public slates by default."
+          label="Get your data"
+          description="This API request returns your user data and slates. If the request body is omitted, the request will return only your public slates by default."
         />
         <CodeBlock
           children={code}
           language={language}
           style={{ maxWidth: "820px" }}
-          title="Get all slates"
+          title="Get your data"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />

@@ -60,7 +60,6 @@ export default async (req, res) => {
 
   res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
   if (req.body.data.redirectURL) {
-    console.log(req.body.data.redirectURL);
     res.redirect(req.body.data.redirectURL);
   }
 };

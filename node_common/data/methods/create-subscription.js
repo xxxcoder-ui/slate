@@ -4,11 +4,6 @@ export default async ({ ownerId, slateId, userId }) => {
   return await runQuery({
     label: "CREATE_SUBSCRIPTION",
     queryFn: async (DB) => {
-      console.log({
-        ownerId,
-        slateId,
-        userId,
-      });
       const query = await DB.insert({
         ownerId,
         slateId,

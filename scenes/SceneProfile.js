@@ -130,7 +130,6 @@ export default class SceneProfile extends React.Component {
   };
 
   render() {
-    console.log(this.state.profile);
     if (this.state.notFound) {
       return (
         <ScenePage>

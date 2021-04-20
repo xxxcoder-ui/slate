@@ -14,7 +14,6 @@ export default async (req, res) => {
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
-  console.log(req.body.data);
 
   if (!req.body.data.files?.length) {
     return res.status(400).send({

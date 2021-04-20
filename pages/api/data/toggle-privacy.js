@@ -4,6 +4,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
 
 export default async (req, res) => {
+  console.log(req.body);
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
@@ -27,8 +28,9 @@ export default async (req, res) => {
   let response = await Data.updateFilePrivacy({
     ownerId: file.ownerId,
     id: file.id,
-    isPublic: !file.isPublic,
+    isPublic: file.isPublic,
   });
+  console.log(response);
 
   if (!response || response.error) {
     return res

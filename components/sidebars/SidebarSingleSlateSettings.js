@@ -100,7 +100,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   _handleChange = (e) => {
-    console.log("inside single slate settings toggle privacy");
     this.setState({ [e.target.name]: e.target.value });
 
     if (e.target.name === "tags") {

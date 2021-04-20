@@ -1,9 +1,7 @@
 import * as React from "react";
-import * as Constants from "~/common/constants";
 import * as System from "~/components/system";
-import CodeBlock from "~/components/system/CodeBlock";
 
-import { css } from "@emotion/react";
+import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key, slateId) => {
   return `const SLATE_ID = "${slateId}"

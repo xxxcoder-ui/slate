@@ -6,7 +6,7 @@ import * as Powergate from "~/node_common/powergate";
 export default async (req, res) => {
   if (Strings.isEmpty(req.headers.authorization)) {
     return res.status(404).send({
-      decorator: "SERVER_API_KEY_MISSING",
+      decorator: "NO_API_KEY_PROVIDED",
       error: true,
     });
   }
@@ -19,14 +19,14 @@ export default async (req, res) => {
 
   if (!key) {
     return res.status(403).send({
-      decorator: "V1_GET_SLATE_NOT_FOUND",
+      decorator: "NO_MATCHING_API_KEY_FOUND",
       error: true,
     });
   }
 
   if (key.error) {
     return res.status(500).send({
-      decorator: "V1_GET_SLATE_NOT_FOUND",
+      decorator: "ERROR_WHILE_VERIFYING_API_KEY",
       error: true,
     });
   }
@@ -36,11 +36,11 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).send({ decorator: "V1_GET_SLATE_USER_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "API_KEY_OWNER_NOT_FOUND", error: true });
   }
 
   if (user.error) {
-    return res.status(500).send({ decorator: "V1_GET_SLATE_USER_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER", error: true });
   }
 
   let reformattedUser = {
@@ -61,14 +61,14 @@ export default async (req, res) => {
 
   if (!slates) {
     return res.status(404).send({
-      decorator: "V1_GET_SLATES_NOT_FOUND",
+      decorator: "COULD_NOT_FETCH_SLATES",
       error: true,
     });
   }
 
   if (slates.error) {
     return res.status(500).send({
-      decorator: "V1_GET_SLATES_NOT_FOUND",
+      decorator: "COULD_NOT_FETCH_SLATES",
       error: true,
     });
   }

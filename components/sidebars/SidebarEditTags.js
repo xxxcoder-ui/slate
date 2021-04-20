@@ -29,9 +29,12 @@ export default class SidebarEditTags extends React.Component {
   }
 
   _handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
+    this.setState(
+      {
+        [e.target.name]: e.target.value,
+      },
+      () => this.updateSuggestions()
+    );
   };
 
   updateSuggestions = () => {
@@ -44,15 +47,13 @@ export default class SidebarEditTags extends React.Component {
     const checkedIndexes = Object.keys(checked);
 
     let update = checkedIndexes.map((checkedIndex) => {
-      let objectTags = objects[checkedIndex]?.tags || [];
+      const curr = objects[checkedIndex];
+      let objectTags = curr?.data.tags || [];
       let newTags = this.state.tags;
 
       /* NOTE(daniel): since there are no common tags, we are simply adding new tags to the files */
       if (!commonTags.length) {
-        let data = { tags: [...new Set([...objectTags, ...newTags])] };
-        objects[checkedIndex] = { ...objects[checkedIndex], ...data };
-
-        return { id: this.props.viewer.id, data: objects[checkedIndex] };
+        return { ...curr, data: { ...curr.data, tags: [...new Set([...objectTags, ...newTags])] } };
       }
 
       /* NOTE(daniel): symmetrical difference between new tags and common tags */
@@ -71,13 +72,11 @@ export default class SidebarEditTags extends React.Component {
         return acc;
       }, objectTags);
 
-      let data = { tags: update };
-      objects[checkedIndex] = { ...objects[checkedIndex], ...data };
-
-      return { id: this.props.viewer.id, data: objects[checkedIndex] };
+      return { ...curr, data: { ...curr.data, tags: update } };
     });
 
     const response = await Actions.updateFile(update);
+
     Events.hasError(response);
   };
 

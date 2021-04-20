@@ -191,11 +191,11 @@ export default class SceneFilesFolder extends React.Component {
     if (fileTypeFiltersActive && this.props.viewer?.library?.length) {
       filteredFiles = filteredFiles.filter((file) => {
         return (
-          (filters.image && file.type.startsWith("image/")) ||
-          (filters.video && file.type.startsWith("video/")) ||
-          (filters.audio && file.type.startsWith("audio/")) ||
-          (filters.epub && file.type.startsWith("application/epub")) ||
-          (filters.pdf && file.type.startsWith("application/pdf"))
+          (filters.image && file.data.type.startsWith("image/")) ||
+          (filters.video && file.data.type.startsWith("video/")) ||
+          (filters.audio && file.data.type.startsWith("audio/")) ||
+          (filters.epub && file.data.type.startsWith("application/epub")) ||
+          (filters.pdf && file.data.type.startsWith("application/pdf"))
         );
       });
     }

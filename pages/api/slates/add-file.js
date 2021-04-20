@@ -16,7 +16,6 @@ export default async (req, res) => {
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
-  console.log(req.body.data);
 
   const user = await Data.getUserById({
     id,
@@ -72,7 +71,6 @@ export default async (req, res) => {
       error: true,
     });
   }
-  console.log(files);
 
   let duplicateCids = await Data.getSlateFilesByCids({
     slateId: slateId,

@@ -673,7 +673,6 @@ export class SlateLayout extends React.Component {
     ) {
       e.preventDefault();
       e.stopPropagation();
-      console.log(this.props.isMac);
       this._handleUndo();
     } else if (
       (this.keysPressed["Control"] || this.keysPressed["Meta"]) &&

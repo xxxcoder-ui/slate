@@ -3,7 +3,6 @@ import * as Serializers from "~/node_common/serializers";
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ id, data, lastActive, username, salt, password }) => {
-  console.log(id);
   const updateObject = { id, lastActive: lastActive || new Date() };
 
   if (data) {
