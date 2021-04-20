@@ -10,7 +10,7 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    private: false // set this to true to only return your private slates
+    private: false // set this to true to include private slates as well
   }})
 });
 

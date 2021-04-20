@@ -12,6 +12,18 @@ const REQUEST_HEADERS = {
   "Content-Type": "application/json",
 };
 
+const API_HEADERS = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  Authorization: "Basic SLA42887290-7073-4f7c-961d-db84aea29b41TE",
+};
+
+const API_OPTIONS = {
+  method: "POST",
+  headers: API_HEADERS,
+  credentials: "include",
+};
+
 const DEFAULT_OPTIONS = {
   method: "POST",
   headers: REQUEST_HEADERS,
@@ -365,5 +377,61 @@ export const getZipFilePaths = async (data) => {
 export const cleanDatabase = async () => {
   return await returnJSON(`api/clean-up/users`, {
     ...DEFAULT_OPTIONS,
+  });
+};
+
+export const v1GetSlate = async (data) => {
+  return await returnJSON(`api/v1/get-slate`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v1Get = async (data) => {
+  return await returnJSON(`api/v1/get`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v1UpdateSlate = async (data) => {
+  return await returnJSON(`api/v1/update-slate`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v2GetSlate = async (data) => {
+  return await returnJSON(`api/v2/get-slate`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v2GetUser = async (data) => {
+  return await returnJSON(`api/v2/get-user`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v2Get = async (data) => {
+  return await returnJSON(`api/v2/get`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v2UpdateSlate = async (data) => {
+  return await returnJSON(`api/v2/update-slate`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const v2UpdateFile = async (data) => {
+  return await returnJSON(`api/v2/update-file`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
   });
 };

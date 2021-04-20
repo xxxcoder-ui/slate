@@ -1,6 +1,8 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
+import * as SearchManager from "~/node_common/managers/search";
 import * as ViewerManager from "~/node_common/managers/viewer";
 
 export default async (req, res) => {
@@ -162,5 +164,7 @@ export default async (req, res) => {
     SearchManager.updateSlate(updatedSlate, "EDIT");
   }
 
-  return res.status(200).send({ decorator: "V1_UPDATE_SLATE", slate });
+  ViewerManager.hydratePartial(user.id, { slates: true });
+
+  return res.status(200).send({ decorator: "V1_UPDATE_SLATE", slate: updatedSlate });
 };

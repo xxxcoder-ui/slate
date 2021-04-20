@@ -47,7 +47,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER", error: true });
   }
 
-  const slates = await Data.getSlatesByUserId({
+  let slates = await Data.getSlatesByUserId({
     ownerId: id,
     sanitize: true,
     includeFiles: true,

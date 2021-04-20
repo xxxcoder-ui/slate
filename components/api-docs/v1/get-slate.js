@@ -18,7 +18,14 @@ const EXAMPLE_CODE_JS = (
 });
 
 const json = await response.json();
-console.log(json);`;
+
+if (!json) {
+  console.log("No response");
+} else if (json.error) {
+  console.log(json.error);
+} else {
+  const slate = json.slate;
+}`;
 
 const EXAMPLE_CODE_PY = (key, slateId) => `import requests
 import json as JSON

@@ -1,5 +1,7 @@
+import * as Strings from "~/common/strings";
 import * as Data from "~/node_common/data";
 import * as SearchManager from "~/node_common/managers/search";
+import * as ViewerManager from "~/node_common/managers/viewer";
 
 export default async (req, res) => {
   if (Strings.isEmpty(req.headers.authorization)) {
@@ -65,9 +67,16 @@ export default async (req, res) => {
 
   const file = await Data.getFileById({ id: updates.id });
 
-  if (typeof updates.isPublic !== "undefined" && updates.isPublic !== file.id) {
+  if (file.ownerId !== user.id) {
+    return res.status(400).send({
+      decorator: "NOT_FILE_OWNER_UPDATE_NOT_PERMITTED",
+      error: true,
+    });
+  }
+
+  if (typeof updates.isPublic !== "undefined" && updates.isPublic !== file.isPublic) {
     let response = await Data.updateFilePrivacy({
-      ownerId: updates.ownerId,
+      ownerId: file.ownerId,
       id: updates.id,
       isPublic: updates.isPublic,
     });
@@ -90,8 +99,10 @@ export default async (req, res) => {
   }
 
   if (response.isPublic) {
-    SearchManager.updateFile(publicFiles, "EDIT");
+    SearchManager.updateFile(response, "EDIT");
   }
+
+  ViewerManager.hydratePartial(user.id, { library: true, slates: true });
 
   return res.status(200).send({
     decorator: "V2_UPDATE_FILE",

@@ -18,17 +18,6 @@ import APIDocsGetSlateV1 from "~/components/api-docs/v1/get-slate.js";
 import APIDocsUpdateSlateV1 from "~/components/api-docs/v1/update-slate.js";
 import APIDocsUploadToSlateV1 from "~/components/api-docs/v1/upload.js";
 
-// const STYLES_KEY = css`
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   width: 380px;
-//   background-color: ${Constants.system.white};
-//   color: ${Constants.system.pitchBlack};
-//   border-radius: 4px;
-//   height: 40px;
-// `;
-
 const STYLES_API_KEY = css`
   height: 40px;
   border-radius: 4px;
@@ -149,21 +138,21 @@ export default class SceneSettingsDeveloper extends React.Component {
   };
 
   async componentDidMount() {
-    if (!this.props.viewer.keys) {
-      return;
-    }
-    if (!this.props.viewer.keys.length) {
-      return;
-    }
-
-    const response = await fetch("/api/v1/get-slate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${this.props.viewer.keys[0].key}`,
-      },
-    });
-    const json = await response.json();
+    // if (!this.props.viewer.keys) {
+    //   return;
+    // }
+    // if (!this.props.viewer.keys.length) {
+    //   return;
+    // }
+    // console.log(this.props.viewer.keys);
+    // const response = await fetch("/api/v1/get-slate", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Basic ${this.props.viewer.keys[0].key}`,
+    //   },
+    // });
+    // const json = await response.json();
   }
 
   render() {

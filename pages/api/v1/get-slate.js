@@ -65,7 +65,7 @@ export default async (req, res) => {
     });
   }
 
-  if (!slate.isPublic) {
+  if (!slate.isPublic && slate.ownerId !== user.id) {
     return res.status(400).send({ decorator: "SLATE_IS_PRIVATE", error: true });
   }
 
@@ -87,7 +87,6 @@ export default async (req, res) => {
     id: slate.id,
     updated_at: slate.updatedAt,
     created_at: slate.createdAt,
-    published_at: null,
     slatename: slate.slatename,
     data: {
       name: slate.data.name,

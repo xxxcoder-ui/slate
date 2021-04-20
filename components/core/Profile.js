@@ -487,13 +487,6 @@ export default class Profile extends React.Component {
       });
     }
 
-    let total = 0;
-    if (user.slates) {
-      total = user.slates.reduce((total, slate) => {
-        return total + slate.data?.objects?.length || 0;
-      }, 0);
-    }
-
     const showStatusIndicator = this.props.isAuthenticated;
 
     return (
@@ -554,7 +547,8 @@ export default class Profile extends React.Component {
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
-                    {total} <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
+                    {publicFiles.length}{" "}
+                    <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
                   </div>
                 </div>
                 <div css={STYLES_STAT}>

@@ -1,8 +1,8 @@
-import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
-import * as ViewerManager from "~/node_common/managers/viewer";
+import * as Validations from "~/common/validations";
 import * as SearchManager from "~/node_common/managers/search";
+import * as ViewerManager from "~/node_common/managers/viewer";
 
 export default async (req, res) => {
   if (Strings.isEmpty(req.headers.authorization)) {
@@ -78,7 +78,6 @@ export default async (req, res) => {
   let updates = {
     id: req.body.data.id,
     updatedAt: new Date(),
-    slatename: req.body.data.slatename,
     isPublic: req.body.data.isPublic,
     data: {
       name: req.body.data.data?.name,
@@ -163,6 +162,8 @@ export default async (req, res) => {
   } else {
     SearchManager.updateSlate(updatedSlate, "EDIT");
   }
+
+  ViewerManager.hydratePartial(user.id, { slates: true });
 
   return res.status(200).send({ decorator: "V2_UPDATE_SLATE", slate: updatedSlate });
 };
