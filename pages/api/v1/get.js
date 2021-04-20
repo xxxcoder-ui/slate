@@ -4,6 +4,8 @@ import * as Strings from "~/common/strings";
 import * as Powergate from "~/node_common/powergate";
 
 export default async (req, res) => {
+  console.log("INSIDE API/V1/GET");
+  console.log({ authorization: req.headers.authorization });
   if (Strings.isEmpty(req.headers.authorization)) {
     return res.status(404).send({
       decorator: "NO_API_KEY_PROVIDED",
@@ -16,6 +18,7 @@ export default async (req, res) => {
   const key = await Data.getAPIKeyByKey({
     key: parsed,
   });
+  console.log({ key });
 
   if (!key) {
     return res.status(403).send({
@@ -35,6 +38,8 @@ export default async (req, res) => {
     id: key.ownerId,
   });
 
+  console.log({ user });
+
   if (!user) {
     return res.status(404).send({ decorator: "API_KEY_OWNER_NOT_FOUND", error: true });
   }
@@ -52,12 +57,15 @@ export default async (req, res) => {
     },
   };
 
+  console.log({ reformattedUser });
   let slates = await Data.getSlatesByUserId({
     ownerId: user.id,
     sanitize: true,
     includeFiles: true,
     publicOnly: req.body.data && req.body.data.private ? false : true,
   });
+
+  console.log({ slates });
 
   if (!slates) {
     return res.status(404).send({
@@ -103,6 +111,8 @@ export default async (req, res) => {
       },
     };
   });
+
+  console.log({ reformattedSlates });
 
   return res
     .status(200)

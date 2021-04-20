@@ -9,6 +9,7 @@ export default async ({ ids, sanitize = false, includeFiles = false }) => {
       // const slateFiles = () =>
       //   DB.raw("json_agg(?? order by ?? asc) as ??", ["files", "slate_files.createdAt", "objects"]);
 
+      let query;
       const slateFiles = () =>
         DB.raw("coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??", [
           "files",
