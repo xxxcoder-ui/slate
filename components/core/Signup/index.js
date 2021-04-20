@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as System from "~/components/system";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 
 import { useAuth } from "./hooks";
-import { Devider, Initial, SignUpPopover } from "./components";
+import { Initial, SignUpPopover } from "./components";
 
 const STYLES_SMALL = (theme) => css`
   font-size: ${theme.typescale.lvlN1};
@@ -24,6 +25,11 @@ const STYLES_LINK = (theme) => css`
   }
 `;
 
+const STYLES_SMALL_DESCRIPTION = (theme) => css`
+  font-size: ${theme.typescale.lvl0};
+  color: ${theme.system.textGrayDark};
+`;
+
 export default function Signup() {
   const { currentState, send } = useAuth();
 
@@ -33,7 +39,7 @@ export default function Signup() {
         onTwitterSignin={() => send("SIGNIN_WITH_TWITTER")}
         onSignin={() => send("SIGNIN")}
         onTwitterSignup={() => send("SIGNUP_WITH_TWITTER")}
-        onVerify={() => send("VERIFY")}
+        onVerify={() => send("VERIFY_EMAIL")}
       />
     );
   }
@@ -95,14 +101,30 @@ export default function Signup() {
     return (
       <SignUpPopover
         logoStyle={{ width: 56 }}
-        title="Verification link sent,please check your inbox."
+        title={
+          <>
+            Verification link sent,
+            <br />
+            please check your inbox.
+          </>
+        }
       >
-        <System.P css={[STYLES_SMALL, { textAlign: "center", marginTop: 28 }]}>
-          Didn’t receive an email?
+        <System.Input
+          autoFocus
+          label="Input 6 digits code"
+          icon={SVG.NavigationArrow}
+          containerStyle={{ marginTop: "28px" }}
+          name="email"
+          type="email"
+          onSubmit={() => {
+            //TODO
+            send("CONTINUE_EMAIL_SIGNUP");
+          }}
+          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+        />
+        <System.P css={STYLES_SMALL_DESCRIPTION} style={{ marginTop: 8 }}>
+          Didn’t receive an email? Resend code.
         </System.P>
-        <System.ButtonDisabled full disabled style={{ marginTop: 12 }}>
-          Resend Link (23s)
-        </System.ButtonDisabled>
       </SignUpPopover>
     );
   }
@@ -111,8 +133,7 @@ export default function Signup() {
       <SignUpPopover title="Create an account">
         <System.Input
           autoFocus
-          label="Username"
-          containerStyle={{ marginTop: 41 }}
+          containerStyle={{ marginTop: 46 }}
           placeholder="username"
           name="username"
           type="username"
@@ -120,7 +141,6 @@ export default function Signup() {
         />
         <System.Input
           autoFocus
-          label="Password"
           containerStyle={{ marginTop: 16 }}
           placeholder="password"
           name="password"

@@ -187,6 +187,7 @@ export class Input extends React.Component {
             autoComplete="off"
             disabled={this.props.disabled}
             readOnly={this.props.readOnly}
+            required={this.props.required}
             style={{
               boxShadow: this.props.validation
                 ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${

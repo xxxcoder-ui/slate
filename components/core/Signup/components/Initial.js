@@ -5,6 +5,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 
 import { Toggle, Devider, SignUpPopover } from "./";
+import { useForm } from "../hooks";
 
 const STYLES_LINK_ITEM = (theme) => css`
   display: block;
@@ -49,6 +50,16 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
   ];
   const [state, setState] = React.useState("signin");
   const handleToggleChange = (value) => setState(value);
+
+  const { getFieldProps, getFormProps } = useForm({
+    initialValues: { email: "" },
+    onSubmit: ({ email }) => {
+      // TODO
+
+      // next step
+      onVerify();
+    },
+  });
   return (
     <div>
       <SignUpPopover
@@ -110,17 +121,21 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
               height="0.5px"
               style={{ margin: "20px auto 0px auto" }}
             />
-            <System.Input
-              autoFocus
-              label="Sign up with email"
-              placeholder="email"
-              name="email"
-              type="email"
-              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-            />
-            <System.ButtonPrimary full style={{ marginTop: "16px" }} onClick={onVerify}>
-              Send verification link
-            </System.ButtonPrimary>
+            <form {...getFormProps()}>
+              <System.Input
+                required
+                autoFocus
+                label="Sign up with email"
+                placeholder="email"
+                type="email"
+                style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+                {...getFieldProps("email")}
+              />
+
+              <System.ButtonPrimary full type="submit" style={{ marginTop: "16px" }}>
+                Send verification link
+              </System.ButtonPrimary>
+            </form>
             <div css={STYLES_TERMS_AND_SERVICES}>
               <span>
                 <System.P css={STYLES_TYPOGRAPHY_SMALL}>

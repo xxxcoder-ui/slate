@@ -7,7 +7,7 @@ const AUTH_STATE_GRAPH = {
     SIGNIN_WITH_TWITTER: "final",
     SIGNUP: "signup",
     // NOTE(Amine): if user comes from link verification, go to account creation
-    VERIFY_EMAIL: "email_signup",
+    VERIFY_EMAIL: "verification",
   },
 
   signin: {
@@ -31,6 +31,7 @@ const AUTH_STATE_GRAPH = {
   verification: {
     // after  60s allow to resend
     RESEND: "verification",
+    CONTINUE_EMAIL_SIGNUP: "email_signup",
   },
 
   final: {},
@@ -44,6 +45,7 @@ const reducer = (state, event) => {
 export const useAuth = () => {
   const [state, send] = React.useReducer(reducer, "initial");
 
+  console.log(state);
   React.useLayoutEffect(() => {
     if (!window) return;
     const urlParams = new URLSearchParams(window.location.search);
@@ -52,4 +54,26 @@ export const useAuth = () => {
   }, []);
 
   return { currentState: state, send };
+};
+
+export const useForm = ({ onSubmit, initialValues }) => {
+  const [values, setValue] = React.useState(initialValues);
+
+  const handleFieldChange = (e) =>
+    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const getFieldProps = (name) => ({
+    name: name,
+    value: values[name],
+    onChange: handleFieldChange,
+  });
+
+  const handleFormOnSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(values);
+  };
+  const getFormProps = () => ({
+    onSubmit: handleFormOnSubmit,
+  });
+
+  return { getFieldProps, getFormProps };
 };
