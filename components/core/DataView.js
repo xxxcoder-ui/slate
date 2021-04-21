@@ -474,37 +474,27 @@ export default class DataView extends React.Component {
     this.setState({ checked: {} });
   };
 
-  _handleDelete = (cid, id) => {
+  _handleDelete = (id) => {
     const message = `Are you sure you want to delete these files? They will be deleted from your slates as well`;
     if (!window.confirm(message)) {
       return;
     }
 
-    let cids;
     let ids;
-    if (cid) {
-      cids = [cid];
+    if (id) {
       ids = [id];
     } else {
-      cids = Object.keys(this.state.checked).map((id) => {
-        let index = parseInt(id);
-        let item = this.props.viewer.library[0].children[index];
-        return item.cid;
-      });
       ids = Object.keys(this.state.checked).map((id) => {
         let index = parseInt(id);
-        let item = this.props.viewer.library[0].children[index];
+        let item = this.props.viewer.library[index];
         return item.id;
       });
     }
 
-    let library = this.props.viewer.library;
-    library[0].children = library[0].children.filter(
-      (obj) => !ids.includes(obj.id) && !cids.includes(obj.cid)
-    );
+    let library = this.props.viewer.library.filter((obj) => !ids.includes(obj.id));
     this.props.onUpdateViewer({ library });
 
-    UserBehaviors.deleteFiles(cids, ids);
+    UserBehaviors.deleteFiles(ids);
     this.setState({ checked: {} });
   };
 
@@ -545,7 +535,7 @@ export default class DataView extends React.Component {
   };
 
   _handleAddToSlate = (e) => {
-    let userFiles = this.props.viewer.library[0].children;
+    let userFiles = this.props.viewer.library;
     let files = Object.keys(this.state.checked).map((index) => userFiles[index]);
     this.props.onAction({
       type: "SIDEBAR",
@@ -576,9 +566,9 @@ export default class DataView extends React.Component {
   };
 
   _handleDragToDesktop = (e, object) => {
-    const url = Strings.getCIDGatewayURL(object.cid);
-    const title = object.file || object.name;
-    const type = object.type;
+    const url = Strings.getURLfromCID(object.cid);
+    const title = object.filename || object.data.name;
+    const type = object.data.type;
     console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
@@ -592,7 +582,7 @@ export default class DataView extends React.Component {
     }
 
     let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
-      items[index].tags ? items[index].tags : []
+      items[index].data.tags ? items[index].data.tags : []
     );
 
     let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
@@ -690,13 +680,15 @@ export default class DataView extends React.Component {
                 >
                   {Strings.pluralize("Download file", numChecked)}
                 </ButtonWarning>
-                <ButtonWarning
-                  transparent
-                  style={{ marginLeft: 8, color: Constants.system.white }}
-                  onClick={() => this._handleDelete()}
-                >
-                  {Strings.pluralize("Delete file", numChecked)}
-                </ButtonWarning>
+                {this.props.isOwner && (
+                  <ButtonWarning
+                    transparent
+                    style={{ marginLeft: 8, color: Constants.system.white }}
+                    onClick={() => this._handleDelete()}
+                  >
+                    {Strings.pluralize("Delete file", numChecked)}
+                  </ButtonWarning>
+                )}
                 <div
                   css={STYLES_ICON_BOX}
                   onClick={() => {
@@ -742,15 +734,7 @@ export default class DataView extends React.Component {
                     onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
                     onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                   >
-                    <SlateMediaObjectPreview
-                      blurhash={each.blurhash}
-                      url={Strings.getCIDGatewayURL(each.cid)}
-                      title={each.name || each.file}
-                      type={each.type}
-                      cid={each.cid}
-                      coverImage={each.coverImage}
-                      dataView={true}
-                    />
+                    <SlateMediaObjectPreview file={each} />
                     <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
                       {numChecked || this.state.hover === i || this.state.menu === each.id ? (
                         <React.Fragment>
@@ -785,7 +769,7 @@ export default class DataView extends React.Component {
                                       {
                                         text: "Copy link",
                                         onClick: (e) =>
-                                          this._handleCopy(e, Strings.getCIDGatewayURL(cid)),
+                                          this._handleCopy(e, Strings.getURLfromCID(cid)),
                                       },
                                       {
                                         text: "Delete",
@@ -812,7 +796,7 @@ export default class DataView extends React.Component {
                                       {
                                         text: "Copy link",
                                         onClick: (e) =>
-                                          this._handleCopy(e, Strings.getCIDGatewayURL(cid)),
+                                          this._handleCopy(e, Strings.getURLfromCID(cid)),
                                       },
                                     ]}
                                   />
@@ -938,18 +922,18 @@ export default class DataView extends React.Component {
             }}
             onDragEnd={this._enableDragAndDropUploadEvent}
           >
-            <FilePreviewBubble url={cid} type={each.type}>
+            <FilePreviewBubble cid={cid} type={each.data.type}>
               <div css={STYLES_CONTAINER_HOVER} onClick={() => this._handleSelect(index)}>
                 <div css={STYLES_ICON_BOX_HOVER} style={{ paddingLeft: 0, paddingRight: 18 }}>
-                  <FileTypeIcon type={each.type} height="24px" />
+                  <FileTypeIcon type={each.data.type} height="24px" />
                 </div>
-                <div css={STYLES_LINK}>{each.file || each.name}</div>
+                <div css={STYLES_LINK}>{each.data.name || each.filename}</div>
               </div>
             </FilePreviewBubble>
           </Selectable>
         ),
-        tags: <>{each.tags && <Tags tags={each.tags} />}</>,
-        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
+        tags: <>{each.data.tags?.length && <Tags tags={each.data.tags} />}</>,
+        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.data.size)}</div>,
         more: (
           <div
             css={STYLES_ICON_BOX_HOVER}
@@ -979,13 +963,13 @@ export default class DataView extends React.Component {
                     },
                     // {
                     //   text: "Copy link",
-                    //   onClick: (e) => this._handleCopy(e, Strings.getCIDGatewayURL(cid)),
+                    //   onClick: (e) => this._handleCopy(e, Strings.getURLfromCID(cid)),
                     // },
                     {
                       text: "Delete",
                       onClick: (e) => {
                         e.stopPropagation();
-                        this.setState({ menu: null }, () => this._handleDelete(cid, each.id));
+                        this.setState({ menu: null }, () => this._handleDelete(each.id));
                       },
                     },
                   ]}

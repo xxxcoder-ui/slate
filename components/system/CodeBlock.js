@@ -304,11 +304,14 @@ const STYLES_TOOLTIP = css`
 class CodeBlock extends React.Component {
   _ref = null;
 
+  static defaultProps = {
+    language: "javascript",
+  };
+
   state = {
     copyValue: "",
     tooltip: false,
     copied: false,
-    language: this.props.language ? this.props.language : "javascript",
   };
 
   _handleCopy = (value) => {
@@ -341,7 +344,7 @@ class CodeBlock extends React.Component {
                   return (
                     <div
                       key={index}
-                      css={language === this.state.language ? STYLES_LANG_SELECTED : STYLES_LANG}
+                      css={language === this.props.language ? STYLES_LANG_SELECTED : STYLES_LANG}
                       onClick={() => {
                         this._handleSwitchLang(language);
                       }}
@@ -357,7 +360,7 @@ class CodeBlock extends React.Component {
               onClick={() =>
                 this._handleCopy(
                   availableLanguages.length > 1
-                    ? this.props.children[this.state.language]
+                    ? this.props.children[this.props.language]
                     : this.props.children
                 )
               }
@@ -383,10 +386,10 @@ class CodeBlock extends React.Component {
             theme={customTheme}
             code={
               availableLanguages.length > 1
-                ? this.props.children[this.state.language]
+                ? this.props.children[this.props.language]
                 : this.props.children
             }
-            language={this.state.language}
+            language={this.props.language}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <pre className={className} css={STYLES_CODE_BODY}>

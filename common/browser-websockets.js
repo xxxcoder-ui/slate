@@ -30,8 +30,8 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       return null;
     }
 
-    const payload = { type: "SUBSCRIBE_VIEWER", data: viewer };
-
+    const payload = { type: "SUBSCRIBE_VIEWER", data: { id: viewer.id } };
+    console.log(payload);
     client.send(JSON.stringify(payload));
   });
 

@@ -33,14 +33,9 @@ export class SlateLayoutMobile extends React.Component {
             onClick={() => this.props.onSelect(i)}
           >
             <SlateMediaObjectPreview
-              blurhash={item.blurhash}
+              file={item}
               iconOnly={this.props.fileNames}
               charCap={70}
-              type={item.type}
-              url={item.url}
-              title={item.title || item.name}
-              cid={item.cid}
-              coverImage={item.coverImage}
               style={{
                 height: `calc(100vw - 48px)`,
                 width: `calc(100vw - 48px)`,

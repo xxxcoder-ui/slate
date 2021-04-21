@@ -204,26 +204,22 @@ const STYLES_EMPTY_SLATE_PREVIEW = css`
 
 const SlatePreview = ({ slate, user }) => {
   let preview;
-  for (let obj of slate.data.objects) {
-    if (obj.type && Validations.isPreviewableImage(obj.type)) {
-      preview = obj;
-      break;
+  if (slate.objects?.length) {
+    for (let obj of slate.objects) {
+      if (obj.type && Validations.isPreviewableImage(obj.type)) {
+        preview = obj;
+        break;
+      }
     }
-  }
-  if (!slate && slate.data.objects && slate.data.objects.length) {
-    preview = slate.data.objects[0];
+    if (!preview) {
+      preview = slate.objects[0];
+    }
   }
   return (
     <div style={{ textAlign: "center" }}>
       <div css={STYLES_PREVIEW_IMAGE}>
         {preview ? (
-          <SlateMediaObjectPreview
-            blurhash={preview.blurhash}
-            url={preview.url}
-            title={preview.title || preview.name}
-            type={preview.type}
-            coverImage={preview.coverImage}
-          />
+          <SlateMediaObjectPreview file={preview} />
         ) : (
           <div css={STYLES_EMPTY_SLATE_PREVIEW}>
             <SVG.Slate height="80px" style={{ color: "#bfbfbf" }} />
@@ -233,9 +229,11 @@ const SlatePreview = ({ slate, user }) => {
       {user ? (
         <div css={STYLES_PREVIEW_TEXT}>Created by: {user.data.name || `@${user.username}`}</div>
       ) : null}
-      <div css={STYLES_PREVIEW_TEXT}>
-        {slate.data.objects.length} File{slate.data.objects.length === 1 ? "" : "s"}
-      </div>
+      {slate.objects && (
+        <div css={STYLES_PREVIEW_TEXT}>
+          {slate.objects.length} File{slate.objects.length === 1 ? "" : "s"}
+        </div>
+      )}
     </div>
   );
 };
@@ -248,16 +246,10 @@ const FileEntry = ({ file }) => {
           <FileTypeIcon type={file.type} height="24px" />
         </div>
         <div css={STYLES_TEXT_ROWS}>
-          <div css={STYLES_TITLE}>{file.title || file.name || file.file}</div>
-          {file.file ? (
-            <div css={STYLES_SUBTITLE} style={{ textTransform: "uppercase" }}>
-              {Strings.getFileExtension(file.file)}
-            </div>
-          ) : file.name ? (
-            <div css={STYLES_SUBTITLE} style={{ textTransform: "uppercase" }}>
-              {Strings.getFileExtension(file.name)}
-            </div>
-          ) : null}
+          <div css={STYLES_TITLE}>{file.data.name || file.filename}</div>
+          <div css={STYLES_SUBTITLE} style={{ textTransform: "uppercase" }}>
+            {Strings.getFileExtension(file.filename)}
+          </div>
         </div>
       </div>
     </div>
@@ -268,15 +260,7 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
   return (
     <div style={{ textAlign: "center" }}>
       <div css={STYLES_PREVIEW_IMAGE}>
-        <SlateMediaObjectPreview
-          previewPanel
-          blurhash={file.blurhash}
-          url={file.url ? file.url : Strings.getCIDGatewayURL(file.cid)}
-          title={file.title || file.name || file.file}
-          type={file.type}
-          cid={file.cide}
-          coverImage={file.coverImage}
-        />
+        <SlateMediaObjectPreview file={file} previewPanel />
       </div>
       {user ? (
         <div css={STYLES_PREVIEW_TEXT}>Owner: {user.data.name || `@${user.username}`}</div>
@@ -520,16 +504,6 @@ export class SearchModal extends React.Component {
         slateIds.push(sub.target_slate_id);
       }
     }
-    // for (let sub of this.props.viewer.trusted) {
-    //   if (sub.target_user_id) {
-    //     networkIds.push(sub.target_user_id);
-    //   }
-    // }
-    // for (let sub of this.props.viewer.pendingTrusted) {
-    //   if (sub.owner_user_id) {
-    //     networkIds.push(sub.owner_user_id);
-    //   }
-    // }
     this.networkIds = networkIds;
     this.slateIds = slateIds;
   };
@@ -545,35 +519,21 @@ export class SearchModal extends React.Component {
         fuzzy: 0.15,
       },
     });
-    let files = this.props.viewer.library[0].children.map((file, i) => {
+    let files = this.props.viewer.library.map((file, i) => {
       return {
+        ...file,
         type: "DATA_FILE",
-        id: file.id,
-        name: file.title,
-        title: file.file,
-        data: {
-          file: {
-            ...file,
-            url: Strings.getCIDGatewayURL(file.cid),
-          },
-        },
       };
     });
     this.localSearch.addAll(files);
-    let privateSlates = this.props.viewer.slates.filter((slate) => !slate.data.public);
+    let privateSlates = this.props.viewer.slates.filter((slate) => !slate.isPublic);
     let privateFiles = [];
     for (let slate of privateSlates) {
       privateFiles.push(
-        ...slate.data.objects.map((file, i) => {
+        ...slate.objects.map((file, i) => {
           return {
+            ...file,
             type: "FILE",
-            id: `${file.id}-${slate.id}`,
-            name: file.name,
-            title: file.title,
-            data: {
-              file,
-              slate,
-            },
           };
         })
       );
@@ -581,8 +541,6 @@ export class SearchModal extends React.Component {
     privateSlates = privateSlates.map((slate) => {
       return {
         ...slate,
-        name: slate.slatename,
-        title: slate.data.name,
         type: "SLATE",
       };
     });
@@ -663,7 +621,7 @@ export class SearchModal extends React.Component {
   };
 
   _handleChange = (e) => {
-    this.debounceInstance(e);
+    this.debounceInstance();
     this.setState({ inputValue: e.target.value });
   };
 
@@ -751,8 +709,8 @@ export class SearchModal extends React.Component {
     searchResults = this.processResults(res);
     for (let res of searchResults) {
       if (res.type === "USER") {
-        let id = res.user.id;
-        if (ids.has(id)) continue;
+        let id = res.user?.id;
+        if (!id || ids.has(id)) continue;
         ids.add(id);
         results.push({
           id,
@@ -762,8 +720,8 @@ export class SearchModal extends React.Component {
           preview: <UserPreview user={res.user} />,
         });
       } else if (res.type === "SLATE") {
-        let id = res.user.id;
-        if (ids.has(id)) continue;
+        let id = res.slate?.id;
+        if (!id || ids.has(id)) continue;
         ids.add(id);
         results.push({
           id,
@@ -773,8 +731,8 @@ export class SearchModal extends React.Component {
           preview: <SlatePreview slate={res.slate} user={res.user} />,
         });
       } else if (res.type === "FILE") {
-        let id = res.user.id;
-        if (ids.has(id)) continue;
+        let id = res.file?.id;
+        if (!id || ids.has(id)) continue;
         ids.add(id);
         results.push({
           id,
@@ -858,26 +816,23 @@ export class SearchModal extends React.Component {
         value: "NAV_SLATE",
         data: res.data.slate,
       });
-    }
-    if (res.type === "USER") {
+    } else if (res.type === "USER") {
       this.props.onAction({
         type: "NAVIGATE",
         value: "NAV_PROFILE",
         data: res.data.user,
       });
-    }
-    if (res.type === "DATA_FILE") {
+    } else if (res.type === "DATA_FILE" || res.data.file.ownerId === this.props.viewer.id) {
       await this.props.onAction({
         type: "NAVIGATE",
         value: "NAV_DATA",
         fileId: res.data.file.id,
       });
-    }
-    if (res.type === "FILE") {
+    } else if (res.type === "FILE") {
       await this.props.onAction({
         type: "NAVIGATE",
-        value: "NAV_SLATE",
-        data: res.data.slate,
+        value: "NAV_PROFILE",
+        data: res.data.user,
         fileId: res.data.file.id,
       });
     }
@@ -1194,7 +1149,7 @@ export class SearchModal extends React.Component {
                             paddingRight: selectedIndex === i ? "88px" : "4px",
                           }}
                           onClick={() => {
-                            selectedIndex === i || this.props.mobile
+                            selectedIndex === i || this.props.isMobile
                               ? this._handleSelect(each)
                               : this.setState({ selectedIndex: i });
                           }}

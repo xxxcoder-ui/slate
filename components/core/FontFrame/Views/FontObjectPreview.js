@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { css } from "@emotion/react";
-import { useFont } from "../hooks";
+import { useFont } from "~/components/core/FontFrame/hooks";
 
 const withView = (Component) => (props) => {
   const ref = React.useRef(null);
@@ -34,8 +34,8 @@ const STYLES_LETTER = (theme) => css`
 `;
 
 const FontObjectPreview = React.memo(
-  ({ url, cid, fallback }) => {
-    const { isFontLoading, error, fontName } = useFont({ url, name: cid }, [cid]);
+  ({ cid, fallback }) => {
+    const { isFontLoading, error, fontName } = useFont({ cid }, [cid]);
     if (error || isFontLoading) {
       return fallback;
     }
@@ -45,6 +45,6 @@ const FontObjectPreview = React.memo(
       </div>
     );
   },
-  (prevProps, nextProps) => prevProps.cid === nextProps.cid && prevProps.url == nextProps.url
+  (prevProps, nextProps) => prevProps.cid === nextProps.cid
 );
 export default withView(FontObjectPreview);

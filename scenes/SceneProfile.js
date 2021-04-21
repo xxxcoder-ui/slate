@@ -24,24 +24,38 @@ export default class SceneProfile extends React.Component {
   state = {
     profile: null,
     notFound: false,
+    isOwner: false,
+    loading: true,
   };
 
   componentDidMount = async () => {
     this.fetchProfile();
   };
 
+  componentDidUpdate = (prevProps) => {
+    if (this.state.isOwner && this.props.viewer.library !== prevProps.viewer.library) {
+      let filteredViewer = this.getFilteredViewer();
+      this.setState({ profile: filteredViewer });
+    } else if (this.props.page !== prevProps.page) {
+      this.openCarouselToItem();
+    }
+  };
+
   fetchProfile = async () => {
     const username = this.props.page.user || this.props.page.data?.username;
+    let isOwner = false;
     let query;
     let targetUser;
     if (username) {
       if (username === this.props.viewer.username) {
+        isOwner = true;
         targetUser = this.getFilteredViewer();
       } else {
         query = { username: username };
       }
-    } else if (this.props.data && this.props.data.id) {
+    } else if (this.props.data?.id) {
       if (this.props.data.id === this.props.viewer.id) {
+        isOwner = true;
         targetUser = this.getFilteredViewer();
       } else {
         query = { id: this.props.data.id };
@@ -61,49 +75,58 @@ export default class SceneProfile extends React.Component {
 
       targetUser = response.data;
     }
-
-    const {
-      page: { cid },
-    } = this.props;
-
     window.history.replaceState(
       { ...window.history.state, data: targetUser },
       "A slate user",
       `/${targetUser.username}`
     );
+    this.props.onUpdateData(targetUser);
+    this.setState({ isOwner, profile: targetUser, loading: false }, this.openCarouselToItem);
+  };
 
-    this.props.onUpdateData({ data: targetUser });
-    this.setState({ profile: targetUser }, () => {
-      if (Strings.isEmpty(cid)) {
-        return;
-      }
+  openCarouselToItem = () => {
+    if (!this.state.profile?.library?.length) {
+      return;
+    }
+    const { cid, fileId, index } = this.props.page;
 
-      let library = targetUser.library[0].children || [];
-      const index = library.findIndex((object) => object.cid === cid);
-      if (index !== -1) {
-        Events.dispatchCustomEvent({
-          name: "slate-global-open-carousel",
-          detail: { index },
-        });
-      } else {
-        Events.dispatchCustomEvent({
-          name: "create-alert",
-          detail: {
-            alert: {
-              message:
-                "The requested file could not be found. It could have been deleted or may be private",
-            },
-          },
-        });
-      }
-    });
+    if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
+      return;
+    }
+
+    const library = this.state.profile.library;
+
+    let foundIndex = -1;
+    if (index) {
+      foundIndex = index;
+    } else if (cid) {
+      foundIndex = library.findIndex((object) => object.cid === cid);
+    } else if (fileId) {
+      foundIndex = library.findIndex((object) => object.id === fileId);
+    }
+    if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
+      Events.dispatchCustomEvent({
+        name: "slate-global-open-carousel",
+        detail: { index: foundIndex },
+      });
+    }
+    // else {
+    //   Events.dispatchCustomEvent({
+    //     name: "create-alert",
+    //     detail: {
+    //       alert: {
+    //         message:
+    //           "The requested file could not be found. It could have been deleted or may be private",
+    //       },
+    //     },
+    //   });
+    // }
   };
 
   getFilteredViewer = () => {
     let viewer = this.props.viewer;
     const res = Utilities.getPublicAndPrivateFiles({ viewer });
-    viewer.library[0].children = res.publicFiles;
-    return viewer;
+    return { ...viewer, library: res.publicFiles };
   };
 
   render() {
@@ -118,24 +141,25 @@ export default class SceneProfile extends React.Component {
       );
     }
 
-    if (!this.state.profile) {
+    if (this.state.loading) {
       return (
-        <div css={STYLES_LOADER}>
-          <LoaderSpinner />
-        </div>
+        <ScenePage>
+          <div css={STYLES_LOADER}>
+            <LoaderSpinner />
+          </div>
+        </ScenePage>
+      );
+    } else if (this.state.profile?.id) {
+      return (
+        <Profile
+          {...this.props}
+          user={this.state.profile}
+          isOwner={this.state.isOwner}
+          isAuthenticated={this.props.viewer !== null}
+          key={this.state.profile.id}
+        />
       );
     }
-
-    return (
-      <Profile
-        {...this.props}
-        creator={
-          this.state.profile.id === this.props.viewer.id ? this.props.viewer : this.state.profile
-        }
-        isOwner={this.state.profile.id === this.props.viewer.id}
-        isAuthenticated={this.props.viewer !== null}
-        key={this.state.profile.id}
-      />
-    );
+    return null;
   }
 }

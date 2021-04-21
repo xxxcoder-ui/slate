@@ -47,7 +47,7 @@ const STYLES_GROUPING = css`
 export default class SidebarSingleSlateSettings extends React.Component {
   state = {
     slatename: this.props.data.slatename,
-    public: this.props.data.data.public,
+    isPublic: this.props.data.isPublic,
     body: this.props.data.data.body,
     name: this.props.data.data.name,
     tags: this.props.data.data?.tags || [],
@@ -68,7 +68,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
     for (let slate of slates) {
       if (slate.id === this.props.data.id) {
         slate.data.name = this.state.name;
-        slate.data.public = this.state.public;
+        slate.isPublic = this.state.isPublic;
         slate.data.body = this.state.body;
         slate.data.tags = this.state.tags;
 
@@ -82,9 +82,9 @@ export default class SidebarSingleSlateSettings extends React.Component {
     this.props.onCancel();
     const response = await Actions.updateSlate({
       id: this.props.data.id,
+      isPublic: this.state.isPublic,
       data: {
         name: this.state.name,
-        public: this.state.public,
         body: this.state.body,
         tags: this.state.tags,
       },
@@ -135,14 +135,14 @@ export default class SidebarSingleSlateSettings extends React.Component {
     const url = `/${this.props.viewer.username}/${slug}`;
     let preview = this.props.data.data.preview;
     if (!preview) {
-      for (let object of this.props.data.data.objects) {
+      for (let object of this.props.data.objects) {
         if (
-          object.type &&
-          Validations.isPreviewableImage(object.type) &&
-          object.size &&
-          object.size < SIZE_LIMIT
+          object.data.type &&
+          Validations.isPreviewableImage(object.data.type) &&
+          object.data.size &&
+          object.data.size < SIZE_LIMIT
         ) {
-          preview = object.url;
+          preview = Strings.getURLfromCID(object.cid);
           break;
         }
       }
@@ -228,7 +228,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
           </System.P>
           <System.Tag
             name="tags"
-            placeholder={`Edit tags for ${this.state.slatename}`}
             tags={this.state.tags}
             suggestions={this.state.suggestions}
             style={{ marginTop: 12 }}
@@ -236,24 +235,23 @@ export default class SidebarSingleSlateSettings extends React.Component {
           />
         </div>
 
-        {this.state.public ? (
-          <div css={STYLES_GROUPING}>
-            <System.P css={STYLES_HEADER}>Preview image</System.P>
+        <div css={STYLES_GROUPING}>
+          <System.P css={STYLES_HEADER}>Cover image</System.P>
 
-            <System.P
-              css={STYLES_TEXT}
-              style={{
-                marginTop: 12,
-              }}
-            >
-              This is the image that shows when you share a link to your slate.
-            </System.P>
+          <System.P
+            css={STYLES_TEXT}
+            style={{
+              marginTop: 12,
+            }}
+          >
+            This is the cover image for your slate. You can select a different cover image using the
+            "Make cover image" button.
+          </System.P>
 
-            <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
-              <img src={preview} alt="" style={{ maxWidth: "368px", maxHeight: "368px" }} />
-            </div>
+          <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
+            <img src={preview} alt="" style={{ maxWidth: "368px", maxHeight: "368px" }} />
           </div>
-        ) : null}
+        </div>
 
         <div css={STYLES_GROUPING}>
           <System.P css={STYLES_HEADER} style={{ marginBottom: 12 }}>
@@ -269,7 +267,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             on the internet. If you make it private, only you will be able to see it.
           </System.P>
           <RadioGroup
-            name="public"
+            name="isPublic"
             options={[
               {
                 value: true,
@@ -292,7 +290,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             ]}
             style={{ marginTop: 12 }}
             labelStyle={{ fontFamily: Constants.font.medium }}
-            selected={this.state.public}
+            selected={this.state.isPublic}
             onChange={this._handleChange}
           />
         </div>

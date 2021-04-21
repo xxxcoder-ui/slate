@@ -4,6 +4,7 @@ import * as Strings from "~/common/strings";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Utilities from "~/common/utilities";
+import * as Events from "~/common/custom-events";
 import * as Window from "~/common/window";
 
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
@@ -85,8 +86,8 @@ const STYLES_STATUS_INDICATOR = css`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid ${Constants.system.gray50};
-  background-color: ${Constants.system.white};
+  border: 2px solid ${Constants.system.active};
+  background-color: ${Constants.system.active};
 `;
 
 const STYLES_NAME = css`
@@ -211,8 +212,8 @@ const STYLES_DIRECTORY_STATUS_INDICATOR = css`
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  border: 1.2px solid ${Constants.system.gray50};
-  background-color: ${Constants.system.white};
+  border: 1.2px solid ${Constants.system.active};
+  background-color: ${Constants.system.active};
 `;
 
 const STYLES_MESSAGE = css`
@@ -258,15 +259,7 @@ function UserEntry({
             css={STYLES_DIRECTORY_PROFILE_IMAGE}
             style={{ backgroundImage: `url(${user.data.photo})` }}
           >
-            {showStatusIndicator && (
-              <div
-                css={STYLES_DIRECTORY_STATUS_INDICATOR}
-                style={{
-                  borderColor: isOnline && `${Constants.system.active}`,
-                  backgroundColor: isOnline && `${Constants.system.active}`,
-                }}
-              />
-            )}
+            {showStatusIndicator && isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
           </div>
           <span css={STYLES_DIRECTORY_NAME}>
             {user.data.name || `@${user.username}`}
@@ -279,13 +272,7 @@ function UserEntry({
             css={STYLES_DIRECTORY_PROFILE_IMAGE}
             style={{ backgroundImage: `url(${user.data.photo})` }}
           >
-            <div
-              css={STYLES_DIRECTORY_STATUS_INDICATOR}
-              style={{
-                borderColor: isOnline && `${Constants.system.active}`,
-                backgroundColor: isOnline && `${Constants.system.active}`,
-              }}
-            />
+            {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
           </div>
           <span css={STYLES_DIRECTORY_NAME}>
             {user.data.name || `@${user.username}`}
@@ -307,23 +294,22 @@ export default class Profile extends React.Component {
     peerTab: 0,
     // copyValue: "",
     contextMenu: null,
-    publicFiles: this.props.creator.library[0].children,
-    slates: this.props.creator.slates,
+    slates: this.props.user.slates,
     subscriptions: [],
-    subscribers: [],
-    isFollowing: this.props.external
-      ? false
-      : !!this.props.viewer.subscriptions.filter((entry) => {
-          return entry.target_user_id === this.props.creator.id;
-        }).length,
+    followers: [],
+    following: [],
+    isFollowing:
+      this.props.external || this.props.user.id === this.props.viewer?.id
+        ? false
+        : !!this.props.viewer?.following.some((entry) => {
+            return entry.id === this.props.user.id;
+          }),
     fetched: false,
-    tab: this.props.tab,
+    tab: this.props.tab || 0,
   };
 
   componentDidMount = () => {
-    console.log(this.props.creator);
     this._handleUpdatePage();
-    // this.filterByVisibility();
   };
 
   componentDidUpdate = (prevProps) => {
@@ -333,21 +319,29 @@ export default class Profile extends React.Component {
   };
 
   fetchSocial = async () => {
-    let query = { userId: this.props.creator.id };
-    const { subscribers, subscriptions } = await Actions.getSocial(query);
-    this.setState({ subscribers: subscribers, subscriptions: subscriptions, fetched: true });
+    if (this.state.fetched) return;
+    let following, followers, subscriptions;
+    if (this.props.user.id === this.props.viewer?.id) {
+      following = this.props.viewer?.following;
+      followers = this.props.viewer?.followers;
+      subscriptions = this.props.viewer?.subscriptions;
+    } else {
+      const query = { id: this.props.user.id };
+      let response = await Actions.getSocial(query);
+      if (Events.hasError(response)) {
+        return;
+      }
+      following = response.following;
+      followers = response.followers;
+      subscriptions = response.subscriptions;
+    }
+    this.setState({
+      following: following,
+      followers: followers,
+      subscriptions: subscriptions,
+      fetched: true,
+    });
   };
-
-  // filterByVisibility = () => {
-  //   let publicFiles = [];
-  //   if (this.props.isOwner) {
-  //     const res = Utilities.getPublicAndPrivateFiles({ viewer: this.props.creator });
-  //     publicFiles = res.publicFiles;
-  //   } else {
-  //     publicFiles = this.props.creator.library[0].children;
-  //   }
-  //   this.setState({ publicFiles: publicFiles });
-  // };
 
   // _handleCopy = (e, value) => {
   //   e.stopPropagation();
@@ -417,148 +411,81 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    let tab = typeof this.state.tab === "undefined" || this.state.tab === null ? 1 : this.state.tab;
+    let tab = this.state.tab || 0;
+    let publicFiles = this.props.user.library;
     let isOwner = this.props.isOwner;
-    let creator = this.props.creator;
-    let username = this.state.slateTab === 0 ? creator.username : null;
-    let subscriptions = this.state.subscriptions;
-    let subscribers = this.state.subscribers;
+    let user = this.props.user;
+    let username = this.state.slateTab === 0 ? user.username : null;
     let slates = [];
     if (tab === 1) {
       if (this.state.slateTab === 0) {
-        slates = isOwner
-          ? creator.slates.filter((slate) => slate.data.public === true)
-          : creator.slates;
+        slates = user.slates
+          ? isOwner
+            ? user.slates.filter((slate) => slate.isPublic === true)
+            : user.slates
+          : null;
       } else {
-        slates = subscriptions
-          .filter((relation) => {
-            return !!relation.target_slate_id;
-          })
-          .map((relation) => relation.slate);
+        slates = this.state.subscriptions;
       }
     }
     let exploreSlates = this.props.exploreSlates;
-    let peers = [];
+    let peers = this.state.peerTab === 0 ? this.state.following : this.state.followers;
     if (tab === 2) {
-      if (this.state.peerTab === 0) {
-        peers = subscriptions
-          .filter((relation) => {
-            return !!relation.target_user_id;
-          })
-          .map((relation) => {
-            let button = (
-              <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
-                <SVG.MoreHorizontal height="24px" />
-                {this.state.contextMenu === relation.id ? (
-                  <Boundary
-                    captureResize={true}
-                    captureScroll={false}
-                    enabled
-                    onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
-                  >
-                    <PopoverNavigation
-                      style={{
-                        top: "40px",
-                        right: "0px",
-                      }}
-                      navigation={[
-                        {
-                          text: this.props.viewer?.subscriptions.filter((subscription) => {
-                            return subscription.target_user_id === relation.target_user_id;
-                          }).length
-                            ? "Unfollow"
-                            : "Follow",
-                          onClick: this.props.viewer
-                            ? (e) => this._handleFollow(e, relation.target_user_id)
-                            : () => this.setState({ visible: true }),
-                        },
-                      ]}
-                    />
-                  </Boundary>
-                ) : null}
-              </div>
-            );
+      peers = peers.map((relation) => {
+        let button = (
+          <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
+            <SVG.MoreHorizontal height="24px" />
+            {this.state.contextMenu === relation.id ? (
+              <Boundary
+                captureResize={true}
+                captureScroll={false}
+                enabled
+                onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
+              >
+                <PopoverNavigation
+                  style={{
+                    top: "40px",
+                    right: "0px",
+                  }}
+                  navigation={[
+                    {
+                      text: this.props.viewer?.following.some((subscription) => {
+                        return subscription.id === relation.id;
+                      }).length
+                        ? "Unfollow"
+                        : "Follow",
+                      onClick: this.props.viewer
+                        ? (e) => this._handleFollow(e, relation.id)
+                        : () => this.setState({ visible: true }),
+                    },
+                  ]}
+                />
+              </Boundary>
+            ) : null}
+          </div>
+        );
 
-            return (
-              <UserEntry
-                key={relation.id}
-                user={relation.user}
-                button={button}
-                checkStatus={this.checkStatus}
-                showStatusIndicator={this.props.isAuthenticated}
-                onClick={() => {
-                  this.props.onAction({
-                    type: "NAVIGATE",
-                    value: this.props.sceneId,
-                    scene: "PROFILE",
-                    data: relation.user,
-                  });
-                }}
-                external={this.props.external}
-                url={`/${relation.user.username}`}
-              />
-            );
-          });
-      } else {
-        peers = subscribers.map((relation) => {
-          let button = (
-            <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
-              <SVG.MoreHorizontal height="24px" />
-              {this.state.contextMenu === relation.id ? (
-                <Boundary
-                  captureResize={true}
-                  captureScroll={false}
-                  enabled
-                  onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
-                >
-                  <PopoverNavigation
-                    style={{
-                      top: "40px",
-                      right: "0px",
-                    }}
-                    navigation={[
-                      {
-                        text: this.props.viewer?.subscriptions.filter((subscription) => {
-                          return subscription.target_user_id === relation.owner_user_id;
-                        }).length
-                          ? "Unfollow"
-                          : "Follow",
-                        onClick: this.props.viewer
-                          ? (e) => this._handleFollow(e, relation.owner_user_id)
-                          : () => this.setState({ visible: true }),
-                      },
-                    ]}
-                  />
-                </Boundary>
-              ) : null}
-            </div>
-          );
-          return (
-            <UserEntry
-              key={relation.id}
-              user={relation.owner}
-              button={button}
-              checkStatus={this.checkStatus}
-              showStatusIndicator={this.props.isAuthenticated}
-              onClick={() => {
-                this.props.onAction({
-                  type: "NAVIGATE",
-                  value: this.props.sceneId,
-                  scene: "PROFILE",
-                  data: relation.owner,
-                });
-              }}
-              external={this.props.external}
-              url={`/${relation.owner.username}`}
-            />
-          );
-        });
-      }
+        return (
+          <UserEntry
+            key={relation.id}
+            user={relation}
+            button={button}
+            checkStatus={this.checkStatus}
+            showStatusIndicator={this.props.isAuthenticated}
+            onClick={() => {
+              this.props.onAction({
+                type: "NAVIGATE",
+                value: this.props.sceneId,
+                scene: "PROFILE",
+                data: relation,
+              });
+            }}
+            external={this.props.external}
+            url={`/${relation.username}`}
+          />
+        );
+      });
     }
-
-    let total = creator.slates.reduce((total, slate) => {
-      return total + slate.data?.objects?.length || 0;
-    }, 0);
 
     const showStatusIndicator = this.props.isAuthenticated;
 
@@ -569,10 +496,10 @@ export default class Profile extends React.Component {
           onUpdateViewer={this.props.onUpdateViewer}
           resources={this.props.resources}
           viewer={this.props.viewer}
-          objects={this.state.publicFiles}
-          isOwner={false}
+          objects={publicFiles}
+          isOwner={this.props.isOwner}
           onAction={this.props.onAction}
-          mobile={this.props.mobile}
+          isMobile={this.props.isMobile}
           external={this.props.external}
         />
         <div css={STYLES_PROFILE_BACKGROUND}>
@@ -580,30 +507,22 @@ export default class Profile extends React.Component {
             <div
               css={STYLES_PROFILE_IMAGE}
               style={{
-                backgroundImage: `url('${creator.data.photo}')`,
+                backgroundImage: `url('${user.data.photo}')`,
               }}
             >
-              {showStatusIndicator && (
-                <div
-                  css={STYLES_STATUS_INDICATOR}
-                  style={{
-                    borderColor:
-                      this.checkStatus({ id: this.props.data?.id }) && `${Constants.system.active}`,
-                    backgroundColor:
-                      this.checkStatus({ id: this.props.data?.id }) && `${Constants.system.active}`,
-                  }}
-                />
+              {showStatusIndicator && this.checkStatus({ id: user.id }) && (
+                <div css={STYLES_STATUS_INDICATOR} />
               )}
             </div>
             <div css={STYLES_INFO}>
-              <div css={STYLES_NAME}>{Strings.getPresentationName(creator)}</div>
+              <div css={STYLES_NAME}>{Strings.getPresentationName(user)}</div>
               {!isOwner && (
                 <div css={STYLES_BUTTON}>
                   {this.state.isFollowing ? (
                     <ButtonSecondary
                       onClick={(e) => {
                         this.setState({ isFollowing: false });
-                        this._handleFollow(e, this.props.creator.id);
+                        this._handleFollow(e, this.props.user.id);
                       }}
                     >
                       Unfollow
@@ -612,7 +531,7 @@ export default class Profile extends React.Component {
                     <ButtonPrimary
                       onClick={(e) => {
                         this.setState({ isFollowing: true });
-                        this._handleFollow(e, this.props.creator.id);
+                        this._handleFollow(e, this.props.user.id);
                       }}
                     >
                       Follow
@@ -620,20 +539,21 @@ export default class Profile extends React.Component {
                   )}
                 </div>
               )}
-              {creator.data.body ? (
+              {user.data.body ? (
                 <div css={STYLES_DESCRIPTION}>
-                  <ProcessedText text={creator.data.body} />
+                  <ProcessedText text={user.data.body} />
                 </div>
               ) : null}
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
-                    {total} <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
+                    {publicFiles.length}{" "}
+                    <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
                   </div>
                 </div>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
-                    {creator.slates.length}{" "}
+                    {user.slates?.length || 0}{" "}
                     <span style={{ color: `${Constants.system.darkGray}` }}>Slates</span>
                   </div>
                 </div>
@@ -649,7 +569,7 @@ export default class Profile extends React.Component {
               open={this.state.visible}
               redirectURL={`/_${Strings.createQueryParams({
                 scene: "NAV_PROFILE",
-                user: creator.username,
+                user: user.username,
               })}`}
             />
           </div>
@@ -664,7 +584,7 @@ export default class Profile extends React.Component {
           />
           {tab === 0 ? (
             <div>
-              {this.props.mobile ? null : (
+              {this.props.isMobile ? null : (
                 <div style={{ display: `flex` }}>
                   <SecondaryTabGroup
                     tabs={[
@@ -677,12 +597,13 @@ export default class Profile extends React.Component {
                   />
                 </div>
               )}
-              {this.state.publicFiles.length ? (
+              {publicFiles.length ? (
                 <DataView
+                  key="scene-profile"
                   onAction={this.props.onAction}
                   viewer={this.props.viewer}
                   isOwner={isOwner}
-                  items={this.state.publicFiles}
+                  items={publicFiles}
                   onUpdateViewer={this.props.onUpdateViewer}
                   view={this.state.view}
                   resources={this.props.resources}
@@ -713,7 +634,7 @@ export default class Profile extends React.Component {
                 <SlatePreviewBlocks
                   isOwner={this.state.slateTab === 0 ? isOwner : false}
                   external={this.props.external}
-                  slates={slates}
+                  slates={slates || []}
                   username={username}
                   onAction={this.props.onAction}
                 />

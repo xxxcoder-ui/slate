@@ -68,7 +68,7 @@ export const signOut = async ({ viewer }) => {
 };
 
 // NOTE(jim): Permanently deletes you, forever.
-export const deleteMe = async () => {
+export const deleteMe = async ({ viewer }) => {
   const message = "Do you really want to delete your account? It will be permanently removed";
   if (!window.confirm(message)) {
     return false;
@@ -82,7 +82,7 @@ export const deleteMe = async () => {
     return response;
   }
 
-  await signOut();
+  await signOut({ viewer });
 
   let wsclient = Websockets.getClient();
   if (wsclient) {
@@ -146,7 +146,6 @@ export const formatDroppedFiles = async ({ dataTransfer }) => {
 
           file = new File(blob, `data-${uuid()}`);
           file.name = `data-${uuid()}`;
-          console.log(file);
         } catch (e) {
           Events.dispatchMessage({
             message: "File type not supported. Please try a different file",
@@ -209,30 +208,26 @@ export const uploadImage = async (file, resources, excludeFromLibrary) => {
     return;
   }
 
-  const response = await FileUtilities.upload({ file, routes: resources, excludeFromLibrary });
+  const response = await FileUtilities.upload({ file, routes: resources });
 
   if (Events.hasError(response)) {
     return false;
   }
 
-  delete response.json.data.icon;
-  delete response.json.data.ipfs;
-
-  return response.json;
+  return response;
 };
 
-export const deleteFiles = async (fileCids, fileIds = [], noAlert) => {
-  let cids = Array.isArray(fileCids) ? fileCids : [fileCids];
+export const deleteFiles = async (fileIds = [], noAlert) => {
   let ids = Array.isArray(fileIds) ? fileIds : [fileIds];
 
-  const response = await Actions.deleteBucketItems({ cids, ids });
+  const response = await Actions.deleteFiles({ ids });
 
   if (!noAlert) {
     if (Events.hasError(response)) {
       return false;
     }
 
-    // Events.dispatchMessage({ message: "Files successfully deleted!", status: "INFO" });
+    Events.dispatchMessage({ message: "Files successfully deleted!", status: "INFO" });
 
     return response;
   }
@@ -251,19 +246,8 @@ export const removeFromSlate = async ({ slate, ids }) => {
   return response;
 };
 
-export const addToSlate = async ({ slate, files, fromSlate }) => {
-  let data = files.map((file) => {
-    return {
-      title: file.name || file.title || file.file,
-      ...file,
-    };
-  });
-
-  const addResponse = await Actions.addFileToSlate({
-    slate,
-    data,
-    fromSlate,
-  });
+export const addToSlate = async ({ slate, files }) => {
+  const addResponse = await Actions.addFileToSlate({ slate, files });
 
   if (Events.hasError(addResponse)) {
     return false;
@@ -275,14 +259,8 @@ export const addToSlate = async ({ slate, files, fromSlate }) => {
   return true;
 };
 
-export const addToDataFromSlate = async ({ files }) => {
-  let items = files.map((file) => {
-    return {
-      ownerId: file.ownerId,
-      cid: file.cid,
-    };
-  });
-  let response = await Actions.addCIDToData({ items });
+export const saveCopy = async ({ files }) => {
+  let response = await Actions.saveCopy({ files });
   if (Events.hasError(response)) {
     return false;
   }
@@ -292,22 +270,16 @@ export const addToDataFromSlate = async ({ files }) => {
 };
 
 export const download = (file) => {
-  const filename = file.file || file.name || file.title;
-  let uri;
-  if (file.url) {
-    uri = file.url;
-  } else {
-    uri = Strings.getCIDGatewayURL(file.cid);
-  }
-  Window.saveAs(uri, filename);
+  let uri = Strings.getURLfromCID(file.cid);
+  Window.saveAs(uri, file.filename);
 };
 
 export const downloadZip = async (file) => {
   try {
     const { data } = await Actions.getZipFilePaths(file);
     const filesPaths = data.filesPaths.map((item) => item.replace(`/${file.id}/`, ""));
-    const baseUrl = file.url;
-    const zipFileName = file.file;
+    const baseUrl = Strings.getURLfromCID(file.cid);
+    const zipFileName = file.filename;
 
     let zip = new JSZip();
 
@@ -363,8 +335,8 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
       if (file.type === "application/unity") {
         const { data } = await Actions.getZipFilePaths(file);
         const unityFiles = data.filesPaths.map((item) => ({
-          url: item.replace(`/${file.id}/`, `${file.url || Strings.getCIDGatewayURL(file.cid)}/`),
-          name: item.replace(`/${file.id}/`, `/${file.name}/`),
+          url: item.replace(`/${file.id}/`, `${Strings.getURLfromCID(file.cid)}/`),
+          name: item.replace(`/${file.id}/`, `/${file.filename}/`),
         }));
 
         downloadFiles = downloadFiles.concat(unityFiles);
@@ -372,8 +344,8 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
       }
 
       downloadFiles.push({
-        name: file.file || file.name,
-        url: file.url || Strings.getCIDGatewayURL(file.cid),
+        name: file.filename,
+        url: Strings.getURLfromCID(file.cid),
       });
     }
 
@@ -395,7 +367,7 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
 // export const createSlate = async (data) => {
 //   let response = await Actions.createSlate({
 //     name: data.name,
-//     public: data.public,
+//     isPublic: data.isPublic,
 //     body: data.body,
 //   });
 //   return response;

@@ -19,7 +19,7 @@ function sortObject(obj) {
       });
     }
   }
-  arr.sort(function(a, b) {
+  arr.sort(function (a, b) {
     return b.value - a.value;
   });
   //arr.sort(function(a, b) { a.value.toLowerCase().localeCompare(b.value.toLowerCase()); }); //use this to sort as strings
@@ -27,7 +27,7 @@ function sortObject(obj) {
 }
 
 const run = async () => {
-  const response = await Data.getEveryUser(false);
+  const response = await Data.getEveryUser();
 
   let count = 0;
   let bytes = 0;
@@ -37,7 +37,7 @@ const run = async () => {
     count = count + 1;
 
     let userBytes = 0;
-    user.data.library[0].children.forEach((each) => {
+    user.data.library.forEach((each) => {
       userBytes = each.size + userBytes;
       bytes = each.size + bytes;
     });
@@ -55,7 +55,7 @@ const run = async () => {
   console.log("TOTAL BYTES (CONVERTED)", Strings.bytesToSize(bytes));
 };
 
-run();
+// run();
 
 console.log(`FINISHED: worker-analytics.js`);
 console.log(`          CTRL +C to return to terminal.`);

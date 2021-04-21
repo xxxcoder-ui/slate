@@ -12,7 +12,7 @@ console.log(`RUNNING:  adjust.js`);
 const createGlobalTable = db.schema.createTable("global", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.jsonb("data").nullable();
-  table.timestamp("created_at").notNullable().defaultTo(db.raw("now()"));
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
 Promise.all([createGlobalTable]);

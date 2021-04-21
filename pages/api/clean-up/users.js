@@ -3,7 +3,7 @@ import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
 
 export default async (req, res) => {
-  const users = await Data.getEveryUser(false);
+  const users = await Data.getEveryUser();
   for (let user of users) {
     if (user.data?.library[0]?.children?.length) {
       let library = user.data.library[0].children;

@@ -71,7 +71,7 @@ const STYLES_PATH = css`
 export default class SceneFile extends React.Component {
   render() {
     const cid = this.props.data.cid;
-    const fileURL = Strings.getCIDGatewayURL(cid);
+    const fileURL = Strings.getURLfromCID(cid);
 
     return (
       <div css={STYLES_FLEX}>
@@ -85,7 +85,7 @@ export default class SceneFile extends React.Component {
             <SVG.Dismiss height="24px" />
           </div>
         </div>
-        <SlateMediaObject data={this.props.data} />
+        <SlateMediaObject file={this.props.data} />
       </div>
     );
   }

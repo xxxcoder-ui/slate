@@ -69,7 +69,7 @@ const STYLES_BLUR_CONTAINER = css`
 
 export default class SlateMediaObjectPreview extends React.Component {
   static defaultProps = {
-    charCap: 30,
+    charCap: 70,
   };
 
   state = {
@@ -78,39 +78,48 @@ export default class SlateMediaObjectPreview extends React.Component {
   };
 
   componentDidMount = () => {
-    if (this.props.type && Validations.isPreviewableImage(this.props.type)) {
-      this.loadImage(this.props.url);
-    } else if (this.props.coverImage) {
-      this.loadImage(this.props.coverImage.url);
-    }
+    this.setImage();
   };
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.coverImage?.url !== this.props.coverImage?.url && this.props.coverImage?.url) {
-      this.loadImage(this.props.coverImage.url);
+    if (prevProps.coverImage?.cid !== this.props.coverImage?.cid) {
+      this.setImage();
     }
   };
 
-  loadImage = async (url) => {
-    const img = new Image();
-    img.onload = () => this.setState({ showImage: true });
-    img.src = url;
+  setImage = () => {
+    let type = this.props.file.data.type;
+    let coverImage = this.props.file.data.coverImage;
+    let url;
+    if (type && Validations.isPreviewableImage(type)) {
+      url = Strings.getURLfromCID(this.props.file.cid);
+    } else if (coverImage) {
+      url = Strings.getURLfromCID(coverImage.cid);
+    }
+    if (url) {
+      const img = new Image();
+      img.onload = () => this.setState({ showImage: true });
+      img.src = url;
+    }
   };
 
   render() {
+    const file = this.props.file;
+    const type = this.props.file.data.type;
+    const coverImage = this.props.file.data.coverImage;
     let url;
-    if (this.props.type && Validations.isPreviewableImage(this.props.type)) {
-      url = this.props.url;
-    } else if (this.props.coverImage) {
-      url = this.props.coverImage.url;
+    if (type && Validations.isPreviewableImage(type)) {
+      url = Strings.getURLfromCID(this.props.file.cid);
+    } else if (coverImage) {
+      url = Strings.getURLfromCID(coverImage.cid);
     }
 
     if (url) {
-      let blurhash =
-        this.props.blurhash && isBlurhashValid(this.props.blurhash)
-          ? this.props.blurhash
-          : this.props.coverImage?.blurhash && isBlurhashValid(this.props.coverImage?.blurhash)
-          ? this.props.coverImage?.blurhash
+      const blurhash =
+        file.data.blurhash && isBlurhashValid(file.data.blurhash)
+          ? file.data.blurhash
+          : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash)
+          ? coverImage?.data.blurhash
           : null;
       if (this.state.error) {
         return (
@@ -177,23 +186,22 @@ export default class SlateMediaObjectPreview extends React.Component {
       );
     }
 
-    const title = this.props.title;
-    // this.props.title && this.props.title.length > this.props.charCap
-    //   ? this.props.title.substring(0, this.props.charCap) + "..."
-    //   : this.props.title;
-    let extension = Strings.getFileExtension(this.props.title);
+    let name = (file.data.name || file.filename).substring(0, this.charCap);
+    let extension = Strings.getFileExtension(file.filename);
     if (extension && extension.length) {
       extension = extension.toUpperCase();
     }
     let element = (
       <FileTypeIcon
-        type={this.props.type}
+        type={file.data.type}
         height={this.props.previewPanel ? "26px" : "20px"}
         style={{ color: Constants.system.textGray }}
       />
     );
-
-    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], this.props.title)) {
+    if (!file.filename) {
+      console.log(file);
+    }
+    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], file.filename)) {
       return (
         <article
           css={STYLES_ENTITY}
@@ -203,8 +211,7 @@ export default class SlateMediaObjectPreview extends React.Component {
           }}
         >
           <FontObjectPreview
-            url={this.props.url}
-            cid={this.props.cid}
+            cid={file.cid}
             fallback={
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <img
@@ -216,9 +223,9 @@ export default class SlateMediaObjectPreview extends React.Component {
               </div>
             }
           />
-          {this.props.title && !this.props.iconOnly && !this.props.previewPanel ? (
+          {name && !this.props.iconOnly && !this.props.previewPanel ? (
             <div style={{ position: "absolute", bottom: 16, left: 16, width: "inherit" }}>
-              <div css={STYLES_TITLE}>{title}</div>
+              <div css={STYLES_TITLE}>{name}</div>
               {extension ? (
                 <div
                   css={STYLES_TITLE}
@@ -253,9 +260,9 @@ export default class SlateMediaObjectPreview extends React.Component {
           />
           <div style={{ position: "absolute" }}>{element}</div>
         </div>
-        {this.props.title && !this.props.iconOnly && !this.props.previewPanel ? (
+        {!this.props.iconOnly && !this.props.previewPanel ? (
           <div style={{ position: "absolute", bottom: 16, left: 16, width: "inherit" }}>
-            <div css={STYLES_TITLE}>{title}</div>
+            <div css={STYLES_TITLE}>{name}</div>
             {extension ? (
               <div
                 css={STYLES_TITLE}

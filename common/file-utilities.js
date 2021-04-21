@@ -126,6 +126,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
           });
         }
       };
+      console.log(formData);
       XHR.send(formData);
     });
 
@@ -152,7 +153,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
     res = await _privateUploadMethod(`${generalRoute}${file.name}`, file);
   }
 
-  if (!res || res.error || !res.data) {
+  if (!res?.data || res.error) {
     if (context) {
       await context.setState({
         fileLoading: {
@@ -169,43 +170,16 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
     return !res ? { decorator: "NO_RESPONSE_FROM_SERVER", error: true } : res;
   }
 
-  if (res.data.data.type.startsWith("image/")) {
-    let url = `${Constants.gateways.ipfs}/${res.data.data.cid}`;
+  let item = res.data.data;
+  if (item.data.type.startsWith("image/")) {
+    let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);
-      res.data.data.blurhash = blurhash;
+      item.data.blurhash = blurhash;
     } catch (e) {
       console.log(e);
     }
   }
 
-  if (!excludeFromLibrary) {
-    await Actions.createPendingFiles({ data: res.data });
-  }
-
-  res.data = res.data.data;
-
-  return { file, json: res };
-};
-
-export const uploadToSlate = async ({ responses, slate }) => {
-  let added;
-  let skipped;
-  if (responses && responses.length) {
-    const addResponse = await Actions.addFileToSlate({
-      slate,
-      data: responses.map((res) => {
-        return { title: res.file.name, ...res.json.data };
-      }),
-    });
-
-    if (Events.hasError(addResponse)) {
-      return;
-    }
-
-    added = addResponse.added;
-    skipped = addResponse.skipped;
-  }
-  let message = Strings.formatAsUploadMessage(added, skipped, true);
-  Events.dispatchMessage({ message, status: !added ? null : "INFO" });
+  return item;
 };

@@ -55,7 +55,7 @@ export const FilePreviewBubble = (props) => {
       </div>
       {showPreview && (
         <div css={STYLES_FILE_PREVIEW_BUBBLE}>
-          <img css={STYLES_FILE_PREVIEW} src={Strings.getCIDGatewayURL(props.url)} />
+          <img css={STYLES_FILE_PREVIEW} src={Strings.getURLfromCID(props.cid)} />
         </div>
       )}
     </React.Fragment>

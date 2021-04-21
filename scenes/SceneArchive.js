@@ -32,9 +32,10 @@ export default class SceneArchive extends React.Component {
     dealsLoaded: false,
     tab: 0,
     networkViewer: null,
-    allow_filecoin_directory_listing: this.props.viewer.allow_filecoin_directory_listing,
-    allow_automatic_data_storage: this.props.viewer.allow_automatic_data_storage,
-    allow_encrypted_data_storage: this.props.viewer.allow_encrypted_data_storage,
+    allow_filecoin_directory_listing: this.props.viewer.data.settings
+      ?.allow_filecoin_directory_listing,
+    allow_automatic_data_storage: this.props.viewer.data.settings?.allow_automatic_data_storage,
+    allow_encrypted_data_storage: this.props.viewer.data.settings?.allow_encrypted_data_storage,
   };
 
   async componentDidMount() {
@@ -97,9 +98,11 @@ export default class SceneArchive extends React.Component {
 
     await Actions.updateViewer({
       data: {
-        allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
-        allow_automatic_data_storage: this.state.allow_automatic_data_storage,
-        allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
+        settings: {
+          allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
+          allow_automatic_data_storage: this.state.allow_automatic_data_storage,
+          allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
+        },
       },
     });
 

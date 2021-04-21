@@ -231,12 +231,6 @@ const STYLES_INPUT = css`
   background: ${Constants.system.white};
   color: ${Constants.system.black};
 
-  :focus {
-    outline: 0;
-    border: 0;
-    box-shadow: 0 0 0 1px ${Constants.system.bgBlue} inset;
-  }
-
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: ${Constants.system.darkGray};
@@ -255,11 +249,8 @@ const STYLES_INPUT = css`
 `;
 
 const STYLES_INPUT_DARK = css`
-  ${INPUT_STYLES};
+  ${STYLES_INPUT};
 
-  width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   box-shadow: 0 0 0 1px #3c3c3c inset;
   background: ${Constants.system.blurBlack};
   color: ${Constants.system.white};
@@ -479,6 +470,9 @@ export const Tag = ({
   const _handleKeyPress = (e) => {
     if (e.key === "Enter" && value.length) {
       _handleAdd(value);
+    }
+    if (!open) {
+      setOpen(true);
     }
   };
 

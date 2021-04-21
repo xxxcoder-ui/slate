@@ -6,9 +6,8 @@ export const getServerSideProps = async ({ query }) => {
   return {
     props: {
       viewer: query.viewer,
-      analytics: query.analytics,
-      mobile: query.mobile,
-      mac: query.mac,
+      isMobile: query.isMobile,
+      isMac: query.isMac,
       resources: query.resources,
     },
   };
@@ -19,9 +18,8 @@ export default class ApplicationPage extends React.Component {
     return (
       <Application
         viewer={this.props.viewer}
-        analytics={this.props.analytics}
-        mobile={this.props.mobile}
-        mac={this.props.mac}
+        isMobile={this.props.isMobile}
+        isMac={this.props.isMac}
         resources={this.props.resources}
       />
     );

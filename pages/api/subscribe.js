@@ -8,7 +8,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_SUBSCRIBE", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -16,11 +16,11 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).send({ decorator: "SERVER_SUBSCRIBE_USER_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_SUBSCRIBE_USER_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (!req.body.data || (!req.body.data.userId && !req.body.data.slateId)) {
@@ -77,39 +77,11 @@ export default async (req, res) => {
     }
   }
 
-  const existingResponse = await Data.getSubscriptionById({
-    subscriberUserId: user.id,
+  const existingResponse = await Data.getSubscription({
+    ownerId: user.id,
     slateId: targetSlate ? targetSlate.id : null,
     userId: targetUser ? targetUser.id : null,
   });
-
-  if (targetUser) {
-    Monitor.subscribeUser({
-      userId: user.id,
-      data: {
-        actorUserId: user.id,
-        context: {
-          username: user.username,
-          targetUsername: targetUser.username,
-          targetUserId: targetUser.id,
-        },
-      },
-    });
-  }
-
-  if (targetSlate) {
-    Monitor.subscribeSlate({
-      slateId: targetSlate.id,
-      data: {
-        actorUserId: user.id,
-        context: {
-          slateId: targetSlate.id,
-          slatename: targetSlate.slatename,
-          username: user.username,
-        },
-      },
-    });
-  }
 
   if (existingResponse && existingResponse.error) {
     return res.status(500).send({
@@ -118,48 +90,61 @@ export default async (req, res) => {
     });
   }
 
+  let response;
+
   // NOTE(jim): If it exists, we unsubscribe instead.
   if (existingResponse) {
-    const unsubscribeResponse = await Data.deleteSubscriptionById({
+    response = await Data.deleteSubscriptionById({
       id: existingResponse.id,
     });
 
-    if (!unsubscribeResponse) {
-      return res.status(404).send({ decorator: "SERVER_UNSUBSCRIBE_NOT_FOUND", error: true });
+    if (!response) {
+      return res.status(404).send({ decorator: "SERVER_UNSUBSCRIBE_FAILED", error: true });
     }
 
-    if (unsubscribeResponse.error) {
-      return res.status(500).send({ decorator: "SERVER_UNSUBSCRIBE_ERROR", error: true });
+    if (response.error) {
+      return res.status(500).send({ decorator: "SERVER_UNSUBSCRIBE_FAILED", error: true });
+    }
+  } else {
+    response = await Data.createSubscription({
+      ownerId: user.id,
+      slateId: targetSlate ? targetSlate.id : null,
+      userId: targetUser ? targetUser.id : null,
+    });
+
+    if (!response) {
+      return res.status(404).send({ decorator: "SERVER_SUBSCRIBE_FAILED", error: true });
     }
 
-    ViewerManager.hydratePartialSubscriptions({ subscriptions: true }, user.id);
-
-    return res.status(200).send({ decorator: "SERVER_UNSUBSCRIBE", data: unsubscribeResponse });
+    if (response.error) {
+      return res.status(500).send({ decorator: "SERVER_SUBSCRIBE_FAILED", error: true });
+    }
   }
 
-  const subscribeResponse = await Data.createSubscription({
-    subscriberUserId: user.id,
-    slateId: targetSlate ? targetSlate.id : null,
-    userId: targetUser ? targetUser.id : null,
-  });
+  if (targetUser) {
+    ViewerManager.hydratePartial(id, { following: true });
 
-  if (!subscribeResponse) {
-    return res.status(404).send({ decorator: "SERVER_SUBSCRIBE_NOT_FOUND", error: true });
+    if (!existingResponse) {
+      Monitor.subscribeUser({
+        user,
+        targetUser,
+      });
+    }
   }
 
-  if (subscribeResponse.error) {
-    return res.status(500).send({ decorator: "SERVER_SUBSCRIBE_ERROR", error: true });
-  }
+  if (targetSlate) {
+    ViewerManager.hydratePartial(id, { subscriptions: true });
 
-  ViewerManager.hydratePartialSubscriptions({ subscriptions: true }, user.id);
+    if (!existingResponse) {
+      Monitor.subscribeSlate({
+        user,
+        targetSlate,
+      });
+    }
+  }
 
   return res.status(200).send({
     decorator: "SERVER_SUBSCRIBE",
-    data: {
-      ...subscribeResponse,
-      owner: Serializers.user(user),
-      slate: targetSlate ? Serializers.slate(targetSlate) : null,
-      user: targetUser ? Serializers.user(targetUser) : null,
-    },
+    data: response,
   });
 };

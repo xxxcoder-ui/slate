@@ -5,16 +5,16 @@
 export const getPublicAndPrivateFiles = ({ viewer }) => {
   let publicFileIds = [];
   for (let slate of viewer.slates) {
-    if (slate.data.public) {
-      publicFileIds.push(...slate.data.objects.map((obj) => obj.id));
+    if (slate.isPublic) {
+      publicFileIds.push(...slate.objects.map((obj) => obj.id));
     }
   }
 
   let publicFiles = [];
   let privateFiles = [];
-  let library = viewer.library[0]?.children || [];
+  let library = viewer.library || [];
   for (let file of library) {
-    if (file.public || publicFileIds.includes(file.id)) {
+    if (file.isPublic || publicFileIds.includes(file.id)) {
       publicFiles.push(file);
     } else {
       privateFiles.push(file);
@@ -33,4 +33,11 @@ export const generateNumberByStep = ({ min, max, step = 1 }) => {
   return numbers[randomIndex];
 };
 
-export const endsWithAny = (options, string) => options.some((option) => string.endsWith(option));
+export const endsWithAny = (options, string) =>
+  options.some((option) => {
+    if (string) {
+      return string.endsWith(option);
+    } else {
+      return false;
+    }
+  });

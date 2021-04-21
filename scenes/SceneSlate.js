@@ -19,7 +19,7 @@ import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import ProcessedText from "~/components/core/ProcessedText";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
-import CircleButtonGray from "~/components/core/CircleButtonGray";
+import SquareButtonGray from "~/components/core/SquareButtonGray";
 import EmptyState from "~/components/core/EmptyState";
 
 const STYLES_LOADER = css`
@@ -58,6 +58,7 @@ const STYLES_MOBILE_ONLY = css`
 
 export default class SceneSlate extends React.Component {
   state = {
+    loading: true,
     notFound: false,
     accessDenied: false,
   };
@@ -67,7 +68,7 @@ export default class SceneSlate extends React.Component {
   };
 
   componentDidUpdate = async (prevProps) => {
-    if (this.props.data?.id && prevProps.data?.id && this.props.data.id !== prevProps.data.id) {
+    if (!this.props.data?.objects && !this.state.notFound) {
       await this.fetchSlate();
     } else if (this.props.page !== prevProps.page) {
       this.openCarouselToItem();
@@ -125,49 +126,51 @@ export default class SceneSlate extends React.Component {
         response = await Actions.getSerializedSlate(query);
       }
       if (response?.decorator == "SLATE_PRIVATE_ACCESS_DENIED") {
-        this.setState({ accessDenied: true });
+        this.setState({ accessDenied: true, loading: false });
         return;
       }
       if (Events.hasError(response)) {
-        this.setState({ notFound: true });
+        this.setState({ notFound: true, loading: false });
         return;
       }
-      slate = response.data;
+      slate = response.slate;
       window.history.replaceState(
         { ...window.history.state, data: slate },
         "Slate",
-        `/${response.data.user.username}/${response.data.slatename}`
+        `/${slate.user.username}/${slate.slatename}`
       );
     }
-
-    this.props.onUpdateData({ data: slate }, this.openCarouselToItem);
+    this.props.onUpdateData(slate, () => {
+      this.setState({ loading: false });
+      this.openCarouselToItem();
+    });
   };
 
   openCarouselToItem = () => {
-    let slate = this.props.data;
-    let index = -1;
-    let page = this.props.page;
-    if (page?.fileId || page?.cid || page?.index || !Strings.isEmpty(page.cid)) {
-      if (page?.index) {
-        index = page.index;
-      } else {
-        for (let i = 0; i < slate.data.objects.length; i++) {
-          let obj = slate.data.objects[i];
-          if (
-            (obj.cid && (obj.cid === page.cid || obj.cid === page?.cid)) ||
-            (obj.id && obj.id === page?.fileId)
-          ) {
-            index = i;
-            break;
-          }
-        }
-      }
+    if (!this.props.data?.objects?.length) {
+      return;
+    }
+    let objects = this.props.data.objects;
+
+    const { cid, fileId, index } = this.props.page;
+
+    if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
+      return;
     }
 
-    if (index !== -1) {
+    let foundIndex = -1;
+    if (index) {
+      foundIndex = index;
+    } else if (cid) {
+      foundIndex = objects.findIndex((object) => object.cid === cid);
+    } else if (fileId) {
+      foundIndex = objects.findIndex((object) => object.id === fileId);
+    }
+
+    if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
       Events.dispatchCustomEvent({
         name: "slate-global-open-carousel",
-        detail: { index },
+        detail: { index: foundIndex },
       });
     }
   };
@@ -187,7 +190,7 @@ export default class SceneSlate extends React.Component {
         </ScenePage>
       );
     }
-    if (!this.props.data?.data?.objects) {
+    if (this.state.loading) {
       return (
         <ScenePage>
           <div css={STYLES_LOADER}>
@@ -195,8 +198,10 @@ export default class SceneSlate extends React.Component {
           </div>
         </ScenePage>
       );
+    } else if (this.props.data?.id) {
+      return <SlatePage {...this.props} key={this.props.data.id} current={this.props.data} />;
     }
-    return <SlatePage {...this.props} current={this.props.data} />;
+    return null;
   }
 }
 
@@ -208,9 +213,9 @@ class SlatePage extends React.Component {
   state = {
     ...(this.props.current, this.props.viewer),
     editing: false,
-    isFollowing: !!this.props.viewer.subscriptions.filter((subscription) => {
-      return subscription.target_slate_id === this.props.current.id;
-    }).length,
+    isSubscribed: this.props.viewer.subscriptions.some((subscription) => {
+      return subscription.id === this.props.current.id;
+    }),
   };
 
   componentDidMount() {
@@ -224,7 +229,7 @@ class SlatePage extends React.Component {
       return;
     }
 
-    const index = this.props.current.data.objects.findIndex((object) => object.cid === cid);
+    const index = this.props.current.objects.findIndex((object) => object.cid === cid);
     if (index !== -1) {
       Events.dispatchCustomEvent({
         name: "slate-global-open-carousel",
@@ -246,56 +251,48 @@ class SlatePage extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.viewer.subscriptions !== prevProps.viewer.subscriptions) {
       this.setState({
-        isFollowing: !!this.props.viewer.subscriptions.filter((subscription) => {
-          return subscription.target_slate_id === this.props.current.id;
-        }).length,
+        isSubscribed: this.props.viewer.subscriptions.some((subscription) => {
+          return subscription.id === this.props.current.id;
+        }),
       });
     }
   }
 
-  _handleFollow = () => {
-    this.setState({ isFollowing: !this.state.isFollowing });
-    Actions.createSubscription({
-      slateId: this.props.current.id,
+  _handleSubscribe = () => {
+    this.setState({ isSubscribed: !this.state.isSubscribed }, () => {
+      Actions.createSubscription({
+        slateId: this.props.current.id,
+      });
     });
   };
 
   _handleSaveLayout = async (layouts, autoSave) => {
-    await this._handleSave(null, null, layouts, autoSave);
-  };
-
-  _handleSave = async (e, objects, layouts, autoSave = false, preview) => {
-    let layoutOnly = layouts && !objects;
-
-    let data = {};
-    if (objects) {
-      data.objects = objects;
-    }
-    if (layouts) {
-      data.layouts = layouts;
-    }
-    if (preview) {
-      let slates = this.props.viewer.slates;
-      let slateId = this.props.current.id;
-      for (let slate of slates) {
-        if (slate.id === slateId) {
-          slate.data.preview = preview;
-          break;
-        }
-      }
-      this.props.onUpdateViewer({ slates });
-      data.preview = preview;
-    }
-    const response = await Actions.updateSlate({
+    const response = await Actions.updateSlateLayout({
       id: this.props.current.id,
-      layoutOnly,
-      autoSave,
-      data,
+      layouts,
     });
 
     if (!autoSave) {
       Events.hasError(response);
     }
+  };
+
+  _handleSavePreview = async (preview) => {
+    let updateObject = { id: this.props.current.id, data: { preview } };
+
+    let slates = this.props.viewer.slates;
+    let slateId = this.props.current.id;
+    for (let slate of slates) {
+      if (slate.id === slateId) {
+        slate.data.preview = preview;
+        break;
+      }
+    }
+    this.props.onUpdateViewer({ slates });
+
+    const response = await Actions.updateSlate(updateObject);
+
+    Events.hasError(response);
   };
 
   _handleSelect = (index) =>
@@ -332,9 +329,9 @@ class SlatePage extends React.Component {
     }, 1000);
   };
 
-  _handleDownloadFiles = () => {
+  _handleDownload = () => {
     const slateName = this.props.current.data.name;
-    const slateFiles = this.props.current.data.objects;
+    const slateFiles = this.props.current.objects;
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,
       name: `${slateName}.zip`,
@@ -345,39 +342,34 @@ class SlatePage extends React.Component {
   render() {
     const { user, data } = this.props.current;
     const { body = "", preview } = data;
-    let objects = this.props.current.data.objects;
+    let objects = this.props.current.objects;
     let layouts = this.props.current.data.layouts;
-    const isPublic = data.public;
-    const isOwner = this.props.current.data.ownerId === this.props.viewer.id;
-    const isSlateEmpty = this.props.current.data.objects.length === 0;
+    const isPublic = this.props.current.isPublic;
+    const isOwner = this.props.current.ownerId === this.props.viewer.id;
     const tags = data.tags;
 
     let actions = isOwner ? (
       <span>
-        {!isSlateEmpty && (
-          <CircleButtonGray onClick={this._handleDownloadFiles} style={{ marginRight: 16 }}>
-            <SVG.Download height="16px" />
-          </CircleButtonGray>
-        )}
-        <CircleButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
+        <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
+          <SVG.Download height="16px" />
+        </SquareButtonGray>
+        <SquareButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
           <SVG.Plus height="16px" />
-        </CircleButtonGray>
-        <CircleButtonGray onClick={this._handleShowSettings}>
+        </SquareButtonGray>
+        <SquareButtonGray onClick={this._handleShowSettings}>
           <SVG.Settings height="16px" />
-        </CircleButtonGray>
+        </SquareButtonGray>
       </span>
     ) : (
       <div style={{ display: `flex` }}>
-        {!isSlateEmpty && (
-          <ButtonPrimary style={{ marginRight: "16px" }} onClick={this._handleDownloadFiles}>
-            Download
-          </ButtonPrimary>
-        )}
-        <div onClick={this._handleFollow}>
-          {this.state.isFollowing ? (
-            <ButtonSecondary>Unfollow</ButtonSecondary>
+        <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
+          <SVG.Download height="16px" />
+        </SquareButtonGray>
+        <div onClick={this._handleSubscribe}>
+          {this.state.isSubscribed ? (
+            <ButtonSecondary>Unsubscribe</ButtonSecondary>
           ) : (
-            <ButtonPrimary>Follow</ButtonPrimary>
+            <ButtonPrimary>Subscribe</ButtonPrimary>
           )}
         </div>
       </div>
@@ -387,7 +379,7 @@ class SlatePage extends React.Component {
         <ScenePageHeader
           wide
           title={
-            user ? (
+            user && !isOwner ? (
               <span>
                 <span
                   onClick={() =>
@@ -437,11 +429,11 @@ class SlatePage extends React.Component {
               objects={objects}
               current={this.props.current}
               onAction={this.props.onAction}
-              mobile={this.props.mobile}
+              isMobile={this.props.isMobile}
               isOwner={isOwner}
               external={this.props.external}
             />
-            {this.props.mobile ? (
+            {this.props.isMobile ? (
               <SlateLayoutMobile
                 isOwner={isOwner}
                 items={objects}
@@ -458,11 +450,10 @@ class SlatePage extends React.Component {
                   slateId={this.props.current.id}
                   layout={layouts && layouts.ver === "2.0" ? layouts.layout || [] : null}
                   onSaveLayout={this._handleSaveLayout}
-                  onSave={this._handleSave}
                   isOwner={isOwner}
                   fileNames={layouts && layouts.ver === "2.0" ? layouts.fileNames : false}
                   preview={preview}
-                  onSavePreview={(preview) => this._handleSave(null, null, null, false, preview)}
+                  onSavePreview={this._handleSavePreview}
                   items={objects}
                   resources={this.props.resources}
                   onSelect={this._handleSelect}

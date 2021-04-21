@@ -41,7 +41,7 @@ export default class SidebarFileStorageDeal extends React.Component {
   };
 
   async componentDidMount() {
-    if (!this.props.viewer.settings_deals_auto_approve) {
+    if (!this.props.viewer.settings?.settings_deals_auto_approve) {
       return null;
     }
 

@@ -42,7 +42,7 @@ const STYLES_IMAGE_BOX = css`
 
 const STYLES_TEXT_AREA = css`
   position: absolute;
-  bottom: 0px;
+  top: 16px;
   left: 0px;
 `;
 
@@ -61,14 +61,12 @@ const STYLES_TITLE = css`
 const STYLES_SECONDARY = css`
   ${STYLES_TITLE}
   font-size: ${Constants.typescale.lvlN1};
-  margin-bottom: 16px;
   width: 100%;
 `;
 
 const STYLES_SECONDARY_HOVERABLE = css`
   ${STYLES_SECONDARY}
   padding: 8px 16px;
-  margin-bottom: 8px;
 
   :hover {
     color: ${Constants.system.brand} !important;
@@ -78,15 +76,15 @@ const STYLES_SECONDARY_HOVERABLE = css`
 const STYLES_GRADIENT = css`
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 0%,
     rgba(0, 0, 0, 0.2) 26.56%,
-    rgba(0, 0, 0, 0.3) 100%
+    rgba(0, 0, 0, 0) 100%
   );
   backdrop-filter: blur(2px);
   width: 100%;
   height: 72px;
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   left: 0px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -114,43 +112,38 @@ class ActivitySquare extends React.Component {
   render() {
     const item = this.props.item;
     const size = this.props.size;
-    const isImage = Validations.isPreviewableImage(item.file.type);
+    const isImage =
+      Validations.isPreviewableImage(item.file.data.type) || !!item.file.data.coverImage;
     return (
       <div
         css={STYLES_IMAGE_BOX}
         style={{ width: size, height: size }}
-        onMouseEnter={isImage ? () => this.setState({ showText: true }) : () => {}}
-        onMouseLeave={isImage ? () => this.setState({ showText: false }) : () => {}}
+        onMouseEnter={() => this.setState({ showText: true })}
+        onMouseLeave={() => this.setState({ showText: false })}
       >
         <SlateMediaObjectPreview
+          file={item.file}
           centeredImage
-          iconOnly
-          blurhash={item.file.blurhash}
-          url={item.file.url}
-          title={item.file.title || item.file.name}
-          type={item.file.type}
+          // iconOnly
           style={{ border: "none" }}
-          cid={item.file.cid}
           imageStyle={{ border: "none" }}
         />
-        {isImage && (this.state.showText || this.props.mobile) ? (
-          <div css={STYLES_GRADIENT} />
-        ) : null}
-        {this.state.showText || !isImage || this.props.mobile ? (
+        {this.state.showText || this.props.isMobile ? <div css={STYLES_GRADIENT} /> : null}
+        {this.state.showText || this.props.isMobile ? (
           <div css={STYLES_TEXT_AREA} style={{ width: this.props.size }}>
-            {isImage ? null : (
+            {/* {isImage ? null : (
               <div
                 css={STYLES_TITLE}
                 style={{
                   color: Constants.system.textGray,
                 }}
               >
-                {item.file.title || item.file.name}
+                {item.file.data.name || item.file.filename}
               </div>
-            )}
-            <div
+            )} */}
+            <span
               style={{
-                color: isImage ? Constants.system.white : Constants.system.textGrayLight,
+                color: Constants.system.white,
               }}
               css={this.props.onClick ? STYLES_SECONDARY_HOVERABLE : STYLES_SECONDARY}
               onClick={(e) => {
@@ -158,14 +151,12 @@ class ActivitySquare extends React.Component {
                 this.props.onClick();
               }}
             >
-              {isImage ? (
-                <SVG.ArrowDownLeft
-                  height="10px"
-                  style={{ transform: "scaleX(-1)", marginRight: 4 }}
-                />
-              ) : null}
+              <SVG.ArrowDownLeft
+                height="10px"
+                style={{ transform: "scaleX(-1)", marginRight: 4 }}
+              />
               {item.slate.data.name || item.slate.slatename}
-            </div>
+            </span>
           </div>
         ) : null}
       </div>
@@ -175,25 +166,21 @@ class ActivitySquare extends React.Component {
 
 const ActivityRectangle = ({ item, width, height }) => {
   let file;
-  for (let obj of item.slate?.data?.objects || []) {
+  for (let obj of item.slate?.objects || []) {
     if (Validations.isPreviewableImage(obj.type) || obj.coverImage) {
       file = obj;
     }
   }
-  let numObjects = item.slate?.data?.objects?.length || 0;
+  let numObjects = item.slate?.objects?.length || 0;
   return (
     <div css={STYLES_IMAGE_BOX} style={{ width, height }}>
       {file ? (
         <SlateMediaObjectPreview
+          file={file}
           centeredImage
           iconOnly
-          blurhash={file.blurhash}
-          url={file.url}
-          title={file.title || file.name}
-          type={file.type}
           style={{ border: "none" }}
           imageStyle={{ border: "none" }}
-          coverImage={file.coverImage}
         />
       ) : null}
       <div css={STYLES_GRADIENT} />
@@ -271,59 +258,45 @@ export default class SceneActivity extends React.Component {
   };
 
   fetchActivityItems = async (update = false) => {
+    const isExplore = this.props.tab === 1;
     this.setState({ loading: "loading" });
-    let activity =
-      this.props.tab === 0 ? this.props.viewer.activity || [] : this.props.viewer.explore || [];
-    let response;
+    let activity = isExplore ? this.props.viewer.explore || [] : this.props.viewer.activity || [];
+
+    let requestObject = {};
     if (activity.length) {
       if (update) {
-        //NOTE(martina): fetch any new updates since last fetched
-        response = await Actions.getActivity({
-          explore: this.props.tab === 1,
-          latestTimestamp: activity[0].created_at,
-        });
-        if (Events.hasError(response)) {
-          this.setState({ loading: "failed" });
-          return;
-        }
-        if (!response.activity.length) {
-          this.setState({ loading: false });
-          return;
-        }
-        activity.unshift(...response.activity);
-        this.count = 0;
-        activity = this.formatActivity(activity);
+        requestObject.latestTimestamp = activity[0].createdAt;
       } else {
-        //NOTE(martina): pagination -- fetch the next 100 events upon scrolling to the bottom
-        response = await Actions.getActivity({
-          explore: this.props.tab === 1,
-          earliestTimestamp: activity[activity.length - 1].created_at,
-        });
-        if (Events.hasError(response)) {
-          this.setState({ loading: "failed" });
-          return;
-        }
-        if (!response.activity.length) {
-          this.setState({ loading: false });
-          return;
-        }
-        let newItems = this.formatActivity(response.activity) || [];
-        activity.push(...newItems);
+        requestObject.earliestTimestamp = activity[activity.length - 1].createdAt;
       }
-    } else {
-      //NOTE(martina): fetch the most recent 100 events
-      response = await Actions.getActivity({ explore: this.props.tab === 1 });
-      if (Events.hasError(response)) {
-        this.setState({ loading: false });
-        return;
-      }
-      if (!response.activity.length) {
-        this.setState({ loading: false });
-        return;
-      }
-      this.count = 0;
-      activity = this.formatActivity(response.activity);
     }
+
+    let response;
+    if (isExplore) {
+      response = await Actions.getExplore(requestObject);
+    } else {
+      requestObject.following = this.props.viewer.following.map((item) => item.id);
+      requestObject.subscriptions = this.props.viewer.subscriptions.map((item) => item.id);
+
+      response = await Actions.getActivity(requestObject);
+    }
+
+    if (Events.hasError(response)) {
+      this.setState({ loading: "failed" });
+      return;
+    }
+
+    let newItems = response.activity || response.explore;
+
+    if (update) {
+      activity.unshift(...newItems);
+      this.counter = 0;
+      activity = this.formatActivity(activity);
+    } else {
+      newItems = this.formatActivity(newItems);
+      activity.push(...newItems);
+    }
+
     if (this.props.tab === 0) {
       this.props.onUpdateViewer({ activity: activity });
     } else {
@@ -333,30 +306,43 @@ export default class SceneActivity extends React.Component {
   };
 
   formatActivity = (userActivity) => {
-    //NOTE(martina): rearrange order to always get an even row of 6 squares
-    let activity = userActivity || [];
-    for (let i = 0; i < activity.length; i++) {
-      let item = activity[i];
-      if (item.data.type === "SUBSCRIBED_CREATE_SLATE") {
-        this.counter += 2;
-      } else if (item.data.type === "SUBSCRIBED_ADD_TO_SLATE") {
-        this.counter += 1;
+    let activity = [];
+    for (let item of userActivity) {
+      if (item.slate && !item.slate.isPublic) {
+        continue;
       }
-      if (this.counter === 6) {
-        this.counter = 0;
-      } else if (this.counter > 6) {
-        let j = i - 1;
-        while (activity[j].data.type !== "SUBSCRIBED_ADD_TO_SLATE") {
-          j -= 1;
-        }
-        let temp = activity[j];
-        activity[j] = activity[i];
-        activity[i] = temp;
-        this.counter = 0;
-        i -= 1;
+      if (item.type === "CREATE_SLATE_OBJECT" && item.slate && item.file) {
+        activity.push(item);
+      } else if (item.type === "CREATE_SLATE" && item.slate) {
+        activity.push(item);
       }
     }
-    return activity;
+    return activity; //NOTE(martina): because now it's only things of CREATE_SLATE_OBJECT type, so all square and don't need reordering
+    //NOTE(martina): rearrange order to always get an even row of 6 squares
+    //TODO(martina): improve this. will fail if there are no more squares left to "swap" with at the end, and you'll end up wtih an empty space
+    // let activity = userActivity || [];
+    // for (let i = 0; i < activity.length; i++) {
+    //   let item = activity[i];
+    //   if (item.type === "CREATE_SLATE") {
+    //     this.counter += 2;
+    //   } else if (item.type === "CREATE_SLATE_OBJECT") {
+    //     this.counter += 1;
+    //   }
+    //   if (this.counter === 6) {
+    //     this.counter = 0;
+    //   } else if (this.counter > 6) {
+    //     let j = i - 1;
+    //     while (activity[j].type !== "CREATE_SLATE_OBJECT") {
+    //       j -= 1;
+    //     }
+    //     let temp = activity[j];
+    //     activity[j] = activity[i];
+    //     activity[i] = temp;
+    //     this.counter = 0;
+    //     i -= 1;
+    //   }
+    // }
+    // return activity;
   };
 
   _handleCreateSlate = () => {
@@ -379,7 +365,7 @@ export default class SceneActivity extends React.Component {
   };
 
   getItemIndexById = (items, item) => {
-    const id = item.data?.context?.file?.id;
+    const id = item.file?.id;
     return items.findIndex((i) => i.id === id);
   };
 
@@ -387,12 +373,12 @@ export default class SceneActivity extends React.Component {
     let activity =
       this.props.tab === 0 ? this.props.viewer.activity || [] : this.props.viewer.explore || [];
     let items = activity
-      .filter((item) => item.data.type === "SUBSCRIBED_ADD_TO_SLATE")
+      .filter((item) => item.type === "CREATE_SLATE_OBJECT")
       .map((item) => {
         return {
-          ...item.data.context.file,
-          slate: item.data.context.slate,
-          owner: item.data.context.user.username,
+          ...item.file,
+          slate: item.slate,
+          owner: item.owner?.username,
         };
       });
 
@@ -400,7 +386,7 @@ export default class SceneActivity extends React.Component {
       <ScenePage>
         <ScenePageHeader
           title={
-            this.props.mobile ? (
+            this.props.isMobile ? (
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
@@ -442,13 +428,14 @@ export default class SceneActivity extends React.Component {
           viewer={this.props.viewer}
           objects={items}
           onAction={this.props.onAction}
-          mobile={this.props.mobile}
+          isMobile={this.props.isMobile}
+          isOwner={false}
         />
         {activity.length ? (
           <div>
             <div css={STYLES_ACTIVITY_GRID}>
               {activity.map((item, index) => {
-                if (item.data.type === "SUBSCRIBED_CREATE_SLATE") {
+                if (item.type === "CREATE_SLATE") {
                   return (
                     <span
                       key={item.id}
@@ -456,32 +443,32 @@ export default class SceneActivity extends React.Component {
                         this.props.onAction({
                           type: "NAVIGATE",
                           value: "NAV_SLATE",
-                          data: { decorator: "SLATE", ...item.data.context.slate },
+                          data: { decorator: "SLATE", ...item.slate },
                         })
                       }
                     >
                       <ActivityRectangle
                         width={
-                          this.props.mobile ? this.state.imageSize : this.state.imageSize * 2 + 20
+                          this.props.isMobile ? this.state.imageSize : this.state.imageSize * 2 + 20
                         }
                         height={this.state.imageSize}
-                        item={item.data.context}
+                        item={item}
                       />
                     </span>
                   );
-                } else if (item.data.type === "SUBSCRIBED_ADD_TO_SLATE") {
+                } else if (item.type === "CREATE_SLATE_OBJECT") {
                   return (
                     <span
                       key={item.id}
                       onClick={
-                        this.props.mobile
+                        this.props.isMobile
                           ? () => {
                               this.props.onAction({
                                 type: "NAVIGATE",
                                 value: "NAV_SLATE",
                                 data: {
                                   decorator: "SLATE",
-                                  ...item.data.context.slate,
+                                  ...item.slate,
                                 },
                               });
                             }
@@ -494,10 +481,10 @@ export default class SceneActivity extends React.Component {
                     >
                       <ActivitySquare
                         size={this.state.imageSize}
-                        item={item.data.context}
-                        mobile={this.props.mobile}
+                        item={item}
+                        isMobile={this.props.isMobile}
                         onClick={
-                          this.props.mobile
+                          this.props.isMobile
                             ? () => {}
                             : () => {
                                 this.props.onAction({
@@ -505,7 +492,7 @@ export default class SceneActivity extends React.Component {
                                   value: "NAV_SLATE",
                                   data: {
                                     decorator: "SLATE",
-                                    ...item.data.context.slate,
+                                    ...item.slate,
                                   },
                                 });
                               }
@@ -537,30 +524,4 @@ export default class SceneActivity extends React.Component {
       </ScenePage>
     );
   }
-}
-
-{
-  /* <React.Fragment>
-            <System.P>When you're ready, create a slate!</System.P>
-            <br />
-            <System.ButtonPrimary onClick={this._handleCreateSlate}>
-              Create a slate
-            </System.ButtonPrimary>
-            <video
-              css={STYLES_VIDEO_BIG}
-              autoPlay
-              loop
-              muted
-              src="https://slate.textile.io/ipfs/bafybeienjmql6lbtsaz3ycon3ttliohcl7qbquwvny43lhcodky54z65cy"
-              type="video/m4v"
-              playsInline
-              style={{
-                backgroundImage: `url('https://slate.textile.io/ipfs/bafybeienjmql6lbtsaz3ycon3ttliohcl7qbquwvny43lhcodky54z65cy')`,
-                borderRadius: `4px`,
-                width: `100%`,
-                boxShadow: `0px 10px 50px 20px rgba(0, 0, 0, 0.1)`,
-                backgroundSize: `cover`,
-              }}
-            />
-          </React.Fragment> */
 }

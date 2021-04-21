@@ -6,6 +6,9 @@ import * as Serializers from "~/node_common/serializers";
 import * as Strings from "~/common/strings";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as NodeLogging from "~/node_common/node-logging";
+import * as Window from "~/common/window";
+
+import WebSocket from "ws";
 
 const websocketSend = async (type, data) => {
   if (Strings.isEmpty(Environment.PUBSUB_SECRET)) {
@@ -14,7 +17,6 @@ const websocketSend = async (type, data) => {
 
   const ws = Websocket.get();
   if (!ws) {
-    console.log("no websocket. creating now...");
     ws = Websocket.create();
     await Window.delay(2000);
   }
@@ -25,13 +27,15 @@ const websocketSend = async (type, data) => {
   );
 
   // NOTE(jim): Only allow this to be passed around encrypted.
-  ws.send(
-    JSON.stringify({
-      type,
-      iv: encryptedData.iv,
-      data: encryptedData.hex,
-    })
-  );
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(
+      JSON.stringify({
+        type,
+        iv: encryptedData.iv,
+        data: encryptedData.hex,
+      })
+    );
+  }
 };
 
 export const updateUser = async (user, action) => {
@@ -40,22 +44,59 @@ export const updateUser = async (user, action) => {
 
   NodeLogging.log(`Search is updating user ...`);
 
-  const data = {
-    data: { type: action, data: { ...Serializers.user(user), type: "USER" } },
+  let data;
+  if (Array.isArray(user)) {
+    data = user.map((item) => {
+      return { ...Serializers.sanitizeUser(item), type: "USER" };
+    });
+  } else {
+    data = { ...Serializers.sanitizeUser(user), type: "USER" };
+  }
+
+  websocketSend("UPDATE", {
     id: "LENS",
-  };
-  websocketSend("UPDATE", data);
+    data: { action, data },
+  });
 };
 
 export const updateSlate = async (slate, action) => {
-  console.log("UPDATE SEARCH for slate / files in slate");
+  console.log("UPDATE SEARCH for slate");
   if (!slate || !action) return;
 
   NodeLogging.log(`Search is updating slate ...`);
 
-  const data = {
+  let data;
+  if (Array.isArray(slate)) {
+    data = slate.map((item) => {
+      return { ...Serializers.sanitizeSlate(item), type: "SLATE" };
+    });
+  } else {
+    data = { ...Serializers.sanitizeSlate(slate), type: "SLATE" };
+  }
+
+  websocketSend("UPDATE", {
     id: "LENS",
-    data: { type: action, data: { ...Serializers.slate(slate), type: "SLATE" } },
-  };
-  websocketSend("UPDATE", data);
+    data: { action, data },
+  });
+};
+
+export const updateFile = async (file, action) => {
+  console.log("UPDATE SEARCH for file");
+  if (!file || !action) return;
+
+  NodeLogging.log(`Search is updating file ...`);
+
+  let data;
+  if (Array.isArray(file)) {
+    data = file.map((item) => {
+      return { ...Serializers.sanitizeFile(item), type: "FILE" };
+    });
+  } else {
+    data = { ...Serializers.sanitizeFile(file), type: "FILE" };
+  }
+
+  websocketSend("UPDATE", {
+    id: "LENS",
+    data: { action, data },
+  });
 };

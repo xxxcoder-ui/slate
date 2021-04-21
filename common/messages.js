@@ -1,354 +1,190 @@
 export const error = {
-  //Slate Create
-  SERVER_FIND_USER_CREATE_SLATE: "There seems to be an issue with your account",
-  SERVER_FIND_USER_CREATE_SLATE_USER_NOT_FOUND: "Login to create a Slate!",
-  SERVER_EXISTING_SLATE: "You already have a slate with that name. Please choose another",
-  SERVER_CREATE_SLATE: "There was an error when creating the Slate",
-  FIND_USER_CREATE_SLATE: "There seems to be an issue with your account",
-  FIND_USER_CREATE_SLATE_USER_NOT_FOUND: "Login to create a Slate!",
-  EXISTING_SLATE: "A Slate with that name already exists. Please try another",
-  CREATE_SLATE: "There was an error when creating the Slate",
-  SERVER_SLATE_LIMIT: "You've reached the limit for number of slates!",
+  //General
+  SERVER_NOT_AUTHENTICATED:
+    "You are not currently logged in. Please refresh the page and sign in to perform this action",
+  SERVER_USER_NOT_FOUND: "We're having trouble locating your information right now",
+  SERVER_NO_BUCKET_DATA: "We ran into issues while trying to locate your data",
 
-  //Slate Add URL
-  ADD_TO_SLATE_USER_NOT_FOUND: "Login to add a Slate URL",
-  ADD_TO_SLATE_SLATE_NOT_FOUND: "Sorry, we couldn't find that Slate! Please try another",
-  ADD_TO_SLATE_ERROR: "There was an error retriving this Slate",
+  //Activity and explore
+  SERVER_GET_ACTIVITY_NOT_FOUND: "We're having trouble loading activity right now",
+  SERVER_GET_EXPLORE_NOT_FOUND: "We're having trouble loading explore right now",
 
-  //Slate remove file
-  SERVER_REMOVE_FROM_SLATE_USER_NOT_FOUND: "Login to manage your slates",
-  SERVER_REMOVE_FROM_SLATE_NO_ID_PROVIDED: "Please specify which item you would like to remove",
-  SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND: "We're having trouble locating that slate",
-  SERVER_REMOVE_FROM_SLATE_ERROR: "We're having trouble removing from this slate right now",
+  //Filecoin and archiving
+  SERVER_SEND_FILECOIN_ACTION_FAILURE: "We're having trouble sending out Filecoin right now",
+  SERVER_ARCHIVE_NO_FILES: "You have no files to archive",
+  SERVER_ARCHIVE_BUCKET_TOO_SMALL:
+    "Your deal size is too small to archive. Deals should be a minimum of 100MB",
+  SERVER_ARCHIVE_BUCKET_COUNT_VERIFICATION_FAILED:
+    "We ran into issues while verifying your ability to make storage deals",
+  SERVER_ARCHIVE_MAX_NUMBER_BUCKETS:
+    "You have reached the maximum number of storage deals for this account",
+  SERVER_ARCHIVE_ENCRYPTION_FAILED:
+    "We encountered issues while encrypting your files for archiving",
+  SERVER_ARCHIVE_BUCKET_CLONING_FAILED:
+    "We ran into issues while replicating your files for archiving",
+  SERVER_ARCHIVE_DEAL_FAILED: "The storage deal wasn't successful",
 
-  //Slate Delete
-  DELETE_SLATE_BY_ID:
-    "Sorry, there was an error while trying to delete that slate. Please try again",
-  DELETE_SLATES_FOR_USER_ID:
-    "Sorry, we're having trouble deleting all your slates. Please try again later",
-  SERVER_DELETE_SLATE: "We're having trouble deleting that at the moment. Please try again later",
-  SERVER_DELETE_SLATE_USER_NOT_FOUND: "Login to manage your slates!",
+  //Bucket remove
+  SERVER_BUCKET_REMOVE_NO_CID:
+    "We ran into issues while removing a file. There was no file specified",
+  SERVER_BUCKET_REMOVE_BUCKET_NOT_FOUND: "We couldn't locate your files to delete",
+  SERVER_BUCKET_REMOVE_NO_BUCKET_ITEMS: "We couldn't locate your files to delete",
+  SERVER_BUCKET_REMOVE_NO_MATCHING_CID: "There were no matching files found",
+  SERVER_BUCKET_REMOVE_FAILED: "We were not able to delete that file",
+
+  //File create
+  CREATE_FILE_NO_FILE_PROVIDED: "We ran into issues while creating a file. No file was provided",
+  CREATE_FILE_DUPLICATE: "The uploaded file(s) were duplicates and were skipped",
+  CREATE_FILE_FAILED: "We ran into issues while creating that file",
+
+  //File delete
+  SERVER_REMOVE_DATA_NO_IDS: "The file to delete was not specified",
+
+  //Save copy
+  SERVER_SAVE_COPY_NO_CIDS: "The file to save was not specified",
+
+  //Toggle file privacy
+  SERVER_TOGGLE_FILE_PRIVACY_NO_FILE:
+    "We ran into issues while editing a file's privacy. No file was specified",
+  SERVER_TOGGLE_FILE_PRIVACY_UPDATE_FAILED:
+    "We're having trouble updating the privacy of that file right now",
+
+  //Update file
+  SERVER_EDIT_DATA_NO_FILE: "We ran into issues while editing a file. No file was provided",
+  SERVER_EDIT_DATA_FAILED: "We're having trouble updating that file right now",
+
+  //Delete api key
+  SERVER_DELETE_API_KEY_NOT_FOUND:
+    "We weren't able to locate that API key. It may have already been deleted",
+  SERVER_DELETE_API_KEY_ERROR: "We weren't able to delete that API key. Please try again later",
+
+  //Create api key
+  SERVER_GENERATE_API_KEY_TOO_MANY_KEYS: "You've reached the limit for number of API keys",
+  SERVER_GENERATE_API_KEY_ERROR:
+    "We're having trouble generating an API key right now, please try again later",
+
+  //Add to slate
+  SERVER_ADD_TO_SLATE_NO_SLATE:
+    "We ran into issues while adding files to that slate. No slate was specified",
+  SERVER_ADD_TO_SLATE_SLATE_NOT_FOUND: "We're having trouble locating that slate right now",
+  SERVER_ADD_TO_SLATE_NO_FILES:
+    "We ran into issues while adding files to that slate. No files selected",
+  SERVER_ADD_TO_SLATE_FAILED: "We're having trouble adding those files to that slate right now",
+
+  //Slate create
+  SERVER_CREATE_SLATE_EXISTING_SLATE_NAME:
+    "You already have a slate with that name. Slate names must be unique",
+  SERVER_CREATE_SLATE_FAILED:
+    "We are having trouble creating that slate right now, please try again later",
+
+  //Slate delete
   SERVER_DELETE_SLATE_SLATE_NOT_FOUND:
-    "We're having trouble deleting that at the moment. Please try again later",
-  SERVER_DELETE_SLATE: "We're having trouble deleting that at the moment. Please try again later",
+    "We're having difficulty locating that slate. It may have already been deleted",
+  SERVER_DELETE_SLATE_FAILED:
+    "We're having trouble deleting that slate right now, please try again later",
 
-  //Slate Get
-  GET_SLATE_BY_ID:
-    "We're having trouble retrieving information on that slate right now. Please try again later",
-  GET_SLATE_BY_NAME:
-    "We're having trouble retrieving information on that slate right now. Please try again later",
-  GET_SLATES_BY_USER_ID:
-    "We're having trouble retrieving that user's information. Please try again later",
-  SLATE_NOT_FOUND: "That slate could not be found. It may have been deleted",
-  SLATE_OWNER_NOT_FOUND:
-    "We're having trouble retrieving that slate's owner right now. Please try again",
-  SERVER_GET_SLATE_USER_NOT_FOUND:
-    "We're having trouble retrieving that slate's owner right now. Please try again",
-  SERVER_GET_SLATE:
-    "We're having trouble retrieving information on that slate right now. Please try again later",
+  //Get slate
+  SERVER_GET_SERIALIZED_SLATE_SLATE_NOT_FOUND:
+    "We were unable to locate that slate. It may be private or it may not exist",
+  SERVER_GET_SERIALIZED_SLATE_PRIVATE_ACCESS_DENIED:
+    "We were unable to locate that slate. It may be private or it may not exist",
   SERVER_GET_SLATE_NOT_FOUND:
-    "We're having trouble retrieving information on that slate right now. Please try again later",
+    "We were unable to locate that slate. It may be private or it may not exist",
+  SERVER_GET_SLATE_PRIVATE_ACCESS_DENIED:
+    "We were unable to locate that slate. It may be private or it may not exist",
 
-  //Slate Update
-  UPDATE_SLATE_BY_ID: "We ran into an issue while saving your slate. Please try again",
-  SERVER_ADD_TO_SLATE_USER_NOT_FOUND: "Login to upload files!",
-  SERVER_FIND_USER_UPDATE_SLATE_USER_NOT_FOUND: "Login to upload files!",
-  SERVER_ADD_TO_SLATE_SLATE_NOT_FOUND:
-    "We ran into issues while uploading that file. Please try again",
-  SERVER_ADD_TO_SLATE_ERROR: "We ran into issues while uploading that file. Please try again",
-  SERVER_FIND_USER_UPDATE_SLATE: "We ran into issues while uploading that file. Please try again",
-  SERVER_UPDATE_SLATE_NOT_FOUND: "We ran into issues while locating that slate. Please try again",
-  SERVER_UPDATE_SLATE_MUST_PROVIDE_DATA: "The input cannot be blank. Please check your input",
-  SERVER_UPDATE_SLATE_MUST_PROVIDE_NAME: "Please provide a slate name",
-  SERVER_UPDATE_SLATE: "We're having trouble updating that slate right now. Please try again later",
-  SERVER_UPDATE_SLATE_NAME_TAKEN: "You already have a slate with that name. Please choose another",
-  V1_SERVER_UPLOAD_SLATE_NOT_FOUND:
-    "We're having trouble locating that slate right now. Please try again later",
-  V1_SERVER_API_KEY_NOT_FOUND:
-    "We can't seem to find your API key right now. Please try again later",
-  V1_SERVER_API_UPLOAD_ERROR:
-    "We're having trouble uploading that right now. Please try again later",
-  V1_SERVER_UPLOAD_SLATE_NOT_FOUND: "We're having trouble locating that slate right now",
-  V1_SERVER_UPLOAD_TO_SLATE_ERROR:
-    "We're ran into issues while adding that to the slate. Please try again",
-  V1_GET_SLATE_NOT_FOUND:
-    "We're having trouble locating that slate right now. Please try again later",
-  V1_GET_SLATE_USER_NOT_FOUND:
-    "We're having trouble locating the owner of that slate right now. Please try again later",
-  V1_GET_SLATE_SLATE_NOT_FOUND:
-    "We're having trouble locating that slate right now. Please try again later",
-  V1_GET_SLATES_NOT_FOUND:
-    "We're having trouble locating those slates right now. Please try again later",
+  //Remove from slate
+  SERVER_REMOVE_FROM_SLATE_NO_ID_PROVIDED:
+    "Unable to remove from slate because no slate was specified",
+  SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND: "We are having trouble locating that slate",
+  SERVER_REMOVE_FROM_SLATE_FAILED: "We are having trouble removing from that slate right now",
 
-  //Address Send
-  SERVER_SEND_FILECOIN_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  SERVER_SEND_FILECOIN_NO_ID: "That user doesn't seem to exist. Please try another",
-  SERVER_SEND_FILECOIN_ACTION_FAILURE:
-    "There was an error sending the transaction. We're looking into it",
-  SEND_FILECOIN_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  SEND_FILECOIN: "There was an error sending the transaction. We're looking into it",
-  SEND_FILECOIN_ACTION_FAILURE: "There was an error sending the transaction. We're looking into it",
+  //Update slate layout
+  SERVER_UPDATE_SLATE_LAYOUT_MUST_PROVIDE_DATA: "No layout was provided to update",
+  SERVER_UPDATE_SLATE_LAYOUT_NOT_FOUND: "We are having trouble locating that slate",
+  SERVER_UPDATE_SLATE_LAYOUT:
+    "We are unable to update that slate's layout right now. Please try again later",
 
-  //Address Create
-  CREATE_FILECOIN_ADDRESS: "There was an error when creating the Filecoin address.",
+  //Update slate
+  SERVER_UPDATE_SLATE_MUST_PROVIDE_DATA:
+    "We are unable to update that slate because no data was provided",
+  SERVER_UPDATE_SLATE_NOT_FOUND: "We are having trouble locating that slate",
+  SERVER_UPDATE_SLATE_UPDATE_PRIVACY_FAILED:
+    "We are having trouble updating the privacy of that slate",
+  SERVER_UPDATE_SLATE_INVALID_NAME: "Please use a valid slate name",
+  SERVER_UPDATE_SLATE_NAME_TAKEN:
+    "You already have a slate with that name. Slate names must be unique",
+  SERVER_UPDATE_SLATE_FAILED: "We are having trouble updating that slate right now",
 
-  //Data Upload
-  UPLOAD_PARSE_FAILURE: "There was an error when parsing the upload. Please try again",
-  UPLOAD_NOT_IMAGE_TYPE:
-    "We are only accepting JPG and PNG files at this time. Try uploading a different file type!",
-  BUCKETS_PUSH_ISSUE: "There was an error uploading the data",
-  SERVER_UPLOAD_ERROR: "We're having issues uploading that file right now",
-  SERVER_API_KEY_MISSING: "We can't seem to find your API key right now. Please try again later",
-  CREATE_PENDING_DATA: "We ran into issues while uploading your data, please try again later",
-  CREATE_PENDING_ERROR: "We ran into issues while uploading your data, please try again later",
-  PROCESS_PENDING_ERROR:
-    "We ran into an error while updating your uploaded data. Please try again later",
-  PROCESS_PENDING_USER_NOT_FOUND: "Please log in to upload files",
+  //Create user
+  SERVER_CREATE_USER_NOT_ALLOWED: "You can only create users while on slate.host",
+  SERVER_CREATE_USER_ACCEPT_TERMS: "You must accept the terms of service to create an account",
+  SERVER_CREATE_USER_USERNAME_TAKEN: "There is already an account with that username",
+  SERVER_CREATE_USER_INVALID_USERNAME: "Please choose a valid username",
+  SERVER_CREATE_USER_INVALID_PASSWORD: "Please chooose a valid password",
+  SERVER_CREATE_USER_BUCKET_INIT_FAILURE:
+    "We're having trouble setting up your storage, please try again later",
+  SERVER_CREATE_USER_FAILED:
+    "We're having trouble creating your account right now. Please try again later",
 
-  //Data CID Status
-  NO_CIDS_TO_CHECK: "There are no CIDs to check",
+  //Get user
+  SERVER_GET_USER_NO_USER_PROVIDED:
+    "We were not able to fetch that user because no user was specified",
+  SERVER_GET_USER_USER_NOT_FOUND: "We were not able to locate that user",
 
-  //Data Get
-  SERVER_GET_BUCKET_DATA: "We ran into an issue fetching that data. Please try again later",
+  //Get user social
+  SERVER_USER_SOCIAL_NO_USER_ID:
+    "We were not able to fetch that user's subscriptions and following because no user was specified",
+  SERVER_USER_SOCIAL_SUBSCRIPTIONS_NOT_FOUND:
+    "We were not able to locate that user's subscriptions",
+  SERVER_USER_SOCIAL_FOLLOWING_NOT_FOUND: "We were not able to locate that user's following",
+  SERVER_USER_SOCIAL_FOLLOWERS_NOT_FOUND: "We were not able to locate that user's followers",
 
-  //Data Remove
-  SERVER_REMOVE_DATA_NO_CID:
-    "Slate is having trouble deleting some files right now. We're working on fixing this soon!",
-  SERVER_REMOVE_DATA_NOT_ALLOWED: "You aren't authorized to remove that file",
-  SERVER_REMOVE_DATA_NO_LINK: "We couldn't remove that data. Please try again later",
+  //Status update
+  SERVER_STATUS_UPDATE_FAILED: "We're having trouble making that change right now",
+  SERVER_STATUS_UPDATE_MUST_PROVIDE_UPDATE: "No update was provided",
 
-  //Data Storage Deals
-  SERVER_STORAGE_DEAL_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  SERVER_NO_CID: "IPFS CID is required",
-  SERVER_NO_IPFS: "There was a issue retriving data from IPFS",
-  SERVER_FILECOIN_STORAGE_DEAL_CID_ERROR: "There was a issue making a storage deal",
-  SERVER_NO_JOB: "Sorry, this job doesn't exist!",
-  STORAGE_DEAL_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  NO_CID: "IPFS CID is required",
-  NO_IPFS: "There was a issue retriving data from IPFS",
-  FILECOIN_STORAGE_DEAL_CID_ERROR: "There was a issue making a storage deal",
-  NO_JOB: "Sorry, this job doesn't exist!",
+  //Update user
+  SERVER_USER_UPDATE_INVALID_USERNAME: "Please choose a valid username",
+  SERVER_USER_UPDATE_USERNAME_IS_TAKEN: "There is already an account with that username",
+  SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG:
+    "We're having trouble updating your settings right now",
+  SERVER_USER_UPDATE_INVALID_PASSWORD: "Please chooose a valid password",
 
-  //Archive Deal
-  SERVER_REMOVE_DATA_NOT_ALLOWED: "Please login first to archive a deal!",
-  SERVER_BUCKET_ARCHIVE_DEAL_USER_NOT_FOUND: "Please login first to archive a deal!",
-  SERVER_BUCKET_INIT_FAILURE: "Something went wrong while locating your storage bucket",
-  STORAGE_DEAL_MAKING_NO_BUCKET: "We could not locate your storage bucket",
-  STORAGE_DEAL_MAKING_NO_FILES: "No file selected. Please select a file to archive then try again",
-  STORAGE_BUCKET_TOO_SMALL: "Deal size too small. Deals must be 100MB or larger",
-  BUCKET_SPAWN_VERIFICATION_FAILED_FOR_BUCKET_COUNT:
-    "We ran into an issue while verifying how much storage space you have",
-  TOO_MANY_BUCKETS: "You've reached the maximum number of storage buckets for an account",
-  FORCED_ENCRYPTION_FAILED_FOR_DATA: "We ran into an issue while encrypting your data",
-  BUCKET_CLONING_FAILED: "We ran into an issue while creating a storage bucket for you",
-  STORAGE_DEAL_MAKING_NOT_SANITARY: "We ran into an issue while creating that storage deal",
-
-  //CID Status
-  SERVER_NO_CIDS_TO_CHECK: "No CIDs were entered, please check your input",
-
-  //Users Create
-  SIGN_UP_RATE_LIMITED: "Too many sign up attempts. Please try again in 10 minutes",
-  SERVER_EXISTING_USER_ALREADY: "That username is taken. Please try another one",
-  EXISTING_USER_ALREADY: "That username is taken. Please try another one",
-  INVALID_USERNAME: "Invalid username. Please include only letters and numbers",
-  SERVER_INVALID_USERNAME: "Invalid username. Please include only letters and numbers",
-  INVALID_PASSWORD: "Password length must be more than 8 characters",
-  SERVER_INVALID_PASSWORD: "Password length must be more than 8 characters",
-  USER_CREATE_USER_NOT_FOUND: "Sorry we weren't able to create your account. Please try again",
-  SERVER_USER_CREATE_USER_NOT_FOUND:
-    "Sorry we weren't able to create your account. Please try again",
-  CREATE_USER: "Sorry we weren't able to create your account. Please try again",
-
-  //Users Delete
-  USER_DELETE: "That user doesn't seem to exist. Please try another",
-  SERVER_USER_DELETE: "That user doesn't seem to exist. Please try another",
-  USER_DELETE_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  SERVER_USER_DELETE_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  DELETE_USER_BY_USERNAME: "We're having trouble deleting your account right now",
-  SERVER_USER_DELETE: "We're having trouble deleting your account right now",
-  USER_NOT_FOUND: "We're having trouble connecting right now",
-  SLATES_NOT_FOUND: "We weren't able to locate the slates for that user",
-
-  //Users Update
-  USER_UPDATE: "That user doesn't seem to exist. Please try another",
-  USER_UPDATE_USER_NOT_FOUND: "Sorry, we couldn't find that user!",
-  UPDATE_USER_BY_ID: "We ran into an issue while updating your information. Please try again",
-  USER_UPDATE_SETTINGS_CONFIG: "Error when updating user settings",
-  SERVER_USER_UPDATE: "Please make sure you are signed in first",
-  SERVER_USER_UPDATE_USER_NOT_FOUND:
-    "We're having trouble locating your information. Please try again",
-  SERVER_STATUS_UPDATE: "Please log in first to access this page",
-  SERVER_STATUS_UPDATE_USER_NOT_FOUND: "We're having trouble locating your information right now",
-  SERVER_STATUS_UPDATE_MUST_PROVIDE_UPDATE:
-    "We're having trouble updating your information right now",
-  SERVER_USERNAME_IS_TAKEN: "That username is taken",
-
-  //Users Get
-  GET_USER_BY_ID: "We weren't able to fetch information on that user. Please try again later",
-  GET_USER_BY_USERNAME:
-    "We weren't able to fetch information on that user. Please check your input",
-  USER_NOT_FOUND: "We aren't able to locate that user at the moment. Please try again",
-  SERVER_USER_SUBSCRIPTIONS_NOT_FOUND:
-    "We weren't able to fetch information on that user. Please try again later",
-  SERVER_USER_SUBSCRIBERS_NOT_FOUND:
-    "We weren't able to fetch information on that user. Please try again later",
+  //Zip files
+  GET_ZIP_FILES_PATHS_BUCKET_CHECK_FAILED: "We're having trouble locating those files right now",
 
   //Hydrate
-  HYDRATE_FAILURE: "Please make sure you're logged in",
-  SERVER_HYDRATE_FAILURE: "Please make sure you're logged in",
   SERVER_VIEWER_DATA_ERROR:
-    "We're havign trouble fetching your information right now. Please try again",
+    "We're having trouble fetching your information right now, please refresh the page",
 
-  //Sign-in
-  SIGN_IN_RATE_LIMITED: "Too many sign in attempts. Please try again in 10 minutes",
-  SIGN_IN: "Your username/password can't be blank",
-  SERVER_SIGN_IN: "Your username/password can't be blank",
-  SIGN_IN_USER_NOT_FOUND: "We're having trouble logging you in right now, please try again later",
-  SERVER_SIGN_IN_USER_NOT_FOUND: "That username and password do not match", //no one with that username
-  SERVER_SIGN_IN_ERROR: "We're having trouble connecting right now. Please try again later",
-  SERVER_SIGN_IN_AUTH: "That username and password do not match", //incorrect password
+  //Get deals
+  SERVER_FILECOIN_NETWORK_DEALS_ERROR:
+    "We're having trouble fetching your deal information right now",
+  SERVER_FILECOIN_NETWORK_ERROR: "We're having trouble fetching your storage information right now",
 
-  //Activity
-  CREATE_ACTIVITY: "We're having issues posting that right now. Please try again",
-  DELETE_ACTIVITY_BY_ID: "We weren't able to delete that. Please try again",
-  GET_ACTIVITY_BY_ID: "We weren't able to fetch that information. Please try again",
-  GET_ACTIVITY_FOR_SLATE_ID: "We weren't able to fetch that information. Please try again",
-  GET_ACTIVITY_FOR_USER_ID: "We weren't able to fetch that user's information. Please try again",
-  SERVER_GET_ACTIVITY_NOT_FOUND: "We're having trouble fetching your feed right now",
-  SERVER_GET_ACTIVITY_USER_NOT_FOUND: "Please login to view your feed",
+  //Sign in
+  SERVER_SIGN_IN_NOT_ALLOWED: "You can only sign in to an account while on slate.host",
+  SERVER_SIGN_IN_NO_USERNAME: "Please provide a username to sign in",
+  SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
+  SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
+  SERVER_SIGN_IN_WRONG_PASSWORD: "We were unable to locate that account with those credentials",
 
-  //Subscription Create
-  CREATE_SUBSCRIPTION: "We weren't able to subscribe you. Please try again later",
-  SERVER_SUBSCRIBE: "Please login to subscribe",
-  SERVER_SUBSCRIBE_USER_NOT_FOUND:
-    "We're having trouble fetching your information. Please try again later",
-  SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER:
-    "No user or slate was provided. Please check your input",
-  SERVER_SUBSCRIBE_CAN_NOT_SUBSCRIBE_TO_YOURSELF: "You cannot subscribe to yourself",
-  SERVER_SUBSCRIBE_TARGET_USER_NOT_FOUND: "That user could not be found",
-  SERVER_SUBSCRIBE_TARGET_SLATE_NOT_FOUND: "That slate could not be found",
+  //Subscribe
+  SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No slate or user to follow specified",
+  SERVER_SUBSCRIBE_CAN_NOT_SUBSCRIBE_TO_YOURSELF: "You cannot follow yourself",
+  SERVER_SUBSCRIBE_TARGET_USER_NOT_FOUND: "We are unable to locate that user",
+  SERVER_SUBSCRIBE_TARGET_SLATE_NOT_FOUND: "We are unable to locate that slate",
   SERVER_SUBSCRIBE_SUBSCRIPTION_CHECK_ERROR:
-    "We weren't able to subscribe you. Please try again later",
-  SERVER_UNSUBSCRIBE_NOT_FOUND: "We weren't able to unsubscribe you. Please try again",
-  SERVER_UNSUBSCRIBE_ERROR: "We weren't able to unsubscribe you. Please try again",
-  SERVER_SUBSCRIBE_NOT_FOUND: "We weren't able to subscribe you. Please try again",
-  SERVER_SUBSCRIBE_ERROR: "We weren't able to subscribe you. Please try again",
-
-  //Subscription Delete
-  DELETE_SUBSCRIPTION_BY_ID: "We weren't able to unsubscribe you. Please try again later",
-
-  //Subscription Get
-  GET_SUBSCRIBERS_BY_USER_ID:
-    "We weren't able to retrieve that information. Please try again later",
-  GET_SUBSCRIPTION_BY_ID:
-    "We weren't able to retrieve that subscription information. Please try again later",
-  GET_SUBSCRIPTIONS_BY_USER_ID:
-    "We weren't able to retrieve that information. Please try again later",
-  GET_SUBSCRIPTIONS_TO_SLATE_ID:
-    "We weren't able to retrieve that information. Please try again later",
-  GET_SUBSCRIPTIONS_TO_USER_ID:
-    "We weren't able to retrieve that information. Please try again later",
-
-  //Trusted Create
-  CREATE_TRUSTED_RELATIONSHIP:
-    "We weren't able to add this user as trusted. Please try again later",
-  SERVER_TRUST: "Please make sure you are logged in",
-  SERVER_TRUSTED_RELATIONSHIP_USER_NOT_FOUND:
-    "We are having trouble retrieving your information right now",
-  SERVER_TRUSTED_RELATIONSHIP_MUST_PROVIDE_SOMEONE_TO_TRUST: "No user was specified",
-  SERVER_TRUSTED_RELATIONSHIP_CAN_NOT_TRUST_YOURSELF: "You cannot add yourself as trusted",
-  SERVER_TRUSTED_RELATIONSHIP_TARGET_USER_NOT_FOUND:
-    "We could not locate that user. Please try again later",
-  SERVER_TRUSTED_RELATIONSHIP_CHECK_ERROR:
-    "We're having trouble adding this person as your trusted right now",
-  SERVER_TRUSTED_RELATIONSHIP_INVERTED_CHECK_ERROR:
-    "You have already received a trust request from this person. Please accept it instead",
-  SERVER_DELETE_TRUSTED_RELATIONSHIP_NOT_FOUND: "There is no trust relationshp to delete",
-  SERVER_DELETE_TRUSTED_RELATIONSHIP_ERROR:
-    "We're having trouble deleting this trust relationship right now",
-  SERVER_TRUSTED_RELATIONSHIP_NOT_FOUND:
-    "We're having trouble creating this trust relationship right now",
-  SERVER_TRUSTED_RELATIONSHIP_ERROR:
-    "We're having trouble creating this trust relationship right now",
-
-  //Trusted Delete
-  DELETE_TRUSTED_RELATIONSHIP_BY_ID:
-    "We weren't able to remove this user from your trusted. Please try again later",
-  SERVER_TRUST_DELETE: "Please login to manage your trusted",
-  SERVER_TRUST_DELETE_USER_NOT_FOUND: "We weren't able to locate this user. Please try again later",
-  SERVER_TRUST_DELETE_MUST_PROVIDE_ID: "Please check your input",
-
-  //Trusted Get
-  GET_TRUSTED_RELATIONSHIP_BY_ID:
-    "We're having trouble retrieving that information right now. Please try again later",
-  GET_TRUSTED_RELATIONSHIP_BY_IDS:
-    "We're having trouble retrieving that information right now. Please try again later",
-  GET_TRUSTED_RELATIONSHIPS_BY_USER_ID:
-    "We're having trouble retrieving that information right now. Please try again later",
-
-  //Trusted Update
-  UPDATE_TRUSTED_RELATIONSHIP_BY_ID:
-    "We ran into an issue while updating that information. Please try again later",
-  SERVER_TRUST_UPDATE: "Please login to mange your trusted",
-  SERVER_TRUST_UPDATE_USER_NOT_FOUND:
-    "We weren't able to locate your information. Please try again later",
-  SERVER_TRUST_UPDATE_MUST_PROVIDE_SOMEONE_TO_TRUST:
-    "Please check your input. No user was provided",
-  SERVER_TRUST_UPDATE_CAN_NOT_TRUST_YOURSELF: "You cannot add yourself as a trusted peer",
-  SERVER_TRUST_UPDATE_TARGET_USER_NOT_FOUND:
-    "We weren't able to locate that user. Please try again later",
-  SERVER_TRUST_UPDATE_CHECK_ERROR: "This person is already among your trusted peers",
-
-  //API Key Create
-  CREATE_API_KEY_FOR_USER_ID:
-    "We're having trouble creating your API keys right now. Please try again",
-  SERVER_GENERATE_API_KEY_AUTH: "You aren't authorized to create that API key",
-  SERVER_GENERATE_API_KEY_USER_NOT_FOUND:
-    "We ran into issues finding your information while trying to generate that API key",
-  SERVER_GENERATE_API_KEY_TOO_MANY_KEYS: "You have reached the limit for number of API keys",
-  SERVER_GENERATE_API_KEY_ERROR: "We ran into issues while trying to generate that API key",
-
-  //API Key Delete
-  DELETE_API_KEY_BY_ID:
-    "We're having trouble deleting that API key right now. Please try again later",
-  DELETE_API_KEYS_FOR_USER_ID:
-    "We're having trouble deleting your API keys right now. Please try again later",
-  SERVER_DELETE_API_KEY_AUTH: "You aren't authorized to delete that API key",
-  SERVER_DELETE_API_KEY_USER_NOT_FOUND: "No matching API key was found for that user",
-  SERVER_DELETE_API_KEY_NOT_FOUND: "No matching API key was found for that user",
-  SERVER_DELETE_API_KEY_ERROR:
-    "We ran into an issue while trying to delete that API key. Please try again",
-
-  //API Key Get
-  GET_API_KEY_BY_KEY: "We weren't able to fetch that API key. Please try again later",
-  GET_API_KEY: "We weren't able to fetch that API key. Please try again later",
-  GET_API_KEYS_BY_USER_ID:
-    "We're having trouble retrieving your API keys right now. Please try again",
-
-  //Query
-  SERVER_DEEPLINK: "This slate or profile does not exist",
-  SERVER_DEEPLINK_ERROR: "This slate or profile does not exist",
-  SERVER_SEARCH_NO_QUERY: "No query was entered. Please enter a query and try again",
-
-  // Storage Deals
-  SERVER_BUCKET_INIT_FAILURE: "Something went wrong with our infrastructure. Check in later.",
-  STORAGE_DEAL_MAKING_NO_BUCKET: "Something went wrong with our infrastructure. Check in later.",
-  STORAGE_DEAL_MAKING_NO_FILES: "You must provide files before you make a deal.",
+    "We are having trouble editing that subscription right now",
+  SERVER_UNSUBSCRIBE_FAILED: "We were unable to unsubscribe, please try again later",
+  SERVER_SUBSCRIBE_FAILED: "We were unable to subscribe, please try again later",
 
   //Support
-  SERVER_SUPPORT: "You must be logged in to send a support message. Please try logging in again",
-  SERVER_SUPPORT_USER_NOT_FOUND: "We're having difficulty locating your information right now",
-  SERVER_SUPPORT_NO_DATA_PROVIDED: "We're having trouble transmitting your message right now",
-  SERVER_SUPPORT_MUST_PROVIDE_EMAIL: "Please provide an email where we can contact you",
-  SERVER_SUPPORT_MUST_PROVIDE_MESSAGE: "Please provide a message to send",
-  SERVER_SUPPORT: "We're having trouble sending your support message to the team right now",
-
-  // Unity game download
+  SERVER_SUPPORT_NO_DATA_PROVIDED: "Please include details for us to send a support message",
+  SERVER_SUPPORT_MUST_PROVIDE_EMAIL: "Please include an email where we can reach you",
+  SERVER_SUPPORT_MUST_PROVIDE_MESSAGE: "Please include a support message",
+  SERVER_SUPPORT_NO_USERNAME_PROVIDED: "Please include a username",
   UNITY_ZIP_DOWNLOAD_FAILED:
-    "We're having trouble downloading you Unity game file. Please try again",
-
-  // Delete tag
-  SERVER_DELETE_TAG_USER_NOT_FOUND:
-    "We're having trouble retrieving that slate's owner right now. Please try again",
-  SERVER_DELETE_TAG_SLATES_NOT_FOUND: "We weren't able to locate the slates for that user",
+    "We're having trouble downloading your Unity game file. Please try again later",
 };

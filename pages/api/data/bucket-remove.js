@@ -4,18 +4,13 @@ import * as Strings from "~/common/strings";
 import * as Social from "~/node_common/social";
 
 export default async (req, res) => {
-  if (Strings.isEmpty(req.body.data.cid)) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_BUCKET_REMOVE_DATA_NO_CID", error: true });
-  }
-
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
-    return res.status(403).send({
-      decorator: "SERVER_BUCKET_REMOVE_DATA_NOT_ALLOWED",
-      error: true,
-    });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
+  }
+
+  if (Strings.isEmpty(req.body.data.cid)) {
+    return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_NO_CID", error: true });
   }
 
   const user = await Data.getUserById({
@@ -29,7 +24,7 @@ export default async (req, res) => {
 
   if (!buckets) {
     return res.status(500).send({
-      decorator: "SERVER_BUCKET_BUCKET_INIT_FAILURE",
+      decorator: "SERVER_NO_BUCKET_DATA",
       error: true,
     });
   }
@@ -49,9 +44,7 @@ export default async (req, res) => {
   }
 
   if (!r) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_BUCKET_REMOVE_DATA_NO_TEXTILE", error: true });
+    return res.status(500).send({ decorator: "SERVER_NO_BUCKET_DATA", error: true });
   }
 
   const targetBucket = r.find((d) => d.name === req.body.data.bucketName);
@@ -59,7 +52,7 @@ export default async (req, res) => {
   if (!targetBucket) {
     return res
       .status(404)
-      .send({ decorator: "SERVER_BUCKET_NOT_FOUND", error: true });
+      .send({ decorator: "SERVER_BUCKET_REMOVE_BUCKET_NOT_FOUND", error: true });
   }
 
   let items = null;
@@ -77,9 +70,7 @@ export default async (req, res) => {
   }
 
   if (!items) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_BUCKET_REMOVE_DATA_NO_TEXTILE", error: true });
+    return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_NO_BUCKET_ITEMS", error: true });
   }
 
   let entity;
@@ -91,9 +82,7 @@ export default async (req, res) => {
   }
 
   if (!entity) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_BUCKET_REMOVE_DATA_NO_CID", error: true });
+    return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_NO_MATCHING_CID", error: true });
   }
 
   let bucketRemoval;
@@ -108,13 +97,11 @@ export default async (req, res) => {
       functionName: `buckets.removePath`,
     });
 
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_BUCKET_REMOVE_DATA_NO_LINK", error: true });
+    return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_FAILED", error: true });
   }
 
   return res.status(200).send({
-    decorator: "SERVER_BUCKET_REMOVE_DATA",
+    decorator: "SERVER_BUCKET_REMOVE",
     success: true,
     bucketItems: items.items,
   });

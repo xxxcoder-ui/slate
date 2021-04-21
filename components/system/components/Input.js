@@ -174,7 +174,13 @@ export class Input extends React.Component {
             type={this.props.type}
             placeholder={this.props.placeholder}
             onChange={this._handleChange}
-            onFocus={this.props.onFocus}
+            onFocus={
+              this.props.autoHighlight
+                ? () => {
+                    this._input.select();
+                  }
+                : this.props.onFocus
+            }
             onBlur={this.props.onBlur}
             onKeyUp={this._handleKeyUp}
             autoComplete="off"

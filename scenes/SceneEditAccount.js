@@ -47,9 +47,10 @@ export default class SceneEditAccount extends React.Component {
     photo: this.props.viewer.data.photo,
     name: this.props.viewer.data.name,
     deleting: false,
-    allow_filecoin_directory_listing: this.props.viewer.allow_filecoin_directory_listing,
-    allow_automatic_data_storage: this.props.viewer.allow_automatic_data_storage,
-    allow_encrypted_data_storage: this.props.viewer.allow_encrypted_data_storage,
+    allow_filecoin_directory_listing: this.props.viewer.data.settings
+      ?.allow_filecoin_directory_listing,
+    allow_automatic_data_storage: this.props.viewer.data.settings?.allow_automatic_data_storage,
+    allow_encrypted_data_storage: this.props.viewer.data.settings?.allow_encrypted_data_storage,
     changingPassword: false,
     changingAvatar: false,
     savingNameBio: false,
@@ -59,17 +60,17 @@ export default class SceneEditAccount extends React.Component {
 
   _handleUpload = async (e) => {
     this.setState({ changingAvatar: true });
-    let json = await UserBehaviors.uploadImage(e.target.files[0], this.props.resources, true);
-    if (!json) {
+    let file = await UserBehaviors.uploadImage(e.target.files[0], this.props.resources, true);
+    if (!file) {
       this.setState({ changingAvatar: false });
       return;
     }
 
-    const cid = json.data.cid;
-    const url = Strings.getCIDGatewayURL(cid);
+    const cid = file.cid;
+    const url = Strings.getURLfromCID(cid);
     let updateResponse = await Actions.updateViewer({
       data: {
-        photo: Strings.getCIDGatewayURL(cid),
+        photo: Strings.getURLfromCID(cid),
       },
     });
 
@@ -82,9 +83,11 @@ export default class SceneEditAccount extends React.Component {
 
     let response = await Actions.updateViewer({
       data: {
-        allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
-        allow_automatic_data_storage: this.state.allow_automatic_data_storage,
-        allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
+        settings: {
+          allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
+          allow_automatic_data_storage: this.state.allow_automatic_data_storage,
+          allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
+        },
       },
     });
 
@@ -153,7 +156,7 @@ export default class SceneEditAccount extends React.Component {
 
     await Window.delay(100);
 
-    await UserBehaviors.deleteMe();
+    await UserBehaviors.deleteMe({ viewer: this.props.viewer });
     this.setState({ deleting: false });
   };
 

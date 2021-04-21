@@ -88,23 +88,6 @@ export const navigation = [
     pageTitle: "Slate",
     ignore: true,
   },
-  /*
-  {
-    id: "V1_NAVIGATION_LOCAL",
-    decorator: "LOCAL_DATA",
-    name: "Local",
-    pageTitle: "Your local data",
-    children: [],
-    ignore: false,
-  },
-  {
-    id: "V1_NAVIGATION_NETWORK",
-    decorator: "NETWORK",
-    name: "Network",
-    pageTitle: "The Filecoin Network",
-    children: null,
-  },
-  */
   {
     id: "NAV_FILECOIN",
     decorator: "FILECOIN",

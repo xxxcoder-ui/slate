@@ -98,7 +98,6 @@ export class Boundary extends React.PureComponent {
   };
 
   _handleOutsideRectEvent = (e) => {
-    // console.log("outside rect event");
     this.props.onOutsideRectEvent(e);
   };
 

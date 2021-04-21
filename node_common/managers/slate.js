@@ -7,16 +7,16 @@ export const getRandomSlateElementURL = async ({ id, fallback = "" }) => {
     return fallback;
   }
 
-  const query = await Data.getSlateById({ id });
+  const query = await Data.getSlateById({ id, includeFiles: true, sanitize: true });
 
   if (!query || query.error) {
     return fallback;
   }
 
-  if (!query.data.objects.length) {
+  if (!query.objects.length) {
     return fallback;
   }
 
-  const index = Numbers.getRandomInt(0, query.data.objects.length - 1);
-  return query.data.objects[index].url;
+  const index = Numbers.getRandomInt(0, query.objects.length - 1);
+  return Strings.getURLfromCID(query.objects[index].cid);
 };

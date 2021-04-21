@@ -9,6 +9,8 @@ import * as Window from "~/common/window";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as Filecoin from "~/common/filecoin";
 
+import WebSocket from "ws";
+
 const STAGING_DEAL_BUCKET = "stage-deal";
 
 const websocketSend = async (type, data) => {
@@ -18,7 +20,6 @@ const websocketSend = async (type, data) => {
 
   let ws = Websocket.get();
   if (!ws) {
-    console.log("no websocket. creating now...");
     ws = Websocket.create();
     await Window.delay(2000);
   }
@@ -29,162 +30,80 @@ const websocketSend = async (type, data) => {
   );
 
   // NOTE(jim): Only allow this to be passed around encrypted.
-  ws.send(
-    JSON.stringify({
-      type,
-      iv: encryptedData.iv,
-      data: encryptedData.hex,
-    })
-  );
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(
+      JSON.stringify({
+        type,
+        iv: encryptedData.iv,
+        data: encryptedData.hex,
+      })
+    );
+  }
 };
 
-export const hydratePartialViewer = async (user) => {
-  const data = {
-    id: user.id,
-    username: user.username,
-    data: {
-      name: user.data.name ? user.data.name : "",
-      photo: user.data.photo ? user.data.photo : "",
-      body: user.data.body ? user.data.body : "",
-    },
-    type: "PARTIAL_VIEWER",
-    library: user.data.library,
-    onboarding: user.data.onboarding || {},
+export const hydratePartial = async (
+  id,
+  { viewer, slates, keys, library, subscriptions, following, followers }
+) => {
+  if (!id) return;
 
-    // TODO(jim): Move this elsewhere.
-    allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing
-      ? user.data.allow_filecoin_directory_listing
-      : null,
-    allow_automatic_data_storage: user.data.allow_automatic_data_storage
-      ? user.data.allow_automatic_data_storage
-      : null,
-    allow_encrypted_data_storage: user.data.allow_encrypted_data_storage
-      ? user.data.allow_encrypted_data_storage
-      : null,
-  };
+  let update = { id };
 
-  websocketSend("UPDATE", data);
-};
-
-export const hydratePartialStatus = async (status, userId) => {
-  console.log("HYDRATE partial status");
-  const data = {
-    id: userId,
-    status,
-  };
-  websocketSend("UPDATE", data);
-};
-
-export const hydratePartialSubscriptions = async (updated, userId) => {
-  console.log("HYDRATE partial subscriptions");
-  const data = {
-    id: userId,
-  };
-
-  const user = await Data.getUserById({ id: userId });
-  if (!user) {
-    return null;
+  if (viewer) {
+    let user;
+    if (library) {
+      user = await Data.getUserById({
+        id,
+        includeFiles: true,
+      });
+    } else {
+      user = await Data.getUserById({
+        id,
+      });
+    }
+    update = {
+      ...update,
+      username: user.username,
+      email: user.email,
+      data: user.data,
+      library: user.library,
+    };
+  } else if (library) {
+    library = await Data.getFilesByUserId({ id, sanitize: true, publicOnly: false });
+    update.library = library;
   }
 
-  if (user.error) {
-    return null;
-  }
-
-  let mostRecent;
-  if (updated.subscriptions) {
-    const subscriptions = await Data.getSubscriptionsByUserId({ userId });
-    let r1 = await Serializers.doSubscriptions({
-      users: [],
-      slates: [],
-      subscriptions,
-      serializedUsersMap: { [user.id]: Serializers.user(user) },
-      serializedSlatesMap: {},
+  if (slates) {
+    const slates = await Data.getSlatesByUserId({
+      ownerId: id,
+      sanitize: true,
+      includeFiles: true,
     });
-    data.subscriptions = r1.serializedSubscriptions;
-    mostRecent = r1;
+    update.slates = slates;
   }
 
-  if (updated.subscribers) {
-    const subscribers = await Data.getSubscribersByUserId({ userId });
-    let r2 = await Serializers.doSubscribers({
-      users: [],
-      slates: [],
-      subscribers,
-      serializedUsersMap: mostRecent
-        ? mostRecent.serializedUsersMap
-        : { [user.id]: Serializers.user(user) },
-      serializedSlatesMap: mostRecent ? mostRecent.serializedSlatesMap : {},
-    });
-    data.subscribers = r2.serializedSubscribers;
-    mostRecent = r2;
+  if (keys) {
+    const keys = await Data.getAPIKeysByUserId({ userId: id });
+    update.keys = keys;
   }
 
-  // if (updated.trusted) {
-  //   const trusted = await Data.getTrustedRelationshipsByUserId({ userId });
-  //   let r3 = await Serializers.doTrusted({
-  //     users: [],
-  //     trusted,
-  //     serializedUsersMap: mostRecent
-  //       ? mostRecent.serializedUsersMap
-  //       : { [user.id]: Serializers.user(user) },
-  //     serializedSlatesMap: mostRecent ? mostRecent.serializedSlatesMap : {},
-  //   });
-  //   data.trusted = r3.serializedTrusted;
-  //   mostRecent = r3;
-  // }
+  if (subscriptions) {
+    const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
+    update.subscriptions = subscriptions;
+  }
 
-  // if (updated.pendingTrusted) {
-  //   const pendingTrusted = await Data.getPendingTrustedRelationshipsByUserId({
-  //     userId,
-  //   });
-  //   let r4 = await Serializers.doPendingTrusted({
-  //     users: [userId],
-  //     pendingTrusted,
-  //     serializedUsersMap: mostRecent
-  //       ? mostRecent.serializedUsersMap
-  //       : { [user.id]: Serializers.user(user) },
-  //     serializedSlatesMap: mostRecent ? mostRecent.serializedSlatesMap : {},
-  //   });
-  //   data.pendingTrusted = r4.serializedPendingTrusted;
-  // }
+  if (following) {
+    const following = await Data.getFollowingByUserId({ ownerId: id });
+    update.following = following;
+  }
 
-  websocketSend("UPDATE", data);
+  if (followers) {
+    const followers = await Data.getFollowersByUserId({ userId: id });
+    update.followers = followers;
+  }
+
+  websocketSend("UPDATE", update);
 };
-
-export const hydratePartialKeys = async (keys, userId) => {
-  console.log("HYDRATE partial keys");
-  const data = {
-    id: userId,
-    keys,
-  };
-
-  websocketSend("UPDATE", data);
-};
-
-export const hydratePartialLibrary = async (library, userId) => {
-  console.log("HYDRATE partial library");
-  const data = {
-    id: userId,
-    library,
-  };
-
-  websocketSend("UPDATE", data);
-};
-
-export const hydratePartialSlates = async (slates, userId) => {
-  console.log("HYDRATE partial slates");
-  const data = {
-    id: userId,
-    slates,
-  };
-
-  websocketSend("UPDATE", data);
-};
-
-// export const hydratePartialActivity = async (activity, userId) => {
-//   this one will need to be more complex like what is in hydrate subscriptions
-//   websocketSend("UPDATE", data);
-// };
 
 export const hydrate = async (id) => {
   let data = getById({ id });
@@ -209,9 +128,17 @@ export const shouldRedirect = async ({ id }) => {
 
 // TODO(jim): Work on better serialization when adoption starts occuring.
 export const getById = async ({ id }) => {
-  const user = await Data.getUserById({
+  let user = await Data.getUserById({
     id,
+    includeFiles: true,
   });
+
+  // try {
+  //   JSON.stringify(user);
+  // } catch (e) {
+  //   console.log(user);
+  //   console.log("errored on json.stringify user (1st time)");
+  // }
 
   if (!user) {
     return null;
@@ -221,104 +148,69 @@ export const getById = async ({ id }) => {
     return null;
   }
 
-  // TODO(jim): You can serialize this last because you will have all the information
-  // from subscriptions, trusted, and pendingTrusted most likely.
-  const slates = await Data.getSlatesByUserId({ userId: id });
+  // user.library = await Data.getFilesByUserId({ id, sanitize: true });
+
+  const slates = await Data.getSlatesByUserId({
+    ownerId: id,
+    sanitize: true,
+    includeFiles: true,
+  });
   const keys = await Data.getAPIKeysByUserId({ userId: id });
-  const subscriptions = await Data.getSubscriptionsByUserId({ userId: id });
-  const subscribers = await Data.getSubscribersByUserId({ userId: id });
+  const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
+  const following = await Data.getFollowingByUserId({ ownerId: id });
+  const followers = await Data.getFollowersByUserId({ userId: id });
 
-  let serializedUsersMap = { [user.id]: Serializers.user(user) };
-  let serializedSlatesMap = {};
-
-  // NOTE(jim): The most expensive call first.
-  const r1 = await Serializers.doSubscriptions({
-    users: [],
-    slates: [],
-    subscriptions,
-    serializedUsersMap,
-    serializedSlatesMap,
-  });
-
-  const r2 = await Serializers.doSubscribers({
-    users: [],
-    slates: [],
-    subscribers,
-    serializedUsersMap: r1.serializedUsersMap,
-    serializedSlatesMap: r1.serializedSlatesMap,
-  });
-
-  // // NOTE(jim): If any trusted users are subscription users, this ends up being cheaper.
-  // const trusted = await Data.getTrustedRelationshipsByUserId({ userId: id });
-  // const r3 = await Serializers.doTrusted({
-  //   users: [],
-  //   trusted,
-  //   serializedUsersMap: r2.serializedUsersMap,
-  //   serializedSlatesMap: r2.serializedSlatesMap,
-  // });
-
-  // // NOTE(jim): This should be the cheapest call.
-  // const pendingTrusted = await Data.getPendingTrustedRelationshipsByUserId({
-  //   userId: id,
-  // });
-  // const r4 = await Serializers.doPendingTrusted({
-  //   users: [id],
-  //   pendingTrusted,
-  //   serializedUsersMap: r3.serializedUsersMap,
-  //   serializedSlatesMap: r3.serializedSlatesMap,
-  // });
-
+  let cids = {};
   let bytes = 0;
   let imageBytes = 0;
   let videoBytes = 0;
   let audioBytes = 0;
   let epubBytes = 0;
   let pdfBytes = 0;
-  user.data.library[0].children.forEach((each) => {
-    if (each.type && each.type.startsWith("image/")) {
-      imageBytes += each.size;
-    } else if (each.type && each.type.startsWith("video/")) {
-      videoBytes += each.size;
-    } else if (each.type && each.type.startsWith("audio/")) {
-      audioBytes += each.size;
-    } else if (each.type && each.type.startsWith("application/epub")) {
-      epubBytes += each.size;
-    } else if (each.type && each.type.startsWith("application/pdf")) {
-      pdfBytes += each.size;
+  for (let each of user.library) {
+    if (cids[each.cid]) {
+      continue;
     }
-    if (each.coverImage) {
-      imageBytes += each.coverImage.size;
+    if (each.data.type && each.data.type.startsWith("image/")) {
+      imageBytes += each.data.size;
+    } else if (each.data.type && each.data.type.startsWith("video/")) {
+      videoBytes += each.data.size;
+    } else if (each.data.type && each.data.type.startsWith("audio/")) {
+      audioBytes += each.data.size;
+    } else if (each.data.type && each.data.type.startsWith("application/epub")) {
+      epubBytes += each.data.size;
+    } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
+      pdfBytes += each.data.size;
     }
-    bytes += each.size;
-  });
+    let coverImage = each.data.coverImage;
+    if (coverImage && !cids[coverImage.cid]) {
+      imageBytes += coverImage.data.size;
+      cids[coverImage.cid] = true;
+    }
+    bytes += each.data.size;
+    cids[each.cid] = true;
+  }
 
-  const tags = Utilities.getUserTags({ library: user.data.library[0].children, slates });
+  const tags = Utilities.getUserTags({ library: user.library, slates });
 
   const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
     user,
   });
 
-  return {
-    ...Serializers.user(user),
-    type: "VIEWER",
-    library: user.data.library,
-    onboarding: user.data.onboarding || {},
-    status: user.data.status || {},
-    tags,
-    userBucketCID: bucketRoot?.path,
-
-    // TODO(jim): Move this elsewhere.
-    allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing
-      ? user.data.allow_filecoin_directory_listing
-      : null,
-    allow_automatic_data_storage: user.data.allow_automatic_data_storage
-      ? user.data.allow_automatic_data_storage
-      : null,
-    allow_encrypted_data_storage: user.data.allow_encrypted_data_storage
-      ? user.data.allow_encrypted_data_storage
-      : null,
-
-    // NOTE(jim): Remaining data.
+  let viewer = {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    data: user.data,
+    library: user.library,
+    // onboarding: user.data.onboarding || {},
+    // status: user.data.status || {},
+    // settings: {
+    //   allow_automatic_data_storage: user.data.allow_automatic_data_storage || null,
+    //   allow_encrypted_data_storage: user.data.allow_encrypted_data_storage || null,
+    //   allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing || null,
+    //   settings_deals_auto_approve: user.data.settings_deals_auto_approve || null,
+    // },
     stats: {
       bytes,
       maximumBytes: Constants.TEXTILE_ACCOUNT_BYTE_LIMIT,
@@ -328,13 +220,23 @@ export const getById = async ({ id }) => {
       epubBytes,
       pdfBytes,
     },
+    tags,
+    userBucketCID: bucketRoot?.path,
     keys,
     slates,
-    subscriptions: r1.serializedSubscriptions,
-    subscribers: r2.serializedSubscribers,
-    // trusted: r3.serializedTrusted,
-    // pendingTrusted: r4.serializedPendingTrusted,
+    subscriptions,
+    following,
+    followers,
   };
+
+  // try {
+  //   JSON.stringify(viewer);
+  // } catch (e) {
+  //   console.log(viewer);
+  //   console.log("errored on json.stringify viewer (2nd time)");
+  // }
+
+  return viewer;
 };
 
 export const getDealHistory = async ({ id }) => {
@@ -389,7 +291,7 @@ export const getDealHistory = async ({ id }) => {
         time: o.time,
         createdAt: Strings.toDateSinceEpoch(o.time),
         pending: o.pending,
-        user: Serializers.user(user),
+        user: Serializers.sanitizeUser(user),
       });
     }
   } catch (e) {
@@ -403,7 +305,7 @@ export const getDealHistory = async ({ id }) => {
     });
   }
 
-  return { type: "VIEWER_FILECOIN_DEALS", deals };
+  return { deals };
 };
 
 export const getTextileById = async ({ id }) => {
@@ -492,7 +394,6 @@ export const getTextileById = async ({ id }) => {
   const settings = await b.buckets.defaultArchiveConfig(b.bucketKey);
 
   return {
-    type: "VIEWER_FILECOIN",
     settings: {
       ...settings,
       addr: addresses[0].address,

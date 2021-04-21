@@ -10,8 +10,6 @@ import * as SVG from "~/common/svg";
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
 
-const SLATE_LIMIT = 50;
-
 const STYLES_TEXT = css`
   color: ${Constants.system.textGray};
   font-size: ${Constants.typescale.lvl0};
@@ -33,7 +31,7 @@ const STYLES_GROUPING = css`
 export default class SidebarCreateSlate extends React.Component {
   state = {
     name: "",
-    public: true,
+    isPublic: true,
     body: "",
     tags: [],
     suggestions: this.props.viewer?.tags || [],
@@ -41,11 +39,6 @@ export default class SidebarCreateSlate extends React.Component {
   };
 
   _handleSubmit = async () => {
-    if (this.props.viewer.slates.length >= SLATE_LIMIT) {
-      Events.dispatchMessage({ message: `You have reached the limit of ${SLATE_LIMIT} Slates!` });
-      return;
-    }
-
     this.setState({ loading: true });
 
     if (!Validations.slatename(this.state.name)) {
@@ -56,7 +49,7 @@ export default class SidebarCreateSlate extends React.Component {
 
     const response = await Actions.createSlate({
       name: this.state.name,
-      public: this.state.public,
+      isPublic: this.state.isPublic,
       body: this.state.body,
       tags: this.state.tags,
     });
@@ -67,13 +60,9 @@ export default class SidebarCreateSlate extends React.Component {
     }
 
     if (this.props.sidebarData && this.props.sidebarData.files) {
-      let data = this.props.sidebarData.files.map((file) => {
-        return { title: file.title || file.name, ...file };
-      });
       const addResponse = await Actions.addFileToSlate({
         slate: response.slate,
-        data,
-        fromSlate: this.props.sidebarData.fromSlate,
+        files: this.props.sidebarData.files,
       });
 
       if (Events.hasError(addResponse)) {
@@ -213,7 +202,7 @@ export default class SidebarCreateSlate extends React.Component {
             on the internet. If you make it private, only you will be able to see it.
           </System.P>
           <RadioGroup
-            name="public"
+            name="isPublic"
             options={[
               {
                 value: true,
@@ -236,7 +225,7 @@ export default class SidebarCreateSlate extends React.Component {
             ]}
             style={{ marginTop: 12 }}
             labelStyle={{ fontFamily: Constants.font.medium }}
-            selected={this.state.public}
+            selected={this.state.isPublic}
             onChange={this._handleChange}
           />
         </div>

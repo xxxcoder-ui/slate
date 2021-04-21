@@ -6,9 +6,8 @@ import * as SearchManager from "~/node_common/managers/search";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
-  console.log(req.body);
   if (!id) {
-    return res.status(500).send({ decorator: "SERVER_SEARCH_UPDATE", error: true });
+    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
   const user = await Data.getUserById({
@@ -16,11 +15,11 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).send({ decorator: "SERVER_SEARCH_UPDATE_USER_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_SEARCH_UPDATE_USER_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
   let action;

@@ -61,7 +61,6 @@ export default class SidebarAddFileToSlate extends React.Component {
       await UserBehaviors.addToSlate({
         slate,
         files: this.props.sidebarData.files,
-        fromSlate: this.props.sidebarData.fromSlate,
       });
     }
   };
