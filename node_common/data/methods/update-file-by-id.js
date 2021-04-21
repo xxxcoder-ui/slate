@@ -13,7 +13,6 @@ export default async ({ id, data }) => {
   if (data) {
     updateObject.data = data;
   }
-  console.log({ updateObject });
 
   return await runQuery({
     label: "UPDATE_FILE_BY_ID",
@@ -28,11 +27,9 @@ export default async ({ id, data }) => {
       }
 
       let updatedFile = Serializers.getUpdatedFile(currentFile, updateObject);
-      console.log({ updatedFile });
 
       const response = await DB.from("files").where("id", id).update(updatedFile).returning("*");
       const index = response ? response.pop() : null;
-      console.log({ index });
       return JSON.parse(JSON.stringify(index));
     },
     errorFn: async (e) => {

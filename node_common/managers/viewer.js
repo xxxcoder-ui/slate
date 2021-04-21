@@ -9,6 +9,8 @@ import * as Window from "~/common/window";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as Filecoin from "~/common/filecoin";
 
+import WebSocket from "ws";
+
 const STAGING_DEAL_BUCKET = "stage-deal";
 
 const websocketSend = async (type, data) => {
@@ -28,13 +30,15 @@ const websocketSend = async (type, data) => {
   );
 
   // NOTE(jim): Only allow this to be passed around encrypted.
-  ws.send(
-    JSON.stringify({
-      type,
-      iv: encryptedData.iv,
-      data: encryptedData.hex,
-    })
-  );
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(
+      JSON.stringify({
+        type,
+        iv: encryptedData.iv,
+        data: encryptedData.hex,
+      })
+    );
+  }
 };
 
 export const hydratePartial = async (
@@ -187,11 +191,11 @@ export const getById = async ({ id }) => {
     cids[each.cid] = true;
   }
 
-const tags = Utilities.getUserTags({ library: user.library, slates });
+  const tags = Utilities.getUserTags({ library: user.library, slates });
 
-const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
-  user,
-});
+  const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+    user,
+  });
 
   let viewer = {
     id: user.id,

@@ -18,6 +18,13 @@ import APIDocsGetSlateV1 from "~/components/api-docs/v1/get-slate.js";
 import APIDocsUpdateSlateV1 from "~/components/api-docs/v1/update-slate.js";
 import APIDocsUploadToSlateV1 from "~/components/api-docs/v1/upload.js";
 
+import APIDocsGetV2 from "~/components/api-docs/v2/get";
+import APIDocsGetSlateV2 from "~/components/api-docs/v2/get-slate.js";
+import APIDocsGetUserV2 from "~/components/api-docs/v2/get-user.js";
+import APIDocsUpdateSlateV2 from "~/components/api-docs/v2/update-slate.js";
+import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
+import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
+
 const STYLES_API_KEY = css`
   height: 40px;
   border-radius: 4px;
@@ -132,28 +139,9 @@ export default class SceneSettingsDeveloper extends React.Component {
     this.setState({ loading: false });
   };
 
-  //handles language changes
   _handleChangeLanguage = (newLanguage) => {
     this.setState({ language: newLanguage });
   };
-
-  async componentDidMount() {
-    // if (!this.props.viewer.keys) {
-    //   return;
-    // }
-    // if (!this.props.viewer.keys.length) {
-    //   return;
-    // }
-    // console.log(this.props.viewer.keys);
-    // const response = await fetch("/api/v1/get-slate", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Basic ${this.props.viewer.keys[0].key}`,
-    //   },
-    // });
-    // const json = await response.json();
-  }
 
   render() {
     let APIKey = "YOUR-API-KEY-HERE";
@@ -163,6 +151,8 @@ export default class SceneSettingsDeveloper extends React.Component {
         APIKey = this.props.viewer.keys[0].key;
       }
     }
+
+    const userId = this.props.viewer.id;
 
     let slateId = "YOUR-SLATE-ID-VALUE";
     if (this.props.viewer.slates) {
@@ -304,7 +294,43 @@ export default class SceneSettingsDeveloper extends React.Component {
         />
 
         {this.state.tab === 0 ? (
-          <></>
+          <>
+            <APIDocsGetV2
+              language={lang}
+              APIKey={APIKey}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsGetSlateV2
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsGetUserV2
+              language={lang}
+              APIKey={APIKey}
+              userId={userId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsUpdateSlateV2
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsUpdateFileV2
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+            <APIDocsUploadToSlateV2
+              language={lang}
+              APIKey={APIKey}
+              slateId={slateId}
+              onLanguageChange={this._handleChangeLanguage}
+            />
+          </>
         ) : (
           <>
             <APIDocsGetV1
