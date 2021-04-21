@@ -198,7 +198,9 @@ export default class SlateMediaObjectPreview extends React.Component {
         style={{ color: Constants.system.textGray }}
       />
     );
-
+    if (!file.filename) {
+      console.log(file);
+    }
     if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], file.filename)) {
       return (
         <article

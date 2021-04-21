@@ -33,4 +33,11 @@ export const generateNumberByStep = ({ min, max, step = 1 }) => {
   return numbers[randomIndex];
 };
 
-export const endsWithAny = (options, string) => options.some((option) => string.endsWith(option));
+export const endsWithAny = (options, string) =>
+  options.some((option) => {
+    if (string) {
+      return string.endsWith(option);
+    } else {
+      return false;
+    }
+  });

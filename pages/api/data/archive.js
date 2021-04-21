@@ -136,7 +136,7 @@ export default async (req, res) => {
 
   let key = bucketRoot.key;
   let encryptedBucketName = null;
-  if (user.data.settings.allow_encrypted_data_storage || req.body.data.forceEncryption) {
+  if (user.data.settings?.allow_encrypted_data_storage || req.body.data.forceEncryption) {
     encryptedBucketName = req.body.data.forceEncryption
       ? `encrypted-deal-${uuid()}`
       : `encrypted-data-${uuid()}`;

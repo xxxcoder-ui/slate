@@ -44,9 +44,9 @@ const printUsersTable = async () => {
       }
     }
   }
-  console.log(Object.keys(dataParams));
-  console.log(Object.keys(fileParams));
-  console.log(Object.keys(coverParams));
+  console.log({ dataParams: Object.keys(dataParams) });
+  console.log({ fileParams: Object.keys(fileParams) });
+  console.log({ coverParams: Object.keys(coverParams) });
 };
 
 const printSlatesTable = async () => {
@@ -78,22 +78,22 @@ const printSlatesTable = async () => {
       }
     }
   }
-  console.log(Object.keys(dataParams));
-  console.log(Object.keys(fileParams));
-  console.log(Object.keys(coverParams));
+  console.log({ dataParams: Object.keys(dataParams) });
+  console.log({ fileParams: Object.keys(fileParams) });
+  console.log({ coverParams: Object.keys(coverParams) });
 };
 
 // MARK: - add/modify tables
 
 const addTables = async () => {
   await DB.schema.table("deals", function (table) {
-    table.renameColumn("owner_user_id", "ownerId"); //replaced
+    table.renameColumn("owner_user_id", "ownerId");
     table.renameColumn("created_at", "createdAt");
-    table.renameColumn("updated_at", "updatedAt"); //replaced
+    table.renameColumn("updated_at", "updatedAt");
   });
 
   await DB.schema.table("keys", function (table) {
-    table.renameColumn("owner_id", "ownerId"); //replaced
+    table.renameColumn("owner_id", "ownerId");
     table.renameColumn("created_at", "createdAt");
   });
 
@@ -169,10 +169,6 @@ const addTables = async () => {
 };
 
 // MARK: - populate new tables
-
-//strip out the "data-" in the id so it can be a uuid
-//if there's a file with that id already existing, this is probably a save copy instance. So give this one a new id
-//when matching slate fiels to files, if you can't find it by id, match it by cid and ownerId. should only be one match.
 
 const migrateUsersTable = async (testing = false) => {
   const users = await DB.select("*").from("users");
@@ -542,11 +538,11 @@ const runScript = async () => {
   // await wipeNewTables();
 
   //NOTE(martina): before starting, make sure you have all the parameters accounted for
-  //   await printUsersTable()
-  //   await printSlatesTable()
+  await printUsersTable();
+  await printSlatesTable();
 
   //NOTE(martina): add tables
-  await addTables();
+  // await addTables();
 
   //NOTE(martina): put data into new tables
   let testing = false;
