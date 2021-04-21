@@ -380,7 +380,7 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    files = await this._handleOptimisticUpload({ files });
+    files = await this._handleOptimisticUpload({ files, slate });
 
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
@@ -507,7 +507,7 @@ export default class ApplicationPage extends React.Component {
     this.setState({ optimisticFiles });
 
     let update = [...optimisticFiles, ...this.state.viewer?.library[0].children];
-    let library = this.props.viewer.library;
+    let library = this.props.viewer?.library;
     library[0].children = update;
     this._handleUpdateViewer({ library });
 
