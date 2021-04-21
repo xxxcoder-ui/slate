@@ -484,9 +484,9 @@ export default class ApplicationPage extends React.Component {
   _handleOptimisticUpload = async ({ files }) => {
     let optimisticFiles = [];
     for (let i = 0; i < files.length; i++) {
-      if (!files[i].type.startsWith("image")) {
-        continue;
-      }
+      // if (!files[i].type.startsWith("image") || !files[i].type.startsWith("video")) {
+      //   continue;
+      // }
 
       let id = `data-${uuid()}`;
       let dataURL = await this._handleLoadDataURL(files[i]);
@@ -495,7 +495,7 @@ export default class ApplicationPage extends React.Component {
         name: files[i].name,
         type: files[i].type,
         size: files[i].size,
-        decorator: "OPTIMISTIC-IMAGE-FILE",
+        decorator: "OPTIMISTIC-FILE",
         dataURL,
       };
 
@@ -516,6 +516,11 @@ export default class ApplicationPage extends React.Component {
 
   _handleLoadDataURL = (file) =>
     new Promise((resolve, reject) => {
+      if (file.type.startsWith("application/pdf")) {
+        resolve(URL.createObjectURL(file));
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = () => {
         resolve(reader.result);

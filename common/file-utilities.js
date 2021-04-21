@@ -73,10 +73,8 @@ export const upload = async ({
     }); //TODO(martina): figure out how to cancel an await if upload has been cancelled
 
     formData.append(fileId, converted);
-  } else if (file.type.startsWith("image")) {
-    formData.append(fileId, file);
   } else {
-    formData.append("data", file);
+    formData.append(fileId, file);
   }
 
   if (Store.checkCancelled(`${file.lastModified}-${file.name}`)) {
