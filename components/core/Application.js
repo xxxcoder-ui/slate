@@ -402,6 +402,27 @@ export default class ApplicationPage extends React.Component {
         });
       } catch (e) {
         console.log(e);
+        let library = this.state.viewer.library;
+        library[0].children = library[0].children.filter((child) => {
+          if (child.id === e.failedFile.id) {
+            return false;
+          }
+
+          return true;
+        });
+
+        this._handleUpdateViewer({ library });
+
+        let optimisticFiles = this.state.optimisticFiles;
+        let updatedOptimisticFiles = optimisticFiles.filter((item) => {
+          if (item.id === e.failedFile.id) {
+            return false;
+          }
+
+          return true;
+        });
+
+        this.setState({ optimisticFiles: updatedOptimisticFiles });
       }
 
       if (!response || response.error) {
@@ -485,7 +506,7 @@ export default class ApplicationPage extends React.Component {
 
     this.setState({ optimisticFiles });
 
-    let update = [...optimisticFiles, ...this.props.viewer?.library[0].children];
+    let update = [...optimisticFiles, ...this.state.viewer?.library[0].children];
     let library = this.props.viewer.library;
     library[0].children = update;
     this._handleUpdateViewer({ library });

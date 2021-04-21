@@ -130,8 +130,9 @@ export const upload = async ({
         try {
           return resolve(JSON.parse(event.target.response));
         } catch (e) {
-          return resolve({
+          return reject({
             error: "SERVER_UPLOAD_ERROR",
+            failedFile: file,
           });
         }
       };
