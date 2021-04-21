@@ -910,17 +910,26 @@ export default class DataView extends React.Component {
         ...each,
         checkbox: (
           <div onClick={(e) => this._handleCheckBox(e, index)}>
-            <CheckBox
-              name={index}
-              value={!!this.state.checked[index]}
-              boxStyle={{ height: 16, width: 16 }}
-              style={{
-                position: "relative",
-                right: 3,
-                margin: "12px 0",
-                opacity: numChecked > 0 || this.state.hover === index ? "100%" : "0%",
-              }}
-            />
+            {each.decorator.startsWith("OPTIMISTIC") ? (
+              <LoaderSpinner
+                style={{
+                  height: 20,
+                  width: 20,
+                }}
+              />
+            ) : (
+              <CheckBox
+                name={index}
+                value={!!this.state.checked[index]}
+                boxStyle={{ height: 16, width: 16 }}
+                style={{
+                  position: "relative",
+                  right: 3,
+                  margin: "12px 0",
+                  opacity: numChecked > 0 || this.state.hover === index ? "100%" : "0%",
+                }}
+              />
+            )}
           </div>
         ),
         name: (
