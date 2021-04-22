@@ -58,6 +58,7 @@
     "moment": "^2.29.1",
     "morgan": "^1.10.0",
     "next": "^10.0.7",
+    "next-offline": "^5.0.5",
     "pg": "^8.5.1",
     "prism-react-renderer": "^1.2.0",
     "prismjs": "^1.23.0",
