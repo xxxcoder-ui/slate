@@ -4,7 +4,7 @@ import * as System from "~/components/system";
 import { Symbol } from "~/common/logo";
 import { css } from "@emotion/react";
 
-const STYLES_POPOVER = css`
+const STYLES_POPOVER = (theme) => css`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -13,6 +13,11 @@ const STYLES_POPOVER = css`
   width: 95vw;
   border-radius: 8px;
   padding: 36px 32px;
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    flex-grow: 1;
+    margin-bottom: auto;
+  }
 
   background: radial-gradient(
     80.79% 80.79% at 50% 50%,
@@ -38,16 +43,24 @@ const STYLES_POPOVER = css`
   animation: authentication-popover-fade-in 400ms ease;
 `;
 
+const STYLES_POPOVER_BODY = css`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+`;
 export default function SignUpPopover({ children, title, logoStyle, titleStyle, props }) {
   return (
     <div css={STYLES_POPOVER} {...props}>
-      <div style={{ textAlign: "center" }}>
-        <Symbol style={{ width: "40px", marginBottom: "8px", ...logoStyle }} />
+      <div>
+        <div style={{ textAlign: "center" }}>
+          <Symbol style={{ width: "40px", marginBottom: "8px", ...logoStyle }} />
+        </div>
+        <System.H3 style={{ textAlign: "center", lineHeight: "30px", ...titleStyle }}>
+          {title}{" "}
+        </System.H3>
       </div>
-      <System.H3 style={{ textAlign: "center", lineHeight: "30px", ...titleStyle }}>
-        {title}{" "}
-      </System.H3>
-      {children}
+      <div css={STYLES_POPOVER_BODY}>{children}</div>
     </div>
   );
 }
