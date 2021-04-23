@@ -6,14 +6,14 @@ import CodeBlock from "~/components/system/CodeBlock";
 const EXAMPLE_CODE_JS = (
   key,
   slateId
-) => `const response = await fetch('https://slate.host/api/v2/get-slate', {
+) => `const response = await fetch('https://slate.host/api/v2/get-collection', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    id: '${slateId}' // slate ID
+    id: '${slateId}' // collection ID
   }})
 });
 
@@ -25,13 +25,13 @@ const json = await response.json();
 if (json.error) {
   console.log(json.error);
 } else {
-  const slate = json.slate;
+  const collection = json.collection;
 }`;
 
 const EXAMPLE_CODE_PY = (key, slateId) => `import requests
 import json as JSON
 
-url = 'https://slate.host/api/v2/get-slate'
+url = 'https://slate.host/api/v2/get-collection'
 headers = {
   'content-type': 'application/json',
   'Authorization': 'Basic ${key}'
@@ -39,13 +39,13 @@ headers = {
 
 json = {
   "data": {
-    "id": "${slateId}" # slate ID
+    "id": "${slateId}" # collection ID
   }
 }
 
 r = requests.post(url, headers=headers, json=json)`;
 
-export default class APIDocsGetSlate extends React.Component {
+export default class APIDocsGetCollection extends React.Component {
   render() {
     let APIKey = this.props.APIKey;
     let slateId = this.props.slateId;
@@ -60,14 +60,14 @@ export default class APIDocsGetSlate extends React.Component {
       <React.Fragment>
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
-          label="Get slate by ID"
-          description="This API request will return a specific slate. You can save the response locally and send this JSON back to our API server using the route /api/v2/update-slate to update your slate."
+          label="Get collection by ID"
+          description="This API request will return a specific collection. You can save the response locally and send this JSON back to our API server using the route /api/v2/update-collection to update your collection."
         />
         <CodeBlock
           children={code}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Get slate by ID"
+          title="Get collection by ID"
           onLanguageChange={this.props.onLanguageChange}
           multiLang="true"
         />

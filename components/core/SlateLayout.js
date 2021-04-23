@@ -1050,7 +1050,7 @@ export class SlateLayout extends React.Component {
   };
 
   _handleDeleteFiles = async (e, i) => {
-    const message = `Are you sure you want to delete these files? They will be deleted from your data and slates.`;
+    const message = `Are you sure you want to delete these files? They will be deleted from your data and collections.`;
     if (!window.confirm(message)) {
       return;
     }
@@ -1384,7 +1384,7 @@ export class SlateLayout extends React.Component {
                                 }
                               >
                                 {this.state.tooltip === `${i}-remove`
-                                  ? "Remove from slate"
+                                  ? "Remove from collection"
                                   : this.state.tooltip === `${i}-view`
                                   ? "View file"
                                   : this.state.tooltip === `${i}-download`
@@ -1509,7 +1509,7 @@ export class SlateLayout extends React.Component {
                                 }
                               >
                                 {this.state.tooltip === `${i}-add`
-                                  ? "Add to slate"
+                                  ? "Add to collection"
                                   : this.state.tooltip === `${i}-copy`
                                   ? "Copy link"
                                   : this.state.tooltip === `${i}-download`
@@ -1690,7 +1690,7 @@ export class SlateLayout extends React.Component {
                         style={{ marginLeft: 8, color: Constants.system.white }}
                         onClick={this._handleAddToSlate}
                       >
-                        Add to slate
+                        Add to collection
                       </ButtonPrimary>
                       <ButtonWarning
                         transparent
@@ -1725,7 +1725,7 @@ export class SlateLayout extends React.Component {
                       onClick={this._handleAddToSlate}
                       style={{ color: Constants.system.white }}
                     >
-                      Add to slate
+                      Add to collection
                     </ButtonPrimary>
                     <ButtonPrimary
                       transparent

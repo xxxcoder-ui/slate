@@ -123,7 +123,7 @@ export class SlatePicker extends React.Component {
               pointerEvents: "none",
             }}
           />
-          <div>Create new slate</div>
+          <div>Create new collection</div>
         </div>
 
         {this.props.slates.length ? (

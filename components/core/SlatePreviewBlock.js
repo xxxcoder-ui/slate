@@ -278,7 +278,7 @@ export class SlatePreviewBlock extends React.Component {
             }}
             navigation={[
               {
-                text: "Copy slate ID",
+                text: "Copy collection ID",
                 onClick: (e) => this._handleCopy(e, this.props.slate.id),
               },
             ]}
@@ -368,7 +368,7 @@ export class SlatePreviewBlock extends React.Component {
               }}
             >
               <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
-              No files in this slate
+              No files in this collection
             </div>
           )}
         </span>

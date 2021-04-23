@@ -390,7 +390,7 @@ export default class SceneActivity extends React.Component {
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={2}
@@ -403,7 +403,7 @@ export default class SceneActivity extends React.Component {
               <PrimaryTabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={2}
@@ -517,7 +517,7 @@ export default class SceneActivity extends React.Component {
           <EmptyState>
             <SVG.Users height="24px" />
             <div style={{ marginTop: 24 }}>
-              Start following people and slates to see their activity here
+              Start following people and collections to see their activity here
             </div>
           </EmptyState>
         )}

@@ -48,7 +48,7 @@ const response = await fetch(url, {
 
 const SLATE_EXAMPLE_CODE_PY = (key, slateId) => `import requests
 
-url = "https://uploads.slate.host/api/public/${slateId}" # collection ID
+url = "https://uploads.slate.host/api/public/${slateId}" # collection ID. Omit this to just upload without adding to a specific collection
 files = {
   "file": open("example-file.txt", "rb")
 }
@@ -78,7 +78,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           style={{ maxWidth: 640, marginTop: 64 }}
           label="Upload"
           description={
-            "This API endpoint allows you to upload file(s) to your data. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network."
+            "This API endpoint allows you to upload a file to your data. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network."
           }
         />
         <CodeBlock
@@ -94,7 +94,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           children={slateUploadCode}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Upload"
+          title="Upload to collection"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />

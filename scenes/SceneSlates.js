@@ -41,7 +41,7 @@ export default class SceneSlates extends React.Component {
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={1}
@@ -54,7 +54,7 @@ export default class SceneSlates extends React.Component {
               <PrimaryTabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={1}
@@ -69,7 +69,7 @@ export default class SceneSlates extends React.Component {
               </SquareButtonGray>
               <SecondaryTabGroup
                 tabs={[
-                  { title: "My Slates", value: "NAV_SLATES" },
+                  { title: "My Collections", value: "NAV_SLATES" },
                   { title: "Subscribed", value: "NAV_SLATES_FOLLOWING" },
                 ]}
                 value={this.props.tab}
@@ -102,10 +102,10 @@ export default class SceneSlates extends React.Component {
             <EmptyState>
               <FileTypeGroup />
               <div style={{ marginTop: 24 }}>
-                Use slates to create mood boards, share files, and organize research.
+                Use collections to create mood boards, share files, and organize research.
               </div>
               <ButtonSecondary onClick={this._handleAdd} style={{ marginTop: 32 }}>
-                Create slate
+                Create collection
               </ButtonSecondary>
             </EmptyState>
           )
@@ -120,9 +120,9 @@ export default class SceneSlates extends React.Component {
             />
           ) : (
             <EmptyState>
-              You can follow any public slates on the network.
+              You can follow any public collections on the network.
               <ButtonSecondary onClick={this._handleSearch} style={{ marginTop: 32 }}>
-                Browse slates
+                Browse collections
               </ButtonSecondary>
             </EmptyState>
           )

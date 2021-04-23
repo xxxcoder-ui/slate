@@ -554,7 +554,7 @@ export default class Profile extends React.Component {
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
                     {user.slates?.length || 0}{" "}
-                    <span style={{ color: `${Constants.system.darkGray}` }}>Slates</span>
+                    <span style={{ color: `${Constants.system.darkGray}` }}>Collections</span>
                   </div>
                 </div>
               </div>
@@ -576,7 +576,7 @@ export default class Profile extends React.Component {
         )}
         <div css={STYLES_PROFILE}>
           <TabGroup
-            tabs={["Files", "Slates", "Peers"]}
+            tabs={["Files", "Collections", "Peers"]}
             value={tab}
             onChange={this._handleSwitchTab}
             style={{ marginTop: 0, marginBottom: 32 }}
@@ -619,7 +619,7 @@ export default class Profile extends React.Component {
           {tab === 1 ? (
             <div>
               <SecondaryTabGroup
-                tabs={["Slates", "Following"]}
+                tabs={["Collections", "Following"]}
                 value={this.state.slateTab}
                 onChange={(value) => {
                   this.setState({ slateTab: value }, () => {
@@ -647,14 +647,14 @@ export default class Profile extends React.Component {
                           <React.Fragment>
                             <SVG.Slate height="24px" style={{ marginBottom: 24 }} />
                             {this.state.slateTab === 0
-                              ? `This user does not have any public slates yet`
-                              : `This user is not following any slates yet`}
+                              ? `This user does not have any public collections yet`
+                              : `This user is not following any collections yet`}
                           </React.Fragment>
                         ) : (
                           <LoaderSpinner style={{ height: 24, width: 24 }} />
                         )}
                       </EmptyState>
-                      <div css={STYLES_EXPLORE}>Explore Slates</div>
+                      <div css={STYLES_EXPLORE}>Explore Collections</div>
                       <SlatePreviewBlocks
                         isOwner={false}
                         external={this.props.external}
@@ -669,8 +669,8 @@ export default class Profile extends React.Component {
                         <React.Fragment>
                           <SVG.Slate height="24px" style={{ marginBottom: 24 }} />
                           {this.state.slateTab === 0
-                            ? `This user does not have any public slates yet`
-                            : `This user is not following any slates yet`}
+                            ? `This user does not have any public collections yet`
+                            : `This user is not following any collections yet`}
                         </React.Fragment>
                       ) : (
                         <LoaderSpinner style={{ height: 24, width: 24 }} />

@@ -85,7 +85,7 @@ export const createSlate = ({ user, slate }) => {
 
     const userProfileURL = `https://slate.host/${user.username}`;
     const userURL = `<${userProfileURL}|${user.username}>`;
-    const message = `*${userURL}* created a slate: https://slate.host/${user.username}/${slate.slatename}`;
+    const message = `*${userURL}* created a collection: https://slate.host/${user.username}/${slate.slatename}`;
 
     Social.sendSlackMessage(message);
   } catch (e) {
@@ -180,7 +180,6 @@ export const createSlate = ({ user, slate }) => {
 
 export const createSlateObjects = ({ slate, user, files }) => {
   // Data.createOrUpdateStats(new Date(), { objects: files.length });
-  console.log("inside create slate objects");
   if (!slate.isPublic) return;
 
   let activityItems = [];
@@ -307,7 +306,7 @@ export const subscribeSlate = ({ user, targetSlate }) => {
     const targetSlatePageURL = `https://slate.host/$/${targetSlate.id}`;
     const targetSlateURL = `<${targetSlatePageURL}|${targetSlate.slateId}>`;
 
-    const message = `*${userURL}* subscribed to slate:${targetSlateURL}`;
+    const message = `*${userURL}* subscribed to collection:${targetSlateURL}`;
     Social.sendSlackMessage(message);
   } catch (e) {
     console.log(e);

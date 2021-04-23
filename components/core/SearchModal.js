@@ -115,7 +115,7 @@ const UserPreview = ({ user }) => {
       <div css={STYLES_PREVIEW_TEXT}>@{user.username}</div>
       {user.data.slates ? (
         <div css={STYLES_PREVIEW_TEXT}>
-          {user.data.slates.length} Slate{user.data.slates.length === 1 ? "" : "s"}
+          {user.data.slates.length} Collection{user.data.slates.length === 1 ? "" : "s"}
         </div>
       ) : null}
     </div>
@@ -266,7 +266,7 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
         <div css={STYLES_PREVIEW_TEXT}>Owner: {user.data.name || `@${user.username}`}</div>
       ) : null}
       {slate ? (
-        <div css={STYLES_PREVIEW_TEXT}>Slate: {slate.data.name || slate.slatename}</div>
+        <div css={STYLES_PREVIEW_TEXT}>Collection: {slate.data.name || slate.slatename}</div>
       ) : user?.id === viewerId ? (
         <div css={STYLES_PREVIEW_TEXT}>In your files</div>
       ) : null}
@@ -955,7 +955,7 @@ export class SearchModal extends React.Component {
                         {this.state.typeFilter ? (
                           <div css={STYLES_INLINE_TAG}>
                             {this.state.typeFilter === "SLATE"
-                              ? "Slates:"
+                              ? "Collections:"
                               : this.state.typeFilter === "USER"
                               ? "Users:"
                               : this.state.typeFilter === "FILE"
@@ -971,9 +971,9 @@ export class SearchModal extends React.Component {
                         value={this.state.inputValue}
                         placeholder={`Search for ${
                           !this.state.typeFilter
-                            ? "slates, users, and files..."
+                            ? "collections, users, and files..."
                             : this.state.typeFilter === "SLATE"
-                            ? "slates..."
+                            ? "collections..."
                             : this.state.typeFilter === "USER"
                             ? "users..."
                             : this.state.typeFilter === "FILE"
@@ -1013,7 +1013,7 @@ export class SearchModal extends React.Component {
                         >
                           <SVG.Layers height="16px" />
                           <span css={STYLES_MOBILE_HIDDEN} style={{ marginLeft: 8 }}>
-                            Search slates
+                            Search collections
                           </span>
                         </div>
                         <div

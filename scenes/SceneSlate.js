@@ -183,8 +183,8 @@ export default class SceneSlate extends React.Component {
             <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
             <div>
               {this.state.accessDenied
-                ? "You do not have access to that slate"
-                : "We were unable to locate that slate"}
+                ? "You do not have access to that collection"
+                : "We were unable to locate that collection"}
             </div>
           </EmptyState>
         </ScenePage>
@@ -467,7 +467,9 @@ class SlatePage extends React.Component {
           <div>
             <EmptyState>
               <FileTypeGroup />
-              <div style={{ marginTop: 24 }}>Drag and drop files to add them to this slate</div>
+              <div style={{ marginTop: 24 }}>
+                Drag and drop files to add them to this collection
+              </div>
             </EmptyState>
           </div>
         ) : (

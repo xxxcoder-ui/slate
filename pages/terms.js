@@ -138,8 +138,8 @@ export default class TermsPage extends React.Component {
                   </a>
                 </li>
                 <li>
-                  <a css={STYLES_LINK} href="#Your account and slates">
-                    Your account and slates
+                  <a css={STYLES_LINK} href="#Your account and collections">
+                    Your account and collections
                   </a>
                 </li>
                 <li>

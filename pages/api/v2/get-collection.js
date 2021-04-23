@@ -47,31 +47,31 @@ export default async (req, res) => {
   let slate;
 
   if (Strings.isEmpty(slateId)) {
-    return res.status(400).send({ decorator: "V2_GET_SLATE_NO_ID_PROVIDED", error: true });
+    return res.status(400).send({ decorator: "NO_ID_PROVIDED", error: true });
   }
 
   slate = await Data.getSlateById({ id: slateId, includeFiles: true, sanitize: true });
 
   if (!slate) {
     return res.status(404).send({
-      decorator: "SLATE_NOT_FOUND",
+      decorator: "COLLECTION_NOT_FOUND",
       error: true,
     });
   }
 
   if (slate.error) {
     return res.status(500).send({
-      decorator: "ERROR_WHILE_LOCATING_SLATE",
+      decorator: "ERROR_WHILE_LOCATING_COLLECTION",
       error: true,
     });
   }
 
   if (!slate.isPublic) {
     return res.status(400).send({
-      decorator: "SLATE_IS_PRIVATE",
+      decorator: "COLLECTION_IS_PRIVATE",
       error: true,
     });
   }
 
-  return res.status(200).send({ decorator: "V2_GET_SLATE", slate });
+  return res.status(200).send({ decorator: "V2_GET_COLLECTION", collection: slate });
 };

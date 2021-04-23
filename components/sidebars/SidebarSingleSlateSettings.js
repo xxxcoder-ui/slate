@@ -109,7 +109,9 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
   _handleDelete = async (e) => {
     if (
-      !window.confirm("Are you sure you want to delete this Slate? This action is irreversible.")
+      !window.confirm(
+        "Are you sure you want to delete this Collection? This action is irreversible."
+      )
     ) {
       return;
     }
@@ -160,7 +162,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             marginBottom: 36,
           }}
         >
-          Slate settings
+          Collection settings
         </System.P>
 
         <div css={STYLES_GROUPING}>
@@ -171,11 +173,11 @@ export default class SidebarSingleSlateSettings extends React.Component {
               marginTop: 12,
             }}
           >
-            Give your slate a name so you and others can find it on Slate and on the web.
+            Give your collection a name so you and others can find it on Slate and on the web.
           </System.P>
 
           <System.Input
-            placeholder="Slate name..."
+            placeholder="Collection name..."
             style={{ marginTop: 12 }}
             name="tags"
             value={this.state.name}
@@ -203,13 +205,13 @@ export default class SidebarSingleSlateSettings extends React.Component {
               marginTop: 12,
             }}
           >
-            Give your slate a description, add links, and connect it to other slates.
+            Give your collection a description, add links, and connect it to other collections.
           </System.P>
 
           <System.Textarea
             style={{ marginTop: 12 }}
             name="body"
-            placeholder="Slate description..."
+            placeholder="Collection description..."
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
@@ -224,7 +226,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
               marginTop: 12,
             }}
           >
-            Add tags to a slate to categorize it.
+            Add tags to a collection to categorize it.
           </System.P>
           <System.Tag
             name="tags"
@@ -244,8 +246,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
               marginTop: 12,
             }}
           >
-            This is the cover image for your slate. You can select a different cover image using the
-            "Make cover image" button.
+            This is the cover image for your collection. You can select a different cover image
+            using the "Make cover image" button.
           </System.P>
 
           <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
@@ -263,8 +265,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
               marginTop: 12,
             }}
           >
-            All slates are public by default. This means they can be discovered and seen by anyone
-            on the internet. If you make it private, only you will be able to see it.
+            All collections are public by default. This means they can be discovered and seen by
+            anyone on the internet. If you make it private, only you will be able to see it.
           </System.P>
           <RadioGroup
             name="isPublic"
@@ -302,7 +304,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
           <div style={{ marginTop: 16 }}>
             <System.ButtonWarning full onClick={this._handleDelete} style={{ overflow: "hidden" }}>
-              Delete slate
+              Delete collection
             </System.ButtonWarning>
           </div>
         </div>

@@ -429,7 +429,7 @@ export default class IndexPage extends React.Component {
               <div css={STYLES_TEXT_BLOCK}>
                 <h2 css={STYLES_H1}>
                   <span css={STYLES_HIGHLIGHT_YELLOW}>Collect, organize and share</span> <br />
-                  your slates
+                  your collections
                 </h2>
                 <p css={STYLES_P} style={{ opacity: 0.7 }}>
                   A modular interface for your files, an interface that gives you complete

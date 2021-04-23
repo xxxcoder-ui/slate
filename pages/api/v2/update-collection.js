@@ -52,7 +52,7 @@ export default async (req, res) => {
 
   if (!req.body.data) {
     return res.status(500).send({
-      decorator: "V2_UPDATE_SLATE_MUST_PROVIDE_DATA",
+      decorator: "V2_UPDATE_COLLECTION_MUST_PROVIDE_DATA",
       error: true,
     });
   }
@@ -60,16 +60,16 @@ export default async (req, res) => {
   const slate = await Data.getSlateById({ id: req.body.data.id, includeFiles: true });
 
   if (!slate) {
-    return res.status(404).send({ decorator: "SLATE_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "COLLECTION_NOT_FOUND", error: true });
   }
 
   if (slate.error) {
-    return res.status(500).send({ decorator: "SLATE_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "COLLECTION_NOT_FOUND", error: true });
   }
 
   if (slate.ownerId !== user.id) {
     return res.status(400).send({
-      decorator: "NOT_SLATE_OWNER_UPDATE_NOT_PERMITTED",
+      decorator: "NOT_COLLECTION_OWNER_UPDATE_NOT_PERMITTED",
       error: true,
     });
   }
@@ -92,11 +92,11 @@ export default async (req, res) => {
     });
 
     if (!privacyResponse) {
-      return res.status(404).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
+      return res.status(404).send({ decorator: "UPDATE_COLLECTION_PRIVACY_FAILED", error: true });
     }
 
     if (privacyResponse.error) {
-      return res.status(500).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
+      return res.status(500).send({ decorator: "UPDATE_COLLECTION_PRIVACY_FAILED", error: true });
     }
 
     if (!updates.isPublic) {
@@ -125,7 +125,7 @@ export default async (req, res) => {
   if (updates.data.name && updates.data.name !== slate.data.name) {
     if (!Validations.slatename(slate.data.name)) {
       return res.status(400).send({
-        decorator: "INVALID_SLATE_NAME",
+        decorator: "INVALID_COLLECTION_NAME",
         error: true,
       });
     }
@@ -137,7 +137,7 @@ export default async (req, res) => {
 
     if (existingSlate) {
       return res.status(500).send({
-        decorator: "SLATE_NAME_TAKEN",
+        decorator: "COLLECTION_NAME_TAKEN",
         error: true,
       });
     } else {
@@ -148,11 +148,11 @@ export default async (req, res) => {
   let updatedSlate = await Data.updateSlateById(updates);
 
   if (!updatedSlate) {
-    return res.status(404).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
+    return res.status(404).send({ decorator: "UPDATE_COLLECTION_FAILED", error: true });
   }
 
   if (updatedSlate.error) {
-    return res.status(500).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
+    return res.status(500).send({ decorator: "UPDATE_COLLECTION_FAILED", error: true });
   }
 
   if (slate.isPublic && !updates.isPublic) {
@@ -165,5 +165,5 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 
-  return res.status(200).send({ decorator: "V2_UPDATE_SLATE", slate: updatedSlate });
+  return res.status(200).send({ decorator: "V2_UPDATE_COLLECTION", collection: updatedSlate });
 };

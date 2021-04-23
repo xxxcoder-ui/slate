@@ -75,7 +75,7 @@ export default class SidebarAddFileToSlate extends React.Component {
             marginBottom: 36,
           }}
         >
-          Add files to slate
+          Add files to collection
         </System.P>
 
         <System.P css={STYLES_HEADER}>Slates</System.P>
@@ -89,11 +89,11 @@ export default class SidebarAddFileToSlate extends React.Component {
 
         {Object.keys(this.state.selected).length ? (
           <ButtonPrimary full onClick={this._handleSubmit} style={{ marginTop: 32 }}>
-            Add to slates
+            Add to collections
           </ButtonPrimary>
         ) : (
           <ButtonDisabled full style={{ marginTop: 32 }}>
-            Add to slates
+            Add to collections
           </ButtonDisabled>
         )}
       </div>
