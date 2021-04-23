@@ -17,7 +17,7 @@ Slate is the first open source file storage application designed to encourage co
 
 Slate is tightly scoped for the present and more broadly thought out for the future. Our primary objective is to create a best-in-class experience for uploading, collecting, and sharing media. Additional filetypes will be supported, but our focus is to start with the pieces that apply to everyone and then dial into more specific formats.
 
-- Example slate: https://slate.host/tara/loom
+- Example collection: https://slate.host/tara/loom
 - Example user profile: https://slate.host/gndclouds
 - New brand: https://slate.host/narative/slate-brand-identity
 - Monet on Filecoin: https://slate.host/slate/monet

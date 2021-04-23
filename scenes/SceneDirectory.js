@@ -305,7 +305,8 @@ export default class SceneDirectory extends React.Component {
           ) : (
             <EmptyState>
               <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              You can follow any user on the network to be updated on their new uploads and slates.
+              You can follow any user on the network to be updated on their new uploads and
+              collections.
             </EmptyState>
           )
         ) : null}

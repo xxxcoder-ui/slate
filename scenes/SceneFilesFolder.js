@@ -244,7 +244,7 @@ export default class SceneFilesFolder extends React.Component {
               <TabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={0}
@@ -257,7 +257,7 @@ export default class SceneFilesFolder extends React.Component {
               <PrimaryTabGroup
                 tabs={[
                   { title: "Files", value: "NAV_DATA" },
-                  { title: "Slates", value: "NAV_SLATES" },
+                  { title: "Collections", value: "NAV_SLATES" },
                   { title: "Activity", value: "NAV_ACTIVITY" },
                 ]}
                 value={0}

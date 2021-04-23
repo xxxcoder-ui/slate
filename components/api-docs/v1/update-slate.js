@@ -4,12 +4,12 @@ import * as System from "~/components/system";
 import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key, slateId) => {
-  return `const SLATE_ID = "${slateId}" 
+  return `const COLLECTION_ID = "${slateId}" 
 
-const slateResponseData = getSlateById(SLATE_ID);
+const collectionResponseData = getCollectionById(COLLECTION_ID);
 
-const slate = slateResponseData.slate;
-slate.data.name = "New title"
+const collection = collectionResponseData.slate;
+collection.data.name = "New title"
 
 const response = await fetch('https://slate.host/api/v1/update-slate', {
   method: 'POST',
@@ -17,7 +17,7 @@ const response = await fetch('https://slate.host/api/v1/update-slate', {
     'Content-Type': 'application/json',
     Authorization: 'Basic ${key}', // API key
   },
-  body: JSON.stringify({ data: slate })
+  body: JSON.stringify({ data: collection })
 });`;
 };
 
@@ -31,17 +31,17 @@ headers = {
 
 json = { "id": "${slateId}" } # slate ID
 
-get_slate = requests.post(
+get_collection = requests.post(
     "https://slate.host/api/v1/get-slate", headers=headers, json=json
 )
 
-get_slate_response = get_slate.json()
+get_collection_response = get_collection.json()
 
 
-slate = get_slate_response["slate"]
-slate["data"]["name"] = "New title"
+collection = get_collection_response["slate"]
+collection["data"]["name"] = "New title"
 
-postJson = { "data": slate }
+postJson = { "data": collection }
 
 url = "https://slate.host/api/v1/update-slate"
 
@@ -61,14 +61,14 @@ export default class APIDocsUpdateSlate extends React.Component {
       <React.Fragment>
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
-          label="Update slate"
-          description="This API endpoint allows you to modify a slate by saving the response from get-slate, modifying it, and sending it back"
+          label="Update collection"
+          description="This API endpoint allows you to modify a collection by saving the response from get-slate, modifying it, and sending it back"
         />
         <CodeBlock
           children={code}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Update slate"
+          title="Update collection"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />

@@ -452,7 +452,7 @@ class CarouselSidebar extends React.Component {
   _handleDelete = () => {
     if (this.props.external || !this.props.isOwner) return;
     const message =
-      "Are you sure you want to delete this? It will be removed from your slates as well";
+      "Are you sure you want to delete this? It will be removed from your collections as well";
     if (!window.confirm(message)) {
       return;
     }
@@ -538,7 +538,7 @@ class CarouselSidebar extends React.Component {
         }
       }
       const slateNames = publicSlateNames.join(", ");
-      const message = `Making this file private will remove it from the following public slates: ${slateNames}. Do you wish to continue?`;
+      const message = `Making this file private will remove it from the following public collections: ${slateNames}. Do you wish to continue?`;
       if (!window.confirm(message)) {
         return;
       }
@@ -697,7 +697,7 @@ class CarouselSidebar extends React.Component {
               }
             >
               <SVG.Slate height="24px" />
-              <span style={{ marginLeft: 16 }}>Go to slate</span>
+              <span style={{ marginLeft: 16 }}>Go to collection</span>
             </div>
           )
         : null;
@@ -738,7 +738,7 @@ class CarouselSidebar extends React.Component {
       actions.push(
         <div key="remove" css={STYLES_ACTION} onClick={this._handleRemove}>
           <SVG.DismissCircle height="24px" />
-          <span style={{ marginLeft: 16 }}>Remove from slate</span>
+          <span style={{ marginLeft: 16 }}>Remove from collection</span>
         </div>
       );
     }
@@ -866,7 +866,7 @@ class CarouselSidebar extends React.Component {
                 >
                   <SVG.ChevronDown height="24px" display="block" />
                 </span>
-                <span>Add to slate</span>
+                <span>Add to collection</span>
               </div>
               {this.state.showConnectedSection && (
                 <div style={{ width: "100%", margin: "24px 0 44px 0" }}>

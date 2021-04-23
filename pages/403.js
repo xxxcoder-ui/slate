@@ -135,7 +135,7 @@ export default class NotFoundPage extends React.Component {
 
           <div css={STYLES_MIDDLE}>
             <h1 css={STYLES_GLITCH}>403</h1>
-            <h2>You do not have access to this Slate.</h2>
+            <h2>You do not have access to this collection.</h2>
           </div>
 
           <WebsitePrototypeFooter />

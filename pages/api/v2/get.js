@@ -55,14 +55,14 @@ export default async (req, res) => {
 
   if (!slates) {
     return res.status(404).send({
-      decorator: "COULD_NOT_FETCH_SLATES",
+      decorator: "COULD_NOT_FETCH_COLLECTIONS",
       error: true,
     });
   }
 
   if (slates.error) {
     return res.status(500).send({
-      decorator: "COULD_NOT_FETCH_SLATES",
+      decorator: "COULD_NOT_FETCH_COLLECTIONS",
       error: true,
     });
   }
@@ -72,5 +72,5 @@ export default async (req, res) => {
     return each;
   });
 
-  return res.status(200).send({ decorator: "V2_GET", user, slates });
+  return res.status(200).send({ decorator: "V2_GET", user, collections: slates });
 };

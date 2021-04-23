@@ -90,7 +90,7 @@ export class OnboardingModal extends React.Component {
     {
       title: "New On Slate: Grid System 2.0",
       text:
-        "We just introduced a completely new layout engine that gives you total control over the way you can organize and display your slates.",
+        "We just introduced a completely new layout engine that gives you total control over the way you can organize and display your collections.",
       image: (
         <img
           src="https://slate.textile.io/ipfs/bafybeigb7pd2dh64ty7l2yhnzu5kjupgxbfzqzjjb2gtprexfxzkwx4nle"

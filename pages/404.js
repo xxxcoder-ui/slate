@@ -125,7 +125,7 @@ const STYLES_MIDDLE = css`
 export default class NotFoundPage extends React.Component {
   render() {
     const title = `404`;
-    const description = "This page no longer exists.";
+    const description = "The page you are looking for does not exist";
     const url = "https://slate.host/404";
 
     return (
@@ -135,7 +135,7 @@ export default class NotFoundPage extends React.Component {
 
           <div css={STYLES_MIDDLE}>
             <h1 css={STYLES_GLITCH}>404</h1>
-            <h2>The page you are looking for does not exist.</h2>
+            <h2>The page you are looking for does not exist</h2>
           </div>
 
           <WebsitePrototypeFooter />

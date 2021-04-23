@@ -475,7 +475,7 @@ export default class DataView extends React.Component {
   };
 
   _handleDelete = (id) => {
-    const message = `Are you sure you want to delete these files? They will be deleted from your slates as well`;
+    const message = `Are you sure you want to delete these files? They will be deleted from your collections as well`;
     if (!window.confirm(message)) {
       return;
     }
@@ -653,7 +653,7 @@ export default class DataView extends React.Component {
                   style={{ color: Constants.system.white }}
                   onClick={this._handleAddToSlate}
                 >
-                  Add to slate
+                  Add to collection
                 </ButtonPrimary>
                 <ButtonPrimary
                   transparent

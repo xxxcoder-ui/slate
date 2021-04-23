@@ -4,12 +4,12 @@ import * as System from "~/components/system";
 import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key, slateId) => {
-  return `const SLATE_ID = "${slateId}" 
+  return `const COLLECTION_ID = "${slateId}" 
 
-const slateResponseData = getSlateById(SLATE_ID);
+const collectionResponseData = getCollectionById(COLLECTION_ID);
 
-const slate = slateResponseData.slate;
-const file = slate.objects[0];
+const collection = collectionResponseData.collection;
+const file = collection.objects[0];
 file.data.name = "New filename";
 
 const response = await fetch('https://slate.host/api/v2/update-file', {
@@ -30,16 +30,16 @@ headers = {
     "Authorization": "Basic ${key}", // API key
 }
 
-json = { "id": "${slateId}" } # slate ID
+json = { "id": "${slateId}" } # collection ID
 
-get_slate = requests.post(
-    "https://slate.host/api/v2/get-slate", headers=headers, json=json
+get_collection = requests.post(
+    "https://slate.host/api/v2/get-collection", headers=headers, json=json
 )
 
-get_slate_response = get_slate.json()
+get_collection_response = get_collection.json()
 
-slate = get_slate_response["slate"]
-file = slate["objects"][0];
+collection = get_collection_response["collection"]
+file = collection["objects"][0];
 file["data"]["name"] = "New filename"
 
 postJson = { "data": file }
@@ -63,7 +63,7 @@ export default class APIDocsUpdateFile extends React.Component {
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
           label="Update file"
-          description="This API endpoint allows you to modify a file by saving the slate object in the response from get-slate, modifying it, and sending it back"
+          description="This API endpoint allows you to modify a file by saving the collection object in the response from get-collection, modifying it, and sending it back"
         />
         <CodeBlock
           children={code}

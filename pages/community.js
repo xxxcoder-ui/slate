@@ -728,7 +728,7 @@ method: 'POST',
     Authorization: 'Basic SLATE-API-KEY-FROM-ACCOUNT-SETTINGS',
     },
     body: JSON.stringify({ data: {
-    // NOTE: optional, if you want your private slates too.
+    // NOTE: optional, if you want your private collections too.
     private: false
     }})
   });

@@ -111,7 +111,7 @@ export default class SidebarCreateSlate extends React.Component {
             marginBottom: 36,
           }}
         >
-          Create slate
+          Create collection
         </System.P>
 
         <div css={STYLES_GROUPING}>
@@ -122,12 +122,12 @@ export default class SidebarCreateSlate extends React.Component {
               marginTop: 12,
             }}
           >
-            Give your slate a name so you and others can find it on Slate and on the web.
+            Give your collection a name so you and others can find it on Slate and on the web.
           </System.P>
 
           <System.Input
             autoFocus
-            placeholder="Slate name..."
+            placeholder="Collection name..."
             style={{ marginTop: 12 }}
             name="name"
             value={this.state.name}
@@ -155,12 +155,12 @@ export default class SidebarCreateSlate extends React.Component {
               marginTop: 12,
             }}
           >
-            Give your slate a description, add links, and connect it to other slates.
+            Give your collection a description, add links, and connect it to other collections.
           </System.P>
 
           <System.Textarea
             style={{ marginTop: 12 }}
-            placeholder="Slate description..."
+            placeholder="Collection description..."
             name="body"
             value={this.state.body}
             onChange={this._handleChange}
@@ -176,11 +176,11 @@ export default class SidebarCreateSlate extends React.Component {
               marginTop: 12,
             }}
           >
-            Add tags to a slate to categorize it.
+            Add tags to a collection to categorize it.
           </System.P>
           <System.Tag
             name="tags"
-            placeholder={`Edit tags for ${this.state.name ? this.state.name : "this slate"}`}
+            placeholder={`Edit tags for ${this.state.name ? this.state.name : "this collection"}`}
             tags={this.state.tags}
             suggestions={this.state.suggestions}
             style={{ marginTop: 12 }}
@@ -198,8 +198,8 @@ export default class SidebarCreateSlate extends React.Component {
               marginTop: 12,
             }}
           >
-            All slates are public by default. This means they can be discovered and seen by anyone
-            on the internet. If you make it private, only you will be able to see it.
+            All collections are public by default. This means they can be discovered and seen by
+            anyone on the internet. If you make it private, only you will be able to see it.
           </System.P>
           <RadioGroup
             name="isPublic"

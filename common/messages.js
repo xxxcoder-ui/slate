@@ -65,56 +65,57 @@ export const error = {
 
   //Add to slate
   SERVER_ADD_TO_SLATE_NO_SLATE:
-    "We ran into issues while adding files to that slate. No slate was specified",
-  SERVER_ADD_TO_SLATE_SLATE_NOT_FOUND: "We're having trouble locating that slate right now",
+    "We ran into issues while adding files to that collection. No collection was specified",
+  SERVER_ADD_TO_SLATE_SLATE_NOT_FOUND: "We're having trouble locating that collection right now",
   SERVER_ADD_TO_SLATE_NO_FILES:
-    "We ran into issues while adding files to that slate. No files selected",
-  SERVER_ADD_TO_SLATE_FAILED: "We're having trouble adding those files to that slate right now",
+    "We ran into issues while adding files to that collection. No files selected",
+  SERVER_ADD_TO_SLATE_FAILED:
+    "We're having trouble adding those files to that collection right now",
 
   //Slate create
   SERVER_CREATE_SLATE_EXISTING_SLATE_NAME:
-    "You already have a slate with that name. Slate names must be unique",
+    "You already have a collection with that name. Collection names must be unique",
   SERVER_CREATE_SLATE_FAILED:
-    "We are having trouble creating that slate right now, please try again later",
+    "We are having trouble creating that collection right now, please try again later",
 
   //Slate delete
   SERVER_DELETE_SLATE_SLATE_NOT_FOUND:
-    "We're having difficulty locating that slate. It may have already been deleted",
+    "We're having difficulty locating that collection. It may have already been deleted",
   SERVER_DELETE_SLATE_FAILED:
-    "We're having trouble deleting that slate right now, please try again later",
+    "We're having trouble deleting that collection right now, please try again later",
 
   //Get slate
   SERVER_GET_SERIALIZED_SLATE_SLATE_NOT_FOUND:
-    "We were unable to locate that slate. It may be private or it may not exist",
+    "We were unable to locate that collection. It may be private or it may not exist",
   SERVER_GET_SERIALIZED_SLATE_PRIVATE_ACCESS_DENIED:
-    "We were unable to locate that slate. It may be private or it may not exist",
+    "We were unable to locate that collection. It may be private or it may not exist",
   SERVER_GET_SLATE_NOT_FOUND:
-    "We were unable to locate that slate. It may be private or it may not exist",
+    "We were unable to locate that collection. It may be private or it may not exist",
   SERVER_GET_SLATE_PRIVATE_ACCESS_DENIED:
-    "We were unable to locate that slate. It may be private or it may not exist",
+    "We were unable to locate that collection. It may be private or it may not exist",
 
   //Remove from slate
   SERVER_REMOVE_FROM_SLATE_NO_ID_PROVIDED:
-    "Unable to remove from slate because no slate was specified",
-  SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND: "We are having trouble locating that slate",
-  SERVER_REMOVE_FROM_SLATE_FAILED: "We are having trouble removing from that slate right now",
+    "Unable to remove from collection because no collection was specified",
+  SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND: "We are having trouble locating that collection",
+  SERVER_REMOVE_FROM_SLATE_FAILED: "We are having trouble removing from that collection right now",
 
   //Update slate layout
   SERVER_UPDATE_SLATE_LAYOUT_MUST_PROVIDE_DATA: "No layout was provided to update",
-  SERVER_UPDATE_SLATE_LAYOUT_NOT_FOUND: "We are having trouble locating that slate",
+  SERVER_UPDATE_SLATE_LAYOUT_NOT_FOUND: "We are having trouble locating that collection",
   SERVER_UPDATE_SLATE_LAYOUT:
-    "We are unable to update that slate's layout right now. Please try again later",
+    "We are unable to update that collection's layout right now. Please try again later",
 
   //Update slate
   SERVER_UPDATE_SLATE_MUST_PROVIDE_DATA:
-    "We are unable to update that slate because no data was provided",
-  SERVER_UPDATE_SLATE_NOT_FOUND: "We are having trouble locating that slate",
+    "We are unable to update that collection because no data was provided",
+  SERVER_UPDATE_SLATE_NOT_FOUND: "We are having trouble locating that collection",
   SERVER_UPDATE_SLATE_UPDATE_PRIVACY_FAILED:
-    "We are having trouble updating the privacy of that slate",
-  SERVER_UPDATE_SLATE_INVALID_NAME: "Please use a valid slate name",
+    "We are having trouble updating the privacy of that collection",
+  SERVER_UPDATE_SLATE_INVALID_NAME: "Please use a valid collection name",
   SERVER_UPDATE_SLATE_NAME_TAKEN:
-    "You already have a slate with that name. Slate names must be unique",
-  SERVER_UPDATE_SLATE_FAILED: "We are having trouble updating that slate right now",
+    "You already have a collection with that name. Collection names must be unique",
+  SERVER_UPDATE_SLATE_FAILED: "We are having trouble updating that collection right now",
 
   //Create user
   SERVER_CREATE_USER_NOT_ALLOWED: "You can only create users while on slate.host",
@@ -171,10 +172,10 @@ export const error = {
   SERVER_SIGN_IN_WRONG_PASSWORD: "We were unable to locate that account with those credentials",
 
   //Subscribe
-  SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No slate or user to follow specified",
+  SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",
   SERVER_SUBSCRIBE_CAN_NOT_SUBSCRIBE_TO_YOURSELF: "You cannot follow yourself",
   SERVER_SUBSCRIBE_TARGET_USER_NOT_FOUND: "We are unable to locate that user",
-  SERVER_SUBSCRIBE_TARGET_SLATE_NOT_FOUND: "We are unable to locate that slate",
+  SERVER_SUBSCRIBE_TARGET_SLATE_NOT_FOUND: "We are unable to locate that collection",
   SERVER_SUBSCRIBE_SUBSCRIPTION_CHECK_ERROR:
     "We are having trouble editing that subscription right now",
   SERVER_UNSUBSCRIBE_FAILED: "We were unable to unsubscribe, please try again later",

@@ -19,7 +19,7 @@ const json = await response.json();
 if (json.error) {
   console.log(json.error);
 } else {
-  const slates = json.slates;
+  const collections = json.collections;
   const user = json.user;
 }`;
 
@@ -60,7 +60,7 @@ const EXAMPLE_RESPONSE = `
         ],
         ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         data: {
-        body: "just a public slate, nothing special",
+        body: "just a public collection, nothing special",
         name: "Public Example",
         layouts: {
             ver: "2.0",
@@ -120,7 +120,7 @@ export default class APIDocsGet extends React.Component {
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
           label="Get your data"
-          description="This API request returns your user data and slates. If the request body is omitted, the request will return only your public slates by default."
+          description="This API request returns your user data and collections. If the request body is omitted, the request will return only your public collections by default."
         />
         <CodeBlock
           children={code}

@@ -57,15 +57,15 @@ export const navigation = [
   {
     id: "NAV_SLATES",
     decorator: "SLATES",
-    name: "Slates",
-    pageTitle: "Slates",
+    name: "Collections",
+    pageTitle: "Collections",
     ignore: true,
   },
   {
     id: "NAV_SLATES_FOLLOWING",
     decorator: "SLATES_FOLLOWING",
-    name: "Slates",
-    pageTitle: "Slates",
+    name: "Collections following",
+    pageTitle: "Collections following",
     ignore: true,
   },
   {
@@ -84,8 +84,8 @@ export const navigation = [
   {
     id: "NAV_SLATE",
     decorator: "SLATE",
-    name: "Slate",
-    pageTitle: "Slate",
+    name: "Collection",
+    pageTitle: "Collection",
     ignore: true,
   },
   {
