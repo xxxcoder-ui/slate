@@ -4,6 +4,7 @@ import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 import * as Window from "~/common/window";
 
+import { Logo } from "~/common/logo";
 import { css } from "@emotion/react";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
@@ -36,9 +37,16 @@ const STYLES_ITEM_BOX = css`
 const STYLES_PLACEHOLDER = css`
   width: 100%;
   height: 320px;
-  background-size: cover;
-  background-position: 50% 50%;
-  margin-bottom: 4px;
+  ${"" /* background-size: cover;
+  background-position: 50% 50%; */}
+  ${"" /* margin-bottom: 4px; */}
+  background-color: #d2d7db;
+  font-family: ${Constants.font.text};
+  font-size: 14px;
+  color: ${Constants.system.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     height: 100%;
@@ -354,10 +362,14 @@ export class SlatePreviewBlock extends React.Component {
             <div
               css={STYLES_PLACEHOLDER}
               style={{
-                backgroundImage: `url(${placeholder})`,
+                // backgroundImage: `url(${placeholder})`,
+
                 ...this.props.imageStyle,
               }}
-            />
+            >
+              <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
+              No files in this slate
+            </div>
           )}
         </span>
         <span css={STYLES_MOBILE_ONLY}>

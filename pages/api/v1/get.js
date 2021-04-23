@@ -76,13 +76,9 @@ export default async (req, res) => {
   let reformattedSlates = slates.map((slate) => {
     let reformattedObjects = slate.objects.map((file) => {
       return {
-        id: file.id,
-        name: file.filename,
-        title: file.data.name,
-        ownerId: file.ownerId,
-        body: file.data.body,
-        author: file.data.author,
-        source: file.data.source,
+        ...file,
+        ...file.data,
+        data: null,
         url: Strings.getURLfromCID(file.cid),
       };
     });

@@ -47,7 +47,7 @@ const STYLES_PROFILE_MOBILE = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.system.white};
   background-size: cover;
   background-position: 50% 50%;
   flex-shrink: 0;
