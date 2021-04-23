@@ -13,7 +13,7 @@ const EXAMPLE_CODE_JS = (
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    id: '${slateId}' // slate ID
+    id: '${slateId}' // collection ID
   }})
 });
 
@@ -25,7 +25,7 @@ const json = await response.json();
 if (json.error) {
   console.log(json.error);
 } else {
-  const slate = json.slate;
+  const collection = json.slate;
 }`;
 
 const EXAMPLE_CODE_PY = (key, slateId) => `import requests
@@ -39,7 +39,7 @@ headers = {
 
 json = {
   "data": {
-    "id": "${slateId}" # slate ID
+    "id": "${slateId}" # collection ID
   }
 }
 
@@ -60,14 +60,14 @@ export default class APIDocsGetSlate extends React.Component {
       <React.Fragment>
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
-          label="Get slate by ID"
-          description="This API request will return a specific slate. You can save the response locally and send this JSON back to our API server using the route /api/v1/update-slate to update your slate."
+          label="Get collection by ID"
+          description="This API request will return a specific collection. You can save the response locally and send this JSON back to our API server using the route /api/v1/update-slate to update your collection."
         />
         <CodeBlock
           children={code}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Get slate by ID"
+          title="Get collection by ID"
           onLanguageChange={this.props.onLanguageChange}
           multiLang="true"
         />

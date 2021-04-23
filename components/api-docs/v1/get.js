@@ -10,7 +10,7 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
     Authorization: 'Basic ${key}',
   },
   body: JSON.stringify({ data: {
-    private: false // set private = true to include private slates 
+    private: false // set private = true to include private collections 
   }})
 });
 
@@ -22,7 +22,7 @@ const json = await response.json();
 if (json.error) {
   console.log(json.error);
 } else {
-  const slates = json.slates;
+  const collections = json.slates;
   const user = json.user;
 }`;
 
@@ -37,7 +37,7 @@ headers = {
 
 json = {
   "data": {
-    "private": "false" # set private = true to include private slates 
+    "private": "false" # set private = true to include private collections 
   }
 }
 
@@ -53,7 +53,7 @@ const EXAMPLE_RESPONSE = `
       "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "slatename": "public-example",
       "data": {
-        "body": "just a public slate, nothing special",
+        "body": "just a public collection, nothing special",
         "name": "Public Example",
         "public": true,
         "layouts": {
@@ -114,7 +114,7 @@ export default class APIDocsGet extends React.Component {
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 64 }}
           label="Get your data"
-          description="This API request returns your user data and slates. If the request body is omitted, the request will return only your public slates by default."
+          description="This API request returns your user data and collections. If the request body is omitted, the request will return only your public collections by default."
         />
         <CodeBlock
           children={code}
