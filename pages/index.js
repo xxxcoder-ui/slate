@@ -17,11 +17,11 @@ const USER_SLATES = [
       "https://slate.textile.io/ipfs/bafybeiee6hshzmxfafytbtnnx3fawrhiq5qflz5pmpsaelq7jrchgkwk2m",
   },
   {
-    name: "NG X Typography Animation",
-    url: "https://slate.host/nicolas/ng-x-typography-animation",
-    username: "@nicolas",
+    name: "Oldschool PC font",
+    url: "https://slate.host/int10h/oldschool-pc-font-aspect-corrected",
+    username: "@int10h",
     preview:
-      "https://slate.textile.io/ipfs/bafybeifvqcgmk722ggvc2jjqan75qtndofhkvcq55yxsaijwsywfcegwuu",
+      "https://slate.host/int10h/oldschool-pc-font-aspect-corrected/cid:bafkreiefduomhrps5sxxo3azcsnft57fgm63qxa4xfqwghlzofoinejt5m",
   },
   {
     name: "Cartography",
