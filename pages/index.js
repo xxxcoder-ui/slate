@@ -21,7 +21,7 @@ const USER_SLATES = [
     url: "https://slate.host/int10h/oldschool-pc-font-aspect-corrected",
     username: "@int10h",
     preview:
-      "https://slate.host/int10h/oldschool-pc-font-aspect-corrected/cid:bafkreiefduomhrps5sxxo3azcsnft57fgm63qxa4xfqwghlzofoinejt5m",
+      "https://slate.textile.io/ipfs/bafkreieessvfn3ozxgaktvfaodvnqnh3g2rpert4h3mfsynrrgazc43ljq",
   },
   {
     name: "Cartography",
