@@ -328,7 +328,10 @@ const _nativeDownload = ({ url, onError }) => {
 export const compressAndDownloadFiles = async ({ files, name = "slate.zip", resourceURI }) => {
   const errorMessage = "Something went wrong with the download. Please try again";
   try {
-    if (!(files && files.length > 0)) return;
+    if (!(files && files.length > 0)) {
+      Events.dispatchMessage({ message: "No files in collection to download" });
+      return;
+    }
     Events.dispatchMessage({ message: "We're preparing your files to download", status: "INFO" });
     let downloadFiles = [];
     for (const file of files) {

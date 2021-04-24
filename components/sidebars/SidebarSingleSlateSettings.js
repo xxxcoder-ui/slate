@@ -100,11 +100,11 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   _handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-
-    if (e.target.name === "tags") {
-      this.updateSuggestions();
-    }
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (e.target.name === "tags") {
+        this.updateSuggestions();
+      }
+    });
   };
 
   _handleDelete = async (e) => {
@@ -179,7 +179,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           <System.Input
             placeholder="Collection name..."
             style={{ marginTop: 12 }}
-            name="tags"
+            name="name"
             value={this.state.name}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}

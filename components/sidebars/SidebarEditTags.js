@@ -33,7 +33,7 @@ export default class SidebarEditTags extends React.Component {
       {
         [e.target.name]: e.target.value,
       },
-      () => this.updateSuggestions()
+      this.updateSuggestions
     );
   };
 

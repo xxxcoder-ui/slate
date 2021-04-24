@@ -38,6 +38,15 @@ export default class SidebarCreateSlate extends React.Component {
     loading: false,
   };
 
+  componentDidMount = () => {
+    this.updateSuggestions();
+  };
+
+  updateSuggestions = () => {
+    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+    this.setState({ suggestions: Array.from(newSuggestions) });
+  };
+
   _handleSubmit = async () => {
     this.setState({ loading: true });
 
@@ -96,7 +105,11 @@ export default class SidebarCreateSlate extends React.Component {
   };
 
   _handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (e.target.name === "tags") {
+        this.updateSuggestions();
+      }
+    });
   };
 
   render() {

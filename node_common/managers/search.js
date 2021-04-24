@@ -15,7 +15,7 @@ const websocketSend = async (type, data) => {
     return;
   }
 
-  const ws = Websocket.get();
+  let ws = Websocket.get();
   if (!ws) {
     ws = Websocket.create();
     await Window.delay(2000);
