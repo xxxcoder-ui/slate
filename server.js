@@ -15,6 +15,7 @@ import next from "next";
 import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
+import path from "path";
 
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
@@ -124,6 +125,7 @@ app.prepare().then(async () => {
   }
 
   server.use("/public", express.static("public"));
+  server.get("/service-worker.js", express.static(path.join(__dirname, ".next")));
   server.get("/system", async (r, s) => s.redirect("/_/system"));
   server.get("/experiences", async (r, s) => s.redirect("/_/system"));
   server.get("/_/experiences", async (r, s) => s.redirect("/_/system"));

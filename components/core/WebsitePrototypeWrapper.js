@@ -33,6 +33,9 @@ export default class WebsitePrototypeWrapper extends React.Component {
           <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
 
           <link rel="shortcut icon" href="/static/favicon.ico" />
+
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="apple-touch-icon" href="/static/icon-96x96.png" />
         </Head>
         {this.props.children}
       </React.Fragment>
