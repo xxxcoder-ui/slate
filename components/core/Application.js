@@ -501,7 +501,7 @@ export default class ApplicationPage extends React.Component {
 
       for (let item of slates) {
         if (item.id === slate.id) {
-          item.objects = [...optimisticFiles, ...item.objects];
+          item.objects = [...item.objects, ...optimisticFiles];
           break;
         }
       }

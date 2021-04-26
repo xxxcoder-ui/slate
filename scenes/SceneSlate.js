@@ -347,7 +347,7 @@ class SlatePage extends React.Component {
     const isPublic = this.props.current.isPublic;
     const isOwner = this.props.current.ownerId === this.props.viewer.id;
     const tags = data.tags;
-    console.log(objects);
+
     let actions = isOwner ? (
       <span>
         <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
