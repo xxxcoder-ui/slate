@@ -350,7 +350,7 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    files = await this._handleOptimisticUpload({ files });
+    files = await this._handleOptimisticUpload({ files, slate });
 
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
@@ -372,16 +372,6 @@ export default class ApplicationPage extends React.Component {
         });
       } catch (e) {
         console.log(e);
-        let library = this.state.viewer.library;
-        library = library.filter((child) => {
-          if (child.id === e.failedFile.id) {
-            return false;
-          }
-
-          return true;
-        });
-
-        this._handleUpdateViewer({ library });
 
         let optimisticFiles = this.state.optimisticFiles;
         let updatedOptimisticFiles = optimisticFiles.filter((item) => {
@@ -393,6 +383,36 @@ export default class ApplicationPage extends React.Component {
         });
 
         this.setState({ optimisticFiles: updatedOptimisticFiles });
+
+        if (slate && slate.id) {
+          let slates = this.state.viewer.slates;
+          for (let item of slates) {
+            if (item.id === slate.id) {
+              item.objects = item.objects.filter((child) => {
+                if (child.id === e.failedFile.id) {
+                  return false;
+                }
+
+                return true;
+              });
+            }
+          }
+
+          this._handleUpdateViewer({ slates });
+
+          return;
+        }
+
+        let library = this.state.viewer.library;
+        library = library.filter((child) => {
+          if (child.id === e.failedFile.id) {
+            return false;
+          }
+
+          return true;
+        });
+
+        this._handleUpdateViewer({ library });
       }
 
       if (!response || response.error) {
@@ -451,8 +471,9 @@ export default class ApplicationPage extends React.Component {
     this._handleRegisterLoadingFinished({ keys });
   };
 
-  _handleOptimisticUpload = async ({ files }) => {
+  _handleOptimisticUpload = async ({ files, slate }) => {
     let optimisticFiles = [];
+
     for (let i = 0; i < files.length; i++) {
       let id = uuid();
       let dataURL = await this._handleLoadDataURL(files[i]);
@@ -474,6 +495,20 @@ export default class ApplicationPage extends React.Component {
     }
 
     this.setState({ optimisticFiles });
+
+    if (slate && slate.id) {
+      const slates = this.state.viewer.slates;
+
+      for (let item of slates) {
+        if (item.id === slate.id) {
+          item.objects = [...optimisticFiles, ...item.objects];
+          break;
+        }
+      }
+
+      this._handleUpdateViewer({ slates });
+      return files;
+    }
 
     let update = [...optimisticFiles, ...this.state.viewer?.library];
     let library = this.props.viewer?.library;
