@@ -805,7 +805,7 @@ export default class DataView extends React.Component {
                             ) : null}
                           </div> */}
 
-                          {each.decorator.startsWith("OPTIMISTIC") ? (
+                          {each.decorator?.startsWith("OPTIMISTIC") ? (
                             <LoaderSpinner
                               style={{
                                 height: 20,
@@ -910,7 +910,7 @@ export default class DataView extends React.Component {
         ...each,
         checkbox: (
           <div onClick={(e) => this._handleCheckBox(e, index)}>
-            {each.decorator.startsWith("OPTIMISTIC") ? (
+            {each.decorator?.startsWith("OPTIMISTIC") ? (
               <LoaderSpinner
                 style={{
                   height: 20,

@@ -227,36 +227,6 @@ export default class ApplicationPage extends React.Component {
       }
     }
 
-    if (newViewerState.library?.length) {
-      // NOTE(daniel): update optimistic files with upload data
-      let oldViewerState = this.state.viewer;
-      let oldLibrary = oldViewerState.library;
-
-      let update = newViewerState.library[0].children.map((child) => {
-        let optimisticFileIndex = oldLibrary[0].children.findIndex(
-          (item) => item.id === child.id && item.decorator.startsWith("OPTMISTIC")
-        );
-        if (optimisticFileIndex > -1) {
-          return { ...oldLibrary[0].children[optimisticFileIndex], ...child };
-        }
-
-        return child;
-      });
-
-      oldViewerState.library[0].children = update;
-
-      this.setState(
-        {
-          viewer: { ...oldViewerState, ...newViewerState, type: "VIEWER" },
-        },
-        () => {
-          if (callback) {
-            callback();
-          }
-        }
-      );
-    }
-
     this.setState(
       {
         viewer: { ...this.state.viewer, ...newViewerState },
@@ -380,7 +350,7 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    files = await this._handleOptimisticUpload({ files, slate });
+    files = await this._handleOptimisticUpload({ files });
 
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
@@ -403,7 +373,7 @@ export default class ApplicationPage extends React.Component {
       } catch (e) {
         console.log(e);
         let library = this.state.viewer.library;
-        library[0].children = library[0].children.filter((child) => {
+        library = library.filter((child) => {
           if (child.id === e.failedFile.id) {
             return false;
           }
@@ -484,17 +454,16 @@ export default class ApplicationPage extends React.Component {
   _handleOptimisticUpload = async ({ files }) => {
     let optimisticFiles = [];
     for (let i = 0; i < files.length; i++) {
-      // if (!files[i].type.startsWith("image") || !files[i].type.startsWith("video")) {
-      //   continue;
-      // }
-
-      let id = `data-${uuid()}`;
+      let id = uuid();
       let dataURL = await this._handleLoadDataURL(files[i]);
       let data = {
         id,
-        name: files[i].name,
-        type: files[i].type,
-        size: files[i].size,
+        filename: files[i].name,
+        data: {
+          name: files[i].name,
+          type: files[i].type,
+          size: files[i].size,
+        },
         decorator: "OPTIMISTIC-FILE",
         dataURL,
       };
@@ -506,9 +475,9 @@ export default class ApplicationPage extends React.Component {
 
     this.setState({ optimisticFiles });
 
-    let update = [...optimisticFiles, ...this.state.viewer?.library[0].children];
+    let update = [...optimisticFiles, ...this.state.viewer?.library];
     let library = this.props.viewer?.library;
-    library[0].children = update;
+    library = update;
     this._handleUpdateViewer({ library });
 
     return files;
