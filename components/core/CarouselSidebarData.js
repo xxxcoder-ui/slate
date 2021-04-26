@@ -385,7 +385,7 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleDownload = () => {
-    if (this.props.data.decorator.startsWith("OPTIMISTIC")) {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
       return;
     }
 
@@ -402,7 +402,7 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleCreateSlate = async () => {
-    if (this.props.data.decorator.startsWith("OPTIMISTIC")) {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
       return;
     }
 
@@ -441,7 +441,7 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleAdd = async (slate) => {
-    if (this.props.data.decorator.startsWith("OPTIMISTIC")) {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
       return;
     }
 
@@ -468,7 +468,7 @@ class CarouselSidebarData extends React.Component {
   };
 
   _handleToggleVisibility = async (e) => {
-    if (this.props.data.decorator.startsWith("OPTIMISTIC")) {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
       return;
     }
 
@@ -525,7 +525,7 @@ class CarouselSidebarData extends React.Component {
           {this.state.isEditing &&
           this.props.isOwner &&
           !this.props.external &&
-          !this.props.data.decorator.startsWith("OPTIMISTIC") ? (
+          !this.props.data.decorator?.startsWith("OPTIMISTIC") ? (
             <Boundary enabled onOutsideRectEvent={this._handleEditFilename}>
               <Input
                 full
@@ -545,7 +545,7 @@ class CarouselSidebarData extends React.Component {
               onClick={
                 this.props.external ||
                 !this.props.isOwner ||
-                this.props.data.decorator.startsWith("OPTIMISTIC")
+                this.props.data.decorator?.startsWith("OPTIMISTIC")
                   ? () => {}
                   : this._handleEditFilename
               }
@@ -619,7 +619,7 @@ class CarouselSidebarData extends React.Component {
                 inputStyles={{ padding: "16px" }}
                 dropdownStyles={{ top: "50px" }}
                 onChange={this._handleChange}
-                isDisabled={this.props.data.decorator.startsWith("OPTIMISTIC") && true}
+                isDisabled={this.props.data.decorator?.startsWith("OPTIMISTIC") && true}
               />
             </div>
           </React.Fragment>
