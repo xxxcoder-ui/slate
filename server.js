@@ -366,7 +366,6 @@ app.prepare().then(async () => {
       isMac,
       resources: EXTERNAL_RESOURCES,
       exploreSlates,
-      userBucketCID: bucketRoot?.path,
     });
   });
 
