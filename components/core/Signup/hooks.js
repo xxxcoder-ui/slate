@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useRouter } from "next/router";
 
 const AUTH_STATE_GRAPH = {
   initial: {
@@ -43,17 +42,31 @@ const reducer = (state, event) => {
 };
 
 export const useAuth = () => {
+  const [context, setContext] = React.useState({});
   const [state, send] = React.useReducer(reducer, "initial");
-
   console.log(state);
-  React.useLayoutEffect(() => {
-    if (!window) return;
-    const urlParams = new URLSearchParams(window.location.search);
-    const emailtoken = urlParams.get("emailtoken");
-    if (emailtoken) send("VERIFY_EMAIL");
-  }, []);
+  const handlers = React.useMemo(() => {
+    const continueSignin = ({ emailOrUsername }) => {
+      setContext((prev) => ({ ...prev, emailOrUsername }));
+      send("SIGNIN");
+    };
+    const continueSignup = ({ emailToVerify }) => {
+      setContext((prev) => ({ ...prev, emailToVerify }));
+      // TODO: Validate and link with backend
+      send("VERIFY_EMAIL");
+    };
 
-  return { currentState: state, send };
+    const verifyToken = ({ token }) => {
+      const { emailToVerify } = context;
+      // TODO: Validate and link with backend
+
+      send("CONTINUE_EMAIL_SIGNUP");
+    };
+
+    return { continueSignin, continueSignup, verifyToken };
+  }, [state, context]);
+
+  return { currentState: state, context, send, ...handlers };
 };
 
 export const useForm = ({ onSubmit, initialValues }) => {

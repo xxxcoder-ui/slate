@@ -5,7 +5,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 
 import { useAuth } from "./hooks";
-import { Initial, SignUpPopover } from "./components";
+import { Initial, SignUpPopover, Verification } from "./components";
 
 const STYLES_SMALL = (theme) => css`
   font-size: ${theme.typescale.lvlN1};
@@ -25,40 +25,35 @@ const STYLES_LINK = (theme) => css`
   }
 `;
 
-const STYLES_SMALL_DESCRIPTION = (theme) => css`
-  font-size: ${theme.typescale.lvl0};
-  color: ${theme.system.textGrayDark};
-`;
-
 export default function Signup() {
-  const { currentState, send } = useAuth();
+  const { currentState, send, context, continueSignin, continueSignup, verifyToken } = useAuth();
 
   if (currentState === "initial") {
     return (
       <Initial
         onTwitterSignin={() => send("SIGNIN_WITH_TWITTER")}
-        onSignin={() => send("SIGNIN")}
+        onSignin={continueSignin}
         onTwitterSignup={() => send("SIGNUP_WITH_TWITTER")}
-        onVerify={() => send("VERIFY_EMAIL")}
+        onSignup={continueSignup}
       />
     );
   }
+  if (currentState === "verification") return <Verification onVerify={verifyToken} />;
 
   if (currentState === "signin") {
     return (
       <SignUpPopover title="Discover, experience, share files on Slate">
         <System.Input
           autoFocus
-          label="Email address or username"
           containerStyle={{ marginTop: 41 }}
-          placeholder="username"
+          placeholder="email address or username"
           name="username"
+          value={context.emailOrUsername}
           type="username"
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
         <System.Input
           autoFocus
-          label="Password"
           containerStyle={{ marginTop: 16 }}
           placeholder="password"
           name="password"
@@ -96,37 +91,6 @@ export default function Signup() {
 
   if (currentState === "signup") {
     return <SignUpPopover title="Sign up for Slate"></SignUpPopover>;
-  }
-  if (currentState === "verification") {
-    return (
-      <SignUpPopover
-        logoStyle={{ width: 56 }}
-        title={
-          <>
-            Verification link sent,
-            <br />
-            please check your inbox.
-          </>
-        }
-      >
-        <System.Input
-          autoFocus
-          label="Input 6 digits code"
-          icon={SVG.NavigationArrow}
-          containerStyle={{ marginTop: "28px" }}
-          name="email"
-          type="email"
-          onSubmit={() => {
-            //TODO
-            send("CONTINUE_EMAIL_SIGNUP");
-          }}
-          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-        />
-        <System.P css={STYLES_SMALL_DESCRIPTION} style={{ marginTop: 8 }}>
-          Didn’t receive an email? Resend code.
-        </System.P>
-      </SignUpPopover>
-    );
   }
   if (currentState === "email_signup")
     return (

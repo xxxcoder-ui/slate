@@ -4,7 +4,7 @@ import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 
-import { Toggle, Devider, SignUpPopover } from "./";
+import { Toggle, SignUpPopover } from "./";
 import { useForm } from "../hooks";
 
 const STYLES_LINK_ITEM = (theme) => css`
@@ -43,7 +43,7 @@ const STYLES_TERMS_AND_SERVICES = (theme) => css`
   }
 `;
 
-export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, onVerify }) {
+export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, onSignup }) {
   const TOGGLE_OPTIONS = [
     { value: "signin", label: "Sign in" },
     { value: "signup", label: "Sign up" },
@@ -53,13 +53,11 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
 
   const { getFieldProps, getFormProps } = useForm({
     initialValues: { email: "" },
-    onSubmit: ({ email }) => {
-      // TODO
-
-      // next step
-      onVerify();
-    },
+    onSubmit: ({ email }) => onSignup({ emailToVerify: email }),
   });
+
+  const [username, setUsername] = React.useState("");
+  const handleUsernameChange = (e) => setUsername(e.target.value);
   return (
     <div>
       <SignUpPopover
@@ -78,7 +76,7 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
             >
               Continue with Twitter
             </System.ButtonPrimary>
-            <Devider
+            <System.Devider
               color="#AEAEB2"
               width="45px"
               height="0.5px"
@@ -91,7 +89,9 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
               icon={SVG.NavigationArrow}
               containerStyle={{ marginTop: "4px" }}
               name="email"
-              onSubmit={onSignin}
+              value={username}
+              onChange={handleUsernameChange}
+              onSubmit={() => onSignin({ emailOrUsername: username })}
               type="email"
               style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
             />
@@ -115,7 +115,7 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
             >
               Continue with Twitter
             </System.ButtonPrimary>
-            <Devider
+            <System.Devider
               color="#AEAEB2"
               width="45px"
               height="0.5px"

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export default function Devider({ width = "100%", height = "1px", color, ...props }) {
+export const Devider = ({ width = "100%", height = "1px", color, ...props }) => {
   return (
     <div
       css={(theme) => ({
@@ -12,4 +12,4 @@ export default function Devider({ width = "100%", height = "1px", color, ...prop
       {...props}
     />
   );
-}
+};
