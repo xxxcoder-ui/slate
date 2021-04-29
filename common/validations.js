@@ -97,6 +97,23 @@ export const username = (text) => {
   return true;
 };
 
+export const email = (text) => {
+  if (Strings.isEmpty(text)) {
+    return false;
+  }
+
+  if (text.length > 254 || text.length < 5) {
+    return false;
+  }
+
+  if (!EMAIL_REGEX.test(text)) {
+    return false;
+  }
+
+
+  return true;
+};
+
 export const password = (text) => {
   if (Strings.isEmpty(text)) {
     return false;

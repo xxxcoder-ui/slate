@@ -87,6 +87,20 @@ export const checkUsername = async (data) => {
   });
 };
 
+export const checkEmail = async (data) => {
+  return await returnJSON(`/api/email/check-email`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const validateEmail = async (data) => {
+  return await returnJSON("/api/email/validate", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const archive = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/archive`, {
