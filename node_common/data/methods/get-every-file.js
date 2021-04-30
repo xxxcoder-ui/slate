@@ -13,7 +13,8 @@ export default async ({ sanitize = false, publicOnly = false } = {}) => {
           "files.ownerId",
           "files.cid",
           "files.isPublic",
-          "files.data"
+          "files.data",
+          "files.createdAt"
         )
           .from("files")
           .leftJoin("slate_files", "slate_files.fileId", "files.id")

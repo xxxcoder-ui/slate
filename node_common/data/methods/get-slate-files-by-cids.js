@@ -14,7 +14,8 @@ export default async ({ slateId, cids }) => {
         "files.cid",
         "files.isPublic",
         "files.filename",
-        "files.data"
+        "files.data",
+        "files.createdAt"
       )
         .from("files")
         .join("slate_files", "slate_files.fileId", "=", "files.id")
