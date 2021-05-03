@@ -88,18 +88,34 @@ export const checkUsername = async (data) => {
 };
 
 export const checkEmail = async (data) => {
-  return await returnJSON(`/api/email/check-email`, {
+  return await returnJSON(`/api/emails/check-email`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
-export const validateEmail = async (data) => {
-  return await returnJSON("/api/email/validate", {
+//NOTE(toast): this functionality comes with the upgraded sg plan
+// export const validateEmail = async (data) => {
+//   return await returnJSON("/api/emails/validate", {
+//     ...DEFAULT_OPTIONS,
+//     body: JSON.stringify({ data }),
+//   });
+// };
+
+export const sendEmail = async (data) => {
+  return await returnJSON("/api/emails/send-email", {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
+
+export const sendTemplateEmail = async (data) => {
+  return await returnJSON("/api/emails/send-template", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 
 export const archive = async (data) => {
   await Websockets.checkWebsocket();

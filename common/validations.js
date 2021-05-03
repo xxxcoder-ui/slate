@@ -1,4 +1,5 @@
 import * as Strings from "~/common/strings";
+//import { validateEmail } from "~/common/actions.js";
 
 import JSZip from "jszip";
 
@@ -110,6 +111,11 @@ export const email = (text) => {
     return false;
   }
 
+//NOTE(toast): add this if the sendgrid plan is upgraded
+//  const sgEmailValidation = validateEmail({ email: text });
+//  if (sgEmailValidation.verdict !== "Valid") {
+//    return false;
+//  }
 
   return true;
 };
