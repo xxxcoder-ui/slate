@@ -44,7 +44,6 @@ export const endsWithAny = (options, string) =>
     }
   });
 
-export const generateConfirmationCode = () => {
-  const id = crypto.randomBytes(8).toString("hex");
-  return id;
+export const generateConfirmationCode = (len) => {
+  return crypto.randomBytes(len).toString("hex");
 };
