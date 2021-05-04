@@ -2,6 +2,8 @@
 //For API related utility functions, see common/user-behaviors.js
 //And for uploading related utility functions, see common/file-utilities.js
 
+import crypto from "crypto";
+
 export const getPublicAndPrivateFiles = ({ viewer }) => {
   let publicFileIds = [];
   for (let slate of viewer.slates) {
@@ -41,3 +43,8 @@ export const endsWithAny = (options, string) =>
       return false;
     }
   });
+
+export const generateConfirmationCode = () => {
+  const id = crypto.randomBytes(8).toString("hex");
+  return id;
+};

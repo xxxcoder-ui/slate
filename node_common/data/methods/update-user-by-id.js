@@ -2,7 +2,7 @@ import * as Serializers from "~/node_common/serializers";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ id, data, lastActive, username, salt, password }) => {
+export default async ({ id, data, lastActive, username, email, salt, password }) => {
   const updateObject = { id, lastActive: lastActive || new Date() };
 
   if (data) {
@@ -11,6 +11,10 @@ export default async ({ id, data, lastActive, username, salt, password }) => {
 
   if (username) {
     updateObject.username = username.toLowerCase();
+  }
+
+  if (email) {
+    updateObject.email = email.toLowerCase();
   }
 
   if (salt) {

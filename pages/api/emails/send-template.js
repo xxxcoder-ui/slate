@@ -1,4 +1,5 @@
 import * as Environment from "~/node_common/environment";
+
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(Environment.SENDGRID_API_KEY);
 

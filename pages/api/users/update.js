@@ -48,6 +48,23 @@ export default async (req, res) => {
     }
   }
 
+  if (updates.email && updates.email !== user.email) {
+    if (!Validations.email(req.body.data.username)) {
+      return res.status(400).send({
+        decorator: "SERVER_USER_UPDATE_INVALID_EMAIL",
+        error: true,
+      });
+    }
+
+    const existing = await Data.getUserByEmail({
+      email: req.body.data.email.toLowerCase(),
+    });
+
+    if (existing && existing.id !== id) {
+      return res.status(500).send({ decorator: "SERVER_USER_UPDATE_EMAIL", error: true });
+    }
+  }
+
   if (req.body.data.type === "SAVE_DEFAULT_ARCHIVE_CONFIG") {
     let b;
     try {

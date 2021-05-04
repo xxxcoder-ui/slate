@@ -169,7 +169,7 @@ export default class SceneEditAccount extends React.Component {
       <ScenePage>
         <ScenePageHeader title="Settings" />
         <SecondaryTabGroup
-          tabs={["Profile", "Data Storage", "Security", "Account"]}
+          tabs={["Profile", "Data Storage", "Account"]}
           value={this.state.tab}
           onChange={(value) => this.setState({ tab: value })}
           style={{ marginBottom: 48 }}
@@ -272,39 +272,6 @@ export default class SceneEditAccount extends React.Component {
         ) : null}
         {this.state.tab === 2 ? (
           <div>
-            <div css={STYLES_HEADER}>Change password</div>
-            <div>Passwords must be a minimum of eight characters.</div>
-
-            <System.Input
-              containerStyle={{ marginTop: 24 }}
-              name="password"
-              type="password"
-              value={this.state.password}
-              placeholder="Your new password"
-              onChange={this._handleChange}
-            />
-            <System.Input
-              containerStyle={{ marginTop: 12 }}
-              name="confirm"
-              type="password"
-              value={this.state.confirm}
-              placeholder="Confirm password"
-              onChange={this._handleChange}
-            />
-
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary
-                onClick={this._handleChangePassword}
-                loading={this.state.changingPassword}
-                style={{ width: "200px" }}
-              >
-                Change password
-              </System.ButtonPrimary>
-            </div>
-          </div>
-        ) : null}
-        {this.state.tab === 3 ? (
-          <div>
             <div css={STYLES_HEADER}>Change username</div>
             <div style={{ maxWidth: 800 }}>
               Username must be unique. <br />
@@ -320,17 +287,62 @@ export default class SceneEditAccount extends React.Component {
             />
             <div style={{ marginTop: 24 }}>
               <System.ButtonPrimary onClick={this._handleSave} style={{ width: "200px" }}>
-                Change my username
+                Change username
               </System.ButtonPrimary>
             </div>
+            <div css={STYLES_HEADER}>Change email</div>
+            <div style={{ maxWidth: 800 }}>
+              Email must be unique. <br />
+            </div>
+            <System.Input
+              containerStyle={{ marginTop: 12 }}
+              name="email"
+              value={this.state.email}
+              placeholder="Email"
+              onChange={this._handleEmailChange}
+            />
+            <div style={{ marginTop: 24 }}>
+              <System.ButtonPrimary onClick={this._handleSave} style={{ width: "200px" }}>
+                Change email
+              </System.ButtonPrimary>
+            </div>
+            <div>
+              <div css={STYLES_HEADER}>Change password</div>
+              <div>Passwords must be a minimum of eight characters.</div>
 
+              <System.Input
+                containerStyle={{ marginTop: 24 }}
+                name="password"
+                type="password"
+                value={this.state.password}
+                placeholder="Your new password"
+                onChange={this._handleChange}
+              />
+              <System.Input
+                containerStyle={{ marginTop: 12 }}
+                name="confirm"
+                type="password"
+                value={this.state.confirm}
+                placeholder="Confirm password"
+                onChange={this._handleChange}
+              />
+
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonPrimary
+                  onClick={this._handleChangePassword}
+                  loading={this.state.changingPassword}
+                  style={{ width: "200px" }}
+                >
+                  Change password
+                </System.ButtonPrimary>
+              </div>
+            </div>
             <div css={STYLES_HEADER} style={{ marginTop: 64 }}>
               Delete your account
             </div>
             <div style={{ maxWidth: 800 }}>
               If you choose to delete your account you will lose your Textile Hub and Powergate key.
             </div>
-
             <div style={{ marginTop: 24 }}>
               <System.ButtonWarning
                 onClick={this._handleDelete}

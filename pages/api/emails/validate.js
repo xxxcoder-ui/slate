@@ -1,6 +1,7 @@
 import "isomorphic-fetch";
 import * as Environment from "~/node_common/environment";
 
+//NOTE(toast): only available to upgraded sendgrid accounts
 export default async (req, res) => {
   const msg = { email: req.body.email };
   const request = await fetch("https://api.sendgrid.com/v3/validations/email", {
