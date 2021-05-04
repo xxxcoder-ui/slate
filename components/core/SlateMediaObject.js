@@ -155,7 +155,7 @@ export default class SlateMediaObject extends React.Component {
       return <iframe src={url} css={STYLES_IFRAME} />;
     }
 
-    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], file.filename)) {
+    if (Validations.isFontFile(file.filename)) {
       return (
         <FontFrame
           name={file.data.name || file.filename}
@@ -168,7 +168,7 @@ export default class SlateMediaObject extends React.Component {
       );
     }
 
-    if (file.filename.endsWith(".md") || type.startsWith("text/plain")) {
+    if (Validations.isMarkdown(file.filename, type)) {
       return <MarkdownFrame date={file.createdAt} url={url} />;
     }
 
