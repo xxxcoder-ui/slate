@@ -1,4 +1,5 @@
 import * as Strings from "~/common/strings";
+import * as Utilities from "~/common/utilities";
 
 import JSZip from "jszip";
 
@@ -175,6 +176,14 @@ export const isEpubType = (type) => {
   if (type.startsWith("application/epub")) {
     return true;
   }
+};
+
+export const isFontFile = (fileName) => {
+  return Utilities.endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
+};
+
+export const isMarkdown = (filename, type) => {
+  return filename.toLowerCase().endsWith(".md") || type.startsWith("text/plain");
 };
 
 export const isUnityFile = async (file) => {
