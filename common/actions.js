@@ -88,7 +88,7 @@ export const checkUsername = async (data) => {
 };
 
 export const checkEmail = async (data) => {
-  return await returnJSON(`/api/emails/check-email`, {
+  return await returnJSON(`/api/users/check-email`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
