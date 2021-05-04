@@ -49,7 +49,7 @@ export default async (req, res) => {
   }
 
   if (updates.email && updates.email !== user.email) {
-    if (!Validations.email(req.body.data.username)) {
+    if (!Validations.email(req.body.data.email)) {
       return res.status(400).send({
         decorator: "SERVER_USER_UPDATE_INVALID_EMAIL",
         error: true,
