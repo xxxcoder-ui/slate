@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
+import * as Actions from "~/common/actions";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
@@ -68,9 +69,16 @@ const useUsernameField = ({ onSubmit }) => {
 export default function Initial({ goToSigninScene, goToSignupScene, goToTwitterSignupScene }) {
   const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler();
 
-  const { getFieldProps, getFormProps } = useForm({
+  const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
     initialValues: { email: "" },
-    onSubmit: ({ email }) => goToSignupScene({ email }),
+    onSubmit: async ({ email }) => {
+      const response = await Actions.checkEmail({ email });
+      if (response?.data?.email) {
+        goToSigninScene({ emailOrUsername: email });
+        return;
+      }
+      goToSignupScene({ email });
+    },
   });
 
   const { getUserNameFieldProps } = useUsernameField({
@@ -151,7 +159,12 @@ export default function Initial({ goToSigninScene, goToSignupScene, goToTwitterS
               {...getFieldProps("email")}
             />
 
-            <System.ButtonPrimary full type="submit" style={{ marginTop: "16px" }}>
+            <System.ButtonPrimary
+              full
+              type="submit"
+              style={{ marginTop: "16px" }}
+              loading={isCheckingEmail}
+            >
               Send verification link
             </System.ButtonPrimary>
           </form>

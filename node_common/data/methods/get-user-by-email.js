@@ -9,11 +9,11 @@ export default async ({ email }) => {
     queryFn: async (DB) => {
       const query = await DB.select("*").from("users").where({ email }).first();
 
-      query = Serializers.sanitizeUser(query);
-
       if (!query || query.error) {
         return null;
       }
+
+      query = Serializers.sanitizeUser(query);
 
       return JSON.parse(JSON.stringify(query));
     },

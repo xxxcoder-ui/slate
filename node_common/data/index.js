@@ -5,6 +5,7 @@ import updateUserById from "~/node_common/data/methods/update-user-by-id";
 import deleteUserById from "~/node_common/data/methods/delete-user-by-id";
 import getUserByUsername from "~/node_common/data/methods/get-user-by-username";
 import getUserById from "~/node_common/data/methods/get-user-by-id";
+import getUserByEmail from "~/node_common/data/methods/get-user-by-email";
 
 //NOTE(martina):
 // File postgres queries
@@ -80,6 +81,7 @@ export {
   deleteUserById,
   getUserByUsername,
   getUserById,
+  getUserByEmail,
   //NOTE(martina): File operations
   createFile,
   getFileByCid,

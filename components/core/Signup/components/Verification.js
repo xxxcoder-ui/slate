@@ -6,11 +6,6 @@ import { css } from "@emotion/react";
 
 import { SignUpPopover } from "./";
 
-const STYLES_SMALL_DESCRIPTION = (theme) => css`
-  font-size: ${theme.typescale.lvl0};
-  color: ${theme.system.textGrayDark};
-`;
-
 export default function Verification({ onVerify }) {
   const [token, setToken] = React.useState("");
   const handleOnChange = (code) => setToken(code);
@@ -19,7 +14,7 @@ export default function Verification({ onVerify }) {
       logoStyle={{ width: 56 }}
       title={
         <>
-          Verification link sent,
+          Verification code sent,
           <br />
           please check your inbox.
         </>
