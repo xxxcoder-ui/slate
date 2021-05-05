@@ -198,7 +198,7 @@ export class Input extends React.Component {
               ref={(c) => {
                 this._input = c;
               }}
-              css={STYLES_INPUT}
+              css={[STYLES_INPUT, this.props.verification && STYLES_VERIFICATION_INPUT]}
               autoFocus={this.props.autoFocus}
               value={this.props.value}
               name={this.props.name}

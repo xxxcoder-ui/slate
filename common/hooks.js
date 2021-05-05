@@ -29,7 +29,7 @@ export const useForm = ({ onSubmit, validate, initialValues }) => {
         return;
       }
     }
-
+    if (!onSubmit) return;
     setState((prev) => ({ ...prev, isSubmitting: true }));
     onSubmit(state.values)
       .then(() => {

@@ -29,6 +29,8 @@ const STYLES_ROOT = css`
   position: absolute;
   overflow: hidden;
   background-image: url(${background_image});
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 const STYLES_MIDDLE = css`

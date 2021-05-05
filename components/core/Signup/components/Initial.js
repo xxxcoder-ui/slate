@@ -86,7 +86,7 @@ export default function Initial({ goToSigninScene, goToSignupScene, goToTwitterS
       }
       style={{ paddingBottom: 24 }}
     >
-      <div css={{ display: "flex", justifyContent: "center", marginTop: "auto" }}>
+      <div css={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
         <Toggle options={TOGGLE_OPTIONS} onChange={handleToggleChange} />
       </div>
       {toggleValue === "signin" ? (
