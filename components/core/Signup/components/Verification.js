@@ -43,6 +43,7 @@ export default function Verification({ onVerify }) {
         onChange={handleOnChange}
         onSubmit={(token) => {
           //TODO
+          if (!token) return;
           onVerify({ token });
         }}
       />

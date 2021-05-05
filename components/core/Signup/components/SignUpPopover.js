@@ -43,11 +43,14 @@ const STYLES_POPOVER = (theme) => css`
   animation: authentication-popover-fade-in 400ms ease;
 `;
 
-const STYLES_POPOVER_BODY = css`
+const STYLES_POPOVER_BODY = (theme) => css`
   display: flex;
   height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    justify-content: center;
+  }
 `;
 export default function SignUpPopover({ children, title, logoStyle, titleStyle, props }) {
   return (
@@ -57,7 +60,7 @@ export default function SignUpPopover({ children, title, logoStyle, titleStyle, 
           <Symbol style={{ width: "40px", marginBottom: "8px", ...logoStyle }} />
         </div>
         <System.H3 style={{ textAlign: "center", lineHeight: "30px", ...titleStyle }}>
-          {title}{" "}
+          {title}
         </System.H3>
       </div>
       <div css={STYLES_POPOVER_BODY}>{children}</div>
