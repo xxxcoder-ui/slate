@@ -3,9 +3,9 @@ import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
+import { useForm } from "~/common/hooks";
 
 import { Toggle, SignUpPopover } from "./";
-import { useForm } from "../hooks";
 
 const STYLES_LINK_ITEM = (theme) => css`
   display: block;
@@ -43,30 +43,55 @@ const STYLES_TERMS_AND_SERVICES = (theme) => css`
   }
 `;
 
-export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, onSignup }) {
+const useToggler = () => {
   const TOGGLE_OPTIONS = [
     { value: "signin", label: "Sign in" },
     { value: "signup", label: "Sign up" },
   ];
   const [state, setState] = React.useState("signin");
   const handleToggleChange = (value) => setState(value);
+  return { toggleValue: state, handleToggleChange, TOGGLE_OPTIONS };
+};
+
+const useUsernameField = ({ onSubmit }) => {
+  const [username, setUsername] = React.useState("");
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+
+  const getUserNameFieldProps = () => ({
+    value: username,
+    onChange: handleUsernameChange,
+    onSubmit: () => onSubmit({ emailOrUsername: username }),
+  });
+  return { getUserNameFieldProps };
+};
+
+export default function Initial({ goToSigninScene, goToSignupScene, goToTwitterSignupScene }) {
+  const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler();
 
   const { getFieldProps, getFormProps } = useForm({
     initialValues: { email: "" },
-    onSubmit: ({ email }) => onSignup({ emailToVerify: email }),
+    onSubmit: ({ email }) => goToSignupScene({ email }),
   });
 
-  const [username, setUsername] = React.useState("");
-  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const { getUserNameFieldProps } = useUsernameField({
+    onSubmit: ({ emailOrUsername }) => goToSigninScene({ emailOrUsername }),
+  });
+
   return (
-    <SignUpPopover title="Discover, experience, share files on Slate" style={{ paddingBottom: 24 }}>
+    <SignUpPopover
+      title={
+        <>
+          Discover, experience, share files on <br /> Slate
+        </>
+      }
+      style={{ paddingBottom: 24 }}
+    >
       <div css={{ display: "flex", justifyContent: "center", marginTop: "auto" }}>
         <Toggle options={TOGGLE_OPTIONS} onChange={handleToggleChange} />
       </div>
-      {state === "signin" ? (
+      {toggleValue === "signin" ? (
         <>
           <System.ButtonPrimary
-            onClick={onTwitterSignin}
             full
             style={{ backgroundColor: "rgb(29,161,242)", marginTop: "20px" }}
           >
@@ -85,10 +110,8 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
             icon={SVG.NavigationArrow}
             containerStyle={{ marginTop: "4px" }}
             name="email"
-            value={username}
-            onChange={handleUsernameChange}
-            onSubmit={() => onSignin({ emailOrUsername: username })}
-            type="email"
+            type="text"
+            {...getUserNameFieldProps()}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
 
@@ -107,7 +130,7 @@ export default function Initial({ onTwitterSignin, onSignin, onTwitterSignup, on
           <System.ButtonPrimary
             full
             style={{ backgroundColor: "rgb(29,161,242)", marginTop: 20 }}
-            onClick={onTwitterSignup}
+            onClick={goToTwitterSignupScene}
           >
             Continue with Twitter
           </System.ButtonPrimary>
