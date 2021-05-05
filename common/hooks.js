@@ -1,6 +1,7 @@
 import * as React from "react";
+import * as Events from "~/common/custom-events";
 
-export const useForm = ({ onSubmit, initialValues }) => {
+export const useForm = ({ onSubmit, validate, initialValues }) => {
   const [state, setState] = React.useState({ isSubmitting: false, values: initialValues });
 
   const handleFieldChange = (e) =>
@@ -16,15 +17,27 @@ export const useForm = ({ onSubmit, initialValues }) => {
     onChange: handleFieldChange,
   });
 
-  const handleFormOnSubmit = async (e) => {
+  const handleFormOnSubmit = (e) => {
     e.preventDefault();
-    try {
-      setState((prev) => ({ ...prev, isSubmitting: true }));
-      await onSubmit(state.values);
-      setState((prev) => ({ ...prev, isSubmitting: false }));
-    } catch (error) {
-      setState((prev) => ({ ...prev, isSubmitting: false }));
+
+    if (validate) {
+      const error = validate(state.values);
+      if (error) {
+        Events.dispatchMessage({
+          message: error,
+        });
+        return;
+      }
     }
+
+    setState((prev) => ({ ...prev, isSubmitting: true }));
+    onSubmit(state.values)
+      .then(() => {
+        setState((prev) => ({ ...prev, isSubmitting: false }));
+      })
+      .catch(() => {
+        setState((prev) => ({ ...prev, isSubmitting: false }));
+      });
   };
 
   // Note(Amine): this prop getter will overide the form onSubmit handler
