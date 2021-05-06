@@ -194,8 +194,8 @@ export const isUnityFile = async (file) => {
   }
 };
 
-export const isUsernameMatch = (data) => {
-  if(data.input == data.username) {
+export const isUsernameMatch = (source, candidate) => {
+  if(source == candidate) {
     return true;
   }
 }
