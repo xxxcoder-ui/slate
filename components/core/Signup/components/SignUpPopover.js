@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as System from "~/components/system";
 
-import { Symbol } from "~/common/logo";
+import { DarkSymbol } from "~/common/logo";
 import { css } from "@emotion/react";
 
 const STYLES_POPOVER = (theme) => css`
@@ -57,7 +57,7 @@ export default function SignUpPopover({ children, title, logoStyle, titleStyle, 
     <div css={STYLES_POPOVER} {...props}>
       <div>
         <div style={{ textAlign: "center" }}>
-          <Symbol style={{ width: "40px", marginBottom: "8px", ...logoStyle }} />
+          <DarkSymbol height="40" width="40" style={{ marginBottom: "8px", ...logoStyle }} />
         </div>
         <System.H3 style={{ textAlign: "center", lineHeight: "30px", ...titleStyle }}>
           {title}

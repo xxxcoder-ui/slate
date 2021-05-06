@@ -116,7 +116,6 @@ export default function Initial({ goToSigninScene, goToSignupScene, goToTwitterS
             label="Email address or username"
             placeholder="email"
             icon={SVG.NavigationArrow}
-            containerStyle={{ marginTop: "4px" }}
             name="email"
             type="text"
             {...getUserNameFieldProps()}

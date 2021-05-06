@@ -11,7 +11,7 @@ export default function Verification({ onVerify }) {
   const handleOnChange = (code) => setToken(code);
   return (
     <SignUpPopover
-      logoStyle={{ width: 56 }}
+      logoStyle={{ width: 56, height: 56 }}
       title={
         <>
           Verification code sent,

@@ -12,11 +12,15 @@ const handleValidation = ({ username, password }) => {
   if (!Validations.password(password)) return "Incorrect password";
 };
 
-export default function Signin({ emailOrUsername = "" }) {
-  const { getFieldProps, getFormProps } = useForm({
-    initialValues: { username: "", password: "" },
+export default function Signin({ onAuthenticate, emailOrUsername = "" }) {
+  const { getFieldProps, getFormProps, isSubmitting } = useForm({
+    initialValues: { username: emailOrUsername, password: "" },
     validate: handleValidation,
-    onSubmit: ({ username, password }) => console.log({ username, password }),
+    onSubmit: async ({ username, password }) =>
+      await onAuthenticate({
+        username: username.toLowerCase(),
+        password: password,
+      }),
   });
 
   return (
@@ -38,7 +42,7 @@ export default function Signin({ emailOrUsername = "" }) {
           {...getFieldProps("password")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
-        <System.ButtonPrimary full type="submit" style={{ marginTop: 16 }}>
+        <System.ButtonPrimary full type="submit" loading={isSubmitting} style={{ marginTop: 16 }}>
           Sign in
         </System.ButtonPrimary>
       </form>

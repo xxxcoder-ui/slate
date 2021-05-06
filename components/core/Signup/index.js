@@ -34,7 +34,7 @@ const useAuthFlow = () => {
   return { ...handlers, ...state };
 };
 
-export default function AuthFlow() {
+export default function AuthFlow(props) {
   const {
     goToSigninScene,
     goToSignupScene,
@@ -43,7 +43,7 @@ export default function AuthFlow() {
     context,
   } = useAuthFlow();
 
-  if (scene === "signin") return <Signin emailOrUsername={context.emailOrUsername} />;
+  if (scene === "signin") return <Signin {...props} emailOrUsername={context.emailOrUsername} />;
   if (scene === "signup") return <Signup email={context.email} />;
   if (scene === "twitter_signup") return <TwitterSignup />;
 
