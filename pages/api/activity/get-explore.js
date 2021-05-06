@@ -29,5 +29,5 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_GET_EXPLORE_NOT_FOUND", error: true });
   }
 
-  return res.status(200).send({ decorator: "SERVER_GET_EXPLORE", explore: response });
+  return res.status(200).send({ decorator: "SERVER_GET_EXPLORE", data: response });
 };

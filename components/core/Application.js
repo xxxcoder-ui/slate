@@ -2,7 +2,7 @@ import * as React from "react";
 import * as NavigationData from "~/common/navigation-data";
 import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
-import * as State from "~/common/state";
+import * as Styles from "~/common/styles";
 import * as Credentials from "~/common/credentials";
 import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
@@ -15,6 +15,7 @@ import * as Events from "~/common/custom-events";
 
 // NOTE(jim):
 // Scenes each have an ID and can be navigated to with _handleAction
+import SceneError from "~/scenes/SceneError";
 import SceneEditAccount from "~/scenes/SceneEditAccount";
 import SceneFile from "~/scenes/SceneFile";
 import SceneFilesFolder from "~/scenes/SceneFilesFolder";
@@ -49,6 +50,7 @@ import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import CTATransition from "~/components/core/CTATransition";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
@@ -56,6 +58,7 @@ import { SearchModal } from "~/components/core/SearchModal";
 import { Alert } from "~/components/core/Alert";
 import { announcements } from "~/components/core/OnboardingModal";
 import { Logo } from "~/common/logo";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const SIDEBARS = {
   SIDEBAR_FILECOIN_ARCHIVE: <SidebarFilecoinArchive />,
@@ -73,23 +76,20 @@ const SIDEBARS = {
 };
 
 const SCENES = {
-  ACTIVITY: <SceneActivity tab={0} />,
-  EXPLORE: <SceneActivity tab={1} />,
-  DIRECTORY: <SceneDirectory />,
-  PROFILE_FILES: <SceneProfile tab={0} />,
-  PROFILE: <SceneProfile tab={1} />,
-  PROFILE_PEERS: <SceneProfile tab={2} />,
-  DATA: <SceneFilesFolder />,
-  FILE: <SceneFile />,
-  SLATE: <SceneSlate />,
-  API: <SceneSettingsDeveloper />,
-  SETTINGS: <SceneEditAccount />,
-  SLATES: <SceneSlates tab={0} />,
-  SLATES_FOLLOWING: <SceneSlates tab={1} />,
-  DIRECTORY: <SceneDirectory tab={0} />,
-  DIRECTORY_FOLLOWERS: <SceneDirectory tab={1} />,
-  FILECOIN: <SceneArchive />,
-  STORAGE_DEAL: <SceneMakeFilecoinDeal />,
+  NAV_ERROR: <SceneError />,
+  NAV_SIGN_IN: <SceneSignIn />,
+  NAV_ACTIVITY: <SceneActivity />,
+  NAV_DIRECTORY: <SceneDirectory />,
+  NAV_PROFILE: <SceneProfile />,
+  NAV_DATA: <SceneFilesFolder />,
+  // NAV_FILE: <SceneFile />,
+  NAV_SLATE: <SceneSlate />,
+  NAV_API: <SceneSettingsDeveloper />,
+  NAV_SETTINGS: <SceneEditAccount />,
+  NAV_SLATES: <SceneSlates />,
+  NAV_DIRECTORY: <SceneDirectory />,
+  NAV_FILECOIN: <SceneArchive />,
+  NAV_STORAGE_DEAL: <SceneMakeFilecoinDeal />,
 };
 
 let mounted;
@@ -100,15 +100,18 @@ export default class ApplicationPage extends React.Component {
   state = {
     selected: {},
     viewer: this.props.viewer,
-    data: null,
+    page: this.props.page || {},
+    data: this.props.data,
+    activePage: this.props.page?.id,
     sidebar: null,
     online: null,
     isMobile: this.props.isMobile,
-    loaded: false,
     activeUsers: null,
+    loading: false,
   };
 
   async componentDidMount() {
+    this._handleWindowResize();
     if (mounted) {
       return false;
     }
@@ -128,8 +131,9 @@ export default class ApplicationPage extends React.Component {
     if (this.state.viewer) {
       await this._handleSetupWebsocket();
     }
-
-    this._handleURLRedirect();
+    console.log(this.props.page);
+    console.log(this.props.data);
+    // this._handleBackForward();
   }
 
   componentWillUnmount() {
@@ -160,17 +164,9 @@ export default class ApplicationPage extends React.Component {
 
     this._handleRegisterFileLoading({ fileLoading });
 
-    let page;
-    if (typeof window !== "undefined") {
-      page = window?.history?.state;
-    }
-    if (!page || !page.id) {
-      page = { id: "NAV_DATA", scrollTop: 0, data: null };
-    }
-    const current = NavigationData.getCurrent(page);
-
+    const page = this.state.page;
     let slate = null;
-    if (current.target.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
+    if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
       slate = this.state.data;
     }
 
@@ -181,7 +177,8 @@ export default class ApplicationPage extends React.Component {
     });
   };
 
-  _handleUpdateViewer = (newViewerState, callback) => {
+  _handleUpdateViewer = ({ viewer, callback }) => {
+    // _handleUpdateViewer = (newViewerState, callback) => {
     // let setAsyncState = (newState) =>
     //   new Promise((resolve) =>
     //     this.setState(
@@ -194,17 +191,11 @@ export default class ApplicationPage extends React.Component {
     // await setAsyncState(newViewerState);
 
     //NOTE(martina): if updating viewer affects this.state.data (e.g. you're viewing your own slate), update data as well
-    if (newViewerState.slates?.length) {
-      let page;
-      if (typeof window !== "undefined") {
-        page = window?.history?.state;
-      }
-      if (!page || !page.id) {
-        page = { id: "NAV_DATA", scrollTop: 0, data: null };
-      }
-      if (page.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer.id) {
+    if (viewer?.slates?.length) {
+      const page = this.state.page;
+      if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer.id) {
         let data = this.state.data;
-        for (let slate of newViewerState.slates) {
+        for (let slate of viewer.slates) {
           if (slate.id === data.id) {
             data = slate;
             break;
@@ -212,13 +203,14 @@ export default class ApplicationPage extends React.Component {
         }
         this.setState(
           {
-            viewer: { ...this.state.viewer, ...newViewerState },
+            viewer: { ...this.state.viewer, ...viewer },
             data,
           },
           () => {
             if (callback) {
               callback();
             }
+            console.log(this.state.viewer);
           }
         );
         return;
@@ -226,9 +218,10 @@ export default class ApplicationPage extends React.Component {
     }
     this.setState(
       {
-        viewer: { ...this.state.viewer, ...newViewerState },
+        viewer: { ...this.state.viewer, ...viewer },
       },
       () => {
+        console.log(this.state.viewer);
         if (callback) {
           callback();
         }
@@ -236,7 +229,8 @@ export default class ApplicationPage extends React.Component {
     );
   };
 
-  _handleUpdateData = (data, callback) => {
+  _handleUpdateData = ({ data, callback }) => {
+    // _handleUpdateData = (data, callback) => {
     //TODO(martina): maybe add a default window.history.replacestate where it pushes the new data to browser?
     this.setState({ data }, () => {
       if (callback) {
@@ -256,7 +250,6 @@ export default class ApplicationPage extends React.Component {
         console.log("WEBSOCKET: NOT AUTHENTICATED");
         return;
       }
-      console.log("inside handle setup websocket in application.js");
       wsclient = Websockets.init({
         resource: this.props.resources.pubsub,
         viewer: this.state.viewer,
@@ -311,17 +304,10 @@ export default class ApplicationPage extends React.Component {
       return null;
     }
 
-    let page;
-    if (typeof window !== "undefined") {
-      page = window?.history?.state;
-    }
-    if (!page || !page.id) {
-      page = { id: "NAV_DATA", scrollTop: 0, data: null };
-    }
-    const current = NavigationData.getCurrent(page);
+    let page = this.state.page;
 
     let slate = null;
-    if (current.target.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
+    if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
       slate = this.state.data;
     }
 
@@ -485,17 +471,17 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    return this._handleAuthenticate(state, true);
+    this._handleAuthenticate(state, true);
   };
 
   _handleAuthenticate = async (state, newAccount) => {
     let response = await UserBehaviors.authenticate(state);
-    if (!response) {
+    if (Events.hasError(response)) {
       return;
     }
     let viewer = await UserBehaviors.hydrate();
-    if (!viewer) {
-      return viewer;
+    if (Events.hasError(viewer)) {
+      return;
     }
 
     this.setState({ viewer });
@@ -507,7 +493,6 @@ export default class ApplicationPage extends React.Component {
         unseenAnnouncements.push(feature);
       }
     }
-    console.log(unseenAnnouncements);
 
     if (newAccount || unseenAnnouncements.length) {
       Events.dispatchCustomEvent({
@@ -530,28 +515,28 @@ export default class ApplicationPage extends React.Component {
       Actions.updateSearch("create-user");
     }
 
-    let redirected = this._handleURLRedirect();
-    if (!redirected) {
-      this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
-    }
+    // let redirected = this._handleURLRedirect();
+    // if (!redirected) {
+    //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
+    // }
     return response;
   };
 
-  _handleURLRedirect = () => {
-    const id = Window.getQueryParameterByName("scene");
-    const user = Window.getQueryParameterByName("user");
-    const slate = Window.getQueryParameterByName("slate");
-    const cid = Window.getQueryParameterByName("cid");
+  // _handleURLRedirect = () => {
+  //   const id = Window.getQueryParameterByName("scene");
+  //   const username = Window.getQueryParameterByName("username");
+  //   const slatename = Window.getQueryParameterByName("slatename");
+  //   const cid = Window.getQueryParameterByName("cid");
 
-    if (!Strings.isEmpty(id) && this.state.viewer) {
-      this._handleNavigateTo({ id, user, slate, cid }, null, true);
-      return true;
-    }
-    if (!this.state.loaded) {
-      this.setState({ loaded: true });
-    }
-    return false;
-  };
+  //   if (!Strings.isEmpty(id)) {
+  //     this._handleNavigateTo({ id, username, slatename, cid }, null, true);
+  //     return true;
+  //   }
+  //   if (!this.state.loaded) {
+  //     this.setState({ loaded: true });
+  //   }
+  //   return false;
+  // };
 
   _handleSelectedChange = (e) => {
     this.setState({
@@ -565,30 +550,15 @@ export default class ApplicationPage extends React.Component {
 
   _handleAction = (options) => {
     if (options.type === "NAVIGATE") {
-      // NOTE(martina): The `scene` property is only necessary when you need to display a component different from the one corresponding to the tab it appears in
-      // + e.g. to display <SceneProfile/> while on the Home tab
-      // + `scene` should be the decorator of the component you want displayed
-      return this._handleNavigateTo(
-        {
-          ...options,
-          id: options.value,
-          redirect: null,
-        },
-        options.data,
-        options.redirect
-      );
+      return this._handleNavigateTo(options);
     }
 
-    if (options.type === "NEW_WINDOW") {
-      return window.open(options.value);
+    if (options.type === "UPDATE_VIEWER") {
+      return this._handleUpdateViewer(options);
     }
 
-    if (options.type === "ACTION") {
-      Events.dispatchMessage({ message: JSON.stringify(options), status: "INFO" });
-    }
-
-    if (options.type === "DOWNLOAD") {
-      Events.dispatchMessage({ message: JSON.stringify(options), status: "INFO" });
+    if (options.type === "UPDATE_PARAMS") {
+      return this._handleUpdatePageParams(options);
     }
 
     if (options.type === "SIDEBAR") {
@@ -602,125 +572,167 @@ export default class ApplicationPage extends React.Component {
       return this._handleRegisterFileCancelled({ key: options.value });
     }
 
-    return alert(JSON.stringify(options));
-  };
-
-  _handleNavigateTo = (next, data = null, redirect = false) => {
-    if (redirect) {
-      window.history.replaceState(
-        { ...next, data },
-        "Slate",
-        `/_${next.id ? `?scene=${next.id}` : ""}`
-      );
-    } else {
-      window.history.pushState(
-        { ...next, data },
-        "Slate",
-        `/_${next.id ? `?scene=${next.id}` : ""}`
-      );
+    if (options.type === "NEW_WINDOW") {
+      return window.open(options.value);
     }
 
-    if (!this.state.loaded) {
-      this.setState({ loaded: true });
+    console.log("Error: Failed to _handleAction because TYPE did not match any known actions");
+  };
+
+  _handleNavigateTo = async ({ href, redirect = false, popstate = false }) => {
+    const { page, details } = NavigationData.getByHref(href, this.state.viewer);
+
+    Events.dispatchCustomEvent({ name: "slate-global-close-carousel", detail: {} });
+
+    if (redirect || popstate) {
+      window.history.replaceState(null, "Slate", page.pathname);
+    } else {
+      window.history.pushState(null, "Slate", page.pathname);
+    }
+
+    let state = { data: null, sidebar: null, page };
+    if (!next.ignore) {
+      state.activePage = page.id;
     }
 
     let body = document.documentElement || document.body;
-    if (data) {
-      this.setState(
-        {
-          data,
-          sidebar: null,
-        },
-        () => body.scrollTo(0, 0)
-      );
-    } else {
-      this.setState(
-        {
-          sidebar: null,
-        },
-        () => body.scrollTo(0, 0)
-      );
+    if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
+      state.loading = true;
     }
+    this.setState(state, () => {
+      if (!popstate) {
+        body.scrollTo(0, 0);
+      }
+      if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
+        this.updateDataAndPathname({ page, details });
+      }
+    });
   };
 
-  _handleBackForward = (e) => {
-    let page = window.history.state;
-    this.setState({
-      sidebar: null,
-      data: page.data,
+  updateDataAndPathname = async ({ page, details }) => {
+    let pathname = page.pathname.split("?")[0];
+    let search = Strings.getQueryStringFromParams(page.params);
+    let data;
+    if (page?.id === "NAV_SLATE") {
+      let response = await Actions.getSerializedSlate(details);
+      if (!response || response.error) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({ href: "/_/404", redirect: true });
+        return;
+      }
+      data = response.data;
+      pathname = `/${data.user.username}/${data.slatename}${search}`;
+    } else if (page?.id === "NAV_PROFILE") {
+      let response = await Actions.getSerializedProfile(details);
+      if (!response || response.error) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({ href: "/_/404", redirect: true });
+        return;
+      }
+      data = response.data;
+      pathname = `/${data.username}${search}`;
+    }
+
+    this.setState({ data, loading: false });
+
+    window.history.replaceState(null, "Slate", pathname);
+  };
+
+  _handleUpdatePageParams = ({ params, callback, redirect = false }) => {
+    let query = Strings.getQueryStringFromParams(params);
+    const href = window.location.pathname.concat(query);
+    if (redirect) {
+      window.history.replaceState(null, "Slate", href);
+    } else {
+      window.history.pushState(null, "Slate", href);
+    }
+    this.setState({ page: { ...this.state.page, params } }, () => {
+      if (callback) {
+        callback();
+      }
     });
-    Events.dispatchCustomEvent({ name: "slate-global-close-carousel", detail: {} });
+  };
+
+  // _handleUpdatePageParams = ({ search, callback }) => {
+  //   if (!search.length) {
+  //     return;
+  //   }
+  //   let target = {};
+  //   let searchParams = search.replace("?", "");
+  //   let pairs = searchParams.split("&");
+  //   for (let pair of pairs) {
+  //     let key = pair.split("=")[0];
+  //     let value = pair.slice(key.length + 1);
+  //     if (key && value) {
+  //       target[key] = value;
+  //     }
+  //   }
+  //   const href = window.location.pathname + "?" + searchParams;
+  //   if (target) {
+  //     window.history.replaceState(null, "Slate", href);
+  //     this.setState({ page: target }, () => {
+  //       if (callback) {
+  //         callback();
+  //       }
+  //     });
+  //   } else {
+  //     window.history.replaceState(null, "Slate", href);
+  //     if (callback) {
+  //       callback();
+  //     }
+  //   }
+  // };
+
+  _handleBackForward = () => {
+    let href = window.location.pathname.concat(
+      window.location.search ? `${window.location.search}` : ""
+    );
+    this._handleNavigateTo({ href, popstate: true });
   };
 
   render() {
-    // NOTE(jim): Not authenticated.
-    if (!this.state.viewer) {
-      return (
-        <WebsitePrototypeWrapper
-          title="Slate: sign in"
-          description="Sign in to your Slate account to manage your assets."
-          url="https://slate.host/_"
-        >
-          <Alert noWarning style={{ top: 0, zIndex: Constants.zindex.sidebar }} />
-          <SceneSignIn
-            onCreateUser={this._handleCreateUser}
-            onAuthenticate={this._handleAuthenticate}
-            onAction={this._handleAction}
-          />
-        </WebsitePrototypeWrapper>
+    let page = this.state.page;
+    if (!page?.id) {
+      page = NavigationData.getById(null, this.state.viewer);
+    }
+    let headerElement;
+    if (page.id !== "NAV_SIGN_IN") {
+      headerElement = (
+        <ApplicationHeader
+          viewer={this.state.viewer}
+          navigation={NavigationData.navigation}
+          page={page}
+          onAction={this._handleAction}
+          isMobile={this.state.isMobile}
+          isMac={this.props.isMac}
+          activePage={this.state.activePage}
+        />
       );
     }
-    // NOTE(jim): Authenticated.
-    let page;
-    if (typeof window !== "undefined") {
-      page = window?.history?.state;
-    }
-    if (!page || !page.id) {
-      page = { id: "NAV_DATA", scrollTop: 0, data: null };
-    }
-    const current = NavigationData.getCurrent(page);
 
-    // NOTE(jim): Only happens during a bad query parameter.
-    if (!current.target) {
-      window.location.replace("/_");
-      return null;
-    }
-
-    let headerElement = (
-      <ApplicationHeader
-        viewer={this.state.viewer}
-        navigation={NavigationData.navigation}
-        activeIds={current.activeIds}
-        onAction={this._handleAction}
-        isMobile={this.state.isMobile}
-        isMac={this.props.isMac}
-      />
-    );
-
-    const scene = React.cloneElement(SCENES[page.scene || current.target.decorator], {
+    const scene = React.cloneElement(SCENES[page.id], {
       key: this.state.data?.id,
       page: page,
-      current: current.target,
       data: this.state.data,
       viewer: this.state.viewer,
       selected: this.state.selected,
       onSelectedChange: this._handleSelectedChange,
+      onAuthenticate: this._handleAuthenticate,
+      onCreateUser: this._handleCreateUser,
       onAction: this._handleAction,
       onUpload: this._handleUploadFiles,
-      onUpdateData: this._handleUpdateData,
-      onUpdateViewer: this._handleUpdateViewer,
-      sceneId: current.target.id,
       isMobile: this.state.isMobile,
       isMac: this.props.isMac,
       resources: this.props.resources,
       activeUsers: this.state.activeUsers,
       userBucketCID: this.state.userBucketCID,
+      external: !!!this.state.viewer,
     });
 
     let sidebarElement;
     if (this.state.sidebar) {
       sidebarElement = React.cloneElement(this.state.sidebar, {
-        current: current.target,
+        page: page,
         selected: this.state.selected,
         viewer: this.state.viewer,
         data: this.state.data,
@@ -730,34 +742,30 @@ export default class ApplicationPage extends React.Component {
         onCancel: this._handleDismissSidebar,
         onUpload: this._handleUploadFiles,
         onAction: this._handleAction,
-        onUpdateViewer: this._handleUpdateViewer,
         resources: this.props.resources,
       });
     }
 
-    const title = `Slate : ${current.target.pageTitle}`;
+    const title = `Slate: ${page.pageTitle}`;
     const description = "";
     const url = "https://slate.host/_";
 
-    // console.log("application state:", { target: current.target });
-    // console.log("application state:", { data: this.state.data });
-
-    if (!this.state.loaded) {
-      return (
-        <WebsitePrototypeWrapper description={description} title={title} url={url}>
-          <div
-            style={{
-              height: "100vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Logo style={{ width: "20vw", maxWidth: "200px" }} />
-          </div>
-        </WebsitePrototypeWrapper>
-      );
-    }
+    // if (!this.state.loaded) {
+    //   return (
+    //     <WebsitePrototypeWrapper description={description} title={title} url={url}>
+    //       <div
+    //         style={{
+    //           height: "100vh",
+    //           display: "flex",
+    //           alignItems: "center",
+    //           justifyContent: "center",
+    //         }}
+    //       >
+    //         <Logo style={{ width: "20vw", maxWidth: "200px" }} />
+    //       </div>
+    //     </WebsitePrototypeWrapper>
+    //   );
+    // }
     return (
       <React.Fragment>
         <WebsitePrototypeWrapper description={description} title={title} url={url}>
@@ -767,13 +775,23 @@ export default class ApplicationPage extends React.Component {
             sidebar={sidebarElement}
             onDismissSidebar={this._handleDismissSidebar}
             fileLoading={this.state.fileLoading}
-            filecoin={current.target.filecoin}
             isMobile={this.state.isMobile}
             isMac={this.props.isMac}
             viewer={this.state.viewer}
-            onUpdateViewer={this._handleUpdateViewer}
           >
-            {scene}
+            {this.state.loading ? (
+              <div
+                css={Styles.CONTAINER_CENTERED}
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              >
+                <LoaderSpinner style={{ height: 32, width: 32 }} />
+              </div>
+            ) : (
+              scene
+            )}
           </ApplicationLayout>
           <GlobalModal />
           <SearchModal
@@ -782,7 +800,8 @@ export default class ApplicationPage extends React.Component {
             isMobile={this.props.isMobile}
             resourceURI={this.props.resources.search}
           />
-          {!this.state.loaded ? (
+          <CTATransition onAction={this._handleAction} />
+          {/* {!this.state.loaded ? (
             <div
               style={{
                 position: "absolute",
@@ -795,7 +814,7 @@ export default class ApplicationPage extends React.Component {
             >
               <Logo style={{ width: "20vw", maxWidth: "200px" }} />
             </div>
-          ) : null}
+          ) : null} */}
         </WebsitePrototypeWrapper>
       </React.Fragment>
     );

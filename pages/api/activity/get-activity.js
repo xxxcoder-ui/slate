@@ -60,5 +60,5 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_GET_ACTIVITY_NOT_FOUND", error: true });
   }
 
-  return res.status(200).send({ decorator: "SERVER_GET_ACTIVITY", activity: response });
+  return res.status(200).send({ decorator: "SERVER_GET_ACTIVITY", data: response });
 };

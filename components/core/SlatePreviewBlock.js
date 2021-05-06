@@ -8,6 +8,7 @@ import { Logo } from "~/common/logo";
 import { css } from "@emotion/react";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
+import { Link } from "~/components/core/Link";
 
 import ProcessedText from "~/components/core/ProcessedText";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
@@ -277,10 +278,12 @@ export class SlatePreviewBlock extends React.Component {
               right: "-12px",
             }}
             navigation={[
-              {
-                text: "Copy collection ID",
-                onClick: (e) => this._handleCopy(e, this.props.slate.id),
-              },
+              [
+                {
+                  text: "Copy collection ID",
+                  onClick: (e) => this._handleCopy(e, this.props.slate.id),
+                },
+              ],
             ]}
           />
         </Boundary>
@@ -437,44 +440,15 @@ export default class SlatePreviewBlocks extends React.Component {
   render() {
     return (
       <div css={STYLES_SLATES}>
-        {this.props.external
-          ? this.props.slates?.map((slate) => (
-              <a
-                key={slate.id}
-                style={{ textDecoration: "none", color: Constants.system.black }}
-                href={
-                  !!this.props.username
-                    ? `/${this.props.username}/${slate.slatename}`
-                    : `/$/slate/${slate.id}`
-                }
-              >
-                <SlatePreviewBlock
-                  isOwner={this.props.isOwner}
-                  username={this.props.username}
-                  slate={slate}
-                  external={this.props.external}
-                />
-              </a>
-            ))
-          : this.props.slates?.map((slate) => (
-              <div
-                key={slate.id}
-                onClick={() =>
-                  this.props.onAction({
-                    type: "NAVIGATE",
-                    value: "NAV_SLATE",
-                    data: { decorator: "SLATE", ...slate },
-                  })
-                }
-              >
-                <SlatePreviewBlock
-                  isOwner={this.props.isOwner}
-                  username={this.props.username}
-                  slate={slate}
-                  external={this.props.external}
-                />
-              </div>
-            ))}
+        {this.props.slates?.map((slate) => (
+          <Link key={slate.id} href={`/$/slate/${slate.id}`} onAction={this.props.onAction}>
+            <SlatePreviewBlock
+              isOwner={this.props.isOwner}
+              slate={slate}
+              external={this.props.external}
+            />
+          </Link>
+        ))}
       </div>
     );
   }

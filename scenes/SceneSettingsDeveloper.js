@@ -95,15 +95,14 @@ class Key extends React.Component {
         </SquareButtonGray>
 
         {this.state.modalShow && (
-          <ConfirmationModal 
+          <ConfirmationModal
             type={"DELETE"}
             withValidation={false}
-            callback={(e) => this._handleDelete(e, this.props.data.id)} 
+            callback={(e) => this._handleDelete(e, this.props.data.id)}
             header={`Are you sure you want to revoke this API key?`}
             subHeader={`Any services using it will no longer be able to access your Slate account.`}
           />
         )}
-
       </div>
     );
   }
@@ -117,7 +116,6 @@ export default class SceneSettingsDeveloper extends React.Component {
     language: "javascript",
     docs: "GET",
     copying: false,
-    tab: 0,
     modalShow: false,
   };
 
@@ -154,6 +152,7 @@ export default class SceneSettingsDeveloper extends React.Component {
   };
 
   render() {
+    const tab = this.props.page.params?.tab || "v2";
     let APIKey = "YOUR-API-KEY-HERE";
     let lang = this.state.language;
     if (this.props.viewer.keys) {
@@ -298,12 +297,15 @@ export default class SceneSettingsDeveloper extends React.Component {
         </ScenePageHeader>
 
         <SecondaryTabGroup
-          tabs={["Version 2.0", "Version 1.0"]}
-          value={this.state.tab}
-          onChange={(tab) => this.setState({ tab })}
+          tabs={[
+            { title: "Version 2.0", value: { tab: "v2" } },
+            { title: "Version 1.0", value: { tab: "v1" } },
+          ]}
+          value={tab}
+          onAction={this.props.onAction}
         />
 
-        {this.state.tab === 0 ? (
+        {tab === "v2" ? (
           <>
             <APIDocsGetV2
               language={lang}

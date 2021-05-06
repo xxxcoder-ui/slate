@@ -87,10 +87,10 @@ const WebsitePrototypeHeaderGeneric = (props) => {
             </a>
           </div>
           <div css={STYLES_RIGHT}>
-            <a css={STYLES_LINK} href="/_" style={{ marginRight: 24 }}>
+            <a css={STYLES_LINK} href="/_/auth?tab=signup" style={{ marginRight: 24 }}>
               Sign up
             </a>
-            <a css={STYLES_LINK} href="/_">
+            <a css={STYLES_LINK} href="/_/auth?tab=signin">
               Sign in
             </a>
           </div>

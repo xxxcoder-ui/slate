@@ -80,8 +80,8 @@ export default class SidebarAddFileToBucket extends React.Component {
     this.props.onUpload({
       files: e.target.files,
       slate:
-        this.props.current && this.props.current.slateId
-          ? { id: this.props.current.slateId }
+        this.props.page.id === "NAV_SLATE" && this.props.data?.id
+          ? { id: this.props.data.id }
           : null,
     });
     this.props.onCancel();
@@ -134,12 +134,10 @@ export default class SidebarAddFileToBucket extends React.Component {
 
             <System.P>
               Click below or drop a file anywhere on the page to upload a file
-              {this.props.current &&
-              (this.props.current.slatename ||
-                (this.props.current.data && this.props.current.data.name)) ? (
+              {this.props.data?.slatename || this.props.data?.data.name ? (
                 <span>
                   {" "}
-                  to <strong>{Strings.getPresentationSlateName(this.props.current)}</strong>
+                  to <strong>{Strings.getPresentationSlateName(this.props.data)}</strong>
                 </span>
               ) : (
                 ""

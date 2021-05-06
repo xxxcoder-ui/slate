@@ -116,31 +116,28 @@ const STYLES_MOBILE_HIDDEN = css`
 
 export class GlobalCarousel extends React.Component {
   state = {
-    index: 0,
-    visible: false,
     showSidebar: true,
   };
 
   componentDidMount = () => {
     window.addEventListener("keydown", this._handleKeyDown);
-    window.addEventListener("slate-global-open-carousel", this._handleOpen);
-    window.addEventListener("slate-global-close-carousel", this._handleClose);
+    // window.addEventListener("slate-global-open-carousel", this._handleOpen);
+    // window.addEventListener("slate-global-close-carousel", this._handleClose);
   };
 
   componentWillUnmount = () => {
     window.removeEventListener("keydown", this._handleKeyDown);
-    window.removeEventListener("slate-global-open-carousel", this._handleOpen);
-    window.removeEventListener("slate-global-close-carousel", this._handleClose);
+    // window.removeEventListener("slate-global-open-carousel", this._handleOpen);
+    // window.removeEventListener("slate-global-close-carousel", this._handleClose);
   };
 
-  componentDidUpdate = (prevProps) => {
-    if (
-      !this.props.objects ||
-      this.props.objects.length == 0 ||
-      this.state.index >= this.props.objects.length
-    ) {
-      this._handleClose();
+  findSelectedIndex = () => {
+    const cid = this.props.params?.cid;
+    if (!cid) {
+      return -1;
     }
+    let index = this.props.objects.findIndex((elem) => elem.cid === cid);
+    return index;
   };
 
   _handleKeyDown = (e) => {
@@ -173,95 +170,132 @@ export class GlobalCarousel extends React.Component {
     }
   };
 
-  setWindowState = (data = {}) => {
-    const cid = data?.cid;
-    if (this.props.carouselType === "ACTIVITY") {
-      window.history.replaceState(
-        { ...window.history.state, cid: cid },
-        null,
-        cid ? `/${data.owner}/${data.slate.slatename}/cid:${cid}` : `/_?scene=NAV_ACTIVITY`
-      );
-      return;
-    }
+  // setWindowState = (data = {}) => {
+  //   const cid = data?.cid;
+  //   if (this.props.carouselType === "ACTIVITY") {
+  //     window.history.replaceState(
+  //       { ...window.history.state, cid: cid },
+  //       null,
+  //       cid ? `/${data.owner}/${data.slate.slatename}/cid:${cid}` : `/_?scene=NAV_ACTIVITY`
+  //     );
+  //     return;
+  //   }
 
-    let baseURL = window.location.pathname.split("/");
-    if (this.props.carouselType === "SLATE") {
-      baseURL.length = 3;
-    } else if (this.props.carouselType === "PROFILE") {
-      baseURL.length = 2;
-    } else if (this.props.carouselType === "DATA") {
-      baseURL.length = 2;
-      if (cid) {
-        baseURL[1] = this.props.viewer.username;
-      } else {
-        baseURL[1] = "_?scene=NAV_DATA";
-      }
-    }
-    baseURL = baseURL.join("/");
+  //   let baseURL = window.location.pathname.split("/");
+  //   if (this.props.carouselType === "SLATE") {
+  //     baseURL.length = 3;
+  //   } else if (this.props.carouselType === "PROFILE") {
+  //     baseURL.length = 2;
+  //   } else if (this.props.carouselType === "DATA") {
+  //     baseURL.length = 2;
+  //     if (cid) {
+  //       baseURL[1] = this.props.viewer.username;
+  //     } else {
+  //       baseURL[1] = "_?scene=NAV_DATA";
+  //     }
+  //   }
+  //   baseURL = baseURL.join("/");
 
-    window.history.replaceState(
-      { ...window.history.state, cid: cid },
-      null,
-      cid ? `${baseURL}/cid:${cid}` : baseURL
-    );
-  };
+  //   window.history.replaceState(
+  //     { ...window.history.state, cid: cid },
+  //     null,
+  //     cid ? `${baseURL}/cid:${cid}` : baseURL
+  //   );
+  // };
 
-  _handleOpen = (e) => {
-    let index = e.detail.index;
-    const objects = this.props.objects;
-    if (e.detail.index === null) {
-      if (e.detail.id !== null) {
-        index = objects.findIndex((obj) => obj.id === e.detail.id);
-      }
-    }
-    if (index === null || index < 0 || index >= objects.length) {
-      return;
-    }
-    this.setState({
-      visible: true,
-      index: e.detail.index,
-    });
-    const data = objects[e.detail.index];
-    this.setWindowState(data);
-  };
+  // _handleOpen = (e) => {
+  //   let index = e.detail.index;
+  //   const objects = this.props.objects;
+  //   if (e.detail.index === null) {
+  //     if (e.detail.id !== null) {
+  //       index = objects.findIndex((obj) => obj.id === e.detail.id);
+  //     }
+  //   }
+  //   if (index === null || index < 0 || index >= objects.length) {
+  //     return;
+  //   }
+  //   this.setState({
+  //     visible: true,
+  //     index: e.detail.index,
+  //   });
+  //   const data = objects[e.detail.index];
+  //   this.setWindowState(data);
+  // };
 
   _handleClose = (e) => {
-    if (this.state.visible) {
-      if (e) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-      this.setState({ visible: false, index: 0 });
-      this.setWindowState();
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
     }
+    if (this.props.onChange) {
+      this.props.onChange(-1);
+    } else {
+      let params = { ...this.props.params };
+      delete params.cid;
+      this.props.onAction({
+        type: "UPDATE_PARAMS",
+        params,
+        redirect: true,
+      });
+    }
+
+    // this.setState({ visible: false, index: 0 });
+    // this.setWindowState();
   };
 
   _handleNext = (e) => {
     if (e) {
       e.stopPropagation();
     }
-    let index = this.state.index + 1;
-    if (index >= this.props.objects.length) {
-      return;
+    if (this.props.onChange) {
+      let index = this.props.index + 1;
+      if (index >= this.props.objects.length) return;
+      this.props.onChange(index);
+    } else {
+      let index = this.findSelectedIndex() + 1;
+      if (index >= this.props.objects.length) {
+        return;
+      }
+      let cid = this.props.objects[index].cid;
+      // this.setState({ index });
+      this.props.onAction({
+        type: "UPDATE_PARAMS",
+        params: { ...this.props.params, cid },
+        redirect: true,
+      });
     }
-    this.setState({ index });
-
-    const data = this.props.objects[index];
-    this.setWindowState(data);
+    // const data = this.props.objects[index];
+    // this.setWindowState(data);
   };
+
+  //it uses the initial cid to set which index it is, then it goes off its internal index from there and sets apge still but doesn't get from it?
+  //though that
+  //maybe the initial open is triggered by page, combined with index?
+  //or mayube
 
   _handlePrevious = (e) => {
     if (e) {
       e.stopPropagation();
     }
-    let index = this.state.index - 1;
-    if (index < 0) {
-      return;
+    if (this.props.onChange) {
+      let index = this.props.index - 1;
+      if (index < 0) return;
+      this.props.onChange(index);
+    } else {
+      let index = this.findSelectedIndex() - 1;
+      if (index < 0) {
+        return;
+      }
+      let cid = this.props.objects[index].cid;
+      // this.setState({ index });
+      this.props.onAction({
+        type: "UPDATE_PARAMS",
+        params: { ...this.props.params, cid },
+        redirect: true,
+      });
     }
-    this.setState({ index });
-
-    const data = this.props.objects[index];
-    this.setWindowState(data);
+    // const data = this.props.objects[index];
+    // this.setWindowState(data);
   };
 
   _handleToggleSidebar = (e) => {
@@ -272,27 +306,33 @@ export class GlobalCarousel extends React.Component {
   };
 
   render() {
-    if (
-      !this.state.visible ||
-      !this.props.carouselType ||
-      this.state.index < 0 ||
-      this.state.index >= this.props.objects.length
-    ) {
+    let index;
+    if (this.props.onChange) {
+      index = this.props.index;
+    } else {
+      index = this.findSelectedIndex();
+    }
+    if (!this.props.carouselType || index < 0 || index >= this.props.objects.length) {
       return null;
     }
-    let data = this.props.objects[this.state.index];
-    let { isMobile, isOwner } = this.props;
+    let file = this.props.objects[index];
+    if (!file) {
+      return null;
+    }
+
+    let { isMobile } = this.props;
 
     let isRepost = false;
     if (this.props.carouselType === "SLATE") {
-      isRepost = this.props.current?.ownerId !== data.ownerId;
+      isRepost = this.props.data?.ownerId !== file.ownerId;
     }
 
-    let slide = <SlateMediaObject file={data} isMobile={isMobile} />;
+    let slide = <SlateMediaObject file={file} isMobile={isMobile} />;
 
     return (
       <div css={STYLES_ROOT}>
         <Alert
+          viewer={this.props.viewer}
           noWarning
           id={isMobile ? "slate-mobile-alert" : null}
           style={
@@ -308,7 +348,7 @@ export class GlobalCarousel extends React.Component {
           }
         />
         <div css={STYLES_ROOT_CONTENT} style={this.props.style} onClick={this._handleClose}>
-          {this.state.index > 0 && (
+          {index > 0 && (
             <span
               css={STYLES_BOX}
               onClick={this._handlePrevious}
@@ -317,7 +357,7 @@ export class GlobalCarousel extends React.Component {
               <SVG.ChevronLeft height="20px" />
             </span>
           )}
-          {this.state.index < this.props.objects.length - 1 && (
+          {index < this.props.objects.length - 1 && (
             <span
               css={STYLES_BOX}
               onClick={this._handleNext}
@@ -351,12 +391,13 @@ export class GlobalCarousel extends React.Component {
         </div>
         <span css={STYLES_MOBILE_HIDDEN}>
           <CarouselSidebar
-            key={data.id}
+            key={file.id}
             {...this.props}
-            data={data}
+            file={file}
             display={this.state.showSidebar ? "block" : "none"}
             onClose={this._handleClose}
             isRepost={isRepost}
+            onAction={this.props.onAction}
           />
         </span>
       </div>

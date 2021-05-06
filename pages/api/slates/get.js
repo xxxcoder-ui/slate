@@ -4,29 +4,6 @@ import * as Serializers from "~/node_common/serializers";
 import * as Strings from "~/common/strings";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
-  if (user.error) {
-    return res.status(500).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
   const response = await Data.getSlateById({
     id: req.body.data.id,
     includeFiles: true,
@@ -41,11 +18,15 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_GET_SLATE_NOT_FOUND", error: true });
   }
 
-  if (!response.isPublic && response.ownerId !== id) {
-    return res.status(403).send({
-      decorator: "SERVER_GET_SLATE_PRIVATE_ACCESS_DENIED",
-      error: true,
-    });
+  if (!response.isPublic) {
+    const id = Utilities.getIdFromCookie(req);
+
+    if (!ownerId || response.ownerId !== id) {
+      return res.status(403).send({
+        decorator: "SERVER_GET_SLATE_PRIVATE_ACCESS_DENIED",
+        error: true,
+      });
+    }
   }
 
   return res.status(200).send({ decorator: "SERVER_GET_SLATE", slate: response });

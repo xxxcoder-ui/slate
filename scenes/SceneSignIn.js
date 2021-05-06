@@ -104,24 +104,20 @@ export default class SceneSignIn extends React.Component {
       return;
     }
 
-    let response = null;
-
     if (this.state.scene === "CREATE_ACCOUNT") {
-      response = await this.props.onCreateUser({
+      await this.props.onCreateUser({
         username: this.state.username.toLowerCase(),
         password: this.state.password,
         accepted: this.state.accepted,
       });
     } else {
-      response = await this.props.onAuthenticate({
+      await this.props.onAuthenticate({
         username: this.state.username.toLowerCase(),
         password: this.state.password,
       });
     }
 
-    if (Events.hasError(response)) {
-      this.setState({ loading: false });
-    }
+    this.setState({ loading: false });
   };
 
   _handleCheckUsername = async () => {
@@ -160,7 +156,8 @@ export default class SceneSignIn extends React.Component {
   render() {
     return (
       <div css={STYLES_ROOT}>
-        <WebsitePrototypeHeader style={{ background: `none` }} />
+        <div />
+        {/* <WebsitePrototypeHeader style={{ background: `none` }} /> */}
         <div css={STYLES_MIDDLE}>
           <SignIn {...this.props} />
         </div>

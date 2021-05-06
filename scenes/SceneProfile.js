@@ -22,106 +22,115 @@ const STYLES_LOADER = css`
 
 export default class SceneProfile extends React.Component {
   state = {
-    profile: null,
     notFound: false,
-    isOwner: false,
-    loading: true,
+    loading: false,
   };
 
-  componentDidMount = async () => {
-    this.fetchProfile();
-  };
+  // componentDidMount = async () => {
+  //   if (this.props.data) {
+  //     this.openCarouselToItem();
+  //   }
+  // };
 
-  componentDidUpdate = (prevProps) => {
-    if (this.state.isOwner && this.props.viewer.library !== prevProps.viewer.library) {
-      let filteredViewer = this.getFilteredViewer();
-      this.setState({ profile: filteredViewer });
-    } else if (this.props.page !== prevProps.page) {
-      this.openCarouselToItem();
-    }
-  };
+  // componentDidUpdate = (prevProps) => {
+  //   // if (
+  //   //   this.state.isOwner &&
+  //   //   this.props.viewer &&
+  //   //   this.props.viewer.library !== prevProps.viewer.library
+  //   // ) {
+  //   //   let filteredViewer = this.getFilteredViewer();
+  //   //   this.setState({ profile: filteredViewer });
+  //   // } else
+  //   if (this.props.data !== prevProps.data || this.props.page.params !== prevProps.page.params) {
+  //     this.openCarouselToItem();
+  //   }
+  // };
 
-  fetchProfile = async () => {
-    const username = this.props.page.user || this.props.page.data?.username;
-    let isOwner = false;
-    let query;
-    let targetUser;
-    if (username) {
-      if (username === this.props.viewer.username) {
-        isOwner = true;
-        targetUser = this.getFilteredViewer();
-      } else {
-        query = { username: username };
-      }
-    } else if (this.props.data?.id) {
-      if (this.props.data.id === this.props.viewer.id) {
-        isOwner = true;
-        targetUser = this.getFilteredViewer();
-      } else {
-        query = { id: this.props.data.id };
-      }
-    }
+  // fetchProfile = async () => {
+  //   const username = this.props.page.username || this.props.page.data?.username;
+  //   const { userId } = this.props.page;
 
-    if (!targetUser) {
-      let response;
-      if (query) {
-        response = await Actions.getSerializedProfile(query);
-      }
+  //   const id = userId || this.props.data?.id;
 
-      if (!response || response.error) {
-        this.setState({ notFound: true });
-        return;
-      }
+  //   let isOwner = false;
+  //   let query;
+  //   let targetUser;
+  //   if (username) {
+  //     if (this.props.viewer && username === this.props.viewer.username) {
+  //       isOwner = true;
+  //       targetUser = this.getFilteredViewer();
+  //     } else {
+  //       query = { username };
+  //     }
+  //   } else if (id) {
+  //     if (this.props.viewer && id === this.props.viewer.id) {
+  //       isOwner = true;
+  //       targetUser = this.getFilteredViewer();
+  //     } else {
+  //       query = { id };
+  //     }
+  //   }
 
-      targetUser = response.data;
-    }
-    window.history.replaceState(
-      { ...window.history.state, data: targetUser },
-      "A slate user",
-      `/${targetUser.username}`
-    );
-    this.props.onUpdateData(targetUser);
-    this.setState({ isOwner, profile: targetUser, loading: false }, this.openCarouselToItem);
-  };
+  //   if (!targetUser) {
+  //     let response;
+  //     if (query) {
+  //       response = await Actions.getSerializedProfile(query);
+  //     }
 
-  openCarouselToItem = () => {
-    if (!this.state.profile?.library?.length) {
-      return;
-    }
-    const { cid, fileId, index } = this.props.page;
+  //     if (!response || response.error) {
+  //       this.setState({ notFound: true });
+  //       return;
+  //     }
 
-    if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
-      return;
-    }
+  //     targetUser = response.data;
+  //   }
+  //   window.history.replaceState(
+  //     { ...window.history.state, data: targetUser },
+  //     "A slate user",
+  //     `/${targetUser.username}`
+  //   );
+  //   this.props.onUpdateData(targetUser);
+  //   this.setState({ isOwner, profile: targetUser, loading: false }, this.openCarouselToItem);
+  // };
 
-    const library = this.state.profile.library;
+  // openCarouselToItem = () => {
+  //   if (!this.props.data?.library?.length || !this.props.page?.params) {
+  //     return;
+  //   }
+  //   const { cid, fileId, index } = this.props.page.params;
 
-    let foundIndex = -1;
-    if (index) {
-      foundIndex = index;
-    } else if (cid) {
-      foundIndex = library.findIndex((object) => object.cid === cid);
-    } else if (fileId) {
-      foundIndex = library.findIndex((object) => object.id === fileId);
-    }
-    if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
-      Events.dispatchCustomEvent({
-        name: "slate-global-open-carousel",
-        detail: { index: foundIndex },
-      });
-    }
-    // else {
-    //   Events.dispatchCustomEvent({
-    //     name: "create-alert",
-    //     detail: {
-    //       alert: {
-    //         message:
-    //           "The requested file could not be found. It could have been deleted or may be private",
-    //       },
-    //     },
-    //   });
-    // }
-  };
+  //   if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
+  //     return;
+  //   }
+
+  //   const library = this.props.data.library;
+
+  //   let foundIndex = -1;
+  //   if (index) {
+  //     foundIndex = index;
+  //   } else if (cid) {
+  //     foundIndex = library.findIndex((object) => object.cid === cid);
+  //   } else if (fileId) {
+  //     foundIndex = library.findIndex((object) => object.id === fileId);
+  //   }
+  //   if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
+  //     Events.dispatchCustomEvent({
+  //       name: "slate-global-open-carousel",
+  //       detail: { index: foundIndex },
+  //     });
+  //   }
+  //   // else {
+  //   //   Events.dispatchCustomEvent({
+  //   //     name: "create-alert",
+  //   //     detail: {
+  //   //       alert: {
+  //   //         message:
+  //   //           "The requested file could not be found. It could have been deleted or may be private",
+  //   //       },
+  //   //     },
+  //   //   });
+  //   // }
+  // };
 
   getFilteredViewer = () => {
     let viewer = this.props.viewer;
@@ -130,36 +139,51 @@ export default class SceneProfile extends React.Component {
   };
 
   render() {
-    if (this.state.notFound) {
-      return (
-        <ScenePage>
-          <EmptyState>
-            <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-            <div>We were unable to locate that user profile</div>
-          </EmptyState>
-        </ScenePage>
-      );
-    }
-
-    if (this.state.loading) {
+    let user = this.props.data;
+    if (!user) {
       return (
         <ScenePage>
           <div css={STYLES_LOADER}>
             <LoaderSpinner />
           </div>
         </ScenePage>
+        // <ScenePage>
+        //   <EmptyState>
+        //     <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+        //     <div>We were unable to locate that user profile</div>
+        //   </EmptyState>
+        // </ScenePage>
       );
-    } else if (this.state.profile?.id) {
+    } else {
       return (
         <Profile
           {...this.props}
-          user={this.state.profile}
-          isOwner={this.state.isOwner}
+          user={user}
+          isOwner={this.props.viewer ? user.id === this.props.viewer.id : false}
           isAuthenticated={this.props.viewer !== null}
-          key={this.state.profile.id}
+          key={user.id}
         />
       );
     }
-    return null;
+
+    // if (this.state.loading) {
+    //   return (
+    //     <ScenePage>
+    //       <div css={STYLES_LOADER}>
+    //         <LoaderSpinner />
+    //       </div>
+    //     </ScenePage>
+    //   );
+    // } else {
+    //   return (
+    //     <Profile
+    //       {...this.props}
+    //       user={user}
+    //       isOwner={this.state.isOwner}
+    //       isAuthenticated={this.props.viewer !== null}
+    //       key={user.id}
+    //     />
+    //   );
+    // }
   }
 }

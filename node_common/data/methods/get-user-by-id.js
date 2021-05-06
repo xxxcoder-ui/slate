@@ -53,8 +53,16 @@ export default async ({ id, sanitize = false, includeFiles = false, publicOnly =
             .from("files")
             .leftJoin("slate_files", "slate_files.fileId", "=", "files.id")
             .leftJoin("slates", "slate_files.slateId", "=", "slates.id")
-            .where({ "files.ownerId": id, "slates.isPublic": true })
-            .orWhere({ "files.ownerId": id, "files.isPublic": true })
+            .whereRaw("?? = ? and (?? = ? or ?? = ?)", [
+              "files.ownerId",
+              id,
+              "files.isPublic",
+              true,
+              "slates.isPublic",
+              true,
+            ])
+            // .where({ "files.ownerId": id, "slates.isPublic": true })
+            // .orWhere({ "files.ownerId": id, "files.isPublic": true })
             .orderBy("files.createdAt", "desc")
             .groupBy("files.id");
 

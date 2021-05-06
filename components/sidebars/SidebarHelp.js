@@ -27,7 +27,7 @@ const STYLES_TEXT = css`
 
 export default class SidebarCreateSlate extends React.Component {
   state = {
-    name: this.props.viewer.data && this.props.viewer.data.name ? this.props.viewer.data.name : "",
+    name: this.props.viewer?.data?.name ? this.props.viewer.data.name : "",
     email: "",
     twitter: "",
     message: "",
@@ -51,12 +51,12 @@ export default class SidebarCreateSlate extends React.Component {
     });
 
     const response = await Actions.createSupportMessage({
-      username: this.props.viewer.username,
+      username: this.props.viewer?.username || "",
       name: this.state.name,
       email: this.state.email,
       twitter: this.state.twitter,
       message: this.state.message,
-      stored: Strings.bytesToSize(this.props.viewer.stats.bytes),
+      stored: Strings.bytesToSize(this.props.viewer?.stats.bytes || 0),
     });
 
     Events.hasError(response);

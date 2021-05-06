@@ -146,6 +146,9 @@ export class SignIn extends React.Component {
         password: this.state.password,
       });
     }
+    if (!Events.hasError(response)) {
+      window.location.replace("/_/activity");
+    }
     this.setState({ loading: false });
   };
 
@@ -190,9 +193,7 @@ export class SignIn extends React.Component {
             <Logo height="36px" style={{ display: "block", margin: "56px auto 0px auto" }} />
 
             <System.P style={{ margin: "56px 0", textAlign: "center" }}>
-              {this.props.external
-                ? "Sign up or sign in to continue"
-                : "An open-source file sharing network for research and collaboration"}
+              An open-source file sharing network for research and collaboration
             </System.P>
 
             <System.ButtonPrimary

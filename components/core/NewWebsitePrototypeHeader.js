@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import * as Constants from "~/common/constants";
-
 import { css } from "@emotion/react";
 import { Logo } from "~/common/logo.js";
+import { Link } from "~/components/core/Link";
+
+import * as Constants from "~/common/constants";
 
 const STYLES_ROOT = css`
   position: -webkit-sticky;
@@ -195,7 +196,7 @@ const NewWebsitePrototypeHeader = (props) => {
   };
 
   const communityURL = "https://github.com/filecoin-project/slate";
-  const signInURL = "/_";
+  const signInURL = "/_/auth";
   const styleMenu = open ? openMenu : null;
   const styleBurgerBun = open ? openBurgerBun : null;
   const styleBurgerBun2 = open ? openBurgerBun2 : null;

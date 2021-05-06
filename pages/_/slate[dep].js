@@ -22,7 +22,6 @@ import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
 import CTATransition from "~/components/core/CTATransition";
 
-const SIZE_LIMIT = 1000000; //NOTE(martina): 1mb limit for twitter preview images
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
 const DEFAULT_BOOK =
@@ -233,7 +232,7 @@ export default class SlatePage extends React.Component {
             objects[i].data.type &&
             Validations.isPreviewableImage(objects[i].data.type) &&
             objects[i].data.size &&
-            objects[i].data.size < SIZE_LIMIT
+            objects[i].data.size < Constants.linkPreviewSizeLimit
           ) {
             image = Strings.getURLfromCID(objects[i].cid);
             break;
@@ -320,7 +319,7 @@ export default class SlatePage extends React.Component {
           </div>
           <div css={STYLES_SLATE}>
             <GlobalCarousel
-              current={this.props.slate}
+              data={this.props.slate}
               carouselType="SLATE"
               viewer={this.props.viewer}
               objects={objects}

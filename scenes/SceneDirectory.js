@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
-import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
+import { Link } from "~/components/core/Link";
 
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
@@ -211,10 +211,12 @@ export default class SceneDirectory extends React.Component {
                   right: "0px",
                 }}
                 navigation={[
-                  {
-                    text: "Unfollow",
-                    onClick: (e) => this._handleFollow(e, relation.id),
-                  },
+                  [
+                    {
+                      text: "Unfollow",
+                      onClick: (e) => this._handleFollow(e, relation.id),
+                    },
+                  ],
                 ]}
               />
             </Boundary>
@@ -222,20 +224,22 @@ export default class SceneDirectory extends React.Component {
         </div>
       );
       return (
-        <UserEntry
-          key={relation.id}
-          user={relation}
-          button={button}
-          checkStatus={this.checkStatus}
-          onClick={() => {
-            this.props.onAction({
-              type: "NAVIGATE",
-              value: this.props.sceneId,
-              scene: "PROFILE",
-              data: relation,
-            });
-          }}
-        />
+        <Link href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
+          <UserEntry
+            key={relation.id}
+            user={relation}
+            button={button}
+            checkStatus={this.checkStatus}
+            // onClick={() => {
+            //   this.props.onAction({
+            //     type: "NAVIGATE",
+            //     value: "NAV_PROFILE",
+            //     shallow: true,
+            //     data: relation,
+            //   });
+            // }}
+          />
+        </Link>
       );
     });
 
@@ -256,14 +260,16 @@ export default class SceneDirectory extends React.Component {
                   right: "0px",
                 }}
                 navigation={[
-                  {
-                    text: this.props.viewer.following.some((user) => {
-                      return user.id === relation.id;
-                    })
-                      ? "Unfollow"
-                      : "Follow",
-                    onClick: (e) => this._handleFollow(e, relation.id),
-                  },
+                  [
+                    {
+                      text: this.props.viewer.following.some((user) => {
+                        return user.id === relation.id;
+                      })
+                        ? "Unfollow"
+                        : "Follow",
+                      onClick: (e) => this._handleFollow(e, relation.id),
+                    },
+                  ],
                 ]}
               />
             </Boundary>
@@ -271,35 +277,38 @@ export default class SceneDirectory extends React.Component {
         </div>
       );
       return (
-        <UserEntry
-          key={relation.id}
-          user={relation}
-          button={button}
-          checkStatus={this.checkStatus}
-          onClick={() => {
-            this.props.onAction({
-              type: "NAVIGATE",
-              value: this.props.sceneId,
-              scene: "PROFILE",
-              data: relation,
-            });
-          }}
-        />
+        <Link href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
+          <UserEntry
+            key={relation.id}
+            user={relation}
+            button={button}
+            checkStatus={this.checkStatus}
+            // onClick={() => {
+            //   this.props.onAction({
+            //     type: "NAVIGATE",
+            //     value: "NAV_PROFILE",
+            //     shallow: true,
+            //     data: relation,
+            //   });
+            // }}
+          />
+        </Link>
       );
     });
 
+    let tab = this.props.page.params?.tab || "following";
     return (
       <ScenePage>
         <ScenePageHeader title="Directory" />
         <SecondaryTabGroup
           tabs={[
-            { title: "Following", value: "NAV_DIRECTORY" },
-            { title: "Followers", value: "NAV_DIRECTORY_FOLLOWERS" },
+            { title: "Following", value: { tab: "following" } },
+            { title: "Followers", value: { tab: "followers" } },
           ]}
-          value={this.props.tab}
+          value={tab}
           onAction={this.props.onAction}
         />
-        {this.props.tab === 0 ? (
+        {tab === "following" ? (
           following && following.length ? (
             following
           ) : (
@@ -310,7 +319,7 @@ export default class SceneDirectory extends React.Component {
             </EmptyState>
           )
         ) : null}
-        {this.props.tab === 1 ? (
+        {tab === "followers" ? (
           followers && followers.length ? (
             followers
           ) : (

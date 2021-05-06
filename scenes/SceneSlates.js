@@ -31,67 +31,27 @@ export default class SceneSlates extends React.Component {
   };
 
   render() {
+    const tab = this.props.page.params?.tab || "collections";
     let subscriptions = this.props.viewer.subscriptions;
 
     return (
       <ScenePage>
-        <ScenePageHeader
-          title={
-            this.props.isMobile ? (
-              <TabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={1}
-                onAction={this.props.onAction}
-                onChange={(value) => this.setState({ tab: value })}
-                style={{ marginTop: 0, marginBottom: 32 }}
-                itemStyle={{ margin: "0px 12px" }}
-              />
-            ) : (
-              <PrimaryTabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={1}
-                onAction={this.props.onAction}
-              />
-            )
-          }
-          actions={
-            <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
-              <SquareButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
-                <SVG.Plus height="16px" />
-              </SquareButtonGray>
-              <SecondaryTabGroup
-                tabs={[
-                  { title: "My Collections", value: "NAV_SLATES" },
-                  { title: "Subscribed", value: "NAV_SLATES_FOLLOWING" },
-                ]}
-                value={this.props.tab}
-                onAction={this.props.onAction}
-                style={{ margin: 0 }}
-              />
-            </div>
-          }
-        />
-        {/* <ScenePageHeader
-          title="Slates"
-          actions={
-            this.props.tab === 0 ? (
-              <SquareButtonGray onClick={this._handleAdd} style={{ marginLeft: 12 }}>
-                <SVG.Plus height="16px" />
-              </SquareButtonGray>
-            ) : null
-          }
-        /> */}
-
-        {this.props.tab === 0 ? (
-          this.props.viewer.slates && this.props.viewer.slates.length ? (
+        <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
+          <SecondaryTabGroup
+            tabs={[
+              { title: "My Collections", value: { tab: "collections" } },
+              { title: "Subscribed", value: { tab: "subscribed" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+            style={{ margin: 0 }}
+          />
+          <SquareButtonGray onClick={this._handleAdd} style={{ marginLeft: 16 }}>
+            <SVG.Plus height="16px" />
+          </SquareButtonGray>
+        </div>
+        {tab === "collections" ? (
+          this.props.viewer.slates?.length ? (
             <SlatePreviewBlocks
               isOwner
               slates={this.props.viewer.slates}
@@ -111,7 +71,7 @@ export default class SceneSlates extends React.Component {
           )
         ) : null}
 
-        {this.props.tab === 1 ? (
+        {tab === "subscribed" ? (
           subscriptions && subscriptions.length ? (
             <SlatePreviewBlocks
               slates={subscriptions}

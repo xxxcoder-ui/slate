@@ -30,7 +30,6 @@ export default class SceneArchive extends React.Component {
   state = {
     deals: [],
     dealsLoaded: false,
-    tab: 0,
     networkViewer: null,
     allow_filecoin_directory_listing: this.props.viewer.data.settings
       ?.allow_filecoin_directory_listing,
@@ -114,6 +113,7 @@ export default class SceneArchive extends React.Component {
   }
 
   render() {
+    let tab = this.props.page.params?.tab || "archive";
     return (
       <ScenePage>
         <ScenePageHeader title="Filecoin">
@@ -122,14 +122,19 @@ export default class SceneArchive extends React.Component {
         </ScenePageHeader>
 
         <SecondaryTabGroup
-          tabs={["Archive Settings", "Wallet", "API", "Miners"]}
-          value={this.state.tab}
-          onChange={(value) => this.setState({ tab: value })}
+          tabs={[
+            { title: "Archive Settings", value: { tab: "archive" } },
+            { title: "Wallet", value: { tab: "wallet" } },
+            { title: "API", value: { tab: "api" } },
+            { title: "Miners", value: { tab: "miners" } },
+          ]}
+          value={tab}
+          onAction={this.props.onAction}
         />
 
         {this.state.networkViewer ? (
           <React.Fragment>
-            {this.state.tab === 0 ? (
+            {tab === "archive" ? (
               <React.Fragment>
                 <ScenePageHeader>
                   Use this section to archive all of your data on to Filecoin through a storage
@@ -201,7 +206,7 @@ export default class SceneArchive extends React.Component {
               </React.Fragment>
             ) : null}
 
-            {this.state.tab === 1 ? (
+            {tab === "wallet" ? (
               <React.Fragment>
                 <SceneWallet {...this.props} networkViewer={this.state.networkViewer} />
                 <br />
@@ -216,7 +221,7 @@ export default class SceneArchive extends React.Component {
               </React.Fragment>
             ) : null}
 
-            {this.state.tab === 2 ? (
+            {tab === "api" ? (
               <React.Fragment>
                 {this.state.routes ? (
                   <SceneSentinel routes={this.state.routes} />
@@ -228,7 +233,7 @@ export default class SceneArchive extends React.Component {
               </React.Fragment>
             ) : null}
 
-            {this.state.tab === 3 ? (
+            {tab === "miners" ? (
               <React.Fragment>
                 {this.state.miners ? (
                   <SceneMiners miners={this.state.miners} />

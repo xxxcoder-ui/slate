@@ -3,10 +3,6 @@ import * as Strings from "~/common/strings";
 import * as Utilities from "~/node_common/utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
   let user;
 
   if (req.body.data.id) {

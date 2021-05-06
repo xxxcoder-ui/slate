@@ -2,88 +2,80 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
+import * as Styles from "~/common/styles";
 
-import ApplicationUserControls from "~/components/core/ApplicationUserControls";
+import {
+  ApplicationUserControls,
+  ApplicationUserControlsPopup,
+} from "~/components/core/ApplicationUserControls";
 
 import { css, keyframes } from "@emotion/react";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system";
+import { Logo, Symbol } from "~/common/logo";
+import { Link } from "~/components/core/Link";
+import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
 
-const IconMap = {
-  // ACTIVITY: <SVG.Home height="20px" />,
-  ENCRYPTED: <SVG.SecurityLock height="20px" />,
-  NETWORK: <SVG.Activity height="20px" />,
-  DIRECTORY: <SVG.Directory height="20px" />,
-  // DATA: <SVG.Folder height="20px" />,
-  DATA: <SVG.Home height="20px" />,
-  WALLET: <SVG.OldWallet height="20px" />,
-  DEALS: <SVG.Deals height="20px" />,
-  STORAGE_DEAL: <SVG.HardDrive height="20px" />,
-  SLATES: <SVG.Layers height="20px" />,
-  SLATE: <SVG.Slate height="20px" />,
-  LOCAL_DATA: <SVG.HardDrive height="20px" />,
-  PROFILE_PAGE: <SVG.ProfileUser height="20px" />,
-  API: <SVG.Tool height="20px" />,
-  SETTINGS: <SVG.Settings height="20px" />,
-  DIRECTORY: <SVG.Directory height="20px" />,
-  FILECOIN: <SVG.Wallet height="20px" />,
-  MINERS: <SVG.Miners height="20px" />,
-};
-
-const STYLES_SHORTCUTS = css`
-  background-color: ${Constants.system.white};
-  border-radius: 2px;
-  height: 24px;
-  width: 24px;
-  margin-left: 4px;
-  font-size: 15px;
+const STYLES_NAV_LINKS = css`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${Constants.system.textGray};
+  flex-direction: row;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    flex-direction: column;
+    overflow: hidden;
+  }
 `;
 
-const STYLES_ICON_ELEMENT = css`
-  height: 40px;
-  width: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+const STYLES_NAV_LINK = css`
   color: ${Constants.system.textGray};
-  user-select: none;
+  text-decoration: none;
+  transition: 200ms ease color;
+  display: block;
   cursor: pointer;
-  pointer-events: auto;
+  padding: 4px 24px;
+  font-size: ${Constants.typescale.lvl1};
 
   :hover {
     color: ${Constants.system.brand};
   }
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    border-bottom: 1px solid ${Constants.system.grayLight2};
+    margin: 0px 24px;
+    padding: 12px 0px;
+    ${Styles.BODY_02};
+  }
 `;
 
-const STYLES_APPLICATION_HEADER = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const STYLES_APPLICATION_HEADER_CONTAINER = css`
   width: 100%;
-  height: 56px;
-  padding: 0 24px 0 16px;
-  pointer-events: none;
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.system.white};
 
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);
     backdrop-filter: blur(25px);
-    background-color: rgba(248, 248, 248, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
   }
+`;
+
+const STYLES_APPLICATION_HEADER = css`
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  ${"" /* justify-content: space-between; */}
+  width: 100%;
+  height: 56px;
+  ${"" /* padding: 0 24px 0 16px; */}
+  padding: 0px 32px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 0px 12px;
+    padding: 0px 24px;
     width: 100%;
   }
 `;
 
 const STYLES_LEFT = css`
   flex-shrink: 0;
-  ${"" /* width: 352px; */}
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -92,38 +84,34 @@ const STYLES_LEFT = css`
 const STYLES_MIDDLE = css`
   min-width: 10%;
   width: 100%;
-  padding: 0 24px 0 48px;
-`;
-
-const STYLES_MOBILE_HIDDEN = css`
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: none;
-  }
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
 `;
 
 const STYLES_RIGHT = css`
-  min-width: 10%;
-  width: 100%;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 `;
 
-const rotate = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
+const STYLES_BACKGROUND = css`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: ${Constants.system.bgBlurGrayBlack};
+  pointer-events: auto;
 
-const STYLES_ROTATION = css`
-  animation: ${rotate} 1s linear infinite;
-`;
-
-const STYLES_STATIC = css`
-  transition: 200ms ease all;
+  @keyframes fade-in {
+    from {
+      opacity: 50%;
+    }
+    to {
+      opacity: 100%;
+    }
+  }
+  animation: fade-in 200ms ease-out;
 `;
 
 export default class ApplicationHeader extends React.Component {
@@ -135,6 +123,7 @@ export default class ApplicationHeader extends React.Component {
   );
 
   state = {
+    showDropdown: false,
     popup: null,
     isRefreshing: false,
   };
@@ -162,6 +151,7 @@ export default class ApplicationHeader extends React.Component {
   };
 
   _handleCreateSearch = (e) => {
+    this.setState({ showDropdown: false });
     Events.dispatchCustomEvent({
       name: "show-search",
       detail: {},
@@ -169,6 +159,7 @@ export default class ApplicationHeader extends React.Component {
   };
 
   _handleTogglePopup = (value) => {
+    console.log(value);
     if (!value || this.state.popup === value) {
       this.setState({ popup: null });
     } else {
@@ -177,135 +168,217 @@ export default class ApplicationHeader extends React.Component {
   };
 
   render() {
-    // const isBackDisabled = this.props.currentIndex === 0 || this.props.history.length < 2;
+    const navigation = this.props.navigation.filter((item) => item.mainNav);
 
-    // const isForwardDisabled =
-    //   this.props.currentIndex === this.props.history.length - 1 || this.props.history.length < 2;
-    return (
-      <header css={STYLES_APPLICATION_HEADER}>
-        <div css={STYLES_LEFT}>
-          <span
-            css={STYLES_ICON_ELEMENT}
-            style={{ position: "relative" }}
-            onClick={() => this._handleTogglePopup("nav")}
-          >
-            <SVG.Menu height="24px" />
-            {this.state.popup === "nav" ? (
-              <Boundary
-                captureResize={true}
-                captureScroll={false}
-                enabled
-                onOutsideRectEvent={() => this._handleTogglePopup()}
-                style={this.props.style}
+    if (!this.props.viewer) {
+      const searchComponent = (
+        <div
+          onClick={this._handleCreateSearch}
+          css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+          style={{ border: "none", pointerEvents: "auto", cursor: "pointer" }}
+        >
+          <SVG.Search
+            height="16px"
+            style={{ color: Constants.system.textGrayDark, marginRight: 8 }}
+          />
+          <span css={Styles.BODY_02} style={{ color: Constants.system.textGray }}>
+            Search Slate...
+          </span>
+        </div>
+      );
+
+      //NOTE(martina): signed out view
+      return (
+        <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
+          <div css={STYLES_APPLICATION_HEADER}>
+            <div css={STYLES_LEFT}>
+              <Symbol style={{ height: 24, marginRight: 16 }} />
+              <div css={Styles.MOBILE_ONLY}>{searchComponent}</div>
+            </div>
+            <div css={STYLES_MIDDLE}>
+              <span css={Styles.MOBILE_HIDDEN}>{searchComponent}</span>
+            </div>
+            <div css={STYLES_RIGHT}>
+              <Link
+                href="/_/auth?tab=signin"
+                onAction={this.props.onAction}
+                style={{ pointerEvents: "auto" }}
               >
-                <PopoverNavigation
-                  style={{ top: 44, left: 8, width: 220, padding: "12px 24px" }}
-                  itemStyle={{ padding: "12px 0" }}
-                  navigation={this.props.navigation
-                    .filter((item) => !item.ignore)
-                    .map((item) => {
-                      return {
-                        text: (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              color: this.props.activeIds[item.id] ? Constants.system.brand : null,
-                            }}
-                          >
-                            <span style={{ marginRight: 16 }}>{IconMap[item.decorator]}</span>
-                            <span style={{ fontSize: 18 }}>{item.name}</span>
-                          </div>
-                        ),
-                        onClick: (e) => {
-                          this._handleTogglePopup();
-                          this.props.onAction({
-                            type: "NAVIGATE",
-                            value: item.id,
-                          });
-                        },
-                      };
-                    })}
-                />
-              </Boundary>
-            ) : null}
-          </span>
-          {/* <span css={STYLES_MOBILE_HIDDEN} style={{ marginLeft: 32 }}>
-            <span
-              css={STYLES_ICON_ELEMENT}
-              style={
-                isBackDisabled ? { cursor: "not-allowed", color: Constants.system.border } : null
-              }
-              onClick={isBackDisabled ? () => {} : this.props.onBack}
-            >
-              <SVG.ChevronLeft height="28px" />
-            </span>
-            <span
-              css={STYLES_ICON_ELEMENT}
-              style={
-                isForwardDisabled
-                  ? { cursor: "not-allowed", color: Constants.system.border, marginLeft: 8 }
-                  : { marginLeft: 8 }
-              }
-              onClick={isForwardDisabled ? () => {} : this.props.onForward}
-            >
-              <SVG.ChevronRight height="28px" />
-            </span>
-          </span> */}
-          {/* <div
-            style={{
-              height: 28,
-              margin: "0px 12px",
-              borderRight: `1px solid ${Constants.system.border}`,
-            }}
-          /> */}
-          <span
-            css={STYLES_ICON_ELEMENT}
-            style={{ marginLeft: 24 }}
-            onClick={this._handleCreateSearch}
-          >
-            <SVG.Search height="24px" />
-          </span>
-          <span css={STYLES_MOBILE_HIDDEN}>
+                <span css={Styles.MOBILE_HIDDEN}>
+                  <ButtonTertiary
+                    style={{
+                      padding: "0px 12px",
+                      minHeight: "30px",
+                      fontFamily: Constants.font.text,
+                      marginRight: 8,
+                    }}
+                  >
+                    Sign in
+                  </ButtonTertiary>
+                </span>
+              </Link>
+              <Link
+                href="/_/auth?tab=signup"
+                onAction={this.props.onAction}
+                style={{ pointerEvents: "auto" }}
+              >
+                <ButtonPrimary
+                  style={{
+                    padding: "0px 12px",
+                    minHeight: "30px",
+                    fontFamily: Constants.font.text,
+                  }}
+                >
+                  Sign up
+                </ButtonPrimary>
+              </Link>
+            </div>
+          </div>
+        </header>
+      );
+    }
+    const mobilePopup = (
+      // <Boundary
+      //   captureResize={false}
+      //   captureScroll={false}
+      //   enabled={this.state.popup === "profile"}
+      //   onOutsideRectEvent={(e) => {
+      //     e.stopPropagation();
+      //     e.preventDefault();
+      //     this._handleTogglePopup(e);
+      //   }}
+      // >
+      <>
+        <ApplicationUserControlsPopup
+          popup={this.state.popup}
+          onTogglePopup={this._handleTogglePopup}
+          viewer={this.props.viewer}
+          onAction={this.props.onAction}
+          style={{ pointerEvents: "auto", paddingBottom: 16 }}
+        />
+        <div css={STYLES_BACKGROUND} />
+      </>
+      // </Boundary>
+    );
+
+    const mobileDropdown = (
+      <>
+        <Boundary
+          captureResize={false}
+          captureScroll={false}
+          enabled={this.state.showDropdown}
+          onOutsideRectEvent={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.setState({ showDropdown: false });
+          }}
+        >
+          <div css={STYLES_NAV_LINKS} style={{ pointerEvents: "auto", paddingBottom: 16 }}>
+            {this.props.navigation
+              .filter((item) => item.mainNav)
+              .map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.pathname}
+                  onAction={this.props.onAction}
+                  onClick={() => this.setState({ showDropdown: false })}
+                >
+                  <div
+                    css={STYLES_NAV_LINK}
+                    style={{
+                      color: this.props.activePage === item.id ? Constants.system.black : null,
+                    }}
+                  >
+                    {item.name}
+                  </div>
+                </Link>
+              ))}
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
+              onClick={this._handleCreateSearch}
+              css={STYLES_NAV_LINK}
+              style={{ border: "none" }}
             >
-              <div css={STYLES_SHORTCUTS} style={{ width: "auto" }}>
-                {this.searchModKey}
+              Search
+            </div>
+          </div>
+        </Boundary>
+        <div css={STYLES_BACKGROUND} />
+      </>
+    );
+
+    return (
+      <>
+        <div style={{ width: "100vw", height: "100vh", position: "absolute" }} />
+        <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
+          <span css={Styles.MOBILE_HIDDEN}>
+            <div css={STYLES_APPLICATION_HEADER}>
+              <div css={STYLES_LEFT}>
+                <Symbol style={{ height: 24 }} />
               </div>
-              <div css={STYLES_SHORTCUTS}>F</div>
+              <div css={STYLES_MIDDLE}>
+                <div css={STYLES_NAV_LINKS} style={{ pointerEvents: "auto" }}>
+                  {navigation.map((item, i) => (
+                    <Link key={item.id} href={item.pathname} onAction={this.props.onAction}>
+                      <div
+                        css={STYLES_NAV_LINK}
+                        style={{
+                          color: this.props.activePage === item.id ? Constants.system.black : null,
+                        }}
+                      >
+                        {item.name}
+                      </div>
+                    </Link>
+                  ))}
+                  <div onClick={this._handleCreateSearch} css={STYLES_NAV_LINK}>
+                    Search
+                  </div>
+                </div>
+              </div>
+              <div css={STYLES_RIGHT}>
+                <span style={{ pointerEvents: "auto", marginLeft: 24 }}>
+                  <ApplicationUserControls
+                    popup={this.state.popup}
+                    onTogglePopup={this._handleTogglePopup}
+                    viewer={this.props.viewer}
+                    onAction={this.props.onAction}
+                  />
+                </span>
+              </div>
             </div>
           </span>
-        </div>
-        {/* <div css={STYLES_MIDDLE} /> */}
-        <div css={STYLES_RIGHT}>
-          {/* <span css={STYLES_MOBILE_HIDDEN}>
-            <span
-              css={STYLES_ICON_ELEMENT}
-              onClick={() =>
-                this.props.onAction({
-                  type: "SIDEBAR",
-                  value: "SIDEBAR_HELP",
-                })
-              }
-            >
-              <SVG.Help height="24px" />
-            </span>
-          </span> */}
-          <span style={{ pointerEvents: "auto", marginLeft: 24 }}>
-            <ApplicationUserControls
-              popup={this.state.popup}
-              onTogglePopup={this._handleTogglePopup}
-              viewer={this.props.viewer}
-              onAction={this.props.onAction}
-            />
+          <span css={Styles.MOBILE_ONLY}>
+            <div css={STYLES_APPLICATION_HEADER}>
+              <div css={STYLES_LEFT}>
+                <div
+                  css={Styles.ICON_CONTAINER}
+                  style={{ pointerEvents: "auto" }}
+                  onClick={() => this.setState({ showDropdown: !this.state.showDropdown })}
+                >
+                  <SVG.MenuMinimal height="16px" />
+                </div>
+              </div>
+              <div css={STYLES_MIDDLE}>
+                <Symbol style={{ height: 24 }} />
+              </div>
+              <div css={STYLES_RIGHT}>
+                <span style={{ pointerEvents: "auto", marginLeft: 24 }}>
+                  <ApplicationUserControls
+                    popup={false}
+                    onTogglePopup={this._handleTogglePopup}
+                    viewer={this.props.viewer}
+                    onAction={this.props.onAction}
+                  />
+                </span>
+              </div>
+            </div>
+            {this.state.popup === "profile"
+              ? mobilePopup
+              : this.state.showDropdown
+              ? mobileDropdown
+              : null}
           </span>
-        </div>
-      </header>
+        </header>
+      </>
     );
   }
 }

@@ -20,10 +20,18 @@ export default async ({ ids, sanitize = false, publicOnly = false }) => {
           .from("files")
           .leftJoin("slate_files", "slate_files.fileId", "=", "files.id")
           .leftJoin("slates", "slates.id", "=", "slate_files.slateId")
-          .whereIn("files.id", ids)
-          .where("files.isPublic", true)
-          .orWhereIn("files.id", ids)
-          .andWhere("slates.isPublic", true)
+          .whereRaw("?? = any(?) and (?? = ? or ?? = ?)", [
+            "files.id",
+            ids,
+            "files.isPublic",
+            true,
+            "slates.isPublic",
+            true,
+          ])
+          // .whereIn("files.id", ids)
+          // .where("files.isPublic", true)
+          // .orWhereIn("files.id", ids)
+          // .andWhere("slates.isPublic", true)
           .groupBy("files.id");
       } else {
         query = await DB.select("*").from("files").whereIn("id", ids);

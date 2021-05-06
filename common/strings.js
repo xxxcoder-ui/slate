@@ -217,6 +217,34 @@ export const urlToCid = (url) => {
     .replace("hub.textile.io/ipfs/", "");
 };
 
+export const getQueryStringFromParams = (params) => {
+  let pairs = Object.entries(params).map(([key, value]) => `${key}=${value}`);
+  let query = "?".concat(pairs.join("&"));
+  if (query.length === 1) {
+    return "";
+  }
+  return query;
+};
+
+//NOTE(martina): works with both url and search passed in
+export const getParamsFromUrl = (url) => {
+  let startIndex = url.indexOf("?") + 1;
+  let search = url.slice(startIndex);
+  if (search.length < 3) {
+    return {};
+  }
+  let params = {};
+  let pairs = search.split("&");
+  for (let pair of pairs) {
+    let key = pair.split("=")[0];
+    let value = pair.slice(key.length + 1);
+    if (key && value) {
+      params[key] = value;
+    }
+  }
+  return params;
+};
+
 export const hexToRGBA = (hex, alpha = 1) => {
   hex = hex.replace("#", "");
   var r = parseInt(hex.length == 3 ? hex.slice(0, 1).repeat(2) : hex.slice(0, 2), 16);

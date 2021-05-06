@@ -113,7 +113,6 @@ const STYLES_COMMAND_TOOLTIP_ANCHOR = css`
 
 export default class SceneFilesFolder extends React.Component {
   state = {
-    view: 0,
     filterTooltip: false,
     fileTypes: {
       image: false,
@@ -128,9 +127,9 @@ export default class SceneFilesFolder extends React.Component {
     keyboardTooltip: false,
   };
 
-  componentDidMount = () => {
-    this.openCarouselToItem();
-  };
+  // componentDidMount = () => {
+  //   this.openCarouselToItem();
+  // };
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.viewer.library !== this.props.viewer.library) {
@@ -138,9 +137,9 @@ export default class SceneFilesFolder extends React.Component {
         this._filterFiles();
       }
     }
-    if (prevProps.page !== this.props.page) {
-      this.openCarouselToItem();
-    }
+    // if (prevProps.page.params !== this.props.page.params) {
+    //   this.openCarouselToItem();
+    // }
   };
 
   _handleFilterTooltip = () => {
@@ -206,87 +205,50 @@ export default class SceneFilesFolder extends React.Component {
     });
   };
 
-  openCarouselToItem = () => {
-    let index = -1;
-    let page = this.props.page;
-    if (page?.fileId || page?.cid || page?.index) {
-      if (page?.index) {
-        index = page.index;
-      } else {
-        let library = this.props.viewer.library || [];
-        for (let i = 0; i < library.length; i++) {
-          let obj = library[i];
-          if ((obj.cid && obj.cid === page?.cid) || (obj.id && obj.id === page?.fileId)) {
-            index = i;
-            break;
-          }
-        }
-      }
-    }
+  // openCarouselToItem = () => {
+  //   if (!this.props.page?.params || !this.props.viewer.library?.length) {
+  //     return;
+  //   }
+  //   let index = -1;
+  //   let params = this.props.page.params;
+  //   if (params?.fileId || params?.cid || params?.index) {
+  //     if (params?.index) {
+  //       index = params.index;
+  //     } else {
+  //       let library = this.props.viewer.library || [];
+  //       for (let i = 0; i < library.length; i++) {
+  //         let obj = library[i];
+  //         if ((obj.cid && obj.cid === params?.cid) || (obj.id && obj.id === params?.fileId)) {
+  //           index = i;
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    if (index !== -1) {
-      Events.dispatchCustomEvent({
-        name: "slate-global-open-carousel",
-        detail: { index },
-      });
-    }
-  };
+  //   if (index !== -1) {
+  //     Events.dispatchCustomEvent({
+  //       name: "slate-global-open-carousel",
+  //       detail: { index },
+  //     });
+  //   }
+  // };
 
   render() {
     let files = this.state.filtersActive ? this.state.filteredFiles : this.props.viewer?.library;
     files = files || [];
+    const tab = this.props.page.params?.tab || "grid";
 
     return (
       <ScenePage>
-        <ScenePageHeader
-          title={
-            this.props.isMobile ? (
-              <TabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={0}
-                onAction={this.props.onAction}
-                onChange={(value) => this.setState({ tab: value })}
-                style={{ marginTop: 0, marginBottom: 32 }}
-                itemStyle={{ margin: "0px 12px" }}
-              />
-            ) : (
-              <PrimaryTabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={0}
-                onAction={this.props.onAction}
-              />
-            )
-          }
-          actions={
-            this.props.isMobile ? null : (
-              <SecondaryTabGroup
-                tabs={[
-                  <SVG.GridView height="24px" style={{ display: "block" }} />,
-                  <SVG.TableView height="24px" style={{ display: "block" }} />,
-                ]}
-                value={this.state.view}
-                onChange={(value) => this.setState({ view: value })}
-                style={{ margin: "0 0 24px 0" }}
-              />
-            )
-          }
-        />
         <GlobalCarousel
           carouselType="DATA"
-          onUpdateViewer={this.props.onUpdateViewer}
           resources={this.props.resources}
           viewer={this.props.viewer}
           objects={files}
           onAction={this.props.onAction}
           isMobile={this.props.isMobile}
+          params={this.props.page.params}
           isOwner={true}
         />
         <DataMeter
@@ -307,6 +269,21 @@ export default class SceneFilesFolder extends React.Component {
           }
         />
         <div css={STYLES_CONTAINER_WRAPPER}>
+          <SecondaryTabGroup
+            tabs={[
+              {
+                title: <SVG.GridView height="24px" style={{ display: "block" }} />,
+                value: { tab: "grid" },
+              },
+              {
+                title: <SVG.TableView height="24px" style={{ display: "block" }} />,
+                value: { tab: "table" },
+              },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+            style={{ margin: "0 0 24px 0" }}
+          />
           <div css={STYLES_CONTAINER}>
             <div
               css={STYLES_BUTTONS_ROW}
@@ -486,10 +463,10 @@ export default class SceneFilesFolder extends React.Component {
             onAction={this.props.onAction}
             viewer={this.props.viewer}
             items={files}
-            onUpdateViewer={this.props.onUpdateViewer}
-            view={this.state.view}
+            view={tab}
             resources={this.props.resources}
             isOwner={true}
+            page={this.props.page}
           />
         ) : (
           <EmptyState>

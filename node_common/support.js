@@ -6,20 +6,19 @@ import { IncomingWebhook } from "@slack/webhook";
 const url = `https://hooks.slack.com/services/${Environment.SUPPORT_SLACK_WEBHOOK_KEY}`;
 const webhook = new IncomingWebhook(url);
 
-export const sendSlackMessage = ({
-  username,
-  name,
-  email,
-  twitter,
-  message,
-  stored,
-}) => {
+export const sendSlackMessage = ({ username, name, email, twitter, message, stored }) => {
   if (Strings.isEmpty(Environment.SUPPORT_SLACK_WEBHOOK_KEY)) {
     return false;
   }
 
-  const userProfileURL = `https://slate.host/${username}`;
-  const userURL = `<${userProfileURL}|${username}>`;
+  let userURL;
+  if (username) {
+    const userProfileURL = `https://slate.host/${username}`;
+    userURL = `<${userProfileURL}|${username}>`;
+  } else {
+    userURL = "[Not authenticated]";
+  }
+
   let twitterURL = "";
   if (twitter) {
     const twitterProfileURL = `https://twitter.com/${twitter.replace("@", "")}`;

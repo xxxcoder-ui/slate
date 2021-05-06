@@ -13,6 +13,7 @@ import { css } from "@emotion/react";
 import { createState } from "~/scenes/SceneSettings";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { FilecoinNumber } from "@glif/filecoin-number";
+import { Link } from "~/components/core/Link";
 
 import Section from "~/components/core/Section";
 import ScenePage from "~/components/core/ScenePage";
@@ -206,7 +207,7 @@ export default class SceneMakeFilecoinDeal extends React.Component {
       "Your storage deal was put in the queue. This can take up to 36 hours, check back later."
     );
 
-    this.props.onAction({ type: "NAVIGATE", value: "NAV_FILECOIN" });
+    this.props.onAction({ type: "NAVIGATE", href: "/_/filecoin" });
   };
 
   _handleRemove = async (cid) => {

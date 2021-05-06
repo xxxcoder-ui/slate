@@ -1,146 +1,205 @@
+import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
 
-// NOTE(jim):
-// Recursion for nested entities (any number).
-export const getCurrent = ({ id, data }) => {
-  let target = null;
-  let activeIds = {};
+export const getById = (id, viewer) => {
+  let target;
 
-  const findById = (state, id) => {
-    for (let i = 0; i < state.length; i++) {
-      if (state[i].id === id) {
-        target = state[i];
-        activeIds[state[i].id] = true;
+  if (id) {
+    target = navigation.find((each) => each.id === id);
+  }
+  if (!target) {
+    return { ...errorPage };
+  }
 
-        if (target.id === "NAV_SLATE") {
-          target.slateId = data && data.id;
-        }
-      }
+  if (viewer && target.id === authPage.id) {
+    return { ...activityPage }; //NOTE(martina): authenticated users should be redirected to the home page rather than the
+  }
 
-      // if (!target && state[i].children) {
-      //   activeIds[state[i].id] = true;
-      //   findById(state[i].children, id);
+  if (!viewer && !target.externalAllowed) {
+    return { ...authPage }; //NOTE(martina): redirect to sign in page if try to access internal page while logged out
+  }
 
-      //   if (!target) {
-      //     activeIds[state[i].id] = false;
-      //   }
-      // }
+  return { ...target };
+};
+
+export const getByHref = (href, viewer) => {
+  let pathname;
+  if (href) {
+    pathname = href.split("?")[0];
+  }
+  if (!pathname) {
+    return { page: { ...errorPage } };
+  }
+  if (pathname === "/_") {
+    return { page: { ...activityPage } };
+  }
+
+  let page = navigation.find((each) => pathname.startsWith(each.pathname));
+
+  let details;
+  if (page) {
+    page = { ...page };
+    if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
+      details = {
+        id: pathname.replace(page.pathname, ""),
+      };
     }
-  };
+  } else {
+    let params = pathname.slice(1).split("/");
+    if (params.length === 1) {
+      page = { ...profilePage };
+      details = {
+        username: params[0],
+      };
+    } else if (params.length === 2) {
+      page = { ...slatePage };
+      details = {
+        username: params[0],
+        slatename: params[1],
+      };
+    }
+  }
+  page.pathname = href;
 
-  findById(navigation, id);
+  let redirected = false;
 
-  return { target, activeIds };
+  if (viewer && page === authPage) {
+    redirected = true;
+    page = { ...activityPage };
+  }
+
+  if (!viewer && !page.externalAllowed) {
+    redirected = true;
+    page = { ...authPage }; //NOTE(martina): redirect to sign in page if try to access internal page while logged out
+  }
+
+  if (!page) {
+    window.location.replace("/_/404");
+  }
+
+  //NOTE(martina): to transform query params into more easily usable key value pairs in page
+  if (!redirected) {
+    let params = Strings.getParamsFromUrl(href);
+    if (page.id === "NAV_PROFILE" && page.cid) {
+      params.tab = "FILES";
+    }
+    page.params = params;
+  }
+  return { page, details };
+};
+
+const authPage = {
+  id: "NAV_SIGN_IN",
+  name: "Sign in",
+  pageTitle: "Sign in & Sign up",
+  ignore: true,
+  pathname: "/_/auth",
+};
+
+const dataPage = {
+  id: "NAV_DATA",
+  name: "Files",
+  pageTitle: "Your Files",
+  pathname: "/_/data",
+  mainNav: true,
+};
+
+const activityPage = {
+  id: "NAV_ACTIVITY",
+  name: "Activity",
+  pageTitle: "Activity",
+  ignore: true,
+  externalAllowed: true,
+  pathname: "/_/activity",
+  mainNav: true,
+};
+
+const slatePage = {
+  id: "NAV_SLATE",
+  name: "Collection",
+  pageTitle: "A Collection",
+  ignore: true,
+  externalAllowed: true,
+  pathname: "/$/slate/",
+};
+
+const profilePage = {
+  id: "NAV_PROFILE",
+  name: "Profile",
+  pageTitle: "A Profile",
+  ignore: true,
+  externalAllowed: true,
+  pathname: "/$/user/",
+};
+
+const errorPage = {
+  id: "NAV_ERROR",
+  name: "404",
+  pageTitle: "404 Not found",
+  ignore: true,
+  externalAllowed: true,
+  pathname: "/_/404",
 };
 
 export const navigation = [
-  {
-    id: "NAV_DATA",
-    decorator: "DATA",
-    name: "Home",
-    pageTitle: "Welcome back!",
-  },
-  {
-    id: "NAV_ACTIVITY",
-    decorator: "ACTIVITY",
-    name: "Activity",
-    pageTitle: "Activity",
-    ignore: true,
-  },
-  {
-    id: "NAV_EXPLORE",
-    decorator: "EXPLORE",
-    name: "Explore",
-    pageTitle: "Welcome back!",
-    ignore: true,
-  },
+  errorPage,
+  authPage,
+  activityPage,
+  dataPage,
   {
     id: "NAV_SLATES",
-    decorator: "SLATES",
     name: "Collections",
-    pageTitle: "Collections",
+    pageTitle: "Your Collections",
     ignore: true,
+    pathname: "/_/collections",
+    mainNav: true,
   },
-  {
-    id: "NAV_SLATES_FOLLOWING",
-    decorator: "SLATES_FOLLOWING",
-    name: "Collections following",
-    pageTitle: "Collections following",
-    ignore: true,
-  },
+  // {
+  //   id: "NAV_SEARCH",
+  //   name: "Search",
+  //   pageTitle: "Search Slate",
+  //   ignore: true,
+  //   pathname: "/_/search",
+  // mainNav: true,
+  // },
   {
     id: "NAV_DIRECTORY",
-    decorator: "DIRECTORY",
     name: "Directory",
-    pageTitle: "Your directory",
+    pageTitle: "Your Following",
+    pathname: "/_/directory",
   },
-  {
-    id: "NAV_DIRECTORY_FOLLOWERS",
-    decorator: "DIRECTORY_FOLLOWERS",
-    name: "Directory",
-    pageTitle: "Your directory",
-    ignore: true,
-  },
-  {
-    id: "NAV_SLATE",
-    decorator: "SLATE",
-    name: "Collection",
-    pageTitle: "Collection",
-    ignore: true,
-  },
+  slatePage,
   {
     id: "NAV_FILECOIN",
-    decorator: "FILECOIN",
     name: "Filecoin",
     pageTitle: "Archive on Filecoin",
-    filecoin: true,
+    pathname: "/_/filecoin",
   },
   {
     id: "NAV_STORAGE_DEAL",
-    decorator: "STORAGE_DEAL",
     name: "Storage Deal",
-    filecoin: true,
-    pageTitle: "Make a one-off Filecoin storage deal",
+    pageTitle: "Filecoin Storage Deal",
+    pathname: "/_/storage-deal",
   },
   {
     id: "NAV_API",
-    decorator: "API",
     name: "API",
     pageTitle: "Developer API",
+    pathname: "/_/api",
   },
   {
     id: "NAV_SETTINGS",
-    decorator: "SETTINGS",
-    name: "Profile & Account Settings",
-    pageTitle: "Your Profile & Account Settings",
+    name: "Settings",
+    pageTitle: "Profile & Account Settings",
     ignore: true,
+    pathname: "/_/settings",
   },
-  {
-    id: "NAV_PROFILE_FILES",
-    decorator: "PROFILE_FILES",
-    name: "Profile",
-    pageTitle: "Profile",
-    ignore: true,
-  },
-  {
-    id: "NAV_PROFILE",
-    decorator: "PROFILE",
-    name: "Profile",
-    pageTitle: "Profile",
-    ignore: true,
-  },
-  {
-    id: "NAV_PROFILE_PEERS",
-    decorator: "PROFILE_PEERS",
-    name: "Profile",
-    pageTitle: "Profile",
-    ignore: true,
-  },
-  {
-    id: "NAV_FILE",
-    decorator: "FILE",
-    name: "File",
-    pageTitle: "File",
-    ignore: true,
-  },
+  profilePage,
+  // {
+  //   id: "NAV_FILE",
+  //   name: "File",
+  //   pageTitle: "A File",
+  //   ignore: true,
+  //   externalAllowed: true,
+  // },
 ];

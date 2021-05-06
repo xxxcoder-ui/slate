@@ -86,7 +86,7 @@ export default class SidebarEditTags extends React.Component {
     this._handleSave();
 
     let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-    this.props.onUpdateViewer({ tags: Array.from(newSuggestions) });
+    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: Array.from(newSuggestions) } });
   };
 
   render() {
