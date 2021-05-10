@@ -39,6 +39,13 @@ const STYLES_BUTTON_PRIMARY = css`
   }
 `;
 
+const STYLES_BUTTON_PRIMARY_DISABLED = css `
+  ${STYLES_BUTTON}
+  cursor: not-allowed;
+  background-color: ${Constants.system.bgBlue};
+  color: ${Constants.system.white};
+`;
+
 const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
@@ -71,6 +78,17 @@ export const ButtonPrimary = (props) => {
     );
   }
 
+  if (props.disabled) {
+    return(
+      <button
+        css={STYLES_BUTTON_PRIMARY_DISABLED}
+        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        onClick={props.onClick}
+        children={props.children}
+      />
+    );
+  }
+
   return (
     <button
       css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
@@ -88,12 +106,12 @@ export const ButtonPrimaryFull = (props) => {
 const STYLES_BUTTON_SECONDARY = css`
   ${STYLES_BUTTON}
   cursor: pointer;
-  color: ${Constants.system.brand};
-  background-color: ${Constants.system.white};
+  color: ${Constants.system.black};
+  background-color: ${Constants.system.gray20};
   box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 
   :hover {
-    background-color: #fcfcfc;
+    background-color: ${Constants.system.gray30};
   }
 
   :focus {
@@ -132,7 +150,7 @@ export const ButtonSecondary = (props) => {
         htmlFor={props.htmlFor}
       />
     );
-  }
+  } 
 
   return (
     <button
@@ -251,18 +269,26 @@ export const ButtonDisabledFull = (props) => {
 const STYLES_BUTTON_WARNING = css`
   ${STYLES_BUTTON}
   cursor: pointer;
-  color: ${Constants.system.red};
-  background-color: ${Constants.system.white};
+  color: ${Constants.system.white};
+  background-color: ${Constants.system.red};
   box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 
   :hover {
-    background-color: #fcfcfc;
+    background-color: #b51111;
   }
 
   :focus {
     outline: 0;
     border: 0;
   }
+`;
+
+const STYLES_BUTTON_WARNING_DISABLED = css`
+  ${STYLES_BUTTON}
+  cursor: not-allowed;
+  color: ${Constants.system.white};
+  background-color: ${Constants.system.bgRed};
+  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 `;
 
 const STYLES_BUTTON_WARNING_TRANSPARENT = css`
@@ -297,6 +323,17 @@ export const ButtonWarning = (props) => {
     );
   }
 
+  if (props.disabled) {
+    return (
+      <button
+        css={STYLES_BUTTON_WARNING_DISABLED}
+        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        onClick={props.onClick}
+        children={props.children}
+      />
+  );
+  }
+
   return (
     <button
       css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
@@ -307,142 +344,6 @@ export const ButtonWarning = (props) => {
   );
 };
 
-
-const STYLES_BUTTON_DELETE = css`
-  ${STYLES_BUTTON}
-  cursor: pointer;
-  color: ${Constants.system.white};
-  background-color: ${Constants.system.red};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
-
-  :hover {
-    background-color: #b51111;
-  }
-
-  :focus {
-    outline: 0;
-    border: 0;
-  }
-`;
-
-const STYLES_BUTTON_DELETE_TRANSPARENT = css`
-  ${STYLES_BUTTON}
-  cursor: pointer;
-  background-color: transparent;
-  color: ${Constants.system.darkGray};
-`;
-
-export const ButtonDelete = (props) => {
-  if (props.loading) {
-    return (
-      <button
-        css={props.transparent ? STYLES_BUTTON_DELETE_TRANSPARENT : STYLES_BUTTON_DELETE}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-      >
-        <LoaderSpinner style={{ height: 16, width: 16 }} />
-      </button>
-    );
-  }
-
-  if (props.type === "label") {
-    return (
-      <label
-        css={props.transparent ? STYLES_BUTTON_DELETE_TRANSPARENT : STYLES_BUTTON_DELETE}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-        onClick={props.onClick}
-        children={props.children}
-        type={props.label}
-        htmlFor={props.htmlFor}
-      />
-    );
-  }
-
-  return (
-    <button
-      css={props.transparent ? STYLES_BUTTON_DELETE_TRANSPARENT : STYLES_BUTTON_DELETE}
-      onClick={props.onClick}
-      children={props.children}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-    />
-  );
-};
-
-export const ButtonDeleteFull = (props) => {
-  return <ButtonDelete full {...props} />;
-};
-
-const STYLES_BUTTON_DELETE_DISABLED = css`
-  ${STYLES_BUTTON}
-  cursor: not-allowed;
-  background-color: ${Constants.system.bgRed};
-  color: ${Constants.system.white};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
-
-  :focus {
-    outline: 0;
-    border: 0;
-  }
-`;
-
-const STYLES_BUTTON_DELETE_DISABLED_TRANSPARENT = css`
-  ${STYLES_BUTTON}
-  cursor: not-allowed;
-  background-color: transparent;
-  color: ${Constants.system.gray};
-`;
-
-export const ButtonDeleteDisabled = (props) => {
-  return (
-    <button
-      css={props.transparent ? STYLES_BUTTON_DELETE_DISABLED_TRANSPARENT : STYLES_BUTTON_DELETE_DISABLED}
-      onClick={props.onClick}
-      children={props.children}
-      type={props.label}
-      htmlFor={props.htmlFor}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-    />
-  );
-};
-
-export const ButtonDeleteDisabledFull = (props) => {
-  return <ButtonDeleteDisabled full {...props} />;
-};
-
-const STYLES_BUTTON_CANCEL = css`
-  ${STYLES_BUTTON}
-  cursor: pointer;
-  color: ${Constants.system.black};
-  background-color: ${Constants.system.gray20};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
-
-  :hover {
-    background-color: ${Constants.system.gray30};
-  }
-
-  :focus {
-    outline: 0;
-    border: 0;
-  }
-`;
-
-const STYLES_BUTTON_CANCEL_TRANSPARENT = css`
-  ${STYLES_BUTTON}
-  cursor: pointer;
-  background-color: transparent;
-  color: ${Constants.system.darkGray};
-`;
-
-export const ButtonCancel = (props) => {
-  return (
-    <button
-      css={props.transparent ? STYLES_BUTTON_CANCEL_TRANSPARENT : STYLES_BUTTON_CANCEL}
-      onClick={props.onClick}
-      children={props.children}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-    />
-  );
-};
-
-export const ButtonCancelFull = (props) => {
-  return <ButtonCancel full {...props} />;
+export const ButtonWarningFull = (props) => {
+  return <ButtonWarning full {...props} />;
 };
