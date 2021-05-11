@@ -25,6 +25,8 @@ import APIDocsUpdateSlateV2 from "~/components/api-docs/v2/update-slate.js";
 import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
 import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
 
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
+
 const STYLES_API_KEY = css`
   height: 40px;
   border-radius: 4px;
@@ -49,10 +51,15 @@ const STYLES_KEY_CONTAINER = css`
 class Key extends React.Component {
   _input;
 
-  state = { visible: false, copying: false };
+  state = { visible: false, copying: false, modalShow: false };
 
-  _handleDelete = async (id) => {
+  _handleDelete = async (res, id) => {
+    if (!res) {
+      this.setState({ modalShow: false });
+      return;
+    }
     await this.props.onDelete(id);
+    this.setState({ modalShow: false });
   };
 
   _handleCopy = async () => {
@@ -79,13 +86,24 @@ class Key extends React.Component {
           onMouseLeave={() => this.setState({ visible: false })}
         />
         <SquareButtonGray
-          onClick={() => this._handleDelete(this.props.data.id)}
+          onClick={() => this.setState({ modalShow: true })}
           style={{
             marginLeft: 8,
           }}
         >
           <SVG.Trash height="16px" />
         </SquareButtonGray>
+
+        {this.state.modalShow && (
+          <ConfirmationModal 
+            type={"DELETE"}
+            withValidation={false}
+            callback={(e) => this._handleDelete(e, this.props.data.id)} 
+            header={`Are you sure you want to revoke this API key?`}
+            subHeader={`Any services using it will no longer be able to access your Slate account.`}
+          />
+        )}
+
       </div>
     );
   }
@@ -100,6 +118,7 @@ export default class SceneSettingsDeveloper extends React.Component {
     docs: "GET",
     copying: false,
     tab: 0,
+    modalShow: false,
   };
 
   _handleCopy = async () => {
@@ -123,20 +142,11 @@ export default class SceneSettingsDeveloper extends React.Component {
   _handleDelete = async (id) => {
     this.setState({ loading: true });
 
-    if (
-      !window.confirm(
-        "Are you sure you want to revoke this API key? Any services using it will no longer be able to access your Slate account"
-      )
-    ) {
-      this.setState({ loading: false });
-      return;
-    }
-
     const response = await Actions.deleteAPIKey({ id });
 
     Events.hasError(response);
 
-    this.setState({ loading: false });
+    this.setState({ loading: false, modalShow: false });
   };
 
   _handleChangeLanguage = (newLanguage) => {

@@ -15,6 +15,7 @@ import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import Avatar from "~/components/core/Avatar";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 const STYLES_FILE_HIDDEN = css`
   height: 1px;
@@ -56,6 +57,7 @@ export default class SceneEditAccount extends React.Component {
     savingNameBio: false,
     changingFilecoin: false,
     tab: 0,
+    modalShow: false,
   };
 
   _handleUpload = async (e) => {
@@ -151,13 +153,19 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingPassword: false, password: "", confirm: "" });
   };
 
-  _handleDelete = async (e) => {
+  _handleDelete = async (res) => {
+    if (!res) {
+      this.setState({ modalShow: false });
+      return;
+    }
     this.setState({ deleting: true });
-
+    this.setState({ modalShow: false });
+    
     await Window.delay(100);
 
     await UserBehaviors.deleteMe({ viewer: this.props.viewer });
     this.setState({ deleting: false });
+
   };
 
   _handleChange = (e) => {
@@ -333,7 +341,7 @@ export default class SceneEditAccount extends React.Component {
 
             <div style={{ marginTop: 24 }}>
               <System.ButtonWarning
-                onClick={this._handleDelete}
+                onClick={() => this.setState({ modalShow: true })}
                 loading={this.state.deleting}
                 style={{ width: "200px" }}
               >
@@ -351,6 +359,19 @@ export default class SceneEditAccount extends React.Component {
           tabIndex="-1"
           css={STYLES_COPY_INPUT}
         />{" "}
+
+        {this.state.modalShow && (
+        <ConfirmationModal 
+          type={"DELETE"}
+          withValidation={true}
+          matchValue={this.state.username}
+          callback={this._handleDelete} 
+          header={`Are you sure you want to delete your account @${this.state.username}?`}
+          subHeader={`You will lose all your files and collections. You can’t undo this action.`}
+          inputHeader={`Please type your username to confirm`}
+          inputPlaceholder={`username`}
+        />
+      )}
       </ScenePage>
     );
   }

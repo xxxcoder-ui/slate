@@ -10,6 +10,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 const SIZE_LIMIT = 1000000;
 const DEFAULT_IMAGE =
@@ -52,6 +53,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
     name: this.props.data.data.name,
     tags: this.props.data.data?.tags || [],
     suggestions: this.props.viewer?.tags || [],
+    modalShow: false,
   };
 
   componentDidMount = () => {
@@ -107,12 +109,9 @@ export default class SidebarSingleSlateSettings extends React.Component {
     });
   };
 
-  _handleDelete = async (e) => {
-    if (
-      !window.confirm(
-        "Are you sure you want to delete this Collection? This action is irreversible."
-      )
-    ) {
+  _handleDelete = async (res) => {
+    if (!res) {
+      this.setState({ modalShow: false })
       return;
     }
 
@@ -130,6 +129,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     if (Events.hasError(response)) {
       return;
     }
+
+    this.setState({ modalShow: false })
   };
 
   render() {
@@ -303,11 +304,21 @@ export default class SidebarSingleSlateSettings extends React.Component {
           </System.ButtonPrimary>
 
           <div style={{ marginTop: 16 }}>
-            <System.ButtonWarning full onClick={this._handleDelete} style={{ overflow: "hidden" }}>
+            <System.ButtonWarning full onClick={() => this.setState({ modalShow: true })} style={{ overflow: "hidden" }}>
               Delete collection
             </System.ButtonWarning>
           </div>
         </div>
+
+        {this.state.modalShow && (
+          <ConfirmationModal 
+            type={"DELETE"}
+            withValidation={false}
+            callback={this._handleDelete} 
+            header={`Are you sure you want to delete the collection?`}
+            subHeader={`This collection will be deleted but all your files will remain in your file library. You can’t undo this action.`}
+          />
+        )}
       </React.Fragment>
     );
   }

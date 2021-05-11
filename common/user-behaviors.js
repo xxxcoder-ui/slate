@@ -69,11 +69,6 @@ export const signOut = async ({ viewer }) => {
 
 // NOTE(jim): Permanently deletes you, forever.
 export const deleteMe = async ({ viewer }) => {
-  const message = "Do you really want to delete your account? It will be permanently removed";
-  if (!window.confirm(message)) {
-    return false;
-  }
-
   await Actions.updateSearch("delete-user");
 
   let response = await Actions.deleteViewer();
