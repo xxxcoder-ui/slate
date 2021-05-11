@@ -2,7 +2,7 @@ import * as Serializers from "~/node_common/serializers";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ id, data, lastActive, username, email, salt, password }) => {
+export default async ({ id, data, lastActive, username, email, salt, password, twitterId }) => {
   const updateObject = { id, lastActive: lastActive || new Date() };
 
   if (data) {
@@ -24,6 +24,12 @@ export default async ({ id, data, lastActive, username, email, salt, password })
   if (password) {
     updateObject.password = password;
   }
+
+  if (twitterId) {
+    updateObject.twitterId = twitterId;
+  }
+
+  console.log(updateObject);
 
   return await runQuery({
     label: "UPDATE_USER_BY_ID",

@@ -11,6 +11,8 @@ export const sanitizeUser = (entity) => {
     username: entity.username,
     slates: entity.slates, //NOTE(martina): this is not in the database. It is added after
     library: entity.library, //NOTE(martina): this is not in the database. It is added after
+    twitterId: entity.twitterId,
+    email: entity.email,
     data: {
       name: entity.data?.name,
       photo: entity.data?.photo,
@@ -73,6 +75,7 @@ export const cleanUser = (entity) => {
     salt: entity.salt,
     password: entity.password,
     email: entity.email,
+    twitterId: entity.twitterId,
     data: entity.data,
     // data: {
     //   name: entity.data?.name,

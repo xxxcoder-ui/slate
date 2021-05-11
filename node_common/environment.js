@@ -20,9 +20,7 @@ export const PUBSUB_SECRET = process.env.PUBSUB_SECRET;
 export const ALLOWED_HOST = process.env.ALLOWED_HOST;
 export const LOCAL_PASSWORD_ROUNDS_MANUAL = process.env.LOCAL_PASSWORD_ROUNDS_MANUAL;
 export const LOCAL_PASSWORD_ROUNDS = process.env.LOCAL_PASSWORD_ROUNDS;
-export const LOCAL_PASSWORD_SECRET = `$2b$${LOCAL_PASSWORD_ROUNDS}$${
-  process.env.LOCAL_PASSWORD_SECRET
-}`;
+export const LOCAL_PASSWORD_SECRET = `$2b$${LOCAL_PASSWORD_ROUNDS}$${process.env.LOCAL_PASSWORD_SECRET}`;
 
 // NOTE(jim): Custom avatars
 export const AVATAR_SLATE_ID = process.env.AVATAR_SLATE_ID;
@@ -42,3 +40,8 @@ export const RESOURCE_URI_UPLOAD = process.env.RESOURCE_URI_UPLOAD;
 export const RESOURCE_URI_STORAGE_UPLOAD = process.env.RESOURCE_URI_STORAGE_UPLOAD;
 export const RESOURCE_URI_PUBSUB = process.env.RESOURCE_URI_PUBSUB;
 export const RESOURCE_URI_SEARCH = process.env.RESOURCE_URI_SEARCH;
+
+//NOTE(amine): Twitter
+export const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
+export const TWITTER_SECRET_API_KEY = process.env.TWITTER_SECRET_API_KEY;
+export const TWITTER_CALLBACK = process.env.TWITTER_CALLBACK;

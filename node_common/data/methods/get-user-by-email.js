@@ -7,7 +7,7 @@ export default async ({ email }) => {
   return await runQuery({
     label: "GET_USER_BY_EMAIL",
     queryFn: async (DB) => {
-      const query = await DB.select("*").from("users").where({ email }).first();
+      let query = await DB.select("*").from("users").where({ email }).first();
 
       if (!query || query.error) {
         return null;
