@@ -798,7 +798,7 @@ class CarouselSidebar extends React.Component {
           >
             {isVisible
               ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
-              : "This file is currently not visible to others unless they have the link."}
+              : "This file is only visible to those with the link."}
           </System.P>
           <RadioGroup
             name="isPublic"
@@ -828,6 +828,20 @@ class CarouselSidebar extends React.Component {
             selected={isVisible}
             onChange={this._handleToggleVisibility}
           />
+          {!isVisible && (
+            <Input
+              full
+              value={Strings.getURLfromCID(file.cid)}
+              name="copyLink"
+              readOnly
+              copyable
+              style={{
+                fontSize: Constants.typescale.lvl1,
+                ...STYLES_INPUT,
+                marginTop: 12,
+              }}
+            />
+          )}
         </div>
       );
     }
