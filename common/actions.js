@@ -116,7 +116,6 @@ export const sendTemplateEmail = async (data) => {
   });
 };
 
-
 export const archive = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/archive`, {
@@ -213,6 +212,19 @@ export const createFile = async (data) => {
 export const addFileToSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/add-file`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const requestTwitterToken = async () => {
+  return await returnJSON(`/api/twitter/request-token`, {
+    ...DEFAULT_OPTIONS,
+  });
+};
+
+export const authenticateViaTwitter = async (data) => {
+  return await returnJSON(`/api/twitter/authenticate`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
