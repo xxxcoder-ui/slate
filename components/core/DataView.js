@@ -20,10 +20,10 @@ import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 import FilePreviewBubble from "~/components/core/FilePreviewBubble";
 import isEqual from "lodash/isEqual";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
-
   :hover {
     color: ${Constants.system.brand};
   }
@@ -67,7 +67,6 @@ const STYLES_LINK = css`
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 320px;
-
   @media (max-width: ${Constants.sizes.tablet}px) {
     max-width: 120px;
   }
@@ -86,7 +85,6 @@ const STYLES_ICON_BOX_HOVER = css`
   align-items: center;
   padding: 8px;
   cursor: pointer;
-
   :hover {
     color: ${Constants.system.brand};
   }
@@ -117,7 +115,6 @@ const STYLES_ACTION_BAR = css`
   width: 90vw;
   max-width: 878px;
   height: 48px;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
@@ -131,7 +128,6 @@ const STYLES_ACTION_BAR_CONTAINER = css`
   display: flex;
   justify-content: center;
   z-index: ${Constants.zindex.header};
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
@@ -153,7 +149,6 @@ const STYLES_LEFT = css`
 const STYLES_FILES_SELECTED = css`
   font-family: ${Constants.font.semiBold};
   color: ${Constants.system.white};
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
@@ -171,7 +166,6 @@ const STYLES_IMAGE_GRID = css`
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   width: 100%;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -185,11 +179,9 @@ const STYLES_IMAGE_BOX = css`
   justify-content: center;
   cursor: pointer;
   position: relative;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 12px auto;
   }
-
   :hover {
     box-shadow: 0px 0px 0px 1px ${Constants.system.lightBorder} inset,
       0 0 40px 0 ${Constants.system.shadow};
@@ -223,12 +215,10 @@ const STYLES_TAG = css`
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;
-
   span {
     line-height: 1.5;
     font-size: 14px;
   }
-
   &:hover {
     background: ${Constants.system.gray30};
   }
@@ -307,6 +297,7 @@ export default class DataView extends React.Component {
     viewLimit: 40,
     scrollDebounce: false,
     imageSize: 100,
+    modalShow: false,
   };
 
   isShiftDown = false;
@@ -474,9 +465,9 @@ export default class DataView extends React.Component {
     this.setState({ checked: {} });
   };
 
-  _handleDelete = (id) => {
-    const message = `Are you sure you want to delete these files? They will be deleted from your collections as well`;
-    if (!window.confirm(message)) {
+  _handleDelete = (res, id) => {
+    if (!res) {
+      this.setState({ modalShow: false });
       return;
     }
 
@@ -495,7 +486,7 @@ export default class DataView extends React.Component {
     this.props.onUpdateViewer({ library });
 
     UserBehaviors.deleteFiles(ids);
-    this.setState({ checked: {} });
+    this.setState({ checked: {}, modalShow: false });
   };
 
   _handleSelect = (index) => {
@@ -600,7 +591,6 @@ export default class DataView extends React.Component {
 
     return commonTags;
   };
-
   render() {
     let numChecked = Object.keys(this.state.checked).length || 0;
     // const header = (
@@ -637,6 +627,7 @@ export default class DataView extends React.Component {
     //     </span>
     //   </div>
     // );
+
     const footer = (
       <React.Fragment>
         {numChecked ? (
@@ -684,10 +675,19 @@ export default class DataView extends React.Component {
                   <ButtonWarning
                     transparent
                     style={{ marginLeft: 8, color: Constants.system.white }}
-                    onClick={() => this._handleDelete()}
+                    onClick={() => this.setState({ modalShow: true })}
                   >
                     {Strings.pluralize("Delete file", numChecked)}
                   </ButtonWarning>
+                )}
+                {this.state.modalShow && (
+                  <ConfirmationModal 
+                    type={"DELETE"}
+                    withValidation={false}
+                    callback={this._handleDelete} 
+                    header={`Are you sure you want to delete the selected files?`}
+                    subHeader={`These files will be deleted from all connected collections and your file library. You can’t undo this action.`}
+                  />
                 )}
                 <div
                   css={STYLES_ICON_BOX}
@@ -969,7 +969,7 @@ export default class DataView extends React.Component {
                       text: "Delete",
                       onClick: (e) => {
                         e.stopPropagation();
-                        this.setState({ menu: null }, () => this._handleDelete(each.id));
+                        this.setState({ menu: null, modalShow: true });
                       },
                     },
                   ]}

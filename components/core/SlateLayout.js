@@ -24,6 +24,7 @@ import {
   ButtonWarning,
 } from "~/components/system/components/Buttons";
 import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 //NOTE(martina): sets 200px as the standard width for a 1080px wide layout with 20px margin btwn images.
 //If the container is larger or smaller, it scales accordingly by that factor
@@ -328,6 +329,7 @@ export class SlateLayout extends React.Component {
     tooltip: null,
     keyboardTooltip: false,
     signInModal: false,
+    modalShowDeleteFiles: false,
   };
 
   componentDidMount = async () => {
@@ -887,10 +889,9 @@ export class SlateLayout extends React.Component {
     this.setState(state);
   };
 
-  _handleResetLayout = async () => {
-    if (
-      !window.confirm("Are you sure you want to reset your layout to the default column layout?")
-    ) {
+  _handleResetLayout = async (res) => {
+    if (!res) {
+      this.setState({ modalShowResetLayout: false });
       return;
     }
     let prevLayout = this.cloneLayout(this.state.layout);
@@ -907,6 +908,7 @@ export class SlateLayout extends React.Component {
       ],
       layout,
       zIndexMax: 1,
+      modalShowResetLayout: false,
     });
   };
 
@@ -1049,14 +1051,15 @@ export class SlateLayout extends React.Component {
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
-  _handleDeleteFiles = async (e, i) => {
-    const message = `Are you sure you want to delete these files? They will be deleted from your data and collections.`;
-    if (!window.confirm(message)) {
+  _handleDeleteModal = () => {
+    this.setState({ modalShowDeleteFiles: true })
+  }
+
+  _handleDeleteFiles = async (res, i) => {
+    if (!res) {
+      this.setState({ modalShowDeleteFiles: false });
       return;
     }
-
-    e.stopPropagation();
-    e.preventDefault();
     let ids = [];
     if (i !== undefined) {
       ids = [this.state.items[i].id.replace("data-", "")];
@@ -1078,7 +1081,7 @@ export class SlateLayout extends React.Component {
     }
 
     await UserBehaviors.deleteFiles(ids);
-    this.setState({ checked: {} });
+    this.setState({ checked: {}, modalShowDeleteFiles: false });
   };
 
   _stopProp = (e) => {
@@ -1134,9 +1137,18 @@ export class SlateLayout extends React.Component {
                       Reset layout
                     </ButtonDisabled>
                   ) : (
-                    <ButtonSecondary onClick={this._handleResetLayout} style={{ marginRight: 16 }}>
+                    <ButtonSecondary onClick={() => { this.setState({ modalShowResetLayout: true }) }} style={{ marginRight: 16 }}>
                       Reset layout
                     </ButtonSecondary>
+                  )}
+                  {this.state.modalShowResetLayout && (
+                    <ConfirmationModal 
+                      type={"CONFIRM"}
+                      withValidation={false}
+                      callback={this._handleResetLayout} 
+                      header={`Are you sure you want to reset your layout to the default column layout?`}
+                      subHeader={`You can’t undo this action.`}
+                    />
                   )}
                   {this.state.prevLayouts.length ? (
                     <ButtonSecondary style={{ marginRight: 16 }} onClick={this._handleUndo}>
@@ -1453,8 +1465,8 @@ export class SlateLayout extends React.Component {
                                 onMouseLeave={() => this.setState({ tooltip: null })}
                                 onClick={
                                   this.state.items[i].ownerId === this.props.viewer.id
-                                    ? (e) => {
-                                        this._handleDeleteFiles(e, i);
+                                    ? () => {
+                                        this.setState({ modalShowDeleteFiles: true })
                                       }
                                     : () => {}
                                 }
@@ -1475,6 +1487,7 @@ export class SlateLayout extends React.Component {
                                   }}
                                 />
                               </div>
+
                             </div>
                           </React.Fragment>
                         ) : (
@@ -1674,6 +1687,15 @@ export class SlateLayout extends React.Component {
               )}
             </div>
           </div>
+          {this.state.modalShowDeleteFiles && (
+            <ConfirmationModal 
+              type={"DELETE"}
+              withValidation={false}
+              callback={this._handleDeleteFiles}
+              header={`Are you sure you want to delete the selected files?`}
+              subHeader={`These files will be deleted from all connected collections and your file library. You can’t undo this action.`}
+            />
+          )}
           {numChecked ? (
             <div css={STYLES_ACTION_BAR_CONTAINER}>
               <div css={STYLES_ACTION_BAR}>
@@ -1710,7 +1732,7 @@ export class SlateLayout extends React.Component {
                     <ButtonWarning
                       transparent
                       style={{ marginLeft: 8, color: Constants.system.white }}
-                      onClick={this._handleDeleteFiles}
+                      onClick={this._handleDeleteModal}
                     >
                       {Strings.pluralize("Delete file", numChecked)}
                     </ButtonWarning>

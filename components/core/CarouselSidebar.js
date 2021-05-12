@@ -21,6 +21,7 @@ import { Tag } from "~/components/system/components/Tag";
 import isEqual from "lodash/isEqual";
 import cloneDeep from "lodash/cloneDeep";
 import ProcessedText from "~/components/core/ProcessedText";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 const DEFAULT_BOOK =
   "https://slate.textile.io/ipfs/bafkreibk32sw7arspy5kw3p5gkuidfcwjbwqyjdktd5wkqqxahvkm2qlyi";
@@ -38,7 +39,6 @@ const STYLES_NO_VISIBLE_SCROLL = css`
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   -ms-overflow-style: -ms-autohiding-scrollbar;
-
   ::-webkit-scrollbar {
     width: 0px;
     display: none;
@@ -77,13 +77,11 @@ const STYLES_SIDEBAR = css`
   justify-content: space-between;
   background-color: rgba(20, 20, 20, 0.8);
   ${STYLES_NO_VISIBLE_SCROLL}
-
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
     background-color: rgba(150, 150, 150, 0.2);
   }
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
@@ -95,7 +93,6 @@ const STYLES_DISMISS_BOX = css`
   right: 16px;
   color: ${Constants.system.darkGray};
   cursor: pointer;
-
   :hover {
     color: ${Constants.system.white};
   }
@@ -123,7 +120,6 @@ const STYLES_META_TITLE = css`
   text-decoration: none;
   word-break: break-all;
   overflow-wrap: anywhere;
-
   :hover {
     color: ${Constants.system.blue};
   }
@@ -173,11 +169,9 @@ const STYLES_ACTION = css`
   border-bottom: 1px solid #3c3c3c;
   display: flex;
   align-items: center;
-
   :hover {
     color: ${Constants.system.brand};
   }
-
   :last-child {
     border: none;
   }
@@ -243,7 +237,6 @@ const STYLES_AUTOSAVE = css`
   position: absolute;
   top: 24px;
   left: 16px;
-
   @keyframes slate-animations-autosave {
     0% {
       opacity: 0;
@@ -300,6 +293,7 @@ class CarouselSidebar extends React.Component {
     showSavedMessage: false,
     showConnectedSection: false,
     showFileSection: true,
+    modalShow: false,
   };
 
   componentDidMount = () => {
@@ -449,11 +443,11 @@ class CarouselSidebar extends React.Component {
     });
   };
 
-  _handleDelete = () => {
+  _handleDelete = (res) => {
     if (this.props.external || !this.props.isOwner) return;
-    const message =
-      "Are you sure you want to delete this? It will be removed from your collections as well";
-    if (!window.confirm(message)) {
+
+    if (!res) {
+      this.setState({ modalShow: false });
       return;
     }
     const id = this.props.data.id;
@@ -745,7 +739,7 @@ class CarouselSidebar extends React.Component {
 
     if (editingAllowed) {
       actions.push(
-        <div key="delete" css={STYLES_ACTION} onClick={this._handleDelete}>
+        <div key="delete" css={STYLES_ACTION} onClick={() => this.setState({ modalShow: true })}>
           <SVG.Trash height="24px" />
           <span style={{ marginLeft: 16 }}>Delete</span>
         </div>
@@ -798,7 +792,7 @@ class CarouselSidebar extends React.Component {
           >
             {isVisible
               ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
-              : "This file is currently not visible to others unless they have the link."}
+              : "This file is only visible to those with the link."}
           </System.P>
           <RadioGroup
             name="isPublic"
@@ -828,75 +822,101 @@ class CarouselSidebar extends React.Component {
             selected={isVisible}
             onChange={this._handleToggleVisibility}
           />
+          {!isVisible && (
+            <Input
+              full
+              value={Strings.getURLfromCID(file.cid)}
+              name="copyLink"
+              readOnly
+              copyable
+              style={{
+                fontSize: Constants.typescale.lvl1,
+                ...STYLES_INPUT,
+                marginTop: 12,
+              }}
+            />
+          )}
+
         </div>
       );
     }
 
     return (
-      <div css={STYLES_SIDEBAR} style={{ display: this.props.display }}>
-        {this.state.showSavedMessage && (
-          <div css={STYLES_AUTOSAVE}>
-            <SVG.Check height="14px" style={{ marginRight: 4 }} />
-            Changes saved
-          </div>
+      <>
+        {this.state.modalShow && (
+          <ConfirmationModal 
+            type={"DELETE"}
+            withValidation={false}
+            callback={this._handleDelete} 
+            header={`Are you sure you want to delete the file “${this.state.name}”?`}
+            subHeader={`This file will be deleted from all connected collections and your file library. You can’t undo this action.`}
+          />
         )}
-        <div key="s-1" css={STYLES_DISMISS_BOX} onClick={this.props.onClose}>
-          <SVG.Dismiss height="24px" />
-        </div>
-
-        <div key="s-2" style={{ marginBottom: 80 }}>
-          {elements}
-
-          {!this.props.external && <div css={STYLES_ACTIONS}>{actions}</div>}
-          {privacy}
-          {uploadCoverImage}
-          {!this.props.external && (
-            <>
-              <div
-                css={STYLES_SECTION_HEADER}
-                style={{ cursor: "pointer", marginTop: 48 }}
-                onClick={() => this._handleToggleAccordion("showConnectedSection")}
-              >
-                <span
-                  style={{
-                    marginRight: 8,
-                    transform: this.state.showConnectedSection ? "none" : "rotate(-90deg)",
-                    transition: "100ms ease transform",
-                  }}
-                >
-                  <SVG.ChevronDown height="24px" display="block" />
-                </span>
-                <span>Add to collection</span>
-              </div>
-              {this.state.showConnectedSection && (
-                <div style={{ width: "100%", margin: "24px 0 44px 0" }}>
-                  <SlatePicker
-                    dark
-                    slates={this.props.viewer.slates}
-                    onCreateSlate={this._handleCreateSlate}
-                    selectedColor={Constants.system.white}
-                    files={[this.props.data]}
-                    selected={this.state.selected}
-                    onAdd={this._handleAdd}
-                  />
-                </div>
-              )}
-            </>
+        <div css={STYLES_SIDEBAR} style={{ display: this.props.display }}>
+          {this.state.showSavedMessage && (
+            <div css={STYLES_AUTOSAVE}>
+              <SVG.Check height="14px" style={{ marginRight: 4 }} />
+              Changes saved
+            </div>
           )}
+          <div key="s-1" css={STYLES_DISMISS_BOX} onClick={this.props.onClose}>
+            <SVG.Dismiss height="24px" />
+          </div>
 
-          {this.props.data.filename.endsWith(".md") ? (
-            <>
-              <div css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
-                Settings
-              </div>
-              <div css={STYLES_OPTIONS_SECTION}>
-                <div css={STYLES_TEXT}>Dark mode</div>
-                <Toggle dark active={this.props?.theme?.darkmode} onChange={this._handleDarkMode} />
-              </div>
-            </>
-          ) : null}
+          <div key="s-2" style={{ marginBottom: 80 }}>
+            {elements}
+
+            {!this.props.external && <div css={STYLES_ACTIONS}>{actions}</div>}
+            {privacy}
+            {uploadCoverImage}
+            {!this.props.external && (
+              <>
+                <div
+                  css={STYLES_SECTION_HEADER}
+                  style={{ cursor: "pointer", marginTop: 48 }}
+                  onClick={() => this._handleToggleAccordion("showConnectedSection")}
+                >
+                  <span
+                    style={{
+                      marginRight: 8,
+                      transform: this.state.showConnectedSection ? "none" : "rotate(-90deg)",
+                      transition: "100ms ease transform",
+                    }}
+                  >
+                    <SVG.ChevronDown height="24px" display="block" />
+                  </span>
+                  <span>Add to collection</span>
+                </div>
+                {this.state.showConnectedSection && (
+                  <div style={{ width: "100%", margin: "24px 0 44px 0" }}>
+                    <SlatePicker
+                      dark
+                      slates={this.props.viewer.slates}
+                      onCreateSlate={this._handleCreateSlate}
+                      selectedColor={Constants.system.white}
+                      files={[this.props.data]}
+                      selected={this.state.selected}
+                      onAdd={this._handleAdd}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {this.props.data.filename.endsWith(".md") ? (
+              <>
+                <div css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+                  Settings
+                </div>
+                <div css={STYLES_OPTIONS_SECTION}>
+                  <div css={STYLES_TEXT}>Dark mode</div>
+                  <Toggle dark active={this.props?.theme?.darkmode} onChange={this._handleDarkMode} />
+                </div>
+              </>
+            ) : null}
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
