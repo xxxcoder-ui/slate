@@ -51,13 +51,11 @@ const STYLES_CONTENT = css`
   }
 `;
 
-const STYLES_SIDEBAR = css`
-  z-index: ${Constants.zindex.sidebar};
+const STYLES_SIDEBAR_ELEMENTS = css`
   height: 100vh;
   width: ${Constants.sizes.sidebar}px;
   padding: 0;
   flex-shrink: 0;
-  position: fixed;
   background-color: rgba(195, 195, 196, 1);
   top: 0;
   right: 0;
@@ -66,12 +64,20 @@ const STYLES_SIDEBAR = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
   }
-
+  /*
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);
     backdrop-filter: blur(25px);
     background-color: rgba(195, 195, 196, 0.6);
   }
+  */
+`;
+
+const STYLES_SIDEBAR = css`
+  position: fixed;
+  top: 0; right: 0;
+  margin: auto;
+  z-index: ${Constants.zindex.sidebar};
 `;
 
 const STYLES_SIDEBAR_HEADER = css`
@@ -202,13 +208,15 @@ export default class ApplicationLayout extends React.Component {
             enabled
             onOutsideRectEvent={this._handleDismiss}
           >
-            <div
-              css={STYLES_SIDEBAR}
-              ref={(c) => {
-                this._sidebar = c;
-              }}
-            >
-              {sidebarElements}
+            <div css={STYLES_SIDEBAR}>
+              <div
+                css={STYLES_SIDEBAR_ELEMENTS}
+                ref={(c) => {
+                  this._sidebar = c;
+                }}
+              >
+                {sidebarElements}
+              </div>
             </div>
           </Boundary>
         ) : null}

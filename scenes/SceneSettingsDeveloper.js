@@ -140,13 +140,13 @@ export default class SceneSettingsDeveloper extends React.Component {
   };
 
   _handleDelete = async (id) => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, modalShow: false });
 
     const response = await Actions.deleteAPIKey({ id });
 
     Events.hasError(response);
 
-    this.setState({ loading: false, modalShow: false });
+    this.setState({ loading: false });
   };
 
   _handleChangeLanguage = (newLanguage) => {

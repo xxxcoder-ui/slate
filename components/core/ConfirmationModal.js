@@ -10,12 +10,12 @@ import { Boundary } from "~/components/system/components/fragments/Boundary.js";
 
 const STYLES_TRANSPARENT_BG = css `
   background-color: ${Constants.system.bgBlurGrayBlack};
-  width: 100%;
+  z-index: ${Constants.zindex.modal};
+  width: 100vw;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 999999;
 `;
 
 const STYLES_MAIN_MODAL = css `

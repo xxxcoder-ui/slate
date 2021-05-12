@@ -309,13 +309,12 @@ export default class SidebarSingleSlateSettings extends React.Component {
             </System.ButtonWarning>
           </div>
         </div>
-
         {this.state.modalShow && (
           <ConfirmationModal 
             type={"DELETE"}
             withValidation={false}
             callback={this._handleDelete} 
-            header={`Are you sure you want to delete the collection?`}
+            header={`Are you sure you want to delete the collection “${this.state.slatename}”?`}
             subHeader={`This collection will be deleted but all your files will remain in your file library. You can’t undo this action.`}
           />
         )}
