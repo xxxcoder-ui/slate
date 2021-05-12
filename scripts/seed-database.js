@@ -29,6 +29,7 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
   table.timestamp("lastActive").notNullable().defaultTo(db.raw("now()"));
   table.string("username").unique().notNullable();
+  table.string("twitterId").unique().nullable();
   table.string("password").nullable();
   table.string("salt").nullable();
   table.jsonb("data").nullable();

@@ -58,14 +58,9 @@ export default async (req, res) => {
     //   authSecretAccessToken,
     // });
 
-    if (Strings.isEmpty(twitterUser.email)) {
-      return res.status(201).send({ decorator: "SERVER_TWITTER_OAUTH_NO_EMAIL" });
-    }
-
-    const user = await Data.getUserByEmail({ email: twitterUser.email });
-
-    // NOTE(Amine): If the user signed up using Twitter
-    if (user.email === twitterUser.email && user.twitterId === twitterUser.id_str) {
+    const user = await Data.getUserByTwitterId({ twitterId: twitterUser.id_str });
+    // NOTE(Amine): If a user with TwitterId exists
+    if (user) {
       const authorization = Utilities.parseAuthHeader(req.headers.authorization);
       if (authorization && !Strings.isEmpty(authorization.value)) {
         const verfied = JWT.verify(authorization.value, Environment.JWT_SECRET);
@@ -82,17 +77,29 @@ export default async (req, res) => {
       return res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
     }
 
+    // NOTE(Amine): Twitter account doesn't have an email
+    if (Strings.isEmpty(twitterUser.email)) {
+      return res.status(201).send({ decorator: "SERVER_TWITTER_OAUTH_NO_EMAIL" });
+    }
+
     // NOTE(Amine): If there is an account with the user's twitter email
-    if (user.email === twitterUser.email) {
+    const userByEmail = await Data.getUserByEmail({ email: twitterUser.email });
+    if (userByEmail.email === twitterUser.email) {
       await Data.updateUserById({
-        id: user.id,
+        id: userByEmail.id,
         twitterId: twitterUser.id_str,
       });
-      const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
+      const token = JWT.sign(
+        { id: userByEmail.id, username: userByEmail.username },
+        Environment.JWT_SECRET
+      );
       return res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
     }
 
-    return res.status(200).json({ decorator: "SERVER_TWITTER_CONTINUE_SIGNUP" });
+    //NOTE(Amine): If we have twitter email but no user is associated with it
+    return res
+      .status(200)
+      .json({ decorator: "SERVER_TWITTER_CONTINUE_SIGNUP", email: twitterUser.email });
   } catch (err) {
     console.log(err);
     res.status(403).end();
