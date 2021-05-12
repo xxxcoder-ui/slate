@@ -478,18 +478,18 @@ export default class ApplicationPage extends React.Component {
     e.preventDefault();
   };
 
-  _handleCreateUser = async (state) => {
-    let response = await Actions.createUser(state);
+  // _handleCreateUser = async (state) => {
+  //   let response = await Actions.createUser(state);
 
-    if (Events.hasError(response)) {
-      return;
-    }
+  //   if (Events.hasError(response)) {
+  //     return;
+  //   }
 
-    return this._handleAuthenticate(state, true);
-  };
+  //   return this._handleAuthenticate(state, true);
+  // };
 
-  _handleAuthenticate = async (state, newAccount) => {
-    let response = await UserBehaviors.authenticate(state);
+  _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
+    let response = await authenticate(state);
     if (!response) {
       return;
     }
@@ -663,8 +663,7 @@ export default class ApplicationPage extends React.Component {
         >
           <Alert noWarning style={{ top: 0, zIndex: Constants.zindex.sidebar }} />
           <SceneSignIn
-            onCreateUser={this._handleCreateUser}
-            onAuthenticate={this._handleAuthenticate}
+            withAuthenticationBehavior={this._withAuthenticationBehavior}
             onAction={this._handleAction}
           />
         </WebsitePrototypeWrapper>

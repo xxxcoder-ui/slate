@@ -5,7 +5,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
 
-import { SignUpPopover, Verification } from "./";
+import { SignUpPopover, Verification } from "./components";
 
 const STYLES_SMALL = (theme) => css`
   font-size: ${theme.typescale.lvlN1};
@@ -26,7 +26,6 @@ export default function Signup({}) {
   const { getFieldProps, getFormProps } = useForm({
     initialValues: { username: "", email: "" },
     onSubmit: ({ username, email }) => {
-      console.log({ username, email });
       goToVerification();
     },
   });

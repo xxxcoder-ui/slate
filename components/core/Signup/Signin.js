@@ -4,7 +4,7 @@ import * as Validations from "~/common/validations";
 
 import { useForm } from "~/common/hooks";
 
-import { SignUpPopover } from "./";
+import { SignUpPopover } from "./components";
 
 const handleValidation = ({ username, password }) => {
   if (!Validations.username(username)) return "Invalid username";

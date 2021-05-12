@@ -2,8 +2,6 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 
-import { css } from "@emotion/react";
-
 import { SignUpPopover } from "./";
 
 export default function Verification({ onVerify }) {

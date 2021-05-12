@@ -5,7 +5,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
 
-import { SignUpPopover, Verification } from "./";
+import { SignUpPopover, Verification } from "./components";
 
 const useSignup = () => {
   const [scene, setScene] = React.useState("verification");

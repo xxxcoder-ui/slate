@@ -48,6 +48,26 @@ export const authenticate = async (state) => {
   return response;
 };
 
+export const authenticateViaTwitter = (response) => {
+  // NOTE(jim): Kills existing session cookie if there is one.
+  const jwt = cookies.get(Credentials.session.key);
+
+  if (jwt) {
+    cookies.remove(Credentials.session.key);
+  }
+
+  // NOTE(jim):
+  // + One week.
+  // + Only requests to the same site.
+  // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
+  cookies.set(Credentials.session.key, response.token, true, {
+    path: "/",
+    maxAge: 3600 * 24 * 7,
+    sameSite: "strict",
+  });
+  return response;
+};
+
 // NOTE(jim): Signs a user out and redirects to the sign in screen.
 export const signOut = async ({ viewer }) => {
   let wsclient = Websockets.getClient();
