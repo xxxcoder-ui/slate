@@ -27,7 +27,7 @@ const websocketSend = async (type, data) => {
   );
 
   // NOTE(jim): Only allow this to be passed around encrypted.
-  if (ws.readyState === WebSocket.OPEN) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(
       JSON.stringify({
         type,

@@ -836,7 +836,6 @@ class CarouselSidebar extends React.Component {
               }}
             />
           )}
-
         </div>
       );
     }

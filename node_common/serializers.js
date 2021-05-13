@@ -44,6 +44,7 @@ export const sanitizeFile = (entity) => {
     ownerId: entity.ownerId,
     isPublic: entity.isPublic,
     filename: entity.filename,
+    createdAt: entity.createdAt,
     data: {
       type: entity.data?.type,
       name: entity.data?.name,

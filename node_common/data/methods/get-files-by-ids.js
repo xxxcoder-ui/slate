@@ -14,7 +14,8 @@ export default async ({ ids, sanitize = false, publicOnly = false }) => {
           "files.cid",
           "files.isPublic",
           "files.filename",
-          "files.data"
+          "files.data",
+          "files.createdAt"
         )
           .from("files")
           .leftJoin("slate_files", "slate_files.fileId", "=", "files.id")

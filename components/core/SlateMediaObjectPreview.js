@@ -8,7 +8,6 @@ import { css } from "@emotion/react";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
-import { endsWithAny } from "~/common/utilities";
 
 import FontObjectPreview from "~/components/core/FontFrame/Views/FontObjectPreview";
 
@@ -201,7 +200,7 @@ export default class SlateMediaObjectPreview extends React.Component {
     if (!file.filename) {
       console.log(file);
     }
-    if (endsWithAny([".ttf", ".otf", ".woff", ".woff2"], file.filename)) {
+    if (Validations.isFontFile(file.filename)) {
       return (
         <article
           css={STYLES_ENTITY}

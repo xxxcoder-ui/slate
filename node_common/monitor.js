@@ -304,7 +304,7 @@ export const subscribeSlate = ({ user, targetSlate }) => {
     const userURL = `<${userProfileURL}|${user.username}>`;
 
     const targetSlatePageURL = `https://slate.host/$/${targetSlate.id}`;
-    const targetSlateURL = `<${targetSlatePageURL}|${targetSlate.slateId}>`;
+    const targetSlateURL = `<${targetSlatePageURL}|${targetSlate.id}>`;
 
     const message = `*${userURL}* subscribed to collection:${targetSlateURL}`;
     Social.sendSlackMessage(message);
