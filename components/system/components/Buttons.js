@@ -39,7 +39,7 @@ const STYLES_BUTTON_PRIMARY = css`
   }
 `;
 
-const STYLES_BUTTON_PRIMARY_DISABLED = css `
+const STYLES_BUTTON_PRIMARY_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
   background-color: ${Constants.system.bgBlue};
@@ -79,7 +79,7 @@ export const ButtonPrimary = (props) => {
   }
 
   if (props.disabled) {
-    return(
+    return (
       <button
         css={STYLES_BUTTON_PRIMARY_DISABLED}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
@@ -150,7 +150,7 @@ export const ButtonSecondary = (props) => {
         htmlFor={props.htmlFor}
       />
     );
-  } 
+  }
 
   return (
     <button
@@ -271,7 +271,6 @@ const STYLES_BUTTON_WARNING = css`
   cursor: pointer;
   color: ${Constants.system.white};
   background-color: ${Constants.system.red};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 
   :hover {
     background-color: #b51111;
@@ -331,7 +330,7 @@ export const ButtonWarning = (props) => {
         onClick={props.onClick}
         children={props.children}
       />
-  );
+    );
   }
 
   return (
