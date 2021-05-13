@@ -39,6 +39,13 @@ const STYLES_BUTTON_PRIMARY = css`
   }
 `;
 
+const STYLES_BUTTON_PRIMARY_DISABLED = css`
+  ${STYLES_BUTTON}
+  cursor: not-allowed;
+  background-color: ${Constants.system.bgBlue};
+  color: ${Constants.system.white};
+`;
+
 const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
@@ -71,6 +78,17 @@ export const ButtonPrimary = (props) => {
     );
   }
 
+  if (props.disabled) {
+    return (
+      <button
+        css={STYLES_BUTTON_PRIMARY_DISABLED}
+        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        onClick={props.onClick}
+        children={props.children}
+      />
+    );
+  }
+
   return (
     <button
       css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
@@ -88,12 +106,12 @@ export const ButtonPrimaryFull = (props) => {
 const STYLES_BUTTON_SECONDARY = css`
   ${STYLES_BUTTON}
   cursor: pointer;
-  color: ${Constants.system.brand};
-  background-color: ${Constants.system.white};
+  color: ${Constants.system.black};
+  background-color: ${Constants.system.gray20};
   box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 
   :hover {
-    background-color: #fcfcfc;
+    background-color: ${Constants.system.gray30};
   }
 
   :focus {
@@ -251,18 +269,25 @@ export const ButtonDisabledFull = (props) => {
 const STYLES_BUTTON_WARNING = css`
   ${STYLES_BUTTON}
   cursor: pointer;
-  color: ${Constants.system.red};
-  background-color: ${Constants.system.white};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  color: ${Constants.system.white};
+  background-color: ${Constants.system.red};
 
   :hover {
-    background-color: #fcfcfc;
+    background-color: #b51111;
   }
 
   :focus {
     outline: 0;
     border: 0;
   }
+`;
+
+const STYLES_BUTTON_WARNING_DISABLED = css`
+  ${STYLES_BUTTON}
+  cursor: not-allowed;
+  color: ${Constants.system.white};
+  background-color: ${Constants.system.bgRed};
+  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 `;
 
 const STYLES_BUTTON_WARNING_TRANSPARENT = css`
@@ -297,6 +322,17 @@ export const ButtonWarning = (props) => {
     );
   }
 
+  if (props.disabled) {
+    return (
+      <button
+        css={STYLES_BUTTON_WARNING_DISABLED}
+        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        onClick={props.onClick}
+        children={props.children}
+      />
+    );
+  }
+
   return (
     <button
       css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
@@ -305,4 +341,8 @@ export const ButtonWarning = (props) => {
       children={props.children}
     />
   );
+};
+
+export const ButtonWarningFull = (props) => {
+  return <ButtonWarning full {...props} />;
 };
