@@ -48,10 +48,14 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
   });
 
   const openPopup = (authToken) => {
+    const width = 500;
+    const height = 700;
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
     popupRef.current = window.open(
       `https://api.twitter.com/oauth/authenticate?oauth_token=${authToken}`,
       "popup",
-      "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=500,height:500"
+      ` width=${width},height=${height},left=${left},top=${top},toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no`
     );
   };
 
