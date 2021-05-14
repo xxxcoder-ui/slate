@@ -3,12 +3,10 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 
-import Storage from "node-storage";
 import JWT from "jsonwebtoken";
 
 import { createOAuthProvider } from "~/node_common/managers/twitter";
 
-const storage = new Storage("file.txt");
 const COOKIE_NAME = "oauth_token";
 
 export default async (req, res) => {
@@ -34,7 +32,7 @@ export default async (req, res) => {
   }
 
   try {
-    const authSecretToken = storage.get(authToken);
+    const authSecretToken = await Data.getTwitterToken({ token: authToken });
     const { getOAuthAccessToken, getProtectedResource } = createOAuthProvider();
 
     const { authAccessToken, authSecretAccessToken } = await getOAuthAccessToken({
