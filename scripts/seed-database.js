@@ -118,6 +118,10 @@ const createVerificationsTable = db.schema.createTable("verficiations", function
 const createTwitterTokensTable = db.schema.createTable("twitterTokens", function (table) {
   table.string("token").primary().unique().notNullable();
   table.string("tokenSecret").notNullable();
+  table.string("email").nullable();
+  table.string("id_str").nullable();
+  table.string("screen_name").nullable();
+  table.string("verified").nullable();
 });
 
 // --------------------------
