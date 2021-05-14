@@ -37,6 +37,7 @@ export default function ({ options = [], onChange }) {
     <div css={STYLES_WRAPPER}>
       {options.map((option) => (
         <button
+          key={option.label}
           onClick={() => handleChange(option)}
           css={[STYLES_BUTTON, option.value === currentOption.value && STYLES_BUTTON_ACTIVE]}
         >
