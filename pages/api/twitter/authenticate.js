@@ -32,7 +32,7 @@ export default async (req, res) => {
   }
 
   try {
-    const authSecretToken = await Data.getTwitterToken({ token: authToken });
+    const { tokenSecret: authSecretToken } = await Data.getTwitterToken({ token: authToken });
     const { getOAuthAccessToken, getProtectedResource } = createOAuthProvider();
 
     const { authAccessToken, authSecretAccessToken } = await getOAuthAccessToken({
@@ -59,33 +59,35 @@ export default async (req, res) => {
     const user = await Data.getUserByTwitterId({ twitterId: twitterUser.id_str });
     // NOTE(Amine): If a user with TwitterId exists
     if (user) {
-      const authorization = Utilities.parseAuthHeader(req.headers.authorization);
-      if (authorization && !Strings.isEmpty(authorization.value)) {
-        const verfied = JWT.verify(authorization.value, Environment.JWT_SECRET);
-
-        if (user.username === verfied.username) {
-          return res.status(200).send({
-            message: "You are already authenticated. Welcome back!",
-            viewer: user,
-          });
-        }
-      }
-
       const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
       return res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
     }
 
     // NOTE(Amine): Twitter account doesn't have an email
     if (Strings.isEmpty(twitterUser.email)) {
+      await Data.updateTwitterToken({
+        token: authToken,
+        screen_name: twitterUser.screen_name,
+        id: twitterUser.id_str,
+        verified: twitterUser.verified,
+      });
       return res.status(201).send({ decorator: "SERVER_TWITTER_OAUTH_NO_EMAIL" });
     }
 
     // NOTE(Amine): If there is an account with the user's twitter email
+    // but not associated with any twitter account
     const userByEmail = await Data.getUserByEmail({ email: twitterUser.email });
-    if (userByEmail.email === twitterUser.email) {
+    if (userByEmail && !userByEmail.twitterId) {
       await Data.updateUserById({
         id: userByEmail.id,
         twitterId: twitterUser.id_str,
+        data: {
+          ...userByEmail.data,
+          twitter: {
+            username: twitterUser.screen_name,
+            verified: twitterUser.verified,
+          },
+        },
       });
       const token = JWT.sign(
         { id: userByEmail.id, username: userByEmail.username },
@@ -95,6 +97,13 @@ export default async (req, res) => {
     }
 
     //NOTE(Amine): If we have twitter email but no user is associated with it
+    await Data.updateTwitterToken({
+      token: authToken,
+      screen_name: twitterUser.screen_name,
+      email: twitterUser.email,
+      id: twitterUser.id_str,
+      verified: twitterUser.verified,
+    });
     return res
       .status(200)
       .json({ decorator: "SERVER_TWITTER_CONTINUE_SIGNUP", email: twitterUser.email });

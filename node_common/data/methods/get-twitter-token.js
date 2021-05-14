@@ -11,7 +11,7 @@ export default async ({ token }) => {
       }
 
       if (query.token) {
-        return JSON.parse(JSON.stringify(query)).tokenSecret;
+        return JSON.parse(JSON.stringify(query));
       }
 
       return null;

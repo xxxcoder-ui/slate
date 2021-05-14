@@ -12,6 +12,7 @@ import getUserByTwitterId from "~/node_common/data/methods/get-user-by-twitter-i
 // TwitterTokens postgres queries
 import createTwitterToken from "~/node_common/data/methods/create-twitter-token";
 import getTwitterToken from "~/node_common/data/methods/get-twitter-token";
+import updateTwitterToken from "~/node_common/data/methods/update-twitter-token";
 
 //NOTE(martina):
 // File postgres queries
@@ -155,4 +156,5 @@ export {
   // NOTE(amine): Twitter
   createTwitterToken,
   getTwitterToken,
+  updateTwitterToken,
 };

@@ -29,8 +29,6 @@ export default async ({ id, data, lastActive, username, email, salt, password, t
     updateObject.twitterId = twitterId;
   }
 
-  console.log(updateObject);
-
   return await runQuery({
     label: "UPDATE_USER_BY_ID",
     queryFn: async (DB) => {
