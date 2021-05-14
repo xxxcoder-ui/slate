@@ -18,7 +18,7 @@ const useSignup = () => {
   return { ...handlers, scene };
 };
 
-export default function Signup({ email }) {
+export default function Signup({ initialEmail }) {
   const { goToAccountCreationScene, scene } = useSignup();
 
   const { getFieldProps, getFormProps } = useForm({

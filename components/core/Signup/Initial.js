@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
-import * as UserBehaviors from "~/common/user-behaviors";
 import * as Actions from "~/common/actions";
 
 import { css } from "@emotion/react";
@@ -67,84 +66,11 @@ const useUsernameField = ({ onSubmit }) => {
   return { getUserNameFieldProps };
 };
 
-const useTwitter = ({ onTwitterAuthenticate }) => {
-  const popupRef = React.useRef();
-  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
-
-  const openPopup = (authToken) => {
-    popupRef.current = window.open(
-      `https://api.twitter.com/oauth/authenticate?oauth_token=${authToken}`,
-      "popup",
-      "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=500,height:500"
-    );
-  };
-
-  const getAuthTokenAndVerifier = () =>
-    new Promise((resolve, reject) => {
-      const popup = popupRef.current;
-      const interval = setInterval(() => {
-        if (!popup || popup.closed || popup.closed === undefined) {
-          clearInterval(interval);
-          // TODO failure
-          reject("getAuthTokenAndVerifier Error 1");
-        }
-
-        const closeDialog = () => {
-          clearInterval(interval);
-          popup.close();
-        };
-        try {
-          if (
-            !popup.location.hostname.includes("api.twitter.com") &&
-            !popup.location.hostname == ""
-          ) {
-            if (popup.location.search) {
-              const query = new URLSearchParams(popup.location.search);
-
-              const authToken = query.get("oauth_token");
-              const authVerifier = query.get("oauth_verifier");
-              closeDialog();
-              resolve({ authToken, authVerifier });
-            } else {
-              closeDialog();
-              // TODO: failure
-              reject("getAuthTokenAndVerifier Error 2");
-            }
-          }
-        } catch (e) {}
-      }, 500);
-    });
-
-  const signin = async () => {
-    setIsLoggingIn(true);
-    try {
-      const { authToken } = await Actions.requestTwitterToken();
-      openPopup(authToken);
-      const { authToken: auth_token, authVerifier } = await getAuthTokenAndVerifier();
-      const response = await Actions.authenticateViaTwitter({
-        authToken: auth_token,
-        authVerifier,
-      });
-
-      if (response.token) await onTwitterAuthenticate(response);
-
-      setIsLoggingIn(false);
-    } catch (e) {
-      // TODO failure
-      console.log("error", e);
-      popupRef.current.close();
-      setIsLoggingIn(false);
-    }
-  };
-
-  return { isLoggingIn, signin };
-};
-
 export default function Initial({
+  isSigninViaTwitter,
   goToSigninScene,
+  onTwitterSignin,
   goToSignupScene,
-  goToTwitterSignupScene,
-  onTwitterAuthenticate,
 }) {
   const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
     initialValues: { email: "" },
@@ -163,8 +89,6 @@ export default function Initial({
 
   const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler();
 
-  const { signin, isLoggingIn } = useTwitter({ onTwitterAuthenticate });
-
   return (
     <SignUpPopover
       title={
@@ -182,8 +106,8 @@ export default function Initial({
           <System.ButtonPrimary
             full
             style={{ backgroundColor: "rgb(29,161,242)", marginTop: "20px" }}
-            onClick={signin}
-            loading={isLoggingIn}
+            onClick={onTwitterSignin}
+            loading={isSigninViaTwitter}
           >
             Continue with Twitter
           </System.ButtonPrimary>
@@ -219,8 +143,8 @@ export default function Initial({
           <System.ButtonPrimary
             full
             style={{ backgroundColor: "rgb(29,161,242)", marginTop: 20 }}
-            onClick={signin}
-            loading={isLoggingIn}
+            onClick={onTwitterSignin}
+            loading={isSigninViaTwitter}
           >
             Continue with Twitter
           </System.ButtonPrimary>

@@ -1,6 +1,6 @@
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ password, username, email, salt, data = {} }) => {
+export default async ({ password, username, email, salt, twitterId, data = {} }) => {
   return await runQuery({
     label: "CREATE_USER",
     queryFn: async (DB) => {
@@ -10,6 +10,7 @@ export default async ({ password, username, email, salt, data = {} }) => {
         data,
         username,
         email,
+        twitterId,
       })
         .into("users")
         .returning("*");
