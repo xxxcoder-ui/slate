@@ -78,6 +78,7 @@ import getEveryFile from "~/node_common/data/methods/get-every-file";
 // NOTE(toast):
 // Verification sessions for email verif
 import createVerification from "~/node_common/data/methods/create-verification";
+import updateVerification from "~/node_common/data/methods/update-verification";
 import deleteVerificationByEmail from "~/node_common/data/methods/delete-verification-by-email";
 import deleteVerificationBySid from "~/node_common/data/methods/delete-verification-by-sid";
 import getVerificationByEmail from "~/node_common/data/methods/get-verification-by-email";
@@ -153,6 +154,7 @@ export {
   deleteVerificationByEmail,
   deleteVerificationBySid,
   pruneVerifications,
+  updateVerification,
   // NOTE(amine): Twitter
   createTwitterToken,
   getTwitterToken,

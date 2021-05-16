@@ -15,24 +15,38 @@ export default async (req, res) => {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_NOT_ALLOWED", error: true });
   }
 
-  if (Strings.isEmpty(req.body.data.accepted)) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_USER_ACCEPT_TERMS", error: true });
-  }
-
-  const existing = await Data.getUserByUsername({
-    username: req.body.data.username.toLowerCase(),
-  });
-
-  if (existing) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
-  }
-
   if (!Validations.username(req.body.data.username)) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
   }
 
   if (!Validations.password(req.body.data.password)) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_PASSWORD", error: true });
+  }
+
+  if (Strings.isEmpty(req.body.data.token)) {
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_EMAIL_VERIFICATION_INVALID_TOKEN", error: true });
+  }
+
+  const verification = await Data.getVerificationBySid({
+    sid: req.body.data.token,
+  });
+
+  if (!verification.isVerified) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_UNVERIFIED", error: true });
+  }
+
+  const existing = await Data.getUserByUsername({
+    username: req.body.data.username.toLowerCase(),
+  });
+  if (existing) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
+  }
+
+  const existingViaEmail = await Data.getUserByEmail({ email: verification.email });
+  if (existingViaEmail) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN", error: true });
   }
 
   const rounds = Number(Environment.LOCAL_PASSWORD_ROUNDS);
@@ -47,8 +61,7 @@ export default async (req, res) => {
   // TODO(jim):
   // Don't do this once you refactor.
   const newUsername = req.body.data.username.toLowerCase();
-
-  newEmail = req.body.data.email.toLowerCase();
+  const newEmail = verification.email;
 
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
