@@ -107,6 +107,15 @@ const createGlobalTable = db.schema.createTable("global", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
+//NOTE(toast): making sid pkey and letting emails dupe allows for multiple keys per user,
+//stops people from getting dos'd on verification
+const createVerificationsTable = db.schema.createTable("verficiations", function (table) {
+  table.uuid("sid").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.string("email").nullable();
+  table.string("code", 8).unique().notNullable();
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
+});
+
 // --------------------------
 // RUN
 // --------------------------
@@ -122,6 +131,7 @@ Promise.all([
   createActivityTable,
   createStatsTable,
   createOrphansTable,
+  createVerificationsTable,
   createGlobalTable,
 ]);
 

@@ -69,6 +69,15 @@ import getEverySlate from "~/node_common/data/methods/get-every-slate";
 import getEveryUser from "~/node_common/data/methods/get-every-user";
 import getEveryFile from "~/node_common/data/methods/get-every-file";
 
+// NOTE(toast):
+// Verification sessions for email verif
+import createVerification from "~/node_common/data/methods/create-verification";
+import deleteVerificationByEmail from "~/node_common/data/methods/delete-verification-by-email";
+import deleteVerificationBySid from "~/node_common/data/methods/delete-verification-by-sid";
+import getVerificationByEmail from "~/node_common/data/methods/get-verification-by-email";
+import getVerificationBySid from "~/node_common/data/methods/get-verification-by-sid";
+import pruneVerifications from "~/node_common/data/methods/prune-verifications";
+
 // NOTE(jim):
 // one-offs
 import createOrphan from "~/node_common/data/methods/create-orphan";
@@ -131,4 +140,11 @@ export {
   getEverySlate,
   getEveryUser,
   getEveryFile,
+  //NOTE(toast): Verification operations
+  createVerification,
+  getVerificationByEmail,
+  getVerificationBySid,
+  deleteVerificationByEmail,
+  deleteVerificationBySid,
+  pruneVerifications,
 };

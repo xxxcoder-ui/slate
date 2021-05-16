@@ -48,8 +48,6 @@ export default async (req, res) => {
   // Don't do this once you refactor.
   const newUsername = req.body.data.username.toLowerCase();
 
-  //NOTE(toast): usually this is validated during the confirmation stage,
-  //but we have legacy users that we have to insert emails for
   newEmail = req.body.data.email.toLowerCase();
 
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
