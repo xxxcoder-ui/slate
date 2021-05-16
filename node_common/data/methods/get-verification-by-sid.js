@@ -5,7 +5,6 @@ export default async ({ sid }) => {
     label: "GET_VERIFICATION_BY_SID",
     queryFn: async (DB) => {
       const query = await DB.select("*").from("verifications").where({ sid }).first();
-
       if (!query || query.error) {
         return null;
       }
@@ -14,7 +13,7 @@ export default async ({ sid }) => {
         return JSON.parse(JSON.stringify(query));
       }
 
-      return null;
+      return query;
     },
     errorFn: async (e) => {
       return {

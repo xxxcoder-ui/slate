@@ -484,27 +484,17 @@ export const v2UpdateFile = async (data) => {
     body: JSON.stringify({ data }),
   });
 };
-export const createVerification = (data) => {
+
+export const createVerification = async (data) => {
   return await returnJSON(`api/verifications/create`, {
     ...API_OPTIONS,
-    body: JSON.stringify({data}),
+    body: JSON.stringify({ data }),
   });
 };
-export const deleteVerification = (data) => {
-  return await returnJSON(`api/verifications/delete`, {
+
+export const verifyEmail = async (data) => {
+  return await returnJSON(`api/verifications/verify`, {
     ...API_OPTIONS,
-    body: JSON.stringify({data}),
-  });
-};
-export const getVerification = (data) => {
-  return await returnJSON(`api/verifications/get`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({data}),
-  });
-};
-export const pruneVerification = (data) => {
-  return await returnJSON(`api/verifications/prune`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({data}),
+    body: JSON.stringify({ data }),
   });
 };
