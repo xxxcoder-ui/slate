@@ -114,6 +114,10 @@ const createVerificationsTable = db.schema.createTable("verficiations", function
   table.string("email").nullable();
   table.string("code", 8).unique().notNullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
+  
+const createTwitterTokensTable = db.schema.createTable("twitterTokens", function (table) {
+  table.string("token").primary().unique().notNullable();
+  table.string("tokenSecret").notNullable();
 });
 
 // --------------------------
@@ -133,6 +137,7 @@ Promise.all([
   createOrphansTable,
   createVerificationsTable,
   createGlobalTable,
+  createTwitterTokensTable,
 ]);
 
 console.log(`FINISHED: seed-database.js`);

@@ -8,6 +8,11 @@ import getUserById from "~/node_common/data/methods/get-user-by-id";
 import getUserByEmail from "~/node_common/data/methods/get-user-by-email";
 import getUserByTwitterId from "~/node_common/data/methods/get-user-by-twitter-id";
 
+// NOTE(amine)
+// TwitterTokens postgres queries
+import createTwitterToken from "~/node_common/data/methods/create-twitter-token";
+import getTwitterToken from "~/node_common/data/methods/get-twitter-token";
+
 //NOTE(martina):
 // File postgres queries
 import createFile from "~/node_common/data/methods/create-file";
@@ -147,4 +152,7 @@ export {
   deleteVerificationByEmail,
   deleteVerificationBySid,
   pruneVerifications,
+  // NOTE(amine): Twitter
+  createTwitterToken,
+  getTwitterToken,
 };
