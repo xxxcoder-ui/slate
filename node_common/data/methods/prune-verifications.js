@@ -7,7 +7,7 @@ export default async () => {
       const currentTime = new Date();
       const cutoffTime = new Date(currentTime.getTime() - 15 * 60000);
 
-      //NOTE(toast): removes verification sessions older than 15 min
+      //NOTE(toast): removes verification sessions created before 15 min ago
       const query = await DB.from("verifications").whereBetween("createdAt", "<", cutoffTime).del();
       return query === 1;
     },
