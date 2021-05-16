@@ -2,7 +2,7 @@ import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ token, email, id, screen_name, verified }) => {
   return await runQuery({
-    label: "UPDATE_SLATE_PRIVACY",
+    label: "UPDATE_TWITTER_TOKEN",
     queryFn: async (DB) => {
       const response = await DB.from("twitterTokens")
         .where("token", token)
@@ -20,7 +20,7 @@ export default async ({ token, email, id, screen_name, verified }) => {
     errorFn: async (e) => {
       return {
         error: true,
-        decorator: "UPDATE_SLATE_PRIVACY",
+        decorator: "UPDATE_TWITTER_TOKEN",
       };
     },
   });
