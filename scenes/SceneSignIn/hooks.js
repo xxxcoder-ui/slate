@@ -22,6 +22,7 @@ const reducer = (state, { event, context }) => {
   };
 };
 
+// NOTE(amine): handles switching between signup/signin states
 export const useAuthFlow = () => {
   const [state, send] = React.useReducer(reducer, { scene: "initial", context: {} });
   const handlers = React.useMemo(
@@ -35,6 +36,40 @@ export const useAuthFlow = () => {
     []
   );
   return { ...handlers, ...state };
+};
+
+export const useSignup = ({ onAuthenticate }) => {
+  const verificationToken = React.useRef();
+  const createVerification = async (data) => {
+    const response = await Actions.createVerification(data);
+    if (Events.hasError(response)) {
+      return;
+    }
+    verificationToken.current = response.token;
+    return response;
+  };
+
+  const verifyEmail = async ({ pin }) => {
+    const response = await Actions.verifyEmail({ pin, token: verificationToken.current });
+    if (Events.hasError(response)) {
+      return;
+    }
+    return response;
+  };
+
+  const createUser = async ({ username, password }) => {
+    const response = await Actions.createUser({
+      username,
+      password,
+      token: verificationToken.current,
+    });
+    if (Events.hasError(response)) {
+      return;
+    }
+    return await onAuthenticate({ username, password });
+  };
+
+  return { createVerification, verifyEmail, createUser };
 };
 
 export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
