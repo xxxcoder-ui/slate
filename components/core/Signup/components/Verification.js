@@ -1,12 +1,13 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
+import * as Validations from "~/common/validations";
 
 import { SignUpPopover } from "./";
 
 export default function Verification({ onVerify }) {
-  const [token, setToken] = React.useState("");
-  const handleOnChange = (code) => setToken(code);
+  const [pin, setPin] = React.useState("");
+  const handleOnChange = (code) => setPin(code);
   return (
     <SignUpPopover
       logoStyle={{ width: 56, height: 56 }}
@@ -30,14 +31,15 @@ export default function Verification({ onVerify }) {
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         verification
-        name="token"
+        name="pin"
         type="text"
-        value={token}
+        value={pin}
         onChange={handleOnChange}
-        onSubmit={(token) => {
-          //TODO
-          if (!token) return;
-          onVerify({ token });
+        onSubmit={(pin) => {
+          //TODO: Handle errors
+          console.log(pin, Validations.verificationPin(pin));
+          if (!Validations.verificationPin(pin)) return;
+          onVerify({ pin });
         }}
       />
     </SignUpPopover>

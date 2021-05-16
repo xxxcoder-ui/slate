@@ -4,7 +4,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { css } from "@emotion/react";
 import { Initial, Signin, Signup, TwitterSignup } from "~/components/core/Signup";
 
-import { useAuthFlow, useTwitter } from "./hooks";
+import { useAuthFlow, useTwitter, useSignup } from "./hooks";
 
 const background_image =
   "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
@@ -57,6 +57,8 @@ const SigninScene = ({ withAuthenticationBehavior, ...props }) => {
     goToTwitterSignupScene,
   });
 
+  const signupProvider = useSignup({ onAuthenticate: handleAuthenticate });
+
   if (scene === "signin")
     return (
       <Signin
@@ -65,12 +67,18 @@ const SigninScene = ({ withAuthenticationBehavior, ...props }) => {
         emailOrUsername={context.emailOrUsername}
       />
     );
-  if (scene === "signup") return <Signup initialEmail={context.email} />;
+
+  if (scene === "signup")
+    return (
+      <Signup verifyEmail={signupProvider.verifyEmail} createUser={signupProvider.createUser} />
+    );
+
   if (scene === "twitter_signup")
     return <TwitterSignup initialEmail={context.twitterEmail} onSignup={twitterProvider.signup} />;
 
   return (
     <Initial
+      createVerification={signupProvider.createVerification}
       isSigninViaTwitter={twitterProvider.isLoggingIn}
       onTwitterSignin={twitterProvider.signin}
       goToSigninScene={goToSigninScene}

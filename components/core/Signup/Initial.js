@@ -71,6 +71,7 @@ export default function Initial({
   goToSigninScene,
   onTwitterSignin,
   goToSignupScene,
+  createVerification,
 }) {
   const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
     initialValues: { email: "" },
@@ -80,9 +81,12 @@ export default function Initial({
         goToSigninScene({ emailOrUsername: email });
         return;
       }
+      const verificationResponse = await createVerification({ email });
+      if (!verificationResponse) return;
       goToSignupScene({ email });
     },
   });
+
   const { getUserNameFieldProps } = useUsernameField({
     onSubmit: ({ emailOrUsername }) => goToSigninScene({ emailOrUsername }),
   });
