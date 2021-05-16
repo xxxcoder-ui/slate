@@ -137,13 +137,23 @@ export class Input extends React.Component {
     document.execCommand("copy");
   };
 
+  _handleSubmit = (e) => {
+    if (this.props.verification) {
+      let code = this.props.value.replace(/[\D\s\._\-]+/g, "");
+      code = code.slice(0, 7);
+      this.props.onSubmit(code);
+      return;
+    }
+    this.props.onSubmit(e);
+  };
+
   _handleKeyUp = (e) => {
     if (this.props.onKeyUp) {
       this.props.onKeyUp(e);
     }
 
     if ((e.which === 13 || e.keyCode === 13) && this.props.onSubmit) {
-      this.props.onSubmit(e);
+      this._handleSubmit(e);
       return;
     }
   };
@@ -237,7 +247,7 @@ export class Input extends React.Component {
               {this.props.unit}
             </div>
             {this.props.unit ? null : this.props.icon ? (
-              <this.props.icon height="16px" css={STYLES_ICON} onClick={this.props.onSubmit} />
+              <this.props.icon height="16px" css={STYLES_ICON} onClick={this._handleSubmit} />
             ) : this.props.copyable ? (
               <SVG.CopyAndPaste height="16px" css={STYLES_ICON} onClick={this._handleCopy} />
             ) : null}
