@@ -7,9 +7,10 @@ import * as Credentials from "~/common/credentials";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { css } from "@emotion/react";
 import { Logo } from "~/common/logo";
+import { Link } from "~/components/core/Link";
 
 const STYLES_BACKGROUND = css`
-  z-index: ${Constants.zindex.tooltip};
+  z-index: ${Constants.zindex.cta};
   position: fixed;
   left: 0;
   right: 0;
@@ -17,7 +18,6 @@ const STYLES_BACKGROUND = css`
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: ${Constants.zindex.modal};
   background-color: rgba(0, 0, 0, 0.85);
   text-align: center;
   font-size: 1rem;
@@ -88,10 +88,38 @@ const STYLES_LINK_ITEM = css`
 `;
 
 export default class CTATransition extends React.Component {
+  state = {
+    visible: false,
+  };
+
+  componentDidMount = () => {
+    window.addEventListener("slate-global-open-cta", this._handleOpen);
+    window.addEventListener("slate-global-close-cta", this._handleClose);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("slate-global-open-cta", this._handleOpen);
+    window.removeEventListener("slate-global-close-cta", this._handleClose);
+  };
+
+  _handleOpen = (e) => {
+    this.setState({ visible: true });
+  };
+
+  _handleClose = (e) => {
+    this.setState({ visible: false });
+  };
+
+  _handleAction = (props) => {
+    this.setState({ visible: false }, () => {
+      this.props.onAction(props);
+    });
+  };
+
   render() {
     return (
-      <div>
-        {open && (
+      this.state.visible && (
+        <div>
           <div css={STYLES_BACKGROUND}>
             <div css={STYLES_TRANSITION}>
               <div css={STYLES_EXPLAINER}>Sign up or sign in to continue</div>
@@ -100,7 +128,7 @@ export default class CTATransition extends React.Component {
                 captureResize={true}
                 captureScroll={false}
                 enabled
-                onOutsideRectEvent={this.props.onClose}
+                onOutsideRectEvent={this._handleClose}
               >
                 <div css={STYLES_POPOVER}>
                   <Logo height="36px" style={{ display: "block", margin: "56px auto 0px auto" }} />
@@ -108,20 +136,27 @@ export default class CTATransition extends React.Component {
                   <System.P style={{ margin: "56px 0", textAlign: "center" }}>
                     An open-source file sharing network for research and collaboration
                   </System.P>
-                  <a href={this.props.redirectURL} style={{ textDecoration: `none` }}>
-                    <System.ButtonPrimary full style={{ marginBottom: 16 }}>
-                      Continue to sign up
-                    </System.ButtonPrimary>{" "}
-                  </a>
-                  <a css={STYLES_LINK_ITEM} href={this.props.redirectURL}>
-                    Already have an account?
-                  </a>
+                  <Link href={"/_/auth?tab=signup"} onAction={this._handleAction}>
+                    <div style={{ textDecoration: `none` }}>
+                      <System.ButtonPrimary full style={{ marginBottom: 16 }}>
+                        Continue to sign up
+                      </System.ButtonPrimary>
+                    </div>
+                  </Link>
+                  <Link href={"/_/auth?tab=signin"} onAction={this._handleAction}>
+                    <div css={STYLES_LINK_ITEM}>Already have an account?</div>
+                  </Link>
                 </div>
               </Boundary>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )
     );
   }
 }
+
+// `/_${Strings.createQueryParams({
+//   scene: "NAV_PROFILE",
+//   user: this.props.creator.username,
+// })}`

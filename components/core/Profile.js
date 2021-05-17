@@ -7,6 +7,8 @@ import * as Utilities from "~/common/utilities";
 import * as Events from "~/common/custom-events";
 import * as Window from "~/common/window";
 
+import { useState } from "react";
+import { Link } from "~/components/core/Link";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { css } from "@emotion/react";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
@@ -239,48 +241,236 @@ const STYLES_DIRECTORY_NAME = css`
 //   opacity: 0;
 // `;
 
-function UserEntry({
-  user,
-  button,
-  onClick,
-  message,
-  external,
-  url,
-  checkStatus,
-  showStatusIndicator,
-}) {
+function UserEntry({ user, button, onClick, message, checkStatus }) {
   const isOnline = checkStatus({ id: user.id });
 
   return (
     <div key={user.username} css={STYLES_USER_ENTRY}>
-      {external ? (
-        <a css={STYLES_USER} style={{ textDecoration: "none" }} href={url}>
-          <div
-            css={STYLES_DIRECTORY_PROFILE_IMAGE}
-            style={{ backgroundImage: `url(${user.data.photo})` }}
-          >
-            {showStatusIndicator && isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
-          </div>
-          <span css={STYLES_DIRECTORY_NAME}>
-            {user.data.name || `@${user.username}`}
-            {message ? <span css={STYLES_MESSAGE}>{message}</span> : null}
-          </span>
-        </a>
-      ) : (
-        <div css={STYLES_USER} onClick={onClick}>
-          <div
-            css={STYLES_DIRECTORY_PROFILE_IMAGE}
-            style={{ backgroundImage: `url(${user.data.photo})` }}
-          >
-            {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
-          </div>
-          <span css={STYLES_DIRECTORY_NAME}>
-            {user.data.name || `@${user.username}`}
-            {message ? <span css={STYLES_MESSAGE}>{message}</span> : null}
-          </span>
+      <div css={STYLES_USER} onClick={onClick}>
+        <div
+          css={STYLES_DIRECTORY_PROFILE_IMAGE}
+          style={{ backgroundImage: `url(${user.data.photo})` }}
+        >
+          {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
         </div>
+        <span css={STYLES_DIRECTORY_NAME}>
+          {user.data.name || `@${user.username}`}
+          {message ? <span css={STYLES_MESSAGE}>{message}</span> : null}
+        </span>
+      </div>
+      {button}
+    </div>
+  );
+}
+
+function FilesPage({
+  library,
+  isOwner,
+  isMobile,
+  viewer,
+  onAction,
+  resources,
+  page,
+  tab = "grid",
+}) {
+  return (
+    <div>
+      {isMobile ? null : (
+        <SecondaryTabGroup
+          tabs={[
+            {
+              title: <SVG.GridView height="24px" style={{ display: "block" }} />,
+              value: { tab: "grid", subtab: "files" },
+            },
+            {
+              title: <SVG.TableView height="24px" style={{ display: "block" }} />,
+              value: { tab: "table", subtab: "files" },
+            },
+          ]}
+          value={tab}
+          onAction={onAction}
+          style={{ margin: "0 0 24px 0" }}
+        />
       )}
-      {external ? null : button}
+      {library.length ? (
+        <DataView
+          key="scene-profile"
+          onAction={onAction}
+          viewer={viewer}
+          isOwner={isOwner}
+          items={library}
+          view={tab}
+          resources={resources}
+          page={page}
+        />
+      ) : (
+        <EmptyState>
+          <FileTypeGroup />
+          <div style={{ marginTop: 24 }}>This user does not have any public files yet</div>
+        </EmptyState>
+      )}
+    </div>
+  );
+}
+
+function CollectionsPage({
+  user,
+  viewer,
+  fetched,
+  subscriptions,
+  tab = "collections",
+  isOwner,
+  onAction,
+}) {
+  let slates = [];
+  if (tab === "collections") {
+    slates = user.slates
+      ? isOwner
+        ? user.slates.filter((slate) => slate.isPublic === true)
+        : user.slates
+      : slates;
+  } else {
+    slates = subscriptions;
+  }
+  slates = slates || [];
+  return (
+    <div>
+      <SecondaryTabGroup
+        tabs={[
+          { title: "Collections", value: { tab: "collections", subtab: "collections" } },
+          { title: "Subscribed", value: { tab: "subscribed", subtab: "collections" } },
+        ]}
+        value={tab}
+        onAction={onAction}
+        style={{ margin: "0 0 24px 0" }}
+      />
+      {slates?.length ? (
+        <SlatePreviewBlocks external={!viewer} slates={slates || []} onAction={onAction} />
+      ) : (
+        <EmptyState>
+          {tab === "collections" || fetched ? (
+            <React.Fragment>
+              <SVG.Slate height="24px" style={{ marginBottom: 24 }} />
+              {tab === "collections"
+                ? `This user does not have any public collections yet`
+                : `This user is not following any collections yet`}
+            </React.Fragment>
+          ) : (
+            <LoaderSpinner style={{ height: 24, width: 24 }} />
+          )}
+        </EmptyState>
+      )}
+    </div>
+  );
+}
+
+function PeersPage({
+  checkStatus,
+  viewer,
+  following,
+  followers,
+  fetched,
+  tab = "following",
+  onAction,
+  onLoginModal,
+}) {
+  const [selectedUser, setSelectedUser] = useState(false);
+  const selectUser = (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!id || selectedUser === id) {
+      setSelectedUser(null);
+    } else {
+      setSelectedUser(id);
+    }
+  };
+  const followUser = async (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    selectUser(e, null);
+    if (!viewer) {
+      onLoginModal();
+      return;
+    }
+    await Actions.createSubscription({
+      userId: id,
+    });
+  };
+
+  let peers = tab === "following" ? following : followers;
+  peers = peers.map((relation) => {
+    const following = !!(
+      viewer &&
+      viewer.following.some((subscription) => {
+        return subscription.id === relation.id;
+      }).length
+    );
+    let button =
+      !viewer || relation.id !== viewer?.id ? (
+        <div css={STYLES_ITEM_BOX} onClick={(e) => selectUser(e, relation.id)}>
+          <SVG.MoreHorizontal height="24px" />
+          {selectedUser === relation.id ? (
+            <Boundary
+              captureResize={true}
+              captureScroll={false}
+              enabled
+              onOutsideRectEvent={(e) => selectUser(e)}
+            >
+              <PopoverNavigation
+                style={{
+                  top: "40px",
+                  right: "0px",
+                }}
+                navigation={[
+                  [
+                    {
+                      text: following ? "Unfollow" : "Follow",
+                      onClick: (e) => followUser(e, relation.id),
+                    },
+                  ],
+                ]}
+              />
+            </Boundary>
+          ) : null}
+        </div>
+      ) : null;
+
+    return (
+      <Link href={`/$/user/${relation.id}`} onAction={onAction}>
+        <UserEntry key={relation.id} user={relation} button={button} checkStatus={checkStatus} />
+      </Link>
+    );
+  });
+
+  return (
+    <div>
+      <SecondaryTabGroup
+        tabs={[
+          { title: "Following", value: { tab: "following", subtab: "peers" } },
+          { title: "Followers", value: { tab: "followers", subtab: "peers" } },
+        ]}
+        value={tab}
+        onAction={onAction}
+        style={{ margin: "0 0 24px 0" }}
+      />
+      <div>
+        {peers?.length ? (
+          peers
+        ) : (
+          <EmptyState>
+            {fetched ? (
+              <React.Fragment>
+                <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+                {tab === "following"
+                  ? `This user is not following anyone yet`
+                  : `This user does not have any followers yet`}
+              </React.Fragment>
+            ) : (
+              <LoaderSpinner style={{ height: 24, width: 24 }} />
+            )}
+          </EmptyState>
+        )}
+      </div>
     </div>
   );
 }
@@ -289,12 +479,7 @@ export default class Profile extends React.Component {
   _ref = null;
 
   state = {
-    view: 0,
-    slateTab: 0,
-    peerTab: 0,
-    // copyValue: "",
     contextMenu: null,
-    slates: this.props.user.slates,
     subscriptions: [],
     followers: [],
     following: [],
@@ -305,21 +490,22 @@ export default class Profile extends React.Component {
             return entry.id === this.props.user.id;
           }),
     fetched: false,
-    tab: this.props.tab || 0,
   };
 
   componentDidMount = () => {
-    this._handleUpdatePage();
+    this.fetchSocial();
   };
 
   componentDidUpdate = (prevProps) => {
-    if (this.props.page?.tab !== prevProps.page?.tab) {
-      this.setState({ tab: this.props.page.tab });
+    if (!this.state.fetched && this.props.page.params !== prevProps.page.params) {
+      this.fetchSocial();
     }
   };
 
   fetchSocial = async () => {
     if (this.state.fetched) return;
+    if (this.props.page.params?.subtab !== "peers" && this.props.page.params?.tab !== "subscribed")
+      return;
     let following, followers, subscriptions;
     if (this.props.user.id === this.props.viewer?.id) {
       following = this.props.viewer?.following;
@@ -343,31 +529,23 @@ export default class Profile extends React.Component {
     });
   };
 
-  // _handleCopy = (e, value) => {
-  //   e.stopPropagation();
-  //   this.setState({ copyValue: value }, () => {
-  //     this._ref.select();
-  //     document.execCommand("copy");
-  //     this._handleHide();
-  //   });
-  // };
-
   _handleHide = (e) => {
     this.setState({ contextMenu: null });
   };
 
-  _handleClick = (e, value) => {
-    e.stopPropagation();
-    if (this.state.contextMenu === value) {
-      this._handleHide();
-    } else {
-      this.setState({ contextMenu: value });
-    }
-  };
+  // _handleClick = (e, value) => {
+  //   e.stopPropagation();
+  //   if (this.state.contextMenu === value) {
+  //     this._handleHide();
+  //   } else {
+  //     this.setState({ contextMenu: value });
+  //   }
+  // };
 
   _handleFollow = async (e, id) => {
     if (this.props.external) {
-      this._handleRedirectToInternal();
+      this._handleLoginModal();
+      return;
     }
     this._handleHide();
     e.stopPropagation();
@@ -376,33 +554,12 @@ export default class Profile extends React.Component {
     });
   };
 
-  _handleRedirectToInternal = () => {
-    this.setState({ visible: true });
-  };
-
-  _handleSwitchTab = (tab) => {
-    if (typeof window !== "undefined") {
-      this.setState({ tab });
-      window.history.pushState({ ...window.history.state, tab }, "", window.location.pathname);
+  _handleLoginModal = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
-    if (tab === 2 && !this.state.fetched) {
-      this.fetchSocial();
-    }
-  };
-
-  _handleUpdatePage = () => {
-    let tab;
-    if (typeof window !== "undefined") {
-      tab = window?.history?.state.tab;
-    }
-    if (typeof tab === "undefined") {
-      tab = 0;
-    }
-    this.setState({ tab }, () => {
-      if (this.state.tab === 2 || (this.state.tab === 1 && this.state.slateTab === 1)) {
-        this.fetchSocial();
-      }
-    });
+    Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
   };
 
   checkStatus = ({ id }) => {
@@ -411,81 +568,15 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    let tab = this.state.tab || 0;
-    let publicFiles = this.props.user.library;
+    let subtab = this.props.page.params?.subtab
+      ? this.props.page.params?.subtab
+      : this.props.page.params?.cid
+      ? "files"
+      : "collections";
+    let tab = this.props.page.params?.tab;
+    let library = this.props.user.library;
     let isOwner = this.props.isOwner;
     let user = this.props.user;
-    let username = this.state.slateTab === 0 ? user.username : null;
-    let slates = [];
-    if (tab === 1) {
-      if (this.state.slateTab === 0) {
-        slates = user.slates
-          ? isOwner
-            ? user.slates.filter((slate) => slate.isPublic === true)
-            : user.slates
-          : null;
-      } else {
-        slates = this.state.subscriptions;
-      }
-    }
-    let exploreSlates = this.props.exploreSlates;
-    let peers = this.state.peerTab === 0 ? this.state.following : this.state.followers;
-    if (tab === 2) {
-      peers = peers.map((relation) => {
-        let button = (
-          <div css={STYLES_ITEM_BOX} onClick={(e) => this._handleClick(e, relation.id)}>
-            <SVG.MoreHorizontal height="24px" />
-            {this.state.contextMenu === relation.id ? (
-              <Boundary
-                captureResize={true}
-                captureScroll={false}
-                enabled
-                onOutsideRectEvent={(e) => this._handleClick(e, relation.id)}
-              >
-                <PopoverNavigation
-                  style={{
-                    top: "40px",
-                    right: "0px",
-                  }}
-                  navigation={[
-                    {
-                      text: this.props.viewer?.following.some((subscription) => {
-                        return subscription.id === relation.id;
-                      }).length
-                        ? "Unfollow"
-                        : "Follow",
-                      onClick: this.props.viewer
-                        ? (e) => this._handleFollow(e, relation.id)
-                        : () => this.setState({ visible: true }),
-                    },
-                  ]}
-                />
-              </Boundary>
-            ) : null}
-          </div>
-        );
-
-        return (
-          <UserEntry
-            key={relation.id}
-            user={relation}
-            button={button}
-            checkStatus={this.checkStatus}
-            showStatusIndicator={this.props.isAuthenticated}
-            onClick={() => {
-              this.props.onAction({
-                type: "NAVIGATE",
-                value: this.props.sceneId,
-                scene: "PROFILE",
-                data: relation,
-              });
-            }}
-            external={this.props.external}
-            url={`/${relation.username}`}
-          />
-        );
-      });
-    }
 
     const showStatusIndicator = this.props.isAuthenticated;
 
@@ -493,14 +584,14 @@ export default class Profile extends React.Component {
       <div>
         <GlobalCarousel
           carouselType="PROFILE"
-          onUpdateViewer={this.props.onUpdateViewer}
           resources={this.props.resources}
           viewer={this.props.viewer}
-          objects={publicFiles}
+          objects={library}
           isOwner={this.props.isOwner}
           onAction={this.props.onAction}
           isMobile={this.props.isMobile}
           external={this.props.external}
+          params={this.props.page.params}
         />
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>
@@ -547,7 +638,7 @@ export default class Profile extends React.Component {
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
-                    {publicFiles.length}{" "}
+                    {library.length}{" "}
                     <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
                   </div>
                 </div>
@@ -561,162 +652,37 @@ export default class Profile extends React.Component {
             </div>
           </div>
         </div>
-        {this.state.visible && (
-          <div>
-            <CTATransition
-              onClose={() => this.setState({ visible: false })}
-              viewer={this.props.viewer}
-              open={this.state.visible}
-              redirectURL={`/_${Strings.createQueryParams({
-                scene: "NAV_PROFILE",
-                user: user.username,
-              })}`}
-            />
-          </div>
-        )}
         <div css={STYLES_PROFILE}>
           <TabGroup
-            tabs={["Files", "Collections", "Peers"]}
-            value={tab}
-            onChange={this._handleSwitchTab}
+            tabs={[
+              { title: "Files", value: { subtab: "files" } },
+              { title: "Collections", value: { subtab: "collections" } },
+              { title: "Peers", value: { subtab: "peers" } },
+            ]}
+            value={subtab}
+            onAction={this.props.onAction}
             style={{ marginTop: 0, marginBottom: 32 }}
             itemStyle={{ margin: "0px 16px" }}
           />
-          {tab === 0 ? (
-            <div>
-              {this.props.isMobile ? null : (
-                <div style={{ display: `flex` }}>
-                  <SecondaryTabGroup
-                    tabs={[
-                      <SVG.GridView height="24px" style={{ display: "block" }} />,
-                      <SVG.TableView height="24px" style={{ display: "block" }} />,
-                    ]}
-                    value={this.state.view}
-                    onChange={(value) => this.setState({ view: value })}
-                    style={{ margin: "0 0 24px 0", justifyContent: "flex-end" }}
-                  />
-                </div>
-              )}
-              {publicFiles.length ? (
-                <DataView
-                  key="scene-profile"
-                  onAction={this.props.onAction}
-                  viewer={this.props.viewer}
-                  isOwner={isOwner}
-                  items={publicFiles}
-                  onUpdateViewer={this.props.onUpdateViewer}
-                  view={this.state.view}
-                  resources={this.props.resources}
-                />
-              ) : (
-                <EmptyState>
-                  <FileTypeGroup />
-                  <div style={{ marginTop: 24 }}>This user does not have any public files yet</div>
-                </EmptyState>
-              )}
-            </div>
+          {subtab === "files" ? <FilesPage {...this.props} library={library} tab={tab} /> : null}
+          {subtab === "collections" ? (
+            <CollectionsPage
+              {...this.props}
+              tab={tab}
+              fetched={this.state.fetched}
+              subscriptions={this.state.subscriptions}
+            />
           ) : null}
-          {tab === 1 ? (
-            <div>
-              <SecondaryTabGroup
-                tabs={["Collections", "Following"]}
-                value={this.state.slateTab}
-                onChange={(value) => {
-                  this.setState({ slateTab: value }, () => {
-                    if (!this.state.fetched) {
-                      this.fetchSocial();
-                    }
-                  });
-                }}
-                style={{ margin: "0 0 24px 0" }}
-              />
-              {slates?.length ? (
-                <SlatePreviewBlocks
-                  isOwner={this.state.slateTab === 0 ? isOwner : false}
-                  external={this.props.external}
-                  slates={slates || []}
-                  username={username}
-                  onAction={this.props.onAction}
-                />
-              ) : (
-                <React.Fragment>
-                  {this.props.external && exploreSlates.length != 0 ? (
-                    <React.Fragment>
-                      <EmptyState style={{ border: `none`, height: `120px` }}>
-                        {this.state.fetched || this.state.slateTab == 0 ? (
-                          <React.Fragment>
-                            <SVG.Slate height="24px" style={{ marginBottom: 24 }} />
-                            {this.state.slateTab === 0
-                              ? `This user does not have any public collections yet`
-                              : `This user is not following any collections yet`}
-                          </React.Fragment>
-                        ) : (
-                          <LoaderSpinner style={{ height: 24, width: 24 }} />
-                        )}
-                      </EmptyState>
-                      <div css={STYLES_EXPLORE}>Explore Collections</div>
-                      <SlatePreviewBlocks
-                        isOwner={false}
-                        external={this.props.external}
-                        slates={exploreSlates}
-                        username={exploreSlates.username}
-                        onAction={this.props.onAction}
-                      />
-                    </React.Fragment>
-                  ) : (
-                    <EmptyState>
-                      {this.state.fetched || this.state.slateTab == 0 ? (
-                        <React.Fragment>
-                          <SVG.Slate height="24px" style={{ marginBottom: 24 }} />
-                          {this.state.slateTab === 0
-                            ? `This user does not have any public collections yet`
-                            : `This user is not following any collections yet`}
-                        </React.Fragment>
-                      ) : (
-                        <LoaderSpinner style={{ height: 24, width: 24 }} />
-                      )}
-                    </EmptyState>
-                  )}
-                </React.Fragment>
-              )}
-            </div>
-          ) : null}
-          {tab === 2 ? (
-            <div>
-              <SecondaryTabGroup
-                tabs={["Following", "Followers"]}
-                value={this.state.peerTab}
-                onChange={(value) => this.setState({ peerTab: value })}
-                style={{ margin: "0 0 24px 0" }}
-              />
-              <div>
-                {peers?.length ? (
-                  peers
-                ) : (
-                  <EmptyState>
-                    {this.state.fetched || this.state.slateTab == 0 ? (
-                      <React.Fragment>
-                        <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-                        {this.state.peerTab === 0
-                          ? `This user is not following anyone yet`
-                          : `This user does not have any followers yet`}
-                      </React.Fragment>
-                    ) : (
-                      <LoaderSpinner style={{ height: 24, width: 24 }} />
-                    )}
-                  </EmptyState>
-                )}
-              </div>
-              {/* <input
-                readOnly
-                ref={(c) => {
-                  this._ref = c;
-                }}
-                value={this.state.copyValue}
-                tabIndex="-1"
-                css={STYLES_COPY_INPUT}
-              /> */}
-            </div>
+          {subtab === "peers" ? (
+            <PeersPage
+              {...this.props}
+              tab={tab}
+              onLoginModal={this._handleLoginModal}
+              checkStatus={this.checkStatus}
+              following={this.state.following}
+              followers={this.state.followers}
+              fetched={this.state.fetched}
+            />
           ) : null}
         </div>
       </div>

@@ -61,6 +61,7 @@ export const system = {
   active: "#00BB00",
   blurBlack: "#262626",
   bgBlurGray: "#403F42",
+  grayLight2: "#AEAEB2",
 };
 
 export const shadow = {
@@ -78,6 +79,7 @@ export const zindex = {
   header: 4,
   modal: 6,
   tooltip: 7,
+  cta: 8,
 };
 
 export const font = {
@@ -131,3 +133,5 @@ export const filetypes = {
   videos: ["video/mpeg", "video/webm", "video/quicktime"],
   books: ["application/pdf", "application/epub+zip", "application/vnd.amazon.ebook"],
 };
+
+export const linkPreviewSizeLimit = 5000000; //NOTE(martina): 5mb limit for twitter preview images

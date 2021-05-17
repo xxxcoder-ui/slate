@@ -8,11 +8,11 @@ const withView = (Component) => (props) => {
 
   const [isIntersecting, setIntersecting] = React.useState(false);
 
-  const observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) setIntersecting(true);
-  });
-
   React.useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setIntersecting(true);
+    });
+
     observer.observe(ref.current);
     return () => {
       observer.disconnect();

@@ -9,6 +9,7 @@ import * as SVG from "~/common/svg";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
+import { Link } from "~/components/core/Link";
 
 const STYLES_TEXT = css`
   color: ${Constants.system.textGray};
@@ -91,10 +92,7 @@ export default class SidebarCreateSlate extends React.Component {
       () =>
         this.props.onAction({
           type: "NAVIGATE",
-          value: "NAV_SLATE",
-          data: {
-            id: response.slate.id,
-          },
+          href: `/$/slate/${response.slate.id}`,
         }),
       200
     );

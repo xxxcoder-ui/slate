@@ -9,6 +9,7 @@ import * as Validations from "~/common/validations";
 import MiniSearch from "minisearch";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 
+import { Link } from "~/components/core/Link";
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
@@ -437,6 +438,21 @@ const STYLES_DISMISS_BOX = css`
   outline: 0;
 `;
 
+const getHref = (result) => {
+  if (result.type === "SLATE") {
+    return `/$/slate/${result.data.slate.id}`;
+  } else if (result.type === "USER") {
+    return `/$/user/${result.data.user.id}`;
+  } else if (result.type === "FILE") {
+    return `/$/user/${result.data.user.id}?cid=${result.data.file.cid}`;
+  } else if (result.type === "DATA_FILE") {
+    return `/_/data?cid=${result.data.file.cid}`;
+  } else {
+    console.log("GET HREF FAILED B/C RESULT WAS:");
+    console.log(result);
+  }
+};
+
 export class SearchModal extends React.Component {
   _input;
   _optionRoot;
@@ -484,24 +500,27 @@ export class SearchModal extends React.Component {
     this.debounceInstance = Window.debounce(() => {
       this._handleSearch();
     }, 500);
-    let defaultResults = this.props.viewer.slates;
+    let defaultResults = this.props.viewer ? this.props.viewer.slates : [];
     defaultResults = defaultResults.map((slate) => {
       return {
         id: slate.id,
         type: "SLATE",
-        data: { slate: slate },
+        data: { slate },
         component: <SlateEntry slate={slate} user={this.props.viewer} />,
         preview: <SlatePreview slate={slate} user={this.props.viewer} />,
+        href: `/$/slate/${slate.id}`,
       };
     });
     this.setState({ defaultResults });
     let networkIds = [];
     let slateIds = [];
-    for (let sub of this.props.viewer.subscriptions) {
-      if (sub.target_user_id) {
-        networkIds.push(sub.target_user_id);
-      } else if (sub.target_slate_id) {
-        slateIds.push(sub.target_slate_id);
+    if (this.props.viewer?.subscriptions) {
+      for (let sub of this.props.viewer.subscriptions) {
+        if (sub.target_user_id) {
+          networkIds.push(sub.target_user_id);
+        } else if (sub.target_slate_id) {
+          slateIds.push(sub.target_slate_id);
+        }
       }
     }
     this.networkIds = networkIds;
@@ -509,6 +528,9 @@ export class SearchModal extends React.Component {
   };
 
   fillLocalDirectory = () => {
+    if (!this.props.viewer) {
+      return;
+    }
     this.localSearch = new MiniSearch({
       fields: ["name", "title"],
       storeFields: ["type", "data", "id"],
@@ -614,7 +636,9 @@ export class SearchModal extends React.Component {
       e.preventDefault();
     } else if (e.keyCode === 13) {
       if (results.length > this.state.selectedIndex && this.state.selectedIndex >= 0) {
-        this._handleSelect(results[this.state.selectedIndex]);
+        let href = results[this.state.selectedIndex].href;
+        console.log("key down navigate");
+        this.props.onAction({ type: "NAVIGATE", href });
       }
       e.preventDefault();
     }
@@ -629,7 +653,7 @@ export class SearchModal extends React.Component {
     let searchResults = [];
     let results = [];
     let ids = new Set();
-    if (this.state.typeFilter !== "USER") {
+    if (this.state.typeFilter !== "USER" && this.props.viewer) {
       let filter;
       if (this.state.typeFilter === "FILE") {
         filter = {
@@ -686,7 +710,7 @@ export class SearchModal extends React.Component {
                 file={item.data.file}
                 slate={item.data.slate}
                 user={this.props.viewer}
-                viewerId={this.props.viewer.id}
+                viewerId={this.props.viewer?.id}
               />
             ),
           });
@@ -715,6 +739,7 @@ export class SearchModal extends React.Component {
         results.push({
           id,
           type: res.type,
+          href: res.href,
           data: res,
           component: <UserEntry user={res.user} />,
           preview: <UserPreview user={res.user} />,
@@ -726,6 +751,7 @@ export class SearchModal extends React.Component {
         results.push({
           id,
           type: res.type,
+          href: res.href,
           data: res,
           component: <SlateEntry slate={res.slate} user={res.user} />,
           preview: <SlatePreview slate={res.slate} user={res.user} />,
@@ -737,6 +763,7 @@ export class SearchModal extends React.Component {
         results.push({
           id,
           type: res.type,
+          href: res.href,
           data: res,
           component: <FileEntry file={res.file} />,
           preview: (
@@ -744,12 +771,16 @@ export class SearchModal extends React.Component {
               file={res.file}
               slate={res.slate}
               user={res.user}
-              viewerId={this.props.viewer.id}
+              viewerId={this.props.viewer?.id}
             />
           ),
         });
       }
     }
+    results = results.map((res) => {
+      return { ...res, href: getHref(res) };
+    });
+    console.log(results);
     this.setState({ results, selectedIndex: 0 });
     if (this._optionRoot) {
       this._optionRoot.scrollTop = 0;
@@ -757,6 +788,9 @@ export class SearchModal extends React.Component {
   };
 
   processResults = (searchResults) => {
+    if (!this.state.viewer) {
+      return searchResults;
+    }
     let results = searchResults;
     if (this.state.scopeFilter === "MY") {
       results = results.filter((res) => {
@@ -809,65 +843,65 @@ export class SearchModal extends React.Component {
     return results;
   };
 
-  _handleSelect = async (res) => {
-    if (res.type === "SLATE") {
-      this.props.onAction({
-        type: "NAVIGATE",
-        value: "NAV_SLATE",
-        data: res.data.slate,
-      });
-    } else if (res.type === "USER") {
-      this.props.onAction({
-        type: "NAVIGATE",
-        value: "NAV_PROFILE",
-        data: res.data.user,
-      });
-    } else if (res.type === "DATA_FILE" || res.data.file.ownerId === this.props.viewer.id) {
-      await this.props.onAction({
-        type: "NAVIGATE",
-        value: "NAV_DATA",
-        fileId: res.data.file.id,
-      });
-    } else if (res.type === "FILE") {
-      await this.props.onAction({
-        type: "NAVIGATE",
-        value: "NAV_PROFILE",
-        data: res.data.user,
-        fileId: res.data.file.id,
-      });
-    }
-    this._handleHide();
-  };
+  // _handleSelect = async (res) => {
+  //   if (res.type === "SLATE") {
+  //     this.props.onAction({
+  //       type: "NAVIGATE",
+  //       value: "NAV_SLATE",
+  //       data: res.data.slate,
+  //     });
+  //   } else if (res.type === "USER") {
+  //     this.props.onAction({
+  //       type: "NAVIGATE",
+  //       value: "NAV_PROFILE",
+  //       data: res.data.user,
+  //     });
+  //   } else if (res.type === "DATA_FILE" || res.data.file.ownerId === this.props.viewer?.id) {
+  //     await this.props.onAction({
+  //       type: "NAVIGATE",
+  //       value: "NAV_DATA",
+  //       fileId: res.data.file.id,
+  //     });
+  //   } else if (res.type === "FILE") {
+  //     await this.props.onAction({
+  //       type: "NAVIGATE",
+  //       value: "NAV_PROFILE",
+  //       data: res.data.user,
+  //       fileId: res.data.file.id,
+  //     });
+  //   }
+  //   this._handleHide();
+  // };
 
   _handleRedirect = async (destination) => {
-    if (destination === "FMU") {
-      let isProd = window.location.hostname.includes("slate.host");
-      this._handleSelect({
-        type: "FILE",
-        data: {
-          file: { id: "rick-roll" },
-          slate: {
-            id: isProd
-              ? "01edcede-53c9-46b3-ac63-8f8479e10bcf"
-              : "60d199e7-6bf5-4994-94e8-b17547c64449",
-            data: {
-              objects: [
-                {
-                  id: "rick-roll",
-                  url:
-                    "https://slate.textile.io/ipfs/bafybeifcxjvbad4lgpnbwff2dafufmnlylylmku4qoqtlkwgidupwi6f3a",
-                  ownerId: "owner",
-                  name: "Never gonna give you up",
-                  title: "never-gonna-give-you-up.mp4",
-                  type: "video/mp4",
-                },
-              ],
-            },
-            ownerId: "owner",
-          },
-        },
-      });
-    }
+    // if (destination === "FMU") {
+    //   let isProd = window.location.hostname.includes("slate.host");
+    //   this._handleSelect({
+    //     type: "FILE",
+    //     data: {
+    //       file: { id: "rick-roll" },
+    //       slate: {
+    //         id: isProd
+    //           ? "01edcede-53c9-46b3-ac63-8f8479e10bcf"
+    //           : "60d199e7-6bf5-4994-94e8-b17547c64449",
+    //         data: {
+    //           objects: [
+    //             {
+    //               id: "rick-roll",
+    //               url:
+    //                 "https://slate.textile.io/ipfs/bafybeifcxjvbad4lgpnbwff2dafufmnlylylmku4qoqtlkwgidupwi6f3a",
+    //               ownerId: "owner",
+    //               name: "Never gonna give you up",
+    //               title: "never-gonna-give-you-up.mp4",
+    //               type: "video/mp4",
+    //             },
+    //           ],
+    //         },
+    //         ownerId: "owner",
+    //       },
+    //     },
+    //   });
+    // }
     this.props.onAction({
       type: "SIDEBAR",
       value: destination,
@@ -913,12 +947,101 @@ export class SearchModal extends React.Component {
     });
   };
 
+  _handleSelectIndex = (i) => {
+    if (this.state.selectedIndex === i || this.props.isMobile) {
+      console.log("handle hide");
+      this._handleHide();
+    } else {
+      console.log("set state");
+      // this.setState({ selectedIndex: i });
+    }
+  };
+
   render() {
     let selectedIndex = this.state.selectedIndex;
     let results =
       this.state.inputValue && this.state.inputValue.length
         ? this.state.results
         : this.state.defaultResults;
+
+    const filterDropdown = this.props.viewer ? (
+      <div style={{ flexShrink: 0, position: "relative" }}>
+        <div
+          css={STYLES_FILTER_BUTTON}
+          style={{
+            marginRight: 0,
+            marginLeft: 16,
+            color: this.state.scopeFilter ? Constants.system.brand : Constants.system.textGray,
+          }}
+          onClick={() => this.setState({ filterTooltip: !this.state.filterTooltip })}
+        >
+          <SVG.Filter height="16px" />
+        </div>
+        {this.state.filterTooltip ? (
+          <Boundary
+            captureResize={true}
+            captureScroll={false}
+            enabled
+            onOutsideRectEvent={() => this.setState({ filterTooltip: false })}
+          >
+            <PopoverNavigation
+              style={{
+                right: 0,
+                top: 44,
+                borderColor: Constants.system.bgGray,
+                color: Constants.system.textGray,
+                width: 124,
+              }}
+              navigation={[
+                [
+                  {
+                    text: (
+                      <span
+                        style={{
+                          color: this.state.scopeFilter ? "inherit" : Constants.system.brand,
+                        }}
+                      >
+                        All
+                      </span>
+                    ),
+                    onClick: () => this._handleFilterScope(null),
+                  },
+                  {
+                    text: (
+                      <span
+                        style={{
+                          color:
+                            this.state.scopeFilter === "MY" ? Constants.system.brand : "inherit",
+                        }}
+                      >
+                        My stuff
+                      </span>
+                    ),
+                    onClick: () => this._handleFilterScope("MY"),
+                  },
+                  {
+                    text: (
+                      <span
+                        style={{
+                          color:
+                            this.state.scopeFilter === "NETWORK"
+                              ? Constants.system.brand
+                              : "inherit",
+                        }}
+                      >
+                        My network
+                      </span>
+                    ),
+                    onClick: () => this._handleFilterScope("NETWORK"),
+                  },
+                ],
+              ]}
+            />
+          </Boundary>
+        ) : null}
+      </div>
+    ) : null;
+
     return (
       <div
         css={STYLES_BACKGROUND}
@@ -1047,87 +1170,7 @@ export class SearchModal extends React.Component {
                           </span>
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, position: "relative" }}>
-                        <div
-                          css={STYLES_FILTER_BUTTON}
-                          style={{
-                            marginRight: 0,
-                            marginLeft: 16,
-                            color: this.state.scopeFilter
-                              ? Constants.system.brand
-                              : Constants.system.textGray,
-                          }}
-                          onClick={() =>
-                            this.setState({ filterTooltip: !this.state.filterTooltip })
-                          }
-                        >
-                          <SVG.Filter height="16px" />
-                        </div>
-                        {this.state.filterTooltip ? (
-                          <Boundary
-                            captureResize={true}
-                            captureScroll={false}
-                            enabled
-                            onOutsideRectEvent={() => this.setState({ filterTooltip: false })}
-                          >
-                            <PopoverNavigation
-                              style={{
-                                right: 0,
-                                top: 44,
-                                borderColor: Constants.system.bgGray,
-                                color: Constants.system.textGray,
-                                width: 124,
-                              }}
-                              navigation={[
-                                {
-                                  text: (
-                                    <span
-                                      style={{
-                                        color: this.state.scopeFilter
-                                          ? "inherit"
-                                          : Constants.system.brand,
-                                      }}
-                                    >
-                                      All
-                                    </span>
-                                  ),
-                                  onClick: () => this._handleFilterScope(null),
-                                },
-                                {
-                                  text: (
-                                    <span
-                                      style={{
-                                        color:
-                                          this.state.scopeFilter === "MY"
-                                            ? Constants.system.brand
-                                            : "inherit",
-                                      }}
-                                    >
-                                      My stuff
-                                    </span>
-                                  ),
-                                  onClick: () => this._handleFilterScope("MY"),
-                                },
-                                {
-                                  text: (
-                                    <span
-                                      style={{
-                                        color:
-                                          this.state.scopeFilter === "NETWORK"
-                                            ? Constants.system.brand
-                                            : "inherit",
-                                      }}
-                                    >
-                                      My network
-                                    </span>
-                                  ),
-                                  onClick: () => this._handleFilterScope("NETWORK"),
-                                },
-                              ]}
-                            />
-                          </Boundary>
-                        ) : null}
-                      </div>
+                      {filterDropdown}
                     </div>
 
                     <div
@@ -1138,45 +1181,57 @@ export class SearchModal extends React.Component {
                       css={STYLES_DROPDOWN}
                     >
                       {results.map((each, i) => (
-                        <div
-                          key={each.id}
-                          css={STYLES_DROPDOWN_ITEM}
-                          style={{
-                            background:
-                              selectedIndex === i
-                                ? "rgba(196, 196, 196, 0.1)"
-                                : Constants.system.white,
-                            paddingRight: selectedIndex === i ? "88px" : "4px",
-                          }}
-                          onClick={() => {
-                            selectedIndex === i || this.props.isMobile
-                              ? this._handleSelect(each)
-                              : this.setState({ selectedIndex: i });
-                          }}
+                        <Link
+                          disabled={this.props.isMobile ? false : selectedIndex !== i}
+                          href={each.href}
+                          onAction={this.props.onAction}
+                          onClick={() => this._handleSelectIndex(i)}
                         >
-                          {each.component}
-                          {selectedIndex === i ? (
-                            <div css={STYLES_RETURN}>
-                              <SVG.ArrowDownLeft height="16px" style={{ marginRight: 8 }} /> Return
-                            </div>
-                          ) : null}
-                        </div>
+                          <div
+                            key={each.id}
+                            css={STYLES_DROPDOWN_ITEM}
+                            style={{
+                              background:
+                                selectedIndex === i
+                                  ? "rgba(196, 196, 196, 0.1)"
+                                  : Constants.system.white,
+                              paddingRight: selectedIndex === i ? "88px" : "4px",
+                            }}
+                            // onClick={() => {
+                            //   selectedIndex === i || this.props.isMobile
+                            //     ? this._handleSelect(each)
+                            //     : this.setState({ selectedIndex: i });
+                            // }}
+                            onClick={() => this.setState({ selectedIndex: i })}
+                          >
+                            {each.component}
+                            {selectedIndex === i ? (
+                              <div css={STYLES_RETURN}>
+                                <SVG.ArrowDownLeft height="16px" style={{ marginRight: 8 }} />{" "}
+                                Return
+                              </div>
+                            ) : null}
+                          </div>
+                        </Link>
                       ))}
                     </div>
-                    {results &&
-                    results.length &&
-                    selectedIndex < results.length &&
-                    selectedIndex >= 0 ? (
-                      <div
-                        css={STYLES_PREVIEW_PANEL}
-                        onClick={() => {
-                          if (selectedIndex >= 0 && selectedIndex < results.length) {
-                            this._handleSelect(results[selectedIndex]);
-                          }
-                        }}
+                    {results?.length && selectedIndex < results.length && selectedIndex >= 0 ? (
+                      <Link
+                        href={results[selectedIndex].href}
+                        onAction={this.props.onAction}
+                        onClick={this._handleHide}
                       >
-                        {results[selectedIndex].preview}
-                      </div>
+                        <div
+                          css={STYLES_PREVIEW_PANEL}
+                          // onClick={() => {
+                          //   if (selectedIndex >= 0 && selectedIndex < results.length) {
+                          //     this._handleSelect(results[selectedIndex]);
+                          //   }
+                          // }}
+                        >
+                          {results[selectedIndex].preview}
+                        </div>
+                      </Link>
                     ) : null}
                   </React.Fragment>
                 )}
@@ -1195,9 +1250,9 @@ export class SearchModal extends React.Component {
                 >
                   FAQ
                 </span>
-                <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
+                {/* <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
                   I'm Feeling Lucky
-                </span>
+                </span> */}
               </div>
             </div>
           </Boundary>

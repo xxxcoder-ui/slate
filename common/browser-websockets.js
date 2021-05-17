@@ -19,7 +19,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
   console.log(`${resource}: init`);
 
   if (client) {
-    console.log("ERROR: Already have client !?");
+    console.log("ERROR: Already has websocket client");
     return client;
   }
 
@@ -31,7 +31,6 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
     }
 
     const payload = { type: "SUBSCRIBE_VIEWER", data: { id: viewer.id } };
-    console.log(payload);
     client.send(JSON.stringify(payload));
   });
 
@@ -76,7 +75,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
     }
 
     if (type === "UPDATE") {
-      onUpdate(data);
+      onUpdate({ viewer: data });
     }
 
     if (type === "UPDATE_USERS_ONLINE" && typeof onNewActiveUser === "function") {
@@ -86,7 +85,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
 
   client.addEventListener("close", (e) => {
     if (e.reason === "SIGN_OUT") {
-      window.location.replace("/_");
+      window.location.replace("/_/auth");
     } else {
       setTimeout(() => {
         client = null;

@@ -10,6 +10,7 @@ import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { css } from "@emotion/react";
 import { TabGroup, PrimaryTabGroup, SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
+import { Link } from "~/components/core/Link";
 
 import EmptyState from "~/components/core/EmptyState";
 import ScenePage from "~/components/core/ScenePage";
@@ -64,15 +65,6 @@ const STYLES_SECONDARY = css`
   width: 100%;
 `;
 
-const STYLES_SECONDARY_HOVERABLE = css`
-  ${STYLES_SECONDARY}
-  padding: 8px 16px;
-
-  :hover {
-    color: ${Constants.system.brand} !important;
-  }
-`;
-
 const STYLES_GRADIENT = css`
   background: linear-gradient(
     180deg,
@@ -112,8 +104,8 @@ class ActivitySquare extends React.Component {
   render() {
     const item = this.props.item;
     const size = this.props.size;
-    const isImage =
-      Validations.isPreviewableImage(item.file.data.type) || !!item.file.data.coverImage;
+    // const isImage =
+    //   Validations.isPreviewableImage(item.file.data.type) || !!item.file.data.coverImage;
     return (
       <div
         css={STYLES_IMAGE_BOX}
@@ -128,41 +120,29 @@ class ActivitySquare extends React.Component {
           style={{ border: "none" }}
           imageStyle={{ border: "none" }}
         />
-        {this.state.showText || this.props.isMobile ? <div css={STYLES_GRADIENT} /> : null}
-        {this.state.showText || this.props.isMobile ? (
-          <div css={STYLES_TEXT_AREA} style={{ width: this.props.size }}>
-            {/* {isImage ? null : (
-              <div
-                css={STYLES_TITLE}
-                style={{
-                  color: Constants.system.textGray,
-                }}
-              >
-                {item.file.data.name || item.file.filename}
-              </div>
-            )} */}
-            <span
-              style={{
-                color: Constants.system.white,
-              }}
-              css={this.props.onClick ? STYLES_SECONDARY_HOVERABLE : STYLES_SECONDARY}
-              onClick={(e) => {
-                e.stopPropagation();
-                this.props.onClick();
-              }}
-            >
-              <SVG.ArrowDownLeft
-                height="10px"
-                style={{ transform: "scaleX(-1)", marginRight: 4 }}
-              />
-              {item.slate.data.name || item.slate.slatename}
-            </span>
-          </div>
-        ) : null}
       </div>
     );
   }
 }
+
+// {this.state.showText || this.props.isMobile ? <div css={STYLES_GRADIENT} /> : null}
+//         {this.state.showText || this.props.isMobile ? (
+//           <div css={STYLES_TEXT_AREA} style={{ width: this.props.size }}>
+//             <span
+//               style={{
+//                 color: Constants.system.white,
+//                 padding: "8px 16px",
+//               }}
+//               css={STYLES_SECONDARY}
+//             >
+//               <SVG.ArrowDownLeft
+//                 height="10px"
+//                 style={{ transform: "scaleX(-1)", marginRight: 4 }}
+//               />
+//               {item.slate.data.name || item.slate.slatename}
+//             </span>
+//           </div>
+//         ) : null}
 
 const ActivityRectangle = ({ item, width, height }) => {
   let file;
@@ -212,21 +192,21 @@ export default class SceneActivity extends React.Component {
   counter = 0;
   state = {
     imageSize: 200,
-    tab: 0,
-    loading: "loading",
+    loading: false,
+    carouselIndex: -1,
   };
 
   async componentDidMount() {
+    this.fetchActivityItems(true);
     this.calculateWidth();
     this.debounceInstance = Window.debounce(this.calculateWidth, 200);
     this.scrollDebounceInstance = Window.debounce(this._handleScroll, 200);
     window.addEventListener("resize", this.debounceInstance);
     window.addEventListener("scroll", this.scrollDebounceInstance);
-    this.fetchActivityItems(true);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.tab !== this.props.tab) {
+    if (prevProps.page.params?.tab !== this.props.page.params?.tab) {
       this.fetchActivityItems(true);
     }
   }
@@ -258,10 +238,23 @@ export default class SceneActivity extends React.Component {
   };
 
   fetchActivityItems = async (update = false) => {
-    const isExplore = this.props.tab === 1;
+    if (this.state.loading === "loading") return;
+    let tab = this.props.page.params?.tab;
+    if (!tab) {
+      if (this.props.viewer) {
+        tab = "activity";
+      } else {
+        tab = "explore";
+      }
+    }
+    const isExplore = tab === "explore";
     this.setState({ loading: "loading" });
-    let activity = isExplore ? this.props.viewer.explore || [] : this.props.viewer.activity || [];
-
+    let activity;
+    if (this.props.viewer) {
+      activity = isExplore ? this.props.viewer?.explore || [] : this.props.viewer?.activity || [];
+    } else {
+      activity = this.state.explore || [];
+    }
     let requestObject = {};
     if (activity.length) {
       if (update) {
@@ -271,6 +264,7 @@ export default class SceneActivity extends React.Component {
       }
     }
 
+    console.log("start fetching");
     let response;
     if (isExplore) {
       response = await Actions.getExplore(requestObject);
@@ -280,13 +274,13 @@ export default class SceneActivity extends React.Component {
 
       response = await Actions.getActivity(requestObject);
     }
-
+    console.log("finished fetching");
     if (Events.hasError(response)) {
-      this.setState({ loading: "failed" });
+      this.setState({ loading: false });
       return;
     }
 
-    let newItems = response.activity || response.explore;
+    let newItems = response.data;
 
     if (update) {
       activity.unshift(...newItems);
@@ -297,21 +291,26 @@ export default class SceneActivity extends React.Component {
       activity.push(...newItems);
     }
 
-    if (this.props.tab === 0) {
-      this.props.onUpdateViewer({ activity: activity });
+    if (this.props.viewer) {
+      if (!isExplore) {
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { activity: activity } });
+      } else {
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { explore: activity } });
+      }
+      this.setState({ loading: false });
     } else {
-      this.props.onUpdateViewer({ explore: activity });
+      this.setState({ explore: activity, loading: false });
     }
-    this.setState({ loading: false });
   };
 
   formatActivity = (userActivity) => {
     let activity = [];
     for (let item of userActivity) {
-      if (item.slate && !item.slate.isPublic) {
-        continue;
-      }
-      if (item.type === "CREATE_SLATE_OBJECT" && item.slate && item.file) {
+      // if (item.slate && !item.slate.isPublic) {
+      //   continue;
+      // }
+      if (item.type === "CREATE_SLATE_OBJECT") {
+        //&& item.slate && item.file
         activity.push(item);
       } else if (item.type === "CREATE_SLATE" && item.slate) {
         activity.push(item);
@@ -345,14 +344,6 @@ export default class SceneActivity extends React.Component {
     // return activity;
   };
 
-  _handleCreateSlate = () => {
-    this.props.onAction({
-      type: "NAVIGATE",
-      value: "NAV_SLATES",
-      data: null,
-    });
-  };
-
   calculateWidth = () => {
     let windowWidth = window.innerWidth;
     let imageSize;
@@ -370,83 +361,92 @@ export default class SceneActivity extends React.Component {
   };
 
   render() {
-    let activity =
-      this.props.tab === 0 ? this.props.viewer.activity || [] : this.props.viewer.explore || [];
+    let tab = this.props.page.params?.tab;
+    if (!tab) {
+      if (this.props.viewer) {
+        tab = "activity";
+      } else {
+        tab = "explore";
+      }
+    }
+    let activity;
+    console.log(this.props.viewer);
+    if (this.props.viewer) {
+      activity =
+        tab === "activity" ? this.props.viewer?.activity || [] : this.props.viewer?.explore || [];
+    } else {
+      activity = this.state.explore || [];
+    }
+    console.log(activity);
     let items = activity
       .filter((item) => item.type === "CREATE_SLATE_OBJECT")
       .map((item) => {
         return {
           ...item.file,
-          slate: item.slate,
-          owner: item.owner?.username,
+          slateId: item.slateId,
+          // slate: item.slate,
+          // owner: item.owner?.username,
         };
       });
 
     return (
       <ScenePage>
-        <ScenePageHeader
-          title={
-            this.props.isMobile ? (
-              <TabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={2}
-                onAction={this.props.onAction}
-                onChange={(value) => this.setState({ tab: value })}
-                style={{ marginTop: 0, marginBottom: 32 }}
-                itemStyle={{ margin: "0px 12px" }}
-              />
-            ) : (
-              <PrimaryTabGroup
-                tabs={[
-                  { title: "Files", value: "NAV_DATA" },
-                  { title: "Collections", value: "NAV_SLATES" },
-                  { title: "Activity", value: "NAV_ACTIVITY" },
-                ]}
-                value={2}
-                onAction={this.props.onAction}
-              />
-            )
-          }
-          actions={
-            <SecondaryTabGroup
-              tabs={[
-                { title: "My network", value: "NAV_ACTIVITY" },
-                { title: "Explore", value: "NAV_EXPLORE" },
-              ]}
-              value={this.props.tab}
-              onAction={this.props.onAction}
-              style={{ margin: 0 }}
-            />
-          }
-        />
+        {this.props.viewer && (
+          <SecondaryTabGroup
+            tabs={[
+              { title: "My network", value: { tab: "activity" } },
+              { title: "Explore", value: { tab: "explore" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+            style={{ marginTop: 0 }}
+          />
+        )}
         <GlobalCarousel
           carouselType="ACTIVITY"
           viewer={this.props.viewer}
           objects={items}
           onAction={this.props.onAction}
+          index={this.state.carouselIndex}
+          onChange={(index) => {
+            if (index >= items.length - 4) {
+              this.fetchActivityItems();
+            }
+            this.setState({ carouselIndex: index });
+          }}
           isMobile={this.props.isMobile}
+          // params={this.props.page.params}
           isOwner={false}
         />
         {activity.length ? (
           <div>
             <div css={STYLES_ACTIVITY_GRID}>
-              {activity.map((item, index) => {
+              {activity.map((item, i) => {
                 if (item.type === "CREATE_SLATE") {
                   return (
-                    <span
+                    <Link
+                      redirect
+                      key={i}
+                      disabled={this.props.isMobile ? false : true}
+                      // params={
+                      //   this.props.isMobile
+                      //     ? null
+                      //     : { ...this.props.page.params, cid: item.file.cid }
+                      // }
+                      href={`/$/slate/${item.slateId}`}
+                      onAction={this.props.onAction}
+                      onClick={() => this.setState({ carouselIndex: i })}
+                    >
+                      {/* <span
                       key={item.id}
                       onClick={() =>
                         this.props.onAction({
                           type: "NAVIGATE",
                           value: "NAV_SLATE",
-                          data: { decorator: "SLATE", ...item.slate },
+                          data: item.slate,
                         })
                       }
-                    >
+                    > */}
                       <ActivityRectangle
                         width={
                           this.props.isMobile ? this.state.imageSize : this.state.imageSize * 2 + 20
@@ -454,51 +454,40 @@ export default class SceneActivity extends React.Component {
                         height={this.state.imageSize}
                         item={item}
                       />
-                    </span>
+                      {/* </span> */}
+                    </Link>
                   );
                 } else if (item.type === "CREATE_SLATE_OBJECT") {
                   return (
-                    <span
-                      key={item.id}
-                      onClick={
-                        this.props.isMobile
-                          ? () => {
-                              this.props.onAction({
-                                type: "NAVIGATE",
-                                value: "NAV_SLATE",
-                                data: {
-                                  decorator: "SLATE",
-                                  ...item.slate,
-                                },
-                              });
-                            }
-                          : () =>
-                              Events.dispatchCustomEvent({
-                                name: "slate-global-open-carousel",
-                                detail: { index: this.getItemIndexById(items, item) },
-                              })
-                      }
+                    <Link
+                      redirect
+                      key={i}
+                      disabled={this.props.isMobile ? false : true}
+                      // params={
+                      //   this.props.isMobile
+                      //     ? null
+                      //     : { ...this.props.page.params, cid: item.file.cid }
+                      // }
+                      href={`/$/slate/${item.slateId}?cid=${item.file.cid}`}
+                      onAction={this.props.onAction}
+                      onClick={() => this.setState({ carouselIndex: i })}
+                      // onClick={
+                      //   this.props.isMobile
+                      //     ? () => {}
+                      //     : () =>
+                      //         Events.dispatchCustomEvent({
+                      //           name: "slate-global-open-carousel",
+                      //           detail: { index: this.getItemIndexById(items, item) },
+                      //         })
+                      // }
                     >
                       <ActivitySquare
                         size={this.state.imageSize}
                         item={item}
                         isMobile={this.props.isMobile}
-                        onClick={
-                          this.props.isMobile
-                            ? () => {}
-                            : () => {
-                                this.props.onAction({
-                                  type: "NAVIGATE",
-                                  value: "NAV_SLATE",
-                                  data: {
-                                    decorator: "SLATE",
-                                    ...item.slate,
-                                  },
-                                });
-                              }
-                        }
+                        onAction={this.props.onAction}
                       />
-                    </span>
+                    </Link>
                   );
                 } else {
                   return null;

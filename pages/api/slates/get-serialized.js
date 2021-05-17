@@ -4,29 +4,6 @@ import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
-  if (user.error) {
-    return res.status(500).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
   let slate;
   if (req.body.data.id) {
     slate = await Data.getSlateById({ id: req.body.data.id, includeFiles: true, sanitize: true });
@@ -46,11 +23,15 @@ export default async (req, res) => {
     });
   }
 
-  if (!slate.isPublic && slate.ownerId !== id) {
-    return res.status(403).send({
-      decorator: "SERVER_GET_SERIALIZED_SLATE_PRIVATE_ACCESS_DENIED",
-      error: true,
-    });
+  if (!slate.isPublic) {
+    const id = Utilities.getIdFromCookie(req);
+
+    if (slate.ownerId !== id) {
+      return res.status(403).send({
+        decorator: "SERVER_GET_SERIALIZED_SLATE_PRIVATE_ACCESS_DENIED",
+        error: true,
+      });
+    }
   }
 
   let owner = await Data.getUserById({ id: slate.ownerId, sanitize: true });
@@ -66,6 +47,6 @@ export default async (req, res) => {
 
   return res.status(200).send({
     decorator: "SERVER_GET_SERIALIZED_SLATE",
-    slate,
+    data: slate,
   });
 };

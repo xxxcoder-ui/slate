@@ -56,7 +56,6 @@ export default class SceneEditAccount extends React.Component {
     changingAvatar: false,
     savingNameBio: false,
     changingFilecoin: false,
-    tab: 0,
     modalShow: false,
   };
 
@@ -107,7 +106,7 @@ export default class SceneEditAccount extends React.Component {
     }
 
     let data = { ...this.props.viewer.data, body: this.state.body, name: this.state.name };
-    this.props.onUpdateViewer({ username: this.state.username, data });
+    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { username: this.state.username, data } });
     this.setState({ savingNameBio: true });
 
     let response = await Actions.updateViewer({
@@ -160,12 +159,12 @@ export default class SceneEditAccount extends React.Component {
     }
     this.setState({ deleting: true });
     this.setState({ modalShow: false });
-    
+
     await Window.delay(100);
 
     await UserBehaviors.deleteMe({ viewer: this.props.viewer });
+    window.location.replace("/_/auth");
     this.setState({ deleting: false });
-
   };
 
   _handleChange = (e) => {
@@ -173,16 +172,22 @@ export default class SceneEditAccount extends React.Component {
   };
 
   render() {
+    let tab = this.props.page.params?.tab || "profile";
     return (
       <ScenePage>
         <ScenePageHeader title="Settings" />
         <SecondaryTabGroup
-          tabs={["Profile", "Data Storage", "Security", "Account"]}
-          value={this.state.tab}
-          onChange={(value) => this.setState({ tab: value })}
+          tabs={[
+            { title: "Profile", value: { tab: "profile" } },
+            { title: "Data Storage", value: { tab: "storage" } },
+            { title: "Security", value: { tab: "security" } },
+            { title: "Account", value: { tab: "account" } },
+          ]}
+          value={tab}
+          onAction={this.props.onAction}
           style={{ marginBottom: 48 }}
         />
-        {this.state.tab === 0 ? (
+        {tab === "profile" ? (
           <div>
             <div css={STYLES_HEADER}>Your Avatar</div>
 
@@ -227,7 +232,7 @@ export default class SceneEditAccount extends React.Component {
             </div>
           </div>
         ) : null}
-        {this.state.tab === 1 ? (
+        {tab === "storage" ? (
           <div style={{ maxWidth: 800 }}>
             <div css={STYLES_HEADER}>
               Allow Slate to make Filecoin archive storage deals on your behalf
@@ -278,7 +283,7 @@ export default class SceneEditAccount extends React.Component {
             </div>
           </div>
         ) : null}
-        {this.state.tab === 2 ? (
+        {tab === "security" ? (
           <div>
             <div css={STYLES_HEADER}>Change password</div>
             <div>Passwords must be a minimum of eight characters.</div>
@@ -311,7 +316,7 @@ export default class SceneEditAccount extends React.Component {
             </div>
           </div>
         ) : null}
-        {this.state.tab === 3 ? (
+        {tab === "account" ? (
           <div>
             <div css={STYLES_HEADER}>Change username</div>
             <div style={{ maxWidth: 800 }}>
@@ -359,19 +364,18 @@ export default class SceneEditAccount extends React.Component {
           tabIndex="-1"
           css={STYLES_COPY_INPUT}
         />{" "}
-
         {this.state.modalShow && (
-        <ConfirmationModal 
-          type={"DELETE"}
-          withValidation={true}
-          matchValue={this.state.username}
-          callback={this._handleDelete} 
-          header={`Are you sure you want to delete your account @${this.state.username}?`}
-          subHeader={`You will lose all your files and collections. You can’t undo this action.`}
-          inputHeader={`Please type your username to confirm`}
-          inputPlaceholder={`username`}
-        />
-      )}
+          <ConfirmationModal
+            type={"DELETE"}
+            withValidation={true}
+            matchValue={this.state.username}
+            callback={this._handleDelete}
+            header={`Are you sure you want to delete your account @${this.state.username}?`}
+            subHeader={`You will lose all your files and collections. You can’t undo this action.`}
+            inputHeader={`Please type your username to confirm`}
+            inputPlaceholder={`username`}
+          />
+        )}
       </ScenePage>
     );
   }

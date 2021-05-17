@@ -169,23 +169,20 @@ export default class ApplicationLayout extends React.Component {
     return (
       <React.Fragment>
         <div css={STYLES_CONTENT}>
-          {/* <GlobalTooltip elementRef={this._body} allowedTypes={["body"]} /> */}
           <GlobalTooltip />
-
-          <div
-            css={STYLES_HEADER}
-            style={{ top: this.props.isMobile ? this.state.headerTop : null }}
-          >
-            {this.props.header}
-          </div>
-
+          {this.props.header && (
+            <div
+              css={STYLES_HEADER}
+              style={{ top: this.props.isMobile ? this.state.headerTop : null }}
+            >
+              {this.props.header}
+            </div>
+          )}
           <Alert
-            noWarning={this.props.viewer.data.status?.hidePrivacyAlert}
+            noWarning={this.props.viewer ? this.props.viewer.data.status?.hidePrivacyAlert : false}
             fileLoading={this.props.fileLoading}
             onAction={this.props.onAction}
-            filecoin={this.props.filecoin}
             id={this.props.isMobile ? "slate-mobile-alert" : null}
-            onUpdateViewer={this.props.onUpdateViewer}
             viewer={this.props.viewer}
             style={
               this.props.isMobile

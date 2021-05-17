@@ -566,7 +566,7 @@ const runScript = async () => {
   // await printSlatesTable();
 
   //NOTE(martina): add tables
-  // await addTables();
+  await addTables();
 
   //NOTE(martina): put data into new tables
   // await DB("slate_files").del();

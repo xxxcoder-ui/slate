@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 
@@ -7,27 +8,37 @@ const STYLES_POPOVER = css`
   z-index: ${Constants.zindex.tooltip};
   box-sizing: border-box;
   font-family: ${Constants.font.text};
-  width: 200px;
+  min-width: 200px;
   border-radius: 4px;
   user-select: none;
   position: absolute;
   background-color: ${Constants.system.white};
   color: ${Constants.system.pitchBlack};
   box-shadow: ${Constants.shadow.medium};
-  padding: 16px 24px;
+  padding: 16px;
+  border: 1px solid ${Constants.system.gray40};
+`;
+
+const STYLES_POPOVER_SECTION = css`
+  border-bottom: 1px solid ${Constants.system.gray40};
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  width: calc(100% - 32px);
+
+  :last-child {
+    border-bottom: none;
+    margin-bottom: -6px;
+    padding-bottom: 0px;
+  }
 `;
 
 const STYLES_POPOVER_ITEM = css`
-  font-family: ${Constants.font.medium};
   box-sizing: border-box;
-  top: 0;
-  left: 0;
-  padding: 8px 0px;
+  padding: 6px 0px;
   display: flex;
   align-items: center;
   transition: 200ms ease all;
   cursor: pointer;
-  font-size: ${Constants.typescale.lvlN1};
 
   :hover {
     color: ${Constants.system.brand};
@@ -37,15 +48,27 @@ const STYLES_POPOVER_ITEM = css`
 export class PopoverNavigation extends React.Component {
   render() {
     return (
-      <div css={STYLES_POPOVER} style={this.props.style}>
-        {this.props.navigation.map((each, i) => (
-          <div
-            key={i}
-            css={STYLES_POPOVER_ITEM}
-            style={this.props.itemStyle}
-            onClick={each.onClick}
-          >
-            {each.text}
+      <div
+        css={STYLES_POPOVER}
+        style={this.props.style}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+      >
+        {this.props.topSection}
+        {this.props.navigation.map((section, i) => (
+          <div css={STYLES_POPOVER_SECTION}>
+            {section.map((each, j) => (
+              <div
+                key={`${i}-${j}`}
+                css={STYLES_POPOVER_ITEM}
+                style={this.props.itemStyle}
+                onClick={each.onClick}
+              >
+                <div css={Styles.HEADING_05 || this.props.css}>{each.text}</div>
+              </div>
+            ))}
           </div>
         ))}
       </div>

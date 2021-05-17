@@ -8,6 +8,7 @@ import * as Strings from "~/common/strings";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
 
+import { Link } from "~/components/core/Link";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { SlateLayout } from "~/components/core/SlateLayout";
@@ -63,145 +64,154 @@ export default class SceneSlate extends React.Component {
     accessDenied: false,
   };
 
-  componentDidMount = async () => {
-    await this.fetchSlate();
-  };
+  // componentDidMount = async () => {
+  //   if (this.props.data) {
+  //     this.openCarouselToItem();
+  //   }
+  // };
 
-  componentDidUpdate = async (prevProps) => {
-    if (!this.props.data?.objects && !this.state.notFound) {
-      await this.fetchSlate();
-    } else if (this.props.page !== prevProps.page) {
-      this.openCarouselToItem();
-    }
-  };
+  // componentDidUpdate = async (prevProps) => {
+  //   // if (!this.props.data?.objects && !this.state.notFound) {
+  //   //   await this.fetchSlate();
+  //   // } else
+  //   if (this.props.data !== prevProps.data || this.props.page.params !== prevProps.page.params) {
+  //     this.openCarouselToItem();
+  //   }
+  // };
 
-  fetchSlate = async () => {
-    const { user: username, slate: slatename } = this.props.page;
+  // fetchSlate = async () => {
+  //   const { username, slatename, slateId } = this.props.page;
 
-    if (!this.props.data && (!username || !slatename)) {
-      this.setState({ notFound: true });
-      return;
-    }
+  //   if (!this.props.data && (!username || !slatename)) {
+  //     this.setState({ notFound: true });
+  //     return;
+  //   }
 
-    //NOTE(martina): look for the slate in the user's slates
-    let slate;
-    if (this.props.data?.id) {
-      for (let s of this.props.viewer.slates) {
-        if (this.props.data.id && this.props.data.id === s.id) {
-          slate = s;
-          break;
-        }
-      }
-    } else if (slatename && username === this.props.viewer.username) {
-      for (let s of this.props.viewer.slates) {
-        if (username && slatename === s.slatename) {
-          slate = s;
-          break;
-        }
-      }
-      if (!slate) {
-        Events.dispatchMessage({ message: "We're having trouble fetching that slate right now." });
-        this.setState({ notFound: true });
-        return;
-      }
-    }
+  //   let id = slateId || this.props.data?.id;
 
-    if (slate) {
-      window.history.replaceState(
-        { ...window.history.state, data: slate },
-        "Slate",
-        `/${this.props.viewer.username}/${slate.slatename}`
-      );
-    }
+  //   //NOTE(martina): look for the slate in the user's slates
+  //   let slate;
+  //   if (this.props.viewer) {
+  //     if (id) {
+  //       for (let s of this.props.viewer.slates) {
+  //         if (id && id === s.id) {
+  //           slate = s;
+  //           break;
+  //         }
+  //       }
+  //     } else if (slatename && username === this.props.viewer.username) {
+  //       for (let s of this.props.viewer.slates) {
+  //         if (username && slatename === s.slatename) {
+  //           slate = s;
+  //           break;
+  //         }
+  //       }
+  //       if (!slate) {
+  //         Events.dispatchMessage({
+  //           message: "We're having trouble fetching that slate right now.",
+  //         });
+  //         this.setState({ notFound: true });
+  //         return;
+  //       }
+  //     }
 
-    if (!slate) {
-      let query;
-      if (username && slatename) {
-        query = { username, slatename };
-      } else if (this.props.data && this.props.data.id) {
-        query = { id: this.props.data.id };
-      }
-      let response;
-      if (query) {
-        response = await Actions.getSerializedSlate(query);
-      }
-      if (response?.decorator == "SLATE_PRIVATE_ACCESS_DENIED") {
-        this.setState({ accessDenied: true, loading: false });
-        return;
-      }
-      if (Events.hasError(response)) {
-        this.setState({ notFound: true, loading: false });
-        return;
-      }
-      slate = response.slate;
-      window.history.replaceState(
-        { ...window.history.state, data: slate },
-        "Slate",
-        `/${slate.user.username}/${slate.slatename}`
-      );
-    }
-    this.props.onUpdateData(slate, () => {
-      this.setState({ loading: false });
-      this.openCarouselToItem();
-    });
-  };
+  //     if (slate) {
+  //       window.history.replaceState(
+  //         { ...window.history.state, data: slate },
+  //         "Slate",
+  //         `/${this.props.viewer.username}/${slate.slatename}`
+  //       );
+  //     }
+  //   }
 
-  openCarouselToItem = () => {
-    if (!this.props.data?.objects?.length) {
-      return;
-    }
-    let objects = this.props.data.objects;
+  //   if (!slate) {
+  //     let query;
+  //     if (username && slatename) {
+  //       query = { username, slatename };
+  //     } else if (id) {
+  //       query = { id };
+  //     }
+  //     let response;
+  //     if (query) {
+  //       response = await Actions.getSerializedSlate(query);
+  //     }
+  //     if (response?.decorator == "SLATE_PRIVATE_ACCESS_DENIED") {
+  //       this.setState({ accessDenied: true, loading: false });
+  //       return;
+  //     }
+  //     if (Events.hasError(response)) {
+  //       this.setState({ notFound: true, loading: false });
+  //       return;
+  //     }
+  //     slate = response.slate;
+  //     window.history.replaceState(
+  //       { ...window.history.state, data: slate },
+  //       "Slate",
+  //       `/${slate.user.username}/${slate.slatename}`
+  //     );
+  //   }
+  //   this.props.onUpdateData(slate, () => {
+  //     this.setState({ loading: false });
+  //     this.openCarouselToItem();
+  //   });
+  // };
 
-    const { cid, fileId, index } = this.props.page;
+  // openCarouselToItem = () => {
+  //   if (!this.props.data?.objects?.length || !this.props.page?.params) {
+  //     return;
+  //   }
+  //   let objects = this.props.data.objects;
 
-    if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
-      return;
-    }
+  //   const { cid, fileId, index } = this.props.page.params;
 
-    let foundIndex = -1;
-    if (index) {
-      foundIndex = index;
-    } else if (cid) {
-      foundIndex = objects.findIndex((object) => object.cid === cid);
-    } else if (fileId) {
-      foundIndex = objects.findIndex((object) => object.id === fileId);
-    }
+  //   if (Strings.isEmpty(cid) && Strings.isEmpty(fileId) && typeof index === "undefined") {
+  //     return;
+  //   }
 
-    if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
-      Events.dispatchCustomEvent({
-        name: "slate-global-open-carousel",
-        detail: { index: foundIndex },
-      });
-    }
-  };
+  //   let foundIndex = -1;
+  //   if (index) {
+  //     foundIndex = index;
+  //   } else if (cid) {
+  //     foundIndex = objects.findIndex((object) => object.cid === cid);
+  //   } else if (fileId) {
+  //     foundIndex = objects.findIndex((object) => object.id === fileId);
+  //   }
+
+  //   if (typeof foundIndex !== "undefined" && foundIndex !== -1) {
+  //     Events.dispatchCustomEvent({
+  //       name: "slate-global-open-carousel",
+  //       detail: { index: foundIndex },
+  //     });
+  //   }
+  // };
 
   render() {
-    if (this.state.notFound || this.state.accessDenied) {
+    if (!this.props.data) {
       return (
-        <ScenePage>
-          <EmptyState>
-            <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
-            <div>
-              {this.state.accessDenied
-                ? "You do not have access to that collection"
-                : "We were unable to locate that collection"}
-            </div>
-          </EmptyState>
-        </ScenePage>
-      );
-    }
-    if (this.state.loading) {
-      return (
+        // <ScenePage>
+        //   <EmptyState>
+        //     <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
+        //     <div>We were unable to locate that collection</div>
+        //   </EmptyState>
+        // </ScenePage>
         <ScenePage>
           <div css={STYLES_LOADER}>
             <LoaderSpinner />
           </div>
         </ScenePage>
       );
-    } else if (this.props.data?.id) {
-      return <SlatePage {...this.props} key={this.props.data.id} current={this.props.data} />;
+    } else {
+      return <SlatePage {...this.props} key={this.props.data.id} data={this.props.data} />;
     }
-    return null;
+    // if (this.state.loading) {
+    //   return (
+    //     <ScenePage>
+    //       <div css={STYLES_LOADER}>
+    //         <LoaderSpinner />
+    //       </div>
+    //     </ScenePage>
+    //   );
+    // } else
   }
 }
 
@@ -211,11 +221,13 @@ class SlatePage extends React.Component {
   _remoteLock = false;
 
   state = {
-    ...(this.props.current, this.props.viewer),
+    ...(this.props.data, this.props.viewer),
     editing: false,
-    isSubscribed: this.props.viewer.subscriptions.some((subscription) => {
-      return subscription.id === this.props.current.id;
-    }),
+    isSubscribed: this.props.viewer
+      ? this.props.viewer.subscriptions.some((subscription) => {
+          return subscription.id === this.props.data.id;
+        })
+      : false,
   };
 
   componentDidMount() {
@@ -229,13 +241,14 @@ class SlatePage extends React.Component {
       return;
     }
 
-    const index = this.props.current.objects.findIndex((object) => object.cid === cid);
-    if (index !== -1) {
-      Events.dispatchCustomEvent({
-        name: "slate-global-open-carousel",
-        detail: { index },
-      });
-    } else {
+    const index = this.props.data.objects.findIndex((object) => object.cid === cid);
+    // if (index !== -1) {
+    //   Events.dispatchCustomEvent({
+    //     name: "slate-global-open-carousel",
+    //     detail: { index },
+    //   });
+    // }
+    if (index === -1) {
       Events.dispatchCustomEvent({
         name: "create-alert",
         detail: {
@@ -249,26 +262,30 @@ class SlatePage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.viewer.subscriptions !== prevProps.viewer.subscriptions) {
+    if (this.props.viewer && this.props.viewer.subscriptions !== prevProps.viewer.subscriptions) {
       this.setState({
         isSubscribed: this.props.viewer.subscriptions.some((subscription) => {
-          return subscription.id === this.props.current.id;
+          return subscription.id === this.props.data.id;
         }),
       });
     }
   }
 
   _handleSubscribe = () => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
     this.setState({ isSubscribed: !this.state.isSubscribed }, () => {
       Actions.createSubscription({
-        slateId: this.props.current.id,
+        slateId: this.props.data.id,
       });
     });
   };
 
   _handleSaveLayout = async (layouts, autoSave) => {
     const response = await Actions.updateSlateLayout({
-      id: this.props.current.id,
+      id: this.props.data.id,
       layouts,
     });
 
@@ -278,34 +295,41 @@ class SlatePage extends React.Component {
   };
 
   _handleSavePreview = async (preview) => {
-    let updateObject = { id: this.props.current.id, data: { preview } };
+    if (!this.props.viewer) {
+      return;
+    }
+    let updateObject = { id: this.props.data.id, data: { preview } };
 
     let slates = this.props.viewer.slates;
-    let slateId = this.props.current.id;
+    let slateId = this.props.data.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
         slate.data.preview = preview;
         break;
       }
     }
-    this.props.onUpdateViewer({ slates });
+    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
 
     const response = await Actions.updateSlate(updateObject);
 
     Events.hasError(response);
   };
 
-  _handleSelect = (index) =>
-    Events.dispatchCustomEvent({
-      name: "slate-global-open-carousel",
-      detail: { index },
-    });
+  // _handleSelect = (index) =>
+  //   Events.dispatchCustomEvent({
+  //     name: "slate-global-open-carousel",
+  //     detail: { index },
+  //   });
 
   _handleAdd = async () => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
     await this.props.onAction({
       type: "SIDEBAR",
       value: "SIDEBAR_ADD_FILE_TO_BUCKET",
-      data: this.props.current,
+      data: this.props.data,
     });
   };
 
@@ -313,7 +337,7 @@ class SlatePage extends React.Component {
     return this.props.onAction({
       type: "SIDEBAR",
       value: "SIDEBAR_SINGLE_SLATE_SETTINGS",
-      data: this.props.current,
+      data: this.props.data,
     });
   };
 
@@ -330,8 +354,12 @@ class SlatePage extends React.Component {
   };
 
   _handleDownload = () => {
-    const slateName = this.props.current.data.name;
-    const slateFiles = this.props.current.objects;
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    const slateName = this.props.data.data.name;
+    const slateFiles = this.props.data.objects;
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,
       name: `${slateName}.zip`,
@@ -340,12 +368,12 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, data } = this.props.current;
+    const { user, data } = this.props.data;
     const { body = "", preview } = data;
-    let objects = this.props.current.objects;
-    let layouts = this.props.current.data.layouts;
-    const isPublic = this.props.current.isPublic;
-    const isOwner = this.props.current.ownerId === this.props.viewer.id;
+    let objects = this.props.data.objects;
+    let layouts = this.props.data.data.layouts;
+    const isPublic = this.props.data.isPublic;
+    const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;
     const tags = data.tags;
 
     let actions = isOwner ? (
@@ -381,19 +409,21 @@ class SlatePage extends React.Component {
           title={
             user && !isOwner ? (
               <span>
-                <span
-                  onClick={() =>
-                    this.props.onAction({
-                      type: "NAVIGATE",
-                      value: this.props.sceneId,
-                      scene: "PROFILE",
-                      data: user,
-                    })
-                  }
-                  css={STYLES_USERNAME}
-                >
-                  {user.username}
-                </span>{" "}
+                <Link href={`/$/user/${user.id}`} onAction={this.props.onAction}>
+                  <span
+                    // onClick={() =>
+                    //   this.props.onAction({
+                    //     type: "NAVIGATE",
+                    //     value: "NAV_PROFILE",
+                    //     shallow: true,
+                    //     data: user,
+                    //   })
+                    // }
+                    css={STYLES_USERNAME}
+                  >
+                    {user.username}
+                  </span>{" "}
+                </Link>
                 / {data.name}
                 {isOwner && !isPublic && (
                   <SVG.SecurityLock
@@ -424,12 +454,12 @@ class SlatePage extends React.Component {
           <>
             <GlobalCarousel
               carouselType="SLATE"
-              onUpdateViewer={this.props.onUpdateViewer}
               viewer={this.props.viewer}
               objects={objects}
-              current={this.props.current}
+              data={this.props.data}
               onAction={this.props.onAction}
               isMobile={this.props.isMobile}
+              params={this.props.page.params}
               isOwner={isOwner}
               external={this.props.external}
             />
@@ -443,11 +473,12 @@ class SlatePage extends React.Component {
             ) : (
               <div style={{ marginTop: isOwner ? 24 : 48 }}>
                 <SlateLayout
-                  key={this.props.current.id}
-                  current={this.props.current}
-                  onUpdateViewer={this.props.onUpdateViewer}
+                  page={this.props.page}
+                  external={this.props.external}
+                  key={this.props.data.id}
+                  data={this.props.data}
                   viewer={this.props.viewer}
-                  slateId={this.props.current.id}
+                  slateId={this.props.data.id}
                   layout={layouts && layouts.ver === "2.0" ? layouts.layout || [] : null}
                   onSaveLayout={this._handleSaveLayout}
                   isOwner={isOwner}

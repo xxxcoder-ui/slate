@@ -4,22 +4,22 @@ import * as Serializers from "~/node_common/serializers";
 import * as Support from "~/node_common/support";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
+  // const id = Utilities.getIdFromCookie(req);
+  // if (!id) {
+  //   return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
+  // }
 
-  const user = await Data.getUserById({
-    id,
-  });
+  // const user = await Data.getUserById({
+  //   id,
+  // });
 
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
+  // if (!user) {
+  //   return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
+  // }
 
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
+  // if (user.error) {
+  //   return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
+  // }
 
   if (!req.body.data) {
     return res.status(500).send({
@@ -40,10 +40,6 @@ export default async (req, res) => {
       decorator: "SERVER_SUPPORT_MUST_PROVIDE_MESSAGE",
       error: true,
     });
-  }
-
-  if (!req.body.data.username) {
-    req.body.data.username = user.username;
   }
 
   let status = await Support.sendSlackMessage(req.body.data);

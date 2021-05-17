@@ -6,6 +6,7 @@ import * as Strings from "~/common/strings";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { CodeText } from "~/components/system/components/fragments/CodeText";
 import { css } from "@emotion/react";
+import { Link } from "~/components/core/Link";
 
 import Avatar from "~/components/core/Avatar";
 
@@ -146,7 +147,7 @@ const STYLES_TABLE_CONTENT_LINK = css`
   }
 `;
 
-const Link = (props) => {
+const LinkItem = (props) => {
   return <span css={STYLES_TABLE_CONTENT_LINK} {...props} />;
 };
 
@@ -188,7 +189,11 @@ export const TableContent = ({ type, text, action, data = {}, onAction }) => {
     case "DEAL_CATEGORY":
       return <React.Fragment>{text == 1 ? "Storage" : "Retrieval"}</React.Fragment>;
     case "BUTTON":
-      return <Link onClick={() => onAction({ type: "SIDEBAR", value: action, data })}>{text}</Link>;
+      return (
+        <LinkItem onClick={() => onAction({ type: "SIDEBAR", value: action, data })}>
+          {text}
+        </LinkItem>
+      );
     case "TRANSACTION_DIRECTION":
       return COMPONENTS_TRANSACTION_DIRECTION[text];
     case "TRANSACTION_STATUS":
@@ -274,14 +279,16 @@ export const TableContent = ({ type, text, action, data = {}, onAction }) => {
         return text;
       }
 
-      return <Link onClick={() => window.open(text)}>{text}</Link>;
+      return <LinkItem onClick={() => window.open(text)}>{text}</LinkItem>;
     case "SLATE_LINK":
       if (!data) {
         return text;
       }
 
       return (
-        <Link onClick={() => onAction({ type: "NAVIGATE", value: data.id, data })}>{text}</Link>
+        <LinkItem onClick={() => onAction({ type: "NAVIGATE", value: data.id, data })}>
+          {text}
+        </LinkItem>
       );
     case "FILE_LINK":
       if (!data) {
@@ -289,7 +296,9 @@ export const TableContent = ({ type, text, action, data = {}, onAction }) => {
       }
 
       return (
-        <Link onClick={() => onAction({ type: "NAVIGATE", value: "NAV_FILE", data })}>{text}</Link>
+        <LinkItem onClick={() => onAction({ type: "NAVIGATE", value: "NAV_FILE", data })}>
+          {text}
+        </LinkItem>
       );
     default:
       return text;

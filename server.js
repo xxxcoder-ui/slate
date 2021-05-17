@@ -8,6 +8,7 @@ import * as NodeLogging from "~/node_common/node-logging";
 import * as Validations from "~/common/validations";
 import * as Window from "~/common/window";
 import * as Strings from "~/common/strings";
+import * as NavigationData from "~/common/navigation-data";
 
 import limit from "express-rate-limit";
 import express from "express";
@@ -153,8 +154,8 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
-    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let isMac = Window.isMac(req.headers["user-agent"]);
+    // let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    // let isMac = Window.isMac(req.headers["user-agent"]);
 
     const isBucketsAvailable = await Utilities.checkTextile();
 
@@ -166,31 +167,58 @@ app.prepare().then(async () => {
 
     let viewer = null;
     if (id) {
+      viewer = await Data.getUserById({
+        id,
+      });
+    }
+
+    if (viewer) {
+      return res.redirect("/_/data");
+    } else {
+      return res.redirect("/_/explore");
+    }
+
+    // let page = NavigationData.getById(null, viewer);
+
+    // return app.render(req, res, "/_", {
+    //   viewer,
+    //   isMobile,
+    //   isMac,
+    //   page,
+    //   data: null,
+    //   resources: EXTERNAL_RESOURCES,
+    // });
+  });
+
+  server.get("/_/:scene", async (req, res) => {
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
+
+    const id = Utilities.getIdFromCookie(req);
+
+    let viewer = null;
+    if (id) {
       viewer = await ViewerManager.getById({
         id,
       });
     }
 
+    let { page } = NavigationData.getByHref(req.path, viewer);
+    page = { ...page, params: req.query };
+    if (!page) {
+      return handler(req, res, req.url, {
+        isMobile,
+        resources: EXTERNAL_RESOURCES,
+      });
+    }
+
     return app.render(req, res, "/_", {
-      viewer,
       isMobile,
       isMac,
+      viewer,
+      page,
+      data: null,
       resources: EXTERNAL_RESOURCES,
-    });
-  });
-
-  server.get("/_/integration-page", async (req, res) => {
-    const id = Utilities.getIdFromCookie(req);
-
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
-
-    return app.render(req, res, "/_/integration-page", {
-      viewer: null,
     });
   });
 
@@ -200,117 +228,68 @@ app.prepare().then(async () => {
   server.get("/[$]/slate/:id", async (req, res) => {
     const slate = await Data.getSlateById({
       id: req.params.id,
-      includeFiles: true,
-      sanitize: true,
     });
 
-    if (!slate) {
-      return res.redirect("/404");
-    }
-
-    if (slate.error) {
-      return res.redirect("/404");
-    }
-
-    if (!slate.isPublic) {
-      return res.redirect("/403");
+    if (!slate || slate.error) {
+      return res.redirect("/_/404");
     }
 
     const creator = await Data.getUserById({
       id: slate.ownerId,
-      sanitize: true,
     });
 
-    if (!creator) {
-      return res.redirect("/404");
+    if (!creator || creator.error) {
+      return res.redirect("/_/404");
     }
 
-    if (creator.error) {
-      return res.redirect("/404");
-    }
+    let search = Strings.getQueryStringFromParams(req.query);
 
-    return res.redirect(`/${creator.username}/${slate.slatename}`);
+    return res.redirect(`/${creator.username}/${slate.slatename}${search}`);
   });
 
   server.get("/[$]/user/:id", async (req, res) => {
     const creator = await Data.getUserById({
       id: req.params.id,
-      includeFiles: true,
-      publicOnly: true,
-      sanitize: true,
     });
 
-    if (!creator) {
-      return res.redirect("/404");
+    if (!creator || creator.error) {
+      return res.redirect("/_/404");
     }
 
-    if (creator.error) {
-      return res.redirect("/404");
-    }
+    let search = Strings.getQueryStringFromParams(req.query);
 
-    return res.redirect(`/${creator.username}`);
+    return res.redirect(`/${creator.username}${search}`);
   });
 
   server.get("/[$]/:id", async (req, res) => {
-    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let isMac = Window.isMac(req.headers["user-agent"]);
-
     const slate = await Data.getSlateById({
       id: req.params.id,
-      includeFiles: true,
-      sanitize: true,
     });
 
-    if (!slate) {
-      return res.redirect("/404");
-    }
-
-    if (slate.error) {
-      return res.redirect("/404");
-    }
-
-    if (!slate.isPublic) {
-      return res.redirect("/403");
+    if (!slate || slate.error) {
+      return res.redirect("/_/404");
     }
 
     const creator = await Data.getUserById({
       id: slate.ownerId,
-      sanitize: true,
     });
 
-    if (!creator) {
-      return res.redirect("/404");
+    if (!creator || creator.error) {
+      return res.redirect("/_/404");
     }
 
-    if (creator.error) {
-      return res.redirect("/404");
-    }
+    let search = Strings.getQueryStringFromParams(req.query);
 
-    const id = Utilities.getIdFromCookie(req);
-
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
-
-    return app.render(req, res, "/_/slate", {
-      viewer: null,
-      creator,
-      slate,
-      isMobile,
-      isMac,
-      resources: EXTERNAL_RESOURCES,
-    });
+    return res.redirect(`/${creator.username}/${slate.slatename}${search}`);
   });
 
   server.get("/:username", async (req, res) => {
+    const username = req.params.username.toLowerCase();
     let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
-    if (!Validations.userRoute(req.params.username)) {
+    if (!Validations.userRoute(username)) {
       return handler(req, res, req.url, {
         isMobile,
         resources: EXTERNAL_RESOURCES,
@@ -318,125 +297,120 @@ app.prepare().then(async () => {
     }
 
     const id = Utilities.getIdFromCookie(req);
-    const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
-    if (shouldViewerRedirect) {
-      return res.redirect(
-        `/_${Strings.createQueryParams({
-          scene: "NAV_PROFILE",
-          user: req.params.username,
-        })}`
-      );
+
+    let viewer = null;
+    if (id) {
+      viewer = await ViewerManager.getById({
+        id,
+      });
     }
+    console.log(req.query);
+    let { page } = NavigationData.getByHref(req.path, viewer);
+    console.log(page);
+    page = { ...page, params: req.query };
+    console.log(page);
 
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
-
-    let creator = await Data.getUserByUsername({
-      username: req.params.username.toLowerCase(),
+    let user = await Data.getUserByUsername({
+      username,
       includeFiles: true,
       sanitize: true,
       publicOnly: true,
     });
 
-    if (!creator) {
-      return res.redirect("/404");
+    if (!user) {
+      return res.redirect("/_/404");
     }
 
-    if (creator.error) {
-      return res.redirect("/404");
+    if (user.error) {
+      return res.redirect("/_/404");
     }
 
     const slates = await Data.getSlatesByUserId({
-      ownerId: creator.id,
+      ownerId: user.id,
       sanitize: true,
       includeFiles: true,
       publicOnly: true,
     });
 
-    creator.slates = slates;
+    user.slates = slates;
 
-    return app.render(req, res, "/_/profile", {
-      viewer: null,
-      creator,
+    return app.render(req, res, "/_", {
+      viewer,
       isMobile,
       isMac,
+      data: user,
+      page,
       resources: EXTERNAL_RESOURCES,
-      exploreSlates,
     });
   });
 
-  server.get("/:username/cid::cid", async (req, res) => {
-    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let isMac = Window.isMac(req.headers["user-agent"]);
+  // server.get("/:username/cid::cid", async (req, res) => {
+  //   const username = req.params.username.toLowerCase();
+  //   const cid = req.params.cid.toLowerCase();
 
-    // TODO(jim): Temporary workaround
-    if (!Validations.userRoute(req.params.username)) {
-      return handler(req, res, req.url);
-    }
+  //   let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+  //   let isMac = Window.isMac(req.headers["user-agent"]);
 
-    const id = Utilities.getIdFromCookie(req);
-    const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
-    if (shouldViewerRedirect) {
-      return res.redirect(
-        `/_${Strings.createQueryParams({
-          scene: "NAV_PROFILE",
-          user: req.params.username,
-          cid: req.params.cid,
-        })}`
-      );
-    }
+  //   // TODO(jim): Temporary workaround
+  //   if (!Validations.userRoute(username)) {
+  //     return handler(req, res, req.url);
+  //   }
 
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
+  //   const id = Utilities.getIdFromCookie(req);
 
-    let creator = await Data.getUserByUsername({
-      username: req.params.username.toLowerCase(),
-      includeFiles: true,
-      sanitize: true,
-      publicOnly: true,
-    });
+  //   let user = await Data.getUserByUsername({
+  //     username,
+  //     includeFiles: true,
+  //     sanitize: true,
+  //     publicOnly: true,
+  //   });
 
-    if (!creator) {
-      return res.redirect("/404");
-    }
+  //   if (!user) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    if (creator.error) {
-      return res.redirect("/404");
-    }
+  //   if (user.error) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    const slates = await Data.getSlatesByUserId({
-      ownerId: creator.id,
-      sanitize: true,
-      includeFiles: true,
-      publicOnly: true,
-    });
+  //   const slates = await Data.getSlatesByUserId({
+  //     ownerId: user.id,
+  //     sanitize: true,
+  //     includeFiles: true,
+  //     publicOnly: true,
+  //   });
 
-    creator.slates = slates;
+  //   user.slates = slates;
 
-    return app.render(req, res, "/_/profile", {
-      viewer: null,
-      creator,
-      isMobile,
-      isMac,
-      resources: EXTERNAL_RESOURCES,
-      cid: req.params.cid,
-    });
-  });
+  //   let viewer = null;
+  //   if (id) {
+  //     viewer = await ViewerManager.getById({
+  //       id,
+  //     });
+  //   }
+
+  //   let page = NavigationData.getById("NAV_PROFILE", viewer);
+  //   page = { ...page, cid };
+
+  //   return app.render(req, res, "/_", {
+  //     viewer,
+  //     isMobile,
+  //     isMac,
+  //     page,
+  //     data: user,
+  //     resources: EXTERNAL_RESOURCES,
+  //   });
+  // });
 
   server.get("/:username/:slatename", async (req, res) => {
+    const username = req.params.username.toLowerCase();
+    const slatename = req.params.slatename.toLowerCase();
+
     let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     let isMac = Window.isMac(req.headers["user-agent"]);
 
     // TODO(jim): Temporary workaround
-    if (!Validations.userRoute(req.params.username)) {
+    if (!Validations.userRoute(username)) {
       return handler(req, res, req.url, {
         isMobile,
         resources: EXTERNAL_RESOURCES,
@@ -444,146 +418,117 @@ app.prepare().then(async () => {
     }
 
     const id = Utilities.getIdFromCookie(req);
-    const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
-    if (shouldViewerRedirect) {
-      return res.redirect(
-        `/_${Strings.createQueryParams({
-          scene: "NAV_SLATE",
-          user: req.params.username,
-          slate: req.params.slatename,
-        })}`
-      );
+
+    let viewer = null;
+    if (id) {
+      viewer = await ViewerManager.getById({
+        id,
+      });
     }
 
+    let { page } = NavigationData.getByHref(req.path, viewer);
+    page = { ...page, params: req.query };
+
     const slate = await Data.getSlateByName({
-      slatename: req.params.slatename,
-      username: req.params.username,
+      slatename,
+      username,
       includeFiles: true,
       sanitize: true,
     });
 
-    if (!slate) {
-      return res.redirect("/404");
+    if (!slate || slate.error || (!slate.isPublic && slate.ownerId !== id)) {
+      return res.redirect("/_/404");
     }
 
-    if (slate.error) {
-      return res.redirect("/404");
-    }
-
-    if (!slate.isPublic && slate.ownerId !== id) {
-      return res.redirect("/403");
-    }
-
-    const creator = await Data.getUserById({
+    const user = await Data.getUserById({
       id: slate.ownerId,
       sanitize: true,
     });
 
-    if (!creator) {
-      return res.redirect("/404");
+    if (!user) {
+      return res.redirect("/_/404");
     }
 
-    if (creator.error) {
-      return res.redirect("/404");
+    if (user.error) {
+      return res.redirect("/_/404");
     }
 
-    if (req.params.username !== creator.username) {
-      return res.redirect("/403");
-    }
+    slate.user = user;
 
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
-
-    return app.render(req, res, "/_/slate", {
-      viewer: null,
-      creator,
-      slate,
+    return app.render(req, res, "/_", {
+      viewer,
       isMobile,
       isMac,
+      data: slate,
+      page,
       resources: EXTERNAL_RESOURCES,
     });
   });
 
-  server.get("/:username/:slatename/cid::cid", async (req, res) => {
-    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
-    let isMac = Window.isMac(req.headers["user-agent"]);
+  // server.get("/:username/:slatename/cid::cid", async (req, res) => {
+  //   const username = req.params.username.toLowerCase();
+  //   const slatename = req.params.slatename.toLowerCase();
+  //   const cid = req.params.cid.toLowerCase();
 
-    // TODO(jim): Temporary workaround
-    if (!Validations.userRoute(req.params.username)) {
-      return handler(req, res, req.url);
-    }
+  //   let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+  //   let isMac = Window.isMac(req.headers["user-agent"]);
 
-    const id = Utilities.getIdFromCookie(req);
+  //   // TODO(jim): Temporary workaround
+  //   if (!Validations.userRoute(username)) {
+  //     return handler(req, res, req.url);
+  //   }
 
-    const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
-    if (shouldViewerRedirect) {
-      return res.redirect(
-        `/_${Strings.createQueryParams({
-          scene: "NAV_SLATE",
-          user: req.params.username,
-          slate: req.params.slatename,
-          cid: req.params.cid,
-        })}`
-      );
-    }
+  //   const id = Utilities.getIdFromCookie(req);
 
-    const slate = await Data.getSlateByName({
-      slatename: req.params.slatename,
-      username: req.params.username,
-      includeFiles: true,
-      sanitize: true,
-    });
+  //   const slate = await Data.getSlateByName({
+  //     slatename,
+  //     username,
+  //     includeFiles: true,
+  //     sanitize: true,
+  //   });
 
-    if (!slate) {
-      return res.redirect("/404");
-    }
+  //   if (!slate) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    if (slate.error) {
-      return res.redirect("/404");
-    }
+  //   if (slate.error || !slate.isPublic && slate.ownerId !== id) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    if (!slate.isPublic && slate.ownerId !== id) {
-      return res.redirect("/403");
-    }
+  //   const user = await Data.getUserById({
+  //     id: slate.ownerId,
+  //     sanitize: true,
+  //   });
 
-    const creator = await Data.getUserById({
-      id: slate.ownerId,
-      sanitize: true,
-    });
+  //   if (!user) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    if (!creator) {
-      return res.redirect("/404");
-    }
+  //   if (user.error) {
+  //     return res.redirect("/_/404");
+  //   }
 
-    if (creator.error) {
-      return res.redirect("/404");
-    }
+  //   let viewer = null;
+  //   if (id) {
+  //     viewer = await ViewerManager.getById({
+  //       id,
+  //     });
+  //   }
 
-    if (req.params.username !== creator.username) {
-      return res.redirect("/403");
-    }
+  //   slate.user = user;
 
-    // let viewer = null;
-    // if (id) {
-    //   viewer = await ViewerManager.getById({
-    //     id,
-    //   });
-    // }
+  //   let page = NavigationData.getById("NAV_SLATE", viewer);
+  //   page = { ...page, cid };
 
-    return app.render(req, res, "/_/slate", {
-      viewer: null,
-      creator,
-      slate,
-      isMobile,
-      isMac,
-      resources: EXTERNAL_RESOURCES,
-      cid: req.params.cid,
-    });
-  });
+  //   return app.render(req, res, "/_", {
+  //     viewer,
+  //     isMobile,
+  //     isMac,
+  //     data: slate,
+  //     page,
+  //     resources: EXTERNAL_RESOURCES,
+  //   });
+  // });
 
   server.all("*", async (r, s) => handler(r, s, r.url));
 

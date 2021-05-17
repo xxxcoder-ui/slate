@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as SVG from "~/common/svg";
+import * as Styles from "~/common/styles";
 import * as UserBehaviors from "~/common/user-behaviors";
 
 import { PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
+import { Link } from "~/components/core/Link";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 
@@ -47,19 +48,19 @@ const STYLES_PROFILE_MOBILE = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.white};
+  background-color: ${Constants.system.foreground};
   background-size: cover;
   background-position: 50% 50%;
   flex-shrink: 0;
-  height: 32px;
-  width: 32px;
+  height: 24px;
+  width: 24px;
   border-radius: 2px;
   cursor: pointer;
 
-  @media (max-width: ${Constants.sizes.mobile}px) {
+  ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {
     height: 24px;
     width: 24px;
-  }
+  } */}
 `;
 
 const STYLES_PROFILE_USERNAME = css`
@@ -100,35 +101,10 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-const STYLES_MENU = css`
-  position: absolute;
-  top: 48px;
-  right: 0px;
-
-  ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {
-    top: 48px;
-    left: 0px;
-  } */}
-`;
-
-const STYLES_MOBILE_HIDDEN = css`
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: none;
-  }
-`;
-
-const STYLES_MOBILE_ONLY = css`
-  @media (min-width: ${Constants.sizes.mobile}px) {
-    display: none;
-  }
-`;
-
-export default class ApplicationUserControls extends React.Component {
-  _handleAction = (e, data) => {
-    e.preventDefault();
-    e.stopPropagation();
+export class ApplicationUserControlsPopup extends React.Component {
+  _handleAction = (props) => {
     this.props.onTogglePopup();
-    return this.props.onAction(data);
+    this.props.onAction(props);
   };
 
   _handleSignOut = (e) => {
@@ -139,55 +115,166 @@ export default class ApplicationUserControls extends React.Component {
   };
 
   render() {
-    let tooltip = (
-      <Boundary
-        captureResize={true}
-        captureScroll={false}
-        enabled
-        onOutsideRectEvent={() => this.props.onTogglePopup()}
-        style={this.props.style}
-      >
-        <div>
-          <PopoverNavigation
-            style={{ top: 36, right: 0, padding: "12px 24px", width: 220 }}
-            itemStyle={{ padding: "12px 0", fontSize: 18, justifyContent: "flex-end" }}
-            navigation={[
-              {
-                text: "View profile",
-                onClick: (e) =>
-                  this._handleAction(e, {
-                    type: "NAVIGATE",
-                    value: "NAV_PROFILE",
-                    data: this.props.viewer,
-                  }),
-              },
-              {
-                text: "Account settings",
-                onClick: (e) =>
-                  this._handleAction(e, {
-                    type: "NAVIGATE",
-                    value: "NAV_SETTINGS",
-                  }),
-              },
-              {
-                text: "Contact us",
-                onClick: (e) =>
-                  this._handleAction(e, {
-                    type: "SIDEBAR",
-                    value: "SIDEBAR_HELP",
-                  }),
-              },
-              {
-                text: "Sign out",
-                onClick: (e) => {
-                  this._handleSignOut(e);
-                },
-              },
-            ]}
+    if (this.props.popup === "profile") {
+      const topSection = (
+        <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginBottom: 14 }}>
+          <span
+            css={STYLES_PROFILE_IMAGE}
+            style={{
+              cursor: "default",
+              width: 46,
+              height: 46,
+              marginRight: 16,
+              backgroundImage: `url('${this.props.viewer.data.photo}')`,
+            }}
           />
+          <div
+            css={Styles.VERTICAL_CONTAINER}
+            style={{
+              height: 46,
+              justifyContent: "space-between",
+            }}
+          >
+            <div css={Styles.HEADING_04}>
+              {this.props.viewer.data.name || `@${this.props.viewer.username}`}
+            </div>
+            <div css={Styles.HORIZONTAL_CONTAINER}>
+              <span css={Styles.SMALL_TEXT} style={{ marginRight: 8 }}>{`${
+                this.props.viewer.library.length
+              } File${this.props.viewer.library.length === 1 ? "" : "s"}`}</span>
+              <span css={Styles.SMALL_TEXT}>{`${this.props.viewer.slates.length} Collection${
+                this.props.viewer.slates.length === 1 ? "" : "s"
+              }`}</span>
+            </div>
+          </div>
         </div>
-      </Boundary>
-    );
+      );
+
+      const navigation = [
+        [
+          {
+            text: (
+              <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
+                Profile
+              </Link>
+            ),
+          },
+          {
+            text: (
+              <Link href={"/_/directory"} onAction={this._handleAction}>
+                Directory
+              </Link>
+            ),
+          },
+        ],
+        [
+          {
+            text: (
+              <Link href={"/_/filecoin"} onAction={this._handleAction}>
+                Filecoin
+              </Link>
+            ),
+          },
+          {
+            text: (
+              <Link href={"/_/storage-deal"} onAction={this._handleAction}>
+                Storage deal
+              </Link>
+            ),
+          },
+          {
+            text: (
+              <Link href={"/_/api"} onAction={this._handleAction}>
+                API
+              </Link>
+            ),
+          },
+        ],
+        [
+          {
+            text: (
+              <Link href={"/_/settings"} onAction={this._handleAction}>
+                Settings
+              </Link>
+            ),
+          },
+        ],
+        [
+          {
+            text: "Help",
+            onClick: (e) => {
+              e.stopPropagation();
+              this._handleAction({
+                type: "SIDEBAR",
+                value: "SIDEBAR_HELP",
+              });
+            },
+          },
+          {
+            text: "Sign out",
+            onClick: (e) => {
+              this._handleSignOut(e);
+            },
+          },
+        ],
+      ];
+
+      return (
+        <>
+          <div css={Styles.MOBILE_ONLY}>
+            <Boundary
+              captureResize={true}
+              captureScroll={false}
+              enabled={this.props.popup === "profile"}
+              onOutsideRectEvent={() => this.props.onTogglePopup()}
+            >
+              <PopoverNavigation
+                style={{
+                  width: "max-content",
+                  position: "relative",
+                  border: "none",
+                  boxShadow: "none",
+                  width: "100vw",
+                  background: "none",
+                  pointerEvents: "auto",
+                }}
+                css={Styles.HEADING_04}
+                itemStyle={{ fontSize: Constants.typescale.lvl0 }}
+                topSection={topSection}
+                navigation={navigation}
+              />
+            </Boundary>
+          </div>
+          <div css={Styles.MOBILE_HIDDEN}>
+            <Boundary
+              captureResize={true}
+              captureScroll={false}
+              enabled={this.props.popup === "profile"}
+              onOutsideRectEvent={() => this.props.onTogglePopup()}
+            >
+              <PopoverNavigation
+                style={{
+                  top: 36,
+                  right: 0,
+                  width: "max-content",
+                }}
+                css={Styles.HEADING_04}
+                itemStyle={{ fontSize: Constants.typescale.lvl0 }}
+                topSection={topSection}
+                navigation={navigation}
+              />
+            </Boundary>
+          </div>
+        </>
+      );
+    }
+    return null;
+  }
+}
+
+export class ApplicationUserControls extends React.Component {
+  render() {
+    let tooltip = <ApplicationUserControlsPopup {...this.props} />;
     return (
       <div css={STYLES_HEADER}>
         <div css={STYLES_PROFILE_MOBILE} style={{ position: "relative" }}>

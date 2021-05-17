@@ -6,6 +6,9 @@ export default class WebsitePrototypeWrapper extends React.Component {
   static defaultProps = {
     image:
       "https://slate.textile.io/ipfs/bafybeihtmqpx2lnlvaerfhq5imi2y3jzuf4jqspmmqbth3ebim4ebc2lqy",
+    title: "Slate",
+    url: "https://slate.host/_",
+    description: "An open-source file sharing network for research and collaboration",
   };
 
   render() {

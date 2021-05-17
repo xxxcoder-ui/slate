@@ -10,12 +10,12 @@ import * as Events from "~/common/custom-events";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 import CTATransition from "~/components/core/CTATransition";
 
+import { Link } from "~/components/core/Link";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { CheckBox } from "~/components/system/components/CheckBox";
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Toggle } from "~/components/system/components/Toggle";
-import { DynamicIcon } from "~/components/core/DynamicIcon";
 import { Tooltip } from "~/components/core/Tooltip";
 import {
   ButtonPrimary,
@@ -33,8 +33,6 @@ const SIZE = 200;
 const MARGIN = 20;
 const CONTAINER_SIZE = 5 * SIZE + 4 * MARGIN;
 const TAG_HEIGHT = 20;
-
-const SIZE_LIMIT = 1000000; //NOTE(martina): 1mb limit for twitter preview images
 
 const generateLayout = (items) => {
   if (!items) {
@@ -328,7 +326,6 @@ export class SlateLayout extends React.Component {
     copyValue: "",
     tooltip: null,
     keyboardTooltip: false,
-    signInModal: false,
     modalShowDeleteFiles: false,
   };
 
@@ -964,6 +961,10 @@ export class SlateLayout extends React.Component {
   };
 
   _handleDownload = (e, i) => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
     e.stopPropagation();
     e.preventDefault();
     if (i !== undefined) {
@@ -972,6 +973,10 @@ export class SlateLayout extends React.Component {
   };
 
   _handleSaveCopy = async (e, i) => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
     e.stopPropagation();
     e.preventDefault();
     let items = [];
@@ -987,6 +992,10 @@ export class SlateLayout extends React.Component {
   };
 
   _handleAddToSlate = (e, i) => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
     e.stopPropagation();
     e.preventDefault();
     let items = [];
@@ -1019,16 +1028,16 @@ export class SlateLayout extends React.Component {
     }
 
     let slates = this.props.viewer.slates;
-    let slateId = this.props.current.id;
+    let slateId = this.props.data.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
         slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id.replace("data-", "")));
-        this.props.onUpdateViewer({ slates });
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
         break;
       }
     }
 
-    UserBehaviors.removeFromSlate({ slate: this.props.current, ids });
+    UserBehaviors.removeFromSlate({ slate: this.props.data, ids });
   };
 
   _stopPropagation = (e) => e.stopPropagation();
@@ -1052,8 +1061,8 @@ export class SlateLayout extends React.Component {
   };
 
   _handleDeleteModal = () => {
-    this.setState({ modalShowDeleteFiles: true })
-  }
+    this.setState({ modalShowDeleteFiles: true });
+  };
 
   _handleDeleteFiles = async (res, i) => {
     if (!res) {
@@ -1069,13 +1078,13 @@ export class SlateLayout extends React.Component {
       }
     }
     let slates = this.props.viewer.slates;
-    let slateId = this.props.current.id;
+    let slateId = this.props.data.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
         slate.objects = slate.objects.filter(
           (obj) => !ids.includes(obj.id.replace("data-", "")) && !cids.includes(obj.cid)
         );
-        this.props.onUpdateViewer({ slates });
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
         break;
       }
     }
@@ -1092,7 +1101,7 @@ export class SlateLayout extends React.Component {
   _handleLoginModal = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({ signInModal: true });
+    Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
   };
 
   render() {
@@ -1137,15 +1146,20 @@ export class SlateLayout extends React.Component {
                       Reset layout
                     </ButtonDisabled>
                   ) : (
-                    <ButtonSecondary onClick={() => { this.setState({ modalShowResetLayout: true }) }} style={{ marginRight: 16 }}>
+                    <ButtonSecondary
+                      onClick={() => {
+                        this.setState({ modalShowResetLayout: true });
+                      }}
+                      style={{ marginRight: 16 }}
+                    >
                       Reset layout
                     </ButtonSecondary>
                   )}
                   {this.state.modalShowResetLayout && (
-                    <ConfirmationModal 
+                    <ConfirmationModal
                       type={"CONFIRM"}
                       withValidation={false}
-                      callback={this._handleResetLayout} 
+                      callback={this._handleResetLayout}
                       header={`Are you sure you want to reset your layout to the default column layout?`}
                       subHeader={`You can’t undo this action.`}
                     />
@@ -1282,50 +1296,56 @@ export class SlateLayout extends React.Component {
             >
               {this.state.show ? (
                 this.state.layout.map((pos, i) => (
-                  <Selectable
-                    css={this.state.editing ? STYLES_ITEM_EDITING : STYLES_ITEM}
+                  <Link
                     key={i}
-                    name={i}
-                    draggable={!(numChecked || this.state.editing)}
-                    onDragStart={(e) => {
-                      this._disableDragAndDropUploadEvent();
-                      this._handleDragToDesktop(e, this.state.items[i]);
-                    }}
-                    onDragEnd={this._enableDragAndDropUploadEvent}
-                    selectableKey={i}
-                    onMouseEnter={() => this.setState({ hover: i })}
-                    onMouseLeave={() => this.setState({ hover: null })}
-                    onMouseDown={this.state.editing ? (e) => this._handleMouseDown(e, i) : () => {}}
-                    onClick={this.state.editing ? () => {} : () => this.props.onSelect(i)}
-                    style={{
-                      top: pos.y * unit,
-                      left: pos.x * unit,
-                      width: pos.w * unit,
-                      height: this.state.fileNames ? (pos.h + TAG_HEIGHT) * unit : pos.h * unit,
-                      zIndex: pos.z,
-                      boxShadow:
-                        this.state.dragIndex === i ? `0 0 44px 0 rgba(0, 0, 0, 0.25)` : null,
-                      backgroundColor: Constants.system.white,
-                    }}
+                    redirect
+                    params={{ ...this.props.page?.params, cid: this.state.items[i].cid }}
+                    onAction={this.props.onAction}
                   >
-                    <SlateMediaObjectPreview
-                      file={this.state.items[i]}
-                      iconOnly={this.state.fileNames}
-                      charCap={70}
+                    <Selectable
+                      css={this.state.editing ? STYLES_ITEM_EDITING : STYLES_ITEM}
+                      name={i}
+                      draggable={!(numChecked || this.state.editing)}
+                      onDragStart={(e) => {
+                        this._disableDragAndDropUploadEvent();
+                        this._handleDragToDesktop(e, this.state.items[i]);
+                      }}
+                      onDragEnd={this._enableDragAndDropUploadEvent}
+                      selectableKey={i}
+                      onMouseEnter={() => this.setState({ hover: i })}
+                      onMouseLeave={() => this.setState({ hover: null })}
+                      onMouseDown={
+                        this.state.editing ? (e) => this._handleMouseDown(e, i) : () => {}
+                      }
+                      // onClick={this.state.editing ? () => {} : () => this.props.onSelect(i)}
                       style={{
-                        height: pos.h * unit,
+                        top: pos.y * unit,
+                        left: pos.x * unit,
                         width: pos.w * unit,
-                        background: Constants.system.white,
+                        height: this.state.fileNames ? (pos.h + TAG_HEIGHT) * unit : pos.h * unit,
+                        zIndex: pos.z,
+                        boxShadow:
+                          this.state.dragIndex === i ? `0 0 44px 0 rgba(0, 0, 0, 0.25)` : null,
+                        backgroundColor: Constants.system.white,
                       }}
-                      imageStyle={{
-                        width: pos.w * unit,
-                        height: pos.h * unit,
-                        maxHeight: "none",
-                      }}
-                    />
-                    {numChecked || this.state.hover === i ? (
-                      <div css={STYLES_MOBILE_HIDDEN}>
-                        {this.props.external ? null : (
+                    >
+                      <SlateMediaObjectPreview
+                        file={this.state.items[i]}
+                        iconOnly={this.state.fileNames}
+                        charCap={70}
+                        style={{
+                          height: pos.h * unit,
+                          width: pos.w * unit,
+                          background: Constants.system.white,
+                        }}
+                        imageStyle={{
+                          width: pos.w * unit,
+                          height: pos.h * unit,
+                          maxHeight: "none",
+                        }}
+                      />
+                      {numChecked || this.state.hover === i ? (
+                        <div css={STYLES_MOBILE_HIDDEN}>
                           <div
                             onMouseDown={this._stopProp}
                             onMouseUp={this._stopProp}
@@ -1362,323 +1382,364 @@ export class SlateLayout extends React.Component {
                               }}
                             />
                           </div>
-                        )}
-                        {this.state.hover !== i ? null : this.state.editing ? (
-                          <React.Fragment>
-                            {this.state.tooltip && this.state.tooltip.startsWith(`${i}-`) ? (
-                              <Tooltip
-                                light
-                                style={
-                                  this.state.tooltip === `${i}-remove`
-                                    ? {
-                                        position: "absolute",
-                                        top: 36,
-                                        right: 8,
-                                      }
+                          {this.state.hover !== i ? null : this.state.editing ? (
+                            <React.Fragment>
+                              {this.state.tooltip && this.state.tooltip.startsWith(`${i}-`) ? (
+                                <Tooltip
+                                  light
+                                  style={
+                                    this.state.tooltip === `${i}-remove`
+                                      ? {
+                                          position: "absolute",
+                                          top: 36,
+                                          right: 8,
+                                        }
+                                      : this.state.tooltip === `${i}-view`
+                                      ? {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% + 28px)",
+                                        }
+                                      : this.state.tooltip === `${i}-download`
+                                      ? {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% - 12px)",
+                                        }
+                                      : {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% - 52px)",
+                                          color: Constants.system.red,
+                                        }
+                                  }
+                                >
+                                  {this.state.tooltip === `${i}-remove`
+                                    ? "Remove from collection"
                                     : this.state.tooltip === `${i}-view`
-                                    ? {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% + 28px)",
-                                      }
+                                    ? "View file"
                                     : this.state.tooltip === `${i}-download`
-                                    ? {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% - 12px)",
-                                      }
-                                    : {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% - 52px)",
-                                        color: Constants.system.red,
-                                      }
-                                }
-                              >
-                                {this.state.tooltip === `${i}-remove`
-                                  ? "Remove from collection"
-                                  : this.state.tooltip === `${i}-view`
-                                  ? "View file"
-                                  : this.state.tooltip === `${i}-download`
-                                  ? "Download"
-                                  : "Delete file"}
-                              </Tooltip>
-                            ) : null}
-                            <div
-                              onMouseDown={this._stopProp}
-                              onMouseUp={this._stopProp}
-                              onMouseEnter={() => this.setState({ tooltip: `${i}-remove` })}
-                              onMouseLeave={() => this.setState({ tooltip: null })}
-                              onClick={(e) => {
-                                this._handleRemoveFromSlate(e, i);
-                              }}
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                cursor: "pointer",
-                                margin: 0,
-                              }}
-                              css={STYLES_ICON_CIRCLE}
-                            >
-                              <SVG.DismissCircle height="24px" />
-                            </div>
-                            <div
-                              css={STYLES_ICON_ROW}
-                              style={{
-                                bottom: this.state.fileNames
-                                  ? `calc(24px + ${TAG_HEIGHT}px)`
-                                  : "24px",
-                                left: `calc(50% - 60px)`,
-                              }}
-                            >
+                                    ? "Download"
+                                    : "Delete file"}
+                                </Tooltip>
+                              ) : null}
                               <div
-                                css={STYLES_ICON_CIRCLE}
                                 onMouseDown={this._stopProp}
                                 onMouseUp={this._stopProp}
-                                onMouseEnter={() => this.setState({ tooltip: `${i}-view` })}
+                                onMouseEnter={() => this.setState({ tooltip: `${i}-remove` })}
                                 onMouseLeave={() => this.setState({ tooltip: null })}
                                 onClick={(e) => {
-                                  this._stopProp(e);
-                                  this.props.onSelect(i);
+                                  this._handleRemoveFromSlate(e, i);
                                 }}
-                              >
-                                <SVG.Eye height="16px" />
-                              </div>
-                              <div
-                                css={STYLES_ICON_CIRCLE}
-                                onMouseDown={this._stopProp}
-                                onMouseUp={this._stopProp}
-                                onMouseEnter={() => this.setState({ tooltip: `${i}-download` })}
-                                onMouseLeave={() => this.setState({ tooltip: null })}
-                                onClick={(e) => {
-                                  this._handleDownload(e, i);
-                                }}
-                              >
-                                <SVG.Download height="16px" />
-                              </div>
-                              <div
-                                css={STYLES_ICON_CIRCLE}
-                                onMouseDown={this._stopProp}
-                                onMouseUp={this._stopProp}
-                                onMouseEnter={() => this.setState({ tooltip: `${i}-delete` })}
-                                onMouseLeave={() => this.setState({ tooltip: null })}
-                                onClick={
-                                  this.state.items[i].ownerId === this.props.viewer.id
-                                    ? () => {
-                                        this.setState({ modalShowDeleteFiles: true })
-                                      }
-                                    : () => {}
-                                }
                                 style={{
-                                  cursor:
-                                    this.state.items[i].ownerId === this.props.viewer.id
-                                      ? "pointer"
-                                      : "not-allowed",
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 8,
+                                  cursor: "pointer",
+                                  margin: 0,
+                                }}
+                                css={STYLES_ICON_CIRCLE}
+                              >
+                                <SVG.DismissCircle height="24px" />
+                              </div>
+                              <div
+                                css={STYLES_ICON_ROW}
+                                style={{
+                                  bottom: this.state.fileNames
+                                    ? `calc(24px + ${TAG_HEIGHT}px)`
+                                    : "24px",
+                                  left: `calc(50% - 60px)`,
                                 }}
                               >
-                                <SVG.Trash
-                                  height="16px"
-                                  style={{
-                                    color:
-                                      this.state.items[i].ownerId === this.props.viewer.id
-                                        ? Constants.system.red
-                                        : "#999999",
+                                <Link
+                                  redirect
+                                  params={{
+                                    ...this.props.page?.params,
+                                    cid: this.state.items[i].cid,
                                   }}
-                                />
-                              </div>
-
-                            </div>
-                          </React.Fragment>
-                        ) : (
-                          <React.Fragment>
-                            {this.state.tooltip && this.state.tooltip.startsWith(`${i}-`) ? (
-                              <Tooltip
-                                light
-                                style={
-                                  this.state.tooltip === `${i}-add`
-                                    ? {
-                                        position: "absolute",
-                                        top: 36,
-                                        right: 8,
-                                      }
-                                    : this.state.tooltip === `${i}-copy`
-                                    ? {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% + 28px)",
-                                      }
-                                    : this.state.tooltip === `${i}-download`
-                                    ? {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% - 12px)",
-                                      }
-                                    : {
-                                        position: "absolute",
-                                        bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
-                                        right: "calc(50% - 52px)",
-                                      }
-                                }
-                              >
-                                {this.state.tooltip === `${i}-add`
-                                  ? "Add to collection"
-                                  : this.state.tooltip === `${i}-copy`
-                                  ? "Copy link"
-                                  : this.state.tooltip === `${i}-download`
-                                  ? "Download"
-                                  : this.state.tooltip === `${i}-preview`
-                                  ? "Make cover image"
-                                  : "Save copy"}
-                              </Tooltip>
-                            ) : null}
-                            <div
-                              onMouseDown={this._stopProp}
-                              onMouseUp={this._stopProp}
-                              onMouseEnter={() => this.setState({ tooltip: `${i}-add` })}
-                              onMouseLeave={() => this.setState({ tooltip: null })}
-                              onClick={
-                                this.props.external
-                                  ? this._handleLoginModal
-                                  : (e) => {
-                                      this._handleAddToSlate(e, i);
-                                    }
-                              }
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                cursor: "pointer",
-                                margin: 0,
-                              }}
-                              css={STYLES_ICON_CIRCLE}
-                            >
-                              <SVG.PlusCircle height="24px" />
-                            </div>
-                            <div
-                              css={STYLES_ICON_ROW}
-                              style={{
-                                bottom: this.state.fileNames
-                                  ? `calc(24px + ${TAG_HEIGHT}px)`
-                                  : "24px",
-                              }}
-                            >
-                              <div
-                                css={STYLES_ICON_CIRCLE}
-                                onMouseDown={this._stopProp}
-                                onMouseUp={this._stopProp}
-                                onMouseEnter={() => this.setState({ tooltip: `${i}-download` })}
-                                onMouseLeave={() => this.setState({ tooltip: null })}
-                                onClick={
-                                  this.props.external
-                                    ? this._handleLoginModal
-                                    : (e) => {
-                                        this._handleDownload(e, i);
-                                      }
-                                }
-                              >
-                                <SVG.Download height="16px" />
-                              </div>
-                              {this.props.isOwner ? (
+                                  onAction={this.props.onAction}
+                                >
+                                  <div
+                                    css={STYLES_ICON_CIRCLE}
+                                    onMouseDown={this._stopProp}
+                                    onMouseUp={this._stopProp}
+                                    onMouseEnter={() => this.setState({ tooltip: `${i}-view` })}
+                                    onMouseLeave={() => this.setState({ tooltip: null })}
+                                    // onClick={(e) => {
+                                    //   this._stopProp(e);
+                                    //   this.props.onSelect(i);
+                                    // }}
+                                  >
+                                    <SVG.Eye height="16px" />
+                                  </div>
+                                </Link>
                                 <div
                                   css={STYLES_ICON_CIRCLE}
                                   onMouseDown={this._stopProp}
                                   onMouseUp={this._stopProp}
-                                  onMouseEnter={() => this.setState({ tooltip: `${i}-preview` })}
+                                  onMouseEnter={() => this.setState({ tooltip: `${i}-download` })}
+                                  onMouseLeave={() => this.setState({ tooltip: null })}
+                                  onClick={(e) => {
+                                    this._handleDownload(e, i);
+                                  }}
+                                >
+                                  <SVG.Download height="16px" />
+                                </div>
+                                <div
+                                  css={STYLES_ICON_CIRCLE}
+                                  onMouseDown={this._stopProp}
+                                  onMouseUp={this._stopProp}
+                                  onMouseEnter={() => this.setState({ tooltip: `${i}-delete` })}
+                                  onMouseLeave={() => this.setState({ tooltip: null })}
+                                  onClick={
+                                    this.state.items[i].ownerId === this.props.viewer.id
+                                      ? () => {
+                                          this.setState({ modalShowDeleteFiles: true });
+                                        }
+                                      : () => {}
+                                  }
+                                  style={{
+                                    cursor:
+                                      this.state.items[i].ownerId === this.props.viewer.id
+                                        ? "pointer"
+                                        : "not-allowed",
+                                  }}
+                                >
+                                  <SVG.Trash
+                                    height="16px"
+                                    style={{
+                                      color:
+                                        this.state.items[i].ownerId === this.props.viewer.id
+                                          ? Constants.system.red
+                                          : "#999999",
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment>
+                              {this.state.tooltip && this.state.tooltip.startsWith(`${i}-`) ? (
+                                <Tooltip
+                                  light
+                                  style={
+                                    this.state.tooltip === `${i}-add` ||
+                                    this.state.tooltip === `${i}-remove`
+                                      ? {
+                                          position: "absolute",
+                                          top: 36,
+                                          right: 8,
+                                        }
+                                      : this.state.tooltip === `${i}-copy`
+                                      ? {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% + 28px)",
+                                        }
+                                      : this.state.tooltip === `${i}-download`
+                                      ? {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% - 12px)",
+                                        }
+                                      : {
+                                          position: "absolute",
+                                          bottom: this.state.fileNames ? 52 + TAG_HEIGHT : 52,
+                                          right: "calc(50% - 52px)",
+                                        }
+                                  }
+                                >
+                                  {this.state.tooltip === `${i}-add`
+                                    ? "Add to collection"
+                                    : this.state.tooltip === `${i}-copy`
+                                    ? "Copy link"
+                                    : this.state.tooltip === `${i}-download`
+                                    ? "Download"
+                                    : this.state.tooltip === `${i}-preview`
+                                    ? "Make cover image"
+                                    : this.state.tooltip === `${i}-remove`
+                                    ? "Remove from collection"
+                                    : "Save copy"}
+                                </Tooltip>
+                              ) : null}
+                              {this.props.isOwner ? (
+                                <div
+                                  onMouseDown={this._stopProp}
+                                  onMouseUp={this._stopProp}
+                                  onMouseEnter={() => this.setState({ tooltip: `${i}-remove` })}
                                   onMouseLeave={() => this.setState({ tooltip: null })}
                                   onClick={
                                     this.props.external
                                       ? this._handleLoginModal
-                                      : this.state.items[i].data.type &&
-                                        Validations.isPreviewableImage(
-                                          this.state.items[i].data.type
-                                        ) &&
-                                        this.state.items[i].data.size &&
-                                        this.state.items[i].data.size < SIZE_LIMIT
-                                      ? (e) => this._handleSetPreview(e, i)
-                                      : () => {}
-                                  }
-                                  style={
-                                    this.props.preview ===
-                                    Strings.getURLfromCID(this.state.items[i].cid)
-                                      ? {
-                                          backgroundColor: "rgba(0, 97, 187, 0.75)",
-                                        }
-                                      : this.state.items[i].data.type &&
-                                        Validations.isPreviewableImage(
-                                          this.state.items[i].data.type
-                                        ) &&
-                                        this.state.items[i].data.size &&
-                                        this.state.items[i].data.size < SIZE_LIMIT
-                                      ? {}
-                                      : {
-                                          color: "#999999",
-                                          cursor: "not-allowed",
+                                      : (e) => {
+                                          this._handleRemoveFromSlate(e, i);
                                         }
                                   }
+                                  style={{
+                                    position: "absolute",
+                                    top: 8,
+                                    right: 8,
+                                    cursor: "pointer",
+                                    margin: 0,
+                                  }}
+                                  css={STYLES_ICON_CIRCLE}
                                 >
-                                  {this.props.preview ===
-                                  Strings.getURLfromCID(this.state.items[i].cid) ? (
-                                    <SVG.DesktopEye
-                                      height="16px"
-                                      style={{
-                                        color: Constants.system.white,
-                                      }}
-                                    />
-                                  ) : (
-                                    <SVG.Desktop height="16px" />
-                                  )}
+                                  <SVG.DismissCircle height="24px" />
                                 </div>
                               ) : (
                                 <div
-                                  css={STYLES_ICON_CIRCLE}
                                   onMouseDown={this._stopProp}
                                   onMouseUp={this._stopProp}
-                                  onMouseEnter={() => this.setState({ tooltip: `${i}-save` })}
+                                  onMouseEnter={() => this.setState({ tooltip: `${i}-add` })}
                                   onMouseLeave={() => this.setState({ tooltip: null })}
                                   onClick={
                                     this.props.external
                                       ? this._handleLoginModal
-                                      : (e) => this._handleSaveCopy(e, i)
+                                      : (e) => {
+                                          this._handleAddToSlate(e, i);
+                                        }
                                   }
+                                  style={{
+                                    position: "absolute",
+                                    top: 8,
+                                    right: 8,
+                                    cursor: "pointer",
+                                    margin: 0,
+                                  }}
+                                  css={STYLES_ICON_CIRCLE}
                                 >
-                                  <SVG.Save height="16px" />
+                                  <SVG.PlusCircle height="24px" />
                                 </div>
                               )}
-                            </div>
-                          </React.Fragment>
-                        )}
-                      </div>
-                    ) : null}
-                    {this.state.fileNames ? (
-                      <div
-                        css={STYLES_FILE_TAG}
-                        style={{
-                          fontSize: `${Math.min(TAG_HEIGHT * unit * 0.7, 14)}px`,
-                          height: `${TAG_HEIGHT * unit}px`,
-                        }}
-                      >
-                        <span css={STYLES_FILE_NAME}>
-                          {this.state.items[i].data.name || this.state.items[i].filename}
-                        </span>
-                        <span css={STYLES_FILE_TYPE}>
-                          {Strings.getFileExtension(this.state.items[i].filename)}
-                        </span>
-                      </div>
-                    ) : null}
-                    {this.state.editing ? (
-                      <div
-                        css={STYLES_HANDLE_BOX}
-                        onMouseDown={(e) => this._handleMouseDownResize(e, i)}
-                        style={{
-                          display:
-                            this.state.hover === i || this.state.dragIndex === i ? "block" : "none",
-                        }}
-                      >
-                        <SVG.DragHandle height="24px" />
-                      </div>
-                    ) : null}
-                  </Selectable>
+                              <div
+                                css={STYLES_ICON_ROW}
+                                style={{
+                                  bottom: this.state.fileNames
+                                    ? `calc(24px + ${TAG_HEIGHT}px)`
+                                    : "24px",
+                                }}
+                              >
+                                <div
+                                  css={STYLES_ICON_CIRCLE}
+                                  onMouseDown={this._stopProp}
+                                  onMouseUp={this._stopProp}
+                                  onMouseEnter={() => this.setState({ tooltip: `${i}-download` })}
+                                  onMouseLeave={() => this.setState({ tooltip: null })}
+                                  onClick={
+                                    this.props.external
+                                      ? this._handleLoginModal
+                                      : (e) => {
+                                          this._handleDownload(e, i);
+                                        }
+                                  }
+                                >
+                                  <SVG.Download height="16px" />
+                                </div>
+                                {this.props.isOwner ? (
+                                  <div
+                                    css={STYLES_ICON_CIRCLE}
+                                    onMouseDown={this._stopProp}
+                                    onMouseUp={this._stopProp}
+                                    onMouseEnter={() => this.setState({ tooltip: `${i}-preview` })}
+                                    onMouseLeave={() => this.setState({ tooltip: null })}
+                                    onClick={
+                                      this.props.external
+                                        ? this._handleLoginModal
+                                        : this.state.items[i].data.type &&
+                                          Validations.isPreviewableImage(
+                                            this.state.items[i].data.type
+                                          ) &&
+                                          this.state.items[i].data.size &&
+                                          this.state.items[i].data.size <
+                                            Constants.linkPreviewSizeLimit
+                                        ? (e) => this._handleSetPreview(e, i)
+                                        : () => {}
+                                    }
+                                    style={
+                                      this.props.preview ===
+                                      Strings.getURLfromCID(this.state.items[i].cid)
+                                        ? {
+                                            backgroundColor: "rgba(0, 97, 187, 0.75)",
+                                          }
+                                        : this.state.items[i].data.type &&
+                                          Validations.isPreviewableImage(
+                                            this.state.items[i].data.type
+                                          ) &&
+                                          this.state.items[i].data.size &&
+                                          this.state.items[i].data.size <
+                                            Constants.linkPreviewSizeLimit
+                                        ? {}
+                                        : {
+                                            color: "#999999",
+                                            cursor: "not-allowed",
+                                          }
+                                    }
+                                  >
+                                    {this.props.preview ===
+                                    Strings.getURLfromCID(this.state.items[i].cid) ? (
+                                      <SVG.DesktopEye
+                                        height="16px"
+                                        style={{
+                                          color: Constants.system.white,
+                                        }}
+                                      />
+                                    ) : (
+                                      <SVG.Desktop height="16px" />
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div
+                                    css={STYLES_ICON_CIRCLE}
+                                    onMouseDown={this._stopProp}
+                                    onMouseUp={this._stopProp}
+                                    onMouseEnter={() => this.setState({ tooltip: `${i}-save` })}
+                                    onMouseLeave={() => this.setState({ tooltip: null })}
+                                    onClick={
+                                      this.props.external
+                                        ? this._handleLoginModal
+                                        : (e) => this._handleSaveCopy(e, i)
+                                    }
+                                  >
+                                    <SVG.Save height="16px" />
+                                  </div>
+                                )}
+                              </div>
+                            </React.Fragment>
+                          )}
+                        </div>
+                      ) : null}
+                      {this.state.fileNames ? (
+                        <div
+                          css={STYLES_FILE_TAG}
+                          style={{
+                            fontSize: `${Math.min(TAG_HEIGHT * unit * 0.7, 14)}px`,
+                            height: `${TAG_HEIGHT * unit}px`,
+                          }}
+                        >
+                          <span css={STYLES_FILE_NAME}>
+                            {this.state.items[i].data.name || this.state.items[i].filename}
+                          </span>
+                          <span css={STYLES_FILE_TYPE}>
+                            {Strings.getFileExtension(this.state.items[i].filename)}
+                          </span>
+                        </div>
+                      ) : null}
+                      {this.state.editing ? (
+                        <div
+                          css={STYLES_HANDLE_BOX}
+                          onMouseDown={(e) => this._handleMouseDownResize(e, i)}
+                          style={{
+                            display:
+                              this.state.hover === i || this.state.dragIndex === i
+                                ? "block"
+                                : "none",
+                          }}
+                        >
+                          <SVG.DragHandle height="24px" />
+                        </div>
+                      ) : null}
+                    </Selectable>
+                  </Link>
                 ))
               ) : (
                 <div css={STYLES_LOADER}>
@@ -1688,7 +1749,7 @@ export class SlateLayout extends React.Component {
             </div>
           </div>
           {this.state.modalShowDeleteFiles && (
-            <ConfirmationModal 
+            <ConfirmationModal
               type={"DELETE"}
               withValidation={false}
               callback={this._handleDeleteFiles}
@@ -1772,20 +1833,6 @@ export class SlateLayout extends React.Component {
             value={this.state.copyValue}
             css={STYLES_COPY_INPUT}
           />
-          {this.props.external && this.state.signInModal && (
-            <div>
-              <CTATransition
-                onClose={() => this.setState({ signInModal: false })}
-                viewer={this.props.viewer}
-                open={this.state.signInModal}
-                redirectURL={`/_${Strings.createQueryParams({
-                  scene: "NAV_SLATE",
-                  user: this.props.creator.username,
-                  slate: this.props.slate.slatename,
-                })}`}
-              />
-            </div>
-          )}
         </GroupSelectable>
       </div>
     );

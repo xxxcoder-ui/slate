@@ -12,17 +12,20 @@ import { endsWithAny } from "~/common/utilities";
 import { css } from "@emotion/react";
 
 const STYLES_FAILURE = css`
-  background-color: ${Constants.system.pitchBlack};
   color: ${Constants.system.white};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 88px;
+  font-size: 24px;
   margin: 0;
-  padding: 0;
+  padding: 24px 36px;
+  height: 100px;
+  border-radius: 4px;
   width: 100%;
   min-height: 10%;
   height: 100%;
+  text-decoration: none;
+  background-color: rgba(20, 20, 20, 0.8);
 `;
 
 const STYLES_OBJECT = css`
@@ -94,7 +97,7 @@ export default class SlateMediaObject extends React.Component {
       return (
         <>
           {isMobile ? (
-            <a href={url} target="_blank">
+            <a href={url} target="_blank" style={{ textDecoration: "none" }}>
               <div css={STYLES_FAILURE}>Tap to open PDF in new tab</div>
             </a>
           ) : (

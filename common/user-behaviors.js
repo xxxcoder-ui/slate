@@ -25,7 +25,11 @@ export const authenticate = async (state) => {
   const jwt = cookies.get(Credentials.session.key);
 
   if (jwt) {
-    cookies.remove(Credentials.session.key);
+    cookies.remove(Credentials.session.key, {
+      path: "/",
+      maxAge: 3600 * 24 * 7,
+      sameSite: "strict",
+    });
   }
 
   let response = await Actions.signIn(state);
@@ -38,7 +42,7 @@ export const authenticate = async (state) => {
     // + One week.
     // + Only requests to the same site.
     // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
-    cookies.set(Credentials.session.key, response.token, true, {
+    cookies.set(Credentials.session.key, response.token, {
       path: "/",
       maxAge: 3600 * 24 * 7,
       sameSite: "strict",
@@ -48,7 +52,7 @@ export const authenticate = async (state) => {
   return response;
 };
 
-// NOTE(jim): Signs a user out and redirects to the sign in screen.
+// NOTE(jim): Signs a user out
 export const signOut = async ({ viewer }) => {
   let wsclient = Websockets.getClient();
   if (wsclient) {
@@ -60,10 +64,14 @@ export const signOut = async ({ viewer }) => {
 
   const jwt = cookies.get(Credentials.session.key);
   if (jwt) {
-    cookies.remove(Credentials.session.key);
+    cookies.remove(Credentials.session.key, {
+      path: "/",
+      maxAge: 3600 * 24 * 7,
+      sameSite: "strict",
+    });
   }
 
-  window.location.replace("/_");
+  window.location.replace("/_/auth");
   return;
 };
 
@@ -79,11 +87,11 @@ export const deleteMe = async ({ viewer }) => {
 
   await signOut({ viewer });
 
-  let wsclient = Websockets.getClient();
-  if (wsclient) {
-    await Websockets.deleteClient();
-    wsclient = null;
-  }
+  // let wsclient = Websockets.getClient();
+  // if (wsclient) {
+  //   await Websockets.deleteClient();
+  //   wsclient = null;
+  // }
 
   return response;
 };

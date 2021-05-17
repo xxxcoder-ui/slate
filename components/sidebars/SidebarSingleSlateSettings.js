@@ -11,8 +11,8 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
 import { ConfirmationModal } from "~/components/core/ConfirmationModal";
+import { Link } from "~/components/core/Link";
 
-const SIZE_LIMIT = 1000000;
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
 
@@ -75,7 +75,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.tags = this.state.tags;
 
         let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-        this.props.onUpdateViewer({ slates, tags: Array.from(newSuggestions) });
+        this.props.onAction({
+          type: "UPDATE_VIEWER",
+          viewer: { slates, tags: Array.from(newSuggestions) },
+        });
 
         break;
       }
@@ -111,16 +114,16 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
   _handleDelete = async (res) => {
     if (!res) {
-      this.setState({ modalShow: false })
+      this.setState({ modalShow: false });
       return;
     }
 
     let slates = this.props.viewer.slates.filter((slate) => slate.id !== this.props.data.id);
-    this.props.onUpdateViewer({ slates });
+    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
 
     this.props.onAction({
       type: "NAVIGATE",
-      value: "NAV_SLATES",
+      value: "/_/collections",
     });
     const response = await Actions.deleteSlate({
       id: this.props.data.id,
@@ -130,7 +133,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
       return;
     }
 
-    this.setState({ modalShow: false })
+    this.setState({ modalShow: false });
   };
 
   render() {
@@ -143,7 +146,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           object.data.type &&
           Validations.isPreviewableImage(object.data.type) &&
           object.data.size &&
-          object.data.size < SIZE_LIMIT
+          object.data.size < Constants.linkPreviewSizeLimit
         ) {
           preview = Strings.getURLfromCID(object.cid);
           break;
@@ -304,16 +307,20 @@ export default class SidebarSingleSlateSettings extends React.Component {
           </System.ButtonPrimary>
 
           <div style={{ marginTop: 16 }}>
-            <System.ButtonWarning full onClick={() => this.setState({ modalShow: true })} style={{ overflow: "hidden" }}>
+            <System.ButtonWarning
+              full
+              onClick={() => this.setState({ modalShow: true })}
+              style={{ overflow: "hidden" }}
+            >
               Delete collection
             </System.ButtonWarning>
           </div>
         </div>
         {this.state.modalShow && (
-          <ConfirmationModal 
+          <ConfirmationModal
             type={"DELETE"}
             withValidation={false}
-            callback={this._handleDelete} 
+            callback={this._handleDelete}
             header={`Are you sure you want to delete the collection “${this.state.slatename}”?`}
             subHeader={`This collection will be deleted but all your files will remain in your file library. You can’t undo this action.`}
           />

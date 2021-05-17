@@ -59,7 +59,4 @@ export default async (req, res) => {
   const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
 
   res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
-  if (req.body.data.redirectURL) {
-    res.redirect(req.body.data.redirectURL);
-  }
 };

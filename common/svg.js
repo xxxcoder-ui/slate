@@ -1692,6 +1692,22 @@ export const Menu = (props) => (
   </svg>
 );
 
+export const MenuMinimal = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    stroke="currentColor"
+    {...props}
+  >
+    <path d="M3.33331 6H21.3333" />
+    <path d="M3.33331 18H21.3333" />
+  </svg>
+);
+
 export const Globe = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

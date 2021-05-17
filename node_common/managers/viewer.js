@@ -221,7 +221,7 @@ export const getById = async ({ id }) => {
       pdfBytes,
     },
     tags,
-    userBucketCID: bucketRoot?.path,
+    userBucketCID: bucketRoot?.path || null,
     keys,
     slates,
     subscriptions,
