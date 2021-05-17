@@ -8,9 +8,16 @@ import "isomorphic-fetch";
 //for sendgrid request structure, see what's optional
 //also see https://github.com/sendgrid/sendgrid-nodejs/tree/main/packages/mail
 
-export const sendEmail = async ({personalizations, to, from, subject, content, optionalData = {}}) => {
+export const sendEmail = async ({
+  personalizations,
+  to,
+  from,
+  subject,
+  content,
+  optionalData = {},
+}) => {
   const msg = {
-    personalizations:personalizations,
+    personalizations: personalizations,
     to: to,
     from: from,
     subject: subject,
@@ -20,13 +27,13 @@ export const sendEmail = async ({personalizations, to, from, subject, content, o
   try {
     await sgMail.send(msg);
   } catch (error) {
-    res.status(500).send({ decorator: "SEND_EMAIL_FAILURE", error: true });
+    return { decorator: "SEND_EMAIL_FAILURE", error: true };
   }
 };
 
 //NOTE(toast): templates override content, subject, etc.
 //properties that are defined in the template take priority
-export const sendTemplate = async ({to, from, templateId, templateData}) => {
+export const sendTemplate = async ({ to, from, templateId, templateData }) => {
   const msg = {
     to: to,
     from: from,
@@ -36,14 +43,14 @@ export const sendTemplate = async ({to, from, templateId, templateData}) => {
   try {
     await sgMail.send(msg);
   } catch (error) {
-    res.status(500).send({ decorator: "SEND_TEMPLATE_EMAIL_FAILURE", error: true });
+    return { decorator: "SEND_TEMPLATE_EMAIL_FAILURE", error: true };
   }
 };
 
 //NOTE(toast): only available to upgraded sendgrid accounts
 //uses their validation service to make sure an email is legit
-export const validateEmail = async (req, res) => {
-  const msg = { email: req.body.email };
+export const validateEmail = async ({ email }) => {
+  const msg = { email: email };
   const request = await fetch("https://api.sendgrid.com/v3/validations/email", {
     method: "POST",
     headers: {
@@ -57,6 +64,6 @@ export const validateEmail = async (req, res) => {
   try {
     await request();
   } catch (e) {
-    res.status(500).send({ decorator: "VALIDATE_EMAIL_FAILURE", error: true });
+    return { decorator: "VALIDATE_EMAIL_FAILURE", error: true };
   }
 };

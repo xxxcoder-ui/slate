@@ -2,6 +2,7 @@ import * as Data from "~/node_common/data";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
 import * as Environment from "~/node_common/environment";
+import { sendTemplate } from "~/node_common/managers";
 
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
@@ -41,6 +42,14 @@ export default async (req, res) => {
 
   await Data.updateVerification({ sid: req.body.data.token, isVerified: true });
 
+  const userEmail = verification.email;
+  const slateEmail = "hello@slate.host"
+  const welcomeTemplateId = "d-7688a09484194c06a417a434eaaadd6e"
+
+  const sentEmail = sendTemplate({userEmail, slateEmail, welcomeTemplateId});
+    if( sentEmail.error) {
+      return res.status(500).send({decorator: email.decorator, error: true});
+  }
   return res.status(200).send({
     decorator: "SERVER_EMAIL_VERIFICATION_SUCCESS",
     token: verification,
