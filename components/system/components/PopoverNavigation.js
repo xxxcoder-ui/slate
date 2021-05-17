@@ -23,7 +23,6 @@ const STYLES_POPOVER_SECTION = css`
   border-bottom: 1px solid ${Constants.system.gray40};
   padding-bottom: 6px;
   margin-bottom: 6px;
-  width: calc(100% - 32px);
 
   :last-child {
     border-bottom: none;

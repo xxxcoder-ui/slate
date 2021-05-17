@@ -1298,6 +1298,7 @@ export class SlateLayout extends React.Component {
                 this.state.layout.map((pos, i) => (
                   <Link
                     key={i}
+                    disabled={this.state.editing}
                     redirect
                     params={{ ...this.props.page?.params, cid: this.state.items[i].cid }}
                     onAction={this.props.onAction}

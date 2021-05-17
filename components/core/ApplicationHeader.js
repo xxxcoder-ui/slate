@@ -159,11 +159,10 @@ export default class ApplicationHeader extends React.Component {
   };
 
   _handleTogglePopup = (value) => {
-    console.log(value);
     if (!value || this.state.popup === value) {
       this.setState({ popup: null });
     } else {
-      this.setState({ popup: value });
+      this.setState({ popup: value, showDropdown: false });
     }
   };
 
@@ -352,7 +351,9 @@ export default class ApplicationHeader extends React.Component {
                 <div
                   css={Styles.ICON_CONTAINER}
                   style={{ pointerEvents: "auto" }}
-                  onClick={() => this.setState({ showDropdown: !this.state.showDropdown })}
+                  onClick={() =>
+                    this.setState({ showDropdown: !this.state.showDropdown, popup: null })
+                  }
                 >
                   <SVG.MenuMinimal height="16px" />
                 </div>
