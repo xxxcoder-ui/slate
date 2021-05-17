@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as Actions from "~/common/actions";
-import * as Window from "~/common/window";
+import * as Validations from "~/common/validations";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
@@ -203,9 +203,7 @@ export default class SceneSlate extends React.Component {
         </WebsitePrototypeWrapper>
       );
     } else {
-      let title;
-      let description;
-      let file;
+      let title, description, file, image;
       let name = slate.data.name;
       if (this.props.page.params?.cid) {
         file = slate.objects.find((file) => file.cid === this.props.page.params.cid);
@@ -215,6 +213,12 @@ export default class SceneSlate extends React.Component {
         description = file.data.body
           ? file.data.body
           : `View ${title}, a file in the collection ${name} on Slate`;
+        if (
+          Validations.isPreviewableImage(file.data.type) &&
+          file.data.size < Constants.linkPreviewSizeLimit
+        ) {
+          image = Strings.getURLfromCID(file.cid);
+        }
       } else {
         if (slate.data.body) {
           description = `${name}. ${slate.data.body}`;
@@ -222,12 +226,29 @@ export default class SceneSlate extends React.Component {
           description = `View the collection ${name} on Slate`;
         }
         title = `${name} • Slate`;
+        image = slate.data.preview;
+        const objects = slate.objects;
+        if (!image && objects) {
+          for (let i = 0; i < objects.length; i++) {
+            if (
+              objects[i].data.type &&
+              Validations.isPreviewableImage(objects[i].data.type) &&
+              objects[i].data.size &&
+              objects[i].data.size < Constants.linkPreviewSizeLimit
+            ) {
+              image = Strings.getURLfromCID(objects[i].cid);
+              break;
+            }
+          }
+        }
       }
+
       return (
         <WebsitePrototypeWrapper
           description={description}
           title={title}
           url={`${Constants.hostname}${this.props.page.pathname}`}
+          image={image}
         >
           <SlatePage {...this.props} key={slate.id} data={slate} />
         </WebsitePrototypeWrapper>

@@ -1,8 +1,9 @@
 import * as React from "react";
-import * as Actions from "~/common/actions";
+import * as Strings from "~/common/strings";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
 import * as Events from "~/common/custom-events";
+import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
@@ -157,17 +158,21 @@ export default class SceneProfile extends React.Component {
       );
     }
     let name = user.data.name || `@${user.username}`;
-    let description;
-    let title;
-    let file;
+    let description, title, file, image;
     if (this.props.page.params?.cid) {
       file = user.library.find((file) => file.cid === this.props.page.params.cid);
     }
     if (file) {
       title = `${file.data.name || file.filename}`;
       description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
-      console.log(description);
+      if (
+        Validations.isPreviewableImage(file.data.type) &&
+        file.data.size < Constants.linkPreviewSizeLimit
+      ) {
+        image = Strings.getURLfromCID(file.cid);
+      }
     } else {
+      image = user.data.photo;
       if (user.data.body) {
         description = `${name}. ${user.data.body}`;
       } else {
@@ -185,6 +190,7 @@ export default class SceneProfile extends React.Component {
         description={description}
         title={title}
         url={`${Constants.hostname}${this.props.page.pathname}`}
+        image={image}
       >
         <Profile
           {...this.props}
