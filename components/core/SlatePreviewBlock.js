@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
-import * as Window from "~/common/window";
+import * as Validations from "~/common/validations";
 
 import { Logo } from "~/common/logo";
 import { css } from "@emotion/react";
@@ -56,37 +56,38 @@ const STYLES_PLACEHOLDER = css`
 
 export class SlatePreviewRow extends React.Component {
   render() {
-    let numItems = this.props.numItems || 4;
-    let objects = this.props.slate.objects;
-    let components;
-    if (objects.length === 0) {
-      components = [
-        <div
-          css={STYLES_PLACEHOLDER}
-          style={{
-            backgroundImage: `url(${placeholder})`,
-            ...this.props.imageStyle,
-          }}
-        />,
-      ];
-    } else {
-      let trimmed =
-        objects.length > numItems ? objects.slice(1, numItems) : objects.slice(1, objects.length);
-      components = trimmed.map((each) => (
-        <div key={each.id} css={STYLES_ITEM_BOX}>
-          <SlateMediaObjectPreview
-            file={each}
-            charCap={30}
-            centeredImage
-            style={this.props.previewStyle}
-            iconOnly={this.props.small}
-          />
-        </div>
-      ));
-    }
+    let objects = this.props.objects;
+    let components = objects.map((each) => (
+      <div key={each.id} css={STYLES_ITEM_BOX}>
+        <SlateMediaObjectPreview
+          file={each}
+          charCap={30}
+          centeredImage
+          style={this.props.previewStyle}
+          iconOnly={this.props.small}
+        />
+      </div>
+    ));
     return (
-      <div css={STYLES_IMAGE_ROW} style={{ height: `100%`, ...this.props.containerStyle }}>
-        {components}
+      <div css={STYLES_PREVIEW}>
+        <div
+          style={{
+            width: "75%",
+            height: 320,
+          }}
+        >
+          <SlateMediaObjectPreview file={objects[0]} centeredImage charCap={30} />
+        </div>
+        <div
+          style={{
+            width: `25%`,
+            height: 324,
+          }}
+        >
+          <div css={STYLES_IMAGE_ROW} style={{ height: `100%`, ...this.props.containerStyle }}>
+            {components}
+          </div>
+        </div>
       </div>
     );
   }
@@ -253,17 +254,25 @@ export class SlatePreviewBlock extends React.Component {
   };
 
   render() {
-    let count = 0;
-    const objects = this.props.slate.objects || [];
-    if (objects && objects.length >= 4) {
-      const set = objects.slice(0, 4);
-      for (let object of set) {
-        if (object.data.type.startsWith("image/") && !object.data.type.startsWith("image/svg")) {
-          count++;
-        }
+    const slate = this.props.slate;
+    let objects;
+    if (slate.data.preview) {
+      const cid = Strings.urlToCid(slate.data.preview);
+      let preview = slate.objects.find((each) => each.cid === cid);
+      if (preview) {
+        objects = [preview];
       }
     }
-    let first = objects ? objects[0] : null;
+    if (!objects) {
+      objects = [];
+      for (let file of slate.objects) {
+        if (Validations.isPreviewableImage(file.data.type)) {
+          objects.push(file);
+        }
+        if (objects.length >= 4) break;
+      }
+    }
+
     let contextMenu = (
       <React.Fragment>
         <Boundary
@@ -333,46 +342,31 @@ export class SlatePreviewBlock extends React.Component {
           <div css={STYLES_BODY}>
             {this.props.slate.data.body ? this.props.slate.data.body : null}
           </div>
-          {objects.length === 1 || (objects.length != 0 && count <= 3) ? (
-            <div
-              style={{
-                width: "100%",
-                height: 320,
-              }}
-            >
-              <SlateMediaObjectPreview file={first} centeredImage charCap={30} />
-            </div>
-          ) : first ? (
-            <div css={STYLES_PREVIEW}>
-              <div
-                style={{
-                  width: "75%",
-                  height: 320,
-                }}
-              >
-                <SlateMediaObjectPreview file={first} centeredImage charCap={30} />
-              </div>
-              <div
-                style={{
-                  width: `25%`,
-                  height: 324,
-                }}
-              >
-                <SlatePreviewRow {...this.props} previewStyle={this.props.previewStyle} />
-              </div>
-            </div>
-          ) : (
+          {objects.length === 0 ? (
             <div
               css={STYLES_PLACEHOLDER}
               style={{
-                // backgroundImage: `url(${placeholder})`,
-
                 ...this.props.imageStyle,
               }}
             >
               <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
               No files in this collection
             </div>
+          ) : objects.length < 4 ? (
+            <div
+              style={{
+                width: "100%",
+                height: 320,
+              }}
+            >
+              <SlateMediaObjectPreview file={objects[0]} centeredImage charCap={30} />
+            </div>
+          ) : (
+            <SlatePreviewRow
+              {...this.props}
+              objects={objects}
+              previewStyle={this.props.previewStyle}
+            />
           )}
         </span>
         <span css={STYLES_MOBILE_ONLY}>
@@ -397,21 +391,18 @@ export class SlatePreviewBlock extends React.Component {
               height: `320px`,
             }}
           >
-            {first ? (
-              <SlateMediaObjectPreview
-                file={first}
-                blurhash={first.blurhash}
-                centeredImage
-                charCap={30}
-              />
+            {objects.length >= 1 ? (
+              <SlateMediaObjectPreview file={objects[0]} centeredImage charCap={30} />
             ) : (
               <div
                 css={STYLES_PLACEHOLDER}
                 style={{
-                  backgroundImage: `url(${placeholder})`,
                   ...this.props.imageStyle,
                 }}
-              />
+              >
+                <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
+                No files in this collection
+              </div>
             )}
           </div>
         </span>
