@@ -57,7 +57,7 @@ const STYLES_PLACEHOLDER = css`
 export class SlatePreviewRow extends React.Component {
   render() {
     let objects = this.props.objects;
-    let components = objects.map((each) => (
+    let components = objects.slice(1).map((each) => (
       <div key={each.id} css={STYLES_ITEM_BOX}>
         <SlateMediaObjectPreview
           file={each}
