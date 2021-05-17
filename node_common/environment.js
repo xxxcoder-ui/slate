@@ -45,3 +45,7 @@ export const RESOURCE_URI_SEARCH = process.env.RESOURCE_URI_SEARCH;
 export const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
 export const TWITTER_SECRET_API_KEY = process.env.TWITTER_SECRET_API_KEY;
 export const TWITTER_CALLBACK = process.env.TWITTER_CALLBACK;
+
+//NOTE(toast): Sendgrid
+export const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+export const SENDGRID_WEBHOOK_KEY = process.env.SENDGRID_WEBHOOK_KEY;
