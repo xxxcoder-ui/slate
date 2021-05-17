@@ -10,6 +10,7 @@ import * as Events from "~/common/custom-events";
 import { css } from "@emotion/react";
 import { SignIn } from "~/components/core/SignIn";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
 
@@ -155,14 +156,18 @@ export default class SceneSignIn extends React.Component {
 
   render() {
     return (
-      <div css={STYLES_ROOT}>
-        <div />
-        {/* <WebsitePrototypeHeader style={{ background: `none` }} /> */}
-        <div css={STYLES_MIDDLE}>
-          <SignIn {...this.props} />
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <div css={STYLES_ROOT}>
+          <div />
+          <div css={STYLES_MIDDLE}>
+            <SignIn {...this.props} />
+          </div>
+          <WebsitePrototypeFooter />
         </div>
-        <WebsitePrototypeFooter />
-      </div>
+      </WebsitePrototypeWrapper>
     );
   }
 }

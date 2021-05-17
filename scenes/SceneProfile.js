@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Actions from "~/common/actions";
 import * as Utilities from "~/common/utilities";
-import * as Strings from "~/common/strings";
+import * as Constants from "~/common/constants";
 import * as Events from "~/common/custom-events";
 import * as SVG from "~/common/svg";
 
@@ -11,6 +11,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import ScenePage from "~/components/core/ScenePage";
 import Profile from "~/components/core/Profile";
 import EmptyState from "~/components/core/EmptyState";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_LOADER = css`
   display: flex;
@@ -142,20 +143,49 @@ export default class SceneProfile extends React.Component {
     let user = this.props.data;
     if (!user) {
       return (
-        <ScenePage>
-          <div css={STYLES_LOADER}>
-            <LoaderSpinner />
-          </div>
-        </ScenePage>
-        // <ScenePage>
-        //   <EmptyState>
-        //     <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-        //     <div>We were unable to locate that user profile</div>
-        //   </EmptyState>
-        // </ScenePage>
+        <WebsitePrototypeWrapper
+          title={`${this.props.page.pageTitle} • Slate`}
+          url={`${Constants.hostname}${this.props.page.pathname}`}
+        >
+          <ScenePage>
+            <EmptyState>
+              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+              <div>We were unable to locate that user profile</div>
+            </EmptyState>
+          </ScenePage>
+        </WebsitePrototypeWrapper>
       );
+    }
+    let name = user.data.name || `@${user.username}`;
+    let description;
+    let title;
+    let file;
+    if (this.props.page.params?.cid) {
+      file = user.library.find((file) => file.cid === this.props.page.params.cid);
+    }
+    if (file) {
+      title = `${file.data.name || file.filename}`;
+      description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
+      console.log(description);
     } else {
-      return (
+      if (user.data.body) {
+        description = `${name}. ${user.data.body}`;
+      } else {
+        description = `View collections and content from ${name} on Slate`;
+      }
+      if (user.data.name) {
+        title = `${user.data.name} (@${user.username}) • Slate`;
+      } else {
+        title = `${user.username} • Slate`;
+      }
+    }
+
+    return (
+      <WebsitePrototypeWrapper
+        description={description}
+        title={title}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
         <Profile
           {...this.props}
           user={user}
@@ -163,8 +193,8 @@ export default class SceneProfile extends React.Component {
           isAuthenticated={this.props.viewer !== null}
           key={user.id}
         />
-      );
-    }
+      </WebsitePrototypeWrapper>
+    );
 
     // if (this.state.loading) {
     //   return (

@@ -8,6 +8,7 @@ import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { TabGroup, PrimaryTabGroup, SecondaryTabGroup } from "~/components/core/TabGroup";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
@@ -24,8 +25,7 @@ import APIDocsGetUserV2 from "~/components/api-docs/v2/get-user.js";
 import APIDocsUpdateSlateV2 from "~/components/api-docs/v2/update-slate.js";
 import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
 import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
-
-import { ConfirmationModal } from "~/components/core/ConfirmationModal";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_API_KEY = css`
   height: 40px;
@@ -176,8 +176,12 @@ export default class SceneSettingsDeveloper extends React.Component {
     }
 
     return (
-      <ScenePage>
-        {/*
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          {/*
         <div css={STYLES_SIDEBAR}>
           <span css={STYLES_LINK} onClick={() => this._changeDocs("INTRO")}>
             Introduction
@@ -218,56 +222,56 @@ export default class SceneSettingsDeveloper extends React.Component {
           <span css={STYLES_LABEL}>guides</span>
         </div>
         */}
-        <ScenePageHeader title="API Keys">
-          You can use your API keys to access your account information outside of Slate and upload
-          files to Slate. You can have a maximum of 10 keys at any given time.
-        </ScenePageHeader>
+          <ScenePageHeader title="API Keys">
+            You can use your API keys to access your account information outside of Slate and upload
+            files to Slate. You can have a maximum of 10 keys at any given time.
+          </ScenePageHeader>
 
-        {userBucketCID && (
-          <div style={{ marginTop: 34, marginBottom: 24 }}>
-            <System.DescriptionGroup
-              style={{ maxWidth: 640 }}
-              label="Bucket CID"
-              description={
-                "This is your bucket CID. Use this to access your Slate files on other platforms"
-              }
-            />
-            <input
-              value={this.state.copying ? "Copied!" : userBucketCID}
-              css={STYLES_API_KEY}
-              style={{ textOverflow: "ellipsis" }}
-              type="text"
-              readOnly
-              ref={(c) => {
-                this._bucketCID = c;
-              }}
-              onClick={this._handleCopy}
-            />
-          </div>
-        )}
-        <br />
-
-        <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 24 }} label="API Keys" />
-        {this.props.viewer.keys.map((k) => {
-          return <Key key={k.id} data={k} onDelete={this._handleDelete} />;
-        })}
-
-        <div style={{ marginTop: 24 }}>
-          {this.props.viewer.keys.length < 10 ? (
-            <System.ButtonPrimary onClick={this._handleSave} loading={this.state.loading}>
-              Generate
-            </System.ButtonPrimary>
-          ) : (
-            <System.ButtonDisabled>Generate</System.ButtonDisabled>
+          {userBucketCID && (
+            <div style={{ marginTop: 34, marginBottom: 24 }}>
+              <System.DescriptionGroup
+                style={{ maxWidth: 640 }}
+                label="Bucket CID"
+                description={
+                  "This is your bucket CID. Use this to access your Slate files on other platforms"
+                }
+              />
+              <input
+                value={this.state.copying ? "Copied!" : userBucketCID}
+                css={STYLES_API_KEY}
+                style={{ textOverflow: "ellipsis" }}
+                type="text"
+                readOnly
+                ref={(c) => {
+                  this._bucketCID = c;
+                }}
+                onClick={this._handleCopy}
+              />
+            </div>
           )}
-          {this.props.viewer.keys.length === 0 ? (
-            <ScenePageHeader title="">
-              Generate an API key to have it appear in the code examples
-            </ScenePageHeader>
-          ) : null}
-        </div>
+          <br />
 
-        {/*
+          <System.DescriptionGroup style={{ maxWidth: 640, marginBottom: 24 }} label="API Keys" />
+          {this.props.viewer.keys.map((k) => {
+            return <Key key={k.id} data={k} onDelete={this._handleDelete} />;
+          })}
+
+          <div style={{ marginTop: 24 }}>
+            {this.props.viewer.keys.length < 10 ? (
+              <System.ButtonPrimary onClick={this._handleSave} loading={this.state.loading}>
+                Generate
+              </System.ButtonPrimary>
+            ) : (
+              <System.ButtonDisabled>Generate</System.ButtonDisabled>
+            )}
+            {this.props.viewer.keys.length === 0 ? (
+              <ScenePageHeader title="">
+                Generate an API key to have it appear in the code examples
+              </ScenePageHeader>
+            ) : null}
+          </div>
+
+          {/*
         <div css={STYLES_LANGUAGE_CONTAINER}>
           <div
             css={STYLES_LANGUAGE_TILE}
@@ -291,86 +295,87 @@ export default class SceneSettingsDeveloper extends React.Component {
           <APIDocsUpdateSlate language={lang} APIKey={APIKey} slateId={slateId} />
           <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
         */}
-        <ScenePageHeader title="Developer Documentation" style={{ marginTop: 96 }}>
-          Slate is currently on v2.0 of the API. While prior versions are still supported, we
-          recommend using the most up to date version.
-        </ScenePageHeader>
+          <ScenePageHeader title="Developer Documentation" style={{ marginTop: 96 }}>
+            Slate is currently on v2.0 of the API. While prior versions are still supported, we
+            recommend using the most up to date version.
+          </ScenePageHeader>
 
-        <SecondaryTabGroup
-          tabs={[
-            { title: "Version 2.0", value: { tab: "v2" } },
-            { title: "Version 1.0", value: { tab: "v1" } },
-          ]}
-          value={tab}
-          onAction={this.props.onAction}
-        />
+          <SecondaryTabGroup
+            tabs={[
+              { title: "Version 2.0", value: { tab: "v2" } },
+              { title: "Version 1.0", value: { tab: "v1" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+          />
 
-        {tab === "v2" ? (
-          <>
-            <APIDocsGetV2
-              language={lang}
-              APIKey={APIKey}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsGetSlateV2
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsGetUserV2
-              language={lang}
-              APIKey={APIKey}
-              userId={userId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUpdateSlateV2
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUpdateFileV2
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUploadToSlateV2
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-          </>
-        ) : (
-          <>
-            <APIDocsGetV1
-              language={lang}
-              APIKey={APIKey}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsGetSlateV1
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUpdateSlateV1
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-            <APIDocsUploadToSlateV1
-              language={lang}
-              APIKey={APIKey}
-              slateId={slateId}
-              onLanguageChange={this._handleChangeLanguage}
-            />
-          </>
-        )}
-      </ScenePage>
+          {tab === "v2" ? (
+            <>
+              <APIDocsGetV2
+                language={lang}
+                APIKey={APIKey}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsGetSlateV2
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsGetUserV2
+                language={lang}
+                APIKey={APIKey}
+                userId={userId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUpdateSlateV2
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUpdateFileV2
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadToSlateV2
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+            </>
+          ) : (
+            <>
+              <APIDocsGetV1
+                language={lang}
+                APIKey={APIKey}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsGetSlateV1
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUpdateSlateV1
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadToSlateV1
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+            </>
+          )}
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

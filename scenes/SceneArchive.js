@@ -8,6 +8,7 @@ import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SceneSettings from "~/scenes/SceneSettings";
@@ -115,142 +116,147 @@ export default class SceneArchive extends React.Component {
   render() {
     let tab = this.props.page.params?.tab || "archive";
     return (
-      <ScenePage>
-        <ScenePageHeader title="Filecoin">
-          {/* Use this section to archive all of your data on to Filecoin through a storage deal. You
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <ScenePageHeader title="Filecoin">
+            {/* Use this section to archive all of your data on to Filecoin through a storage deal. You
           must have at last 100MB stored to make an archive storage deal.  */}
-        </ScenePageHeader>
+          </ScenePageHeader>
 
-        <SecondaryTabGroup
-          tabs={[
-            { title: "Archive Settings", value: { tab: "archive" } },
-            { title: "Wallet", value: { tab: "wallet" } },
-            { title: "API", value: { tab: "api" } },
-            { title: "Miners", value: { tab: "miners" } },
-          ]}
-          value={tab}
-          onAction={this.props.onAction}
-        />
+          <SecondaryTabGroup
+            tabs={[
+              { title: "Archive Settings", value: { tab: "archive" } },
+              { title: "Wallet", value: { tab: "wallet" } },
+              { title: "API", value: { tab: "api" } },
+              { title: "Miners", value: { tab: "miners" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+          />
 
-        {this.state.networkViewer ? (
-          <React.Fragment>
-            {tab === "archive" ? (
-              <React.Fragment>
-                <ScenePageHeader>
-                  Use this section to archive all of your data on to Filecoin through a storage
-                  deal. You must have at last 100MB stored to make an archive storage deal.
-                </ScenePageHeader>
+          {this.state.networkViewer ? (
+            <React.Fragment>
+              {tab === "archive" ? (
+                <React.Fragment>
+                  <ScenePageHeader>
+                    Use this section to archive all of your data on to Filecoin through a storage
+                    deal. You must have at last 100MB stored to make an archive storage deal.
+                  </ScenePageHeader>
 
-                <System.P style={{ marginTop: 24 }}>
-                  Archive all of your data onto the Filecoin Network with a storage deal using your
-                  default settings.
-                </System.P>
-                <br />
-                <System.ButtonPrimary
-                  onClick={() =>
-                    this.props.onAction({
-                      type: "SIDEBAR",
-                      value: "SIDEBAR_FILECOIN_ARCHIVE",
-                    })
-                  }
-                >
-                  Archive your data
-                </System.ButtonPrimary>
-
-                <System.DescriptionGroup
-                  style={{ marginTop: 64 }}
-                  label="Archive automation settings"
-                  description="Configure the automation settings for your archive storage deals."
-                />
-
-                <System.CheckBox
-                  style={{ marginTop: 24 }}
-                  name="allow_filecoin_directory_listing"
-                  value={this.state.allow_filecoin_directory_listing}
-                  onChange={this._handleCheckboxChange}
-                >
-                  Show your successful deals on a directory page where others can retrieve them.
-                </System.CheckBox>
-
-                <System.CheckBox
-                  style={{ marginTop: 24 }}
-                  name="allow_automatic_data_storage"
-                  value={this.state.allow_automatic_data_storage}
-                  onChange={this._handleCheckboxChange}
-                >
-                  Allow Slate to make archive storage deals on your behalf to the Filecoin Network.
-                  You will get a receipt in the Filecoin section.
-                </System.CheckBox>
-
-                <System.CheckBox
-                  style={{ marginTop: 24 }}
-                  name="allow_encrypted_data_storage"
-                  value={this.state.allow_encrypted_data_storage}
-                  onChange={this._handleCheckboxChange}
-                >
-                  Force encryption on archive storage deals (only you can see retrieved data from
-                  the Filecoin network).
-                </System.CheckBox>
-
-                <div style={{ marginTop: 24 }}>
+                  <System.P style={{ marginTop: 24 }}>
+                    Archive all of your data onto the Filecoin Network with a storage deal using
+                    your default settings.
+                  </System.P>
+                  <br />
                   <System.ButtonPrimary
-                    onClick={this._handleSaveFilecoin}
-                    loading={this.state.changingFilecoin}
+                    onClick={() =>
+                      this.props.onAction({
+                        type: "SIDEBAR",
+                        value: "SIDEBAR_FILECOIN_ARCHIVE",
+                      })
+                    }
                   >
-                    Save archiving settings
+                    Archive your data
                   </System.ButtonPrimary>
-                </div>
-                <br />
-                <br />
-                <SceneSettings {...this.props} networkViewer={this.state.networkViewer} />
-              </React.Fragment>
-            ) : null}
 
-            {tab === "wallet" ? (
-              <React.Fragment>
-                <SceneWallet {...this.props} networkViewer={this.state.networkViewer} />
-                <br />
-                <br />
-                {this.state.dealsLoaded ? (
-                  <SceneDeals deals={this.state.deals} dealsLoaded={this.state.dealsLoaded} />
-                ) : (
-                  <div css={STYLES_SPINNER_CONTAINER}>
-                    <LoaderSpinner style={{ height: 32, width: 32 }} />
-                  </div>
-                )}
-              </React.Fragment>
-            ) : null}
+                  <System.DescriptionGroup
+                    style={{ marginTop: 64 }}
+                    label="Archive automation settings"
+                    description="Configure the automation settings for your archive storage deals."
+                  />
 
-            {tab === "api" ? (
-              <React.Fragment>
-                {this.state.routes ? (
-                  <SceneSentinel routes={this.state.routes} />
-                ) : (
-                  <div css={STYLES_SPINNER_CONTAINER}>
-                    <LoaderSpinner style={{ height: 32, width: 32 }} />
-                  </div>
-                )}
-              </React.Fragment>
-            ) : null}
+                  <System.CheckBox
+                    style={{ marginTop: 24 }}
+                    name="allow_filecoin_directory_listing"
+                    value={this.state.allow_filecoin_directory_listing}
+                    onChange={this._handleCheckboxChange}
+                  >
+                    Show your successful deals on a directory page where others can retrieve them.
+                  </System.CheckBox>
 
-            {tab === "miners" ? (
-              <React.Fragment>
-                {this.state.miners ? (
-                  <SceneMiners miners={this.state.miners} />
-                ) : (
-                  <div css={STYLES_SPINNER_CONTAINER}>
-                    <LoaderSpinner style={{ height: 32, width: 32 }} />
+                  <System.CheckBox
+                    style={{ marginTop: 24 }}
+                    name="allow_automatic_data_storage"
+                    value={this.state.allow_automatic_data_storage}
+                    onChange={this._handleCheckboxChange}
+                  >
+                    Allow Slate to make archive storage deals on your behalf to the Filecoin
+                    Network. You will get a receipt in the Filecoin section.
+                  </System.CheckBox>
+
+                  <System.CheckBox
+                    style={{ marginTop: 24 }}
+                    name="allow_encrypted_data_storage"
+                    value={this.state.allow_encrypted_data_storage}
+                    onChange={this._handleCheckboxChange}
+                  >
+                    Force encryption on archive storage deals (only you can see retrieved data from
+                    the Filecoin network).
+                  </System.CheckBox>
+
+                  <div style={{ marginTop: 24 }}>
+                    <System.ButtonPrimary
+                      onClick={this._handleSaveFilecoin}
+                      loading={this.state.changingFilecoin}
+                    >
+                      Save archiving settings
+                    </System.ButtonPrimary>
                   </div>
-                )}
-              </React.Fragment>
-            ) : null}
-          </React.Fragment>
-        ) : (
-          <div css={STYLES_SPINNER_CONTAINER}>
-            <LoaderSpinner style={{ height: 32, width: 32 }} />
-          </div>
-        )}
-      </ScenePage>
+                  <br />
+                  <br />
+                  <SceneSettings {...this.props} networkViewer={this.state.networkViewer} />
+                </React.Fragment>
+              ) : null}
+
+              {tab === "wallet" ? (
+                <React.Fragment>
+                  <SceneWallet {...this.props} networkViewer={this.state.networkViewer} />
+                  <br />
+                  <br />
+                  {this.state.dealsLoaded ? (
+                    <SceneDeals deals={this.state.deals} dealsLoaded={this.state.dealsLoaded} />
+                  ) : (
+                    <div css={STYLES_SPINNER_CONTAINER}>
+                      <LoaderSpinner style={{ height: 32, width: 32 }} />
+                    </div>
+                  )}
+                </React.Fragment>
+              ) : null}
+
+              {tab === "api" ? (
+                <React.Fragment>
+                  {this.state.routes ? (
+                    <SceneSentinel routes={this.state.routes} />
+                  ) : (
+                    <div css={STYLES_SPINNER_CONTAINER}>
+                      <LoaderSpinner style={{ height: 32, width: 32 }} />
+                    </div>
+                  )}
+                </React.Fragment>
+              ) : null}
+
+              {tab === "miners" ? (
+                <React.Fragment>
+                  {this.state.miners ? (
+                    <SceneMiners miners={this.state.miners} />
+                  ) : (
+                    <div css={STYLES_SPINNER_CONTAINER}>
+                      <LoaderSpinner style={{ height: 32, width: 32 }} />
+                    </div>
+                  )}
+                </React.Fragment>
+              ) : null}
+            </React.Fragment>
+          ) : (
+            <div css={STYLES_SPINNER_CONTAINER}>
+              <LoaderSpinner style={{ height: 32, width: 32 }} />
+            </div>
+          )}
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

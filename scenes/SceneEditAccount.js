@@ -11,11 +11,12 @@ import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
+import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import Avatar from "~/components/core/Avatar";
-import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 const STYLES_FILE_HIDDEN = css`
   height: 1px;
@@ -174,209 +175,220 @@ export default class SceneEditAccount extends React.Component {
   render() {
     let tab = this.props.page.params?.tab || "profile";
     return (
-      <ScenePage>
-        <ScenePageHeader title="Settings" />
-        <SecondaryTabGroup
-          tabs={[
-            { title: "Profile", value: { tab: "profile" } },
-            { title: "Data Storage", value: { tab: "storage" } },
-            { title: "Security", value: { tab: "security" } },
-            { title: "Account", value: { tab: "account" } },
-          ]}
-          value={tab}
-          onAction={this.props.onAction}
-          style={{ marginBottom: 48 }}
-        />
-        {tab === "profile" ? (
-          <div>
-            <div css={STYLES_HEADER}>Your Avatar</div>
-
-            <Avatar size={256} url={this.props.viewer.data.photo} />
-
-            <div style={{ marginTop: 24 }}>
-              <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleUpload} />
-              <System.ButtonPrimary
-                style={{ margin: "0 16px 16px 0", width: "200px" }}
-                type="label"
-                htmlFor="file"
-                loading={this.state.changingAvatar}
-              >
-                Upload avatar
-              </System.ButtonPrimary>
-            </div>
-
-            <div css={STYLES_HEADER}>Display name</div>
-            <System.Input
-              name="name"
-              value={this.state.name}
-              placeholder="Your name..."
-              onChange={this._handleChange}
-            />
-
-            <div css={STYLES_HEADER}>Bio</div>
-            <System.Textarea
-              name="body"
-              value={this.state.body}
-              placeholder="A bit about yourself..."
-              onChange={this._handleChange}
-            />
-
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary
-                onClick={this._handleSave}
-                loading={this.state.savingNameBio}
-                style={{ width: "200px" }}
-              >
-                Save
-              </System.ButtonPrimary>
-            </div>
-          </div>
-        ) : null}
-        {tab === "storage" ? (
-          <div style={{ maxWidth: 800 }}>
-            <div css={STYLES_HEADER}>
-              Allow Slate to make Filecoin archive storage deals on your behalf
-            </div>
-            <div style={{ maxWidth: 800 }}>
-              If this box is checked, then we will make Filecoin archive storage deals on your
-              behalf. By default these storage deals are not encrypted and anyone can retrieve them
-              from the Filecoin Network.
-            </div>
-
-            <System.CheckBox
-              style={{ marginTop: 48 }}
-              name="allow_filecoin_directory_listing"
-              value={this.state.allow_filecoin_directory_listing}
-              onChange={this._handleChange}
-            >
-              Show your successful deals on a directory page where others can retrieve them.
-            </System.CheckBox>
-
-            <System.CheckBox
-              style={{ marginTop: 24 }}
-              name="allow_automatic_data_storage"
-              value={this.state.allow_automatic_data_storage}
-              onChange={this._handleChange}
-            >
-              Allow Slate to make archive storage deals on your behalf to the Filecoin Network. You
-              will get a receipt in the Filecoin section.
-            </System.CheckBox>
-
-            <System.CheckBox
-              style={{ marginTop: 24 }}
-              name="allow_encrypted_data_storage"
-              value={this.state.allow_encrypted_data_storage}
-              onChange={this._handleChange}
-            >
-              Force encryption on archive storage deals (only you can see retrieved data from the
-              Filecoin network).
-            </System.CheckBox>
-
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary
-                onClick={this._handleSaveFilecoin}
-                loading={this.state.changingFilecoin}
-                style={{ width: "200px" }}
-              >
-                Save
-              </System.ButtonPrimary>
-            </div>
-          </div>
-        ) : null}
-        {tab === "security" ? (
-          <div>
-            <div css={STYLES_HEADER}>Change password</div>
-            <div>Passwords must be a minimum of eight characters.</div>
-
-            <System.Input
-              containerStyle={{ marginTop: 24 }}
-              name="password"
-              type="password"
-              value={this.state.password}
-              placeholder="Your new password"
-              onChange={this._handleChange}
-            />
-            <System.Input
-              containerStyle={{ marginTop: 12 }}
-              name="confirm"
-              type="password"
-              value={this.state.confirm}
-              placeholder="Confirm password"
-              onChange={this._handleChange}
-            />
-
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary
-                onClick={this._handleChangePassword}
-                loading={this.state.changingPassword}
-                style={{ width: "200px" }}
-              >
-                Change password
-              </System.ButtonPrimary>
-            </div>
-          </div>
-        ) : null}
-        {tab === "account" ? (
-          <div>
-            <div css={STYLES_HEADER}>Change username</div>
-            <div style={{ maxWidth: 800 }}>
-              Username must be unique. <br />
-              Changing your username will make any links to your profile or slates that you
-              previously shared invalid.
-            </div>
-            <System.Input
-              containerStyle={{ marginTop: 12 }}
-              name="username"
-              value={this.state.username}
-              placeholder="Username"
-              onChange={this._handleUsernameChange}
-            />
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary onClick={this._handleSave} style={{ width: "200px" }}>
-                Change my username
-              </System.ButtonPrimary>
-            </div>
-
-            <div css={STYLES_HEADER} style={{ marginTop: 64 }}>
-              Delete your account
-            </div>
-            <div style={{ maxWidth: 800 }}>
-              If you choose to delete your account you will lose your Textile Hub and Powergate key.
-            </div>
-
-            <div style={{ marginTop: 24 }}>
-              <System.ButtonWarning
-                onClick={() => this.setState({ modalShow: true })}
-                loading={this.state.deleting}
-                style={{ width: "200px" }}
-              >
-                Delete my account
-              </System.ButtonWarning>
-            </div>
-          </div>
-        ) : null}
-        <input
-          readOnly
-          ref={(c) => {
-            this._ref = c;
-          }}
-          value={this.state.copyValue}
-          tabIndex="-1"
-          css={STYLES_COPY_INPUT}
-        />{" "}
-        {this.state.modalShow && (
-          <ConfirmationModal
-            type={"DELETE"}
-            withValidation={true}
-            matchValue={this.state.username}
-            callback={this._handleDelete}
-            header={`Are you sure you want to delete your account @${this.state.username}?`}
-            subHeader={`You will lose all your files and collections. You can’t undo this action.`}
-            inputHeader={`Please type your username to confirm`}
-            inputPlaceholder={`username`}
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <ScenePageHeader title="Settings" />
+          <SecondaryTabGroup
+            tabs={[
+              { title: "Profile", value: { tab: "profile" } },
+              { title: "Data Storage", value: { tab: "storage" } },
+              { title: "Security", value: { tab: "security" } },
+              { title: "Account", value: { tab: "account" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+            style={{ marginBottom: 48 }}
           />
-        )}
-      </ScenePage>
+          {tab === "profile" ? (
+            <div>
+              <div css={STYLES_HEADER}>Your Avatar</div>
+
+              <Avatar size={256} url={this.props.viewer.data.photo} />
+
+              <div style={{ marginTop: 24 }}>
+                <input
+                  css={STYLES_FILE_HIDDEN}
+                  type="file"
+                  id="file"
+                  onChange={this._handleUpload}
+                />
+                <System.ButtonPrimary
+                  style={{ margin: "0 16px 16px 0", width: "200px" }}
+                  type="label"
+                  htmlFor="file"
+                  loading={this.state.changingAvatar}
+                >
+                  Upload avatar
+                </System.ButtonPrimary>
+              </div>
+
+              <div css={STYLES_HEADER}>Display name</div>
+              <System.Input
+                name="name"
+                value={this.state.name}
+                placeholder="Your name..."
+                onChange={this._handleChange}
+              />
+
+              <div css={STYLES_HEADER}>Bio</div>
+              <System.Textarea
+                name="body"
+                value={this.state.body}
+                placeholder="A bit about yourself..."
+                onChange={this._handleChange}
+              />
+
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonPrimary
+                  onClick={this._handleSave}
+                  loading={this.state.savingNameBio}
+                  style={{ width: "200px" }}
+                >
+                  Save
+                </System.ButtonPrimary>
+              </div>
+            </div>
+          ) : null}
+          {tab === "storage" ? (
+            <div style={{ maxWidth: 800 }}>
+              <div css={STYLES_HEADER}>
+                Allow Slate to make Filecoin archive storage deals on your behalf
+              </div>
+              <div style={{ maxWidth: 800 }}>
+                If this box is checked, then we will make Filecoin archive storage deals on your
+                behalf. By default these storage deals are not encrypted and anyone can retrieve
+                them from the Filecoin Network.
+              </div>
+
+              <System.CheckBox
+                style={{ marginTop: 48 }}
+                name="allow_filecoin_directory_listing"
+                value={this.state.allow_filecoin_directory_listing}
+                onChange={this._handleChange}
+              >
+                Show your successful deals on a directory page where others can retrieve them.
+              </System.CheckBox>
+
+              <System.CheckBox
+                style={{ marginTop: 24 }}
+                name="allow_automatic_data_storage"
+                value={this.state.allow_automatic_data_storage}
+                onChange={this._handleChange}
+              >
+                Allow Slate to make archive storage deals on your behalf to the Filecoin Network.
+                You will get a receipt in the Filecoin section.
+              </System.CheckBox>
+
+              <System.CheckBox
+                style={{ marginTop: 24 }}
+                name="allow_encrypted_data_storage"
+                value={this.state.allow_encrypted_data_storage}
+                onChange={this._handleChange}
+              >
+                Force encryption on archive storage deals (only you can see retrieved data from the
+                Filecoin network).
+              </System.CheckBox>
+
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonPrimary
+                  onClick={this._handleSaveFilecoin}
+                  loading={this.state.changingFilecoin}
+                  style={{ width: "200px" }}
+                >
+                  Save
+                </System.ButtonPrimary>
+              </div>
+            </div>
+          ) : null}
+          {tab === "security" ? (
+            <div>
+              <div css={STYLES_HEADER}>Change password</div>
+              <div>Passwords must be a minimum of eight characters.</div>
+
+              <System.Input
+                containerStyle={{ marginTop: 24 }}
+                name="password"
+                type="password"
+                value={this.state.password}
+                placeholder="Your new password"
+                onChange={this._handleChange}
+              />
+              <System.Input
+                containerStyle={{ marginTop: 12 }}
+                name="confirm"
+                type="password"
+                value={this.state.confirm}
+                placeholder="Confirm password"
+                onChange={this._handleChange}
+              />
+
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonPrimary
+                  onClick={this._handleChangePassword}
+                  loading={this.state.changingPassword}
+                  style={{ width: "200px" }}
+                >
+                  Change password
+                </System.ButtonPrimary>
+              </div>
+            </div>
+          ) : null}
+          {tab === "account" ? (
+            <div>
+              <div css={STYLES_HEADER}>Change username</div>
+              <div style={{ maxWidth: 800 }}>
+                Username must be unique. <br />
+                Changing your username will make any links to your profile or slates that you
+                previously shared invalid.
+              </div>
+              <System.Input
+                containerStyle={{ marginTop: 12 }}
+                name="username"
+                value={this.state.username}
+                placeholder="Username"
+                onChange={this._handleUsernameChange}
+              />
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonPrimary onClick={this._handleSave} style={{ width: "200px" }}>
+                  Change my username
+                </System.ButtonPrimary>
+              </div>
+
+              <div css={STYLES_HEADER} style={{ marginTop: 64 }}>
+                Delete your account
+              </div>
+              <div style={{ maxWidth: 800 }}>
+                If you choose to delete your account you will lose your Textile Hub and Powergate
+                key.
+              </div>
+
+              <div style={{ marginTop: 24 }}>
+                <System.ButtonWarning
+                  onClick={() => this.setState({ modalShow: true })}
+                  loading={this.state.deleting}
+                  style={{ width: "200px" }}
+                >
+                  Delete my account
+                </System.ButtonWarning>
+              </div>
+            </div>
+          ) : null}
+          <input
+            readOnly
+            ref={(c) => {
+              this._ref = c;
+            }}
+            value={this.state.copyValue}
+            tabIndex="-1"
+            css={STYLES_COPY_INPUT}
+          />{" "}
+          {this.state.modalShow && (
+            <ConfirmationModal
+              type={"DELETE"}
+              withValidation={true}
+              matchValue={this.state.username}
+              callback={this._handleDelete}
+              header={`Are you sure you want to delete your account @${this.state.username}?`}
+              subHeader={`You will lose all your files and collections. You can’t undo this action.`}
+              inputHeader={`Please type your username to confirm`}
+              inputPlaceholder={`username`}
+            />
+          )}
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

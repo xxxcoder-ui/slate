@@ -1,7 +1,9 @@
 import * as React from "react";
+import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 
@@ -123,17 +125,19 @@ const STYLES_MIDDLE = css`
 
 export default class SceneError extends React.Component {
   render() {
-    const title = `404`;
-    const description = "The page you are looking for does not exist";
-    const url = "https://slate.host/404";
-
     return (
-      <ScenePage>
-        <div css={STYLES_MIDDLE}>
-          <h1 css={STYLES_GLITCH}>404</h1>
-          <h2 style={{ textAlign: "center" }}>The page you are looking for does not exist</h2>
-        </div>
-      </ScenePage>
+      <WebsitePrototypeWrapper
+        description="The page you are looking for does not exist"
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <div css={STYLES_MIDDLE}>
+            <h1 css={STYLES_GLITCH}>404</h1>
+            <h2 style={{ textAlign: "center" }}>The page you are looking for does not exist</h2>
+          </div>
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

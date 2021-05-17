@@ -5,6 +5,7 @@ import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 
 const STYLES_FLEX = css`
@@ -74,19 +75,24 @@ export default class SceneFile extends React.Component {
     const fileURL = Strings.getURLfromCID(cid);
 
     return (
-      <div css={STYLES_FLEX}>
-        <div css={STYLES_TOP}>
-          <div css={STYLES_LEFT}>
-            <a css={STYLES_PATH} href={fileURL} target="_blank">
-              {fileURL}
-            </a>
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <div css={STYLES_FLEX}>
+          <div css={STYLES_TOP}>
+            <div css={STYLES_LEFT}>
+              <a css={STYLES_PATH} href={fileURL} target="_blank">
+                {fileURL}
+              </a>
+            </div>
+            <div css={STYLES_RIGHT}>
+              <SVG.Dismiss height="24px" />
+            </div>
           </div>
-          <div css={STYLES_RIGHT}>
-            <SVG.Dismiss height="24px" />
-          </div>
+          <SlateMediaObject file={this.props.data} />
         </div>
-        <SlateMediaObject file={this.props.data} />
-      </div>
+      </WebsitePrototypeWrapper>
     );
   }
 }

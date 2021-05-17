@@ -12,6 +12,7 @@ import { Link } from "~/components/core/Link";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import EmptyState from "~/components/core/EmptyState";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_USER_ENTRY = css`
   display: grid;
@@ -298,47 +299,52 @@ export default class SceneDirectory extends React.Component {
 
     let tab = this.props.page.params?.tab || "following";
     return (
-      <ScenePage>
-        <ScenePageHeader title="Directory" />
-        <SecondaryTabGroup
-          tabs={[
-            { title: "Following", value: { tab: "following" } },
-            { title: "Followers", value: { tab: "followers" } },
-          ]}
-          value={tab}
-          onAction={this.props.onAction}
-        />
-        {tab === "following" ? (
-          following && following.length ? (
-            following
-          ) : (
-            <EmptyState>
-              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              You can follow any user on the network to be updated on their new uploads and
-              collections.
-            </EmptyState>
-          )
-        ) : null}
-        {tab === "followers" ? (
-          followers && followers.length ? (
-            followers
-          ) : (
-            <EmptyState>
-              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              You don't have any followers yet.
-            </EmptyState>
-          )
-        ) : null}
-        <input
-          readOnly
-          ref={(c) => {
-            this._ref = c;
-          }}
-          value={this.state.copyValue}
-          tabIndex="-1"
-          css={STYLES_COPY_INPUT}
-        />
-      </ScenePage>
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <ScenePageHeader title="Directory" />
+          <SecondaryTabGroup
+            tabs={[
+              { title: "Following", value: { tab: "following" } },
+              { title: "Followers", value: { tab: "followers" } },
+            ]}
+            value={tab}
+            onAction={this.props.onAction}
+          />
+          {tab === "following" ? (
+            following && following.length ? (
+              following
+            ) : (
+              <EmptyState>
+                <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+                You can follow any user on the network to be updated on their new uploads and
+                collections.
+              </EmptyState>
+            )
+          ) : null}
+          {tab === "followers" ? (
+            followers && followers.length ? (
+              followers
+            ) : (
+              <EmptyState>
+                <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+                You don't have any followers yet.
+              </EmptyState>
+            )
+          ) : null}
+          <input
+            readOnly
+            ref={(c) => {
+              this._ref = c;
+            }}
+            value={this.state.copyValue}
+            tabIndex="-1"
+            css={STYLES_COPY_INPUT}
+          />
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

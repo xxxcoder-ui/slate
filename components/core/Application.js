@@ -131,9 +131,6 @@ export default class ApplicationPage extends React.Component {
     if (this.state.viewer) {
       await this._handleSetupWebsocket();
     }
-    console.log(this.props.page);
-    console.log(this.props.data);
-    // this._handleBackForward();
   }
 
   componentWillUnmount() {
@@ -768,40 +765,39 @@ export default class ApplicationPage extends React.Component {
     // }
     return (
       <React.Fragment>
-        <WebsitePrototypeWrapper description={description} title={title} url={url}>
-          <ApplicationLayout
-            onAction={this._handleAction}
-            header={headerElement}
-            sidebar={sidebarElement}
-            onDismissSidebar={this._handleDismissSidebar}
-            fileLoading={this.state.fileLoading}
-            isMobile={this.state.isMobile}
-            isMac={this.props.isMac}
-            viewer={this.state.viewer}
-          >
-            {this.state.loading ? (
-              <div
-                css={Styles.CONTAINER_CENTERED}
-                style={{
-                  width: "100vw",
-                  height: "100vh",
-                }}
-              >
-                <LoaderSpinner style={{ height: 32, width: 32 }} />
-              </div>
-            ) : (
-              scene
-            )}
-          </ApplicationLayout>
-          <GlobalModal />
-          <SearchModal
-            viewer={this.state.viewer}
-            onAction={this._handleAction}
-            isMobile={this.props.isMobile}
-            resourceURI={this.props.resources.search}
-          />
-          <CTATransition onAction={this._handleAction} />
-          {/* {!this.state.loaded ? (
+        <ApplicationLayout
+          onAction={this._handleAction}
+          header={headerElement}
+          sidebar={sidebarElement}
+          onDismissSidebar={this._handleDismissSidebar}
+          fileLoading={this.state.fileLoading}
+          isMobile={this.state.isMobile}
+          isMac={this.props.isMac}
+          viewer={this.state.viewer}
+        >
+          {this.state.loading ? (
+            <div
+              css={Styles.CONTAINER_CENTERED}
+              style={{
+                width: "100vw",
+                height: "100vh",
+              }}
+            >
+              <LoaderSpinner style={{ height: 32, width: 32 }} />
+            </div>
+          ) : (
+            scene
+          )}
+        </ApplicationLayout>
+        <GlobalModal />
+        <SearchModal
+          viewer={this.state.viewer}
+          onAction={this._handleAction}
+          isMobile={this.props.isMobile}
+          resourceURI={this.props.resources.search}
+        />
+        <CTATransition onAction={this._handleAction} />
+        {/* {!this.state.loaded ? (
             <div
               style={{
                 position: "absolute",
@@ -815,7 +811,6 @@ export default class ApplicationPage extends React.Component {
               <Logo style={{ width: "20vw", maxWidth: "200px" }} />
             </div>
           ) : null} */}
-        </WebsitePrototypeWrapper>
       </React.Fragment>
     );
   }

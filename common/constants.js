@@ -121,6 +121,8 @@ export const gateways = {
   ipfs: "https://slate.textile.io/ipfs",
 };
 
+export const hostname = "https://slate.host";
+
 // more important filetypes to consider:
 // midi
 // txt, rtf, docx

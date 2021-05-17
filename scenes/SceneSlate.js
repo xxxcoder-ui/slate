@@ -17,6 +17,7 @@ import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ProcessedText from "~/components/core/ProcessedText";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
@@ -186,32 +187,52 @@ export default class SceneSlate extends React.Component {
   // };
 
   render() {
-    if (!this.props.data) {
+    const slate = this.props.data;
+    if (!slate) {
       return (
-        // <ScenePage>
-        //   <EmptyState>
-        //     <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
-        //     <div>We were unable to locate that collection</div>
-        //   </EmptyState>
-        // </ScenePage>
-        <ScenePage>
-          <div css={STYLES_LOADER}>
-            <LoaderSpinner />
-          </div>
-        </ScenePage>
+        <WebsitePrototypeWrapper
+          title={`${this.props.page.pageTitle} • Slate`}
+          url={`${Constants.hostname}${this.props.page.pathname}`}
+        >
+          <ScenePage>
+            <EmptyState>
+              <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
+              <div>We were unable to locate that collection</div>
+            </EmptyState>
+          </ScenePage>
+        </WebsitePrototypeWrapper>
       );
     } else {
-      return <SlatePage {...this.props} key={this.props.data.id} data={this.props.data} />;
+      let title;
+      let description;
+      let file;
+      let name = slate.data.name;
+      if (this.props.page.params?.cid) {
+        file = slate.objects.find((file) => file.cid === this.props.page.params.cid);
+      }
+      if (file) {
+        title = `${file.data.name || file.filename}`;
+        description = file.data.body
+          ? file.data.body
+          : `View ${title}, a file in the collection ${name} on Slate`;
+      } else {
+        if (slate.data.body) {
+          description = `${name}. ${slate.data.body}`;
+        } else {
+          description = `View the collection ${name} on Slate`;
+        }
+        title = `${name} • Slate`;
+      }
+      return (
+        <WebsitePrototypeWrapper
+          description={description}
+          title={title}
+          url={`${Constants.hostname}${this.props.page.pathname}`}
+        >
+          <SlatePage {...this.props} key={slate.id} data={slate} />
+        </WebsitePrototypeWrapper>
+      );
     }
-    // if (this.state.loading) {
-    //   return (
-    //     <ScenePage>
-    //       <div css={STYLES_LOADER}>
-    //         <LoaderSpinner />
-    //       </div>
-    //     </ScenePage>
-    //   );
-    // } else
   }
 }
 

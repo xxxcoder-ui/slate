@@ -15,7 +15,7 @@ import { Link } from "~/components/core/Link";
 import EmptyState from "~/components/core/EmptyState";
 import ScenePage from "~/components/core/ScenePage";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
-import ScenePageHeader from "~/components/core/ScenePageHeader";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_LOADER = css`
   display: flex;
@@ -370,14 +370,14 @@ export default class SceneActivity extends React.Component {
       }
     }
     let activity;
-    console.log(this.props.viewer);
+
     if (this.props.viewer) {
       activity =
         tab === "activity" ? this.props.viewer?.activity || [] : this.props.viewer?.explore || [];
     } else {
       activity = this.state.explore || [];
     }
-    console.log(activity);
+
     let items = activity
       .filter((item) => item.type === "CREATE_SLATE_OBJECT")
       .map((item) => {
@@ -390,54 +390,58 @@ export default class SceneActivity extends React.Component {
       });
 
     return (
-      <ScenePage>
-        {this.props.viewer && (
-          <SecondaryTabGroup
-            tabs={[
-              { title: "My network", value: { tab: "activity" } },
-              { title: "Explore", value: { tab: "explore" } },
-            ]}
-            value={tab}
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          {this.props.viewer && (
+            <SecondaryTabGroup
+              tabs={[
+                { title: "My network", value: { tab: "activity" } },
+                { title: "Explore", value: { tab: "explore" } },
+              ]}
+              value={tab}
+              onAction={this.props.onAction}
+              style={{ marginTop: 0 }}
+            />
+          )}
+          <GlobalCarousel
+            carouselType="ACTIVITY"
+            viewer={this.props.viewer}
+            objects={items}
             onAction={this.props.onAction}
-            style={{ marginTop: 0 }}
+            index={this.state.carouselIndex}
+            onChange={(index) => {
+              if (index >= items.length - 4) {
+                this.fetchActivityItems();
+              }
+              this.setState({ carouselIndex: index });
+            }}
+            isMobile={this.props.isMobile}
+            // params={this.props.page.params}
+            isOwner={false}
           />
-        )}
-        <GlobalCarousel
-          carouselType="ACTIVITY"
-          viewer={this.props.viewer}
-          objects={items}
-          onAction={this.props.onAction}
-          index={this.state.carouselIndex}
-          onChange={(index) => {
-            if (index >= items.length - 4) {
-              this.fetchActivityItems();
-            }
-            this.setState({ carouselIndex: index });
-          }}
-          isMobile={this.props.isMobile}
-          // params={this.props.page.params}
-          isOwner={false}
-        />
-        {activity.length ? (
-          <div>
-            <div css={STYLES_ACTIVITY_GRID}>
-              {activity.map((item, i) => {
-                if (item.type === "CREATE_SLATE") {
-                  return (
-                    <Link
-                      redirect
-                      key={i}
-                      disabled={this.props.isMobile ? false : true}
-                      // params={
-                      //   this.props.isMobile
-                      //     ? null
-                      //     : { ...this.props.page.params, cid: item.file.cid }
-                      // }
-                      href={`/$/slate/${item.slateId}`}
-                      onAction={this.props.onAction}
-                      onClick={() => this.setState({ carouselIndex: i })}
-                    >
-                      {/* <span
+          {activity.length ? (
+            <div>
+              <div css={STYLES_ACTIVITY_GRID}>
+                {activity.map((item, i) => {
+                  if (item.type === "CREATE_SLATE") {
+                    return (
+                      <Link
+                        redirect
+                        key={i}
+                        disabled={this.props.isMobile ? false : true}
+                        // params={
+                        //   this.props.isMobile
+                        //     ? null
+                        //     : { ...this.props.page.params, cid: item.file.cid }
+                        // }
+                        href={`/$/slate/${item.slateId}`}
+                        onAction={this.props.onAction}
+                        onClick={() => this.setState({ carouselIndex: i })}
+                      >
+                        {/* <span
                       key={item.id}
                       onClick={() =>
                         this.props.onAction({
@@ -447,70 +451,73 @@ export default class SceneActivity extends React.Component {
                         })
                       }
                     > */}
-                      <ActivityRectangle
-                        width={
-                          this.props.isMobile ? this.state.imageSize : this.state.imageSize * 2 + 20
-                        }
-                        height={this.state.imageSize}
-                        item={item}
-                      />
-                      {/* </span> */}
-                    </Link>
-                  );
-                } else if (item.type === "CREATE_SLATE_OBJECT") {
-                  return (
-                    <Link
-                      redirect
-                      key={i}
-                      disabled={this.props.isMobile ? false : true}
-                      // params={
-                      //   this.props.isMobile
-                      //     ? null
-                      //     : { ...this.props.page.params, cid: item.file.cid }
-                      // }
-                      href={`/$/slate/${item.slateId}?cid=${item.file.cid}`}
-                      onAction={this.props.onAction}
-                      onClick={() => this.setState({ carouselIndex: i })}
-                      // onClick={
-                      //   this.props.isMobile
-                      //     ? () => {}
-                      //     : () =>
-                      //         Events.dispatchCustomEvent({
-                      //           name: "slate-global-open-carousel",
-                      //           detail: { index: this.getItemIndexById(items, item) },
-                      //         })
-                      // }
-                    >
-                      <ActivitySquare
-                        size={this.state.imageSize}
-                        item={item}
-                        isMobile={this.props.isMobile}
+                        <ActivityRectangle
+                          width={
+                            this.props.isMobile
+                              ? this.state.imageSize
+                              : this.state.imageSize * 2 + 20
+                          }
+                          height={this.state.imageSize}
+                          item={item}
+                        />
+                        {/* </span> */}
+                      </Link>
+                    );
+                  } else if (item.type === "CREATE_SLATE_OBJECT") {
+                    return (
+                      <Link
+                        redirect
+                        key={i}
+                        disabled={this.props.isMobile ? false : true}
+                        // params={
+                        //   this.props.isMobile
+                        //     ? null
+                        //     : { ...this.props.page.params, cid: item.file.cid }
+                        // }
+                        href={`/$/slate/${item.slateId}?cid=${item.file.cid}`}
                         onAction={this.props.onAction}
-                      />
-                    </Link>
-                  );
-                } else {
-                  return null;
-                }
-              })}
+                        onClick={() => this.setState({ carouselIndex: i })}
+                        // onClick={
+                        //   this.props.isMobile
+                        //     ? () => {}
+                        //     : () =>
+                        //         Events.dispatchCustomEvent({
+                        //           name: "slate-global-open-carousel",
+                        //           detail: { index: this.getItemIndexById(items, item) },
+                        //         })
+                        // }
+                      >
+                        <ActivitySquare
+                          size={this.state.imageSize}
+                          item={item}
+                          isMobile={this.props.isMobile}
+                          onAction={this.props.onAction}
+                        />
+                      </Link>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+              </div>
+              <div css={STYLES_LOADER} style={{ height: 100 }}>
+                {this.state.loading === "loading" ? <LoaderSpinner /> : null}
+              </div>
             </div>
-            <div css={STYLES_LOADER} style={{ height: 100 }}>
-              {this.state.loading === "loading" ? <LoaderSpinner /> : null}
+          ) : this.state.loading === "loading" ? (
+            <div css={STYLES_LOADER}>
+              <LoaderSpinner />
             </div>
-          </div>
-        ) : this.state.loading === "loading" ? (
-          <div css={STYLES_LOADER}>
-            <LoaderSpinner />
-          </div>
-        ) : (
-          <EmptyState>
-            <SVG.Users height="24px" />
-            <div style={{ marginTop: 24 }}>
-              Start following people and collections to see their activity here
-            </div>
-          </EmptyState>
-        )}
-      </ScenePage>
+          ) : (
+            <EmptyState>
+              <SVG.Users height="24px" />
+              <div style={{ marginTop: 24 }}>
+                Start following people and collections to see their activity here
+              </div>
+            </EmptyState>
+          )}
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }

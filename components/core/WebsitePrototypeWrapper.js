@@ -8,7 +8,8 @@ export default class WebsitePrototypeWrapper extends React.Component {
       "https://slate.textile.io/ipfs/bafybeihtmqpx2lnlvaerfhq5imi2y3jzuf4jqspmmqbth3ebim4ebc2lqy",
     title: "Slate",
     url: "https://slate.host/_",
-    description: "An open-source file sharing network for research and collaboration",
+    description:
+      "Slate is the place to save and share any content on the web. Discover curated collections of links and files, and create your own. Get started with 30GB of free storage.",
   };
 
   render() {

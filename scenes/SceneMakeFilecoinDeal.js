@@ -15,6 +15,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { FilecoinNumber } from "@glif/filecoin-number";
 import { Link } from "~/components/core/Link";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import Section from "~/components/core/Section";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
@@ -302,65 +303,113 @@ export default class SceneMakeFilecoinDeal extends React.Component {
       inFil = filecoinNumber.toFil();
     }
 
-    console.log(this.state);
-
     return (
-      <ScenePage>
-        <input
-          css={STYLES_FILE_HIDDEN}
-          multiple
-          type="file"
-          id="file"
-          onChange={this._handleUpload}
-        />
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <input
+            css={STYLES_FILE_HIDDEN}
+            multiple
+            type="file"
+            id="file"
+            onChange={this._handleUpload}
+          />
 
-        <ScenePageHeader title="Make a one-off Filecoin Storage Deal">
-          Upload data and make one-off storage deals in the Filecoin network here. Files must be at
-          least 100MB in size.
-        </ScenePageHeader>
+          <ScenePageHeader title="Make a one-off Filecoin Storage Deal">
+            Upload data and make one-off storage deals in the Filecoin network here. Files must be
+            at least 100MB in size.
+          </ScenePageHeader>
 
-        {this.state.networkViewer ? (
-          <React.Fragment>
-            <System.DescriptionGroup
-              style={{ marginTop: 48, maxWidth: 688 }}
-              label="Storage deal files"
-              description="You can add up to 4GB of files."
-            />
+          {this.state.networkViewer ? (
+            <React.Fragment>
+              <System.DescriptionGroup
+                style={{ marginTop: 48, maxWidth: 688 }}
+                label="Storage deal files"
+                description="You can add up to 4GB of files."
+              />
 
-            <Section
-              style={{ marginTop: 24, maxWidth: 688, minWidth: "auto" }}
-              onAction={this.props.onAction}
-              buttons={[
-                {
-                  name: "Add file",
-                  multiple: true,
-                  type: "file",
-                  id: "file",
-                },
-              ]}
-            >
-              {this.state.loading ? (
-                <div css={STYLES_SPINNER_CONTAINER}>
-                  <LoaderSpinner style={{ height: 32, width: 32 }} />
-                </div>
-              ) : (
+              <Section
+                style={{ marginTop: 24, maxWidth: 688, minWidth: "auto" }}
+                onAction={this.props.onAction}
+                buttons={[
+                  {
+                    name: "Add file",
+                    multiple: true,
+                    type: "file",
+                    id: "file",
+                  },
+                ]}
+              >
+                {this.state.loading ? (
+                  <div css={STYLES_SPINNER_CONTAINER}>
+                    <LoaderSpinner style={{ height: 32, width: 32 }} />
+                  </div>
+                ) : (
+                  <System.Table
+                    data={{
+                      columns: [
+                        {
+                          key: "cid",
+                          name: "CID",
+                          width: "100%",
+                        },
+                      ],
+                      rows: this.state.networkViewer.deal.map((file) => {
+                        return {
+                          cid: (
+                            <div css={STYLES_ROW}>
+                              <span css={STYLES_LEFT} target="_blank">
+                                {file.cid}
+                              </span>
+                              <span css={STYLES_RIGHT} onClick={() => this._handleRemove(file.cid)}>
+                                <SVG.Dismiss height="16px" />
+                              </span>
+                            </div>
+                          ),
+                        };
+                      }),
+                    }}
+                  />
+                )}
+              </Section>
+
+              <System.DescriptionGroup
+                style={{ marginTop: 64, maxWidth: 688 }}
+                label="Miners"
+                description="Specify miners for our deal maker to try first, and specify miners for our deal maker to ignore."
+              />
+
+              <Section
+                style={{ marginTop: 24, maxWidth: 688, minWidth: "auto" }}
+                buttons={[
+                  {
+                    name: "Add miner",
+                    onClick: this._handleAddTrustedMiner,
+                  },
+                ]}
+              >
                 <System.Table
                   data={{
                     columns: [
                       {
-                        key: "cid",
-                        name: "CID",
+                        key: "miner",
+                        name: "Miner",
                         width: "100%",
                       },
                     ],
-                    rows: this.state.networkViewer.deal.map((file) => {
+                    rows: this.state.trustedMiners.map((miner) => {
                       return {
-                        cid: (
-                          <div css={STYLES_ROW}>
+                        miner: (
+                          <div css={STYLES_ROW} key={miner}>
                             <span css={STYLES_LEFT} target="_blank">
-                              {file.cid}
+                              {miner}
                             </span>
-                            <span css={STYLES_RIGHT} onClick={() => this._handleRemove(file.cid)}>
+                            <span
+                              css={STYLES_RIGHT}
+                              onClick={() => this._handleRemoveTrustedMiner(miner)}
+                            >
                               <SVG.Dismiss height="16px" />
                             </span>
                           </div>
@@ -369,162 +418,117 @@ export default class SceneMakeFilecoinDeal extends React.Component {
                     }),
                   }}
                 />
-              )}
-            </Section>
+              </Section>
 
-            <System.DescriptionGroup
-              style={{ marginTop: 64, maxWidth: 688 }}
-              label="Miners"
-              description="Specify miners for our deal maker to try first, and specify miners for our deal maker to ignore."
-            />
+              <Section
+                style={{ maxWidth: 688, minWidth: "auto" }}
+                buttons={[
+                  {
+                    name: "Exclude miner",
+                    onClick: this._handleAddExcludedMiner,
+                  },
+                ]}
+              >
+                <System.Table
+                  data={{
+                    columns: [
+                      {
+                        key: "miner",
+                        name: "Miner",
+                        width: "100%",
+                      },
+                    ],
+                    rows: this.state.excludedMiners.map((miner) => {
+                      return {
+                        miner: (
+                          <div css={STYLES_ROW} key={miner}>
+                            <span css={STYLES_LEFT} target="_blank">
+                              Excluding: {miner}
+                            </span>
+                            <span
+                              css={STYLES_RIGHT}
+                              onClick={() => this._handleRemoveExcludedMiner(miner)}
+                            >
+                              <SVG.Dismiss height="16px" />
+                            </span>
+                          </div>
+                        ),
+                      };
+                    }),
+                  }}
+                />
+              </Section>
 
-            <Section
-              style={{ marginTop: 24, maxWidth: 688, minWidth: "auto" }}
-              buttons={[
-                {
-                  name: "Add miner",
-                  onClick: this._handleAddTrustedMiner,
-                },
-              ]}
-            >
-              <System.Table
-                data={{
-                  columns: [
-                    {
-                      key: "miner",
-                      name: "Miner",
-                      width: "100%",
-                    },
-                  ],
-                  rows: this.state.trustedMiners.map((miner) => {
-                    return {
-                      miner: (
-                        <div css={STYLES_ROW} key={miner}>
-                          <span css={STYLES_LEFT} target="_blank">
-                            {miner}
-                          </span>
-                          <span
-                            css={STYLES_RIGHT}
-                            onClick={() => this._handleRemoveTrustedMiner(miner)}
-                          >
-                            <SVG.Dismiss height="16px" />
-                          </span>
-                        </div>
-                      ),
-                    };
-                  }),
-                }}
+              <System.DescriptionGroup
+                style={{ marginTop: 64, maxWidth: 688 }}
+                label="Default Filecoin address"
+                description={`${this.state.addr}`}
               />
-            </Section>
 
-            <Section
-              style={{ maxWidth: 688, minWidth: "auto" }}
-              buttons={[
-                {
-                  name: "Exclude miner",
-                  onClick: this._handleAddExcludedMiner,
-                },
-              ]}
-            >
-              <System.Table
-                data={{
-                  columns: [
-                    {
-                      key: "miner",
-                      name: "Miner",
-                      width: "100%",
-                    },
-                  ],
-                  rows: this.state.excludedMiners.map((miner) => {
-                    return {
-                      miner: (
-                        <div css={STYLES_ROW} key={miner}>
-                          <span css={STYLES_LEFT} target="_blank">
-                            Excluding: {miner}
-                          </span>
-                          <span
-                            css={STYLES_RIGHT}
-                            onClick={() => this._handleRemoveExcludedMiner(miner)}
-                          >
-                            <SVG.Dismiss height="16px" />
-                          </span>
-                        </div>
-                      ),
-                    };
-                  }),
-                }}
+              <System.Input
+                containerStyle={{ marginTop: 32, maxWidth: 688 }}
+                descriptionStyle={{ maxWidth: 688 }}
+                label="Default Filecoin replication and availability factor"
+                description="How many times should we replicate this deal across your selected miners?"
+                name="repFactor"
+                type="number"
+                value={this.state.repFactor}
+                placeholder="Type in amount of miners"
+                onChange={this._handleChange}
               />
-            </Section>
 
-            <System.DescriptionGroup
-              style={{ marginTop: 64, maxWidth: 688 }}
-              label="Default Filecoin address"
-              description={`${this.state.addr}`}
-            />
+              <System.Input
+                containerStyle={{ marginTop: 24, maxWidth: 688 }}
+                descriptionStyle={{ maxWidth: 688 }}
+                label="Default Filecoin deal duration"
+                description={`Your deal is set for ${Strings.getDaysFromEpoch(
+                  this.state.dealMinDuration
+                )}.`}
+                name="dealMinDuration"
+                type="number"
+                unit="epochs"
+                value={this.state.dealMinDuration}
+                placeholder="Type in epochs (1 epoch = ~30 seconds)"
+                onChange={this._handleChange}
+              />
 
-            <System.Input
-              containerStyle={{ marginTop: 32, maxWidth: 688 }}
-              descriptionStyle={{ maxWidth: 688 }}
-              label="Default Filecoin replication and availability factor"
-              description="How many times should we replicate this deal across your selected miners?"
-              name="repFactor"
-              type="number"
-              value={this.state.repFactor}
-              placeholder="Type in amount of miners"
-              onChange={this._handleChange}
-            />
+              <System.Input
+                containerStyle={{ marginTop: 24, maxWidth: 688 }}
+                descriptionStyle={{ maxWidth: 688 }}
+                label="Max Filecoin price"
+                unit="attoFIL"
+                type="number"
+                description={`Set the maximum Filecoin price you're willing to pay. The current price you have set is equivalent to ${inFil} FIL`}
+                name="maxPrice"
+                value={this.state.maxPrice}
+                placeholder="Type in amount of Filecoin (attoFIL)"
+                onChange={this._handleChange}
+              />
 
-            <System.Input
-              containerStyle={{ marginTop: 24, maxWidth: 688 }}
-              descriptionStyle={{ maxWidth: 688 }}
-              label="Default Filecoin deal duration"
-              description={`Your deal is set for ${Strings.getDaysFromEpoch(
-                this.state.dealMinDuration
-              )}.`}
-              name="dealMinDuration"
-              type="number"
-              unit="epochs"
-              value={this.state.dealMinDuration}
-              placeholder="Type in epochs (1 epoch = ~30 seconds)"
-              onChange={this._handleChange}
-            />
+              <System.CheckBox
+                style={{ marginTop: 48 }}
+                name="encryption"
+                value={this.state.encryption}
+                onChange={this._handleChange}
+              >
+                Encrypt this storage deal. Accessing the contents will require decryption.
+              </System.CheckBox>
 
-            <System.Input
-              containerStyle={{ marginTop: 24, maxWidth: 688 }}
-              descriptionStyle={{ maxWidth: 688 }}
-              label="Max Filecoin price"
-              unit="attoFIL"
-              type="number"
-              description={`Set the maximum Filecoin price you're willing to pay. The current price you have set is equivalent to ${inFil} FIL`}
-              name="maxPrice"
-              value={this.state.maxPrice}
-              placeholder="Type in amount of Filecoin (attoFIL)"
-              onChange={this._handleChange}
-            />
-
-            <System.CheckBox
-              style={{ marginTop: 48 }}
-              name="encryption"
-              value={this.state.encryption}
-              onChange={this._handleChange}
-            >
-              Encrypt this storage deal. Accessing the contents will require decryption.
-            </System.CheckBox>
-
-            <System.ButtonPrimary
-              style={{ marginTop: 48 }}
-              onClick={this._handleArchive}
-              loading={this.state.archiving}
-            >
-              Make storage deal
-            </System.ButtonPrimary>
-          </React.Fragment>
-        ) : (
-          <div css={STYLES_SPINNER_CONTAINER}>
-            <LoaderSpinner style={{ height: 32, width: 32 }} />
-          </div>
-        )}
-      </ScenePage>
+              <System.ButtonPrimary
+                style={{ marginTop: 48 }}
+                onClick={this._handleArchive}
+                loading={this.state.archiving}
+              >
+                Make storage deal
+              </System.ButtonPrimary>
+            </React.Fragment>
+          ) : (
+            <div css={STYLES_SPINNER_CONTAINER}>
+              <LoaderSpinner style={{ height: 32, width: 32 }} />
+            </div>
+          )}
+        </ScenePage>
+      </WebsitePrototypeWrapper>
     );
   }
 }
