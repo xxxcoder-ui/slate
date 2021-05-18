@@ -26,7 +26,7 @@ const printUsersTable = async () => {
         dataParams[param] = true;
       }
     }
-    if (user.data?.library[0]?.children?.length) {
+    if (user.data?.library && user.data.library[0]?.children?.length) {
       let library = user.data.library[0].children;
       for (let file of library) {
         for (let param of Object.keys(file)) {
@@ -516,9 +516,17 @@ const cleanUsersTable = async () => {
   const users = await DB.select("*").from("users");
   for (let user of users) {
     const id = user.id;
-    let data = user.data;
-    delete user.data.library;
-    let response = await Data.updateUserById({ id, data });
+    let data = {
+      photo: user.data.photo,
+      body: user.data.body,
+      name: user.data.name,
+      tokens: user.data.tokens,
+      settings: user.data.settings,
+      onboarding: user.data.onboarding,
+      status: user.data.status,
+    };
+    // console.log(data);
+    await DB.from("users").where("id", id).update({ data });
   }
 };
 
@@ -526,14 +534,25 @@ const cleanSlatesTable = async () => {
   const slates = await DB.select("*").from("slates");
   for (let slate of slates) {
     const id = slate.id;
-    let data = slate.data;
-    delete data.ownerId;
     let layouts = slate.data.layouts;
-    if (layouts.ver === "2.0") {
+    if (layouts && layouts.ver === "2.0" && layouts.layout) {
       for (let position of layouts.layout) {
-        position.id = position.id.replace("data-", "");
+        if (position.id) {
+          position.id = position.id.replace("data-", "");
+        }
       }
+    } else {
+      layouts = null;
     }
+    let data = {
+      layouts,
+      body: slate.data.body,
+      name: slate.data.name,
+      preview: slate.data.preview,
+      tags: slate.data.tags,
+    };
+    // console.log(layouts?.layout);
+    // console.log(data);
     await DB.from("slates").where("id", id).update({ data });
   }
 };
@@ -566,7 +585,7 @@ const runScript = async () => {
   // await printSlatesTable();
 
   //NOTE(martina): add tables
-  await addTables();
+  // await addTables();
 
   //NOTE(martina): put data into new tables
   // await DB("slate_files").del();
@@ -580,9 +599,11 @@ const runScript = async () => {
   // await modifyUsersTable(testing);
 
   //NOTE(martina): once certain you don't need the data anymore, delete the original data
-  // await cleanUsersTable()
-  // await cleanSlatesTable()
-  // await dropOldTables()
+  // await cleanUsersTable();
+  // await cleanSlatesTable();
+  await dropOldTables();
+
+  console.log("Finished running. Hit CTRL + C to quit");
 };
 
 runScript();

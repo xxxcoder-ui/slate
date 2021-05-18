@@ -83,7 +83,6 @@ export const cleanUser = (entity) => {
     //   settings: entity.data?.settings,
     //   onboarding: entity.data?.onboarding,
     //   status: entity.data?.status,
-    //   library: entity.data?.library, //MIGRATION: take this out after
     // },
   };
 };
@@ -103,7 +102,6 @@ export const cleanSlate = (entity) => {
     //   preview: entity.data?.preview,
     //   layouts: entity.data?.layouts,
     //   tags: entity.data?.tags,
-    //   objects: entity.data?.objects, //MIGRATION: take this out after
     // },
   };
 };
