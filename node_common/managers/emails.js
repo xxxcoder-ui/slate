@@ -1,8 +1,10 @@
 import * as Environment from "~/node_common/environment";
-const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(Environment.SENDGRID_API_KEY);
+
+import sgMail from "@sendgrid/mail";
 
 import "isomorphic-fetch";
+
+sgMail.setApiKey(Environment.SENDGRID_API_KEY);
 
 //NOTE(toast): please see https://sendgrid.com/docs/api-reference/
 //for sendgrid request structure, see what's optional
@@ -43,6 +45,7 @@ export const sendTemplate = async ({ to, from, templateId, templateData }) => {
   try {
     await sgMail.send(msg);
   } catch (error) {
+    console.log("SOMETHING", error);
     return { decorator: "SEND_TEMPLATE_EMAIL_FAILURE", error: true };
   }
 };

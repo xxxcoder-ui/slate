@@ -5,6 +5,7 @@ import * as SlateManager from "~/node_common/managers/slate";
 import * as Monitor from "~/node_common/monitor";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
+import * as EmailManager from "~/node_common/managers/emails";
 
 import BCrypt from "bcrypt";
 
@@ -107,6 +108,15 @@ export default async (req, res) => {
   if (user.error) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
+
+  const welcomeTemplateId = "d-7688a09484194c06a417a434eaaadd6e";
+  const slateEmail = "hello@slate.host";
+
+  await EmailManager.sendTemplate({
+    to: user.email,
+    from: slateEmail,
+    templateId: welcomeTemplateId,
+  });
 
   Monitor.createUser({ user });
 
