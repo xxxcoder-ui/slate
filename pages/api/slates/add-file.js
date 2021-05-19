@@ -109,7 +109,7 @@ export default async (req, res) => {
   await Data.updateSlateById({ id: slateId, updatedAt: new Date() });
 
   if (slate.isPublic) {
-    Monitor.createSlateObjects({ slate, user, files });
+    Monitor.createSlateObjects({ owner: user, slate, files });
 
     const publicFiles = await Data.getFilesByIds({
       ids: req.body.data.files.map((file) => file.id),

@@ -375,15 +375,11 @@ export default class ApplicationPage extends React.Component {
       this._handleRegisterLoadingFinished({ keys });
       return;
     }
-    console.log("no error in actions.createFile");
 
-    console.log(createResponse);
     let uploadedFiles = createResponse.data;
 
     let added, skipped;
     if (slate && slate.id) {
-      console.log(slate);
-      console.log(uploadedFiles);
       const addResponse = await Actions.addFileToSlate({
         slate,
         files: uploadedFiles,

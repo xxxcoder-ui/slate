@@ -126,8 +126,8 @@ export default async (req, res) => {
 
     if (!existingResponse) {
       Monitor.subscribeUser({
-        user,
-        targetUser,
+        owner: user,
+        user: targetUser,
       });
     }
   }
@@ -137,8 +137,8 @@ export default async (req, res) => {
 
     if (!existingResponse) {
       Monitor.subscribeSlate({
-        user,
-        targetSlate,
+        owner: user,
+        slate: targetSlate,
       });
     }
   }

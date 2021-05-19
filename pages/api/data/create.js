@@ -1,5 +1,6 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
+import * as Monitor from "~/node_common/monitor";
 import * as ViewerManager from "~/node_common/managers/viewer";
 
 export default async (req, res) => {
@@ -55,6 +56,8 @@ export default async (req, res) => {
   if (response.error) {
     return res.status(500).send({ decorator: response.decorator, error: response.error });
   }
+
+  Monitor.createFiles({ owner: user, files: response });
 
   ViewerManager.hydratePartial(id, { library: true });
 

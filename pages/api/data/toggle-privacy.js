@@ -2,9 +2,9 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
-  console.log(req.body);
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
@@ -30,7 +30,6 @@ export default async (req, res) => {
     id: file.id,
     isPublic: file.isPublic,
   });
-  console.log(response);
 
   if (!response || response.error) {
     return res
@@ -40,6 +39,7 @@ export default async (req, res) => {
 
   if (response.isPublic) {
     SearchManager.updateFile(response, "ADD");
+    Monitor.toggleFilePublic({ owner: user, file: response });
   } else {
     SearchManager.updateFile(response, "REMOVE");
   }

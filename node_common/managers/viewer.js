@@ -148,6 +148,8 @@ export const getById = async ({ id }) => {
     return null;
   }
 
+  Data.createUsageStat({ id }); //NOTE(martina): to record the person's usage of Slate for analytics
+
   // user.library = await Data.getFilesByUserId({ id, sanitize: true });
 
   const slates = await Data.getSlatesByUserId({

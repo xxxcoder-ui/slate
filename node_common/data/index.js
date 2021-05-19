@@ -57,6 +57,7 @@ import deleteSubscriptionById from "~/node_common/data/methods/delete-subscripti
 
 // NOTE(jim):
 // Activity postgres queries
+import createUsageStat from "~/node_common/data/methods/create-usage-stat";
 import createActivity from "~/node_common/data/methods/create-activity";
 import getActivity from "~/node_common/data/methods/get-activity";
 import getExplore from "~/node_common/data/methods/get-explore";
@@ -120,6 +121,7 @@ export {
   getFollowingByUserId,
   deleteSubscriptionById,
   // NOTE(jim): Activity operations
+  createUsageStat,
   createActivity,
   getActivity,
   getExplore,

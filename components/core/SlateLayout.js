@@ -960,15 +960,17 @@ export class SlateLayout extends React.Component {
     this.props.onSavePreview(url);
   };
 
-  _handleDownload = (e, i) => {
+  _handleDownload = async (e, i) => {
+    e.stopPropagation();
+    e.preventDefault();
     if (!this.props.viewer) {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    e.stopPropagation();
-    e.preventDefault();
     if (i !== undefined) {
-      UserBehaviors.download(this.state.items[i]);
+      const file = this.state.items[i];
+      const response = await UserBehaviors.download(file);
+      Events.hasError(response);
     }
   };
 

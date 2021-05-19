@@ -9,13 +9,13 @@ const db = knex(envConfig);
 
 console.log(`RUNNING:  adjust.js`);
 
-const createGlobalTable = db.schema.createTable("global", function (table) {
+const createUsageTable = db.schema.createTable("usage", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.jsonb("data").nullable();
+  table.uuid("userId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-Promise.all([createGlobalTable]);
+Promise.all([createUsageTable]);
 
 console.log(`FINISHED: adjust.js`);
 console.log(`          CTRL +C to return to terminal.`);

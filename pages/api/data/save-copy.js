@@ -2,8 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as SearchManager from "~/node_common/managers/search";
 import * as ViewerManager from "~/node_common/managers/viewer";
-
-import { Buckets, PrivateKey, Filecoin, Client, ThreadID } from "@textile/hub";
+import * as Monitor from "~/node_common/monitor";
 
 /**
  * Save copy is equivalent to downloading then reuploading. So an entirely new files table entry should
@@ -87,6 +86,8 @@ export default async (req, res) => {
   }
 
   ViewerManager.hydratePartial(id, { library: true });
+
+  Monitor.saveCopies({ owner: user, files: newFiles });
 
   const added = response?.length || 0;
   const skipped = req.body.data.files.length - added;

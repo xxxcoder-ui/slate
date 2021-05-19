@@ -62,7 +62,7 @@ export default async (req, res) => {
   SearchManager.updateSlate(slate, "ADD");
 
   if (slate.isPublic) {
-    Monitor.createSlate({ user, slate });
+    Monitor.createSlate({ owner: user, slate });
   }
 
   return res.status(200).send({ decorator: "SERVER_CREATE_SLATE", slate });

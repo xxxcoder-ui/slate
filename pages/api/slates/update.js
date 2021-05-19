@@ -5,6 +5,7 @@ import * as Validations from "~/common/validations";
 import * as Serializers from "~/node_common/serializers";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -129,6 +130,7 @@ export default async (req, res) => {
     SearchManager.updateSlate(response, "REMOVE");
   } else if (!slate.isPublic && updates.isPublic) {
     SearchManager.updateSlate(response, "ADD");
+    Monitor.toggleSlatePublic({ owner: user, slate: response });
   } else {
     SearchManager.updateSlate(response, "EDIT");
   }

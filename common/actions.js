@@ -353,6 +353,13 @@ export const createSupportMessage = async (data) => {
   });
 };
 
+export const createDownloadActivity = async (data) => {
+  return await returnJSON(`/api/activity/create-download-activity`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const getActivity = async (data) => {
   return await returnJSON(`/api/activity/get-activity`, {
     ...DEFAULT_OPTIONS,

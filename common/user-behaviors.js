@@ -272,9 +272,14 @@ export const saveCopy = async ({ files }) => {
   return response;
 };
 
-export const download = (file) => {
+export const download = async (file) => {
+  Actions.createDownloadActivity({ file });
+  if (file.data.type === "application/unity") {
+    return await downloadZip(file);
+  }
   let uri = Strings.getURLfromCID(file.cid);
   Window.saveAs(uri, file.filename);
+  return { data: true };
 };
 
 export const downloadZip = async (file) => {
@@ -329,6 +334,7 @@ const _nativeDownload = ({ url, onError }) => {
 };
 
 export const compressAndDownloadFiles = async ({ files, name = "slate.zip", resourceURI }) => {
+  Actions.createDownloadActivity({ files });
   const errorMessage = "Something went wrong with the download. Please try again";
   try {
     if (!(files && files.length > 0)) {

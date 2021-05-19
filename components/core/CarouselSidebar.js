@@ -435,15 +435,11 @@ class CarouselSidebar extends React.Component {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    if (this.props.file.data.type === "application/unity") {
-      this.setState({ isDownloading: true }, async () => {
-        const response = await UserBehaviors.downloadZip(this.props.file);
-        this.setState({ isDownloading: false });
-        Events.hasError(response);
-      });
-    } else {
-      UserBehaviors.download(this.props.file);
-    }
+    this.setState({ isDownloading: true }, async () => {
+      const response = await UserBehaviors.download(this.props.file);
+      this.setState({ isDownloading: false });
+      Events.hasError(response);
+    });
   };
 
   _handleCreateSlate = async () => {
@@ -550,7 +546,7 @@ class CarouselSidebar extends React.Component {
         }
       }
       const slateNames = publicSlateNames.join(", ");
-      const message = `Making this file private will remove it from the following public collections: ${slateNames}. Do you wish to continue?`;
+      const message = `Making this file link-viewing only will remove it from the following public collections: ${slateNames}. Do you wish to continue?`;
       if (!window.confirm(message)) {
         return;
       }
@@ -804,7 +800,7 @@ class CarouselSidebar extends React.Component {
       privacy = (
         <div>
           <System.P css={STYLES_SECTION_HEADER} style={{ marginBottom: 12 }}>
-            Privacy
+            Visibility
           </System.P>
           <System.P
             css={STYLES_TEXT}
@@ -833,7 +829,7 @@ class CarouselSidebar extends React.Component {
                 label: (
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <SVG.SecurityLock height="16px" style={{ marginRight: 8 }} />
-                    Private
+                    Link-viewing only
                   </div>
                 ),
               },

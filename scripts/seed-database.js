@@ -106,6 +106,12 @@ const createGlobalTable = db.schema.createTable("global", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
+const createUsageTable = db.schema.createTable("usage", function (table) {
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.uuid("userId").references("id").inTable("users");
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
+});
+
 // --------------------------
 // RUN
 // --------------------------
@@ -122,6 +128,7 @@ Promise.all([
   createStatsTable,
   createOrphansTable,
   createGlobalTable,
+  createUsageTable,
 ]);
 
 console.log(`FINISHED: seed-database.js`);
