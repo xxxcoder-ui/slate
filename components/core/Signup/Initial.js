@@ -8,6 +8,11 @@ import { useForm } from "~/common/hooks";
 
 import { Toggle, SignUpPopover } from "./components";
 
+const STYLES_INITIAL_CONTAINER = css`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 const STYLES_LINK_ITEM = (theme) => css`
   display: block;
   text-decoration: none;
@@ -32,6 +37,15 @@ const STYLES_LINK_ITEM = (theme) => css`
 
 const STYLES_TYPOGRAPHY_SMALL = (theme) => css`
   font-size: ${theme.typescale.lvl0};
+`;
+
+// NOTE(amine): used to remove content jumping
+// when switching between signin/signup in mobile
+const STYLES_SPACER = (theme) => css`
+  height: 20px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    height: 10vh;
+  }
 `;
 
 const STYLES_TERMS_AND_SERVICES = (theme) => css`
@@ -95,102 +109,103 @@ export default function Initial({
 
   return (
     <SignUpPopover
-      title={
-        <>
-          Discover, experience, share files on <br /> Slate
-        </>
-      }
+      title={<>Discover, experience, share files on Slate</>}
       style={{ paddingBottom: 24 }}
     >
-      <div css={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <Toggle options={TOGGLE_OPTIONS} onChange={handleToggleChange} />
-      </div>
-      {toggleValue === "signin" ? (
-        <>
-          <System.ButtonPrimary
-            full
-            style={{ backgroundColor: "rgb(29,161,242)", marginTop: "20px" }}
-            onClick={onTwitterSignin}
-            loading={isSigninViaTwitter}
-          >
-            Continue with Twitter
-          </System.ButtonPrimary>
-          <System.Devider
-            color="#AEAEB2"
-            width="45px"
-            height="0.5px"
-            style={{ margin: "0px auto", marginTop: "20px" }}
-          />
-          <System.Input
-            autoFocus
-            label="Email address or username"
-            placeholder="email"
-            icon={SVG.NavigationArrow}
-            name="email"
-            type="text"
-            {...getUserNameFieldProps()}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-          />
-
-          <div style={{ marginTop: "auto" }}>
-            <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
-              ⭢ Terms of service
-            </a>
-
-            <a css={STYLES_LINK_ITEM} href="/guidelines" target="_blank">
-              ⭢ Community guidelines
-            </a>
-          </div>
-        </>
-      ) : (
-        <>
-          <System.ButtonPrimary
-            full
-            style={{ backgroundColor: "rgb(29,161,242)", marginTop: 20 }}
-            onClick={onTwitterSignin}
-            loading={isSigninViaTwitter}
-          >
-            Continue with Twitter
-          </System.ButtonPrimary>
-          <System.Devider
-            color="#AEAEB2"
-            width="45px"
-            height="0.5px"
-            style={{ margin: "20px auto 0px auto" }}
-          />
-          <form {...getFormProps()}>
-            <System.Input
-              required
-              autoFocus
-              label="Sign up with email"
-              placeholder="email"
-              type="email"
-              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-              {...getFieldProps("email")}
-            />
-
+      <div css={STYLES_INITIAL_CONTAINER}>
+        <div css={STYLES_SPACER} />
+        <div css={{ display: "flex", justifyContent: "center" }}>
+          <Toggle options={TOGGLE_OPTIONS} onChange={handleToggleChange} />
+        </div>
+        {toggleValue === "signin" ? (
+          <>
             <System.ButtonPrimary
               full
-              type="submit"
-              style={{ marginTop: "16px" }}
-              loading={isCheckingEmail}
+              style={{ backgroundColor: "rgb(29,161,242)", marginTop: "20px" }}
+              onClick={onTwitterSignin}
+              loading={isSigninViaTwitter}
             >
-              Send verification link
+              Continue with Twitter
             </System.ButtonPrimary>
-          </form>
-          <div css={STYLES_TERMS_AND_SERVICES}>
-            <span>
-              <System.P css={STYLES_TYPOGRAPHY_SMALL}>
-                By continuing, you’re agree to our{" "}
-                <a href="/terms" target="_blank">
-                  terms of services
-                </a>
-                .
-              </System.P>
-            </span>
-          </div>
-        </>
-      )}
+            <System.Devider
+              color="#AEAEB2"
+              width="45px"
+              height="0.5px"
+              style={{ margin: "0px auto", marginTop: "20px" }}
+            />
+            <System.Input
+              autoFocus
+              label="Email address or username"
+              placeholder="email"
+              icon={SVG.NavigationArrow}
+              name="email"
+              type="text"
+              full
+              {...getUserNameFieldProps()}
+              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+            />
+
+            <div style={{ marginTop: "auto" }}>
+              <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
+                ⭢ Terms of service
+              </a>
+
+              <a css={STYLES_LINK_ITEM} href="/guidelines" target="_blank">
+                ⭢ Community guidelines
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <System.ButtonPrimary
+              full
+              style={{ backgroundColor: "rgb(29,161,242)", marginTop: 20 }}
+              onClick={onTwitterSignin}
+              loading={isSigninViaTwitter}
+            >
+              Continue with Twitter
+            </System.ButtonPrimary>
+            <System.Devider
+              color="#AEAEB2"
+              width="45px"
+              height="0.5px"
+              style={{ margin: "20px auto 0px auto" }}
+            />
+            <form {...getFormProps()}>
+              <System.Input
+                required
+                autoFocus
+                label="Sign up with email"
+                placeholder="email"
+                type="email"
+                full
+                style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+                {...getFieldProps("email")}
+              />
+
+              <System.ButtonPrimary
+                full
+                type="submit"
+                style={{ marginTop: "16px" }}
+                loading={isCheckingEmail}
+              >
+                Send verification link
+              </System.ButtonPrimary>
+            </form>
+            <div css={STYLES_TERMS_AND_SERVICES}>
+              <span>
+                <System.P css={STYLES_TYPOGRAPHY_SMALL}>
+                  By continuing, you’re agree to our{" "}
+                  <a href="/terms" target="_blank">
+                    terms of services
+                  </a>
+                  .
+                </System.P>
+              </span>
+            </div>
+          </>
+        )}
+      </div>
     </SignUpPopover>
   );
 }

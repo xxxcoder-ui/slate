@@ -31,6 +31,7 @@ export default function Signin({ onAuthenticate, emailOrUsername = "" }) {
           containerStyle={{ marginTop: 41 }}
           placeholder="email address or username"
           type="text"
+          full
           {...getFieldProps("username")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
@@ -39,6 +40,7 @@ export default function Signin({ onAuthenticate, emailOrUsername = "" }) {
           containerStyle={{ marginTop: 16 }}
           placeholder="password"
           type="password"
+          full
           {...getFieldProps("password")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />

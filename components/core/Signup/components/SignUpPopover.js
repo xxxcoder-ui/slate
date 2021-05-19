@@ -17,6 +17,7 @@ const STYLES_POPOVER = (theme) => css`
   @media (max-width: ${theme.sizes.mobile}px) {
     flex-grow: 1;
     margin-bottom: auto;
+    max-width: 100%;
   }
 
   background: radial-gradient(

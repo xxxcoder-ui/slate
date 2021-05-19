@@ -27,6 +27,7 @@ export default function Verification({ onVerify }) {
             Didn’t receive an email? <a style={{ color: "inherit" }}>Resend code.</a>
           </>
         }
+        full
         icon={SVG.NavigationArrow}
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}

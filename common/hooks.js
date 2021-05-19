@@ -1,8 +1,19 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
 
+export const useMounted = () => {
+  const isMounted = React.useRef(true);
+  React.useLayoutEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  return isMounted.current;
+};
+
 export const useForm = ({ onSubmit, validate, initialValues }) => {
   const [state, setState] = React.useState({ isSubmitting: false, values: initialValues });
+  const isMounted = useMounted();
 
   const handleFieldChange = (e) =>
     setState((prev) => ({
@@ -34,9 +45,11 @@ export const useForm = ({ onSubmit, validate, initialValues }) => {
     setState((prev) => ({ ...prev, isSubmitting: true }));
     onSubmit(state.values)
       .then(() => {
+        if (!isMounted) return;
         setState((prev) => ({ ...prev, isSubmitting: false }));
       })
       .catch(() => {
+        if (!isMounted) return;
         setState((prev) => ({ ...prev, isSubmitting: false }));
       });
   };
