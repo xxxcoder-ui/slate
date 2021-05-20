@@ -40,6 +40,7 @@ export const useAuthFlow = () => {
 
 export const useSignup = ({ onAuthenticate }) => {
   const verificationToken = React.useRef();
+
   const createVerification = async (data) => {
     const response = await Actions.createVerification(data);
     if (Events.hasError(response)) {
@@ -73,11 +74,13 @@ export const useSignup = ({ onAuthenticate }) => {
 };
 
 export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
+  const verificationToken = React.useRef();
   const popupRef = React.useRef();
+
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
 
   // NOTE(amine): will be used when signing up a user via twitter
-  const tokens = React.useRef({
+  const twitterTokens = React.useRef({
     authToken: "",
     authVerifier: "",
   });
@@ -141,7 +144,7 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
       }
 
       // NOTE(amine): update tokens
-      tokens.current = {
+      twitterTokens.current = {
         authToken: responseVerifier.authToken,
         authVerifier: responseVerifier.authVerifier,
       };
@@ -170,13 +173,24 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
     }
   };
 
+  const createVerification = async (data) => {
+    const response = await Actions.createVerification({
+      ...data,
+      twitterToken: twitterTokens.current.authToken,
+    });
+    if (Events.hasError(response)) {
+      return;
+    }
+    verificationToken.current = response.token;
+    return response;
+  };
+
   const signup = async ({ email = "", username = "" }) => {
-    const { authToken, authVerifier } = tokens.current;
+    const { authToken } = twitterTokens.current;
     const response = await Actions.createUserViaTwitter({
       email: email.toLowerCase(),
       username: username.toLowerCase(),
       authToken,
-      authVerifier,
     });
     if (Events.hasError(response)) return;
     if (response.token) {
@@ -186,8 +200,20 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
     return response;
   };
 
-  // TODO
-  const signupWithValidations = () => {};
+  const signupWithVerification = async ({ username = "", pin }) => {
+    const response = await Actions.createUserViaTwitterWithVerification({
+      username: username.toLowerCase(),
+      pin,
+      token: verificationToken.current,
+    });
 
-  return { isLoggingIn, signin, signup };
+    if (Events.hasError(response)) return;
+    if (response.token) {
+      await onAuthenticate(response);
+      return;
+    }
+    return response;
+  };
+
+  return { isLoggingIn, signin, signup, signupWithVerification, createVerification };
 };

@@ -74,7 +74,14 @@ const SigninScene = ({ withAuthenticationBehavior, ...props }) => {
     );
 
   if (scene === "twitter_signup")
-    return <TwitterSignup initialEmail={context.twitterEmail} onSignup={twitterProvider.signup} />;
+    return (
+      <TwitterSignup
+        initialEmail={context.twitterEmail}
+        createVerification={twitterProvider.createVerification}
+        onSignupWithVerification={twitterProvider.signupWithVerification}
+        onSignup={twitterProvider.signup}
+      />
+    );
 
   return (
     <Initial

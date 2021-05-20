@@ -20,7 +20,13 @@ export default async (req, res) => {
 
   const userEmail = req.body.data.email.toLowerCase();
   const pin = Utilities.generateRandomNumberInRange(111111, 999999);
-  const verification = await Data.createVerification({ email: userEmail, pin });
+  const verification = await Data.createVerification({
+    email: userEmail,
+    pin,
+    //Note(amine): Using twitter token here to fetch
+    //the rest of twitter data later in signup process.
+    twitterToken: req.body?.data?.twitterToken,
+  });
 
   if (!verification) {
     return res.status(404).send({ decorator: "SERVER_CREATE_VERIFICATION_FAILED", error: true });

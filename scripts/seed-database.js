@@ -112,6 +112,7 @@ const createGlobalTable = db.schema.createTable("global", function (table) {
 const createVerificationsTable = db.schema.createTable("verifications", function (table) {
   table.uuid("sid").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.string("email").nullable();
+  table.string("twitterToken").unique().nullable();
   table.string("pin", 6).unique().notNullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
   table.boolean("isVerified").notNullable().defaultTo(false);

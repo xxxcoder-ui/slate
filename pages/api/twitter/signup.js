@@ -13,7 +13,7 @@ import { PrivateKey } from "@textile/hub";
 const COOKIE_NAME = "oauth_token";
 
 export default async (req, res) => {
-  const { authToken, authVerifier, email, username } = req.body.data;
+  const { authToken, email, username } = req.body.data;
 
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
     return res.status(403).send({ decorator: "SERVER_TWITTER_OAUTH_NOT_ALLOWED", error: true });
@@ -21,12 +21,6 @@ export default async (req, res) => {
 
   if (Strings.isEmpty(authToken)) {
     return res.status(500).send({ decorator: "SERVER_TWITTER_OAUTH_NO_OAUTH_TOKEN", error: true });
-  }
-
-  if (Strings.isEmpty(authVerifier)) {
-    return res
-      .status(500)
-      .send({ decorator: "SERVER_TWITTER_OAUTH_NO_OAUTH_VERIFIER", error: true });
   }
 
   if (!Validations.email(email)) {
@@ -78,7 +72,7 @@ export default async (req, res) => {
     // TODO(jim):
     // Don't do this once you refactor.
     const newUsername = username.toLowerCase();
-    const newEmail = username.toLowerCase();
+    const newEmail = email.toLowerCase();
 
     const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
       user: {

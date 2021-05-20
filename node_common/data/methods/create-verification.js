@@ -2,13 +2,14 @@ import { runQuery } from "~/node_common/data/utilities";
 
 //NOTE(toast): allows for creation of mulitple codes and just
 //passing the sid for the most recent verification session
-export default async ({ email, pin }) => {
+export default async ({ email, pin, twitterToken }) => {
   return await runQuery({
     label: "CREATE_VERIFICATION",
     queryFn: async (DB) => {
       const query = await DB.insert({
         email,
         pin,
+        twitterToken,
       })
         .into("verifications")
         .returning("*");

@@ -22,17 +22,23 @@ const useTwitterSignup = () => {
   return { ...handlers, scene };
 };
 
-export default function TwitterSignup({ initialEmail, onSignup }) {
+export default function TwitterSignup({
+  initialEmail,
+  onSignup,
+  createVerification,
+  onSignupWithVerification,
+}) {
   const { scene, goToVerification } = useTwitterSignup();
   const {
     getFieldProps,
     getFormProps,
-    values: { email },
+    values: { email, username },
     isSubmitting,
   } = useForm({
     initialValues: { username: "", email: initialEmail },
     onSubmit: async ({ username, email }) => {
       if (email !== initialEmail) {
+        await createVerification({ email });
         goToVerification();
         return;
       }
@@ -40,7 +46,13 @@ export default function TwitterSignup({ initialEmail, onSignup }) {
     },
   });
 
-  if (scene === "verification") return <Verification onVerify={() => goToAccountCreationScene()} />;
+  if (scene === "verification") {
+    const handleVerification = async ({ pin }) => {
+      await onSignupWithVerification({ username, pin });
+    };
+    return <Verification onVerify={handleVerification} />;
+  }
+
   return (
     <SignUpPopover title="Create an account">
       <form {...getFormProps()}>
