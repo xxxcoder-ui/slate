@@ -3,11 +3,31 @@ import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 
+import { LoaderSpinner } from "~/components/system/components/Loaders";
+
 import { SignUpPopover } from "./";
 
+const useVerification = ({ onSubmit }) => {
+  const [{ pin, isSubmitting }, setValues] = React.useState({ pin: "" });
+
+  const getVerificationFieldProps = () => ({
+    value: pin,
+    onChange: (value) => setValues((prev) => ({ ...prev, pin: value })),
+    onSubmit: async (formattedPin) => {
+      if (isSubmitting) return;
+      if (!Validations.verificationPin(formattedPin)) return;
+      setValues((prev) => ({ ...prev, isSubmitting: true }));
+      await onSubmit(formattedPin);
+      setValues((prev) => ({ ...prev, isSubmitting: false }));
+    },
+  });
+  return { getVerificationFieldProps, isSubmitting };
+};
+
 export default function Verification({ onVerify }) {
-  const [pin, setPin] = React.useState("");
-  const handleOnChange = (code) => setPin(code);
+  const { getVerificationFieldProps, isSubmitting } = useVerification({
+    onSubmit: (pin) => onVerify({ pin }),
+  });
   return (
     <SignUpPopover
       logoStyle={{ width: 56, height: 56 }}
@@ -28,20 +48,21 @@ export default function Verification({ onVerify }) {
           </>
         }
         full
-        icon={SVG.NavigationArrow}
+        icon={
+          isSubmitting
+            ? (props) => (
+                <span {...props}>
+                  <LoaderSpinner style={{ height: 16, width: 16 }} />
+                </span>
+              )
+            : SVG.NavigationArrow
+        }
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         verification
         name="pin"
         type="text"
-        value={pin}
-        onChange={handleOnChange}
-        onSubmit={(pin) => {
-          //TODO: Handle errors
-          console.log(pin, Validations.verificationPin(pin));
-          if (!Validations.verificationPin(pin)) return;
-          onVerify({ pin });
-        }}
+        {...getVerificationFieldProps()}
       />
     </SignUpPopover>
   );
