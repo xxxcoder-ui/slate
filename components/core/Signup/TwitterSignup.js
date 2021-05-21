@@ -22,6 +22,14 @@ const useTwitterSignup = () => {
   return { ...handlers, scene };
 };
 
+const handleValidation = ({ username, email }) => {
+  if (!Validations.username(username)) return "Invalid username";
+  // Note(amine): username should not be an email
+  if (Validations.email(username)) return "Username shouldn't be an email";
+
+  if (!Validations.email(email)) return "Invalid email";
+};
+
 export default function TwitterSignup({
   initialEmail,
   onSignup,
@@ -36,6 +44,7 @@ export default function TwitterSignup({
     isSubmitting,
   } = useForm({
     initialValues: { username: "", email: initialEmail },
+    validate: handleValidation,
     onSubmit: async ({ username, email }) => {
       if (email !== initialEmail) {
         await createVerification({ email });

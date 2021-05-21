@@ -7,7 +7,8 @@ import { useForm } from "~/common/hooks";
 import { SignUpPopover } from "./components";
 
 const handleValidation = ({ username, password }) => {
-  if (!Validations.username(username)) return "Invalid username";
+  if (!Validations.username(username) && !Validations.email(username))
+    return "Invalid email or username";
 
   if (!Validations.password(password)) return "Incorrect password";
 };

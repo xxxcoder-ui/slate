@@ -3,7 +3,7 @@ import { runQuery } from "~/node_common/data/utilities";
 
 //NOTE(toast): should only be used for checking if an email is taken
 //ALWAYS sanitize it before sending result to frontend
-export default async ({ email }) => {
+export default async ({ email, sanitize = false }) => {
   return await runQuery({
     label: "GET_USER_BY_EMAIL",
     queryFn: async (DB) => {
@@ -13,7 +13,9 @@ export default async ({ email }) => {
         return null;
       }
 
-      query = Serializers.sanitizeUser(query);
+      if (sanitize) {
+        query = Serializers.sanitizeUser(query);
+      }
 
       return JSON.parse(JSON.stringify(query));
     },

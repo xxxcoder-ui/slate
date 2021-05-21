@@ -2,6 +2,7 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
+import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
@@ -89,6 +90,9 @@ export default function Initial({
 }) {
   const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
     initialValues: { email: "" },
+    validate: ({ email }) => {
+      if (!Validations.email(email)) return "Invalid email";
+    },
     onSubmit: async ({ email }) => {
       const response = await Actions.checkEmail({ email });
       if (response?.data?.email) {

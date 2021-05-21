@@ -19,6 +19,8 @@ const useSignup = () => {
 
 const handleValidation = ({ username, password }) => {
   if (!Validations.username(username)) return "Invalid username";
+  // Note(amine): username should not be an email
+  if (Validations.email(username)) return "Username shouldn't be an email";
 
   if (!Validations.password(password)) return "Incorrect password";
 };

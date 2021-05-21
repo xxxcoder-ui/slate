@@ -2,6 +2,7 @@ import * as Environment from "~/node_common/environment";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
 
 import JWT from "jsonwebtoken";
 
@@ -19,13 +20,22 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_SIGN_IN_NO_PASSWORD", error: true });
   }
 
+  const username = req.body.data.username.toLowerCase();
   let user;
-  try {
-    user = await Data.getUserByUsername({
-      username: req.body.data.username.toLowerCase(),
-    });
-  } catch (e) {
-    console.log(e);
+  if (Validations.email(username)) {
+    try {
+      user = await Data.getUserByEmail({ email: username });
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    try {
+      user = await Data.getUserByUsername({
+        username: req.body.data.username.toLowerCase(),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   if (!user) {
@@ -34,6 +44,12 @@ export default async (req, res) => {
 
   if (user.error) {
     return res.status(500).send({ decorator: "SERVER_SIGN_IN_USER_NOT_FOUND", error: true });
+  }
+
+  // Note(amine): Twitter users won't have a password,
+  // we should think in the future how to handle this use case
+  if (!user.salf || !user.password) {
+    return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_PASSWORD", error: true });
   }
 
   const hash = await Utilities.encryptPassword(req.body.data.password, user.salt);
