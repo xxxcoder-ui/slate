@@ -2,7 +2,7 @@ import * as React from "react";
 import * as UserBehaviors from "~/common/user-behaviors";
 
 import { css } from "@emotion/react";
-import { Initial, Signin, Signup, TwitterSignup } from "~/components/core/Signup";
+import { Initial, Signin, Signup, TwitterSignup } from "~/components/core/Auth";
 
 import { useAuthFlow, useTwitter, useSignup } from "./hooks";
 

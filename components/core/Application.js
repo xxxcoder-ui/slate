@@ -21,7 +21,7 @@ import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
 import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
-import SceneSignIn from "~/scenes/SceneSignIn";
+import SceneAuth from "~/scenes/SceneAuth";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
 import SceneDirectory from "~/scenes/SceneDirectory";
@@ -662,7 +662,7 @@ export default class ApplicationPage extends React.Component {
           url="https://slate.host/_"
         >
           <Alert noWarning style={{ top: 0, zIndex: Constants.zindex.sidebar }} />
-          <SceneSignIn
+          <SceneAuth
             withAuthenticationBehavior={this._withAuthenticationBehavior}
             onAction={this._handleAction}
           />
