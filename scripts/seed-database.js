@@ -29,6 +29,7 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
   table.timestamp("lastActive").notNullable().defaultTo(db.raw("now()"));
   table.string("username").unique().notNullable();
+  table.string("twitterId").unique().nullable();
   table.string("password").nullable();
   table.string("salt").nullable();
   table.jsonb("data").nullable();
@@ -111,6 +112,25 @@ const createUsageTable = db.schema.createTable("usage", function (table) {
   table.uuid("userId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
+//NOTE(toast): making sid pkey and letting emails dupe allows for multiple keys per user,
+//stops people from getting dos'd on verification
+const createVerificationsTable = db.schema.createTable("verifications", function (table) {
+  table.uuid("sid").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.string("email").nullable();
+  table.string("twitterToken").unique().nullable();
+  table.string("pin", 6).unique().notNullable();
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
+  table.boolean("isVerified").notNullable().defaultTo(false);
+});
+
+const createTwitterTokensTable = db.schema.createTable("twitterTokens", function (table) {
+  table.string("token").primary().unique().notNullable();
+  table.string("tokenSecret").notNullable();
+  table.string("email").nullable();
+  table.string("id_str").nullable();
+  table.string("screen_name").nullable();
+  table.string("verified").nullable();
+});
 
 // --------------------------
 // RUN
@@ -127,8 +147,10 @@ Promise.all([
   createActivityTable,
   createStatsTable,
   createOrphansTable,
+  createVerificationsTable,
   createGlobalTable,
   createUsageTable,
+  createTwitterTokensTable,
 ]);
 
 console.log(`FINISHED: seed-database.js`);

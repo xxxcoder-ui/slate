@@ -87,6 +87,35 @@ export const checkUsername = async (data) => {
   });
 };
 
+export const checkEmail = async (data) => {
+  return await returnJSON(`/api/users/check-email`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+//NOTE(toast): this functionality comes with the upgraded sg plan
+// export const validateEmail = async (data) => {
+//   return await returnJSON("/api/emails/validate", {
+//     ...DEFAULT_OPTIONS,
+//     body: JSON.stringify({ data }),
+//   });
+// };
+
+export const sendEmail = async (data) => {
+  return await returnJSON("/api/emails/send-email", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const sendTemplateEmail = async (data) => {
+  return await returnJSON("/api/emails/send-template", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const archive = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/archive`, {
@@ -183,6 +212,33 @@ export const createFile = async (data) => {
 export const addFileToSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/add-file`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const requestTwitterToken = async () => {
+  return await returnJSON(`/api/twitter/request-token`, {
+    ...DEFAULT_OPTIONS,
+  });
+};
+
+export const authenticateViaTwitter = async (data) => {
+  return await returnJSON(`/api/twitter/authenticate`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createUserViaTwitter = async (data) => {
+  return await returnJSON(`/api/twitter/signup`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createUserViaTwitterWithVerification = async (data) => {
+  return await returnJSON(`/api/twitter/signup-with-verification`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -438,6 +494,20 @@ export const v2UpdateSlate = async (data) => {
 
 export const v2UpdateFile = async (data) => {
   return await returnJSON(`api/v2/update-file`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createVerification = async (data) => {
+  return await returnJSON(`api/verifications/create`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const verifyEmail = async (data) => {
+  return await returnJSON(`api/verifications/verify`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });

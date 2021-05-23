@@ -22,7 +22,7 @@ import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
 import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
-import SceneSignIn from "~/scenes/SceneSignIn";
+import SceneAuth from "~/scenes/SceneAuth";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
 import SceneDirectory from "~/scenes/SceneDirectory";
@@ -77,7 +77,7 @@ const SIDEBARS = {
 
 const SCENES = {
   NAV_ERROR: <SceneError />,
-  NAV_SIGN_IN: <SceneSignIn />,
+  NAV_SIGN_IN: <SceneAuth />,
   NAV_ACTIVITY: <SceneActivity />,
   NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
@@ -457,19 +457,19 @@ export default class ApplicationPage extends React.Component {
     e.preventDefault();
   };
 
-  _handleCreateUser = async (state) => {
-    let response = await Actions.createUser(state);
+  // _handleCreateUser = async (state) => {
+  //   let response = await Actions.createUser(state);
 
-    if (Events.hasError(response)) {
-      return;
-    }
+  //   if (Events.hasError(response)) {
+  //     return;
+  //   }
 
-    this._handleAuthenticate(state, true);
-  };
+  //   return this._handleAuthenticate(state, true);
+  // };
 
-  _handleAuthenticate = async (state, newAccount) => {
-    let response = await UserBehaviors.authenticate(state);
-    if (Events.hasError(response)) {
+  _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
+    let response = await authenticate(state);
+    if (!response) {
       return;
     }
     let viewer = await UserBehaviors.hydrate();
@@ -710,7 +710,8 @@ export default class ApplicationPage extends React.Component {
       viewer: this.state.viewer,
       selected: this.state.selected,
       onSelectedChange: this._handleSelectedChange,
-      onAuthenticate: this._handleAuthenticate,
+      onAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticate),
+      withAuthenticationBehavior: _withAuthenticationBehavior,
       onCreateUser: this._handleCreateUser,
       onAction: this._handleAction,
       onUpload: this._handleUploadFiles,

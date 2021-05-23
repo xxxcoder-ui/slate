@@ -98,6 +98,28 @@ export const username = (text) => {
   return true;
 };
 
+export const email = (text) => {
+  if (Strings.isEmpty(text)) {
+    return false;
+  }
+
+  if (text.length > 254 || text.length < 5) {
+    return false;
+  }
+
+  if (!EMAIL_REGEX.test(text)) {
+    return false;
+  }
+
+  //NOTE(toast): add this if the sendgrid plan is upgraded
+  //  const sgEmailValidation = validateEmail({ email: text });
+  //  if (sgEmailValidation.verdict !== "Valid") {
+  //    return false;
+  //  }
+
+  return true;
+};
+
 export const password = (text) => {
   if (Strings.isEmpty(text)) {
     return false;
@@ -107,6 +129,19 @@ export const password = (text) => {
     return false;
   }
 
+  return true;
+};
+
+export const verificationPin = (pin) => {
+  if (Strings.isEmpty(pin)) {
+    return false;
+  }
+  if (pin.length !== 6) {
+    return false;
+  }
+  if (!/^[0-9]+$/.test(pin)) {
+    return false;
+  }
   return true;
 };
 

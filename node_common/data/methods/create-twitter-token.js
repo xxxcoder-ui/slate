@@ -1,18 +1,14 @@
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ password, username, email, salt, twitterId, data = {} }) => {
+export default async ({ token, tokenSecret }) => {
   return await runQuery({
-    label: "CREATE_USER",
+    label: "CREATE_TWITTER_TOKEN",
     queryFn: async (DB) => {
       const query = await DB.insert({
-        password,
-        salt,
-        data,
-        username,
-        email,
-        twitterId,
+        token,
+        tokenSecret,
       })
-        .into("users")
+        .into("twitterTokens")
         .returning("*");
 
       const index = query ? query.pop() : null;
@@ -21,7 +17,7 @@ export default async ({ password, username, email, salt, twitterId, data = {} })
     errorFn: async (e) => {
       return {
         error: true,
-        decorator: "CREATE_USER",
+        decorator: "CREATE_TWITTER_TOKEN",
       };
     },
   });

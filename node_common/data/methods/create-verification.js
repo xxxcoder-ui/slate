@@ -1,18 +1,17 @@
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ password, username, email, salt, twitterId, data = {} }) => {
+//NOTE(toast): allows for creation of mulitple codes and just
+//passing the sid for the most recent verification session
+export default async ({ email, pin, twitterToken }) => {
   return await runQuery({
-    label: "CREATE_USER",
+    label: "CREATE_VERIFICATION",
     queryFn: async (DB) => {
       const query = await DB.insert({
-        password,
-        salt,
-        data,
-        username,
         email,
-        twitterId,
+        pin,
+        twitterToken,
       })
-        .into("users")
+        .into("verifications")
         .returning("*");
 
       const index = query ? query.pop() : null;
@@ -21,7 +20,7 @@ export default async ({ password, username, email, salt, twitterId, data = {} })
     errorFn: async (e) => {
       return {
         error: true,
-        decorator: "CREATE_USER",
+        decorator: "CREATE_VERIFICATION",
       };
     },
   });

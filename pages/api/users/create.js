@@ -5,6 +5,7 @@ import * as SlateManager from "~/node_common/managers/slate";
 import * as Monitor from "~/node_common/monitor";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
+import * as EmailManager from "~/node_common/managers/emails";
 
 import BCrypt from "bcrypt";
 
@@ -15,24 +16,38 @@ export default async (req, res) => {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_NOT_ALLOWED", error: true });
   }
 
-  if (Strings.isEmpty(req.body.data.accepted)) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_USER_ACCEPT_TERMS", error: true });
-  }
-
-  const existing = await Data.getUserByUsername({
-    username: req.body.data.username.toLowerCase(),
-  });
-
-  if (existing) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
-  }
-
   if (!Validations.username(req.body.data.username)) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
   }
 
   if (!Validations.password(req.body.data.password)) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_PASSWORD", error: true });
+  }
+
+  if (Strings.isEmpty(req.body.data.token)) {
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_EMAIL_VERIFICATION_INVALID_TOKEN", error: true });
+  }
+
+  const verification = await Data.getVerificationBySid({
+    sid: req.body.data.token,
+  });
+
+  if (!verification.isVerified) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_UNVERIFIED", error: true });
+  }
+
+  const existing = await Data.getUserByUsername({
+    username: req.body.data.username.toLowerCase(),
+  });
+  if (existing) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
+  }
+
+  const existingViaEmail = await Data.getUserByEmail({ email: verification.email });
+  if (existingViaEmail) {
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN", error: true });
   }
 
   const rounds = Number(Environment.LOCAL_PASSWORD_ROUNDS);
@@ -47,6 +62,7 @@ export default async (req, res) => {
   // TODO(jim):
   // Don't do this once you refactor.
   const newUsername = req.body.data.username.toLowerCase();
+  const newEmail = verification.email;
 
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
@@ -71,6 +87,7 @@ export default async (req, res) => {
     password: hash,
     salt,
     username: newUsername,
+    email: newEmail,
     data: {
       photo,
       body: "",
@@ -92,7 +109,16 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
 
-  // Monitor.createUser({ user });
+  const welcomeTemplateId = "d-7688a09484194c06a417a434eaaadd6e";
+  const slateEmail = "hello@slate.host";
+
+  await EmailManager.sendTemplate({
+    to: user.email,
+    from: slateEmail,
+    templateId: welcomeTemplateId,
+  });
+
+  Monitor.createUser({ user });
 
   return res.status(200).send({
     decorator: "SERVER_CREATE_USER",

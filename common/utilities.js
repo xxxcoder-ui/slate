@@ -33,6 +33,9 @@ export const generateNumberByStep = ({ min, max, step = 1 }) => {
   return numbers[randomIndex];
 };
 
+export const generateRandomNumberInRange = (min, max) =>
+  Math.floor(Math.random() * (max - min)) + min;
+
 export const endsWithAny = (options, string) =>
   options.some((option) => {
     if (string) {

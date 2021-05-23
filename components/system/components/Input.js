@@ -4,6 +4,7 @@ import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
+import { P } from "~/components/system";
 
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
 
@@ -31,7 +32,8 @@ const STYLES_UNIT = css`
   font-size: 14px;
   color: ${Constants.system.darkGray};
   position: absolute;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 24px;
 `;
 
@@ -48,6 +50,12 @@ const STYLES_INPUT_CONTAINER_FULL = css`
   box-sizing: border-box;
   position: relative;
   min-width: 188px;
+`;
+
+const STYLES_HELPER = (theme) => css`
+  margin-top: 8px;
+  font-size: ${theme.typescale.lvl0};
+  color: ${theme.system.textGrayDark};
 `;
 
 const STYLES_INPUT = css`
@@ -86,12 +94,22 @@ const STYLES_ICON = css`
   right: 12px;
   margin-top: 1px;
   bottom: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   transition: 200ms ease all;
   cursor: pointer;
 
   :hover {
     color: ${Constants.system.brand};
   }
+`;
+
+const STYLES_VERIFICATION_INPUT = (theme) => css`
+  text-align: center;
+  height: 50px;
+  padding: 0;
+  font-family: ${theme.font.medium};
+  font-size: ${theme.typescale.lvl2};
 `;
 
 const INPUT_COLOR_MAP = {
@@ -119,13 +137,23 @@ export class Input extends React.Component {
     document.execCommand("copy");
   };
 
+  _handleSubmit = (e) => {
+    if (this.props.verification) {
+      let code = this.props.value.replace(/[\D\s\._\-]+/g, "");
+      code = code.slice(0, 7);
+      this.props.onSubmit(code);
+      return;
+    }
+    this.props.onSubmit(e);
+  };
+
   _handleKeyUp = (e) => {
     if (this.props.onKeyUp) {
       this.props.onKeyUp(e);
     }
 
     if ((e.which === 13 || e.keyCode === 13) && this.props.onSubmit) {
-      this.props.onSubmit(e);
+      this._handleSubmit(e);
       return;
     }
   };
@@ -144,6 +172,17 @@ export class Input extends React.Component {
       return;
     }
 
+    if (this.props.verification) {
+      let code = e.target.value;
+      code = code.replace(/[\D\s\._\-]+/g, "");
+      if (code.length > 3) code = code.slice(0, 3) + " " + code.slice(3);
+
+      if (code.length > 7) code = code.slice(0, 7);
+
+      this.props.onChange(code);
+      return;
+    }
+
     if (this.props.onChange) {
       this.props.onChange(e);
     }
@@ -151,66 +190,71 @@ export class Input extends React.Component {
 
   render() {
     return (
-      <div
-        css={this.props.full ? STYLES_INPUT_CONTAINER_FULL : STYLES_INPUT_CONTAINER}
-        style={this.props.containerStyle}
-      >
-        <DescriptionGroup
-          full={this.props.full}
-          tooltip={this.props.tooltip}
-          label={this.props.label}
-          style={this.props.descriptionStyle}
-          description={this.props.description}
-        />
-        <div style={{ position: "relative" }}>
-          <input
-            ref={(c) => {
-              this._input = c;
-            }}
-            css={STYLES_INPUT}
-            autoFocus={this.props.autoFocus}
-            value={this.props.value}
-            name={this.props.name}
-            type={this.props.type}
-            placeholder={this.props.placeholder}
-            onChange={this._handleChange}
-            onFocus={
-              this.props.autoHighlight
-                ? () => {
-                    this._input.select();
-                  }
-                : this.props.onFocus
-            }
-            onBlur={this.props.onBlur}
-            onKeyUp={this._handleKeyUp}
-            autoComplete="off"
-            disabled={this.props.disabled}
-            readOnly={this.props.readOnly}
-            style={{
-              boxShadow: this.props.validation
-                ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${
-                    INPUT_COLOR_MAP[this.props.validation]
-                  }`
-                : null,
-              paddingRight: this.props.copyable || this.props.icon ? "32px" : "24px",
-              ...this.props.style,
-            }}
+      <>
+        <div
+          css={this.props.full ? STYLES_INPUT_CONTAINER_FULL : STYLES_INPUT_CONTAINER}
+          style={this.props.containerStyle}
+        >
+          <DescriptionGroup
+            full={this.props.full}
+            tooltip={this.props.tooltip}
+            label={this.props.label}
+            labelStyle={{ fontSize: Constants.typescale.lvl0 }}
+            style={this.props.descriptionStyle}
+            description={this.props.description}
           />
-          <div
-            css={STYLES_UNIT}
-            ref={(c) => {
-              this._unit = c;
-            }}
-          >
-            {this.props.unit}
+          <div style={{ position: "relative" }}>
+            <input
+              ref={(c) => {
+                this._input = c;
+              }}
+              css={[STYLES_INPUT, this.props.verification && STYLES_VERIFICATION_INPUT]}
+              autoFocus={this.props.autoFocus}
+              value={this.props.value}
+              name={this.props.name}
+              type={this.props.type}
+              placeholder={this.props.placeholder}
+              onChange={this._handleChange}
+              onFocus={
+                this.props.autoHighlight
+                  ? () => {
+                      this._input.select();
+                    }
+                  : this.props.onFocus
+              }
+              onBlur={this.props.onBlur}
+              onKeyUp={this._handleKeyUp}
+              autoComplete="off"
+              disabled={this.props.disabled}
+              readOnly={this.props.readOnly}
+              required={this.props.required}
+              style={{
+                boxShadow: this.props.validation
+                  ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${
+                      INPUT_COLOR_MAP[this.props.validation]
+                    }`
+                  : null,
+                paddingRight: this.props.copyable || this.props.icon ? "32px" : "24px",
+                ...this.props.style,
+              }}
+            />
+            <div
+              css={STYLES_UNIT}
+              ref={(c) => {
+                this._unit = c;
+              }}
+            >
+              {this.props.unit}
+            </div>
+            {this.props.unit ? null : this.props.icon ? (
+              <this.props.icon height="16px" css={STYLES_ICON} onClick={this._handleSubmit} />
+            ) : this.props.copyable ? (
+              <SVG.CopyAndPaste height="16px" css={STYLES_ICON} onClick={this._handleCopy} />
+            ) : null}
           </div>
         </div>
-        {this.props.unit ? null : this.props.icon ? (
-          <this.props.icon height="16px" css={STYLES_ICON} onClick={this.props.onSubmit} />
-        ) : this.props.copyable ? (
-          <SVG.CopyAndPaste height="16px" css={STYLES_ICON} onClick={this._handleCopy} />
-        ) : null}
-      </div>
+        {this.props.helper ? <P css={STYLES_HELPER}>{this.props.helper}</P> : null}
+      </>
     );
   }
 }
