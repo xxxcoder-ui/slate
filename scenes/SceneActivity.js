@@ -280,7 +280,7 @@ export default class SceneActivity extends React.Component {
       return;
     }
 
-    let newItems = response.data;
+    let newItems = response.data || [];
 
     if (update) {
       activity.unshift(...newItems);
