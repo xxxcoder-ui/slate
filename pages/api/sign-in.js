@@ -48,7 +48,7 @@ export default async (req, res) => {
 
   // Note(amine): Twitter users won't have a password,
   // we should think in the future how to handle this use case
-  if (!user.salf || !user.password) {
+  if (!user.salt || !user.password) {
     return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_PASSWORD", error: true });
   }
 

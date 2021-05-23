@@ -118,7 +118,7 @@ export default async (req, res) => {
     templateId: welcomeTemplateId,
   });
 
-  Monitor.createUser({ user });
+  // Monitor.createUser({ user });
 
   return res.status(200).send({
     decorator: "SERVER_CREATE_USER",

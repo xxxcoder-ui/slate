@@ -23,7 +23,7 @@ const coordsCollide = (aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeigh
   );
 };
 
-export default (a, b, tolerance = 0) => {
+export default function DoObjectsCollide(a, b, tolerance = 0) {
   const aObj = a instanceof HTMLElement ? getBoundsForNode(a) : a;
   const bObj = b instanceof HTMLElement ? getBoundsForNode(b) : b;
 
@@ -38,4 +38,4 @@ export default (a, b, tolerance = 0) => {
     bObj.offsetHeight,
     tolerance
   );
-};
+}

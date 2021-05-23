@@ -27,7 +27,7 @@ const STYLES_BUTTON_ACTIVE = (theme) => css`
   color: ${theme.system.textBlack};
 `;
 
-export default function ({ options = [], onChange }) {
+export default function Toggle({ options = [], onChange }) {
   const [currentOption, setOption] = React.useState(options[0]);
   const handleChange = (nextValue) => {
     if (onChange) onChange(nextValue.value);
