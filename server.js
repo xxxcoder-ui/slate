@@ -66,6 +66,16 @@ const verifyVerificationLimiter = limit({
   },
 });
 
+const resendVerificationLimiter = limit({
+  windowMs: 30 * 1000, // 30 seconds
+  max: 1,
+  message: {
+    decorator: "VERIFICATION_VERIFY_RATE_LIMITED",
+    error: true,
+    message: "You have made too many requests.",
+  },
+});
+
 const handler = app.getRequestHandler();
 
 const EXTERNAL_RESOURCES = {
@@ -166,6 +176,10 @@ app.prepare().then(async () => {
   });
 
   server.all("/api/verifications/verify", verifyVerificationLimiter, async (r, s, next) => {
+    return handler(r, s, r.url);
+  });
+
+  server.all("/api/verifications/resend", resendVerificationLimiter, async (r, s, next) => {
     return handler(r, s, r.url);
   });
 
