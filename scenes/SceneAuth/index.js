@@ -65,7 +65,11 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, ...props }) => {
 
   if (scene === "signup")
     return (
-      <Signup verifyEmail={signupProvider.verifyEmail} createUser={signupProvider.createUser} />
+      <Signup
+        verifyEmail={signupProvider.verifyEmail}
+        resendEmailVerification={signupProvider.resendVerification}
+        createUser={signupProvider.createUser}
+      />
     );
 
   if (scene === "twitter_signup")
@@ -73,6 +77,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, ...props }) => {
       <TwitterSignup
         initialEmail={context.twitterEmail}
         createVerification={twitterProvider.createVerification}
+        resendEmailVerification={twitterProvider.resendEmailVerification}
         onSignupWithVerification={twitterProvider.signupWithVerification}
         onSignup={twitterProvider.signup}
       />

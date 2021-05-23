@@ -38,7 +38,7 @@ export const useAuthFlow = () => {
   return { ...handlers, ...state };
 };
 
-export const useSignup = ({ onAuthenticate }) => {
+export const useSignup = ({ onAuthenticate, email }) => {
   const verificationToken = React.useRef();
 
   const createVerification = async (data) => {
@@ -70,7 +70,16 @@ export const useSignup = ({ onAuthenticate }) => {
     return await onAuthenticate({ username, password });
   };
 
-  return { createVerification, verifyEmail, createUser };
+  const resendVerification = async () => {
+    const response = await Actions.resendVerification({
+      token: verificationToken.current,
+    });
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  return { createVerification, verifyEmail, createUser, resendVerification };
 };
 
 export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
@@ -173,18 +182,6 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
     }
   };
 
-  const createVerification = async (data) => {
-    const response = await Actions.createVerification({
-      ...data,
-      twitterToken: twitterTokens.current.authToken,
-    });
-    if (Events.hasError(response)) {
-      return;
-    }
-    verificationToken.current = response.token;
-    return response;
-  };
-
   const signup = async ({ email = "", username = "" }) => {
     const { authToken } = twitterTokens.current;
     const response = await Actions.createUserViaTwitter({
@@ -215,5 +212,34 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
     return response;
   };
 
-  return { isLoggingIn, signin, signup, signupWithVerification, createVerification };
+  const createVerification = async (data) => {
+    const response = await Actions.createVerification({
+      ...data,
+      twitterToken: twitterTokens.current.authToken,
+    });
+    if (Events.hasError(response)) {
+      return;
+    }
+    verificationToken.current = response.token;
+    return response;
+  };
+
+  const resendVerification = async ({ email }) => {
+    const response = await Actions.resendVerification({
+      email,
+      token: verificationToken.current,
+    });
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  return {
+    isLoggingIn,
+    signin,
+    signup,
+    signupWithVerification,
+    createVerification,
+    resendVerification,
+  };
 };

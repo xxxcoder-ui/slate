@@ -109,6 +109,12 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
 
+  // Note(amine): we can respond early to the client, sending the welcome email isn't a necessary part
+  res.status(200).send({
+    decorator: "SERVER_CREATE_USER",
+    user: { username: user.username, id: user.id },
+  });
+
   const welcomeTemplateId = "d-7688a09484194c06a417a434eaaadd6e";
   const slateEmail = "hello@slate.host";
 
@@ -119,9 +125,4 @@ export default async (req, res) => {
   });
 
   // Monitor.createUser({ user });
-
-  return res.status(200).send({
-    decorator: "SERVER_CREATE_USER",
-    user: { username: user.username, id: user.id },
-  });
 };

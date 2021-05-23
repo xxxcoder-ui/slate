@@ -512,3 +512,10 @@ export const verifyEmail = async (data) => {
     body: JSON.stringify({ data }),
   });
 };
+
+export const resendVerification = async (data) => {
+  return await returnJSON(`/api/verifications/resend`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};

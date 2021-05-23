@@ -515,6 +515,8 @@ export default class ApplicationPage extends React.Component {
     // if (!redirected) {
     //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
     // }
+    window.location.replace("/_/activity");
+
     return response;
   };
 

@@ -25,7 +25,7 @@ const handleValidation = ({ username, password }) => {
   if (!Validations.password(password)) return "Incorrect password";
 };
 
-export default function Signup({ verifyEmail, createUser }) {
+export default function Signup({ verifyEmail, createUser, resendEmailVerification }) {
   const { goToAccountCreationScene, scene } = useSignup();
 
   const { getFieldProps, getFormProps, isSubmitting } = useForm({
@@ -41,8 +41,9 @@ export default function Signup({ verifyEmail, createUser }) {
         goToAccountCreationScene();
       }
     };
-    return <Verification onVerify={handleVerification} />;
+    return <Verification onVerify={handleVerification} onResend={resendEmailVerification} />;
   }
+
   return (
     <SignUpPopover title="Create an account">
       <form {...getFormProps()}>

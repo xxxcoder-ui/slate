@@ -4,8 +4,72 @@ import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 
 import { LoaderSpinner } from "~/components/system/components/Loaders";
+import { css } from "@emotion/react";
 
 import { SignUpPopover } from "./";
+
+const STYLES_RESEND_BUTTON = (theme) => css`
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  border: none;
+  background: transparent;
+  &:hover {
+    color: ${theme.system.black};
+    cursor: pointer;
+  }
+`;
+
+const getResendText = ({ status, timeLeft }) => {
+  if (status === "ready") return "Resend code.";
+  if (status === "sending") return "Sending code...";
+  if (status === "sent") return "Code sent.";
+  return `${timeLeft}s left to retry`;
+};
+
+const ResendButton = ({ onResend }) => {
+  // NOTE(amine): we have 4 status: ready, sending, sent, timeout
+  const [status, setStatus] = React.useState("ready");
+  const [timer, setTimer] = React.useState(35);
+
+  const handleResend = async () => {
+    if (status === "ready") {
+      setStatus("sending");
+      await onResend();
+      setStatus("sent");
+      return;
+    }
+
+    if (status === "sent") {
+      setStatus("timeout");
+    }
+  };
+
+  // NOTE(amine): when the timer hits 0,
+  React.useEffect(() => {
+    if (timer === 0) setStatus("ready");
+  }, [timer]);
+
+  React.useEffect(() => {
+    let interval;
+    // NOTE(amine): start a timer when the email is sent
+    if (status === "sent") {
+      // NOTE(amine): reset timer to 35s
+      setTimer(35);
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+        //NOTE(amine): clear interval when the timer is over.
+        if (timer === 0) clearInterval(interval);
+      }, 1000);
+    }
+  }, [status]);
+
+  return (
+    <button css={STYLES_RESEND_BUTTON} onClick={handleResend}>
+      {getResendText({ status, timeLeft: timer })}
+    </button>
+  );
+};
 
 const useVerification = ({ onSubmit }) => {
   const [{ pin, isSubmitting }, setValues] = React.useState({ pin: "" });
@@ -24,10 +88,11 @@ const useVerification = ({ onSubmit }) => {
   return { getVerificationFieldProps, isSubmitting };
 };
 
-export default function Verification({ onVerify }) {
+export default function Verification({ onVerify, onResend }) {
   const { getVerificationFieldProps, isSubmitting } = useVerification({
     onSubmit: (pin) => onVerify({ pin }),
   });
+
   return (
     <SignUpPopover
       logoStyle={{ width: 56, height: 56 }}
@@ -44,7 +109,7 @@ export default function Verification({ onVerify }) {
         label="Input 6 digits code"
         helper={
           <>
-            Didn’t receive an email? <a style={{ color: "inherit" }}>Resend code.</a>
+            Didn’t receive an email? <ResendButton onResend={onResend} />
           </>
         }
         full
@@ -59,9 +124,8 @@ export default function Verification({ onVerify }) {
         }
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-        verification
         name="pin"
-        type="text"
+        type="pin"
         {...getVerificationFieldProps()}
       />
     </SignUpPopover>
