@@ -104,7 +104,7 @@ const STYLES_ICON = css`
   }
 `;
 
-const STYLES_VERIFICATION_INPUT = (theme) => css`
+const STYLES_PIN_INPUT = (theme) => css`
   text-align: center;
   height: 50px;
   padding: 0;
@@ -121,6 +121,7 @@ const INPUT_COLOR_MAP = {
 export class Input extends React.Component {
   _unit;
   _input;
+  _isPin = this.props.type === "pin";
 
   componentDidMount = () => {
     if (this.props.unit) {
@@ -138,7 +139,7 @@ export class Input extends React.Component {
   };
 
   _handleSubmit = (e) => {
-    if (this.props.verification) {
+    if (this._isPin) {
       let code = this.props.value.replace(/[\D\s\._\-]+/g, "");
       code = code.slice(0, 7);
       this.props.onSubmit(code);
@@ -172,7 +173,7 @@ export class Input extends React.Component {
       return;
     }
 
-    if (this.props.verification) {
+    if (this._isPin) {
       let code = e.target.value;
       code = code.replace(/[\D\s\._\-]+/g, "");
       if (code.length > 3) code = code.slice(0, 3) + " " + code.slice(3);
@@ -208,11 +209,11 @@ export class Input extends React.Component {
               ref={(c) => {
                 this._input = c;
               }}
-              css={[STYLES_INPUT, this.props.verification && STYLES_VERIFICATION_INPUT]}
+              css={[STYLES_INPUT, this._isPin && STYLES_PIN_INPUT]}
               autoFocus={this.props.autoFocus}
               value={this.props.value}
               name={this.props.name}
-              type={this.props.type}
+              type={this._isPin ? "text" : this.props.type}
               placeholder={this.props.placeholder}
               onChange={this._handleChange}
               onFocus={
