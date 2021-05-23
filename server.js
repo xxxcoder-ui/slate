@@ -46,6 +46,26 @@ const loginLimiter = limit({
   },
 });
 
+const sendVerificationLimiter = limit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 3,
+  message: {
+    decorator: "VERIFICATION_CREATE_RATE_LIMITED",
+    error: true,
+    message: "You have made too many requests.",
+  },
+});
+
+const verifyVerificationLimiter = limit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 3,
+  message: {
+    decorator: "VERIFICATION_VERIFY_RATE_LIMITED",
+    error: true,
+    message: "You have made too many requests.",
+  },
+});
+
 const handler = app.getRequestHandler();
 
 const EXTERNAL_RESOURCES = {
@@ -138,6 +158,14 @@ app.prepare().then(async () => {
   });
 
   server.all("/api/sign-in", loginLimiter, async (r, s, next) => {
+    return handler(r, s, r.url);
+  });
+
+  server.all("/api/verifications/create", sendVerificationLimiter, async (r, s, next) => {
+    return handler(r, s, r.url);
+  });
+
+  server.all("/api/verifications/verify", verifyVerificationLimiter, async (r, s, next) => {
     return handler(r, s, r.url);
   });
 
