@@ -438,76 +438,76 @@ export const getZipFilePaths = async (data) => {
 };
 
 export const cleanDatabase = async () => {
-  return await returnJSON(`api/clean-up/users`, {
+  return await returnJSON(`/api/clean-up/users`, {
     ...DEFAULT_OPTIONS,
   });
 };
 
 export const v1GetSlate = async (data) => {
-  return await returnJSON(`api/v1/get-slate`, {
+  return await returnJSON(`/api/v1/get-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v1Get = async (data) => {
-  return await returnJSON(`api/v1/get`, {
+  return await returnJSON(`/api/v1/get`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v1UpdateSlate = async (data) => {
-  return await returnJSON(`api/v1/update-slate`, {
+  return await returnJSON(`/api/v1/update-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2GetSlate = async (data) => {
-  return await returnJSON(`api/v2/get-slate`, {
+  return await returnJSON(`/api/v2/get-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2GetUser = async (data) => {
-  return await returnJSON(`api/v2/get-user`, {
+  return await returnJSON(`/api/v2/get-user`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2Get = async (data) => {
-  return await returnJSON(`api/v2/get`, {
+  return await returnJSON(`/api/v2/get`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2UpdateSlate = async (data) => {
-  return await returnJSON(`api/v2/update-slate`, {
+  return await returnJSON(`/api/v2/update-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2UpdateFile = async (data) => {
-  return await returnJSON(`api/v2/update-file`, {
+  return await returnJSON(`/api/v2/update-file`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const createVerification = async (data) => {
-  return await returnJSON(`api/verifications/create`, {
+  return await returnJSON(`/api/verifications/create`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const verifyEmail = async (data) => {
-  return await returnJSON(`api/verifications/verify`, {
+  return await returnJSON(`/api/verifications/verify`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
