@@ -38,7 +38,7 @@ const STYLES_MIDDLE = css`
   padding: 24px;
 `;
 
-const SigninScene = ({ withAuthenticationBehavior, ...props }) => {
+const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, ...props }) => {
   const {
     goToSigninScene,
     goToSignupScene,
@@ -47,23 +47,18 @@ const SigninScene = ({ withAuthenticationBehavior, ...props }) => {
     context,
   } = useAuthFlow();
 
-  const handleAuthenticate = withAuthenticationBehavior(UserBehaviors.authenticate);
-  const handleAuthenticateViaTwitter = withAuthenticationBehavior(
-    UserBehaviors.authenticateViaTwitter
-  );
-
   const twitterProvider = useTwitter({
-    onAuthenticate: handleAuthenticateViaTwitter,
+    onAuthenticate: onTwitterAuthenticate,
     goToTwitterSignupScene,
   });
 
-  const signupProvider = useSignup({ onAuthenticate: handleAuthenticate });
+  const signupProvider = useSignup({ onAuthenticate: onAuthenticate });
 
   if (scene === "signin")
     return (
       <Signin
         {...props}
-        onAuthenticate={handleAuthenticate}
+        onAuthenticate={onAuthenticate}
         emailOrUsername={context.emailOrUsername}
       />
     );

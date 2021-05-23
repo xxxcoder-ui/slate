@@ -469,6 +469,9 @@ export default class ApplicationPage extends React.Component {
 
   _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
     let response = await authenticate(state);
+    if (Events.hasError(response)) {
+      return;
+    }
     if (!response) {
       return;
     }
@@ -711,8 +714,7 @@ export default class ApplicationPage extends React.Component {
       selected: this.state.selected,
       onSelectedChange: this._handleSelectedChange,
       onAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticate),
-      withAuthenticationBehavior: _withAuthenticationBehavior,
-      onCreateUser: this._handleCreateUser,
+      onTwitterAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticateViaTwitter),
       onAction: this._handleAction,
       onUpload: this._handleUploadFiles,
       isMobile: this.state.isMobile,
