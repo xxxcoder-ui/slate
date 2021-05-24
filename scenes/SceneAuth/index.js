@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as UserBehaviors from "~/common/user-behaviors";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
 import { Initial, Signin, Signup, TwitterSignup } from "~/components/core/Auth";
@@ -95,11 +96,13 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, ...props }) => {
 };
 
 const WithCustomWrapper = (Component) => (props) => (
-  <div css={STYLES_ROOT}>
-    <div css={STYLES_MIDDLE}>
-      <Component {...props} />
+  <WebsitePrototypeWrapper>
+    <div css={STYLES_ROOT}>
+      <div css={STYLES_MIDDLE}>
+        <Component {...props} />
+      </div>
     </div>
-  </div>
+  </WebsitePrototypeWrapper>
 );
 
 export default WithCustomWrapper(SigninScene);
