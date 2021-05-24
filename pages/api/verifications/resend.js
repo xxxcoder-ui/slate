@@ -3,6 +3,7 @@ import * as Strings from "~/common/strings";
 import * as Environment from "~/node_common/environment";
 import * as EmailManager from "~/node_common/managers/emails";
 
+// NOTE(amine): this endpoint is rate limited in ./server.js,
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
     return res

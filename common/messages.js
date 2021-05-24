@@ -123,6 +123,7 @@ export const error = {
   SERVER_CREATE_USER_USERNAME_TAKEN: "There is already an account with that username",
   SERVER_CREATE_USER_INVALID_USERNAME: "Please choose a valid username",
   SERVER_CREATE_USER_INVALID_PASSWORD: "Please chooose a valid password",
+  SERVER_CREATE_USER_INVALID_EMAIL: "Please chooose a valid email",
   SERVER_CREATE_USER_BUCKET_INIT_FAILURE:
     "We're having trouble setting up your storage, please try again later",
   SERVER_CREATE_USER_FAILED:
@@ -136,6 +137,11 @@ export const error = {
   SERVER_EMAIL_VERIFICATION_INVALID_PIN: "Please enter a valid pin",
   SERVER_EMAIL_VERIFICATION_FAILED:
     "We're having trouble with verifying your email, please try again later",
+  SERVER_CREATE_VERIFICATION_NOT_ALLOWED:
+    "You can only send a verification pin while on slate.host",
+  SERVER_CREATE_VERIFICATION_INVALID_EMAIL: "Please chooose a valid email",
+  SERVER_CREATE_VERIFICATION_FAILED:
+    "We're having touble sending a verification pin, please try again late",
 
   //Get user
   SERVER_GET_USER_NO_USER_PROVIDED:
