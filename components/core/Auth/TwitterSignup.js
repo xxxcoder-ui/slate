@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as System from "~/components/system";
-import * as SVG from "~/common/svg";
-import * as Actions from "~/common/actions";
+import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";

@@ -19,7 +19,7 @@ export default async ({ email }) => {
     errorFn: async (e) => {
       return {
         error: true,
-        decorator: "GET_VERIFICATION",
+        decorator: "GET_VERIFICATION_BY_EMAIL",
       };
     },
   });

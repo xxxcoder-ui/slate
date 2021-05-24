@@ -57,18 +57,29 @@ export const authenticateViaTwitter = (response) => {
   const jwt = cookies.get(Credentials.session.key);
 
   if (jwt) {
-    cookies.remove(Credentials.session.key);
+    cookies.remove(Credentials.session.key, {
+      path: "/",
+      maxAge: 3600 * 24 * 7,
+      sameSite: "strict",
+    });
   }
 
-  // NOTE(jim):
-  // + One week.
-  // + Only requests to the same site.
-  // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
-  cookies.set(Credentials.session.key, response.token, true, {
-    path: "/",
-    maxAge: 3600 * 24 * 7,
-    sameSite: "strict",
-  });
+  if (Events.hasError(response)) {
+    return false;
+  }
+
+  if (response.token) {
+    // NOTE(jim):
+    // + One week.
+    // + Only requests to the same site.
+    // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
+    cookies.set(Credentials.session.key, response.token, {
+      path: "/",
+      maxAge: 3600 * 24 * 7,
+      sameSite: "strict",
+    });
+  }
+
   return response;
 };
 

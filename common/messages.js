@@ -128,6 +128,15 @@ export const error = {
   SERVER_CREATE_USER_FAILED:
     "We're having trouble creating your account right now. Please try again later",
 
+  // Twitter
+  SERVER_CREATE_USER_TWITTER_EXISTS: "There is already an account linked with your twitter",
+  SERVER_TWITTER_OAUTH_NOT_ALLOWED: "You can only authenticate via twitter while on slate.host",
+
+  // Email Verifications
+  SERVER_EMAIL_VERIFICATION_INVALID_PIN: "Please enter a valid pin",
+  SERVER_EMAIL_VERIFICATION_FAILED:
+    "We're having trouble with verifying your email, please try again later",
+
   //Get user
   SERVER_GET_USER_NO_USER_PROVIDED:
     "We were not able to fetch that user because no user was specified",

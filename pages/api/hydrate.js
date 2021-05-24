@@ -4,7 +4,6 @@ import * as Utilities from "~/node_common/utilities";
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
   console.log(id);
-  console.log(req);
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }

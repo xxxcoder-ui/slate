@@ -4,7 +4,6 @@ import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as SlateManager from "~/node_common/managers/slate";
-import * as Monitor from "~/node_common/monitor";
 
 import JWT from "jsonwebtoken";
 
@@ -38,6 +37,7 @@ export default async (req, res) => {
   if (!verification) {
     return res.status(404).send({ decorator: "SERVER_EMAIL_VERIFICATION_FAILED", error: true });
   }
+
   if (verification.error) {
     return res.status(404).send({ decorator: "SERVER_EMAIL_VERIFICATION_FAILED", error: true });
   }
@@ -49,11 +49,14 @@ export default async (req, res) => {
   }
 
   const twitterUser = await Data.getTwitterToken({ token: verification.twitterToken });
+  if (!twitterUser) {
+    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+  }
 
   const userByTwitterId = await Data.getUserByTwitterId({ twitterId: twitterUser.id_str });
   // NOTE(Amine): If a user with TwitterId exists
   if (userByTwitterId) {
-    return res.status(201).send({ decorator: "SERVER_TWITTER_ACCOUNT_ALREADY_LINKED" });
+    return res.status(201).send({ decorator: "SERVER_CREATE_USER_TWITTER_EXISTS" });
   }
 
   const newUsername = username.toLowerCase();
@@ -61,9 +64,7 @@ export default async (req, res) => {
 
   // NOTE(Amine): If there is an account with the user's twitter email
   const userByEmail = await Data.getUserByEmail({ email: newEmail });
-  if (userByEmail) {
-    return res.status(201).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN" });
-  }
+  if (userByEmail) return res.status(201).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN" });
 
   // NOTE(Amine): If there is an account with the provided username
   const userByUsername = await Data.getUserByUsername({ username });
@@ -125,8 +126,6 @@ export default async (req, res) => {
   if (user.error) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
-
-  Monitor.createUser({ user });
 
   const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
   return res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });
