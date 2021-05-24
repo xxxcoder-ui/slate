@@ -39,7 +39,6 @@ export default async (req, res) => {
 
   if (response.isPublic) {
     SearchManager.updateFile(response, "ADD");
-    Monitor.toggleFilePublic({ owner: user, file: response });
   } else {
     SearchManager.updateFile(response, "REMOVE");
   }

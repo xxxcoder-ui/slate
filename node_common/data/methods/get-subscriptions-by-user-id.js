@@ -1,6 +1,7 @@
-import { runQuery } from "~/node_common/data/utilities";
-
 import * as Serializers from "~/node_common/serializers";
+import * as Constants from "~/node_common/constants";
+
+import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ ownerId }) => {
   return await runQuery({
@@ -17,19 +18,12 @@ export default async ({ ownerId }) => {
           "objects",
         ]);
 
-      const query = await DB.select(
-        "slates.id",
-        "slates.slatename",
-        "slates.data",
-        "slates.ownerId",
-        "slates.isPublic",
-        slateFiles()
-      )
+      const query = await DB.select(...Constants.slateProperties, slateFiles())
         .from("slates")
         .join("subscriptions", "subscriptions.slateId", "=", "slates.id")
         .join("slate_files", "slate_files.slateId", "=", "slates.id")
         .join("files", "slate_files.fileId", "=", "files.id")
-        .where({ "subscriptions.ownerId": ownerId })
+        .where({ "subscriptions.ownerId": ownerId, "slates.isPublic": true })
         // .orderBy("subscriptions.createdAt", "desc");
         .groupBy("slates.id");
 

@@ -98,8 +98,8 @@ const authPage = {
 
 const dataPage = {
   id: "NAV_DATA",
-  name: "Files",
-  pageTitle: "Your Files",
+  name: "My Slate",
+  pageTitle: "My Slate",
   pathname: "/_/data",
   mainNav: true,
 };

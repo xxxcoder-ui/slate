@@ -50,6 +50,7 @@ export default async (req, res) => {
 
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
     let privacyResponse = await Data.updateSlatePrivacy({
+      ownerId: id,
       id: slate.id,
       isPublic: updates.isPublic,
     });
@@ -130,7 +131,6 @@ export default async (req, res) => {
     SearchManager.updateSlate(response, "REMOVE");
   } else if (!slate.isPublic && updates.isPublic) {
     SearchManager.updateSlate(response, "ADD");
-    Monitor.toggleSlatePublic({ owner: user, slate: response });
   } else {
     SearchManager.updateSlate(response, "EDIT");
   }

@@ -1,12 +1,13 @@
-import { runQuery } from "~/node_common/data/utilities";
-
 import * as Serializers from "~/node_common/serializers";
+import * as Constants from "~/node_common/constants";
+
+import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ slateId }) => {
   return await runQuery({
     label: "GET_SUBSCRIBERS_BY_SLATE_ID",
     queryFn: async (DB) => {
-      const query = await DB.select("users.id", "users.username", "users.data")
+      const query = await DB.select(...Constants.userProperties)
         .from("users")
         .join("subscriptions", "subscriptions.ownerId", "=", "users.id")
         .where({ "subscriptions.slateId": slateId })

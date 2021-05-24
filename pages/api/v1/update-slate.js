@@ -88,6 +88,7 @@ export default async (req, res) => {
 
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
     let privacyResponse = await Data.updateSlatePrivacy({
+      ownerId: user.id,
       id: updates.id,
       isPublic: updates.isPublic,
     });

@@ -118,13 +118,14 @@ export default class SidebarSingleSlateSettings extends React.Component {
       return;
     }
 
+    this.props.onAction({
+      type: "NAVIGATE",
+      href: "/_/collections",
+    });
+
     let slates = this.props.viewer.slates.filter((slate) => slate.id !== this.props.data.id);
     this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
 
-    this.props.onAction({
-      type: "NAVIGATE",
-      value: "/_/collections",
-    });
     const response = await Actions.deleteSlate({
       id: this.props.data.id,
     });

@@ -94,11 +94,7 @@ export default async (req, res) => {
     });
   }
 
-  let slateFiles = files.map((file) => {
-    return { slateId: slateId, fileId: file.id };
-  });
-
-  let response = await Data.createSlateFiles(slateFiles);
+  let response = await Data.createSlateFiles({ owner: user, slate, files });
   if (!response || response.error) {
     return res.status(500).send({
       decorator: "SERVER_ADD_TO_SLATE_FAILED",
@@ -109,15 +105,13 @@ export default async (req, res) => {
   await Data.updateSlateById({ id: slateId, updatedAt: new Date() });
 
   if (slate.isPublic) {
-    Monitor.createSlateObjects({ owner: user, slate, files });
-
-    const publicFiles = await Data.getFilesByIds({
-      ids: req.body.data.files.map((file) => file.id),
-      publicOnly: true,
+    const privacyUpdate = await Data.updateFilesPublic({
+      ids: files.map((file) => file.id),
+      ownerId: user.id,
     });
 
-    if (publicFiles.length) {
-      SearchManager.updateFile(publicFiles, "ADD");
+    if (privacyUpdate.length) {
+      SearchManager.updateFile(privacyUpdate, "ADD");
     }
   }
 

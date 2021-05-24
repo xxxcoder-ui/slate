@@ -92,8 +92,6 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
 
-  // Monitor.createUser({ user });
-
   return res.status(200).send({
     decorator: "SERVER_CREATE_USER",
     user: { username: user.username, id: user.id },

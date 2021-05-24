@@ -43,11 +43,7 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "CREATE_FILE_DUPLICATE", error: true });
   }
 
-  newFiles = newFiles.map((file) => {
-    return { ...file, ownerId: user.id };
-  });
-
-  const response = await Data.createFile(newFiles);
+  const response = await Data.createFile({ owner: user, files: newFiles });
 
   if (!response) {
     return res.status(404).send({ decorator: "CREATE_FILE_FAILED", error: true });
@@ -56,8 +52,6 @@ export default async (req, res) => {
   if (response.error) {
     return res.status(500).send({ decorator: response.decorator, error: response.error });
   }
-
-  Monitor.createFiles({ owner: user, files: response });
 
   ViewerManager.hydratePartial(id, { library: true });
 

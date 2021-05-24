@@ -77,17 +77,14 @@ export default async (req, res) => {
     delete file.createdAt;
     delete file.id;
     delete file.isPublic;
-    file.ownerId = user.id;
     newFiles.push(file);
   }
   let response = [];
   if (newFiles?.length) {
-    response = await Data.createFile(newFiles);
+    response = await Data.createFile({ owner: user, files: newFiles, saveCopy: true });
   }
 
   ViewerManager.hydratePartial(id, { library: true });
-
-  Monitor.saveCopies({ owner: user, files: newFiles });
 
   const added = response?.length || 0;
   const skipped = req.body.data.files.length - added;

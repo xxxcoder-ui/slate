@@ -6,7 +6,7 @@ import deleteUserById from "~/node_common/data/methods/delete-user-by-id";
 import getUserByUsername from "~/node_common/data/methods/get-user-by-username";
 import getUserById from "~/node_common/data/methods/get-user-by-id";
 
-//NOTE(martina):
+// NOTE(martina):
 // File postgres queries
 import createFile from "~/node_common/data/methods/create-file";
 import getFileByCid from "~/node_common/data/methods/get-file-by-cid";
@@ -18,6 +18,14 @@ import deleteFilesByIds from "~/node_common/data/methods/delete-files-by-ids";
 import deleteFilesByUserId from "~/node_common/data/methods/delete-files-by-user-id";
 import updateFileById from "~/node_common/data/methods/update-file-by-id";
 import updateFilePrivacy from "~/node_common/data/methods/update-file-privacy";
+import updateFilesPublic from "~/node_common/data/methods/update-files-public";
+
+// NOTE(martina):
+// Like postgres queries
+import createLike from "~/node_common/data/methods/create-like";
+import deleteLikeByFile from "~/node_common/data/methods/delete-like-by-file";
+import getLikeByFile from "~/node_common/data/methods/get-like-by-file";
+import getLikesByUserId from "~/node_common/data/methods/get-likes-by-user-id";
 
 //NOTE(martina):
 // Slate file postgres queries
@@ -58,6 +66,7 @@ import deleteSubscriptionById from "~/node_common/data/methods/delete-subscripti
 // NOTE(jim):
 // Activity postgres queries
 import createUsageStat from "~/node_common/data/methods/create-usage-stat";
+import createDownload from "~/node_common/data/methods/create-download";
 import createActivity from "~/node_common/data/methods/create-activity";
 import getActivity from "~/node_common/data/methods/get-activity";
 import getExplore from "~/node_common/data/methods/get-explore";
@@ -92,7 +101,13 @@ export {
   deleteFilesByUserId,
   updateFileById,
   updateFilePrivacy,
-  //NOTE(martina): Slate file operations
+  updateFilesPublic,
+  // NOTE(martina): Like postgres queries
+  createLike,
+  deleteLikeByFile,
+  getLikeByFile,
+  getLikesByUserId,
+  // NOTE(martina): Slate file operations
   createSlateFiles,
   deleteSlateFiles,
   getSlateFilesByCids,
@@ -122,6 +137,7 @@ export {
   deleteSubscriptionById,
   // NOTE(jim): Activity operations
   createUsageStat,
+  createDownload,
   createActivity,
   getActivity,
   getExplore,

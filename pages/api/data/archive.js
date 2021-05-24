@@ -200,20 +200,6 @@ export default async (req, res) => {
     } else {
       response = await buckets.archive(key);
     }
-
-    // Monitor.deal({
-    //   userId: user.id,
-    //   data: {
-    //     actorUserId: user.id,
-    //     context: {
-    //       username: user.username,
-    //       bucketName: encryptedBucketName ? encryptedBucketName : bucketName,
-    //       isEncrypted: encryptThisDeal,
-    //     },
-    //   },
-    // });
-
-    console.log(response);
   } catch (e) {
     error.message = e.message;
     error.code = e.code;

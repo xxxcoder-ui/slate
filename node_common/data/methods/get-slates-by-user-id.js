@@ -1,4 +1,5 @@
 import * as Serializers from "~/node_common/serializers";
+import * as Constants from "~/node_common/constants";
 
 import { runQuery } from "~/node_common/data/utilities";
 
@@ -27,14 +28,7 @@ export default async ({ ownerId, sanitize = false, includeFiles = false, publicO
 
       if (includeFiles) {
         if (publicOnly) {
-          query = await DB.select(
-            "slates.id",
-            "slates.slatename",
-            "slates.data",
-            "slates.ownerId",
-            "slates.isPublic",
-            slateFiles()
-          )
+          query = await DB.select(...Constants.slateProperties, slateFiles())
             .from("slates")
             .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
             .leftJoin("files", "slate_files.fileId", "=", "files.id")
@@ -42,14 +36,7 @@ export default async ({ ownerId, sanitize = false, includeFiles = false, publicO
             .groupBy("slates.id")
             .orderBy("slates.updatedAt", "desc");
         } else {
-          query = await DB.select(
-            "slates.id",
-            "slates.slatename",
-            "slates.data",
-            "slates.ownerId",
-            "slates.isPublic",
-            slateFiles()
-          )
+          query = await DB.select(...Constants.slateProperties, slateFiles())
             .from("slates")
             .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
             .leftJoin("files", "slate_files.fileId", "=", "files.id")
@@ -59,12 +46,12 @@ export default async ({ ownerId, sanitize = false, includeFiles = false, publicO
         }
       } else {
         if (publicOnly) {
-          query = await DB.select("id", "slatename", "data", "ownerId", "isPublic")
+          query = await DB.select(...Constants.slateProperties)
             .from("slates")
             .where({ "slates.ownerId": ownerId, "slates.isPublic": true })
             .orderBy("updatedAt", "desc");
         } else {
-          query = await DB.select("id", "slatename", "data", "ownerId", "isPublic")
+          query = await DB.select(...Constants.slateProperties)
             .from("slates")
             .where({ "slates.ownerId": ownerId })
             .orderBy("updatedAt", "desc");

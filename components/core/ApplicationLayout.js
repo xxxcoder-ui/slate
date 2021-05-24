@@ -75,7 +75,8 @@ const STYLES_SIDEBAR_ELEMENTS = css`
 
 const STYLES_SIDEBAR = css`
   position: fixed;
-  top: 0; right: 0;
+  top: 0;
+  right: 0;
   margin: auto;
   z-index: ${Constants.zindex.sidebar};
 `;
@@ -166,6 +167,7 @@ export default class ApplicationLayout extends React.Component {
         </React.Fragment>
       );
     }
+
     return (
       <React.Fragment>
         <div css={STYLES_CONTENT}>
@@ -179,7 +181,13 @@ export default class ApplicationLayout extends React.Component {
             </div>
           )}
           <Alert
-            noWarning={this.props.viewer ? this.props.viewer.data.status?.hidePrivacyAlert : false}
+            noWarning={
+              this.props.page?.id === "NAV_SIGN_IN"
+                ? true
+                : this.props.viewer
+                ? this.props.viewer.data.status?.hidePrivacyAlert
+                : false
+            }
             fileLoading={this.props.fileLoading}
             onAction={this.props.onAction}
             id={this.props.isMobile ? "slate-mobile-alert" : null}

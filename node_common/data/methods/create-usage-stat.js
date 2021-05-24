@@ -12,7 +12,6 @@ export default async ({ id }) => {
         .whereRaw("?? >= now()::date", "createdAt")
         .first();
       if (existing) {
-        console.log("existing stat");
         return;
       }
 
@@ -21,8 +20,6 @@ export default async ({ id }) => {
       if (!query) {
         return null;
       }
-      console.log("added stat");
-      console.log(query);
 
       query = query.pop();
 

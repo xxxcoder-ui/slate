@@ -762,6 +762,7 @@ export default class ApplicationPage extends React.Component {
     return (
       <React.Fragment>
         <ApplicationLayout
+          page={page}
           onAction={this._handleAction}
           header={headerElement}
           sidebar={sidebarElement}

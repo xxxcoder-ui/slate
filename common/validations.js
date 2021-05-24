@@ -148,41 +148,41 @@ export const isPreviewableImage = (type = "") => {
   return type.startsWith("image/");
 };
 
-export const isImageType = (type) => {
+export const isImageType = (type = "") => {
   if (type.startsWith("image/")) {
     return true;
   }
 };
 
-export const isAudioType = (type) => {
+export const isAudioType = (type = "") => {
   if (type.startsWith("audio/")) {
     return true;
   }
 };
 
-export const isVideoType = (type) => {
+export const isVideoType = (type = "") => {
   if (type.startsWith("video/")) {
     return true;
   }
 };
 
-export const isPdfType = (type) => {
+export const isPdfType = (type = "") => {
   if (type.startsWith("application/pdf")) {
     return true;
   }
 };
 
-export const isEpubType = (type) => {
+export const isEpubType = (type = "") => {
   if (type.startsWith("application/epub")) {
     return true;
   }
 };
 
-export const isFontFile = (fileName) => {
+export const isFontFile = (fileName = "") => {
   return Utilities.endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
 };
 
-export const isMarkdown = (filename, type) => {
+export const isMarkdown = (filename = "", type = "") => {
   return filename.toLowerCase().endsWith(".md") || type.startsWith("text/plain");
 };
 

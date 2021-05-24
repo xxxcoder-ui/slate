@@ -32,6 +32,9 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.string("password").nullable();
   table.string("salt").nullable();
   table.jsonb("data").nullable();
+  table.integer("followerCount").notNullable().defaultTo(0);
+  table.integer("fileCount").notNullable().defaultTo(0);
+  table.integer("slateCount").notNullable().defaultTo(0);
 });
 
 const createSlatesTable = db.schema.createTable("slates", function (table) {
@@ -42,6 +45,8 @@ const createSlatesTable = db.schema.createTable("slates", function (table) {
   table.string("slatename").notNullable();
   table.boolean("isPublic").notNullable().defaultTo(false);
   table.jsonb("data").nullable();
+  table.integer("subscriberCount").notNullable().defaultTo(0);
+  table.integer("fileCount").notNullable().defaultTo(0);
 });
 
 const createKeysTable = db.schema.createTable("keys", function (table) {
@@ -52,7 +57,7 @@ const createKeysTable = db.schema.createTable("keys", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createFilesTable = await db.schema.createTable("files", function (table) {
+const createFilesTable = db.schema.createTable("files", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
@@ -60,16 +65,18 @@ const createFilesTable = await db.schema.createTable("files", function (table) {
   table.string("filename").nullable();
   table.boolean("isPublic").notNullable().defaultTo(false);
   table.jsonb("data").nullable();
+  table.integer("likeCount").notNullable().defaultTo(0);
+  table.integer("downloadCount").notNullable().defaultTo(0);
 });
 
-const createSlateFilesTable = await db.schema.createTable("slate_files", function (table) {
+const createSlateFilesTable = db.schema.createTable("slate_files", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("fileId").references("id").inTable("files");
   table.uuid("slateId").references("id").inTable("slates");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createSubscriptionsTable = await db.schema.createTable("subscriptions", function (table) {
+const createSubscriptionsTable = db.schema.createTable("subscriptions", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.uuid("slateId").references("id").inTable("slates");
@@ -78,13 +85,21 @@ const createSubscriptionsTable = await db.schema.createTable("subscriptions", fu
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createActivityTable = await db.schema.createTable("activity", function (table) {
+const createActivityTable = db.schema.createTable("activity", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.uuid("userId").references("id").inTable("users");
   table.uuid("slateId").references("id").inTable("slates");
   table.uuid("fileId").references("id").inTable("files");
   table.string("type");
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
+  table.boolean("ignore").notNullable().defaultTo(false);
+});
+
+const createLikesTable = db.schema.createTable("likes", function (table) {
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.uuid("userId").references("id").inTable("users");
+  table.uuid("fileId").references("id").inTable("files");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
@@ -123,6 +138,7 @@ Promise.all([
   createKeysTable,
   createFilesTable,
   createSlateFilesTable,
+  createLikesTable,
   createSubscriptionsTable,
   createActivityTable,
   createStatsTable,

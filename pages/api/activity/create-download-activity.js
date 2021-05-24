@@ -33,7 +33,7 @@ export default async (req, res) => {
       .send({ decorator: "SERVER_CREATE_DOWNLOAD_ACTIVITY_NO_FILE_PROVIDED", error: true });
   }
 
-  Monitor.downloadFiles({ owner: user, files });
+  await Data.createDownload({ userId: id, files });
 
   return res.status(200).send({ decorator: "SERVER_CREATE_DOWNLOAD_ACTIVITY", data: true });
 };

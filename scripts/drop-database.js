@@ -22,6 +22,7 @@ Promise.all([
   db.schema.dropTable("deals"),
   db.schema.dropTable("orphans"),
   db.schema.dropTable("usage"),
+  db.schema.dropTable("likes"),
 ]);
 
 console.log(`FINISHED: drop-database.js`);

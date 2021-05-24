@@ -1,4 +1,5 @@
 import * as Serializers from "~/node_common/serializers";
+import * as Constants from "~/node_common/constants";
 
 import { runQuery } from "~/node_common/data/utilities";
 
@@ -67,14 +68,7 @@ export default async ({ username, sanitize = false, includeFiles = false, public
           const id = query?.id;
 
           if (id) {
-            let library = await DB.select(
-              "files.id",
-              "files.ownerId",
-              "files.cid",
-              "files.isPublic",
-              "files.filename",
-              "files.data"
-            )
+            let library = await DB.select(...Constants.fileProperties)
               .from("files")
               .leftJoin("slate_files", "slate_files.fileId", "=", "files.id")
               .leftJoin("slates", "slate_files.slateId", "=", "slates.id")
@@ -94,13 +88,7 @@ export default async ({ username, sanitize = false, includeFiles = false, public
             query.library = library;
           }
         } else {
-          query = await DB.select(
-            "users.id",
-            "users.username",
-            "users.data",
-            "users.email",
-            userFiles()
-          )
+          query = await DB.select(...Constants.userProperties, userFiles())
             .from("users")
             .where({ "users.username": username })
             .leftJoin("files", "files.ownerId", "users.id")

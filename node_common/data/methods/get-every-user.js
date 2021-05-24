@@ -1,4 +1,5 @@
 import * as Serializers from "~/node_common/serializers";
+import * as Constants from "~/node_common/constants";
 
 import { runQuery } from "~/node_common/data/utilities";
 
@@ -17,11 +18,11 @@ export default async ({ sanitize = false, includeFiles = false } = {}) => {
 
       let users;
       if (includeFiles) {
-        users = await DB.select("users.id", "users.username", "users.data", userFiles())
+        users = await DB.select(...Constants.userProperties, userFiles())
           .from("users")
           .leftJoin("files", "files.ownerId", "users.id");
       } else {
-        users = await DB.select("*").from("users");
+        users = await DB.select(...Constants.userProperties).from("users");
       }
 
       if (!users || users.error) {

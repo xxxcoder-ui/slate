@@ -173,6 +173,7 @@ export default class SceneDirectory extends React.Component {
 
   _handleClick = (e, value) => {
     e.stopPropagation();
+    e.preventDefault();
     if (this.state.contextMenu === value) {
       this._handleHide();
     } else {
@@ -181,8 +182,9 @@ export default class SceneDirectory extends React.Component {
   };
 
   _handleFollow = async (e, id) => {
-    this._handleHide();
     e.stopPropagation();
+    e.preventDefault();
+    this._handleHide();
     await Actions.createSubscription({
       userId: id,
     });
@@ -225,7 +227,7 @@ export default class SceneDirectory extends React.Component {
         </div>
       );
       return (
-        <Link href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
+        <Link key={relation.id} href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
           <UserEntry
             key={relation.id}
             user={relation}
@@ -278,7 +280,7 @@ export default class SceneDirectory extends React.Component {
         </div>
       );
       return (
-        <Link href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
+        <Link key={relation.id} href={`/$/user/${relation.id}`} onAction={this.props.onAction}>
           <UserEntry
             key={relation.id}
             user={relation}

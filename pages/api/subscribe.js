@@ -96,6 +96,9 @@ export default async (req, res) => {
   if (existingResponse) {
     response = await Data.deleteSubscriptionById({
       id: existingResponse.id,
+      ownerId: user.id,
+      slateId: targetSlate ? targetSlate.id : null,
+      userId: targetUser ? targetUser.id : null,
     });
 
     if (!response) {
@@ -123,24 +126,10 @@ export default async (req, res) => {
 
   if (targetUser) {
     ViewerManager.hydratePartial(id, { following: true });
-
-    if (!existingResponse) {
-      Monitor.subscribeUser({
-        owner: user,
-        user: targetUser,
-      });
-    }
   }
 
   if (targetSlate) {
     ViewerManager.hydratePartial(id, { subscriptions: true });
-
-    if (!existingResponse) {
-      Monitor.subscribeSlate({
-        owner: user,
-        slate: targetSlate,
-      });
-    }
   }
 
   return res.status(200).send({

@@ -264,7 +264,6 @@ export default class SceneActivity extends React.Component {
       }
     }
 
-    console.log("start fetching");
     let response;
     if (isExplore) {
       response = await Actions.getExplore(requestObject);
@@ -274,13 +273,12 @@ export default class SceneActivity extends React.Component {
 
       response = await Actions.getActivity(requestObject);
     }
-    console.log("finished fetching");
     if (Events.hasError(response)) {
       this.setState({ loading: false });
       return;
     }
 
-    let newItems = response.data;
+    let newItems = response.data || [];
 
     if (update) {
       activity.unshift(...newItems);
