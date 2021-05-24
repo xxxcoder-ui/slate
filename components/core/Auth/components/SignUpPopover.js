@@ -60,7 +60,9 @@ export default function SignUpPopover({ children, title, logoStyle, titleStyle, 
         <div style={{ textAlign: "center" }}>
           <DarkSymbol height="40" width="40" style={{ marginBottom: "8px", ...logoStyle }} />
         </div>
-        <System.H3 style={{ textAlign: "center", lineHeight: "30px", ...titleStyle }}>
+        <System.H3
+          style={{ textAlign: "center", lineHeight: "30px", padding: "0 24px", ...titleStyle }}
+        >
           {title}
         </System.H3>
       </div>

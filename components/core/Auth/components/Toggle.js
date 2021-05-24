@@ -17,7 +17,6 @@ const STYLES_BUTTON = (theme) => css`
   font-size: ${theme.typescale.lvl0};
   color: ${theme.system.textGrayLight};
   background-color: transparent;
-  transition: 0.25s all;
   outline-style: none;
   cursor: pointer;
 `;
