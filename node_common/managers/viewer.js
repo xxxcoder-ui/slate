@@ -202,7 +202,7 @@ export const getById = async ({ id }) => {
   let viewer = {
     id: user.id,
     username: user.username,
-    email: user.email,
+    email: user.email || null,
     data: user.data,
     library: user.library,
     // onboarding: user.data.onboarding || {},
