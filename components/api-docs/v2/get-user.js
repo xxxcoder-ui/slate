@@ -19,6 +19,12 @@ const EXAMPLE_CODE_JS = (
 
 if (!response) {
   console.log("No response");
+  return;
+}
+
+if (!response.ok) {
+  console.log(response.error);
+  return response.error;
 }
 
 const json = await response.json();

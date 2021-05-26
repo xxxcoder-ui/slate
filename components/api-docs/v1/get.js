@@ -4,7 +4,7 @@ import * as System from "~/components/system";
 import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v1/get', {
-  method: 'POST',
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Basic ${key}',
@@ -16,6 +16,12 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
 
 if (!response) {
   console.log("No response");
+  return;
+}
+
+if (!response.ok) {
+  console.log(response.error);
+  return response.error;
 }
 
 const json = await response.json();
@@ -41,7 +47,7 @@ json = {
   }
 }
 
-r = requests.post(url, headers=headers, json=json)
+r = requests.get(url, headers=headers, json=json)
 
 print(JSON.dumps(r.json(), indent=2))`;
 

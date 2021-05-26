@@ -4,7 +4,7 @@ import * as System from "~/components/system";
 import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v2/get', {
-  method: 'POST',
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Basic ${key}',
@@ -13,6 +13,12 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
 
 if (!response) {
   console.log("No response");
+  return;
+}
+
+if (!response.ok) {
+  console.log(response.error);
+  return response.error;
 }
 
 const json = await response.json();
@@ -32,7 +38,7 @@ headers = {
     "Authorization": "Basic ${key}",
 }
 
-r = requests.post(url, headers=headers)
+r = requests.get(url, headers=headers)
 
 print(JSON.dumps(r.json(), indent=2))`;
 
@@ -51,10 +57,10 @@ const EXAMPLE_RESPONSE = `
             filename: "door.jpg",
             ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             data: {
-            name: "Door",
-            size: 33676,
-            type: "image/jpeg",
-            blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
+              name: "Door",
+              size: 33676,
+              type: "image/jpeg",
+              blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
             },
         },
         ],
