@@ -6,6 +6,7 @@ import * as Actions from "~/common/actions";
 import * as Utilities from "~/common/utilities";
 import * as Events from "~/common/custom-events";
 import * as Window from "~/common/window";
+import * as Styles from "~/common/styles";
 
 import { useState } from "react";
 import { Link } from "~/components/core/Link";
@@ -20,10 +21,10 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import ProcessedText from "~/components/core/ProcessedText";
 import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
-import CTATransition from "~/components/core/CTATransition";
 import DataView from "~/components/core/DataView";
 import EmptyState from "~/components/core/EmptyState";
-import ProfilePhoto from "~/components/core/ProfilePhoto"; 
+import ProfilePhoto from "~/components/core/ProfilePhoto";
+import CollectionPreviewBlock from "~/components/core/CollectionPreviewBlock";
 
 const STYLES_PROFILE_BACKGROUND = css`
   background-color: ${Constants.system.white};
@@ -249,10 +250,7 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
     <div key={user.username} css={STYLES_USER_ENTRY}>
       <div css={STYLES_USER} onClick={onClick}>
         <div css={STYLES_DIRECTORY_PROFILE_IMAGE}>
-          <ProfilePhoto 
-            user={user} 
-            size={24} 
-          />
+          <ProfilePhoto user={user} size={24} />
           {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
         </div>
         <span css={STYLES_DIRECTORY_NAME}>
@@ -267,6 +265,7 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
 
 function FilesPage({
   library,
+  user,
   isOwner,
   isMobile,
   viewer,
@@ -297,6 +296,7 @@ function FilesPage({
       {library.length ? (
         <DataView
           key="scene-profile"
+          user={user}
           onAction={onAction}
           viewer={viewer}
           isOwner={isOwner}
@@ -347,7 +347,18 @@ function CollectionsPage({
         style={{ margin: "0 0 24px 0" }}
       />
       {slates?.length ? (
-        <SlatePreviewBlocks external={!viewer} slates={slates || []} onAction={onAction} />
+        <div css={Styles.COLLECTIONS_PREVIEW_GRID}>
+          {slates.map((collection) => (
+            <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
+              <CollectionPreviewBlock
+                onAction={onAction}
+                collection={collection}
+                viewer={viewer}
+                owner={user}
+              />
+            </Link>
+          ))}
+        </div>
       ) : (
         <EmptyState>
           {tab === "collections" || fetched ? (
@@ -438,7 +449,7 @@ function PeersPage({
       ) : null;
 
     return (
-      <Link href={`/$/user/${relation.id}`} onAction={onAction}>
+      <Link key={relation.id} href={`/$/user/${relation.id}`} onAction={onAction}>
         <UserEntry key={relation.id} user={relation} button={button} checkStatus={checkStatus} />
       </Link>
     );
@@ -601,10 +612,7 @@ export default class Profile extends React.Component {
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>
             <div css={STYLES_PROFILE_IMAGE}>
-              <ProfilePhoto 
-                user={user} 
-                size={120} 
-              />
+              <ProfilePhoto user={user} size={120} />
               {showStatusIndicator && this.checkStatus({ id: user.id }) && (
                 <div css={STYLES_STATUS_INDICATOR} />
               )}
@@ -668,7 +676,9 @@ export default class Profile extends React.Component {
             style={{ marginTop: 0, marginBottom: 32 }}
             itemStyle={{ margin: "0px 16px" }}
           />
-          {subtab === "files" ? <FilesPage {...this.props} library={library} tab={tab} /> : null}
+          {subtab === "files" ? (
+            <FilesPage {...this.props} user={user} library={library} tab={tab} />
+          ) : null}
           {subtab === "collections" ? (
             <CollectionsPage
               {...this.props}
