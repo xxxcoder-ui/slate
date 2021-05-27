@@ -22,14 +22,9 @@ if (!response) {
   return;
 }
 
-if (!response.ok) {
-  console.log(response.error);
-  return response.error;
-}
-
 const json = await response.json();
 if (json.error) {
-  console.log(json.error);
+  console.log(json);
 } else {
   const collection = json.collection;
 }`;

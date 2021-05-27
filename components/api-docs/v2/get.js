@@ -16,14 +16,9 @@ if (!response) {
   return;
 }
 
-if (!response.ok) {
-  console.log(response.error);
-  return response.error;
-}
-
 const json = await response.json();
 if (json.error) {
-  console.log(json.error);
+  console.log(json);
 } else {
   const collections = json.collections;
   const user = json.user;
@@ -53,7 +48,7 @@ const EXAMPLE_RESPONSE = `
         objects: [
         {
             id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-            cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/file-cid"
+            cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a"
             filename: "door.jpg",
             ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             data: {
@@ -92,7 +87,7 @@ const EXAMPLE_RESPONSE = `
     library: [
         {
         id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/file-cid"
+        cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a"
         filename: "door.jpg",
         ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         data: {
