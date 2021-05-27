@@ -460,21 +460,21 @@ export default class ApplicationPage extends React.Component {
   _handleCreateUser = async (state) => {
     let response = await Actions.createUser(state);
 
-    if (Events.hasError(response)) {
-      return;
+    if (!response || response.error) {
+      return response;
     }
 
-    this._handleAuthenticate(state, true);
+    return this._handleAuthenticate(state, true);
   };
 
   _handleAuthenticate = async (state, newAccount) => {
     let response = await UserBehaviors.authenticate(state);
-    if (Events.hasError(response)) {
-      return;
+    if (!response || response.error) {
+      return response;
     }
     let viewer = await UserBehaviors.hydrate();
-    if (Events.hasError(viewer)) {
-      return;
+    if (!viewer || viewer.error) {
+      return viewer;
     }
 
     this.setState({ viewer });

@@ -146,6 +146,7 @@ export class SignIn extends React.Component {
         password: this.state.password,
       });
     }
+
     if (!Events.hasError(response)) {
       window.location.replace("/_/activity");
     }

@@ -33,8 +33,8 @@ export const authenticate = async (state) => {
   }
 
   let response = await Actions.signIn(state);
-  if (Events.hasError(response)) {
-    return false;
+  if (!response || response.error) {
+    return response;
   }
 
   if (response.token) {
