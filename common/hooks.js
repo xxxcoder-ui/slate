@@ -219,3 +219,22 @@ export const useField = ({
 
   return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
 };
+
+// NOTE(amine): the intersection will be called one time
+export const useInView = ({ ref }) => {
+  const [isInView, setInView] = React.useState(false);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          lazyObserver.unobserve(ref.current);
+        }
+      });
+    });
+    // start to observe element
+    lazyObserver.observe(ref.current);
+  }, []);
+  return { isInView };
+};
