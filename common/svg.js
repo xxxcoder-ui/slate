@@ -1870,6 +1870,18 @@ export const MehCircle = (props) => (
   </svg>
 );
 
+export const Heart = (props) => (
+  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M17.367 4.342a4.584 4.584 0 00-6.484 0L10 5.225l-.883-.883a4.584 4.584 0 00-6.484 6.483l.884.883L10 18.192l6.483-6.484.884-.883a4.584 4.584 0 000-6.483v0z"
+      stroke="#48484A"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const SmileCircle = (props) => (
   <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
@@ -1882,6 +1894,18 @@ export const SmileCircle = (props) => (
     <path
       d="M5.333 9.834s1 1.333 2.667 1.333c1.667 0 2.667-1.333 2.667-1.333M6 6.5h.007M10 6.5h.007"
       stroke="#34D159"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const FolderPlus = (props) => (
+  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M18.333 16.333A1.667 1.667 0 0116.667 18H3.333a1.667 1.667 0 01-1.666-1.667V4.667A1.667 1.667 0 013.333 3H7.5l1.667 2.5h7.5a1.667 1.667 0 011.666 1.667v9.166zM10 9.667v5M7.5 12.167h5"
+      stroke="#48484A"
       strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
