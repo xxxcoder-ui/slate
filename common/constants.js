@@ -44,7 +44,9 @@ export const system = {
   bgGreen: "#C0DACD",
   bgYellow: "#FEEDC4",
   bgRed: "#F1C4C4",
-  textGray: "#8E8E93",
+  bgLight: "#F2F2F7",
+  bgBlurLight6: "rgba(242, 242, 247, 0.7)",
+  textGray: "#878688",
   textGrayLight: "#C3C3C4",
   textGrayDark: "#48484A",
   textBlack: "#0F0E12",
@@ -63,6 +65,8 @@ export const system = {
   bgBlurGray: "#403F42",
   bgBlurWhiteTRN: "rgba(255,255,255,0.3)",
   grayLight2: "#AEAEB2",
+  grayLight4: "#D1D1D6",
+  grayLight5: "#E5E5EA",
 };
 
 export const shadow = {
