@@ -103,7 +103,6 @@ export const DataMeter = (props) => {
         used
       </div>
       <DataMeterBar bytes={props.stats.bytes} maximumBytes={props.stats.maximumBytes} />
-      <div css={STYLES_NOTE}>50GB coming soon when we add email verification</div>
     </div>
   );
 };

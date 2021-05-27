@@ -83,3 +83,42 @@ export const coerceToArray = (input) => {
     return [input];
   }
 };
+
+export const getFileExtension = (filename) => filename?.split(".").pop();
+
+export const getTimeDifferenceFromNow = (date) => {
+  const pastDate = new Date(date);
+  const now = new Date();
+
+  const differenceInSeconds = Math.floor((now - pastDate) / 1000);
+  if (differenceInSeconds < 60) {
+    return differenceInSeconds + "s";
+  }
+
+  const differenceInMinutes = Math.floor(differenceInSeconds / 60);
+  if (differenceInMinutes < 60) {
+    return differenceInMinutes + "m";
+  }
+
+  const differenceInHours = Math.floor(differenceInMinutes / 60);
+  if (differenceInHours < 24) {
+    return differenceInHours + "h";
+  }
+
+  const differenceInDays = Math.floor(differenceInHours / 24);
+  if (differenceInDays < 24) {
+    return differenceInDays + "d";
+  }
+
+  const currentYear = now.getFullYear();
+
+  const day = pastDate.getDay();
+  const month = pastDate.toLocaleString("default", { month: "long" });
+  const year = pastDate.getFullYear();
+
+  if (year === currentYear) {
+    return `${day} ${month}`;
+  }
+
+  return `${day} ${month} ${year}`;
+};

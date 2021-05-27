@@ -40,7 +40,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_CONTENT = css`
-  background: ${Constants.semantic.bgLight};
+  background: ${Constants.system.white};
   width: 100%;
   min-width: 10%;
   min-height: 100vh;
