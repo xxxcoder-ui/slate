@@ -73,9 +73,9 @@ export const WebsitePrototypeFooter = (props) => {
         >
           Contribute
         </a>
-        <a css={STYLES_LINK} href="/_/system">
+        {/* <a css={STYLES_LINK} href="/_/system">
           Design System
-        </a>
+        </a> */}
       </div>
     </div>
   );

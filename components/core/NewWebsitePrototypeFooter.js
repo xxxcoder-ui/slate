@@ -138,9 +138,9 @@ export const NewWebsitePrototypeFooter = (props) => {
               Community
             </a>
             <br />
-            <a css={STYLES_LINK} href="/_/system">
+            {/* <a css={STYLES_LINK} href="/_/system">
               Design system
-            </a>
+            </a> */}
           </div>
         </div>
         <br />

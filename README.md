@@ -100,12 +100,12 @@ npm run dev
 - Visit `localhost:1337` in a browser.
 - You should have 3 terminal screens open unless you don't want real time updates and file upload support.
 
-## Design System
+<!-- ## Design System
 
 Our design system is out of date and could use an update.
 
 - [Use our components](https://slate.host/_/system)
-- [Design System Release Repository](https://github.com/filecoin-project/slate-react-system)
+- [Design System Release Repository](https://github.com/filecoin-project/slate-react-system) -->
 
 ## Developer API
 
