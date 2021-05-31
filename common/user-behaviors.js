@@ -249,25 +249,27 @@ export const removeFromSlate = async ({ slate, ids }) => {
   return response;
 };
 
-export const addToSlate = async ({ slate, files }) => {
-  const addResponse = await Actions.addFileToSlate({ slate, files });
+// export const addToSlate = async ({ slate, files }) => {
+//   const addResponse = await Actions.addFileToSlate({ slate, files });
 
-  if (Events.hasError(addResponse)) {
-    return false;
-  }
+//   if (Events.hasError(addResponse)) {
+//     return false;
+//   }
 
-  const { added, skipped } = addResponse;
-  let message = Strings.formatAsUploadMessage(added, skipped, true);
-  Events.dispatchMessage({ message, status: !added ? null : "INFO" });
-  return true;
-};
+//   const { added, skipped } = addResponse;
+//   let message = Strings.formatAsUploadMessage(added, skipped, true);
+//   Events.dispatchMessage({ message, status: !added ? null : "INFO" });
+//   return true;
+// };
 
-export const saveCopy = async ({ files }) => {
-  let response = await Actions.saveCopy({ files });
+//NOTE(martina): save copy includes add to slate now. If it's already in the user's files but not in that slate, it'll skip the adding to files and just add to slate
+export const saveCopy = async ({ files, slate }) => {
+  console.log("user behaviors save copy");
+  let response = await Actions.saveCopy({ files, slate });
   if (Events.hasError(response)) {
     return false;
   }
-  let message = Strings.formatAsUploadMessage(response.data.added, response.data.skipped);
+  let message = Strings.formatAsUploadMessage(response.data.added, response.data.skipped, slate);
   Events.dispatchMessage({ message, status: !response.data.added ? null : "INFO" });
   return response;
 };

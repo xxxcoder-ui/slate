@@ -33,9 +33,10 @@ export const error = {
   SERVER_BUCKET_REMOVE_FAILED: "We were not able to delete that file",
 
   //File create
-  CREATE_FILE_NO_FILE_PROVIDED: "We ran into issues while creating a file. No file was provided",
-  CREATE_FILE_DUPLICATE: "The uploaded file(s) were duplicates and were skipped",
-  CREATE_FILE_FAILED: "We ran into issues while creating that file",
+  SERVER_CREATE_FILE_NO_FILE_PROVIDED:
+    "We ran into issues while creating a file. No file was provided",
+  SERVER_CREATE_FILE_DUPLICATE: "The uploaded file(s) were duplicates and were skipped",
+  SERVER_CREATE_FILE_FAILED: "We ran into issues while creating that file",
 
   //File delete
   SERVER_REMOVE_DATA_NO_IDS: "The file to delete was not specified",

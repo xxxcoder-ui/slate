@@ -56,7 +56,7 @@ const STYLES_LINK = css`
   }
 `;
 
-export const announcements = ["New On Slate: Grid System 2.0"];
+export const announcements = [];
 
 export class OnboardingModal extends React.Component {
   state = {
@@ -87,23 +87,23 @@ export class OnboardingModal extends React.Component {
   };
 
   announcements = [
-    {
-      title: "New On Slate: Grid System 2.0",
-      text:
-        "We just introduced a completely new layout engine that gives you total control over the way you can organize and display your collections.",
-      image: (
-        <img
-          src="https://slate.textile.io/ipfs/bafybeigb7pd2dh64ty7l2yhnzu5kjupgxbfzqzjjb2gtprexfxzkwx4nle"
-          alt="grid layout"
-          css={STYLES_IMAGE}
-        />
-      ),
-      button: (
-        <ButtonPrimary style={{ width: 160 }} onClick={() => this._handleClick(1)}>
-          Try it out
-        </ButtonPrimary>
-      ),
-    },
+    // {
+    //   title: "New On Slate: Grid System 2.0",
+    //   text:
+    //     "We just introduced a completely new layout engine that gives you total control over the way you can organize and display your collections.",
+    //   image: (
+    //     <img
+    //       src="https://slate.textile.io/ipfs/bafybeigb7pd2dh64ty7l2yhnzu5kjupgxbfzqzjjb2gtprexfxzkwx4nle"
+    //       alt="grid layout"
+    //       css={STYLES_IMAGE}
+    //     />
+    //   ),
+    //   button: (
+    //     <ButtonPrimary style={{ width: 160 }} onClick={() => this._handleClick(1)}>
+    //       Try it out
+    //     </ButtonPrimary>
+    //   ),
+    // },
   ];
 
   onboardingCopy = [

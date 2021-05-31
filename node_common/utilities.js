@@ -166,7 +166,9 @@ export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = 
   let root = null;
   NodeLogging.log(`buckets.getOrCreate() init ${name}`);
   try {
+    console.log("before buckets get or create");
     const created = await buckets.getOrCreate(name, { encrypted });
+    console.log("after buckets get or create");
     root = created.root;
   } catch (e) {
     NodeLogging.log(`buckets.getOrCreate() warning: ${e.message}`);

@@ -127,27 +127,20 @@ export class Alert extends React.Component {
   };
 
   render() {
-    if (!this.state.message) {
-      if (!this.props.fileLoading || !Object.keys(this.props.fileLoading).length) {
-        if (this.props.noWarning || !this.props.viewer) {
-          return null;
-        }
+    //NOTE(martina): alert
+    if (this.state.message) {
+      return (
+        <div
+          css={this.state.status === "INFO" ? STYLES_INFO : STYLES_WARNING}
+          style={this.props.style}
+        >
+          {this.state.message}
+        </div>
+      );
+    }
 
-        return (
-          <div css={STYLES_MESSAGE} style={this.props.style}>
-            <div css={STYLES_MESSAGE_BOX} style={{ fontSize: 14 }}>
-              Please don't upload sensitive information to Slate yet. Private storage is coming
-              soon.
-              <span
-                style={{ position: "absolute", right: 24, padding: 4, cursor: "pointer" }}
-                onClick={this._handleDismissPrivacyAlert}
-              >
-                <SVG.Dismiss height="20px" />
-              </span>
-            </div>
-          </div>
-        );
-      }
+    //NOTE(martina): uploading message
+    if (this.props.fileLoading && Object.keys(this.props.fileLoading).length) {
       let total = Object.values(this.props.fileLoading).filter((upload) => {
         return !upload.cancelled;
       }).length;
@@ -179,13 +172,24 @@ export class Alert extends React.Component {
         </div>
       );
     }
-    return (
-      <div
-        css={this.state.status === "INFO" ? STYLES_INFO : STYLES_WARNING}
-        style={this.props.style}
-      >
-        {this.state.message}
-      </div>
-    );
+
+    //NOTE(martina): don't upload sensitive info alert
+    if (this.props.viewer && !this.props.noWarning) {
+      return (
+        <div css={STYLES_MESSAGE} style={this.props.style}>
+          <div css={STYLES_MESSAGE_BOX} style={{ fontSize: 14 }}>
+            Please don't upload sensitive information to Slate yet. Private storage is coming soon.
+            <span
+              style={{ position: "absolute", right: 24, padding: 4, cursor: "pointer" }}
+              onClick={this._handleDismissPrivacyAlert}
+            >
+              <SVG.Dismiss height="20px" />
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   }
 }

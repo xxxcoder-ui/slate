@@ -94,7 +94,6 @@ const STYLES_NAVTAB = css`
 export class SecondaryTabGroup extends React.Component {
   render() {
     const value = this.props.value || this.props.tabs[0].value;
-    console.log(this.props.value);
     const disabled = this.props.disabled;
     return (
       <div css={STYLES_SECONDARY_TAB_GROUP} style={this.props.style}>

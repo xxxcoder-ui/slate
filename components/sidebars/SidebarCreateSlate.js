@@ -70,21 +70,21 @@ export default class SidebarCreateSlate extends React.Component {
     }
 
     if (this.props.sidebarData && this.props.sidebarData.files) {
-      const addResponse = await Actions.addFileToSlate({
+      await UserBehaviors.saveCopy({
         slate: response.slate,
         files: this.props.sidebarData.files,
       });
 
-      if (Events.hasError(addResponse)) {
-        this.setState({ loading: false });
-        return;
-      }
+      // if (Events.hasError(addResponse)) {
+      //   this.setState({ loading: false });
+      //   return;
+      // }
 
-      const { added, skipped } = addResponse;
-      let message = Strings.formatAsUploadMessage(added, skipped, true);
-      if (message) {
-        Events.dispatchMessage({ message, status: !added ? null : "INFO" });
-      }
+      // const { added, skipped } = addResponse;
+      // let message = Strings.formatAsUploadMessage(added, skipped, true);
+      // if (message) {
+      //   Events.dispatchMessage({ message, status: !added ? null : "INFO" });
+      // }
     }
 
     this.setState({ loading: false });

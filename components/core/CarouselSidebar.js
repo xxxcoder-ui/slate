@@ -287,7 +287,6 @@ class CarouselSidebar extends React.Component {
     tags: this.props.file.data.tags || [],
     suggestions: this.props.viewer?.tags || [],
     selected: {},
-    isPublic: false,
     inPublicSlates: 0,
     isUploading: false,
     isDownloading: false,
@@ -318,21 +317,17 @@ class CarouselSidebar extends React.Component {
 
   calculateSelected = () => {
     if (!this.props.viewer) {
-      this.setState({ selected: {}, inPublicSlates: 0, isPublic: this.props.file.isPublic });
+      this.setState({ selected: {} });
       return;
     }
-    let inPublicSlates = 0;
     let selected = {};
     const id = this.props.file.id;
     for (let slate of this.props.viewer.slates) {
       if (slate.objects.some((obj) => obj.id === id)) {
-        if (slate.isPublic) {
-          inPublicSlates += 1;
-        }
         selected[slate.id] = true;
       }
     }
-    this.setState({ selected, inPublicSlates, isPublic: this.props.file.isPublic });
+    this.setState({ selected });
   };
 
   _handleToggleAccordion = (tab) => {
@@ -480,17 +475,13 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleAdd = async (slate) => {
-    let inPublicSlates = this.state.inPublicSlates;
     if (this.state.selected[slate.id]) {
-      if (slate.isPublic) {
-        inPublicSlates -= 1;
-      }
       UserBehaviors.removeFromSlate({ slate, ids: [this.props.file.id] });
     } else {
       if (slate.isPublic) {
         inPublicSlates += 1;
       }
-      UserBehaviors.addToSlate({
+      UserBehaviors.saveCopy({
         slate,
         files: [this.props.file],
       });
@@ -500,7 +491,6 @@ class CarouselSidebar extends React.Component {
         ...this.state.selected,
         [slate.id]: !this.state.selected[slate.id],
       },
-      inPublicSlates,
     });
   };
 
@@ -530,21 +520,23 @@ class CarouselSidebar extends React.Component {
 
   _handleToggleVisibility = async (e) => {
     if (this.props.external || !this.props.isOwner || !this.props.viewer) return;
-    const isVisible = this.state.isPublic || this.state.inPublicSlates > 0;
+    const isPublic = this.props.file.isPublic;
+    const slateIsPublic = this.props.data.isPublic;
     let selected = cloneDeep(this.state.selected);
-    if (this.state.inPublicSlates) {
-      const slateIds = Object.entries(this.state.selected)
-        .filter((entry) => entry[1])
-        .map((entry) => entry[0]);
-      const publicSlateIds = [];
-      const publicSlateNames = [];
-      for (let slate of this.props.viewer.slates) {
-        if (slate.isPublic && slateIds.includes(slate.id)) {
-          publicSlateNames.push(slate.data.name);
-          publicSlateIds.push(slate.id);
-          selected[slate.id] = false;
-        }
+
+    const slateIds = Object.entries(this.state.selected)
+      .filter((entry) => entry[1])
+      .map((entry) => entry[0]);
+    const publicSlateIds = [];
+    const publicSlateNames = [];
+    for (let slate of this.props.viewer.slates) {
+      if (slate.isPublic && slateIds.includes(slate.id)) {
+        publicSlateNames.push(slate.data.name);
+        publicSlateIds.push(slate.id);
+        selected[slate.id] = false;
       }
+    }
+    if (publicSlateNames.length) {
       const slateNames = publicSlateNames.join(", ");
       const message = `Making this file link-viewing only will remove it from the following public collections: ${slateNames}. Do you wish to continue?`;
       if (!window.confirm(message)) {
@@ -552,7 +544,7 @@ class CarouselSidebar extends React.Component {
       }
     }
 
-    if (this.props.carouselType === "SLATE" && this.props.data.isPublic) {
+    if (this.props.carouselType === "SLATE" && slateIsPublic) {
       const slateId = this.props.data.id;
       let slates = cloneDeep(this.props.viewer.slates);
       for (let slate of slates) {
@@ -564,17 +556,15 @@ class CarouselSidebar extends React.Component {
       this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
     }
 
-    let response = await Actions.toggleFilePrivacy({ ...this.props.file, isPublic: !isVisible });
+    let response = await Actions.toggleFilePrivacy({ ...this.props.file, isPublic: !isPublic });
     Events.hasError(response);
-    if (isVisible) {
-      this.setState({ inPublicSlates: 0, isPublic: false, selected });
-    } else {
-      this.setState({ isPublic: true });
+    if (isPublic) {
+      this.setState({ selected });
     }
   };
 
   render() {
-    const isVisible = this.state.isPublic || this.state.inPublicSlates > 0 ? true : false;
+    const isPublic = this.props.file.isPublic;
     const file = this.props.file;
     const { coverImage, type, size } = file.data;
     const editingAllowed = this.props.isOwner && !this.props.isRepost && !this.props.external;
@@ -739,7 +729,7 @@ class CarouselSidebar extends React.Component {
             {this.state.loading === "savingCopy" ? (
               <LoaderSpinner style={{ height: 16, width: 16 }} />
             ) : (
-              <span>Save copy</span>
+              <span>Save</span>
             )}
           </span>
         </div>
@@ -808,7 +798,7 @@ class CarouselSidebar extends React.Component {
               marginTop: 12,
             }}
           >
-            {isVisible
+            {isPublic
               ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
               : "This file is only visible to those with the link."}
           </System.P>
@@ -837,10 +827,10 @@ class CarouselSidebar extends React.Component {
             dark={true}
             style={{ marginTop: 12 }}
             labelStyle={{ fontFamily: Constants.font.medium }}
-            selected={isVisible}
+            selected={isPublic}
             onChange={this._handleToggleVisibility}
           />
-          {!isVisible && (
+          {!isPublic && (
             <Input
               full
               value={Strings.getURLfromCID(file.cid)}

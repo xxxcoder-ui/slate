@@ -1,6 +1,5 @@
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
-import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);

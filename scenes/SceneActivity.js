@@ -239,14 +239,14 @@ export default class SceneActivity extends React.Component {
 
   fetchActivityItems = async (update = false) => {
     if (this.state.loading === "loading") return;
-    let tab = this.props.page.params?.tab;
-    if (!tab) {
-      if (this.props.viewer) {
-        tab = "activity";
-      } else {
-        tab = "explore";
-      }
-    }
+    let tab = this.props.page.params?.tab || "explore";
+    // if (!tab) {
+    //   if (this.props.viewer) {
+    //     tab = "activity";
+    //   } else {
+    //     tab = "explore";
+    //   }
+    // }
     const isExplore = tab === "explore";
     this.setState({ loading: "loading" });
     let activity;
@@ -359,14 +359,14 @@ export default class SceneActivity extends React.Component {
   };
 
   render() {
-    let tab = this.props.page.params?.tab;
-    if (!tab) {
-      if (this.props.viewer) {
-        tab = "activity";
-      } else {
-        tab = "explore";
-      }
-    }
+    let tab = this.props.page.params?.tab || "explore";
+    // if (!tab) {
+    //   if (this.props.viewer) {
+    //     tab = "activity";
+    //   } else {
+    //     tab = "explore";
+    //   }
+    // }
     let activity;
 
     if (this.props.viewer) {

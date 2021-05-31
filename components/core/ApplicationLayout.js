@@ -167,7 +167,6 @@ export default class ApplicationLayout extends React.Component {
         </React.Fragment>
       );
     }
-    console.log(this.props.page?.id === "NAV_SIGN_IN");
     return (
       <React.Fragment>
         <div css={STYLES_CONTENT}>
@@ -196,7 +195,7 @@ export default class ApplicationLayout extends React.Component {
               this.props.isMobile
                 ? { top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : this.state.headerTop + 56 }
                 : {
-                    top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : "auto",
+                    top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : 56,
                     paddingRight: this.props.sidebar
                       ? `calc(${Constants.sizes.sidebar}px + 48px`
                       : "auto",

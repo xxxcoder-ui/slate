@@ -3,7 +3,6 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as Monitor from "~/node_common/monitor";
 import * as SearchManager from "~/node_common/managers/search";
 
 /**

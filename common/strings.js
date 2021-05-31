@@ -114,7 +114,7 @@ export const getCIDFromIPFS = (url) => {
 };
 
 export const formatAsUploadMessage = (added, skipped, slate = false) => {
-  let message = `${added || 0} file${added !== 1 ? "s" : ""} uploaded${
+  let message = `${added || 0} file${added !== 1 ? "s" : ""} added${
     slate ? " to collection" : ""
   }. `;
   if (skipped) {

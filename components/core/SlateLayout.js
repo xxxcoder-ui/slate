@@ -1562,7 +1562,7 @@ export class SlateLayout extends React.Component {
                                     ? "Make cover image"
                                     : this.state.tooltip === `${i}-remove`
                                     ? "Remove from collection"
-                                    : "Save copy"}
+                                    : "Save"}
                                 </Tooltip>
                               ) : null}
                               {this.props.isOwner ? (
@@ -1818,7 +1818,7 @@ export class SlateLayout extends React.Component {
                       onClick={this._handleSaveCopy}
                       style={{ color: Constants.system.white }}
                     >
-                      Save copy
+                      Save
                     </ButtonPrimary>
                     <div css={STYLES_ICON_BOX} onClick={() => this.setState({ checked: {} })}>
                       <SVG.Dismiss height="20px" style={{ color: Constants.system.darkGray }} />

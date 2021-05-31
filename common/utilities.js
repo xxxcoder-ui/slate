@@ -41,3 +41,14 @@ export const endsWithAny = (options, string) =>
       return false;
     }
   });
+
+export const coerceToArray = (input) => {
+  if (!input) {
+    return [];
+  }
+  if (Array.isArray(input)) {
+    return input;
+  } else {
+    return [input];
+  }
+};

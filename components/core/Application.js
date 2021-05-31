@@ -369,7 +369,7 @@ export default class ApplicationPage extends React.Component {
     //   })
     //   .map((res) => res.value);
 
-    let createResponse = await Actions.createFile({ files: resolvedFiles });
+    let createResponse = await Actions.createFile({ files: resolvedFiles, slate });
 
     if (Events.hasError(createResponse)) {
       this._handleRegisterLoadingFinished({ keys });
@@ -378,26 +378,28 @@ export default class ApplicationPage extends React.Component {
 
     let uploadedFiles = createResponse.data;
 
-    let added, skipped;
-    if (slate && slate.id) {
-      const addResponse = await Actions.addFileToSlate({
-        slate,
-        files: uploadedFiles,
-      });
+    // let added, skipped;
+    // if (slate && slate.id) {
+    //   const addResponse = await Actions.addFileToSlate({
+    //     slate,
+    //     files: uploadedFiles,
+    //   });
 
-      if (Events.hasError(addResponse)) {
-        this._handleRegisterLoadingFinished({ keys });
-        return;
-      }
+    //   if (Events.hasError(addResponse)) {
+    //     this._handleRegisterLoadingFinished({ keys });
+    //     return;
+    //   }
 
-      added = addResponse.added;
-      skipped = addResponse.skipped;
-    } else {
-      added = resolvedFiles.length;
-      skipped = files.length - resolvedFiles.length;
-    }
+    //   added = addResponse.added;
+    //   skipped = addResponse.skipped;
+    // } else {
+    //   added = resolvedFiles.length;
+    //   skipped = files.length - resolvedFiles.length;
+    // }
+    let added = uploadedFiles.length;
+    let skipped = files.length - uploadedFiles.length;
 
-    let message = Strings.formatAsUploadMessage(added, skipped + numFailed);
+    let message = Strings.formatAsUploadMessage(added, skipped + numFailed, slate);
     Events.dispatchMessage({ message, status: !added ? null : "INFO" });
 
     this._handleRegisterLoadingFinished({ keys });

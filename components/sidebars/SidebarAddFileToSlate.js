@@ -58,7 +58,7 @@ export default class SidebarAddFileToSlate extends React.Component {
     this.props.onCancel();
     for (let slate of Object.values(this.state.selected)) {
       if (!slate) continue;
-      await UserBehaviors.addToSlate({
+      await UserBehaviors.saveCopy({
         slate,
         files: this.props.sidebarData.files,
       });
