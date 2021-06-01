@@ -69,6 +69,8 @@ export default async (req, res) => {
     }
   }
 
+  let added = createdFiles?.length || 0;
+
   let filesToAddToSlate = createdFiles.concat(duplicateFiles); //NOTE(martina): files that are already owned by the user are included in case they aren't yet in that specific slate
   if (slate && filesToAddToSlate.length) {
     const { decorator: returnedDecorator, added: addedToSlate } = await addToSlate({
@@ -79,14 +81,14 @@ export default async (req, res) => {
     if (returnedDecorator) {
       decorator = returnedDecorator;
     }
-    // added = addedToSlate;
+    added = addedToSlate;
   }
 
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
 
   return res.status(200).send({
     decorator,
-    data: createdFiles,
+    data: { added, skipped: files.length - added },
   });
 };
 

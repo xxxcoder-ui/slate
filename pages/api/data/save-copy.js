@@ -92,6 +92,9 @@ export default async (req, res) => {
     //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
     delete file.createdAt;
     delete file.id;
+    delete file.likeCount;
+    delete file.downloadCount;
+    delete file.saveCount;
     file.isPublic = slate?.isPublic || false;
     newFiles.push(file);
   }

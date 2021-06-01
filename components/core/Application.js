@@ -376,7 +376,9 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
-    let uploadedFiles = createResponse.data;
+    const { added, skipped } = createResponse.data;
+
+    // let uploadedFiles = createResponse.data;
 
     // let added, skipped;
     // if (slate && slate.id) {
@@ -396,8 +398,8 @@ export default class ApplicationPage extends React.Component {
     //   added = resolvedFiles.length;
     //   skipped = files.length - resolvedFiles.length;
     // }
-    let added = uploadedFiles.length;
-    let skipped = files.length - uploadedFiles.length;
+    // let added = uploadedFiles.length;
+    // let skipped = files.length - uploadedFiles.length;
 
     let message = Strings.formatAsUploadMessage(added, skipped + numFailed, slate);
     Events.dispatchMessage({ message, status: !added ? null : "INFO" });
