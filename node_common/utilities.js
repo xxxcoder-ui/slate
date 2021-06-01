@@ -183,6 +183,7 @@ export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = 
 
   if (!root) {
     NodeLogging.error(`buckets.getOrCreate() failed for ${name}`);
+    console.log(user);
     return { buckets: null, bucketKey: null, bucketRoot: null };
   }
 

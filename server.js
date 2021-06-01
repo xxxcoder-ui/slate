@@ -304,11 +304,9 @@ app.prepare().then(async () => {
         id,
       });
     }
-    console.log(req.query);
     let { page } = NavigationData.getByHref(req.path, viewer);
-    console.log(page);
+
     page = { ...page, params: req.query };
-    console.log(page);
 
     let user = await Data.getUserByUsername({
       username,

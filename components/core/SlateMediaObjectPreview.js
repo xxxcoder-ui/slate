@@ -87,8 +87,8 @@ export default class SlateMediaObjectPreview extends React.Component {
   };
 
   setImage = () => {
-    let type = this.props.file.data.type;
-    let coverImage = this.props.file.data.coverImage;
+    let type = this.props.file.data?.type;
+    let coverImage = this.props.file.data?.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
       url = Strings.getURLfromCID(this.props.file.cid);
@@ -104,8 +104,8 @@ export default class SlateMediaObjectPreview extends React.Component {
 
   render() {
     const file = this.props.file;
-    const type = this.props.file.data.type;
-    const coverImage = this.props.file.data.coverImage;
+    const type = this.props.file.data?.type;
+    const coverImage = this.props.file.data?.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
       url = Strings.getURLfromCID(this.props.file.cid);
@@ -115,8 +115,8 @@ export default class SlateMediaObjectPreview extends React.Component {
 
     if (url) {
       const blurhash =
-        file.data.blurhash && isBlurhashValid(file.data.blurhash)
-          ? file.data.blurhash
+        file.data.blurhash && isBlurhashValid(file.data?.blurhash)
+          ? file.data?.blurhash
           : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash)
           ? coverImage?.data.blurhash
           : null;
@@ -185,14 +185,14 @@ export default class SlateMediaObjectPreview extends React.Component {
       );
     }
 
-    let name = (file.data.name || file.filename).substring(0, this.charCap);
+    let name = (file.data?.name || file.filename).substring(0, this.charCap);
     let extension = Strings.getFileExtension(file.filename);
     if (extension && extension.length) {
       extension = extension.toUpperCase();
     }
     let element = (
       <FileTypeIcon
-        type={file.data.type}
+        type={file.data?.type}
         height={this.props.previewPanel ? "26px" : "20px"}
         style={{ color: Constants.system.textGray }}
       />

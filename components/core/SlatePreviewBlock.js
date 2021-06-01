@@ -272,6 +272,9 @@ export class SlatePreviewBlock extends React.Component {
         if (objects.length >= 4) break;
       }
     }
+    if (!objects.length && slate.objects?.length) {
+      objects = [slate.objects[0]];
+    }
 
     let contextMenu = (
       <React.Fragment>
@@ -306,6 +309,7 @@ export class SlatePreviewBlock extends React.Component {
         />
       </React.Fragment>
     );
+    console.log(slate);
 
     return (
       <div css={STYLES_BLOCK}>
@@ -334,8 +338,8 @@ export class SlatePreviewBlock extends React.Component {
               </div>
             ) : (
               <div css={STYLES_OBJECT_COUNT}>
-                {objects.length} file
-                {objects.length > 1 ? "s" : ""}
+                {slate.objects.length} file
+                {slate.objects.length !== 1 ? "s" : ""}
               </div>
             )}
           </div>

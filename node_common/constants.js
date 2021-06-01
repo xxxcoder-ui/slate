@@ -44,4 +44,5 @@ export const fileProperties = [
   "files.createdAt",
   "files.likeCount",
   "files.downloadCount",
+  "files.saveCount",
 ];

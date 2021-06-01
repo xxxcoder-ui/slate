@@ -16,6 +16,9 @@ export const sanitizeUser = (entity) => {
       photo: entity.data?.photo,
       body: entity.data?.body,
     },
+    fileCount: entity.fileCount,
+    followerCount: entity.followerCount,
+    slateCount: entity.slateCount,
   };
 };
 
@@ -34,6 +37,8 @@ export const sanitizeSlate = (entity) => {
       layouts: entity.data?.layouts,
       tags: entity.data?.tags,
     },
+    fileCount: entity.fileCount,
+    subscriberCount: entity.subscriberCount,
   };
 };
 
@@ -59,6 +64,9 @@ export const sanitizeFile = (entity) => {
       unity: entity.data?.unity, //NOTE(martina): newly added
       link: entity.data?.link, //NOTE(martina): newly added
     },
+    likeCount: entity.likeCount,
+    downloadCount: entity.downloadCount,
+    saveCount: entity.saveCount,
   };
 };
 

@@ -7,7 +7,7 @@ import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
 
-const envConfig = configs["development"];
+const envConfig = configs["production"];
 
 const DB = knex(envConfig);
 
@@ -28,9 +28,11 @@ const saveCopyReposts = async () => {
     .join("files", "files.id", "=", "slate_files.fileId")
     .join("users", "users.id", "=", "slates.ownerId")
     .whereRaw("?? != ??", ["files.ownerId", "slates.ownerId"]);
+  //   console.log(repostedFiles.length);
 
   for (let item of repostedFiles) {
     console.log(item);
+    // continue;
     let user = { data: item.data };
     let { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
       user,
@@ -40,7 +42,7 @@ const saveCopyReposts = async () => {
       let response = await Utilities.addExistingCIDToData({
         buckets,
         key: bucketKey,
-        path: bucketRoot.path,
+        path: bucketRoot?.path,
         cid: item.cid,
       });
     } catch (e) {
@@ -65,7 +67,6 @@ const saveCopyReposts = async () => {
         isPublic: item.isPublic,
         data: item.fileData,
       };
-      //   console.log(file);
       await DB.insert(file).into("files");
     }
   }
@@ -80,7 +81,9 @@ const removeReposts = async () => {
         .join("files", "files.id", "=", "slate_files.fileId")
         .whereRaw("?? != ??", ["files.ownerId", "slates.ownerId"]);
     })
-    .del();
+    .del()
+    .returning("*");
+  console.log(repostedFiles);
 };
 
 const runScript = async () => {
