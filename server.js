@@ -154,29 +154,30 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
+    return res.redirect("/_/activity");
     // let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     // let isMac = Window.isMac(req.headers["user-agent"]);
 
-    const isBucketsAvailable = await Utilities.checkTextile();
+    // const isBucketsAvailable = await Utilities.checkTextile();
 
-    if (!isBucketsAvailable && Environment.IS_PRODUCTION) {
-      return res.redirect("/maintenance");
-    }
+    // if (!isBucketsAvailable && Environment.IS_PRODUCTION) {
+    //   return res.redirect("/maintenance");
+    // }
 
-    const id = Utilities.getIdFromCookie(req);
+    // const id = Utilities.getIdFromCookie(req);
 
-    let viewer = null;
-    if (id) {
-      viewer = await Data.getUserById({
-        id,
-      });
-    }
+    // let viewer = null;
+    // if (id) {
+    //   viewer = await Data.getUserById({
+    //     id,
+    //   });
+    // }
 
-    if (viewer) {
-      return res.redirect("/_/data");
-    } else {
-      return res.redirect("/_/explore");
-    }
+    // if (viewer) {
+    //   return res.redirect("/_/data");
+    // } else {
+    //   return res.redirect("/_/activity");
+    // }
 
     // let page = NavigationData.getById(null, viewer);
 
