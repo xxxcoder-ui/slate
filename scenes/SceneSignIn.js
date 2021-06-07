@@ -11,7 +11,6 @@ import { css } from "@emotion/react";
 import { SignIn } from "~/components/core/SignIn";
 
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
 
 const STYLES_ROOT = css`
