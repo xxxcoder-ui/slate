@@ -195,7 +195,7 @@ const WebsitePrototypeHeader = (props) => {
   };
 
   const communityURL = "https://github.com/filecoin-project/slate";
-  const signInURL = "/_/auth";
+  const signInURL = "/_/auth?tab=signin";
   const styleMenu = open ? openMenu : null;
   const styleBurgerBun = open ? openBurgerBun : null;
   const styleBurgerBun2 = open ? openBurgerBun2 : null;
@@ -227,7 +227,7 @@ const WebsitePrototypeHeader = (props) => {
               Get involved
             </a>
             <a css={STYLES_NAVLINK} style={styleNavLink} href={signInURL}>
-              Sign in
+              Use Slate
             </a>
           </div>
         </div>

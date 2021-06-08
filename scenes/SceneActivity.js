@@ -216,6 +216,17 @@ export default class SceneActivity extends React.Component {
     window.removeEventListener("scroll", this.scrollDebounceInstance);
   }
 
+  getTab = () => {
+    const tab = this.props.page.params?.tab;
+    if (tab) {
+      return tab;
+    }
+    if (this.props.viewer.following?.length || this.props.viewer.subscriptions?.length) {
+      return "activity";
+    }
+    return "explore";
+  };
+
   _handleScroll = (e) => {
     if (this.state.loading) {
       return;
@@ -239,14 +250,7 @@ export default class SceneActivity extends React.Component {
 
   fetchActivityItems = async (update = false) => {
     if (this.state.loading === "loading") return;
-    let tab = this.props.page.params?.tab || "explore";
-    // if (!tab) {
-    //   if (this.props.viewer) {
-    //     tab = "activity";
-    //   } else {
-    //     tab = "explore";
-    //   }
-    // }
+    let tab = this.getTab();
     const isExplore = tab === "explore";
     this.setState({ loading: "loading" });
     let activity;
@@ -359,16 +363,8 @@ export default class SceneActivity extends React.Component {
   };
 
   render() {
-    let tab = this.props.page.params?.tab || "explore";
-    // if (!tab) {
-    //   if (this.props.viewer) {
-    //     tab = "activity";
-    //   } else {
-    //     tab = "explore";
-    //   }
-    // }
+    let tab = this.getTab();
     let activity;
-
     if (this.props.viewer) {
       activity =
         tab === "activity" ? this.props.viewer?.activity || [] : this.props.viewer?.explore || [];
