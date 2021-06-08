@@ -221,7 +221,7 @@ export default class SceneActivity extends React.Component {
     if (tab) {
       return tab;
     }
-    if (this.props.viewer.following?.length || this.props.viewer.subscriptions?.length) {
+    if (this.props.viewer?.following?.length || this.props.viewer?.subscriptions?.length) {
       return "activity";
     }
     return "explore";

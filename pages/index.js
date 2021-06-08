@@ -370,7 +370,7 @@ export default class IndexPage extends React.Component {
                   organize, and link files together.
                 </p>
                 <br />
-                <a style={{ textDecoration: `none` }} href="/_">
+                <a style={{ textDecoration: `none` }} href="/_/auth">
                   <ButtonPrimary>Get started with Slate</ButtonPrimary>
                 </a>
               </div>
