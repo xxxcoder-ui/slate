@@ -3,10 +3,13 @@ import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
-import { useFont, useFontControls } from "./hooks";
-import { Controls } from "./Settings/index";
-import { FixedControls, MobileFixedControls } from "./Settings/FixedControls";
-import FontView from "./Views/index";
+import { useFont, useFontControls } from "~/components/core/FontFrame/hooks";
+import { Controls } from "~/components/core/FontFrame/Settings/index";
+import {
+  FixedControls,
+  MobileFixedControls,
+} from "~/components/core/FontFrame/Settings/FixedControls";
+import FontView from "~/components/core/FontFrame/Views/index";
 
 const GET_STYLES_CONTAINER = (theme) => css`
   position: relative;

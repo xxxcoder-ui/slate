@@ -77,7 +77,7 @@ const STYLES_META = (theme) => css`
   margin-bottom: 12px;
 `;
 
-const STYLES_DEVIDER = (theme) => css`
+const STYLES_DIVIDER = (theme) => css`
   position: sticky;
   // Note(Amine): asset padding
   top: -120px;
@@ -155,7 +155,7 @@ export default function MarkdownFrame({ url, date }) {
         <div css={STYLES_META}>
           <span>{Strings.toDate(date)}</span> / <span>{readTime} min read</span>
         </div>
-        <div css={STYLES_DEVIDER} style={{ height: extendScroll ? "4px" : "1px" }}>
+        <div css={STYLES_DIVIDER} style={{ height: extendScroll ? "4px" : "1px" }}>
           <div css={STYLE_PROGRESS} ref={meterRef} style={{ opacity: opacity }} />
           <div css={STYLES_INTENT} />
         </div>

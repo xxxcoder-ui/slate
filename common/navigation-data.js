@@ -34,10 +34,6 @@ export const getByHref = (href, viewer) => {
     return { page: { ...activityPage } };
   }
 
-  if (viewer && pathname === "/_/auth") {
-    return { page: { ...activityPage } }; //NOTE(martina): authenticated users should be redirected to the home page rather than the
-  }
-
   let page = navigation.find((each) => pathname.startsWith(each.pathname));
 
   let details;
@@ -98,6 +94,7 @@ const authPage = {
   pageTitle: "Sign in & Sign up",
   ignore: true,
   pathname: "/_/auth",
+  externalAllowed: true,
 };
 
 const dataPage = {

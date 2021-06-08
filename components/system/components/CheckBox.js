@@ -89,9 +89,9 @@ export class CheckBox extends React.Component {
 
   render() {
     return (
-      <label css={STYLES_CHECKBOX} style={this.props.style}>
+      <label css={[STYLES_CHECKBOX, this.props.containerStyles]} style={this.props.style}>
         <figure
-          css={STYLES_CHECKBOX_FIGURE}
+          css={[STYLES_CHECKBOX_FIGURE, this.props.inputStyles]}
           style={
             this.props.value
               ? {
@@ -116,7 +116,7 @@ export class CheckBox extends React.Component {
           checked={this.props.value}
           onChange={() => this._handleChange(this.props.value)}
         />
-        <span css={STYLES_CHECKBOX_LABEL}>{this.props.children}</span>
+        <span css={[STYLES_CHECKBOX_LABEL, this.props.labelStyles]}>{this.props.children}</span>
       </label>
     );
   }

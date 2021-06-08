@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { css } from "@emotion/react";
 
-import ContentEditable from "./ContentEditable";
+import ContentEditable from "~/components/core/FontFrame/Views/ContentEditable";
 
 const STYLES_SENTENCE_WRAPPER = (theme) => css`
   .font_frame_sentence {

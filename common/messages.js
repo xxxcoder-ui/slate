@@ -131,11 +131,49 @@ export const error = {
   SERVER_CREATE_USER_ACCEPT_TERMS: "You must accept the terms of service to create an account",
   SERVER_CREATE_USER_USERNAME_TAKEN: "There is already an account with that username",
   SERVER_CREATE_USER_INVALID_USERNAME: "Please choose a valid username",
-  SERVER_CREATE_USER_INVALID_PASSWORD: "Please chooose a valid password",
+  SERVER_CREATE_USER_INVALID_PASSWORD: "Please choose a valid password",
+  SERVER_CREATE_USER_INVALID_EMAIL: "Please choose a valid email",
   SERVER_CREATE_USER_BUCKET_INIT_FAILURE:
     "We're having trouble setting up your storage, please try again later",
   SERVER_CREATE_USER_FAILED:
     "We're having trouble creating your account right now. Please try again later",
+
+  // Twitter
+  SERVER_CREATE_USER_TWITTER_EXISTS: "There is already an account linked with your twitter",
+  SERVER_TWITTER_OAUTH_NOT_ALLOWED: "You can only authenticate via twitter while on slate.host",
+  SERVER_TWITTER_LOGIN_ONLY:
+    "This login is associated with a Twitter account. Please continue with Twitter instead",
+
+  // Email Verifications
+  SERVER_EMAIL_VERIFICATION_INVALID_PIN: "Please enter a valid pin",
+  SERVER_EMAIL_VERIFICATION_FAILED:
+    "We're having trouble with verifying your email, please try again later",
+  SERVER_CREATE_VERIFICATION_NOT_ALLOWED:
+    "You can only send a verification pin while on slate.host",
+  SERVER_CREATE_VERIFICATION_INVALID_EMAIL: "Please choose a valid email",
+  SERVER_CREATE_VERIFICATION_EMAIL_TAKEN: "There is already an account with this email",
+  SERVER_CREATE_VERIFICATION_FAILED:
+    "We're having touble sending a verification pin right now, please try again later",
+  SERVER_EMAIL_VERIFICATION_NOT_ALLOWED: "You can only verify an email while on slate.host",
+
+  // Email Verification Legacy account
+  SERVER_CREATE_VERIFICATION_INVALID_USERNAME: "Please choose a valid username",
+  SERVER_CREATE_VERIFICATION_INVALID_PASSWORD: "Please choose a valid password",
+  SERVER_CREATE_VERIFICATION_WRONG_PASSWORD:
+    "We were unable to locate that account with those credentials",
+
+  // Password Reset
+  SERVER_RESET_PASSWORD_NOT_ALLOWED: "You can only reset your password while on slate.host",
+  SERVER_CREATE_VERIFICATION_USER_NOT_FOUND: "We were not able to locate a user with this email",
+  SERVER_RESET_PASSWORD_FAILED:
+    "We're having touble resetting your password, please try again late",
+  SERVER_RESET_PASSWORD_NO_PASSWORD: "Please choose a valid password",
+
+  // Migrate User
+  SERVER_MIGRATE_USER_NOT_ALLOWED: "You can only verify an email while on slate.host",
+  SERVER_MIGRATE_USER_NO_TOKEN:
+    "We're having touble sending a verification pin, please try again late",
+  SERVER_MIGRATE_USER_INVALID_PIN: "Please enter a valid pin",
 
   //Get user
   SERVER_GET_USER_NO_USER_PROVIDED:
@@ -159,7 +197,7 @@ export const error = {
   SERVER_USER_UPDATE_USERNAME_IS_TAKEN: "There is already an account with that username",
   SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG:
     "We're having trouble updating your settings right now",
-  SERVER_USER_UPDATE_INVALID_PASSWORD: "Please chooose a valid password",
+  SERVER_USER_UPDATE_INVALID_PASSWORD: "Please choose a valid password",
 
   //Zip files
   GET_ZIP_FILES_PATHS_BUCKET_CHECK_FAILED: "We're having trouble locating those files right now",
@@ -178,7 +216,7 @@ export const error = {
   SERVER_SIGN_IN_NO_USERNAME: "Please provide a username to sign in",
   SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
   SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
-  SERVER_SIGN_IN_WRONG_PASSWORD: "We were unable to locate that account with those credentials",
+  SERVER_SIGN_IN_WRONG_CREDENTIALS: "You have entered an invalid username or password",
 
   //Subscribe
   SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",

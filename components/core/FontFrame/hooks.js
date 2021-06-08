@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Events from "~/common/custom-events";
-import * as Content from "./Views/content";
+import * as Content from "~/components/core/FontFrame/Views/content";
 import * as Strings from "~/common/strings";
 
 import { generateNumberByStep } from "~/common/utilities";

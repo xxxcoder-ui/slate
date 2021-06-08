@@ -4,6 +4,8 @@ export const dispatchCustomEvent = ({ name, detail }) => {
 };
 
 export const hasError = (response) => {
+  console.log("insdie has error");
+  console.log(response);
   if (!response) {
     dispatchCustomEvent({
       name: "create-alert",

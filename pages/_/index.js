@@ -14,7 +14,7 @@ export const getServerSideProps = async ({ query }) => {
   //   },
   // };
   return {
-    props: { ...query },
+    props: { ...JSON.parse(JSON.stringify(query)) },
   };
 };
 

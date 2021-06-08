@@ -2,6 +2,8 @@ import * as Environment from "~/node_common/environment";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
+import { encryptPasswordClient } from "~/common/utilities";
 
 import JWT from "jsonwebtoken";
 
@@ -19,13 +21,22 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_SIGN_IN_NO_PASSWORD", error: true });
   }
 
+  const username = req.body.data.username.toLowerCase();
   let user;
-  try {
-    user = await Data.getUserByUsername({
-      username: req.body.data.username.toLowerCase(),
-    });
-  } catch (e) {
-    console.log(e);
+  if (Validations.email(username)) {
+    try {
+      user = await Data.getUserByEmail({ email: username });
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    try {
+      user = await Data.getUserByUsername({
+        username: req.body.data.username.toLowerCase(),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   if (!user) {
@@ -36,14 +47,32 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_SIGN_IN_USER_NOT_FOUND", error: true });
   }
 
-  const hash = await Utilities.encryptPassword(req.body.data.password, user.salt);
-
-  if (hash !== user.password) {
-    return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_PASSWORD", error: true });
+  // Note(amine): Twitter users won't have a password,
+  // we should think in the future how to handle this use case
+  if ((!user.salt || !user.password) && user.twitterId) {
+    return res.status(403).send({ decorator: "SERVER_TWITTER_LOGIN_ONLY", error: true });
   }
 
-  await Data.updateUserById({ id: user.id, lastActive: new Date() });
+  const hash = await Utilities.encryptPassword(req.body.data.password, user.salt);
+  if (hash !== user.password) {
+    return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_CREDENTIALS", error: true });
+  }
 
+  let userUpdates = {};
+  if (user.authVersion === 1) {
+    const newHash = await encryptPasswordClient(req.body.data.password);
+    const doubledHash = await Utilities.encryptPassword(newHash, user.salt);
+
+    userUpdates = { id: user.id, lastActive: new Date(), authVersion: 2, password: doubledHash };
+  }
+
+  await Data.updateUserById({ id: user.id, lastActive: new Date(), ...userUpdates });
+
+  if (!user.email) {
+    return res
+      .status(200)
+      .send({ decorator: "SERVER_SIGN_IN_SHOULD_MIGRATE", shouldMigrate: true });
+  }
   const authorization = Utilities.parseAuthHeader(req.headers.authorization);
   if (authorization && !Strings.isEmpty(authorization.value)) {
     const verfied = JWT.verify(authorization.value, Environment.JWT_SECRET);

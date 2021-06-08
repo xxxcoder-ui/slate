@@ -146,8 +146,7 @@ export class SignIn extends React.Component {
         password: this.state.password,
       });
     }
-
-    if (!Events.hasError(response)) {
+    if (response && !response.error) {
       window.location.replace("/_/activity");
     }
     this.setState({ loading: false });
@@ -273,8 +272,10 @@ export class SignIn extends React.Component {
                 onChange={this._handleChange}
                 onSubmit={this._handleSubmit}
                 style={{ paddingRight: 42 }}
+                onClickIcon={() => this.setState({ showPassword: !this.state.showPassword })}
+                icon={this.state.showPassword ? SVG.EyeOff : SVG.Eye}
               />
-              <div
+              {/* <div
                 style={{ position: "absolute", right: 2, top: 2, padding: 8, cursor: "pointer" }}
                 onClick={() => this.setState({ showPassword: !this.state.showPassword })}
               >
@@ -291,7 +292,7 @@ export class SignIn extends React.Component {
                     style={{ color: Constants.system.grayBlack }}
                   />
                 )}
-              </div>
+              </div> */}
             </div>
 
             <System.CheckBox
@@ -323,7 +324,7 @@ export class SignIn extends React.Component {
                 this.setState({ scene: "SIGN_IN", loading: false });
               }}
             >
-              ⭢ Already have an account?
+              <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Already have an account?
             </div>
           </div>
         </React.Fragment>
@@ -371,6 +372,8 @@ export class SignIn extends React.Component {
             value={this.state.password}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
+            onClickIcon={() => this.setState({ showPassword: !this.state.showPassword })}
+            icon={this.state.showPassword ? SVG.EyeOff : SVG.Eye}
           />
 
           <System.ButtonPrimary
@@ -389,7 +392,8 @@ export class SignIn extends React.Component {
               this.setState({ scene: "CREATE_ACCOUNT", loading: false });
             }}
           >
-            ⭢ Not registered? Sign up instead
+            <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Not registered? Sign up
+            instead
           </div>
         </div>
       </React.Fragment>

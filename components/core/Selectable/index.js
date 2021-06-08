@@ -1,2 +1,2 @@
-export { default as GroupSelectable } from "./groupSelectable";
-export { default as Selectable } from "./selectable";
+export { default as GroupSelectable } from "~/components/core/Selectable/groupSelectable";
+export { default as Selectable } from "~/components/core/Selectable/selectable";

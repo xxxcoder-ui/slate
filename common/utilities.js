@@ -1,3 +1,5 @@
+import BCrypt from "bcryptjs";
+
 //NOTE(martina): this file is for utility functions that do not involve API calls
 //For API related utility functions, see common/user-behaviors.js
 //And for uploading related utility functions, see common/file-utilities.js
@@ -41,6 +43,19 @@ export const endsWithAny = (options, string) =>
       return false;
     }
   });
+
+export const encryptPasswordClient = async (text) => {
+  const salt = "$2a$06$Yl.tEYt9ZxMcem5e6AbeUO";
+  let hash = text;
+  const rounds = 5;
+
+  for (let i = 1; i <= rounds; i++) {
+    hash = await BCrypt.hash(text, salt);
+    console.log(`\nPASSWORD HASH ROUND ${i} COMPLETE\n`);
+  }
+
+  return hash;
+};
 
 export const coerceToArray = (input) => {
   if (!input) {

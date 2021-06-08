@@ -226,6 +226,9 @@ export const updateStateData = async (state, newState) => {
   };
 };
 
+export const generateRandomNumberInRange = (min, max) =>
+  Math.floor(Math.random() * (max - min)) + min;
+
 // NOTE(daniel): get all tags on slates and files
 export const getUserTags = ({ library, slates }) => {
   let tags = new Set();
