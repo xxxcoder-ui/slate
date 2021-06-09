@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
+import * as SVG from "~/common/svg";
 
 import Field from "~/components/core/Field";
 
@@ -34,6 +35,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
   const [passwordValidations, setPasswordValidations] = React.useState(
     Validations.passwordForm("")
   );
+  const [showPassword, toggleShowPassword] = React.useState(false);
   const { goToAccountCreationScene, scene } = useSignup();
 
   const { getFieldProps, getFormProps, isSubmitting } = useForm({
@@ -59,7 +61,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
           <Field
             autoFocus
             containerStyle={{ marginTop: 46 }}
-            placeholder="username"
+            placeholder="Username"
             type="text"
             full
             {...getFieldProps("username")}
@@ -69,8 +71,9 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
           <motion.div layout>
             <Field
               containerStyle={{ marginTop: 16 }}
-              placeholder="password"
-              type="password"
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
               full
               validations={passwordValidations}
               {...getFieldProps("password", {
@@ -80,6 +83,8 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
                 },
               })}
               style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+              onClickIcon={() => toggleShowPassword(!showPassword)}
+              icon={showPassword ? SVG.EyeOff : SVG.Eye}
             />
 
             <AuthCheckBox style={{ marginTop: "16px" }} {...getFieldProps("acceptTerms")} />

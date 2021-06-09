@@ -93,25 +93,9 @@ const PasswordValidations = ({ validations }) => {
   );
 };
 
-export default function Field({
-  touched,
-  error,
-  icon,
-  validations,
-  errorAs,
-  containerAs,
-  ...props
-}) {
+export default function Field({ touched, error, validations, errorAs, containerAs, ...props }) {
   const showError = touched && error;
   const showSuccess = touched && !error;
-
-  // const Icon = React.useMemo(() => {
-  //   if (icon) return showError ? SVG.MehCircle : icon;
-
-  //   if (showError) return SVG.MehCircle;
-
-  //   if (showSuccess) return SVG.SmileCircle;
-  // }, [touched, error]);
 
   const STYLES = React.useMemo(() => {
     if (showError) return STYLES_INPUT_ERROR;
@@ -124,9 +108,9 @@ export default function Field({
   return (
     <div>
       <ContainerComponent>
-        <Input icon={icon} inputCss={STYLES} {...props} />
+        <Input inputCss={STYLES} {...props} />
       </ContainerComponent>
-      {props.type === "password" && validations ? (
+      {props.name === "password" && validations ? (
         <PasswordValidations validations={validations} />
       ) : (
         <ErrorWrapper>

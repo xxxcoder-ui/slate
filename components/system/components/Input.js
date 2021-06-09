@@ -251,7 +251,8 @@ export class Input extends React.Component {
               readOnly={this.props.readOnly}
               required={this.props.required}
               style={{
-                width: this.props.copyable || this.props.icon ? "calc(100% - 16px)" : "100%",
+                width: this.props.copyable || this.props.icon ? "calc(100% - 32px)" : "100%",
+                ...this.props.inputFieldStyle,
               }}
             />
             <div

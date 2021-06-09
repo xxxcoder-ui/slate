@@ -157,7 +157,7 @@ export default function Initial({
             <Field
               autoFocus
               label="Email address or username"
-              placeholder="email/username"
+              placeholder="Email/username"
               icon={SVG.RightArrow}
               name="email"
               type="text"

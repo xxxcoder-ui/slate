@@ -368,7 +368,7 @@ export class SignIn extends React.Component {
             containerStyle={{ marginTop: 16 }}
             placeholder="Password"
             name="password"
-            type="password"
+            type={this.state.showPassword ? "text" : "password"}
             value={this.state.password}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}

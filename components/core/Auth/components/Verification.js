@@ -105,9 +105,14 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
         full
         icon={
           isSubmitting
-            ? (props) => <LoaderSpinner style={{ height: 16, width: 16, marginLeft: 16 }} />
+            ? () => (
+                <LoaderSpinner
+                  style={{ height: 16, width: 16, marginLeft: 16, position: "absolute", right: 12 }}
+                />
+              )
             : SVG.RightArrow
         }
+        inputFieldStyle={{ width: "100% !important" }}
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         name="pin"

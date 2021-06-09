@@ -61,6 +61,7 @@ export default function ResetPassword({
   const [passwordValidations, setPasswordValidations] = React.useState(
     Validations.passwordForm("")
   );
+  const [showPassword, toggleShowPassword] = React.useState(false);
 
   const { scene, goToNewPasswordScene, goToVerificationScene } = usePasswordReset();
 
@@ -112,8 +113,8 @@ export default function ResetPassword({
           <Field
             autoFocus
             containerStyle={{ marginTop: 16 }}
-            placeholder="new password"
-            type="password"
+            placeholder="New password"
+            type={showPassword ? "text" : "password"}
             full
             validations={passwordValidations}
             {...getNewPasswordFieldProps("password", {
@@ -123,6 +124,8 @@ export default function ResetPassword({
               },
             })}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+            onClickIcon={() => toggleShowPassword(!showPassword)}
+            icon={showPassword ? SVG.EyeOff : SVG.Eye}
           />
           <AnimateSharedLayout>
             <motion.div layout>
