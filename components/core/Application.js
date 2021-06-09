@@ -22,7 +22,7 @@ import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
 import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
-import SceneSignIn from "~/scenes/SceneSignIn";
+import SceneAuth from "~/scenes/SceneAuth";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
 import SceneDirectory from "~/scenes/SceneDirectory";
@@ -77,7 +77,7 @@ const SIDEBARS = {
 
 const SCENES = {
   NAV_ERROR: <SceneError />,
-  NAV_SIGN_IN: <SceneSignIn />,
+  NAV_SIGN_IN: <SceneAuth />,
   NAV_ACTIVITY: <SceneActivity />,
   NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
@@ -461,27 +461,30 @@ export default class ApplicationPage extends React.Component {
     e.preventDefault();
   };
 
-  _handleCreateUser = async (state) => {
-    let response = await Actions.createUser(state);
+  // _handleCreateUser = async (state) => {
+  //   let response = await Actions.createUser(state);
 
-    if (!response || response.error) {
+  //   if (Events.hasError(response)) {
+  //     return;
+  //   }
+
+  //   return this._handleAuthenticate(state, true);
+  // };
+
+  _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
+    let response = await authenticate(state);
+    if (Events.hasError(response)) {
       return response;
     }
-
-    return this._handleAuthenticate(state, true);
-  };
-
-  _handleAuthenticate = async (state, newAccount) => {
-    let response = await UserBehaviors.authenticate(state);
-    if (!response || response.error) {
+    if (response.shouldMigrate) {
       return response;
     }
     let viewer = await UserBehaviors.hydrate();
-    if (!viewer || viewer.error) {
+    if (Events.hasError(viewer)) {
       return viewer;
     }
 
-    this.setState({ viewer });
+    this.setState({ viewer }, () => console.log(this.state.viewer));
     await this._handleSetupWebsocket();
 
     let unseenAnnouncements = [];
@@ -516,6 +519,8 @@ export default class ApplicationPage extends React.Component {
     // if (!redirected) {
     //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
     // }
+    window.location.replace("/_/activity");
+
     return response;
   };
 
@@ -714,8 +719,8 @@ export default class ApplicationPage extends React.Component {
       viewer: this.state.viewer,
       selected: this.state.selected,
       onSelectedChange: this._handleSelectedChange,
-      onAuthenticate: this._handleAuthenticate,
-      onCreateUser: this._handleCreateUser,
+      onAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticate),
+      onTwitterAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticateViaTwitter),
       onAction: this._handleAction,
       onUpload: this._handleUploadFiles,
       isMobile: this.state.isMobile,

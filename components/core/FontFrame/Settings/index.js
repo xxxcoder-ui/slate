@@ -3,7 +3,12 @@ import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
-import { Controller, AlignmentControl, ContentControl, SettingsControl } from "./Controls";
+import {
+  Controller,
+  AlignmentControl,
+  ContentControl,
+  SettingsControl,
+} from "~/components/core/FontFrame/Settings/Controls";
 
 const STYLES_CONTROLLER_WRAPPER = (theme) =>
   css`

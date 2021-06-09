@@ -9,34 +9,40 @@ const db = knex(envConfig);
 
 console.log(`RUNNING:  adjust.js`);
 
-const editActivityTable = db.schema.table("activity", function (table) {
-  table.boolean("ignore").notNullable().defaultTo(false);
+const editUsersTable1 = db.schema.table("users", function (table) {
+  table.integer("authVersion").notNullable().defaultTo(1);
 });
 
-const editSlatesTable = db.schema.table("slates", function (table) {
-  table.integer("subscriberCount").notNullable().defaultTo(0);
-  table.integer("fileCount").notNullable().defaultTo(0);
+const editUsersTable2 = db.schema.table("users", function (table) {
+  table.integer("authVersion").notNullable().defaultTo(2).alter();
+  table.string("twitterId").unique().nullable();
 });
 
-const editUsersTable = db.schema.table("users", function (table) {
-  table.integer("followerCount").notNullable().defaultTo(0);
-  table.integer("fileCount").notNullable().defaultTo(0);
-  table.integer("slateCount").notNullable().defaultTo(0);
+const editVerificationTable = db.schema.table("verifications", function (table) {
+  table.string("username").nullable();
+  table
+    .enu("type", [
+      "email_verification",
+      "email_twitter_verification",
+      "password_reset",
+      "user_migration",
+    ])
+    .defaultTo("email_verification");
+  table.boolean("passwordChanged").nullable();
 });
 
-const editFilesTable = db.schema.table("files", function (table) {
-  table.integer("likeCount").notNullable().defaultTo(0);
-  table.integer("downloadCount").notNullable().defaultTo(0);
+const editTwitterTokenTable = db.schema.table("twitterTokens", function (table) {
+  table.string("token").primary().unique().notNullable();
+  table.string("tokenSecret").notNullable();
+  table.string("email").nullable();
+  table.string("id_str").nullable();
+  table.string("screen_name").nullable();
+  table.string("verified").nullable();
 });
 
-const addLikesTable = db.schema.createTable("likes", function (table) {
-  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.uuid("userId").references("id").inTable("users");
-  table.uuid("fileId").references("id").inTable("files");
-  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
-});
-
-Promise.all([editActivityTable, editSlatesTable, editUsersTable, editFilesTable, addLikesTable]);
+Promise.all([editVerificationTable]);
+// Promise.all([editUsersTable1]);
+// Promise.all([editUsersTable2, editVerificationTable, editTwitterTokenTable]);
 
 console.log(`FINISHED: adjust.js`);
 console.log(`          CTRL +C to return to terminal.`);

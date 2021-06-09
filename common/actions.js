@@ -87,6 +87,35 @@ export const checkUsername = async (data) => {
   });
 };
 
+export const checkEmail = async (data) => {
+  return await returnJSON(`/api/users/check-email`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+//NOTE(toast): this functionality comes with the upgraded sg plan
+// export const validateEmail = async (data) => {
+//   return await returnJSON("/api/emails/validate", {
+//     ...DEFAULT_OPTIONS,
+//     body: JSON.stringify({ data }),
+//   });
+// };
+
+export const sendEmail = async (data) => {
+  return await returnJSON("/api/emails/send-email", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const sendTemplateEmail = async (data) => {
+  return await returnJSON("/api/emails/send-template", {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const archive = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/archive`, {
@@ -183,6 +212,33 @@ export const createFile = async (data) => {
 export const addFileToSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/add-file`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const requestTwitterToken = async () => {
+  return await returnJSON(`/api/twitter/request-token`, {
+    ...DEFAULT_OPTIONS,
+  });
+};
+
+export const authenticateViaTwitter = async (data) => {
+  return await returnJSON(`/api/twitter/authenticate`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createUserViaTwitter = async (data) => {
+  return await returnJSON(`/api/twitter/signup`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createUserViaTwitterWithVerification = async (data) => {
+  return await returnJSON(`/api/twitter/signup-with-verification`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -382,62 +438,139 @@ export const getZipFilePaths = async (data) => {
 };
 
 export const cleanDatabase = async () => {
-  return await returnJSON(`api/clean-up/users`, {
+  return await returnJSON(`/api/clean-up/users`, {
     ...DEFAULT_OPTIONS,
   });
 };
 
 export const v1GetSlate = async (data) => {
-  return await returnJSON(`api/v1/get-slate`, {
+  return await returnJSON(`/api/v1/get-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v1Get = async (data) => {
-  return await returnJSON(`api/v1/get`, {
+  return await returnJSON(`/api/v1/get`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v1UpdateSlate = async (data) => {
-  return await returnJSON(`api/v1/update-slate`, {
+  return await returnJSON(`/api/v1/update-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2GetSlate = async (data) => {
-  return await returnJSON(`api/v2/get-slate`, {
+  return await returnJSON(`/api/v2/get-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2GetUser = async (data) => {
-  return await returnJSON(`api/v2/get-user`, {
+  return await returnJSON(`/api/v2/get-user`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2Get = async (data) => {
-  return await returnJSON(`api/v2/get`, {
+  return await returnJSON(`/api/v2/get`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2UpdateSlate = async (data) => {
-  return await returnJSON(`api/v2/update-slate`, {
+  return await returnJSON(`/api/v2/update-slate`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const v2UpdateFile = async (data) => {
-  return await returnJSON(`api/v2/update-file`, {
+  return await returnJSON(`/api/v2/update-file`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createTwitterEmailVerification = async (data) => {
+  return await returnJSON(`/api/verifications/twitter/create`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const verifyTwitterEmail = async (data) => {
+  return await returnJSON(`/api/verifications/twitter/verify`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createPasswordResetVerification = async (data) => {
+  return await returnJSON(`/api/verifications/password-reset/create`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const verifyPasswordResetEmail = async (data) => {
+  return await returnJSON(`/api/verifications/password-reset/verify`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const resetPassword = async (data) => {
+  return await returnJSON(`/api/users/reset-password`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createLegacyVerification = async (data) => {
+  return await returnJSON(`/api/verifications/legacy/create`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const migrateUser = async (data) => {
+  return await returnJSON(`/api/users/migrate`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createVerification = async (data) => {
+  return await returnJSON(`/api/verifications/create`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const verifyEmail = async (data) => {
+  return await returnJSON(`/api/verifications/verify`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const resendVerification = async (data) => {
+  return await returnJSON(`/api/verifications/resend`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const getUserVersion = async (data) => {
+  return await returnJSON(`/api/users/get-version`, {
     ...API_OPTIONS,
     body: JSON.stringify({ data }),
   });

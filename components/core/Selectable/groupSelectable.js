@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import { css } from "@emotion/react";
 
-import doObjectsCollide from "./doObjectsCollide";
+import doObjectsCollide from "~/components/core/Selectable/doObjectsCollide";
 
 const Context = React.createContext();
 

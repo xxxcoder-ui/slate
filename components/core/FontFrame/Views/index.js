@@ -1,6 +1,6 @@
-import Glyphs from "./Glyphs";
-import Sentence from "./Sentence";
-import Paragraph from "./Paragraph";
+import Glyphs from "~/components/core/FontFrame/Views/Glyphs";
+import Sentence from "~/components/core/FontFrame/Views/Sentence";
+import Paragraph from "~/components/core/FontFrame/Views/Paragraph";
 
 export default function FontView({
   settings,

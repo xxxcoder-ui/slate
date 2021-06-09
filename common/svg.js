@@ -432,8 +432,8 @@ export const OldWallet = (props) => (
   </svg>
 );
 
-export const NavigationArrow = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+export const RightArrow = (props) => (
+  <svg viewBox="0 0 24 24" height={props.height} style={props.style} {...props}>
     <g
       fill="none"
       stroke="currentColor"
@@ -1852,6 +1852,37 @@ export const RotateCcw = (props) => (
       d="M3.51 15a9 9 0 102.13-9.36L1 10"
       stroke="#000"
       strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const MehCircle = (props) => (
+  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M8 15.167A6.667 6.667 0 108 1.834a6.667 6.667 0 000 13.333zM5.333 10.5h5.334M6 6.5h.007M10 6.5h.007"
+      stroke="#FF4530"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const SmileCircle = (props) => (
+  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M8 15.167A6.667 6.667 0 108 1.834a6.667 6.667 0 000 13.333z"
+      stroke="#34D159"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.333 9.834s1 1.333 2.667 1.333c1.667 0 2.667-1.333 2.667-1.333M6 6.5h.007M10 6.5h.007"
+      stroke="#34D159"
+      strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
     />

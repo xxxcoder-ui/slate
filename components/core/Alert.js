@@ -74,6 +74,11 @@ const STYLES_TEXT = css`
 const STYLES_MESSAGE_BOX = css`
   display: flex;
   align-items: center;
+
+  //Note(amine): remove bottom padding from svg
+  svg {
+    display: block;
+  }
 `;
 
 export class Alert extends React.Component {

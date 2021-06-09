@@ -6,7 +6,7 @@ import { P } from "~/components/system/components/Typography";
 import { Slider } from "~/components/system/components/Slider";
 import { css } from "@emotion/react";
 
-import Select from "./Select";
+import Select from "~/components/core/FontFrame/Settings/Select";
 
 const STYLES_LABEL = (theme) => css`
   font-size: 0.875rem;

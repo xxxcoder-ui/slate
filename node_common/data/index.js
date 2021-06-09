@@ -5,6 +5,14 @@ import updateUserById from "~/node_common/data/methods/update-user-by-id";
 import deleteUserById from "~/node_common/data/methods/delete-user-by-id";
 import getUserByUsername from "~/node_common/data/methods/get-user-by-username";
 import getUserById from "~/node_common/data/methods/get-user-by-id";
+import getUserByEmail from "~/node_common/data/methods/get-user-by-email";
+import getUserByTwitterId from "~/node_common/data/methods/get-user-by-twitter-id";
+
+// NOTE(amine)
+// TwitterTokens postgres queries
+import createTwitterToken from "~/node_common/data/methods/create-twitter-token";
+import getTwitterToken from "~/node_common/data/methods/get-twitter-token";
+import updateTwitterToken from "~/node_common/data/methods/update-twitter-token";
 
 // NOTE(martina):
 // File postgres queries
@@ -77,6 +85,16 @@ import getEverySlate from "~/node_common/data/methods/get-every-slate";
 import getEveryUser from "~/node_common/data/methods/get-every-user";
 import getEveryFile from "~/node_common/data/methods/get-every-file";
 
+// NOTE(toast):
+// Verification sessions for email verif
+import createVerification from "~/node_common/data/methods/create-verification";
+import updateVerification from "~/node_common/data/methods/update-verification";
+import deleteVerificationByEmail from "~/node_common/data/methods/delete-verification-by-email";
+import deleteVerificationBySid from "~/node_common/data/methods/delete-verification-by-sid";
+import getVerificationByEmail from "~/node_common/data/methods/get-verification-by-email";
+import getVerificationBySid from "~/node_common/data/methods/get-verification-by-sid";
+import pruneVerifications from "~/node_common/data/methods/prune-verifications";
+
 // NOTE(jim):
 // one-offs
 import createOrphan from "~/node_common/data/methods/create-orphan";
@@ -90,6 +108,8 @@ export {
   deleteUserById,
   getUserByUsername,
   getUserById,
+  getUserByEmail,
+  getUserByTwitterId,
   //NOTE(martina): File operations
   createFile,
   getFileByCid,
@@ -145,4 +165,16 @@ export {
   getEverySlate,
   getEveryUser,
   getEveryFile,
+  //NOTE(toast): Verification operations
+  createVerification,
+  getVerificationByEmail,
+  getVerificationBySid,
+  deleteVerificationByEmail,
+  deleteVerificationBySid,
+  pruneVerifications,
+  updateVerification,
+  // NOTE(amine): Twitter
+  createTwitterToken,
+  getTwitterToken,
+  updateTwitterToken,
 };

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import ContentEditable from "./ContentEditable";
+import ContentEditable from "~/components/core/FontFrame/Views/ContentEditable";
 
 import { css } from "@emotion/react";
 

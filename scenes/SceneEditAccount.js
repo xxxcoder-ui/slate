@@ -8,6 +8,7 @@ import * as Constants from "~/common/constants";
 import * as FileUtilities from "~/common/file-utilities";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
@@ -58,6 +59,7 @@ export default class SceneEditAccount extends React.Component {
     savingNameBio: false,
     changingFilecoin: false,
     modalShow: false,
+    showPassword: false,
   };
 
   _handleUpload = async (e) => {
@@ -301,18 +303,12 @@ export default class SceneEditAccount extends React.Component {
               <System.Input
                 containerStyle={{ marginTop: 24 }}
                 name="password"
-                type="password"
+                type={this.state.showPassword ? "text" : "password"}
                 value={this.state.password}
                 placeholder="Your new password"
                 onChange={this._handleChange}
-              />
-              <System.Input
-                containerStyle={{ marginTop: 12 }}
-                name="confirm"
-                type="password"
-                value={this.state.confirm}
-                placeholder="Confirm password"
-                onChange={this._handleChange}
+                onClickIcon={() => this.setState({ showPassword: !this.state.showPassword })}
+                icon={this.state.showPassword ? SVG.EyeOff : SVG.Eye}
               />
 
               <div style={{ marginTop: 24 }}>

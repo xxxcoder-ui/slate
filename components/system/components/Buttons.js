@@ -26,7 +26,7 @@ const STYLES_BUTTON = `
 const STYLES_BUTTON_PRIMARY = css`
   ${STYLES_BUTTON}
   cursor: pointer;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   color: ${Constants.system.white};
 
   :hover {

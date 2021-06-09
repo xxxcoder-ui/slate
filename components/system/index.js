@@ -63,6 +63,7 @@ import { Table } from "~/components/system/components/Table";
 import { Textarea } from "~/components/system/components/Textarea";
 import { Toggle } from "~/components/system/components/Toggle";
 import { H1, H2, H3, H4, P, UL, OL, LI } from "~/components/system/components/Typography";
+import { Divider } from "~/components/system/components/Divider";
 
 // NOTE(jim): Fragments
 import { Boundary } from "~/components/system/components/fragments/Boundary";
@@ -137,6 +138,7 @@ export {
   Table,
   Textarea,
   Toggle,
+  Divider,
   Tag,
   H1,
   H2,
