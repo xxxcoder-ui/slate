@@ -335,6 +335,7 @@ export default class SceneEditAccount extends React.Component {
                 name="username"
                 value={this.state.username}
                 placeholder="Username"
+                type="text"
                 onChange={this._handleUsernameChange}
               />
               <div style={{ marginTop: 24 }}>

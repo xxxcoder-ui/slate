@@ -82,7 +82,8 @@ export default function TwitterSignup({
           autoFocus
           containerStyle={{ marginTop: 41 }}
           placeholder="Username"
-          type="username"
+          name="username"
+          type="text"
           {...getFieldProps("username")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
@@ -92,6 +93,7 @@ export default function TwitterSignup({
             containerAs={MotionLayout}
             errorAs={MotionLayout}
             placeholder="Email"
+            name="email"
             type="email"
             {...getFieldProps("email")}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}

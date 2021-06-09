@@ -96,6 +96,7 @@ export default class SidebarCreateSlate extends React.Component {
           </System.P>
           <System.Input
             name="name"
+            type="text"
             style={{ marginTop: 12 }}
             placeholder="Name"
             value={this.state.name}
@@ -106,6 +107,7 @@ export default class SidebarCreateSlate extends React.Component {
           <System.Input
             name="email"
             style={{ marginTop: 8 }}
+            type="email"
             placeholder="Email"
             value={this.state.email}
             onChange={this._handleChange}
@@ -114,6 +116,7 @@ export default class SidebarCreateSlate extends React.Component {
           <System.Input
             name="twitter"
             style={{ marginTop: 8 }}
+            type="text"
             placeholder="Twitter (optional)"
             value={this.state.twitter}
             onChange={this._handleChange}

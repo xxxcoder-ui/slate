@@ -159,7 +159,8 @@ export default function Signin({
             autoFocus
             containerStyle={{ marginTop: 16 }}
             placeholder="Email"
-            type="text"
+            name="email"
+            type="email"
             full
             {...getEmailFieldProps("email")}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
@@ -195,6 +196,7 @@ export default function Signin({
           autoFocus
           containerStyle={{ marginTop: message ? 24 : 16 }}
           placeholder="Password"
+          name="password"
           type={showPassword ? "text" : "password"}
           full
           onClickIcon={() => toggleShowPassword(!showPassword)}

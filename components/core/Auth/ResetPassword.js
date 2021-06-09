@@ -157,7 +157,8 @@ export default function ResetPassword({
           autoFocus
           containerStyle={{ marginTop: 16 }}
           placeholder="Email"
-          type="text"
+          name="email"
+          type="email"
           full
           {...getFieldProps("email")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}

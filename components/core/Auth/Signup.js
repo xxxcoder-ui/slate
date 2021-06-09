@@ -62,6 +62,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             autoFocus
             containerStyle={{ marginTop: 46 }}
             placeholder="Username"
+            name="username"
             type="text"
             full
             {...getFieldProps("username")}

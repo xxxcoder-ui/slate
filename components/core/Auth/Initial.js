@@ -159,7 +159,7 @@ export default function Initial({
               label="Email address or username"
               placeholder="Email/username"
               icon={SVG.RightArrow}
-              name="email"
+              name="email/username"
               type="text"
               full
               {...getSigninFieldProps()}
@@ -188,6 +188,8 @@ export default function Initial({
                 autoFocus
                 label="Sign up with email"
                 placeholder="Email"
+                type="email"
+                name="email"
                 full
                 style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
                 // NOTE(amine): the input component internally is using 16px margin top
