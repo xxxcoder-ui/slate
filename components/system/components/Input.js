@@ -17,7 +17,7 @@ const INPUT_STYLES = css`
   background: transparent;
   color: ${Constants.system.black};
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 8px;
 
   padding: 0 16px 0 16px;
   outline: 0;

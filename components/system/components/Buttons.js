@@ -7,7 +7,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const STYLES_BUTTON = `
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 8px;
   outline: 0;
   border: 0;
   min-height: 40px;
