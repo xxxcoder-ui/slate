@@ -2,10 +2,12 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
+import * as Actions from "~/common/actions";
 
 import Field from "~/components/core/Field";
 
 import { AnimateSharedLayout, motion } from "framer-motion";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useForm } from "~/common/hooks";
 import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Auth/components";
 
@@ -20,7 +22,40 @@ const useSignup = () => {
   return { ...handlers, scene };
 };
 
-const handleValidation = ({ username, password, acceptTerms }, errors) => {
+const useCheckUser = () => {
+  const MESSAGE = "The username is taken.";
+
+  const usernamesAllowed = React.useRef([]);
+  const usernamesTaken = React.useRef([]);
+
+  return async ({ username }, errors) => {
+    if (usernamesAllowed.current.some((value) => value === username)) {
+      return;
+    }
+
+    if (usernamesTaken.current.some((value) => value === username)) {
+      errors.username = MESSAGE;
+      return;
+    }
+
+    const response = await Actions.checkUsername({
+      username,
+    });
+    if (response.data) {
+      errors.username = "The username is taken.";
+      usernamesTaken.current.push(username);
+      return;
+    }
+    usernamesAllowed.current.push(username);
+  };
+};
+
+const createValidations = (validateUsername) => async (
+  { username, password, acceptTerms },
+  errors
+) => {
+  await validateUsername({ username }, errors);
+
   if (!Validations.username(username)) errors.username = "Invalid username";
   // Note(amine): username should not be an email
   if (Validations.email(username)) errors.username = "Username shouldn't be an email";
@@ -38,9 +73,11 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
   const [showPassword, toggleShowPassword] = React.useState(false);
   const { goToAccountCreationScene, scene } = useSignup();
 
-  const { getFieldProps, getFormProps, isSubmitting } = useForm({
+  const validateUsername = useCheckUser();
+
+  const { getFieldProps, getFormProps, isSubmitting, isValidating } = useForm({
     initialValues: { username: "", password: "", acceptTerms: false },
-    validate: handleValidation,
+    validate: createValidations(validateUsername),
     onSubmit: async ({ username, password }) => await createUser({ username, password }),
   });
 
@@ -64,6 +101,22 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             placeholder="Username"
             name="username"
             type="text"
+            success="The username is available."
+            icon={
+              isValidating
+                ? () => (
+                    <LoaderSpinner
+                      style={{
+                        height: 16,
+                        width: 16,
+                        marginLeft: 16,
+                        position: "absolute",
+                        right: 12,
+                      }}
+                    />
+                  )
+                : null
+            }
             full
             {...getFieldProps("username")}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
