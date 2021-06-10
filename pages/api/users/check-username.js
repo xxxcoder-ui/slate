@@ -16,5 +16,5 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
-  return res.status(200).send({ decorator: "SERVER_CHECK_USERNAME", data: user });
+  return res.status(200).send({ decorator: "SERVER_CHECK_USERNAME", data: true });
 };

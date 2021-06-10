@@ -61,21 +61,18 @@ export const useSignin = ({ onAuthenticate }) => {
     if (Events.hasError(response)) return;
 
     // NOTE(amine): handling client hash if the user is v2
-    let hashedPassword;
-    if (response?.data?.version === 1) {
-      hashedPassword = password;
-    } else {
-      hashedPassword = await Utilities.encryptPasswordClient(password);
-    }
+    let hashedPassword = await Utilities.encryptPasswordClient(password);
+
+    credentialsRef.current = { username, password: hashedPassword };
 
     //NOTE(amine): the onAuthenticate function will return early
     //             if there is shouldMigrate in the response payload
+    const passwordSentToServer = response?.data?.version === 1 ? password : hashedPassword;
     const authResponse = await onAuthenticate({
       username: username.toLowerCase(),
-      password: hashedPassword,
+      password: passwordSentToServer,
     });
 
-    credentialsRef.current = { username, password: hashedPassword };
     if (authResponse.shouldMigrate) return authResponse;
   };
 

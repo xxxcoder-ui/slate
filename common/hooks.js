@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Events from "~/common/custom-events";
 
 export const useMounted = () => {
   const isMounted = React.useRef(true);
@@ -30,6 +29,7 @@ export const useForm = ({
   validateOnBlur = true,
   validateOnSubmit = true,
 }) => {
+  const [internal, setInternal] = React.useState({ isSubmitting: false, isValidating: false });
   const [state, setState] = React.useState({
     isSubmitting: false,
     values: initialValues,
@@ -52,15 +52,24 @@ export const useForm = ({
       touched: { ...prev.touched, [e.target.name]: false },
     }));
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = async (e) => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let errors = {};
-    if (validateOnBlur && validate) errors = validate(state.values, { ...state.errors });
-    setState((prev) => ({
-      ...prev,
-      touched: { ...prev.touched, [e.target.name]: validateOnBlur },
-      errors,
-    }));
+    if (validateOnBlur && validate) {
+      try {
+        setInternal((prev) => ({ ...prev, isValidating: true }));
+        errors = await validate(state.values, {});
+      } catch (e) {
+        console.log("validation", e);
+      } finally {
+        setInternal((prev) => ({ ...prev, isValidating: false }));
+        setState((prev) => ({
+          ...prev,
+          touched: { ...prev.touched, [e.target.name]: validateOnBlur },
+          errors,
+        }));
+      }
+    }
   };
 
   // Note(Amine): this prop getter will capture the field state
@@ -74,8 +83,11 @@ export const useForm = ({
   });
 
   /** ---------- NOTE(amine): Form Handlers ----------  */
-  const handleFormOnSubmit = (e) => {
-    e.preventDefault();
+
+  const submitAsync = async () => {
+    // NOTE(amine): Don't submit if the form is validating or already submitting
+    if (internal.isSubmitting || internal.isValidating) return;
+
     //NOTE(amine): touch all inputs
     setState((prev) => {
       const touched = Object.keys(prev.values).reduce((acc, key) => ({ ...acc, [key]: true }), {});
@@ -84,21 +96,36 @@ export const useForm = ({
 
     // NOTE(amine): validate inputs
     if (validateOnSubmit && validate) {
-      const errors = validate(state.values, { ...state.errors });
-      setState((prev) => ({ ...prev, errors }));
-      if (_hasError(errors)) return;
+      let errors = {};
+      try {
+        setInternal((prev) => ({ ...prev, isValidating: true }));
+        errors = await validate(state.values, { ...state.errors });
+        if (_hasError(errors)) return;
+      } catch (e) {
+        console.log("validation", e);
+      } finally {
+        setInternal((prev) => ({ ...prev, isValidating: false }));
+        setState((prev) => ({ ...prev, errors }));
+      }
     }
 
     // NOTE(amine): submit the form
     if (!onSubmit) return;
-    setState((prev) => ({ ...prev, isSubmitting: true }));
-    onSubmit(state.values)
-      .then(() => {
-        setState((prev) => ({ ...prev, isSubmitting: false }));
-      })
-      .catch(() => {
-        setState((prev) => ({ ...prev, isSubmitting: false }));
-      });
+    setInternal((prev) => ({ ...prev, isSubmitting: true }));
+    try {
+      await onSubmit(state.values);
+    } catch (e) {
+      console.log("submitting", e);
+    } finally {
+      setInternal((prev) => ({ ...prev, isSubmitting: false }));
+    }
+  };
+
+  const handleFormOnSubmit = (e) => {
+    e.preventDefault();
+    submitAsync()
+      .then()
+      .catch((e) => console.log(e));
   };
 
   // Note(Amine): this prop getter will overide the form onSubmit handler
@@ -106,7 +133,13 @@ export const useForm = ({
     onSubmit: handleFormOnSubmit,
   });
 
-  return { getFieldProps, getFormProps, values: state.values, isSubmitting: state.isSubmitting };
+  return {
+    getFieldProps,
+    getFormProps,
+    values: state.values,
+    isSubmitting: internal.isSubmitting,
+    isValidating: internal.isValidating,
+  };
 };
 
 /** NOTE(amine): Since we can use on our design system an input onSubmit,

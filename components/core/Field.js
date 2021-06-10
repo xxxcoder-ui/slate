@@ -93,7 +93,15 @@ const PasswordValidations = ({ validations }) => {
   );
 };
 
-export default function Field({ touched, error, validations, errorAs, containerAs, ...props }) {
+export default function Field({
+  touched,
+  error,
+  success,
+  validations,
+  errorAs,
+  containerAs,
+  ...props
+}) {
   const showError = touched && error;
   const showSuccess = touched && !error;
 
@@ -115,7 +123,7 @@ export default function Field({ touched, error, validations, errorAs, containerA
       ) : (
         <ErrorWrapper>
           <P css={STYLES_SMALL_TEXT} style={{ marginTop: "8px" }}>
-            {showError && error}
+            {(showError && error) || (showSuccess && success)}
           </P>
         </ErrorWrapper>
       )}
