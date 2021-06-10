@@ -1,0 +1,215 @@
+import * as Social from "~/node_common/social";
+import * as Arrays from "~/common/arrays";
+
+//update search (searchmanager)
+//send websocket update (viewermanager)
+//send slack message (Social.sendSlackMessage)
+
+//maybe for errors, you also send a slack message and tag martina?
+
+//maybe you could remove the try catch from here and put it inside the send part
+
+//upload, like file, add file to collection, save copy, subscribe/follow, download
+
+//create activity for it
+//create summary counts for it?
+
+const getUserURL = (user) => {
+  const userProfileURL = `https://slate.host/${user.username}`;
+  const userURL = `<${userProfileURL}|${user.username}>`;
+  return userURL;
+};
+
+export const error = (location, e) => {
+  try {
+    const message = `@martina there was an error at ${location}: ${e}`;
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// export const upload = ({ user, files: targetFiles }) => {
+//   const files = Arrays.filterPublic(targetFiles);
+//   if (!files.length) {
+//     return;
+//   }
+//   try {
+//     const userURL = getUserURL(user);
+//     const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+//     const extra =
+//       files.length > 1
+//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+//         : "";
+//     const message = `*${userURL}* uploaded ${objectURL}${extra}`;
+//     Social.sendSlackMessage(message);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+export const upload = ({ user, slate, files: targetFiles }) => {
+  if (slate && !slate.isPublic) return;
+  const files = Arrays.filterPublic(targetFiles);
+  if (!files.length) {
+    return;
+  }
+  try {
+    const userURL = getUserURL(user);
+    const extra =
+      files.length > 1
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        : "";
+    let message;
+    if (slate) {
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
+      message = `*${userURL}* uploaded ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
+    } else {
+      const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+      message = `*${userURL}* uploaded ${objectURL}${extra}`;
+    }
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const download = ({ user, files: targetFiles }) => {
+  const files = Arrays.filterPublic(targetFiles);
+  if (!files.length) {
+    return;
+  }
+  try {
+    const userURL = getUserURL(user);
+    const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+    const extra =
+      files.length > 1
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        : "";
+    const message = `*${userURL}* downloaded ${objectURL}${extra}`;
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// export const addToSlate = ({ slate, user, files: targetFiles }) => {
+//   if (!slate.isPublic) return;
+//   const files = Arrays.filterPublic(targetFiles);
+//   if (!files.length) {
+//     return;
+//   }
+//   try {
+//     const userURL = getUserURL(user);
+//     const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
+//     const extra =
+//       files.length > 1
+//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+//         : "";
+//     const message = `*${userURL}* saved ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
+
+//     Social.sendSlackMessage(message);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+export const saveCopy = ({ slate, user, files: targetFiles }) => {
+  if (slate && !slate.isPublic) return;
+  const files = Arrays.filterPublic(targetFiles);
+  if (!files.length) {
+    return;
+  }
+  try {
+    const userURL = getUserURL(user);
+    const extra =
+      files.length > 1
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        : "";
+    let message;
+    if (slate) {
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
+      message = `*${userURL}* saved ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
+    } else {
+      const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+      message = `*${userURL}* saved ${objectURL}${extra}`;
+    }
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// export const saveCopy = ({ user, files: targetFiles }) => {
+//   const files = Arrays.filterPublic(targetFiles);
+//   if (!files.length) {
+//     return;
+//   }
+//   try {
+//     const userURL = getUserURL(user);
+//     const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+//     const extra =
+//       files.length > 1
+//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+//         : "";
+//     const message = `*${userURL}* saved ${objectURL}${extra}`;
+
+//     Social.sendSlackMessage(message);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+export const createSlate = ({ user, slate }) => {
+  if (!slate.isPublic) return;
+  try {
+    const userURL = getUserURL(user);
+    const message = `*${userURL}* created a collection: https://slate.host/${user.username}/${slate.slatename}`;
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const createUser = ({ user }) => {
+  try {
+    const userURL = getUserURL(user);
+    const message = `*${userURL}* joined slate`;
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const subscribeUser = ({ user, targetUser }) => {
+  try {
+    const userURL = getUserURL(user);
+    const targetUserURL = getUserURL(targetUser);
+
+    const message = `*${userURL}* followed ${targetUserURL}`;
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const subscribeSlate = ({ user, targetSlate }) => {
+  if (!targetSlate.isPublic) return;
+  try {
+    const userURL = getUserURL(user);
+
+    const targetSlatePageURL = `https://slate.host/$/${targetSlate.id}`;
+    const targetSlateURL = `<${targetSlatePageURL}|${targetSlate.slateId}>`;
+
+    const message = `*${userURL}* subscribed to ${targetSlateURL}`;
+
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    console.log(e);
+  }
+};

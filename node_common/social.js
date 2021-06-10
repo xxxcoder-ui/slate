@@ -12,6 +12,7 @@ const textileURL = `https://hooks.slack.com/services/${Environment.TEXTILE_SLACK
 const textileWebhook = new IncomingWebhook(textileURL);
 
 export const sendSlackMessage = (message) => {
+  console.log({ slackMessage: message });
   if (Strings.isEmpty(Environment.SOCIAL_SLACK_WEBHOOK_KEY)) {
     return;
   }

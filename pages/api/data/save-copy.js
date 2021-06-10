@@ -2,12 +2,16 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as ArrayUtilities from "~node_common/array-utilities";
+import * as Monitor from "~/node_common/monitor";
 
 /**
  * Save copy is equivalent to downloading then reuploading. So an entirely new files table entry should
  * be created with a new id, ownerId, and createdAt
  */
 export default async (req, res) => {
+  let decorator = "SERVER_SAVE_COPY";
+
   const id = Utilities.getIdFromCookie(req);
   if (!id) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
@@ -44,10 +48,7 @@ export default async (req, res) => {
     });
   }
 
-  let decorator = "SERVER_SAVE_COPY";
-
   const slateId = req.body.data.slate?.id;
-
   let slate;
   if (slateId) {
     slate = await Data.getSlateById({ id: slateId });
@@ -58,55 +59,43 @@ export default async (req, res) => {
     }
   }
 
-  const duplicateFiles = await Data.getFilesByCids({
-    ownerId: user.id,
-    cids: files.map((file) => file.cid),
-  });
+  let { duplicateFiles, filteredFiles } = ArrayUtilities.removeDuplicateUserFiles({ files, user });
 
-  const duplicateCids = duplicateFiles.map((file) => file.cid);
+  const foundFiles = await Data.getFilesByCids({ ids: files.map((file) => file.cid) });
+  const foundCids = foundFiles.map((file) => file.cid);
 
-  const foundFiles = await Data.getFilesByIds({ ids: files.map((file) => file.id) });
+  filteredFiles = filteredFiles
+    .filter((file) => foundCids.includes(file.cid)) //NOTE(martina): make sure the file being copied exists
+    .map(({ createdAt, id, likeCount, downloadCount, saveCount, ...keepAttrs }) => {
+      //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
+      return { ...keepAttrs, isPublic: slate?.isPublic || false };
+    });
 
-  const foundIds = foundFiles.map((file) => file.id);
+  let copiedFiles = [];
 
-  let newFiles = [];
-  for (let file of files) {
-    const cid = file.cid;
-    if (duplicateCids.includes(cid)) continue; //NOTE(martina): cannot have two of the same cid in a person's files
-
-    if (!foundIds.includes(file.id)) continue; //NOTE(martina): make sure the file being copied exists
-
-    console.log("before add existing cid to data");
+  for (let file of filteredFiles) {
     let response = await Utilities.addExistingCIDToData({
       buckets,
       key: bucketKey,
       path: bucketRoot.path,
-      cid,
+      cid: file.cid,
     });
-    console.log("after add existing cid to data");
 
-    if (!response || response.error) {
-      continue;
+    if (response && !response.error) {
+      copiedFiles.push(file);
     }
-
-    //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
-    delete file.createdAt;
-    delete file.id;
-    delete file.likeCount;
-    delete file.downloadCount;
-    delete file.saveCount;
-    file.isPublic = slate?.isPublic || false;
-    newFiles.push(file);
-  }
-  let copiedFiles = [];
-  if (newFiles?.length) {
-    copiedFiles = (await Data.createFile({ owner: user, files: newFiles, saveCopy: true })) || [];
   }
 
-  let added = copiedFiles?.length || 0;
+  let createdFiles = [];
+  if (copiedFiles?.length) {
+    createdFiles =
+      (await Data.createFile({ owner: user, files: copiedFiles, saveCopy: true })) || [];
+  }
+
+  let added = createdFiles?.length || 0;
 
   //NOTE(martina): adding to the slate if there is one
-  const filesToAddToSlate = copiedFiles.concat(duplicateFiles); //NOTE(martina): files that are already owned by the user are included in case they aren't yet in that specific slate
+  const filesToAddToSlate = createdFiles.concat(duplicateFiles); //NOTE(martina): files that are already owned by the user are included in case they aren't yet in that specific slate
   if (slate && filesToAddToSlate.length) {
     const { decorator: returnedDecorator, added: addedToSlate } = await addToSlate({
       slate,
@@ -120,7 +109,11 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
+  if (slate.isPublic) {
+    SearchManager.updateFile(createdFiles, "ADD");
+  }
+  ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });]
+  Monitor.saveCopy({ user, files: createdFiles });
 
   return res.status(200).send({
     decorator,
@@ -129,38 +122,21 @@ export default async (req, res) => {
 };
 
 const addToSlate = async ({ slate, files, user }) => {
-  let duplicateCids = await Data.getSlateFilesByCids({
-    slateId: slate.id,
-    cids: files.map((file) => file.cid),
+  let { filteredFiles } = ArrayUtilities.removeDuplicateSlateFiles({
+    files,
+    slate,
   });
 
-  let newFiles = files;
-  if (duplicateCids?.length) {
-    duplicateCids = duplicateCids.map((file) => file.cid);
-    newFiles = files.filter((file) => {
-      if (duplicateCids.includes(file.cid)) return false;
-      return true;
-    });
-  }
-
-  if (!newFiles.length) {
+  if (!filteredFiles.length) {
     return { added: 0 };
   }
 
-  let response = await Data.createSlateFiles({ owner: user, slate, files: newFiles });
+  let response = await Data.createSlateFiles({ owner: user, slate, files: filteredFiles });
   if (!response || response.error) {
     return { decorator: "SERVER_SAVE_COPY_ADD_TO_SLATE_FAILED", added: 0 };
   }
 
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 
-  if (slate.isPublic) {
-    const privacyUpdate = await Data.updateFilesPublic({
-      ids: files.map((file) => file.id),
-      ownerId: user.id,
-    });
-
-    SearchManager.updateFile(files, "ADD");
-  }
   return { added: response.length };
 };

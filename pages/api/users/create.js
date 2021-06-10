@@ -123,5 +123,5 @@ export default async (req, res) => {
     templateId: welcomeTemplateId,
   });
 
-  // Monitor.createUser({ user });
+  Monitor.createUser({ user });
 };

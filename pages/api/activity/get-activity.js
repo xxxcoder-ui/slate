@@ -31,8 +31,6 @@ export default async (req, res) => {
 
     const fetchedFollowing = await Data.getFollowingByUserId({ ownerId: id });
 
-    console.log(fetchedFollowing);
-
     if (fetchedFollowing && !fetchedFollowing.error) {
       following = fetchedFollowing.map((sub) => sub.id);
     }

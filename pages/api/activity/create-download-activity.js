@@ -2,6 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Serializers from "~/node_common/serializers";
 import * as Strings from "~/common/strings";
+import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -34,6 +35,7 @@ export default async (req, res) => {
   }
 
   await Data.createDownload({ userId: id, files });
+  Monitor.download({ user, files });
 
   return res.status(200).send({ decorator: "SERVER_CREATE_DOWNLOAD_ACTIVITY", data: true });
 };

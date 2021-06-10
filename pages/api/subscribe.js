@@ -1,6 +1,7 @@
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as ViewerManager from "~/node_common/managers/viewer";
+import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -123,10 +124,12 @@ export default async (req, res) => {
 
   if (targetUser) {
     ViewerManager.hydratePartial(id, { following: true });
+    Monitor.subscribeUser({ user, targetUser });
   }
 
   if (targetSlate) {
     ViewerManager.hydratePartial(id, { subscriptions: true });
+    Monitor.subscribeSlate({ user, targetSlate });
   }
 
   return res.status(200).send({

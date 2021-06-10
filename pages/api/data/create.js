@@ -2,6 +2,8 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as ArrayUtilities from "~node_common/array-utilities";
+import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -43,22 +45,21 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_CREATE_FILE_NO_FILE_PROVIDED", error: true });
   }
 
-  const duplicateFiles = await Data.getFilesByCids({
-    ownerId: user.id,
-    cids: files.map((file) => file.cid),
-  });
+  if (slate.isPublic) {
+    files = files.map((file) => {
+      return { ...file, isPublic: true };
+    });
+  }
 
-  const duplicateCids = duplicateFiles.map((file) => file.cid);
-
-  let newFiles = files.filter((file) => !duplicateCids.includes(file.cid));
+  let { duplicateFiles, filteredFiles } = ArrayUtilities.removeDuplicateUserFiles({ files, user });
 
   // if (!newFiles.length) {
   //   return res.status(400).send({ decorator: "SERVER_CREATE_FILE_DUPLICATE", error: true });
   // }
 
   let createdFiles = [];
-  if (newFiles?.length) {
-    createdFiles = (await Data.createFile({ owner: user, files: newFiles })) || [];
+  if (filteredFiles?.length) {
+    createdFiles = (await Data.createFile({ owner: user, files: filteredFiles })) || [];
 
     if (!createdFiles) {
       return res.status(404).send({ decorator: "SERVER_CREATE_FILE_FAILED", error: true });
@@ -84,7 +85,11 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
+  if (slate.isPublic) {
+    SearchManager.updateFile(createdFiles, "ADD");
+  }
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
+  Monitor.upload({ user, slate, files: createdFiles });
 
   return res.status(200).send({
     decorator,
@@ -93,33 +98,21 @@ export default async (req, res) => {
 };
 
 const addToSlate = async ({ slate, files, user }) => {
-  let duplicateCids = await Data.getSlateFilesByCids({
-    slateId: slate.id,
-    cids: files.map((file) => file.cid),
+  let { filteredFiles } = ArrayUtilities.removeDuplicateSlateFiles({
+    files,
+    slate,
   });
 
-  let newFiles = files;
-  if (duplicateCids?.length) {
-    duplicateCids = duplicateCids.map((file) => file.cid);
-    newFiles = files.filter((file) => {
-      if (duplicateCids.includes(file.cid)) return false;
-      return true;
-    });
-  }
-
-  if (!newFiles.length) {
+  if (!filteredFiles.length) {
     return { added: 0 };
   }
 
-  let response = await Data.createSlateFiles({ owner: user, slate, files: newFiles });
+  let response = await Data.createSlateFiles({ owner: user, slate, files: filteredFiles });
   if (!response || response.error) {
-    return { decorator: "SERVER_SAVE_COPY_ADD_TO_SLATE_FAILED", added: 0 };
+    return { decorator: "SERVER_CREATE_FILE_ADD_TO_SLATE_FAILED", added: 0 };
   }
 
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 
-  if (slate.isPublic) {
-    SearchManager.updateFile(files, "ADD");
-  }
   return { added: response.length };
 };
