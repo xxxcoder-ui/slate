@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
@@ -11,44 +12,51 @@ import { AspectRatio } from "~/components/system";
 import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
 
+const STYLES_BACKGROUND_LIGHT = (theme) => css`
+  background-color: ${theme.system.grayLight5};
+  border-radius: 8px;
+  transform: translateZ(0);
+`;
+
 const STYLES_WRAPPER = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   border-radius: 8px;
   overflow: hidden;
 `;
 
-const STYLES_OBJECT_CONTAINER = (theme) => css`
-  flex-grow: 1;
-  width: 100%;
-  background-color: ${theme.system.grayLight5};
-`;
-
-const STYLES_BACKGROUND_LIGHT = (theme) => css`
-  background-color: ${theme.system.grayLight5};
-  border-radius: 8px;
-`;
-
 const STYLES_DESCRIPTION = (theme) => css`
   box-sizing: border-box;
-  position: relative;
-  background-color: ${theme.system.bgLight};
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 45.31%);
-  padding: 24px 16px 12px;
   width: 100%;
-  h4 {
-    margin-bottom: 2px;
+  padding: 12px 16px 12px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: ${theme.system.bgLight};
+
+  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+    backdrop-filter: blur(75px);
+    -webkit-backdrop-filter: blur(25px);
   }
 `;
 
-const STYLES_DESCRIPTION_HEADING = (theme) => css`
+const STYLES_DESCRIPTION_HEADING = css`
   overflow: hidden;
   line-height: 1.5;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    font-size: 14px;
+  }
+`;
+
+const STYLES_DESCRIPTION_META = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
 `;
 
 const STYLES_METRICS = (theme) => css`
@@ -62,23 +70,6 @@ const STYLES_REACTIONS_CONTAINER = css`
   & > * + * {
     margin-left: 32px;
   }
-`;
-
-const STYLES_DESCRIPTION_TAG = (theme) => css`
-  position: absolute;
-  top: 0%;
-  left: 12px;
-  transform: translateY(-50%);
-  display: inline-block;
-  background-color: ${theme.system.bgBlurLight6};
-  border: 1px solid ${theme.system.grayLight4};
-  text-transform: uppercase;
-  border-radius: 4px;
-  padding: 2px 8px;
-`;
-
-const STYLES_TEXT_SMALL = (theme) => css`
-  font-size: ${theme.typescale.lvlN1};
 `;
 
 const STYLES_REACTION = css`
@@ -96,30 +87,43 @@ const STYLES_PROFILE_IMAGE = css`
   height: 20px;
   width: 20px;
   border-radius: 2px;
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: none;
-  }
 `;
 
-export default function ObjectPreviewPremitive({ children, likes = 0, saves = 0, type, title }) {
+const STYLES_DESCRIPTION_TAG = (theme) => css`
+  position: absolute;
+  top: -32px;
+  left: 12px;
+  text-transform: uppercase;
+  border: 1px solid ${theme.system.grayLight5};
+  background-color: ${theme.system.bgLight};
+  padding: 2px 8px;
+  border-radius: 4px;
+`;
+
+export default function ObjectPreviewPremitive({
+  children,
+  likes = 0,
+  saves = 0,
+  type,
+  title,
+  ...props
+}) {
   return (
-    <AspectRatio ratio={347 / 248} css={STYLES_BACKGROUND_LIGHT}>
+    <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT} {...props}>
       <div css={STYLES_WRAPPER}>
-        <div css={STYLES_OBJECT_CONTAINER}>{children}</div>
+        <AspectRatio ratio={1}>
+          <div>{children}</div>
+        </AspectRatio>
+
         <article css={STYLES_DESCRIPTION}>
-          <div css={STYLES_DESCRIPTION_TAG}>
-            <P css={STYLES_TEXT_SMALL}>{type}</P>
-          </div>
+          {type && (
+            <div css={STYLES_DESCRIPTION_TAG}>
+              <P css={Styles.SMALL_TEXT}>{type}</P>
+            </div>
+          )}
           <H4 css={STYLES_DESCRIPTION_HEADING}>{title}</H4>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: "12px",
-            }}
-          >
+          <div css={STYLES_DESCRIPTION_META}>
             <div css={STYLES_REACTIONS_CONTAINER}>
               <div css={STYLES_REACTION}>
                 <SVG.Heart />
