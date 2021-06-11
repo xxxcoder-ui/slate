@@ -2,7 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
-import * as ArrayUtilities from "~node_common/array-utilities";
+import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 
 /**
@@ -59,9 +59,12 @@ export default async (req, res) => {
     }
   }
 
-  let { duplicateFiles, filteredFiles } = ArrayUtilities.removeDuplicateUserFiles({ files, user });
+  let { duplicateFiles, filteredFiles } = await ArrayUtilities.removeDuplicateUserFiles({
+    files,
+    user,
+  });
 
-  const foundFiles = await Data.getFilesByCids({ ids: files.map((file) => file.cid) });
+  const foundFiles = await Data.getFilesByCids({ cids: files.map((file) => file.cid) });
   const foundCids = foundFiles.map((file) => file.cid);
 
   filteredFiles = filteredFiles
@@ -113,7 +116,10 @@ export default async (req, res) => {
     SearchManager.updateFile(createdFiles, "ADD");
   }
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
-  Monitor.saveCopy({ user, files: createdFiles });
+
+  if (!slate) {
+    Monitor.saveCopy({ user, files: filteredFiles });
+  }
 
   return res.status(200).send({
     decorator,
@@ -122,7 +128,7 @@ export default async (req, res) => {
 };
 
 const addToSlate = async ({ slate, files, user }) => {
-  let { filteredFiles } = ArrayUtilities.removeDuplicateSlateFiles({
+  let { filteredFiles } = await ArrayUtilities.removeDuplicateSlateFiles({
     files,
     slate,
   });
@@ -135,6 +141,8 @@ const addToSlate = async ({ slate, files, user }) => {
   if (!response || response.error) {
     return { decorator: "SERVER_SAVE_COPY_ADD_TO_SLATE_FAILED", added: 0 };
   }
+
+  Monitor.saveCopy({ user, slate, files: filteredFiles });
 
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 

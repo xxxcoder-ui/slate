@@ -4,11 +4,15 @@ import * as Constants from "~/common/constants";
 import { css } from "@emotion/react";
 import { useState } from "react";
 
-import { ButtonPrimaryFull, ButtonSecondaryFull, ButtonWarningFull } from "~/components/system/components/Buttons.js";
+import {
+  ButtonPrimaryFull,
+  ButtonSecondaryFull,
+  ButtonWarningFull,
+} from "~/components/system/components/Buttons.js";
 import { Input } from "~/components/system/components/Input.js";
 import { Boundary } from "~/components/system/components/fragments/Boundary.js";
 
-const STYLES_TRANSPARENT_BG = css `
+const STYLES_TRANSPARENT_BG = css`
   background-color: ${Constants.system.bgBlurGrayBlack};
   z-index: ${Constants.zindex.modal};
   width: 100vw;
@@ -18,7 +22,7 @@ const STYLES_TRANSPARENT_BG = css `
   top: 0;
 `;
 
-const STYLES_MAIN_MODAL = css `
+const STYLES_MAIN_MODAL = css`
   background-color: ${Constants.system.white};
   width: 380px;
   height: auto;
@@ -31,20 +35,21 @@ const STYLES_MAIN_MODAL = css `
   text-align: left;
 `;
 
-const STYLES_HEADER = css `
+const STYLES_HEADER = css`
   color: ${Constants.system.black};
   font-size: ${Constants.typescale.lvl1};
   font-family: ${Constants.font.semiBold};
+  word-break: break-all;
 `;
 
-const STYLES_SUB_HEADER = css `
+const STYLES_SUB_HEADER = css`
   color: ${Constants.system.textGray};
   font-size: ${Constants.typescale.lvl0};
   font-family: ${Constants.font.text};
   margin-top: 16px;
 `;
 
-const STYLES_INPUT_HEADER = css `
+const STYLES_INPUT_HEADER = css`
   color: ${Constants.system.black};
   font-size: ${Constants.typescale.lvlN1};
   font-family: ${Constants.font.semiBold};
@@ -57,28 +62,40 @@ export const ConfirmationModal = (props) => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   const lang = {
-    deleteText: 'Delete',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel'
-  }
+    deleteText: "Delete",
+    confirmText: "Confirm",
+    cancelText: "Cancel",
+  };
 
   const _handleChange = (e) => {
     if (e.target.value === props.matchValue) {
-      setIsEnabled(true); 
-      return; 
-    } 
-    setIsEnabled(false); 
+      setIsEnabled(true);
+      return;
+    }
+    setIsEnabled(false);
+  };
+
+  let deleteButton = (
+    <ButtonWarningFull disabled={true}>{props.buttonText || lang.deleteText}</ButtonWarningFull>
+  );
+  if (isEnabled) {
+    deleteButton = (
+      <ButtonWarningFull onClick={() => props.callback(true)}>
+        {props.buttonText || lang.deleteText}
+      </ButtonWarningFull>
+    );
   }
 
-  let deleteButton = <ButtonWarningFull disabled={true}>{props.buttonText || lang.deleteText}</ButtonWarningFull>;
+  let confirmButton = (
+    <ButtonPrimaryFull disabled={true}>{props.buttonText || lang.confirmText}</ButtonPrimaryFull>
+  );
   if (isEnabled) {
-    deleteButton = <ButtonWarningFull onClick={() => props.callback(true)}>{props.buttonText || lang.deleteText}</ButtonWarningFull>;
-  } 
-
-  let confirmButton = <ButtonPrimaryFull disabled={true}>{props.buttonText || lang.confirmText}</ButtonPrimaryFull>;
-  if (isEnabled) {
-    confirmButton = <ButtonPrimaryFull onClick={() => props.callback(true)}>{props.buttonText || lang.confirmText}</ButtonPrimaryFull>;
-  } 
+    confirmButton = (
+      <ButtonPrimaryFull onClick={() => props.callback(true)}>
+        {props.buttonText || lang.confirmText}
+      </ButtonPrimaryFull>
+    );
+  }
 
   return (
     <div css={STYLES_TRANSPARENT_BG}>
@@ -86,41 +103,65 @@ export const ConfirmationModal = (props) => {
         <div css={STYLES_MAIN_MODAL}>
           <div css={STYLES_HEADER}>{props.header}</div>
           <div css={STYLES_SUB_HEADER}>{props.subHeader}</div>
-          {props.type === "DELETE" &&
+          {props.type === "DELETE" && (
             <>
               {props.withValidation ? (
                 <>
                   <div css={STYLES_INPUT_HEADER}>{props.inputHeader}</div>
                   <Input placeholder={props.inputPlaceholder} onChange={_handleChange} />
-                  <ButtonSecondaryFull onClick={() => props.callback(false)} style={{margin: '24px 0px 8px'}}>{lang.cancelText}</ButtonSecondaryFull>
+                  <ButtonSecondaryFull
+                    onClick={() => props.callback(false)}
+                    style={{ margin: "24px 0px 8px" }}
+                  >
+                    {lang.cancelText}
+                  </ButtonSecondaryFull>
                   {deleteButton}
                 </>
               ) : (
                 <>
-                  <ButtonSecondaryFull onClick={() => props.callback(false)} style={{ margin: '24px 0px 8px' }}>{lang.cancelText}</ButtonSecondaryFull>
-                  <ButtonWarningFull onClick={() => props.callback(true)}>{props.buttonText || lang.deleteText}</ButtonWarningFull>
+                  <ButtonSecondaryFull
+                    onClick={() => props.callback(false)}
+                    style={{ margin: "24px 0px 8px" }}
+                  >
+                    {lang.cancelText}
+                  </ButtonSecondaryFull>
+                  <ButtonWarningFull onClick={() => props.callback(true)}>
+                    {props.buttonText || lang.deleteText}
+                  </ButtonWarningFull>
                 </>
               )}
             </>
-          }
+          )}
 
-          {props.type === "CONFIRM" &&
+          {props.type === "CONFIRM" && (
             <>
               {props.withValidation ? (
                 <>
                   <div css={STYLES_INPUT_HEADER}>{props.inputHeader}</div>
                   <Input placeholder={props.inputPlaceholder} onChange={_handleChange} />
-                  <ButtonSecondaryFull onClick={() => props.callback(false)} style={{ margin: '24px 0px 8px' }}>{lang.cancelText}</ButtonSecondaryFull>
+                  <ButtonSecondaryFull
+                    onClick={() => props.callback(false)}
+                    style={{ margin: "24px 0px 8px" }}
+                  >
+                    {lang.cancelText}
+                  </ButtonSecondaryFull>
                   {confirmButton}
                 </>
               ) : (
                 <>
-                  <ButtonSecondaryFull onClick={() => props.callback(false)} style={{ margin: '24px 0px 8px' }}>{lang.cancelText}</ButtonSecondaryFull>
-                  <ButtonPrimaryFull onClick={() => props.callback(true)}>{props.buttonText || lang.confirmText}</ButtonPrimaryFull>
+                  <ButtonSecondaryFull
+                    onClick={() => props.callback(false)}
+                    style={{ margin: "24px 0px 8px" }}
+                  >
+                    {lang.cancelText}
+                  </ButtonSecondaryFull>
+                  <ButtonPrimaryFull onClick={() => props.callback(true)}>
+                    {props.buttonText || lang.confirmText}
+                  </ButtonPrimaryFull>
                 </>
               )}
             </>
-          }
+          )}
         </div>
       </Boundary>
     </div>

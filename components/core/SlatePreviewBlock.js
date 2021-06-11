@@ -309,7 +309,6 @@ export class SlatePreviewBlock extends React.Component {
         />
       </React.Fragment>
     );
-    console.log(slate);
 
     return (
       <div css={STYLES_BLOCK}>

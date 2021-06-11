@@ -249,11 +249,15 @@ export class GlobalCarousel extends React.Component {
     }
     if (this.props.onChange) {
       let index = this.props.index + 1;
-      if (index >= this.props.objects.length) return;
+      if (index >= this.props.objects.length) {
+        this._handleClose();
+        return;
+      }
       this.props.onChange(index);
     } else {
       let index = this.findSelectedIndex() + 1;
       if (index >= this.props.objects.length) {
+        this._handleClose();
         return;
       }
       let cid = this.props.objects[index].cid;
@@ -279,11 +283,15 @@ export class GlobalCarousel extends React.Component {
     }
     if (this.props.onChange) {
       let index = this.props.index - 1;
-      if (index < 0) return;
+      if (index < 0) {
+        this._handleClose();
+        return;
+      }
       this.props.onChange(index);
     } else {
       let index = this.findSelectedIndex() - 1;
       if (index < 0) {
+        this._handleClose();
         return;
       }
       let cid = this.props.objects[index].cid;
@@ -398,6 +406,7 @@ export class GlobalCarousel extends React.Component {
             onClose={this._handleClose}
             isRepost={isRepost}
             onAction={this.props.onAction}
+            onNext={this._handleNext}
           />
         </span>
       </div>

@@ -11,15 +11,17 @@ export const mapToIds = (arr = []) => {
 };
 
 export const countPublic = (arr = []) => {
-  return arr.reduce((item, count) => {
+  const reducer = (count, item) => {
     if (item.isPublic) return count + 1;
     else return count;
-  });
+  };
+  return arr.reduce(reducer, 0);
 };
 
 export const countPrivate = (arr = []) => {
-  return arr.reduce((item, count) => {
+  const reducer = (count, item) => {
     if (!item.isPublic) return count + 1;
     else return count;
-  });
+  };
+  return arr.reduce(reducer, 0);
 };

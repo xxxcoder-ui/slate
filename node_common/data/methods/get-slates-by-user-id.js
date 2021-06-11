@@ -4,8 +4,6 @@ import * as Constants from "~/node_common/constants";
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ ownerId, sanitize = false, includeFiles = false, publicOnly = false }) => {
-  console.log("inside get slates by user id");
-  console.log(Constants.slateProperties);
   return await runQuery({
     label: "GET_SLATES_BY_USER_ID",
     queryFn: async (DB) => {
@@ -58,9 +56,7 @@ export default async ({ ownerId, sanitize = false, includeFiles = false, publicO
             .orderBy("updatedAt", "desc");
         }
       }
-      console.log("STARTS HERE");
-      console.log(query[0]);
-      console.log("ENDS HERE");
+
       if (!query || query.error) {
         return [];
       }

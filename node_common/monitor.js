@@ -58,7 +58,7 @@ export const upload = ({ user, slate, files: targetFiles }) => {
         : "";
     let message;
     if (slate) {
-      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
       message = `*${userURL}* uploaded ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
@@ -125,7 +125,7 @@ export const saveCopy = ({ slate, user, files: targetFiles }) => {
         : "";
     let message;
     if (slate) {
-      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
       message = `*${userURL}* saved ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;

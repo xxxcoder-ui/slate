@@ -21,7 +21,7 @@ export const system = {
   darkGray: "#b2b2b2",
   grayBlack: "#666666",
   pitchBlack: "#0c0c0c",
-  brand: "#0666bb",
+  brand: "#0084FF", //0666bb
   link: "#2935ff",
   slate: "#27292e",
   moonstone: "#807d78",

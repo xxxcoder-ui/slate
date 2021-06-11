@@ -30,7 +30,7 @@ const STYLES_BUTTON_PRIMARY = css`
   color: ${Constants.system.white};
 
   :hover {
-    background-color: #065ca8;
+    background-color: #0079eb;
   }
 
   :focus {

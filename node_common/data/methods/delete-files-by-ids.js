@@ -1,9 +1,12 @@
+import * as Arrays from "~/common/arrays";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ ids, ownerId }) => {
   return await runQuery({
     label: "DELETE_FILES_BY_IDS",
     queryFn: async (DB) => {
+      console.log("inside delete files by ids");
       // const repostedSlateFiles = await DB.from("slate_files")
       //   .join("slates", "slates.id", "=", "slate_files.slateId")
       //   .whereNot("slates.ownerId", "=", ownerId)
@@ -22,8 +25,8 @@ export default async ({ ids, ownerId }) => {
       const slateFiles = await DB("slate_files").whereIn("fileId", ids).del().returning("slateId");
 
       let deletionCounts = {};
-      for (let res of slateFiles) {
-        const slateId = res.slateId;
+
+      for (let slateId of slateFiles) {
         if (deletionCounts[slateId]) {
           deletionCounts[slateId] += 1;
         } else {
@@ -41,16 +44,13 @@ export default async ({ ids, ownerId }) => {
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");
 
-      const publicCount = files.reduce((count, file) => {
-        if (file.isPublic) {
-          return count + 1;
-        }
-        return count;
-      });
+      const publicCount = Arrays.countPublic(files);
 
-      const summaryQuery = await DB.from("users")
-        .where("id", ownerId)
-        .decrement("fileCount", publicCount);
+      if (publicCount) {
+        const summaryQuery = await DB.from("users")
+          .where("id", ownerId)
+          .decrement("fileCount", publicCount);
+      }
 
       return files.length === ids.length;
     },

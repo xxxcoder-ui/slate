@@ -122,12 +122,12 @@ export default async (req, res) => {
     }
   }
 
-  if (targetUser) {
+  if (targetUser && !existingResponse) {
     ViewerManager.hydratePartial(id, { following: true });
     Monitor.subscribeUser({ user, targetUser });
   }
 
-  if (targetSlate) {
+  if (targetSlate && !existingResponse) {
     ViewerManager.hydratePartial(id, { subscriptions: true });
     Monitor.subscribeSlate({ user, targetSlate });
   }

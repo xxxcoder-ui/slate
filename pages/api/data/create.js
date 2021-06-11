@@ -2,7 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
-import * as ArrayUtilities from "~node_common/array-utilities";
+import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 
 export default async (req, res) => {
@@ -45,13 +45,18 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_CREATE_FILE_NO_FILE_PROVIDED", error: true });
   }
 
-  if (slate.isPublic) {
+  if (slate?.isPublic) {
     files = files.map((file) => {
       return { ...file, isPublic: true };
     });
   }
 
-  let { duplicateFiles, filteredFiles } = ArrayUtilities.removeDuplicateUserFiles({ files, user });
+  let { duplicateFiles, filteredFiles } = await ArrayUtilities.removeDuplicateUserFiles({
+    files,
+    user,
+  });
+  console.log(filteredFiles);
+  console.log(duplicateFiles);
 
   // if (!newFiles.length) {
   //   return res.status(400).send({ decorator: "SERVER_CREATE_FILE_DUPLICATE", error: true });
@@ -61,7 +66,7 @@ export default async (req, res) => {
   if (filteredFiles?.length) {
     createdFiles = (await Data.createFile({ owner: user, files: filteredFiles })) || [];
 
-    if (!createdFiles) {
+    if (!createdFiles?.length) {
       return res.status(404).send({ decorator: "SERVER_CREATE_FILE_FAILED", error: true });
     }
 
@@ -69,6 +74,7 @@ export default async (req, res) => {
       return res.status(500).send({ decorator: createdFiles.decorator, error: createdFiles.error });
     }
   }
+  console.log(createdFiles);
 
   let added = createdFiles?.length || 0;
 
@@ -85,11 +91,14 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  if (slate.isPublic) {
+  if (slate?.isPublic) {
     SearchManager.updateFile(createdFiles, "ADD");
   }
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
-  Monitor.upload({ user, slate, files: createdFiles });
+
+  if (!slate) {
+    Monitor.upload({ user, files: filteredFiles });
+  }
 
   return res.status(200).send({
     decorator,
@@ -98,7 +107,7 @@ export default async (req, res) => {
 };
 
 const addToSlate = async ({ slate, files, user }) => {
-  let { filteredFiles } = ArrayUtilities.removeDuplicateSlateFiles({
+  let { filteredFiles } = await ArrayUtilities.removeDuplicateSlateFiles({
     files,
     slate,
   });
@@ -111,6 +120,8 @@ const addToSlate = async ({ slate, files, user }) => {
   if (!response || response.error) {
     return { decorator: "SERVER_CREATE_FILE_ADD_TO_SLATE_FAILED", added: 0 };
   }
+
+  Monitor.upload({ user, slate, files: filteredFiles });
 
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 

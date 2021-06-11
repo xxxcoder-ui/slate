@@ -471,6 +471,7 @@ class CarouselSidebar extends React.Component {
     }
 
     UserBehaviors.deleteFiles(id);
+    this.props.onNext();
   };
 
   _handleAdd = async (slate) => {
@@ -512,6 +513,7 @@ class CarouselSidebar extends React.Component {
     this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
 
     UserBehaviors.removeFromSlate({ slate: this.props.data, ids: [this.props.file.id] });
+    this.props.onNext();
   };
 
   _handleToggleVisibility = async (e) => {
