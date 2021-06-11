@@ -263,7 +263,7 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
             }
           }
         } catch (e) {
-          console.log(e);
+          Logging.error(e);
         }
       }, 500);
     });
