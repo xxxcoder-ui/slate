@@ -520,6 +520,13 @@ export const createPasswordResetVerification = async (data) => {
   });
 };
 
+export const resendPasswordResetVerification = async (data) => {
+  return await returnJSON(`/api/verifications/password-reset/resend`, {
+    ...API_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const verifyPasswordResetEmail = async (data) => {
   return await returnJSON(`/api/verifications/password-reset/verify`, {
     ...API_OPTIONS,
