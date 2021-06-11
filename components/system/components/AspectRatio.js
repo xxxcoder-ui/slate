@@ -14,6 +14,7 @@ const STYLES_WRAPPER = css`
 
 const GET_ASPECT_STYLES = ({ minWidth, maxWith, ratio }) => css`
   width: 100%;
+  height: 0;
   padding-bottom: ${ratio * 100}%;
   min-width: ${minWidth};
   max-width: ${maxWith};
