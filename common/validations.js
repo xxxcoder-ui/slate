@@ -229,6 +229,17 @@ export const isEpubType = (type = "") => {
   }
 };
 
+export const is3dFile = (filename = "") => {
+  return Utilities.endsWithAny(
+    [".stl", ".obj", ".fbx", ".blend", ".c4d", ".glb", ".dae", ".3ds", ".wrl"],
+    filename.toLowerCase()
+  );
+};
+
+export const isCodeFile = (filename = "") => {
+  return Utilities.endsWithAny([".js"], filename.toLowerCase());
+};
+
 export const isFontFile = (fileName = "") => {
   return Utilities.endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
 };
