@@ -562,7 +562,6 @@ export default class DataView extends React.Component {
     const url = Strings.getURLfromCID(object.cid);
     const title = object.filename || object.data.name;
     const type = object.data.type;
-    console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 

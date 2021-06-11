@@ -2,6 +2,7 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 import { v4 as uuid } from "uuid";
 import { MAX_BUCKET_COUNT, MIN_ARCHIVE_SIZE_BYTES } from "~/node_common/constants";
@@ -74,7 +75,7 @@ export default async (req, res) => {
     });
   }
 
-  console.log(`[ deal ] will make a deal for ${items.items.length} items`);
+  Logging.log(`[ deal ] will make a deal for ${items.items.length} items`);
   if (items.items.length < 2) {
     return res.status(500).send({
       decorator: "SERVER_ARCHIVE_NO_FILES",
@@ -82,7 +83,7 @@ export default async (req, res) => {
     });
   }
 
-  console.log(`[ deal ] deal size: ${Strings.bytesToSize(bucketSizeBytes)}`);
+  Logging.log(`[ deal ] deal size: ${Strings.bytesToSize(bucketSizeBytes)}`);
   if (bucketSizeBytes < MIN_ARCHIVE_SIZE_BYTES) {
     return res.status(500).send({
       decorator: "SERVER_ARCHIVE_BUCKET_TOO_SMALL",
@@ -113,7 +114,7 @@ export default async (req, res) => {
     });
   }
 
-  console.log(
+  Logging.log(
     `[ encrypted ] user has ${userBuckets.length} out of ${MAX_BUCKET_COUNT} buckets used.`
   );
   if (userBuckets.length >= MAX_BUCKET_COUNT) {
@@ -140,7 +141,7 @@ export default async (req, res) => {
       ? `encrypted-deal-${uuid()}`
       : `encrypted-data-${uuid()}`;
 
-    console.log(`[ encrypted ] making an ${encryptedBucketName} for this storage deal.`);
+    Logging.log(`[ encrypted ] making an ${encryptedBucketName} for this storage deal.`);
 
     try {
       const newBucket = await buckets.create(encryptedBucketName, true, items.cid);
@@ -160,8 +161,8 @@ export default async (req, res) => {
       });
     }
 
-    console.log(`[ encrypted ] ${encryptedBucketName}`);
-    console.log(`[ encrypted ] ${key}`);
+    Logging.log(`[ encrypted ] ${encryptedBucketName}`);
+    Logging.log(`[ encrypted ] ${key}`);
   } else {
     const newDealBucketName = `open-deal-${uuid()}`;
 
@@ -183,8 +184,8 @@ export default async (req, res) => {
       });
     }
 
-    console.log(`[ normal ] ${newDealBucketName}`);
-    console.log(`[ normal ] ${key}`);
+    Logging.log(`[ normal ] ${newDealBucketName}`);
+    Logging.log(`[ normal ] ${key}`);
   }
 
   // NOTE(jim): Finally make the deal
@@ -192,9 +193,8 @@ export default async (req, res) => {
   let response = {};
   let error = {};
   try {
-    console.log(`[ deal-maker ] deal being made for ${key}`);
+    Logging.log(`[ deal-maker ] deal being made for ${key}`);
     if (req.body.data && req.body.data.settings) {
-      console.log(req.body.data.settings);
       response = await buckets.archive(key, req.body.data.settings);
     } else {
       response = await buckets.archive(key);
@@ -202,7 +202,7 @@ export default async (req, res) => {
   } catch (e) {
     error.message = e.message;
     error.code = e.code;
-    console.log(e.message);
+    Logging.log(e.message);
 
     Social.sendTextileSlackMessage({
       file: "/pages/api/data/archive.js",

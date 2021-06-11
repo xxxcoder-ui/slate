@@ -1,15 +1,17 @@
 import configs from "~/knexfile";
 import knex from "knex";
 
+import * as Logging from "~/common/logging";
+
 const envConfig = configs["development"];
 
-console.log(`SETUP: database`, envConfig);
+Logging.log(`SETUP: database`, envConfig);
 
 const db = knex(envConfig);
 
-console.log(`RUNNING:  setup-database.js`);
+Logging.log(`RUNNING:  setup-database.js`);
 
 Promise.all([db.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')]);
 
-console.log(`FINISHED: setup-database.js`);
-console.log(`          CTRL +C to return to terminal.`);
+Logging.log(`FINISHED: setup-database.js`);
+Logging.log(`          CTRL +C to return to terminal.`);

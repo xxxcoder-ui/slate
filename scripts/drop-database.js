@@ -1,13 +1,15 @@
+import * as Logging from "~/common/logging";
+
 import configs from "~/knexfile";
 import knex from "knex";
 
 const envConfig = configs["development"];
 
-console.log(`SETUP: database`, envConfig);
+Logging.log(`SETUP: database`, envConfig);
 
 const db = knex(envConfig);
 
-console.log(`RUNNING:  drop-database.js`);
+Logging.log(`RUNNING:  drop-database.js`);
 
 Promise.all([
   db.schema.dropTable("users"),
@@ -25,5 +27,5 @@ Promise.all([
   db.schema.dropTable("likes"),
 ]);
 
-console.log(`FINISHED: drop-database.js`);
-console.log(`          CTRL +C to return to terminal.`);
+Logging.log(`FINISHED: drop-database.js`);
+Logging.log(`          CTRL +C to return to terminal.`);

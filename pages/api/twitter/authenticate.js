@@ -2,6 +2,7 @@ import * as Environment from "~/node_common/environment";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 import JWT from "jsonwebtoken";
 
@@ -51,7 +52,7 @@ export default async (req, res) => {
     });
     twitterUser = JSON.parse(response.data);
   } catch (err) {
-    console.log(err);
+    Logging.error(err);
     return res.status(500).send({ decorator: "SERVER_TWITTER_OAUTH_FAILED", error: true });
   }
   if (!twitterUser) {

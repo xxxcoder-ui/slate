@@ -104,15 +104,6 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleAdd = (e) => {
-    // if (
-    //   this.props.allowedTypes &&
-    //   !this.props.allowedTypes.includes(e.detail.type)
-    // ) {
-    //   return;
-    // }
-    // console.log("got here");
-    // if (!e.detail.bubbleRect.width && !e.detail.bubbleRect.height) return;
-    // console.log("had width and height");
     let tooltips = this.state.tooltips;
     tooltips[e.detail.id] = {
       id: e.detail.id,
@@ -139,14 +130,11 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleShow = async (e) => {
-    console.log(this.state.tooltips);
-    console.log(this.state.tooltips[e.detail.id]);
     if (this.state.tooltips[e.detail.id]) {
       let tooltips = this.state.tooltips;
       if (!tooltips[e.detail.id].style) {
         let anchor = tooltips[e.detail.id].root;
         let rect = anchor.getBoundingClientRect();
-        console.log(rect);
         let style = this.getOrientation(
           rect,
           tooltips[e.detail.id].bubbleRect,
@@ -201,7 +189,6 @@ export class TooltipWrapper extends React.Component {
 
   componentDidMount = () => {
     let bubbleRect = this._bubble.getBoundingClientRect();
-    console.log(this._bubble);
 
     Events.dispatchCustomEvent({
       name: "add-tooltip",

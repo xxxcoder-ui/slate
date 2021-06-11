@@ -1,5 +1,6 @@
 import * as Window from "~/common/window";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 let pingTimeout = null;
 let client = null;
@@ -16,10 +17,10 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
     return null;
   }
 
-  console.log(`${resource}: init`);
+  Logging.log(`${resource}: init`);
 
   if (client) {
-    console.log("ERROR: Already has websocket client");
+    Error.log("ERROR: Already has websocket client");
     return client;
   }
 
@@ -39,7 +40,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       return null;
     }
 
-    console.log(`${resource}: ping`);
+    Logging.log(`${resource}: ping`);
     clearTimeout(pingTimeout);
 
     pingTimeout = setTimeout(() => {
@@ -63,7 +64,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       type = response.type;
       data = response.data;
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
 
     if (!data) {
@@ -89,7 +90,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
     } else {
       setTimeout(() => {
         client = null;
-        console.log(`Auto reconnecting dropped websocket`);
+        Logging.log("Auto reconnecting dropped websocket");
         init({ resource, viewer, onUpdate });
       }, 1000);
     }
@@ -97,7 +98,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       return null;
     }
 
-    console.log(`${resource}: closed`);
+    Logging.log(`${resource}: closed`);
     clearTimeout(pingTimeout);
   });
 
@@ -118,7 +119,7 @@ export const deleteClient = async () => {
   }
 
   if (!client) {
-    console.log("WEBSOCKET: NOTHING TO DELETE");
+    Logging.log("WEBSOCKET: NOTHING TO DELETE");
     return null;
   }
 
@@ -128,7 +129,7 @@ export const deleteClient = async () => {
   client = null;
   await Window.delay(0);
 
-  console.log("WEBSOCKET: TERMINATED");
+  Logging.log("WEBSOCKET: TERMINATED");
 
   return client;
 };
@@ -138,10 +139,10 @@ export const checkWebsocket = async () => {
     return;
   }
   if (!savedResource || !savedViewer || !savedOnUpdate) {
-    console.log("no saved resources from previous, so not connecting a websocket");
+    Logging.log("No saved resources from previous, so not connecting a websocket");
     return;
   }
-  console.log("reconnecting dropped websocket");
+  Logging.log("Reconnecting dropped websocket");
   init({ resource: savedResource, viewer: savedViewer, onUpdate: savedOnUpdate });
   await Window.delay(2000);
   return;

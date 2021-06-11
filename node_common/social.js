@@ -1,5 +1,6 @@
 import * as Environment from "~/node_common/environment";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 import { IncomingWebhook } from "@slack/webhook";
 
@@ -12,8 +13,6 @@ const textileURL = `https://hooks.slack.com/services/${Environment.TEXTILE_SLACK
 const textileWebhook = new IncomingWebhook(textileURL);
 
 export const sendSlackMessage = (message) => {
-  console.log("Inside send slack message");
-  console.log({ slackMessage: message });
   if (Strings.isEmpty(Environment.SOCIAL_SLACK_WEBHOOK_KEY)) {
     return;
   }
@@ -21,7 +20,7 @@ export const sendSlackMessage = (message) => {
   try {
     webhook.send({ text: message });
   } catch (e) {
-    console.log({ decorator: "SLACK_MESSAGE_FAILURE", message });
+    Logging.error("SLACK_MESSAGE_FAILURE", message);
   }
 };
 
@@ -47,6 +46,6 @@ export const sendTextileSlackMessage = ({
       text: `*Source code —* ${slackFileURL} \n*Source client —* ${source} \n*Callsite —* \`${functionName}\`\n*User —* ${userURL}\n\n> ${message}\n\n*Textile error code —* ${code}`,
     });
   } catch (e) {
-    console.log({ decorator: "SLACK_MESSAGE_FAILURE", message });
+    Logging.error("SLACK_MESSAGE_FAILURE", message);
   }
 };

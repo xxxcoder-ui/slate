@@ -1,3 +1,4 @@
+import * as Logging from "~/common/logging";
 import * as Serializers from "~/node_common/serializers";
 import * as Constants from "~/node_common/constants";
 
@@ -53,7 +54,7 @@ export default async ({ sanitize = false, includeFiles = false, publicOnly = fal
       return JSON.parse(JSON.stringify(slates));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_EVERY_SLATE",
       });

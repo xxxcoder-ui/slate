@@ -1,7 +1,9 @@
 import configs from "~/knexfile";
 import knex from "knex";
+
 import { v4 as uuid } from "uuid";
 
+import * as Logging from "~/common/logging";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
@@ -11,7 +13,7 @@ const envConfig = configs["development"];
 
 const DB = knex(envConfig);
 
-console.log(`RUNNING:  files-migration.js`);
+Logging.log(`RUNNING:  files-migration.js`);
 
 const makeFilesPublic = async () => {
   let publicFiles = await DB.from("files")
@@ -31,9 +33,9 @@ const getSlateSubscriberAndFileCount = async () => {
     subscriberCount = subscriberCount.pop().count;
     let fileCount = await DB("slate_files").where("slateId", slate.id).count();
     fileCount = fileCount.pop().count;
-    // console.log(slate.id);
-    // console.log(subscriberCount);
-    // console.log(fileCount);
+    // Logging.log(slate.id);
+    // Logging.log(subscriberCount);
+    // Logging.log(fileCount);
 
     await DB("slates").where("id", slate.id).update({
       subscriberCount,
@@ -51,10 +53,10 @@ const getUserFollowerAndFileAndSlateCount = async () => {
     fileCount = fileCount.pop().count;
     let slateCount = await DB("slates").where({ ownerId: user.id, isPublic: true }).count();
     slateCount = slateCount.pop().count;
-    console.log(user.id);
-    console.log(followerCount);
-    console.log(fileCount);
-    console.log(slateCount);
+    Logging.log(user.id);
+    Logging.log(followerCount);
+    Logging.log(fileCount);
+    Logging.log(slateCount);
     // await DB("users").where("id", user.id).update({
     //   followerCount,
     //   fileCount,
@@ -68,7 +70,7 @@ const runScript = async () => {
   //   await getSlateSubscriberAndFileCount();
   await getUserFollowerAndFileAndSlateCount();
 
-  console.log("Finished running. Hit CTRL + C to quit");
+  Logging.log("Finished running. Hit CTRL + C to quit");
 };
 
 runScript();

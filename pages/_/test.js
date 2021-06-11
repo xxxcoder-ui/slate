@@ -23,7 +23,6 @@ export default class SlateReactSystemPage extends React.Component {
     });
 
     const json = await response.json();
-    console.log(json);
   }
 
   _handleUpload = async (e) => {
@@ -43,12 +42,9 @@ export default class SlateReactSystemPage extends React.Component {
     });
 
     const json = await response.json();
-    console.log(json);
   };
 
   render() {
-    console.log(System.Constants);
-
     return (
       <div>
         <System.GlobalTooltip />

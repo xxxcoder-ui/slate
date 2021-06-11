@@ -5,7 +5,7 @@ import * as Constants from "~/node_common/constants";
 import * as Serializers from "~/node_common/serializers";
 import * as Strings from "~/common/strings";
 import * as Websocket from "~/node_common/nodejs-websocket";
-import * as NodeLogging from "~/node_common/node-logging";
+import * as Logging from "~/common/logging";
 import * as Window from "~/common/window";
 
 import WebSocket from "ws";
@@ -39,10 +39,9 @@ const websocketSend = async (type, data) => {
 };
 
 export const updateUser = async (user, action) => {
-  console.log("UPDATE SEARCH for user");
   if (!user || !action) return;
 
-  NodeLogging.log(`Search is updating user ...`);
+  Logging.log(`Search is updating user ...`);
 
   let data;
   if (Array.isArray(user)) {
@@ -60,10 +59,9 @@ export const updateUser = async (user, action) => {
 };
 
 export const updateSlate = async (slate, action) => {
-  console.log("UPDATE SEARCH for slate");
   if (!slate || !action) return;
 
-  NodeLogging.log(`Search is updating slate ...`);
+  Logging.log(`Search is updating slate ...`);
 
   let data;
   if (Array.isArray(slate)) {
@@ -81,10 +79,9 @@ export const updateSlate = async (slate, action) => {
 };
 
 export const updateFile = async (file, action) => {
-  console.log("UPDATE SEARCH for file");
   if (!file || !action) return;
 
-  NodeLogging.log(`Search is updating file ...`);
+  Logging.log(`Search is updating file ...`);
 
   let data;
   if (Array.isArray(file)) {

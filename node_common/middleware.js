@@ -3,6 +3,7 @@ import * as Credentials from "~/common/credentials";
 import * as Strings from "~/common/strings";
 import * as Data from "~/node_common/data";
 import * as Powergate from "~/node_common/powergate";
+import * as Logging from "~/common/logging";
 
 import JWT from "jsonwebtoken";
 
@@ -51,7 +52,7 @@ export const RequireCookieAuthentication = async (req, res, next) => {
       return res.status(403).json({ decorator: "SERVER_AUTH_USER_NOT_FOUND", error: true });
     }
   } catch (err) {
-    console.log(err);
+    Logging.error(err);
     return res.status(403).json({ decorator: "SERVER_AUTH_USER_ERROR", error: true });
   }
 

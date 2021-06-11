@@ -6,6 +6,7 @@ import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
+import * as Logging from "~/common/logging";
 
 import BCrypt from "bcrypt";
 
@@ -73,7 +74,7 @@ export default async (req, res) => {
         bucketName: "data",
       });
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
       Social.sendTextileSlackMessage({
         file: "/pages/api/users/update.js",
         user,
@@ -91,7 +92,7 @@ export default async (req, res) => {
         req.body.data.config
       );
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
       Social.sendTextileSlackMessage({
         file: "/pages/api/users/update.js",
         user,

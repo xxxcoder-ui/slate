@@ -3,7 +3,7 @@ import * as Strings from "~/common/strings";
 import * as Constants from "~/node_common/constants";
 import * as Data from "~/node_common/data";
 import * as Social from "~/node_common/social";
-import * as NodeLogging from "~/node_common/node-logging";
+import * as Logging from "~/common/logging";
 
 import crypto from "crypto";
 import JWT from "jsonwebtoken";
@@ -70,7 +70,7 @@ export const getIdFromCookie = (req) => {
       const decoded = JWT.verify(token, Environment.JWT_SECRET);
       id = decoded.id;
     } catch (e) {
-      console.log(e.message);
+      Logging.error(e.message);
     }
   }
 
@@ -116,7 +116,7 @@ export const getFilecoinAPIFromUserToken = async ({ user }) => {
   const filecoin = await Filecoin.withKeyInfo(TEXTILE_KEY_INFO);
   await filecoin.getToken(identity);
 
-  NodeLogging.log(`filecoin init`);
+  Logging.log(`filecoin init`);
 
   return {
     filecoin,
@@ -164,14 +164,14 @@ export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = 
   await buckets.getToken(identity);
 
   let root = null;
-  NodeLogging.log(`buckets.getOrCreate() init ${name}`);
+  Logging.log(`buckets.getOrCreate() init ${name}`);
   try {
-    console.log("before buckets get or create");
+    Logging.log("before buckets get or create");
     const created = await buckets.getOrCreate(name, { encrypted });
-    console.log("after buckets get or create");
+    Logging.log("after buckets get or create");
     root = created.root;
   } catch (e) {
-    NodeLogging.log(`buckets.getOrCreate() warning: ${e.message}`);
+    Logging.log(`buckets.getOrCreate() warning: ${e.message}`);
     Social.sendTextileSlackMessage({
       file: "/node_common/utilities.js",
       user,
@@ -182,12 +182,11 @@ export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = 
   }
 
   if (!root) {
-    NodeLogging.error(`buckets.getOrCreate() failed for ${name}`);
-    console.log(user);
+    Logging.error(`buckets.getOrCreate() failed for ${name}`);
     return { buckets: null, bucketKey: null, bucketRoot: null };
   }
 
-  NodeLogging.log(`buckets.getOrCreate() success for ${name}`);
+  Logging.log(`buckets.getOrCreate() success for ${name}`);
   return {
     buckets,
     bucketKey: root.key,

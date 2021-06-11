@@ -1,13 +1,15 @@
+import * as Logging from "~/common/logging";
+
 import configs from "~/knexfile";
 import knex from "knex";
 
 const envConfig = configs["development"];
 
-console.log(`SETUP: database`, envConfig);
+Logging.log(`SETUP: database`, envConfig);
 
 const db = knex(envConfig);
 
-console.log(`RUNNING:  adjust.js`);
+Logging.log(`RUNNING:  adjust.js`);
 
 const editUsersTable1 = db.schema.table("users", function (table) {
   table.integer("authVersion").notNullable().defaultTo(1);
@@ -44,5 +46,5 @@ Promise.all([editVerificationTable]);
 // Promise.all([editUsersTable1]);
 // Promise.all([editUsersTable2, editVerificationTable, editTwitterTokenTable]);
 
-console.log(`FINISHED: adjust.js`);
-console.log(`          CTRL +C to return to terminal.`);
+Logging.log(`FINISHED: adjust.js`);
+Logging.log(`          CTRL +C to return to terminal.`);

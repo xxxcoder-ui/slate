@@ -1,7 +1,6 @@
 import * as Environment from "~/node_common/environment";
-import * as ScriptLogging from "~/node_common/script-logging";
 import * as Strings from "~/common/strings";
-import * as NodeLogging from "~/node_common/node-logging";
+import * as Logging from "~/common/logging";
 
 import WebSocket from "ws";
 
@@ -24,7 +23,7 @@ export const create = () => {
     clearTimeout(this.pingTimeout);
 
     this.pingTimeout = setTimeout(() => {
-      NodeLogging.log(`Did not receive ping in time. Disconnecting websocket`);
+      Logging.log(`Did not receive ping in time. Disconnecting websocket`);
       this.terminate();
     }, 30000 + 1000);
   });
@@ -36,13 +35,13 @@ export const create = () => {
   ws.on("close", () => {
     global.websocket = null;
     setTimeout(() => {
-      NodeLogging.log(`Auto reconnecting websocket`);
+      Logging.log(`Auto reconnecting websocket`);
       create();
     }, 1000);
-    NodeLogging.log(`Websocket disconnected`);
+    Logging.log(`Websocket disconnected`);
   });
 
-  NodeLogging.log(`Websocket server started`);
+  Logging.log(`Websocket server started`);
 
   global.websocket = ws;
   return global.websocket;

@@ -5,6 +5,7 @@ import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
 import * as Window from "~/common/window";
 import * as Validations from "~/common/validations";
+import * as Logging from "~/common/logging";
 
 import MiniSearch from "minisearch";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
@@ -448,8 +449,7 @@ const getHref = (result) => {
   } else if (result.type === "DATA_FILE") {
     return `/_/data?cid=${result.data.file.cid}`;
   } else {
-    console.log("GET HREF FAILED B/C RESULT WAS:");
-    console.log(result);
+    Logging.error("Get href failed because result was:", result);
   }
 };
 
@@ -637,7 +637,6 @@ export class SearchModal extends React.Component {
     } else if (e.keyCode === 13) {
       if (results.length > this.state.selectedIndex && this.state.selectedIndex >= 0) {
         let href = results[this.state.selectedIndex].href;
-        console.log("key down navigate");
         this.props.onAction({ type: "NAVIGATE", href });
       }
       e.preventDefault();
@@ -780,7 +779,6 @@ export class SearchModal extends React.Component {
     results = results.map((res) => {
       return { ...res, href: getHref(res) };
     });
-    console.log(results);
     this.setState({ results, selectedIndex: 0 });
     if (this._optionRoot) {
       this._optionRoot.scrollTop = 0;
@@ -949,11 +947,7 @@ export class SearchModal extends React.Component {
 
   _handleSelectIndex = (i) => {
     if (this.state.selectedIndex === i || this.props.isMobile) {
-      console.log("handle hide");
       this._handleHide();
-    } else {
-      console.log("set state");
-      // this.setState({ selectedIndex: i });
     }
   };
 
@@ -1182,13 +1176,13 @@ export class SearchModal extends React.Component {
                     >
                       {results.map((each, i) => (
                         <Link
+                          key={each.id}
                           disabled={this.props.isMobile ? false : selectedIndex !== i}
                           href={each.href}
                           onAction={this.props.onAction}
                           onClick={() => this._handleSelectIndex(i)}
                         >
                           <div
-                            key={each.id}
                             css={STYLES_DROPDOWN_ITEM}
                             style={{
                               background:

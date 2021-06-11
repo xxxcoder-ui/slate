@@ -10,8 +10,7 @@ export const removeDuplicateUserFiles = async ({ files, user }) => {
   const duplicateCids = duplicateFiles.map((file) => file.cid);
 
   const filteredFiles = files.filter((file) => !duplicateCids.includes(file.cid));
-  console.log(duplicateFiles);
-  console.log(filteredFiles);
+
   return { duplicateFiles, filteredFiles };
 };
 

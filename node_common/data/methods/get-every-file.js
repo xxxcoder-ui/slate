@@ -1,3 +1,4 @@
+import * as Logging from "~/common/logging";
 import * as Serializers from "~/node_common/serializers";
 
 import { runQuery } from "~/node_common/data/utilities";
@@ -24,7 +25,7 @@ export default async ({ sanitize = false, publicOnly = false } = {}) => {
       return JSON.parse(JSON.stringify(files));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_EVERY_FILE",
       });

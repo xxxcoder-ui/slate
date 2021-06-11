@@ -3,11 +3,12 @@ import knex from "knex";
 
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 const envConfig = configs["development"];
 const db = knex(envConfig);
 
-console.log(`RUNNING: worker-analytics.js`);
+Logging.log(`RUNNING: worker-analytics.js`);
 
 function sortObject(obj) {
   var arr = [];
@@ -49,13 +50,13 @@ const run = async () => {
   userMap = userMap.map((each, index) => {
     return { ...each, index, value: Strings.bytesToSize(each.value) };
   });
-  console.log(userMap);
-  console.log("TOTAL USER COUNT", count);
-  console.log("TOTAL BYTES", bytes);
-  console.log("TOTAL BYTES (CONVERTED)", Strings.bytesToSize(bytes));
+  Logging.log(userMap);
+  Logging.log("TOTAL USER COUNT", count);
+  Logging.log("TOTAL BYTES", bytes);
+  Logging.log("TOTAL BYTES (CONVERTED)", Strings.bytesToSize(bytes));
 };
 
 // run();
 
-console.log(`FINISHED: worker-analytics.js`);
-console.log(`          CTRL +C to return to terminal.`);
+Logging.log(`FINISHED: worker-analytics.js`);
+Logging.log(`          CTRL +C to return to terminal.`);

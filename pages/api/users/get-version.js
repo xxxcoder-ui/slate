@@ -2,6 +2,7 @@ import * as Data from "~/node_common/data";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
 import * as Environment from "~/node_common/environment";
+import * as Logging from "~/common/logging";
 
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
@@ -14,7 +15,7 @@ export default async (req, res) => {
     try {
       user = await Data.getUserByEmail({ email: username });
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
   } else {
     try {
@@ -22,7 +23,7 @@ export default async (req, res) => {
         username: req.body.data.username.toLowerCase(),
       });
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
   }
 

@@ -14,14 +14,12 @@ const STYLES_NESTED_TABLE = css`
 
 const NestedTable = (data) => {
   let values = [];
-  console.log(Object.entries(data));
   for (let entries of Object.entries(data)) {
     if (entries[0] !== "rootCid") {
       values.push(<div key={entries[0]}>{entries[0]}</div>);
       values.push(<div key={`${entries[0]}value`}>{entries[1]}</div>);
     }
   }
-  console.log(values);
   return <div css={STYLES_NESTED_TABLE}>{values}</div>;
 };
 

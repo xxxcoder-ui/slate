@@ -165,8 +165,6 @@ export default class SceneFilesFolder extends React.Component {
       return filtered.publicFiles;
     } else if (filter === "PRIVATE") {
       return filtered.privateFiles;
-    } else {
-      console.log("unusable privacy param");
     }
   };
 

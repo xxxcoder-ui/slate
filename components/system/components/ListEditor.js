@@ -123,10 +123,7 @@ export class ListEditor extends React.Component {
         target: { name: this.props.name, value: this.state.options },
       });
     }
-    this.setState({ expand: !this.state.expand }),
-      () => {
-        console.log(this.state.expand);
-      };
+    this.setState({ expand: !this.state.expand });
   };
 
   _handleDelete = (i) => {

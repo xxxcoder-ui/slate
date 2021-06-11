@@ -45,8 +45,6 @@ export default class SidebarFileStorageDeal extends React.Component {
       return null;
     }
 
-    console.log("SETTINGS: AUTO DEAL");
-
     await this._handleSubmit();
   }
 
@@ -63,7 +61,6 @@ export default class SidebarFileStorageDeal extends React.Component {
 
     const response = await fetch("/api/data/storage-deal", options);
     const json = await response.json();
-    console.log(json);
     return json;
   };
 

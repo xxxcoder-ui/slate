@@ -2,6 +2,7 @@ import configs from "~/knexfile";
 import knex from "knex";
 import { v4 as uuid } from "uuid";
 
+import * as Logging from "~/common/logging";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
@@ -11,7 +12,7 @@ const envConfig = configs["production"];
 
 const DB = knex(envConfig);
 
-console.log(`RUNNING:  files-migration.js`);
+Logging.log(`RUNNING:  files-migration.js`);
 
 const saveCopyReposts = async () => {
   let repostedFiles = await DB.column(
@@ -28,10 +29,10 @@ const saveCopyReposts = async () => {
     .join("files", "files.id", "=", "slate_files.fileId")
     .join("users", "users.id", "=", "slates.ownerId")
     .whereRaw("?? != ??", ["files.ownerId", "slates.ownerId"]);
-  //   console.log(repostedFiles.length);
+  //   Logging.log(repostedFiles.length);
 
   for (let item of repostedFiles) {
-    console.log(item);
+    Logging.log(item);
     // continue;
     let user = { data: item.data };
     let { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
@@ -46,7 +47,7 @@ const saveCopyReposts = async () => {
         cid: item.cid,
       });
     } catch (e) {
-      console.log(e);
+      Logging.log(e);
     }
 
     const duplicateFiles = await Data.getFilesByCids({
@@ -56,7 +57,7 @@ const saveCopyReposts = async () => {
 
     if (duplicateFiles.length) {
       if (!duplicateFiles[0].isPublic && item.isPublic) {
-        console.log("UPDATE PUBLIC FOR FILE");
+        Logging.log("UPDATE PUBLIC FOR FILE");
         await DB.from("files").where("id", item.fileId).update({ isPublic: true });
       }
     } else {
@@ -83,14 +84,14 @@ const removeReposts = async () => {
     })
     .del()
     .returning("*");
-  console.log(repostedFiles);
+  Logging.log(repostedFiles);
 };
 
 const runScript = async () => {
   await saveCopyReposts();
   //   await removeReposts();
 
-  console.log("Finished running. Hit CTRL + C to quit");
+  Logging.log("Finished running. Hit CTRL + C to quit");
 };
 
 runScript();
