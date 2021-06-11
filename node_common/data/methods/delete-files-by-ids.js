@@ -6,12 +6,6 @@ export default async ({ ids, ownerId }) => {
   return await runQuery({
     label: "DELETE_FILES_BY_IDS",
     queryFn: async (DB) => {
-      console.log("inside delete files by ids");
-      // const repostedSlateFiles = await DB.from("slate_files")
-      //   .join("slates", "slates.id", "=", "slate_files.slateId")
-      //   .whereNot("slates.ownerId", "=", ownerId)
-      //   .whereIn("slate_files.fileId", ids)
-      //   .update({ "slate_files.fileId": null });
       const repostedSlateFiles = await DB.from("slate_files")
         .whereIn("id", function () {
           this.select("slate_files.id")

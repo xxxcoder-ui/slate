@@ -3,6 +3,7 @@ import knex from "knex";
 import fs from "fs-extra";
 import "isomorphic-fetch";
 
+import * as Logging from "~/common/logging";
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
@@ -36,7 +37,7 @@ const TEXTILE_KEY_INFO = {
   secret: Environment.TEXTILE_HUB_SECRET,
 };
 
-console.log(`RUNNING:  worker-heavy-stones.js`);
+Logging.log(`RUNNING:  worker-heavy-stones.js`);
 
 const delay = async (waitMs) => {
   return await new Promise((resolve) => setTimeout(resolve, waitMs));
@@ -220,9 +221,9 @@ const run = async () => {
         const dealToSave = storageDeals[d];
         Logs.note(`Saving ${dealToSave.dealId} ...`);
 
-        console.log(dealToSave);
+        Logging.log(dealToSave);
         const existing = await db.select("*").from("deals").where(hasDealId(dealToSave.dealId));
-        console.log(existing);
+        Logging.log(existing);
 
         if (existing && !existing.error && existing.length) {
           Logs.error(`${dealToSave.dealId} is already saved.`);
@@ -272,8 +273,8 @@ const run = async () => {
         // NOTE(jim): Determine open deals
         try {
           const { current, history } = await buckets.archives(keyBucket.key);
-          console.log(current);
-          console.log(history);
+          Logging.log(current);
+          Logging.log(history);
         } catch (e) {
           Logs.error(e.message);
           continue;
@@ -312,8 +313,8 @@ const run = async () => {
         // NOTE(jim): Determine open deals
         try {
           const { current, history } = await buckets.archives(keyBucket.key);
-          console.log(current);
-          console.log(history);
+          Logging.log(current);
+          Logging.log(history);
         } catch (e) {
           Logs.error(e.message);
           continue;
@@ -464,8 +465,8 @@ const run = async () => {
       Logs.task(`Show us the history!`);
       try {
         const { current, history } = await buckets.archives(targetBucket.key);
-        console.log(current);
-        console.log(history);
+        Logging.log(current);
+        Logging.log(history);
       } catch (e) {
         Logs.error(e.message);
         continue;
@@ -482,16 +483,16 @@ const run = async () => {
       }
     }
 
-    console.log("\n");
+    Logging.log("\n");
   }
 
   Logs.task(`total storage per run: ${Strings.bytesToSize(bytes)}`);
   Logs.task(`total storage per run (with replication x5): ${Strings.bytesToSize(bytes * 5)}`);
   Logs.task(`creating slate-storage-addresses.json`);
 
-  console.log(`${STORAGE_BOT_NAME} finished. \n\n`);
-  console.log(`FINISHED: worker-heavy-stones.js`);
-  console.log(`          CTRL +C to return to terminal.`);
+  Logging.log(`${STORAGE_BOT_NAME} finished. \n\n`);
+  Logging.log(`FINISHED: worker-heavy-stones.js`);
+  Logging.log(`          CTRL +C to return to terminal.`);
 };
 
 run();

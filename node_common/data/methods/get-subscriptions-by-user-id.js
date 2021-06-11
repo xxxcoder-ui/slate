@@ -1,5 +1,6 @@
 import * as Serializers from "~/node_common/serializers";
 import * as Constants from "~/node_common/constants";
+import * as Logging from "~/common/logging";
 
 import { runQuery } from "~/node_common/data/utilities";
 
@@ -39,7 +40,7 @@ export default async ({ ownerId }) => {
       return JSON.parse(JSON.stringify(serialized));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_SUBSCRIPTIONS_BY_USER_ID",
       });

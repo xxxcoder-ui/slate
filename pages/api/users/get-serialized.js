@@ -39,7 +39,7 @@ export default async (req, res) => {
       error: true,
     });
   }
-  console.log("before get slates by user id");
+
   let slates = await Data.getSlatesByUserId({
     ownerId: user.id,
     includeFiles: true,

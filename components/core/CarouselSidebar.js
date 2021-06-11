@@ -684,7 +684,7 @@ class CarouselSidebar extends React.Component {
     {
       this.props.carouselType === "ACTIVITY"
         ? actions.push(
-            <div style={{ borderBottom: "1px solid #3c3c3c" }}>
+            <div key="go-to-slate" style={{ borderBottom: "1px solid #3c3c3c" }}>
               <Link href={`/$/slate/${file.slateId}`} onAction={this.props.onAction}>
                 <div
                   key="go-to-slate"

@@ -12,6 +12,7 @@ import * as Store from "~/common/store";
 import * as Websockets from "~/common/browser-websockets";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
+import * as Logging from "~/common/logging";
 
 // NOTE(jim):
 // Scenes each have an ID and can be navigated to with _handleAction
@@ -207,7 +208,6 @@ export default class ApplicationPage extends React.Component {
             if (callback) {
               callback();
             }
-            console.log(this.state.viewer);
           }
         );
         return;
@@ -218,7 +218,6 @@ export default class ApplicationPage extends React.Component {
         viewer: { ...this.state.viewer, ...viewer },
       },
       () => {
-        console.log(this.state.viewer);
         if (callback) {
           callback();
         }
@@ -244,7 +243,7 @@ export default class ApplicationPage extends React.Component {
     }
     if (this.props.resources && !Strings.isEmpty(this.props.resources.pubsub)) {
       if (!this.state.viewer) {
-        console.log("WEBSOCKET: NOT AUTHENTICATED");
+        Logging.error("WEBSOCKET: NOT AUTHENTICATED");
         return;
       }
       wsclient = Websockets.init({
@@ -276,7 +275,7 @@ export default class ApplicationPage extends React.Component {
 
     // only change if necessary.
     if (this.state.isMobile !== isMobile) {
-      console.log("changing to mobile?", isMobile);
+      Logging.log("changing to mobile?", isMobile);
       this.setState({ isMobile });
     }
   };
@@ -348,7 +347,7 @@ export default class ApplicationPage extends React.Component {
           routes: this.props.resources,
         });
       } catch (e) {
-        console.log(e);
+        Logging.error(e);
       }
 
       if (!response || response.error) {
@@ -484,7 +483,7 @@ export default class ApplicationPage extends React.Component {
       return viewer;
     }
 
-    this.setState({ viewer }, () => console.log(this.state.viewer));
+    this.setState({ viewer });
     await this._handleSetupWebsocket();
 
     let unseenAnnouncements = [];
@@ -578,7 +577,7 @@ export default class ApplicationPage extends React.Component {
       return window.open(options.value);
     }
 
-    console.log("Error: Failed to _handleAction because TYPE did not match any known actions");
+    Logging.error("Error: Failed to _handleAction because TYPE did not match any known actions");
   };
 
   _handleNavigateTo = async ({ href, redirect = false, popstate = false }) => {

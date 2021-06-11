@@ -1,6 +1,7 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Powergate from "~/node_common/powergate";
+import * as Logging from "~/common/logging";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -23,7 +24,7 @@ export default async (req, res) => {
   try {
     await PG.ffs.sendFil(req.body.data.source, req.body.data.target, req.body.data.amount);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
     return res.status(500).send({ decorator: "SERVER_SEND_FILECOIN_ACTION_FAILURE", error: true });
   }
 

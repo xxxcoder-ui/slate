@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 export class Link extends React.Component {
   state = {
@@ -12,7 +13,7 @@ export class Link extends React.Component {
 
   static defaultProps = {
     onUpdate: () => {
-      console.log(
+      Logging.error(
         `ERROR: onUpdate is missing from a Link object called with href ${this.props.href}`
       );
     },

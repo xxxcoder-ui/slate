@@ -4,6 +4,7 @@ import * as Strings from "~/common/strings";
 import * as Environment from "~/node_common/environment";
 import * as Utilities from "~/node_common/utilities";
 import * as EmailManager from "~/node_common/managers/emails";
+import * as Logging from "~/common/logging";
 
 // NOTE(amine): this endpoint is rate limited in ./server.js,
 export default async (req, res) => {
@@ -71,6 +72,6 @@ export default async (req, res) => {
       token: verification.sid,
     });
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };

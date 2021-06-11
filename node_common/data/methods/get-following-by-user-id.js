@@ -1,7 +1,8 @@
-import { runQuery } from "~/node_common/data/utilities";
 import * as Constants from "~/node_common/constants";
-
+import * as Logging from "~/common/logging";
 import * as Serializers from "~/node_common/serializers";
+
+import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ ownerId }) => {
   return await runQuery({
@@ -25,7 +26,7 @@ export default async ({ ownerId }) => {
       return JSON.parse(JSON.stringify(serialized));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_FOLLOWING_BY_USER_ID",
       });

@@ -1,5 +1,6 @@
 import * as Social from "~/node_common/social";
 import * as Arrays from "~/common/arrays";
+import * as Logging from "~/common/logging";
 
 //things taht could be combined into this:
 //update search (searchmanager)
@@ -21,28 +22,9 @@ export const error = (location, e) => {
     const message = `@martina there was an error at ${location}: ${e}`;
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
-
-// export const upload = ({ user, files: targetFiles }) => {
-//   const files = Arrays.filterPublic(targetFiles);
-//   if (!files.length) {
-//     return;
-//   }
-//   try {
-//     const userURL = getUserURL(user);
-//     const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
-//     const extra =
-//       files.length > 1
-//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
-//         : "";
-//     const message = `*${userURL}* uploaded ${objectURL}${extra}`;
-//     Social.sendSlackMessage(message);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 export const upload = ({ user, slate, files: targetFiles }) => {
   if (slate && !slate.isPublic) return;
@@ -67,7 +49,7 @@ export const upload = ({ user, slate, files: targetFiles }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
@@ -86,30 +68,9 @@ export const download = ({ user, files: targetFiles }) => {
     const message = `*${userURL}* downloaded ${objectURL}${extra}`;
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
-
-// export const addToSlate = ({ slate, user, files: targetFiles }) => {
-//   if (!slate.isPublic) return;
-//   const files = Arrays.filterPublic(targetFiles);
-//   if (!files.length) {
-//     return;
-//   }
-//   try {
-//     const userURL = getUserURL(user);
-//     const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].filename}|${files[0].cid}>`;
-//     const extra =
-//       files.length > 1
-//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
-//         : "";
-//     const message = `*${userURL}* saved ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
-
-//     Social.sendSlackMessage(message);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 export const saveCopy = ({ slate, user, files: targetFiles }) => {
   if (slate && !slate.isPublic) return;
@@ -134,29 +95,9 @@ export const saveCopy = ({ slate, user, files: targetFiles }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
-
-// export const saveCopy = ({ user, files: targetFiles }) => {
-//   const files = Arrays.filterPublic(targetFiles);
-//   if (!files.length) {
-//     return;
-//   }
-//   try {
-//     const userURL = getUserURL(user);
-//     const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
-//     const extra =
-//       files.length > 1
-//         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
-//         : "";
-//     const message = `*${userURL}* saved ${objectURL}${extra}`;
-
-//     Social.sendSlackMessage(message);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 export const createSlate = ({ user, slate }) => {
   if (!slate.isPublic) return;
@@ -166,7 +107,7 @@ export const createSlate = ({ user, slate }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
@@ -177,7 +118,7 @@ export const createUser = ({ user }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
@@ -190,7 +131,7 @@ export const subscribeUser = ({ user, targetUser }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
@@ -206,6 +147,6 @@ export const subscribeSlate = ({ user, targetSlate }) => {
 
     Social.sendSlackMessage(message);
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };

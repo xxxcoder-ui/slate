@@ -73,7 +73,6 @@ export default class CreateChart extends React.Component {
   loopData = (g) => {
     let coordinates = [];
     let i = {};
-    console.log(g);
     g.map((o, index) => {
       coordinates.push(o.x);
       coordinates.push(o.y);

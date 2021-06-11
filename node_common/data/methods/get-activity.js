@@ -1,3 +1,5 @@
+import * as Logging from "~/common/logging";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({
@@ -123,7 +125,7 @@ export default async ({
       return JSON.parse(JSON.stringify(query));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_ACTIVITY_FOR_USER_ID",
       });

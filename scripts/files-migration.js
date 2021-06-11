@@ -2,6 +2,7 @@ import configs from "~/knexfile";
 import knex from "knex";
 import { v4 as uuid } from "uuid";
 
+import * as Logging from "~/common/logging";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
@@ -11,7 +12,7 @@ const envConfig = configs["development"];
 
 const DB = knex(envConfig);
 
-console.log(`RUNNING:  files-migration.js`);
+Logging.log(`RUNNING:  files-migration.js`);
 
 // MARK: - check what parameters are in each table
 
@@ -44,9 +45,9 @@ const printUsersTable = async () => {
       }
     }
   }
-  console.log({ dataParams: Object.keys(dataParams) });
-  console.log({ fileParams: Object.keys(fileParams) });
-  console.log({ coverParams: Object.keys(coverParams) });
+  Logging.log({ dataParams: Object.keys(dataParams) });
+  Logging.log({ fileParams: Object.keys(fileParams) });
+  Logging.log({ coverParams: Object.keys(coverParams) });
 };
 
 const printSlatesTable = async () => {
@@ -78,9 +79,9 @@ const printSlatesTable = async () => {
       }
     }
   }
-  console.log({ dataParams: Object.keys(dataParams) });
-  console.log({ fileParams: Object.keys(fileParams) });
-  console.log({ coverParams: Object.keys(coverParams) });
+  Logging.log({ dataParams: Object.keys(dataParams) });
+  Logging.log({ fileParams: Object.keys(fileParams) });
+  Logging.log({ coverParams: Object.keys(coverParams) });
 };
 
 // MARK: - add/modify tables
@@ -168,7 +169,7 @@ const addTables = async () => {
     table.uuid("userId").references("id").inTable("users").alter();
   });
 
-  console.log("finished adding tables");
+  Logging.log("finished adding tables");
 };
 
 // MARK: - populate new tables
@@ -198,8 +199,8 @@ const migrateUsersTable = async (testing = false) => {
             cid = file.ipfs;
           }
           if (!cid) {
-            console.log("file does not have cid or ipfs");
-            console.log(file);
+            Logging.log("file does not have cid or ipfs");
+            Logging.log(file);
             return;
           }
           let id = file.id.replace("data-", "");
@@ -210,7 +211,7 @@ const migrateUsersTable = async (testing = false) => {
 
           //NOTE(martina): to make sure there are no duplicate cids in the user's files
           if (libraryCids[cid]) {
-            console.log(`skipped duplicate cid ${cid} in user ${user.username} files`);
+            Logging.log(`skipped duplicate cid ${cid} in user ${user.username} files`);
             continue;
           }
           libraryCids[cid] = true;
@@ -219,7 +220,7 @@ const migrateUsersTable = async (testing = false) => {
           const hasConflict = conflicts.includes(id);
           conflicts.push(id);
           if (hasConflict) {
-            console.log(`changing id for saved copy ${id} in ${user.username} files`);
+            Logging.log(`changing id for saved copy ${id} in ${user.username} files`);
             id = uuid();
           }
 
@@ -264,7 +265,7 @@ const migrateUsersTable = async (testing = false) => {
           newFiles.push(newFile);
         }
         if (testing) {
-          // console.log(newFiles);
+          // Logging.log(newFiles);
         } else {
           await DB.insert(newFiles).into("files");
         }
@@ -276,11 +277,11 @@ const migrateUsersTable = async (testing = false) => {
       }
     }
     if (count % 100 === 0) {
-      console.log(`${count} users done`);
+      Logging.log(`${count} users done`);
     }
     count += 1;
   }
-  console.log("finished migrating users table");
+  Logging.log("finished migrating users table");
 };
 
 const migrateSlatesTable = async (testing = false) => {
@@ -288,7 +289,7 @@ const migrateSlatesTable = async (testing = false) => {
   let count = 0;
   for (let slate of slates) {
     if (!slate.data.ownerId) {
-      console.log({ slateMissingOwnerId: slate });
+      Logging.log({ slateMissingOwnerId: slate });
       continue;
     }
     if (slate.data.objects) {
@@ -303,7 +304,7 @@ const migrateSlatesTable = async (testing = false) => {
       for (let file of slate.data.objects) {
         if (!file.url || !file.ownerId || !file.id) {
           if (!file.ownerId) {
-            console.log({ fileMissingOwnerId: file });
+            Logging.log({ fileMissingOwnerId: file });
           }
           continue;
         }
@@ -311,7 +312,7 @@ const migrateSlatesTable = async (testing = false) => {
 
         //NOTE(martina): make sure there are no duplicated cids in a slate
         if (slateCids[cid]) {
-          console.log(`found duplicate file cid ${cid} in slate`);
+          Logging.log(`found duplicate file cid ${cid} in slate`);
           continue;
         }
         slateCids[cid] = true;
@@ -338,7 +339,7 @@ const migrateSlatesTable = async (testing = false) => {
             !Strings.isEmpty(file.author))
         ) {
           if (!matchingFile.data) {
-            console.log("Matching file did not have data");
+            Logging.log("Matching file did not have data");
             continue;
           }
 
@@ -355,7 +356,7 @@ const migrateSlatesTable = async (testing = false) => {
                 },
               });
           } else {
-            console.log({
+            Logging.log({
               data: {
                 ...matchingFile.data,
                 name: file.title ? file.title.substring(0, 255) : "",
@@ -380,18 +381,18 @@ const migrateSlatesTable = async (testing = false) => {
         }
       }
       if (count % 100 === 0) {
-        console.log(`${count} slates done`);
+        Logging.log(`${count} slates done`);
       }
       // if (testing) {
       //   if (count >= 50) {
       //     return;
       //   }
-      //   console.log(objects);
+      //   Logging.log(objects);
       // }
       count += 1;
     }
   }
-  console.log("finished migrating slates table");
+  Logging.log("finished migrating slates table");
 };
 
 //make a function that double checks correctness: finds any duplicate fileId, ownerId in files. and any duplicate fileid slateid in slate_files
@@ -421,7 +422,7 @@ const migrateActivityTable = async (testing = false) => {
     slateId = event.data.context?.slate?.id;
     fileId = event.data.context?.file?.id;
     if (!slateId || !fileId) {
-      // console.log(event.data);
+      // Logging.log(event.data);
       continue;
     }
     fileId = fileId.replace("data-", "");
@@ -438,12 +439,12 @@ const migrateActivityTable = async (testing = false) => {
           createdAt,
         }).into("activity");
       } catch (e) {
-        console.log(e);
+        Logging.log(e);
       }
     }
 
     if (testing) {
-      console.log({
+      Logging.log({
         id,
         ownerId,
         userId,
@@ -458,7 +459,7 @@ const migrateActivityTable = async (testing = false) => {
       count += 1;
     }
   }
-  console.log("finished migrating activity table");
+  Logging.log("finished migrating activity table");
 };
 
 // MARK: - adding new fields and reformatting
@@ -469,14 +470,14 @@ const modifySlatesTable = async (testing = false) => {
     const id = slate.id;
     const ownerId = slate.data.ownerId;
     if (!ownerId) {
-      console.log(slate);
+      Logging.log(slate);
       continue;
     }
     if (!testing) {
       await DB.from("slates").where("id", id).update({ ownerId, isPublic: slate.data.public });
     }
   }
-  console.log("finished modify slates table");
+  Logging.log("finished modify slates table");
 };
 
 const modifyUsersTable = async (testing = false) => {
@@ -502,12 +503,12 @@ const modifyUsersTable = async (testing = false) => {
       if (count === 10) {
         return;
       }
-      console.log(data);
+      Logging.log(data);
     } else {
       await Data.updateUserById({ id, data });
     }
   }
-  console.log("finished modify users table");
+  Logging.log("finished modify users table");
 };
 
 // MARK: - deleting original data source
@@ -525,7 +526,7 @@ const cleanUsersTable = async () => {
       onboarding: user.data.onboarding,
       status: user.data.status,
     };
-    // console.log(data);
+    // Logging.log(data);
     await DB.from("users").where("id", id).update({ data });
   }
 };
@@ -551,8 +552,8 @@ const cleanSlatesTable = async () => {
       preview: slate.data.preview,
       tags: slate.data.tags,
     };
-    // console.log(layouts?.layout);
-    // console.log(data);
+    // Logging.log(layouts?.layout);
+    // Logging.log(data);
     await DB.from("slates").where("id", id).update({ data });
   }
 };
@@ -569,11 +570,11 @@ const dropOldTables = async () => {
 
 const wipeNewTables = async () => {
   let numDeleted = await DB("slate_files").del();
-  console.log(`${numDeleted} deleted from slate_files`);
+  Logging.log(`${numDeleted} deleted from slate_files`);
   numDeleted = await DB("activity").del();
-  console.log(`${numDeleted} deleted from activity`);
+  Logging.log(`${numDeleted} deleted from activity`);
   numDeleted = await DB("files").del();
-  console.log(`${numDeleted} deleted from files`);
+  Logging.log(`${numDeleted} deleted from files`);
 };
 
 const runScript = async () => {
@@ -603,7 +604,7 @@ const runScript = async () => {
   // await cleanSlatesTable();
   await dropOldTables();
 
-  console.log("Finished running. Hit CTRL + C to quit");
+  Logging.log("Finished running. Hit CTRL + C to quit");
 };
 
 runScript();

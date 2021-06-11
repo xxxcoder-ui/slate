@@ -1,3 +1,4 @@
+import * as Logging from "~/common/logging";
 import * as Environment from "~/node_common/environment";
 
 import sgMail from "@sendgrid/mail";
@@ -45,7 +46,7 @@ export const sendTemplate = async ({ to, from, templateId, templateData }) => {
   try {
     await sgMail.send(msg);
   } catch (error) {
-    console.log("SOMETHING", error);
+    Logging.error(error);
     return { decorator: "SEND_TEMPLATE_EMAIL_FAILURE", error: true };
   }
 };

@@ -1,13 +1,15 @@
 import configs from "~/knexfile";
 import knex from "knex";
 
+import * as Logging from "~/common/logging";
+
 const envConfig = configs["development"];
 
-console.log(`SETUP: database`, envConfig);
+Logging.log(`SETUP: database`, envConfig);
 
 const db = knex(envConfig);
 
-console.log(`RUNNING:  seed-database.js`);
+Logging.log(`RUNNING:  seed-database.js`);
 
 // --------------------------
 // SCRIPTS
@@ -180,5 +182,5 @@ Promise.all([
   createTwitterTokensTable,
 ]);
 
-console.log(`FINISHED: seed-database.js`);
-console.log(`          CTRL +C to return to terminal.`);
+Logging.log(`FINISHED: seed-database.js`);
+Logging.log(`          CTRL +C to return to terminal.`);

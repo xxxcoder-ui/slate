@@ -5,6 +5,7 @@ import * as Credentials from "~/common/credentials";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
+import * as Logging from "~/common/logging";
 
 import { encode } from "blurhash";
 
@@ -85,7 +86,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
       XHR.open("post", path, true);
       XHR.setRequestHeader("authorization", getCookie(Credentials.session.key));
       XHR.onerror = (event) => {
-        console.log(event);
+        Logging.error(event);
         XHR.abort();
       };
 
@@ -98,7 +99,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
           }
 
           if (event.lengthComputable) {
-            console.log("FILE UPLOAD PROGRESS", event);
+            Logging.log("FILE UPLOAD PROGRESS", event);
             context.setState({
               fileLoading: {
                 ...context.state.fileLoading,
@@ -117,7 +118,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
       window.removeEventListener(`cancel-${file.lastModified}-${file.name}`, () => XHR.abort());
 
       XHR.onloadend = (event) => {
-        console.log("FILE UPLOAD END", event);
+        Logging.log("FILE UPLOAD END", event);
         try {
           return resolve(JSON.parse(event.target.response));
         } catch (e) {
@@ -126,7 +127,6 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
           });
         }
       };
-      console.log(formData);
       XHR.send(formData);
     });
 
@@ -177,7 +177,7 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
       let blurhash = await encodeImageToBlurhash(url);
       item.data.blurhash = blurhash;
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
   }
 

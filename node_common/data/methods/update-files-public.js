@@ -1,9 +1,9 @@
+import * as Logging from "~/common/logging";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 //NOTE(martina): this method is specifically for making *multiple* files from one owner *public*. It will filter out the already public files
 export default async ({ ids, ownerId }) => {
-  console.log(ids);
-  console.log(ownerId);
   return await runQuery({
     label: "UPDATE_FILES_PUBLIC",
     queryFn: async (DB) => {

@@ -7,6 +7,7 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SubSystem from "~/components/system/components/fragments/TableComponents";
 import * as SVG from "~/common/svg";
+import * as Logging from "~/common/logging";
 
 import { css } from "@emotion/react";
 import { P } from "~/components/system/components/Typography";
@@ -83,7 +84,7 @@ const STYLES_TABLE_TOP_ROW = css`
 
 export class Table extends React.Component {
   static defaultProps = {
-    onAction: () => console.log("No action function set"),
+    onAction: () => Logging.error("No action function set"),
     onChange: () => {},
   };
 

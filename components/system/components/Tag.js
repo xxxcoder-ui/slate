@@ -453,11 +453,8 @@ export const Tag = ({
     if ((tags || []).find((tag) => tag.toLowerCase() === value.toLowerCase().trim())) {
       return;
     }
-    console.log("inside handle add");
     if (onChange) {
-      console.log("on change exists");
       onChange({ target: { name: "tags", value: [...tags, value.trim()] } });
-      console.log("after onchange");
       setValue("");
     }
   };
@@ -489,7 +486,7 @@ export const Tag = ({
   };
 
   const _handleFocus = () => setOpen(true);
-  // console.log({ suggestions });
+
   return (
     <div css={STYLES_TAG_CONTAINER} style={{ ...style }}>
       <div css={STYLES_INPUT_CONTAINER}>

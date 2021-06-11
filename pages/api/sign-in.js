@@ -1,8 +1,10 @@
+import * as Logging from "~/common/logging";
 import * as Environment from "~/node_common/environment";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+
 import { encryptPasswordClient } from "~/common/utilities";
 
 import JWT from "jsonwebtoken";
@@ -27,7 +29,7 @@ export default async (req, res) => {
     try {
       user = await Data.getUserByEmail({ email: username });
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
   } else {
     try {
@@ -35,7 +37,7 @@ export default async (req, res) => {
         username: req.body.data.username.toLowerCase(),
       });
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
     }
   }
 

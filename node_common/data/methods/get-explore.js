@@ -1,3 +1,5 @@
+import * as Logging from "~/common/logging";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ earliestTimestamp, latestTimestamp }) => {
@@ -84,7 +86,7 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
       return JSON.parse(JSON.stringify(query));
     },
     errorFn: async (e) => {
-      console.log({
+      Logging.error({
         error: true,
         decorator: "GET_EXPLORE",
       });

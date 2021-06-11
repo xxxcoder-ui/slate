@@ -1,6 +1,7 @@
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
+import * as Logging from "~/common/logging";
 
 import { createOAuthProvider } from "~/node_common/managers/twitter";
 
@@ -23,7 +24,7 @@ export default async (req, res) => {
     await Data.createTwitterToken({ token: authToken, tokenSecret: authSecretToken });
     res.json({ authToken });
   } catch (e) {
-    console.log("error", e);
+    Logging.error("error", e);
     res.status(500).send({ decorator: "SERVER_TWITTER_REQUEST_TOKEN_FAILED", error: true });
   }
 };

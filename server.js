@@ -4,7 +4,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Serializers from "~/node_common/serializers";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as Websocket from "~/node_common/nodejs-websocket";
-import * as NodeLogging from "~/node_common/node-logging";
+import * as Logging from "~/common/logging";
 import * as Validations from "~/common/validations";
 import * as Window from "~/common/window";
 import * as Strings from "~/common/strings";
@@ -208,7 +208,6 @@ app.prepare().then(async () => {
     if (!redirected) {
       page.params = req.query;
     }
-    console.log({ page });
 
     if (!page) {
       return handler(req, res, req.url, {
@@ -543,14 +542,14 @@ app.prepare().then(async () => {
     if (e) throw e;
     Websocket.create();
 
-    NodeLogging.log(`started on http://localhost:${Environment.PORT}`);
+    Logging.log(`started on http://localhost:${Environment.PORT}`);
 
     exploreSlates = await fetchExploreSlates();
 
     const filecoinNumber = new FilecoinNumber("10000", "attoFil");
 
-    console.log(`Testing Values: ${filecoinNumber.toPicoFil()} PICO FIL`);
-    console.log(`Testing Values: ${filecoinNumber.toAttoFil()} ATTO FIL`);
-    console.log(`Testing Values: ${filecoinNumber.toFil()} FIL`);
+    Logging.log(`Testing Values: ${filecoinNumber.toPicoFil()} PICO FIL`);
+    Logging.log(`Testing Values: ${filecoinNumber.toAttoFil()} ATTO FIL`);
+    Logging.log(`Testing Values: ${filecoinNumber.toFil()} FIL`);
   });
 });

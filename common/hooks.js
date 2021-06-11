@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Logging from "~/common/logging";
 
 export const useMounted = () => {
   const isMounted = React.useRef(true);
@@ -60,7 +61,7 @@ export const useForm = ({
         setInternal((prev) => ({ ...prev, isValidating: true }));
         errors = await validate(state.values, {});
       } catch (e) {
-        console.log("validation", e);
+        Logging.error(e);
       } finally {
         setInternal((prev) => ({ ...prev, isValidating: false }));
         setState((prev) => ({
@@ -102,7 +103,7 @@ export const useForm = ({
         errors = await validate(state.values, { ...state.errors });
         if (_hasError(errors)) return;
       } catch (e) {
-        console.log("validation", e);
+        Logging.error(e);
       } finally {
         setInternal((prev) => ({ ...prev, isValidating: false }));
         setState((prev) => ({ ...prev, errors }));
@@ -115,7 +116,7 @@ export const useForm = ({
     try {
       await onSubmit(state.values);
     } catch (e) {
-      console.log("submitting", e);
+      Logging.error(e);
     } finally {
       setInternal((prev) => ({ ...prev, isSubmitting: false }));
     }
@@ -125,7 +126,7 @@ export const useForm = ({
     e.preventDefault();
     submitAsync()
       .then()
-      .catch((e) => console.log(e));
+      .catch((e) => Logging.error(e));
   };
 
   // Note(Amine): this prop getter will overide the form onSubmit handler

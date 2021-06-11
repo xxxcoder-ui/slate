@@ -55,8 +55,6 @@ export default async (req, res) => {
     files,
     user,
   });
-  console.log(filteredFiles);
-  console.log(duplicateFiles);
 
   // if (!newFiles.length) {
   //   return res.status(400).send({ decorator: "SERVER_CREATE_FILE_DUPLICATE", error: true });
@@ -74,7 +72,6 @@ export default async (req, res) => {
       return res.status(500).send({ decorator: createdFiles.decorator, error: createdFiles.error });
     }
   }
-  console.log(createdFiles);
 
   let added = createdFiles?.length || 0;
 

@@ -8,6 +8,7 @@ import * as Strings from "~/common/strings";
 import * as Window from "~/common/window";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as Filecoin from "~/common/filecoin";
+import * as Logging from "~/common/logging";
 
 import WebSocket from "ws";
 
@@ -133,13 +134,6 @@ export const getById = async ({ id }) => {
     includeFiles: true,
   });
 
-  // try {
-  //   JSON.stringify(user);
-  // } catch (e) {
-  //   console.log(user);
-  //   console.log("errored on json.stringify user (1st time)");
-  // }
-
   if (!user) {
     return null;
   }
@@ -231,13 +225,6 @@ export const getById = async ({ id }) => {
     followers,
   };
 
-  // try {
-  //   JSON.stringify(viewer);
-  // } catch (e) {
-  //   console.log(viewer);
-  //   console.log("errored on json.stringify viewer (2nd time)");
-  // }
-
   return viewer;
 };
 
@@ -297,7 +284,7 @@ export const getDealHistory = async ({ id }) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
     Social.sendTextileSlackMessage({
       file: "/node_common/managers/viewer.js",
       user,

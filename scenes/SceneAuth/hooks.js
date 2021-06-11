@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as Utilities from "~/common/utilities";
+import * as Logging from "~/common/logging";
 
 const AUTH_STATE_GRAPH = {
   initial: {
@@ -303,7 +304,7 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
       goToTwitterSignupScene({ twitterEmail: response.email });
     } catch (e) {
       // TODO failure
-      console.log("error", e);
+      Logging.error("error", e);
       if (popup) popup.close();
       setIsLoggingIn(false);
     }
