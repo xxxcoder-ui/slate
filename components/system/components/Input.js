@@ -15,7 +15,6 @@ const INPUT_STYLES = css`
   width: 100%;
   height: 40px;
   background: transparent;
-  color: ${Constants.system.black};
   font-size: 14px;
   border-radius: 8px;
 
@@ -61,7 +60,8 @@ const STYLES_INPUT = css`
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;
-  border: 1px solid ${Constants.system.gray30};
+  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  color: ${Constants.system.black};
 
   :focus {
     outline: 0;
@@ -252,7 +252,7 @@ export class Input extends React.Component {
               required={this.props.required}
               style={{
                 width: this.props.copyable || this.props.icon ? "calc(100% - 32px)" : "100%",
-                ...this.props.inputFieldStyle,
+                ...this.props.textStyle,
               }}
             />
             <div

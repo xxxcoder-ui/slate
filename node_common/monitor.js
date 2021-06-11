@@ -1,18 +1,14 @@
 import * as Social from "~/node_common/social";
 import * as Arrays from "~/common/arrays";
 
+//things taht could be combined into this:
 //update search (searchmanager)
 //send websocket update (viewermanager)
 //send slack message (Social.sendSlackMessage)
-
-//maybe for errors, you also send a slack message and tag martina?
+//create activity
+//update summary counts
 
 //maybe you could remove the try catch from here and put it inside the send part
-
-//upload, like file, add file to collection, save copy, subscribe/follow, download
-
-//create activity for it
-//create summary counts for it?
 
 const getUserURL = (user) => {
   const userProfileURL = `https://slate.host/${user.username}`;

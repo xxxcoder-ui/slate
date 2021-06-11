@@ -287,7 +287,6 @@ class CarouselSidebar extends React.Component {
     tags: this.props.file.data.tags || [],
     suggestions: this.props.viewer?.tags || [],
     selected: {},
-    inPublicSlates: 0,
     isUploading: false,
     isDownloading: false,
     showSavedMessage: false,
@@ -478,9 +477,6 @@ class CarouselSidebar extends React.Component {
     if (this.state.selected[slate.id]) {
       UserBehaviors.removeFromSlate({ slate, ids: [this.props.file.id] });
     } else {
-      if (slate.isPublic) {
-        inPublicSlates += 1;
-      }
       UserBehaviors.saveCopy({
         slate,
         files: [this.props.file],
@@ -521,7 +517,7 @@ class CarouselSidebar extends React.Component {
   _handleToggleVisibility = async (e) => {
     if (this.props.external || !this.props.isOwner || !this.props.viewer) return;
     const isPublic = this.props.file.isPublic;
-    const slateIsPublic = this.props.data.isPublic;
+    const slateIsPublic = this.props.data?.isPublic;
     let selected = cloneDeep(this.state.selected);
 
     const slateIds = Object.entries(this.state.selected)
@@ -586,6 +582,7 @@ class CarouselSidebar extends React.Component {
               fontSize: Constants.typescale.lvl1,
               ...STYLES_INPUT,
             }}
+            textStyle={{ color: Constants.system.white }}
           />
           <Textarea
             name="body"
@@ -602,6 +599,7 @@ class CarouselSidebar extends React.Component {
             onChange={this._handleChange}
             id={`sidebar-label-source`}
             style={STYLES_INPUT}
+            textStyle={{ color: Constants.system.white }}
           />
           <Input
             full
@@ -611,6 +609,7 @@ class CarouselSidebar extends React.Component {
             onChange={this._handleChange}
             id={`sidebar-label-author`}
             style={{ ...STYLES_INPUT, marginBottom: 12 }}
+            textStyle={{ color: Constants.system.white }}
           />
           <div css={STYLES_OPTIONS_SECTION}>
             <Tag
@@ -842,6 +841,7 @@ class CarouselSidebar extends React.Component {
                 ...STYLES_INPUT,
                 marginTop: 12,
               }}
+              textStyle={{ color: Constants.system.white }}
             />
           )}
         </div>

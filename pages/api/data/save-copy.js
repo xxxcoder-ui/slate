@@ -112,7 +112,7 @@ export default async (req, res) => {
   if (slate.isPublic) {
     SearchManager.updateFile(createdFiles, "ADD");
   }
-  ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });]
+  ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
   Monitor.saveCopy({ user, files: createdFiles });
 
   return res.status(200).send({

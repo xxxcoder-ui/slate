@@ -112,7 +112,7 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
               )
             : SVG.RightArrow
         }
-        inputFieldStyle={{ width: "100% !important" }}
+        textStyle={{ width: "100% !important" }}
         containerStyle={{ marginTop: "28px" }}
         style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         name="pin"
