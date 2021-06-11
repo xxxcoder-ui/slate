@@ -51,7 +51,6 @@ export const encryptPasswordClient = async (text) => {
 
   for (let i = 1; i <= rounds; i++) {
     hash = await BCrypt.hash(text, salt);
-    console.log(`\nPASSWORD HASH ROUND ${i} COMPLETE\n`);
   }
 
   return hash;

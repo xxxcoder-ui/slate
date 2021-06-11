@@ -63,7 +63,7 @@ export const getByHref = (href, viewer) => {
 
   let redirected = false;
 
-  if (viewer && page === authPage) {
+  if (viewer && page.id === authPage.id) {
     redirected = true;
     page = { ...activityPage };
   }
@@ -85,7 +85,7 @@ export const getByHref = (href, viewer) => {
     }
     page.params = params;
   }
-  return { page, details };
+  return { page, details, redirected };
 };
 
 const authPage = {

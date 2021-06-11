@@ -204,8 +204,12 @@ app.prepare().then(async () => {
       });
     }
 
-    let { page } = NavigationData.getByHref(req.path, viewer);
-    page = { ...page, params: req.query };
+    let { page, redirected } = NavigationData.getByHref(req.path, viewer);
+    if (!redirected) {
+      page.params = req.query;
+    }
+    console.log({ page });
+
     if (!page) {
       return handler(req, res, req.url, {
         isMobile,
@@ -305,9 +309,11 @@ app.prepare().then(async () => {
         id,
       });
     }
-    let { page } = NavigationData.getByHref(req.path, viewer);
 
-    page = { ...page, params: req.query };
+    let { page, redirected } = NavigationData.getByHref(req.path, viewer);
+    if (!redirected) {
+      page.params = req.query;
+    }
 
     let user = await Data.getUserByUsername({
       username,
@@ -425,8 +431,10 @@ app.prepare().then(async () => {
       });
     }
 
-    let { page } = NavigationData.getByHref(req.path, viewer);
-    page = { ...page, params: req.query };
+    let { page, redirected } = NavigationData.getByHref(req.path, viewer);
+    if (!redirected) {
+      page.params = req.query;
+    }
 
     const slate = await Data.getSlateByName({
       slatename,
