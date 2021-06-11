@@ -1912,3 +1912,28 @@ export const FolderPlus = (props) => (
     />
   </svg>
 );
+
+export const PlayButton = (props) => (
+  <svg width={40} height={40} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <g filter="url(#prefix__filter0_b)">
+      <rect width={40} height={40} rx={20} fill="#fff" fillOpacity={0.3} />
+      <path d="M15.333 14l9.334 6-9.334 6V14z" fill="#F2F2F7" />
+    </g>
+    <defs>
+      <filter
+        id="prefix__filter0_b"
+        x={-75}
+        y={-75}
+        width={190}
+        height={190}
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity={0} result="BackgroundImageFix" />
+        <feGaussianBlur in="BackgroundImage" stdDeviation={37.5} />
+        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur" />
+        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur" result="shape" />
+      </filter>
+    </defs>
+  </svg>
+);
