@@ -66,3 +66,5 @@ export const coerceToArray = (input) => {
     return [input];
   }
 };
+
+export const getFileExtension = (filename) => filename?.split(".").pop();
