@@ -188,7 +188,7 @@ export default function Initial({
                 autoFocus
                 label="Sign up with email"
                 placeholder="Email"
-                type="email"
+                type="text"
                 name="email"
                 full
                 style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
@@ -196,8 +196,7 @@ export default function Initial({
                 containerStyle={{ marginTop: "4px" }}
                 {...getFieldProps("email")}
               />
-
-              <motion.div layout>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>
                 <System.ButtonPrimary
                   full
                   type="submit"
