@@ -66,3 +66,8 @@ export const coerceToArray = (input) => {
     return [input];
   }
 };
+
+export const extendEmotionCss = (styles, propStyles) => {
+  if (!propStyles) return styles;
+  return [styles, propStyles].flat();
+};

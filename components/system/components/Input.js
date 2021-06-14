@@ -2,9 +2,9 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
-import { P } from "~/components/system";
 
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
 
@@ -214,7 +214,7 @@ export class Input extends React.Component {
             description={this.props.description}
           />
           <div
-            css={[STYLES_INPUT, this.props.inputCss]}
+            css={Utilities.extendEmotionCss(STYLES_INPUT, this.props.inputCss)}
             style={{
               width: "100%",
               position: "relative",
