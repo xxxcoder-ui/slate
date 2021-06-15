@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as SVG from "~/common/svg";
 
 import { P } from "~/components/system/components/Typography";
 import { Input } from "~/components/system";
@@ -109,7 +108,9 @@ export default function Field({
       <ContainerComponent>
         <Input inputCss={[STYLES_INPUT, STYLES_STATUS]} {...props} />
       </ContainerComponent>
-      {props.name === "password" && validations(<PasswordValidations validations={validations} />)}
+      {props.name === "password" && validations && (
+        <PasswordValidations validations={validations} />
+      )}
       {props.name !== "password" && (showError || showSuccess) && (
         <ErrorWrapper>
           <P css={STYLES_SMALL_TEXT} style={{ marginTop: "8px" }}>

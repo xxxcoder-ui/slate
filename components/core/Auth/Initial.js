@@ -11,7 +11,7 @@ import { css } from "@emotion/react";
 import { motion, AnimateSharedLayout } from "framer-motion";
 import { useForm, useField } from "~/common/hooks";
 import Field from "~/components/core/Field";
-import { Toggle, SignUpPopover } from "~/components/core/Auth/components";
+import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
@@ -158,7 +158,7 @@ export default function Initial({
               autoFocus
               label="Email address or username"
               placeholder="Email/username"
-              icon={SVG.RightArrow}
+              icon={ArrowButton}
               name="email/username"
               type="text"
               full

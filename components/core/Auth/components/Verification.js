@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as System from "~/components/system";
-import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 
 import Field from "~/components/core/Field";
@@ -9,7 +8,7 @@ import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { useField } from "~/common/hooks";
-import { SignUpPopover } from "~/components/core/Auth/components";
+import { SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
 
 const STYLES_HELPER = (theme) => css`
   text-align: center;
@@ -110,7 +109,7 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
                   style={{ height: 16, width: 16, marginLeft: 16, position: "absolute", right: 12 }}
                 />
               )
-            : SVG.RightArrow
+            : ArrowButton
         }
         textStyle={{ width: "100% !important" }}
         containerStyle={{ marginTop: "28px" }}
