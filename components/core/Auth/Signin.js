@@ -52,7 +52,7 @@ const STYLES_MESSAGE = (theme) => css`
   margin-top: 16px;
   border: 1px solid ${theme.system.white};
   background-color: white;
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background-color: ${theme.system.bgBlurWhiteTRN};
     backdrop-filter: blur(75px);
   }
