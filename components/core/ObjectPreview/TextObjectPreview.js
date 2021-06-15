@@ -47,7 +47,7 @@ const STYLES_CONTENT_PADDING = css`
 const DEFAULT_CONTENT =
   "This web of time – the strands of which approach one another, bifurcate, intersect or ignore each other through the centuries – embraces every possibility. We do not exist in most of them. In some you exist and not I, while in others I do, and you do not.";
 
-export default function ActivityTextPreview({ url, type, ...props }) {
+export default function TextObjectPreview({ url, type, ...props }) {
   const [{ content, error }, setState] = React.useState({ content: "", error: undefined });
 
   React.useLayoutEffect(() => {

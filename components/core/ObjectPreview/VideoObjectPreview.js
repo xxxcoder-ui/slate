@@ -36,7 +36,7 @@ const STYLES_VIDEO_PLAYBUTTON = css`
   transition: opacity 0.3s;
 `;
 
-export default function ActivityVideoPreview({ url, type, ...props }) {
+export default function VideoObjectPreview({ url, type, ...props }) {
   const previewerRef = React.useRef();
   const { isInView } = useInView({
     ref: previewerRef,

@@ -45,7 +45,7 @@ const ImagePlaceholder = ({ blurhash }) => (
   </div>
 );
 
-export default function ActivityImagePreview({ url, file, ...props }) {
+export default function ImageObjectPreview({ url, file, ...props }) {
   const previewerRef = React.useRef();
   const [isLoading, setLoading] = React.useState(true);
   const handleOnLoaded = () => setLoading(false);

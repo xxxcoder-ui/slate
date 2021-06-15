@@ -15,8 +15,7 @@ import { Link } from "~/components/core/Link";
 
 import EmptyState from "~/components/core/EmptyState";
 import ScenePage from "~/components/core/ScenePage";
-import ActivityObjectPreview from "~/components/core/ActivityObjectPreview";
-import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
+import ObjectPreview from "~/components/core/ObjectPreview";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_LOADER = css`
@@ -94,7 +93,7 @@ class ActivitySquare extends React.Component {
 
     return (
       <div>
-        <ActivityObjectPreview file={item.file} />
+        <ObjectPreview file={item.file} />
       </div>
     );
   }
@@ -129,7 +128,7 @@ const ActivityRectangle = ({ item, width, height }) => {
   let numObjects = item.slate?.objects?.length || 0;
   return (
     <div css={STYLES_IMAGE_BOX} style={{ width, height }}>
-      {file ? <ActivityObjectPreview file={file} /> : null}
+      {file ? <ObjectPreview file={file} /> : null}
       <div css={STYLES_GRADIENT} />
       <div css={STYLES_TEXT_AREA}>
         <div

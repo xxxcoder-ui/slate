@@ -23,7 +23,7 @@ const STYLES_LETTER = (theme) => css`
   font-size: ${theme.typescale.lvl8};
 `;
 
-export default function ActivityFontPreview({ file, type, ...props }) {
+export default function FontObjectPreview({ file, type, ...props }) {
   const { fontName } = useFont({ cid: file.cid }, [file.cid]);
 
   return (

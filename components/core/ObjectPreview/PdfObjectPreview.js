@@ -30,7 +30,7 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function ActivityPDFPreview({ type, ...props }) {
+export default function PDFObjectPreview({ type, ...props }) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>

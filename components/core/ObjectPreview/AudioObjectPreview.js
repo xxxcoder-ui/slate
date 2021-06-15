@@ -4,36 +4,32 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 
 import { P } from "~/components/system";
+
 import { css } from "@emotion/react";
 
 import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
-import EpubPlaceholder from "./placeholders/EPUB";
+import AudioPlaceholder from "./placeholders/Audio";
 
 const STYLES_CONTAINER = css`
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(199 / 248) * 100}%;
-    height: ${(123 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`
   position: absolute;
   text-transform: uppercase;
   background-color: ${theme.system.bgLight};
-  bottom: 32%;
+  bottom: 23.7%;
   left: 50%;
   transform: translateX(-50%);
   padding: 2px 8px;
   border-radius: 4px;
 `;
 
-export default function ActivityEpubPreview({ type, ...props }) {
+export default function AudioObjectPreview({ type, ...props }) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
-        <EpubPlaceholder />
+        <AudioPlaceholder />
         <div css={STYLES_TAG}>
           <P css={Styles.SMALL_TEXT}>{type}</P>
         </div>

@@ -19,7 +19,7 @@ import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
 import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 
 import FilePreviewBubble from "~/components/core/FilePreviewBubble";
-import ActivityObjectPreview from "~/components/core/ActivityObjectPreview";
+import ObjectPreview from "~/components/core/ObjectPreview";
 import isEqual from "lodash/isEqual";
 
 const STYLES_CONTAINER_HOVER = css`
@@ -737,7 +737,7 @@ export default class DataView extends React.Component {
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
                       onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                     >
-                      <ActivityObjectPreview file={each} isSelected={i in this.state.checked} />
+                      <ObjectPreview file={each} isSelected={i in this.state.checked} />
                     </Selectable>
                   </Link>
                 );

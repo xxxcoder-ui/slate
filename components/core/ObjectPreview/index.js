@@ -3,19 +3,19 @@ import * as Validations from "~/common/validations";
 import * as Utilities from "~/common/utilities";
 import * as Strings from "~/common/strings";
 
-import ActivityImagePreview from "./ActivityImagePreview";
-import ActivityVideoPreview from "./ActivityVideoPreview";
-import ActivityTextPreview from "./ActivityTextPreview";
-import ActivityPdfPreview from "./ActivityPdfPreview";
-import ActivityEpubPreview from "./ActivityEpubPreview";
-import ActivityAudioPreview from "./ActivityAudioPreview";
-import ActivityKeynotePreview from "./ActivityKeynotePreview";
-import ActivityDefaultPreview from "./ActivityDefaultPreview";
-import Activity3DPreview from "./Activity3dPreview";
-import ActivityCodePreview from "./ActivityCodePreview";
-import ActivityFontPreview from "./ActivityFontPreview";
+import ImageObjectPreview from "./ImageObjectPreview";
+import VideoObjectPreview from "./VideoObjectPreview";
+import TextObjectPreview from "./TextObjectPreview";
+import PdfObjectPreview from "./PdfObjectPreview";
+import EpubObjectPreview from "./EpubObjectPreview";
+import AudioObjectPreview from "./AudioObjectPreview";
+import KeynoteObjectPreview from "./KeynoteObjectPreview";
+import DefaultObjectPreview from "./DefaultObjectPreview";
+import Object3DPreview from "./3dObjectPreview";
+import CodeObjectPreview from "./CodeObjectPreview";
+import FontObjectPreview from "./FontObjectPreview";
 
-const ActivityObjectPreview = ({ file, ...props }) => {
+const ObjectPreview = ({ file, ...props }) => {
   const title = file.data.name || file.filename;
   const { likeCount, saveCount } = file;
   const { type, coverImage } = file.data;
@@ -27,7 +27,7 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   if (Validations.isPreviewableImage(type)) {
     const fileType = type.split("/")[1];
     return (
-      <ActivityImagePreview
+      <ImageObjectPreview
         type={fileType}
         title={title}
         likes={likeCount}
@@ -42,7 +42,7 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   if (type.startsWith("video/")) {
     const fileExtension = type.split("/")[1];
     return (
-      <ActivityVideoPreview
+      <VideoObjectPreview
         title={title}
         likes={likeCount}
         saves={saveCount}
@@ -55,14 +55,14 @@ const ActivityObjectPreview = ({ file, ...props }) => {
 
   if (Validations.isPdfType(type)) {
     return (
-      <ActivityPdfPreview type="PDF" title={title} likes={likeCount} saves={saveCount} {...props} />
+      <PdfObjectPreview type="PDF" title={title} likes={likeCount} saves={saveCount} {...props} />
     );
   }
 
   if (type.startsWith("audio/")) {
     const fileType = Utilities.getFileExtension(file.filename) || "audio";
     return (
-      <ActivityAudioPreview
+      <AudioObjectPreview
         type={fileType}
         title={title}
         likes={likeCount}
@@ -74,19 +74,13 @@ const ActivityObjectPreview = ({ file, ...props }) => {
 
   if (type === "application/epub+zip") {
     return (
-      <ActivityEpubPreview
-        type="EPUB"
-        title={title}
-        likes={likeCount}
-        saves={saveCount}
-        {...props}
-      />
+      <EpubObjectPreview type="EPUB" title={title} likes={likeCount} saves={saveCount} {...props} />
     );
   }
 
   if (file.filename.endsWith(".key")) {
     return (
-      <ActivityKeynotePreview
+      <KeynoteObjectPreview
         type="KEYNOTE"
         title={title}
         likes={likeCount}
@@ -99,7 +93,7 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   if (Validations.isCodeFile(file.filename)) {
     const fileType = Utilities.getFileExtension(file.filename) || "code";
     return (
-      <ActivityCodePreview
+      <CodeObjectPreview
         type={fileType}
         title={title}
         likes={likeCount}
@@ -112,7 +106,7 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   if (Validations.isFontFile(file.filename)) {
     const fileType = Utilities.getFileExtension(file.filename) || "font";
     return (
-      <ActivityFontPreview
+      <FontObjectPreview
         file={file}
         type={fileType}
         url={url}
@@ -127,7 +121,7 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   if (Validations.isMarkdown(file.filename, type)) {
     const fileType = Utilities.getFileExtension(file.filename) || "text";
     return (
-      <ActivityTextPreview
+      <TextObjectPreview
         url={url}
         type={fileType}
         title={title}
@@ -140,12 +134,12 @@ const ActivityObjectPreview = ({ file, ...props }) => {
 
   if (Validations.is3dFile(file.filename)) {
     return (
-      <Activity3DPreview type="3D" title={title} likes={likeCount} saves={saveCount} {...props} />
+      <Object3DPreview type="3D" title={title} likes={likeCount} saves={saveCount} {...props} />
     );
   }
 
   return (
-    <ActivityDefaultPreview
+    <DefaultObjectPreview
       type="FILE"
       title={title}
       likes={likeCount}
@@ -155,4 +149,4 @@ const ActivityObjectPreview = ({ file, ...props }) => {
   );
 };
 
-export default React.memo(ActivityObjectPreview);
+export default React.memo(ObjectPreview);

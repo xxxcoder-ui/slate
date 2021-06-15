@@ -7,14 +7,14 @@ import { P } from "~/components/system";
 import { css } from "@emotion/react";
 
 import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
-import KeynotePlaceholder from "./placeholders/Keynote";
+import EpubPlaceholder from "./placeholders/EPUB";
 
 const STYLES_CONTAINER = css`
   height: 100%;
   svg {
     overflow: visible !important;
-    width: ${(183 / 248) * 100}%;
-    height: ${(115 / 248) * 100}%;
+    width: ${(199 / 248) * 100}%;
+    height: ${(123 / 248) * 100}%;
   }
 `;
 
@@ -22,18 +22,18 @@ const STYLES_TAG = (theme) => css`
   position: absolute;
   text-transform: uppercase;
   background-color: ${theme.system.bgLight};
-  bottom: 36%;
+  bottom: 32%;
   left: 50%;
   transform: translateX(-50%);
   padding: 2px 8px;
   border-radius: 4px;
 `;
 
-export default function ActivityKeynotePreview({ type, ...props }) {
+export default function EpubObjectPreview({ type, ...props }) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
-        <KeynotePlaceholder />
+        <EpubPlaceholder />
         <div css={STYLES_TAG}>
           <P css={Styles.SMALL_TEXT}>{type}</P>
         </div>
