@@ -5,15 +5,17 @@ import * as Window from "~/common/window";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
+import * as Styles from "~/common/styles";
 
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { css } from "@emotion/react";
-import { TabGroup, PrimaryTabGroup, SecondaryTabGroup } from "~/components/core/TabGroup";
+import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Link } from "~/components/core/Link";
 
 import EmptyState from "~/components/core/EmptyState";
 import ScenePage from "~/components/core/ScenePage";
+import ActivityObjectPreview from "~/components/core/ActivityObjectPreview";
 import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
@@ -30,11 +32,9 @@ const STYLES_IMAGE_BOX = css`
   position: relative;
   box-shadow: ${Constants.shadow.light};
   margin: 10px;
-
   :hover {
     box-shadow: ${Constants.shadow.medium};
   }
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     overflow: hidden;
     border-radius: 8px;
@@ -78,21 +78,9 @@ const STYLES_GRADIENT = css`
   position: absolute;
   top: 0px;
   left: 0px;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     overflow: hidden;
     border-radius: 0px 0px 8px 8px;
-  }
-`;
-
-const STYLES_ACTIVITY_GRID = css`
-  margin: -10px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    margin-top: 24px;
   }
 `;
 
@@ -102,24 +90,11 @@ class ActivitySquare extends React.Component {
   };
 
   render() {
-    const item = this.props.item;
-    const size = this.props.size;
-    // const isImage =
-    //   Validations.isPreviewableImage(item.file.data.type) || !!item.file.data.coverImage;
+    const { item } = this.props;
+
     return (
-      <div
-        css={STYLES_IMAGE_BOX}
-        style={{ width: size, height: size }}
-        onMouseEnter={() => this.setState({ showText: true })}
-        onMouseLeave={() => this.setState({ showText: false })}
-      >
-        <SlateMediaObjectPreview
-          file={item.file}
-          centeredImage
-          // iconOnly
-          style={{ border: "none" }}
-          imageStyle={{ border: "none" }}
-        />
+      <div>
+        <ActivityObjectPreview file={item.file} />
       </div>
     );
   }
@@ -154,15 +129,7 @@ const ActivityRectangle = ({ item, width, height }) => {
   let numObjects = item.slate?.objects?.length || 0;
   return (
     <div css={STYLES_IMAGE_BOX} style={{ width, height }}>
-      {file ? (
-        <SlateMediaObjectPreview
-          file={file}
-          centeredImage
-          iconOnly
-          style={{ border: "none" }}
-          imageStyle={{ border: "none" }}
-        />
-      ) : null}
+      {file ? <ActivityObjectPreview file={file} /> : null}
       <div css={STYLES_GRADIENT} />
       <div css={STYLES_TEXT_AREA}>
         <div
@@ -418,7 +385,7 @@ export default class SceneActivity extends React.Component {
           />
           {activity.length ? (
             <div>
-              <div css={STYLES_ACTIVITY_GRID}>
+              <div css={Styles.OBJECTS_PREVIEW_GRID}>
                 {activity.map((item, i) => {
                   if (item.type === "CREATE_SLATE") {
                     return (
