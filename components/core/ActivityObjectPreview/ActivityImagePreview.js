@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Styles from "~/common/styles";
 
 import { AspectRatio } from "~/components/system";
 import { useInView } from "~/common/hooks";
@@ -15,19 +16,19 @@ const STYLES_PLACEHOLDER_ABSOLUTE = css`
   width: 100%;
   height: 100%;
 `;
-const STYLES_PLACEHOLDER_CONTAINER = css`
+const STYLES_FLUID_CONTAINER = css`
   position: relative;
   width: 100%;
-  display: flex;
   height: 100%;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
+`;
+
+const STYLES_IMAGE = css`
+  object-fit: cover;
 `;
 
 const ImagePlaceholder = ({ blurhash }) => (
   <div css={STYLES_PLACEHOLDER_ABSOLUTE}>
-    <div css={STYLES_PLACEHOLDER_CONTAINER}>
+    <div css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
       <AspectRatio ratio={186 / 302}>
         <div>
           <Blurhash
@@ -44,16 +45,7 @@ const ImagePlaceholder = ({ blurhash }) => (
   </div>
 );
 
-const STYLES_IMAGE_CONTAINER = css`
-  position: relative;
-  width: 100%;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
-
-export default function ActivityImagePreview({ url, file, ...props }) {
+const ActivityImagePreview = ({ url, file, ...props }) => {
   const previewerRef = React.useRef();
   const [isLoading, setLoading] = React.useState(true);
   const handleOnLoaded = () => setLoading(false);
@@ -71,17 +63,26 @@ export default function ActivityImagePreview({ url, file, ...props }) {
       : null;
   }, [file]);
 
+  const shouldShowPlaceholder = isLoading && blurhash;
+
   return (
     <ObjectPreviewPremitive {...props}>
-      <div ref={previewerRef} css={STYLES_IMAGE_CONTAINER}>
-        {isLoading && blurhash && <ImagePlaceholder blurhash={blurhash} />}
+      <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
         {isInView && (
           <AspectRatio ratio={186 / 302}>
             {/** NOTE(amine): if it's loaded */}
-            <img src={url} style={{ objectFit: "cover" }} onLoad={handleOnLoaded} />
+            <img
+              css={STYLES_IMAGE}
+              src={url}
+              alt={`${file.name} preview`}
+              onLoad={handleOnLoaded}
+            />
           </AspectRatio>
         )}
+        {shouldShowPlaceholder && <ImagePlaceholder blurhash={blurhash} />}
       </div>
     </ObjectPreviewPremitive>
   );
-}
+};
+
+export default React.memo(ActivityImagePreview);
