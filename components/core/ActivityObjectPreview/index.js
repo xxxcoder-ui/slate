@@ -15,7 +15,7 @@ import Activity3DPreview from "./Activity3dPreview";
 import ActivityCodePreview from "./ActivityCodePreview";
 import ActivityFontPreview from "./ActivityFontPreview";
 
-export default function ActivityObjectPreview({ file, ...props }) {
+const ActivityObjectPreview = ({ file, ...props }) => {
   const title = file.data.name || file.filename;
   const { likeCount, saveCount } = file;
   const { type, coverImage } = file.data;
@@ -153,4 +153,6 @@ export default function ActivityObjectPreview({ file, ...props }) {
       {...props}
     />
   );
-}
+};
+
+export default React.memo(ActivityObjectPreview);

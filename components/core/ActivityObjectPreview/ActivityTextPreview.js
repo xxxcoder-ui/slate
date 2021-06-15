@@ -3,14 +3,13 @@ import "isomorphic-fetch";
 import * as React from "react";
 import * as Styles from "~/common/styles";
 
-import { AspectRatio, SVG, P } from "~/components/system";
-import { useInView } from "~/common/hooks";
+import { P } from "~/components/system";
 import { css } from "@emotion/react";
 
 import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
 import TextPlaceholder from "./placeholders/Text";
 
-const STYLES_TEXT_CONTAINER = css`
+const STYLES_CONTAINER = css`
   position: relative;
   display: flex;
   height: 100%;
@@ -48,7 +47,7 @@ const STYLES_CONTENT_PADDING = css`
 const DEFAULT_CONTENT =
   "This web of time – the strands of which approach one another, bifurcate, intersect or ignore each other through the centuries – embraces every possibility. We do not exist in most of them. In some you exist and not I, while in others I do, and you do not.";
 
-export default function ActivityTextPreview({ url, file, type, ...props }) {
+export default function ActivityTextPreview({ url, type, ...props }) {
   const [{ content, error }, setState] = React.useState({ content: "", error: undefined });
 
   React.useLayoutEffect(() => {
@@ -64,7 +63,7 @@ export default function ActivityTextPreview({ url, file, type, ...props }) {
 
   return (
     <ObjectPreviewPremitive type={!error && type} {...props}>
-      <div css={STYLES_TEXT_CONTAINER}>
+      <div css={STYLES_CONTAINER}>
         {error ? (
           <>
             <TextPlaceholder text={DEFAULT_CONTENT} />

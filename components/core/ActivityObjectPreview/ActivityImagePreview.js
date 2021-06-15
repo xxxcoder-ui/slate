@@ -45,7 +45,7 @@ const ImagePlaceholder = ({ blurhash }) => (
   </div>
 );
 
-const ActivityImagePreview = ({ url, file, ...props }) => {
+export default function ActivityImagePreview({ url, file, ...props }) {
   const previewerRef = React.useRef();
   const [isLoading, setLoading] = React.useState(true);
   const handleOnLoaded = () => setLoading(false);
@@ -83,6 +83,4 @@ const ActivityImagePreview = ({ url, file, ...props }) => {
       </div>
     </ObjectPreviewPremitive>
   );
-};
-
-export default React.memo(ActivityImagePreview);
+}

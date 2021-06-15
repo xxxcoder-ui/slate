@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Styles from "~/common/styles";
 
 import { AspectRatio, SVG } from "~/components/system";
 import { useInView } from "~/common/hooks";
@@ -8,9 +9,6 @@ import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
 
 const STYLES_PREVIEW_CONTAINER = css`
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
 `;
@@ -38,7 +36,7 @@ const STYLES_VIDEO_PLAYBUTTON = css`
   transition: opacity 0.3s;
 `;
 
-export default function ActivityVideoPreview({ url, file, type, ...props }) {
+export default function ActivityVideoPreview({ url, type, ...props }) {
   const previewerRef = React.useRef();
   const { isInView } = useInView({
     ref: previewerRef,
@@ -70,7 +68,7 @@ export default function ActivityVideoPreview({ url, file, type, ...props }) {
       type={type}
       {...props}
     >
-      <div ref={previewerRef} css={STYLES_PREVIEW_CONTAINER}>
+      <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_PREVIEW_CONTAINER]}>
         {isInView && (
           <AspectRatio ratio={148 / 238}>
             <div>
