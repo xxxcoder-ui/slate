@@ -1,21 +1,16 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
-import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { H4, P } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
-import { Blurhash } from "react-blurhash";
-import { isBlurhashValid } from "blurhash";
 
 const STYLES_BACKGROUND_LIGHT = (theme) => css`
   background-color: ${theme.system.grayLight5};
+  box-shadow: ${theme.shadow.medium};
   border-radius: 8px;
-  transform: translateZ(0);
 `;
 
 const STYLES_WRAPPER = css`
@@ -30,16 +25,16 @@ const STYLES_DESCRIPTION = (theme) => css`
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: ${theme.system.bgLight};
+  background-color: ${theme.system.white};
 
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
     backdrop-filter: blur(75px);
-    -webkit-backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(75px);
   }
 `;
 
-const STYLES_DESCRIPTION_HEADING = css`
+const STYLES_DESCRIPTION_HEADING = (theme) => css`
   overflow: hidden;
   line-height: 1.5;
   text-overflow: ellipsis;
@@ -48,13 +43,11 @@ const STYLES_DESCRIPTION_HEADING = css`
   -webkit-box-orient: vertical;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: 14px;
+    font-size: ${theme.typescale.lvl0};
   }
 `;
 
 const STYLES_DESCRIPTION_META = css`
-  display: flex;
-  align-items: center;
   justify-content: space-between;
   margin-top: 12px;
 `;
@@ -100,49 +93,57 @@ const STYLES_DESCRIPTION_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
+const STYLES_SELECTED_RING = (theme) => css`
+  box-shadow: 0 0 0 2px ${theme.system.blue};
+  border-radius: 8px;
+`;
+
 export default function ObjectPreviewPremitive({
   children,
   likes = 0,
   saves = 0,
   type,
   title,
+  isSelected,
   ...props
 }) {
   return (
-    <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT} {...props}>
-      <div css={STYLES_WRAPPER}>
-        <AspectRatio ratio={1}>
-          <div>{children}</div>
-        </AspectRatio>
+    <div css={isSelected && STYLES_SELECTED_RING}>
+      <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT} {...props}>
+        <div css={STYLES_WRAPPER}>
+          <AspectRatio ratio={1}>
+            <div>{children}</div>
+          </AspectRatio>
 
-        <article css={STYLES_DESCRIPTION}>
-          {type && (
-            <div css={STYLES_DESCRIPTION_TAG}>
-              <P css={Styles.SMALL_TEXT}>{type}</P>
-            </div>
-          )}
-          <H4 css={STYLES_DESCRIPTION_HEADING}>{title}</H4>
+          <article css={STYLES_DESCRIPTION}>
+            {type && (
+              <div css={STYLES_DESCRIPTION_TAG}>
+                <P css={Styles.SMALL_TEXT}>{type}</P>
+              </div>
+            )}
+            <H4 css={STYLES_DESCRIPTION_HEADING}>{title}</H4>
 
-          <div css={STYLES_DESCRIPTION_META}>
-            <div css={STYLES_REACTIONS_CONTAINER}>
-              <div css={STYLES_REACTION}>
-                <SVG.Heart />
-                <P css={STYLES_METRICS}>{likes}</P>
+            <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_DESCRIPTION_META]}>
+              <div css={STYLES_REACTIONS_CONTAINER}>
+                <div css={STYLES_REACTION}>
+                  <SVG.Heart />
+                  <P css={STYLES_METRICS}>{likes}</P>
+                </div>
+                <div css={STYLES_REACTION}>
+                  <SVG.FolderPlus />
+                  <P css={STYLES_METRICS}>{saves}</P>
+                </div>
               </div>
-              <div css={STYLES_REACTION}>
-                <SVG.FolderPlus />
-                <P css={STYLES_METRICS}>{saves}</P>
-              </div>
+              <span
+                css={STYLES_PROFILE_IMAGE}
+                style={{
+                  backgroundImage: `url('https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i')`,
+                }}
+              />
             </div>
-            <span
-              css={STYLES_PROFILE_IMAGE}
-              style={{
-                backgroundImage: `url('https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i')`,
-              }}
-            />
-          </div>
-        </article>
-      </div>
-    </AspectRatio>
+          </article>
+        </div>
+      </AspectRatio>
+    </div>
   );
 }
