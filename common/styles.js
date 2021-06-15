@@ -146,3 +146,15 @@ export const MOBILE_ONLY = css`
     pointer-events: none;
   }
 `;
+
+/* COMMON GRIDS */
+export const OBJECTS_PREVIEW_GRID = css`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  grid-gap: 24px 16px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    grid-gap: 20px 8px;
+    grid-template-columns: repeat(auto-fill, minmax(169px, 1fr));
+  }
+`;
