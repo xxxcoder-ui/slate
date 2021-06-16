@@ -16,6 +16,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
+import { useIntercom } from 'react-use-intercom';
 
 const STYLES_MOBILE_HIDDEN = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -275,6 +276,20 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
     </div>
   );
 };
+
+const OpenIntercom = ({ user }) => {
+  const { show } = useIntercom();
+  
+  const showWithProps = () => show({ 
+    name: user.data.name || user.username, 
+  });
+
+  return(
+    <span style={{ marginRight: 24, cursor: "pointer" }} onClick={() => showWithProps()}>
+      Contact Us
+    </span>
+  );
+} 
 
 const STYLES_DROPDOWN_CONTAINER = css`
   box-sizing: border-box;
@@ -1232,18 +1247,15 @@ export class SearchModal extends React.Component {
               </div>
 
               <div css={STYLES_BOTTOM_BUTTONS}>
+                <OpenIntercom user={this.props.viewer} />
+
                 <span
                   style={{ marginRight: 24, cursor: "pointer" }}
-                  onClick={() => this._handleRedirect("SIDEBAR_HELP")}
-                >
-                  Contact Us
-                </span>
-                <span
-                  style={{ marginRight: 24, cursor: "pointer" }}
-                  onClick={() => this._handleRedirect("SIDEBAR_FAQ")}
+                  onClick={() => { window.open("https://help.slate.host/", "_blank") }}
                 >
                   FAQ
                 </span>
+                
                 {/* <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
                   I'm Feeling Lucky
                 </span> */}
