@@ -23,16 +23,32 @@ export default async ({
   //   "coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??",
   //   ["files", "slate_files.createdAt", "files.id", "objects"]
   // );
-  const selectFields = [
+  const slateFilesFields = ["files", "slate_files.createdAt", "files.id", "objects"];
+  const slateFilesQuery = `coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??`;
+
+  const slateFields = [
     "slate_table",
-    "id",
-    "slatename",
-    "data",
-    "ownerId",
-    "isPublic",
-    "subscriberCount",
-    "fileCount",
+    "slates.id",
+    "slates.slatename",
+    "slates.data",
+    "slates.ownerId",
+    "slates.isPublic",
+    "slates.subscriberCount",
+    "slates.fileCount",
+    ...slateFilesFields,
     "slates",
+    "slate_files",
+    "slate_files.slateId",
+    "slates.id",
+    "files",
+    "files.id",
+    "slate_files.fileId",
+    "slates.id",
+  ];
+  const slateQuery = `WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${slateFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??)`;
+
+  const selectFields = [
+    ...slateFields,
     "activity.id",
     "activity.type",
     "activity.createdAt",
@@ -58,15 +74,13 @@ export default async ({
     "owners",
     "owners.id",
     "activity.ownerId",
-    "activity.ownerId",
-    usersFollowing,
-    "activity.slateId",
-    subscriptions,
   ];
-  const selectQuery =
-    "WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ?? FROM ??) SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
+  const selectQuery = `${slateQuery} SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??`;
   // const selectQuery =
   //   "SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
+
+  const conditionFields = ["activity.ownerId", usersFollowing, "activity.slateId", subscriptions];
+
   return await runQuery({
     label: "GET_ACTIVITY_FOR_USER_ID",
     queryFn: async (DB) => {
@@ -77,7 +91,13 @@ export default async ({
         date.setSeconds(date.getSeconds() - 1);
         query = await DB.raw(
           `${selectQuery} WHERE (?? = ANY(?) OR ?? = ANY(?)) AND ?? < ?? ORDER BY ?? DESC LIMIT 100`,
-          [...selectFields, "activity.createdAt", date.toISOString(), "activity.createdAt"]
+          [
+            ...selectFields,
+            ...conditionFields,
+            "activity.createdAt",
+            date.toISOString(),
+            "activity.createdAt",
+          ]
         );
       } else if (latestTimestamp) {
         //NOTE(martina): for fetching new updates since the last time they loaded
@@ -85,13 +105,19 @@ export default async ({
         date.setSeconds(date.getSeconds() + 1);
         query = await DB.raw(
           `${selectQuery} WHERE (?? = ANY(?) OR ?? = ANY(?)) AND ?? > ?? ORDER BY ?? DESC LIMIT 100`,
-          [...selectFields, "activity.createdAt", date.toISOString(), "activity.createdAt"]
+          [
+            ...selectFields,
+            ...conditionFields,
+            "activity.createdAt",
+            date.toISOString(),
+            "activity.createdAt",
+          ]
         );
       } else {
         //NOTE(martina): for the first fetch they make, when they have not loaded any explore events yet
         query = await DB.raw(
           `${selectQuery} WHERE ?? = ANY(?) OR ?? = ANY(?) ORDER BY ?? DESC LIMIT 100`,
-          [...selectFields, "activity.createdAt"]
+          [...selectFields, ...conditionFields, "activity.createdAt"]
         );
       }
       if (query?.rows) {
@@ -99,7 +125,7 @@ export default async ({
       } else {
         query = [];
       }
-      console.log(query);
+
       return JSON.parse(JSON.stringify(query));
     },
     errorFn: async (e) => {
