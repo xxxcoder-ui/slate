@@ -3,6 +3,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Initial, Signin, Signup, TwitterSignup, ResetPassword } from "~/components/core/Auth";
 
 import {
@@ -12,9 +13,6 @@ import {
   useSignin,
   usePasswordReset,
 } from "~/scenes/SceneAuth/hooks";
-
-const background_image =
-  "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
 
 const STYLES_ROOT = css`
   display: flex;
@@ -26,11 +24,19 @@ const STYLES_ROOT = css`
 
   min-height: 100vh;
   width: 100vw;
-  position: absolute;
+  position: relative;
   overflow: hidden;
-  background-image: url(${background_image});
   background-repeat: no-repeat;
   background-size: cover;
+`;
+
+const STYLES_ROOT_BACKGROUND = css`
+  position: absolute;
+  object-fit: cover;
+  top: 0%;
+  left: 0%;
+  height: 100%;
+  width: 100%;
 `;
 
 const STYLES_MIDDLE = css`
@@ -44,6 +50,17 @@ const STYLES_MIDDLE = css`
   text-align: left;
   padding: 24px;
 `;
+
+const AUTH_BACKGROUNDS = [
+  "https://slate.textile.io/ipfs/bafybeigostprfkuuvuqlehutki32fnvshm2dyy4abqotmlffsca4f7qs7a",
+  "https://slate.textile.io/ipfs/bafybeicmokw3bl5six6u7eflbxcdblpgbx3fat24djrqg6n3hmbleidks4",
+  "https://slate.textile.io/ipfs/bafybeibkttaavlkjxgtafqndyrbgvwqcng67zvd4v36w7fvpajwmdgmxcu",
+  "https://slate.textile.io/ipfs/bafybeicpk7hkbeqdgbwkx3dltlz3akf3qbjpqgfphbnry4b6txnailtlpq",
+  "https://slate.textile.io/ipfs/bafybeibb2xknh3iwwetrro73hw3xfzjgwbi4n4c63wqmwt5hvaloqnh33u",
+  "https://slate.textile.io/ipfs/bafybeig4mij32vyda2jbh6zua3r2rkdpby6wtvninwgxvsejjdnls4wpc4",
+  "https://slate.textile.io/ipfs/bafybeihmoycn4a6zafd2k3fjcadskrxwvri5cwhabatzbyzteouh3s7igi",
+  "https://slate.textile.io/ipfs/bafybeigxssjsv3tmdhz4bj6vl2ca5c6rrhdkepw3mifvlllb7orpx5cfou",
+];
 
 const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) => {
   const {
@@ -136,14 +153,56 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
   );
 };
 
-const WithCustomWrapper = (Component) => (props) => (
-  <WebsitePrototypeWrapper>
+const BackgroundRotate = ({ children }) => {
+  const [backgroundState, setbackgroundState] = React.useState({
+    current: 0,
+    next: 1,
+  });
+
+  const currentBackground = AUTH_BACKGROUNDS[backgroundState.current];
+  const nextBackground = AUTH_BACKGROUNDS[backgroundState.next];
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setbackgroundState((prev) => {
+        const { next } = prev;
+        const backgroundsTotal = AUTH_BACKGROUNDS.length;
+        return { current: next % backgroundsTotal, next: (next + 1) % backgroundsTotal };
+      });
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
     <div css={STYLES_ROOT}>
-      <div css={STYLES_MIDDLE}>
-        <Component {...props} />
+      <div style={{ opacity: 0 }}>
+        <img src={nextBackground} alt="background" css={STYLES_ROOT_BACKGROUND} />
       </div>
+      <AnimatePresence>
+        <motion.img
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          key={currentBackground}
+          src={currentBackground}
+          alt="background"
+          css={STYLES_ROOT_BACKGROUND}
+        />
+      </AnimatePresence>
+      {children}
     </div>
-  </WebsitePrototypeWrapper>
-);
+  );
+};
+const WithCustomWrapper = (Component) => (props) => {
+  return (
+    <WebsitePrototypeWrapper>
+      <BackgroundRotate>
+        <div css={STYLES_MIDDLE}>
+          <Component {...props} />
+        </div>
+      </BackgroundRotate>
+    </WebsitePrototypeWrapper>
+  );
+};
 
 export default WithCustomWrapper(SigninScene);
