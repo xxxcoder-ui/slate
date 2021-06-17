@@ -326,6 +326,7 @@ export default class SceneActivity extends React.Component {
     } else {
       activity = this.state.explore || [];
     }
+    let items = [];
 
     return (
       <WebsitePrototypeWrapper

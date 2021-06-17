@@ -19,11 +19,24 @@ export default async ({
       "3cad78ea-01ad-4c92-8983-a97524fb9e35",
     ]);
   }
+  // const slateFiles = DB.raw(
+  //   "coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??",
+  //   ["files", "slate_files.createdAt", "files.id", "objects"]
+  // );
   const selectFields = [
+    "slate_table",
+    "id",
+    "slatename",
+    "data",
+    "ownerId",
+    "isPublic",
+    "subscriberCount",
+    "fileCount",
+    "slates",
     "activity.id",
     "activity.type",
     "activity.createdAt",
-    "slates",
+    "slate_table",
     "slate",
     "files",
     "file",
@@ -32,8 +45,8 @@ export default async ({
     "owners",
     "owner",
     "activity",
-    "slates",
-    "slates.id",
+    "slate_table",
+    "slate_table.id",
     "activity.slateId",
     "users",
     "users.id",
@@ -51,7 +64,9 @@ export default async ({
     subscriptions,
   ];
   const selectQuery =
-    "SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
+    "WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ?? FROM ??) SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
+  // const selectQuery =
+  //   "SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
   return await runQuery({
     label: "GET_ACTIVITY_FOR_USER_ID",
     queryFn: async (DB) => {
@@ -84,7 +99,7 @@ export default async ({
       } else {
         query = [];
       }
-
+      console.log(query);
       return JSON.parse(JSON.stringify(query));
     },
     errorFn: async (e) => {
