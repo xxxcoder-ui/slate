@@ -1,9 +1,8 @@
 import * as React from "react";
-import * as UserBehaviors from "~/common/user-behaviors";
+import * as Utilities from "common/utilities";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Initial, Signin, Signup, TwitterSignup, ResetPassword } from "~/components/core/Auth";
 
 import {
@@ -28,15 +27,6 @@ const STYLES_ROOT = css`
   overflow: hidden;
   background-repeat: no-repeat;
   background-size: cover;
-`;
-
-const STYLES_ROOT_BACKGROUND = css`
-  position: absolute;
-  object-fit: cover;
-  top: 0%;
-  left: 0%;
-  height: 100%;
-  width: 100%;
 `;
 
 const STYLES_MIDDLE = css`
@@ -153,54 +143,17 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
   );
 };
 
-const BackgroundRotate = ({ children }) => {
-  const [backgroundState, setbackgroundState] = React.useState({
-    current: 0,
-    next: 1,
-  });
-
-  const currentBackground = AUTH_BACKGROUNDS[backgroundState.current];
-  const nextBackground = AUTH_BACKGROUNDS[backgroundState.next];
-
-  React.useEffect(() => {
-    const intervalId = setInterval(() => {
-      setbackgroundState((prev) => {
-        const { next } = prev;
-        const backgroundsTotal = AUTH_BACKGROUNDS.length;
-        return { current: next % backgroundsTotal, next: (next + 1) % backgroundsTotal };
-      });
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  return (
-    <div css={STYLES_ROOT}>
-      <div style={{ opacity: 0 }}>
-        <img src={nextBackground} alt="background" css={STYLES_ROOT_BACKGROUND} />
-      </div>
-      <AnimatePresence>
-        <motion.img
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          key={currentBackground}
-          src={currentBackground}
-          alt="background"
-          css={STYLES_ROOT_BACKGROUND}
-        />
-      </AnimatePresence>
-      {children}
-    </div>
-  );
-};
 const WithCustomWrapper = (Component) => (props) => {
+  const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length);
+  console.log(backgroundIdx);
+  const background = AUTH_BACKGROUNDS[backgroundIdx];
   return (
     <WebsitePrototypeWrapper>
-      <BackgroundRotate>
+      <div style={{ backgroundImage: `url(${background})` }} css={STYLES_ROOT}>
         <div css={STYLES_MIDDLE}>
           <Component {...props} />
         </div>
-      </BackgroundRotate>
+      </div>
     </WebsitePrototypeWrapper>
   );
 };

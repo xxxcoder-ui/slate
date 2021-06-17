@@ -67,6 +67,10 @@ export const coerceToArray = (input) => {
   }
 };
 
+export const getRandomNumberBetween = (min, max) => {
+  return Math.round(Math.random() * (max - min) + min);
+};
+
 export const extendEmotionCss = (styles, propStyles) => {
   if (!propStyles) return styles;
   return [styles, propStyles].flat();
