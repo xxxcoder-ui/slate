@@ -133,7 +133,7 @@ export const usePasswordReset = ({ onAuthenticate }) => {
   };
 
   const resendVerification = async () => {
-    const response = await Actions.resendVerification({
+    const response = await Actions.resendPasswordResetVerification({
       token: verificationToken.current,
     });
     if (Events.hasError(response)) {
@@ -262,7 +262,9 @@ export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
               reject("getAuthTokenAndVerifier Error 2");
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          Logging.error(e);
+        }
       }, 500);
     });
 

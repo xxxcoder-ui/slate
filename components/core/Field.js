@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as SVG from "~/common/svg";
 
 import { P } from "~/components/system/components/Typography";
 import { Input } from "~/components/system";
@@ -22,14 +21,13 @@ const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
   border-radius: 8px;
 `;
 
-const STYLES_PASSWORD_VALIDATION = (theme) =>
-  css`
-    display: flex;
-    align-items: center;
-    & > * + * {
-      margin-left: 8px;
-    }
-  `;
+const STYLES_PASSWORD_VALIDATION = css`
+  display: flex;
+  align-items: center;
+  & > * + * {
+    margin-left: 8px;
+  }
+`;
 
 const STYLES_CIRCLE = (theme) => css`
   height: 8px;
@@ -43,25 +41,18 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
 `;
 
 const STYLES_INPUT = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
+  background-color: rgba(242, 242, 247, 0.7);
+  box-shadow: ${theme.shadow.large};
   border-radius: 8px;
   &::placeholder {
     color: ${theme.system.textGrayDark};
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.red};
-  &::placeholder {
-    color: ${theme.system.textGrayDark};
-  }
 `;
 const STYLES_INPUT_SUCCESS = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.green};
-  &::placeholder {
-    color: ${theme.system.textGrayDark};
-  }
 `;
 
 const PasswordValidations = ({ validations }) => {
@@ -105,10 +96,9 @@ export default function Field({
   const showError = touched && error;
   const showSuccess = touched && !error;
 
-  const STYLES = React.useMemo(() => {
+  const STYLES_STATUS = React.useMemo(() => {
     if (showError) return STYLES_INPUT_ERROR;
     if (showSuccess) return STYLES_INPUT_SUCCESS;
-    return STYLES_INPUT;
   }, [touched, error]);
 
   const ContainerComponent = containerAs || "div";
@@ -116,11 +106,12 @@ export default function Field({
   return (
     <div>
       <ContainerComponent>
-        <Input inputCss={STYLES} {...props} />
+        <Input inputCss={[STYLES_INPUT, STYLES_STATUS]} {...props} />
       </ContainerComponent>
-      {props.name === "password" && validations ? (
+      {props.name === "password" && validations && (
         <PasswordValidations validations={validations} />
-      ) : (
+      )}
+      {props.name !== "password" && (showError || showSuccess) && (
         <ErrorWrapper>
           <P css={STYLES_SMALL_TEXT} style={{ marginTop: "8px" }}>
             {(showError && error) || (showSuccess && success)}

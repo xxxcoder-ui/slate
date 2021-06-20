@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as UserBehaviors from "~/common/user-behaviors";
+import * as Utilities from "common/utilities";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
@@ -13,9 +13,6 @@ import {
   usePasswordReset,
 } from "~/scenes/SceneAuth/hooks";
 
-const background_image =
-  "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
-
 const STYLES_ROOT = css`
   display: flex;
   flex-direction: column;
@@ -26,9 +23,8 @@ const STYLES_ROOT = css`
 
   min-height: 100vh;
   width: 100vw;
-  position: absolute;
+  position: relative;
   overflow: hidden;
-  background-image: url(${background_image});
   background-repeat: no-repeat;
   background-size: cover;
 `;
@@ -44,6 +40,17 @@ const STYLES_MIDDLE = css`
   text-align: left;
   padding: 24px;
 `;
+
+const AUTH_BACKGROUNDS = [
+  "https://slate.textile.io/ipfs/bafybeigostprfkuuvuqlehutki32fnvshm2dyy4abqotmlffsca4f7qs7a",
+  "https://slate.textile.io/ipfs/bafybeicmokw3bl5six6u7eflbxcdblpgbx3fat24djrqg6n3hmbleidks4",
+  "https://slate.textile.io/ipfs/bafybeibkttaavlkjxgtafqndyrbgvwqcng67zvd4v36w7fvpajwmdgmxcu",
+  "https://slate.textile.io/ipfs/bafybeicpk7hkbeqdgbwkx3dltlz3akf3qbjpqgfphbnry4b6txnailtlpq",
+  "https://slate.textile.io/ipfs/bafybeibb2xknh3iwwetrro73hw3xfzjgwbi4n4c63wqmwt5hvaloqnh33u",
+  "https://slate.textile.io/ipfs/bafybeig4mij32vyda2jbh6zua3r2rkdpby6wtvninwgxvsejjdnls4wpc4",
+  "https://slate.textile.io/ipfs/bafybeihmoycn4a6zafd2k3fjcadskrxwvri5cwhabatzbyzteouh3s7igi",
+  "https://slate.textile.io/ipfs/bafybeigxssjsv3tmdhz4bj6vl2ca5c6rrhdkepw3mifvlllb7orpx5cfou",
+];
 
 const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) => {
   const {
@@ -136,14 +143,19 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
   );
 };
 
-const WithCustomWrapper = (Component) => (props) => (
-  <WebsitePrototypeWrapper>
-    <div css={STYLES_ROOT}>
-      <div css={STYLES_MIDDLE}>
-        <Component {...props} />
+const WithCustomWrapper = (Component) => (props) => {
+  const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length);
+  console.log(backgroundIdx);
+  const background = AUTH_BACKGROUNDS[backgroundIdx];
+  return (
+    <WebsitePrototypeWrapper>
+      <div style={{ backgroundImage: `url(${background})` }} css={STYLES_ROOT}>
+        <div css={STYLES_MIDDLE}>
+          <Component {...props} />
+        </div>
       </div>
-    </div>
-  </WebsitePrototypeWrapper>
-);
+    </WebsitePrototypeWrapper>
+  );
+};
 
 export default WithCustomWrapper(SigninScene);

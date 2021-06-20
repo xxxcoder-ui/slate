@@ -11,7 +11,7 @@ import { css } from "@emotion/react";
 import { motion, AnimateSharedLayout } from "framer-motion";
 import { useForm, useField } from "~/common/hooks";
 import Field from "~/components/core/Field";
-import { Toggle, SignUpPopover } from "~/components/core/Auth/components";
+import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
@@ -158,7 +158,7 @@ export default function Initial({
               autoFocus
               label="Email address or username"
               placeholder="Email/username"
-              icon={SVG.RightArrow}
+              icon={ArrowButton}
               name="email/username"
               type="text"
               full
@@ -188,7 +188,7 @@ export default function Initial({
                 autoFocus
                 label="Sign up with email"
                 placeholder="Email"
-                type="email"
+                type="text"
                 name="email"
                 full
                 style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
@@ -196,8 +196,7 @@ export default function Initial({
                 containerStyle={{ marginTop: "4px" }}
                 {...getFieldProps("email")}
               />
-
-              <motion.div layout>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>
                 <System.ButtonPrimary
                   full
                   type="submit"
