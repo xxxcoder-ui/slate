@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import * as React from "react";
 import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
 import * as Actions from "~/common/actions";
+import * as Styles from "~/common/styles";
 
 import Field from "~/components/core/Field";
 
@@ -12,12 +14,14 @@ import { useForm } from "~/common/hooks";
 
 import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Auth/components";
 
-const STYLES_SMALL = (theme) => css`
-  font-size: ${theme.typescale.lvlN1};
+const STYLES_LINK = css`
+  padding: 0;
+  margin: 0;
+  max-width: 224px;
   text-align: center;
-  color: ${theme.system.textGrayDark};
-  max-width: 228px;
   margin: 0 auto;
+  background-color: unset;
+  border: none;
 `;
 
 const useTwitterSignup = () => {
@@ -54,22 +58,21 @@ const useCheckUser = () => {
   };
 };
 
-const createValidations = (validateUsername) => async (
-  { username, email, acceptTerms },
-  errors
-) => {
-  await validateUsername({ username }, errors);
+const createValidations =
+  (validateUsername) =>
+  async ({ username, email, acceptTerms }, errors) => {
+    await validateUsername({ username }, errors);
 
-  if (!Validations.username(username)) errors.username = "Invalid username";
-  // Note(amine): username should not be an email
-  if (Validations.email(username)) errors.username = "Username shouldn't be an email";
+    if (!Validations.username(username)) errors.username = "Invalid username";
+    // Note(amine): username should not be an email
+    if (Validations.email(username)) errors.username = "Username shouldn't be an email";
 
-  if (!Validations.email(email)) errors.email = "Invalid email";
+    if (!Validations.email(email)) errors.email = "Invalid email";
 
-  if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
+    if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
 
-  return errors;
-};
+    return errors;
+  };
 
 const MotionLayout = ({ children, ...props }) => (
   <motion.div layout {...props}>
@@ -80,6 +83,7 @@ const MotionLayout = ({ children, ...props }) => (
 export default function TwitterSignup({
   initialEmail,
   onSignup,
+  goToTwitterLinkingScene,
   createVerification,
   onSignupWithVerification,
 }) {
@@ -90,7 +94,7 @@ export default function TwitterSignup({
   const {
     getFieldProps,
     getFormProps,
-    values: { email, username },
+    values: { username },
     isSubmitting,
     isValidating,
   } = useForm({
@@ -141,6 +145,7 @@ export default function TwitterSignup({
           }
           {...getFieldProps("username")}
           style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+          full
         />
         <AnimateSharedLayout>
           <Field
@@ -150,6 +155,7 @@ export default function TwitterSignup({
             placeholder="Email"
             name="email"
             type="email"
+            full
             {...getFieldProps("email")}
             style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
@@ -165,13 +171,18 @@ export default function TwitterSignup({
               Create account
             </System.ButtonPrimary>
           </motion.div>
-          {(!initialEmail || initialEmail !== email) && (
-            <motion.div layout>
-              <System.P css={STYLES_SMALL} style={{ marginTop: 16 }}>
-                You will receive a code to verify your email at this address
-              </System.P>
-            </motion.div>
-          )}
+
+          <motion.div layout>
+            <div style={{ textAlign: "center", marginTop: 24 }}>
+              <button
+                type="button"
+                onClick={goToTwitterLinkingScene}
+                css={[Styles.LINK, STYLES_LINK]}
+              >
+                Already have an account? Connect your account to Twitter.
+              </button>
+            </div>
+          </motion.div>
         </AnimateSharedLayout>
       </form>
     </SignUpPopover>

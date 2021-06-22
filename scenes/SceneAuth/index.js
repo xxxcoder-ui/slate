@@ -3,7 +3,14 @@ import * as Utilities from "common/utilities";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
-import { Initial, Signin, Signup, TwitterSignup, ResetPassword } from "~/components/core/Auth";
+import {
+  Initial,
+  Signin,
+  Signup,
+  TwitterSignup,
+  TwitterLinking,
+  ResetPassword,
+} from "~/components/core/Auth";
 
 import {
   useAuthFlow,
@@ -57,6 +64,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     goToSigninScene,
     goToSignupScene,
     goToTwitterSignupScene,
+    goToTwitterLinkingScene,
     goToResetPassword,
     clearMessages,
     goBack,
@@ -69,7 +77,8 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     onAuthenticate,
   });
   const twitterProvider = useTwitter({
-    onAuthenticate: onTwitterAuthenticate,
+    onTwitterAuthenticate: onTwitterAuthenticate,
+    onAuthenticate,
     goToTwitterSignupScene,
   });
 
@@ -122,11 +131,21 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
         initialEmail={context.twitterEmail}
         createVerification={twitterProvider.createVerification}
         resendEmailVerification={twitterProvider.resendEmailVerification}
+        goToTwitterLinkingScene={goToTwitterLinkingScene}
         onSignupWithVerification={twitterProvider.signupWithVerification}
         onSignup={twitterProvider.signup}
       />
     );
 
+  if (scene === "twitter_linking") {
+    return (
+      <TwitterLinking
+        linkAccount={twitterProvider.linkAccount}
+        linkAccountWithVerification={twitterProvider.linkAccountWithVerification}
+        createVerification={twitterProvider.createVerification}
+      />
+    );
+  }
   // NOTE(amine): if the user goes back, we should prefill the email
   const initialEmail =
     prevScene === "signin" && context.emailOrUsername ? context.emailOrUsername : "";
@@ -142,18 +161,25 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     />
   );
 };
-
+const BackgroundGenerator = ({ children, ...props }) => {
+  const background = React.useMemo(() => {
+    const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
+    return AUTH_BACKGROUNDS[backgroundIdx];
+  }, []);
+  return (
+    <div style={{ backgroundImage: `url(${background})` }} {...props}>
+      {children}
+    </div>
+  );
+};
 const WithCustomWrapper = (Component) => (props) => {
-  const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length);
-  console.log(backgroundIdx);
-  const background = AUTH_BACKGROUNDS[backgroundIdx];
   return (
     <WebsitePrototypeWrapper>
-      <div style={{ backgroundImage: `url(${background})` }} css={STYLES_ROOT}>
+      <BackgroundGenerator css={STYLES_ROOT}>
         <div css={STYLES_MIDDLE}>
           <Component {...props} />
         </div>
-      </div>
+      </BackgroundGenerator>
     </WebsitePrototypeWrapper>
   );
 };
