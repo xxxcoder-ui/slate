@@ -14,13 +14,15 @@ export default async (req, res) => {
   }
 
   if (!Validations.username(req.body?.data?.username)) {
-    return res.status(400).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
+    return res
+      .status(400)
+      .send({ decorator: "SERVER_TWITTER_LINKING_INVALID_USERNAME", error: true });
   }
 
   if (!Validations.legacyPassword(req.body?.data?.password)) {
     return res
       .status(400)
-      .send({ decorator: "SERVER_CREATE_VERIFICATION_INVALID_PASSWORD", error: true });
+      .send({ decorator: "SERVER_TWITTER_LINKING_INVALID_PASSWORD", error: true });
   }
 
   const { username, password, token } = req.body.data;
@@ -38,12 +40,14 @@ export default async (req, res) => {
   // Note(amine): Twitter users won't have a password,
   // we should think in the future how to handle this use case
   if ((!user.salt || !user.password) && user.twitterId) {
-    return res.status(403).send({ decorator: "SERVER_TWITTER_ALREADY_LINKED", error: true });
+    return res.status(403).send({ decorator: "SERVER_CREATE_USER_TWITTER_EXISTS", error: true });
   }
 
   const hash = await Utilities.encryptPassword(password, user.salt);
   if (hash !== user.password) {
-    return res.status(403).send({ decorator: "SERVER_TWITTER_WRONG_CREDENTIALS", error: true });
+    return res
+      .status(403)
+      .send({ decorator: "SERVER_TWITTER_LINKING_WRONG_CREDENTIALS", error: true });
   }
 
   if (!user.email) {
@@ -52,7 +56,7 @@ export default async (req, res) => {
 
   const twitterUser = await Data.getTwitterToken({ token: token });
   if (!twitterUser) {
-    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+    return res.status(401).send({ decorator: "SERVER_TWITTER_LINKING_FAILED", error: true });
   }
 
   const updates = await Data.updateUserById({
@@ -68,7 +72,7 @@ export default async (req, res) => {
   });
 
   if (updates.error) {
-    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+    return res.status(401).send({ decorator: "SERVER_TWITTER_LINKING_FAILED", error: true });
   }
   return res.status(200).send({ decorator: "SERVER_TWITTER_LINKING" });
 };

@@ -143,7 +143,10 @@ export const error = {
   SERVER_TWITTER_OAUTH_NOT_ALLOWED: "You can only authenticate via twitter while on slate.host",
   SERVER_TWITTER_LOGIN_ONLY:
     "This login is associated with a Twitter account. Please continue with Twitter instead",
-
+  SERVER_TWITTER_LINKING_INVALID_USERNAME: "Please choose a valid username",
+  SERVER_TWITTER_LINKING_INVALID_PASSWORD: "Please choose a valid password",
+  SERVER_TWITTER_LINKING_WRONG_CREDENTIALS: "You have entered an invalid username or password",
+  SERVER_TWITTER_LINKING_FAILED: "SERVER_CREATE_USER_FAILED",
   // Email Verifications
   SERVER_EMAIL_VERIFICATION_INVALID_PIN: "Please enter a valid pin",
   SERVER_EMAIL_VERIFICATION_FAILED:

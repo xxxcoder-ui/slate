@@ -11,11 +11,15 @@ export default async (req, res) => {
   }
 
   if (!Validations.username(req.body.data.username)) {
-    return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_TWITTER_LINKING_INVALID_USERNAME", error: true });
   }
 
   if (!Validations.legacyPassword(req.body.data.password)) {
-    return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
+    return res
+      .status(500)
+      .send({ decorator: "SERVER_TWITTER_LINKING_INVALID_PASSWORD", error: true });
   }
 
   if (Strings.isEmpty(req.body.data.token)) {
@@ -81,11 +85,11 @@ export default async (req, res) => {
 
   const twitterUser = await Data.getTwitterToken({ token: verification.twitterToken });
   if (!twitterUser) {
-    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+    return res.status(401).send({ decorator: "SERVER_TWITTER_LINKING_FAILED", error: true });
   }
 
   if (!twitterUser) {
-    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+    return res.status(401).send({ decorator: "SERVER_TWITTER_LINKING_FAILED", error: true });
   }
 
   const updates = await Data.updateUserById({
@@ -102,7 +106,7 @@ export default async (req, res) => {
   });
 
   if (updates.error) {
-    return res.status(401).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
+    return res.status(401).send({ decorator: "SERVER_TWITTER_LINKING_FAILED", error: true });
   }
   return res.status(200).send({ decorator: "SERVER_TWITTER_LINKING" });
 };
