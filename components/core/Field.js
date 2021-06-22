@@ -49,10 +49,11 @@ const STYLES_INPUT = (theme) => css`
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`
-  border: 1px solid ${theme.system.red};
+  box-shadow: 0 0 0 1px ${theme.system.red};
 `;
+
 const STYLES_INPUT_SUCCESS = (theme) => css`
-  border: 1px solid ${theme.system.green};
+  box-shadow: 0 0 0 1px ${theme.system.green};
 `;
 
 const PasswordValidations = ({ validations }) => {
