@@ -144,7 +144,6 @@ export default function TwitterSignup({
               : null
           }
           {...getFieldProps("username")}
-          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           full
         />
         <AnimateSharedLayout>
@@ -157,7 +156,6 @@ export default function TwitterSignup({
             type="email"
             full
             {...getFieldProps("email")}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
 
           <motion.div layout>

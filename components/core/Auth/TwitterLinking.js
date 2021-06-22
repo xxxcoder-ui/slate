@@ -103,7 +103,6 @@ export default function TwitterLinking({
               type="email"
               full
               {...getEmailFieldProps("email")}
-              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
             />
             <AnimateSharedLayout>
               <motion.div layout>

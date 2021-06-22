@@ -163,7 +163,6 @@ export default function Signin({
             type="email"
             full
             {...getEmailFieldProps("email")}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
           <AnimateSharedLayout>
             <motion.div layout>
@@ -202,7 +201,6 @@ export default function Signin({
           onClickIcon={() => toggleShowPassword(!showPassword)}
           icon={showPassword ? SVG.EyeOff : SVG.Eye}
           {...getFieldProps("password")}
-          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
         <AnimateSharedLayout>
           <motion.div layout>

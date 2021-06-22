@@ -50,21 +50,20 @@ const useCheckUser = () => {
   };
 };
 
-const createValidations = (validateUsername) => async (
-  { username, password, acceptTerms },
-  errors
-) => {
-  await validateUsername({ username }, errors);
+const createValidations =
+  (validateUsername) =>
+  async ({ username, password, acceptTerms }, errors) => {
+    await validateUsername({ username }, errors);
 
-  if (!Validations.username(username)) errors.username = "Invalid username";
-  // Note(amine): username should not be an email
-  if (Validations.email(username)) errors.username = "Username shouldn't be an email";
+    if (!Validations.username(username)) errors.username = "Invalid username";
+    // Note(amine): username should not be an email
+    if (Validations.email(username)) errors.username = "Username shouldn't be an email";
 
-  if (!Validations.password(password)) errors.password = "Incorrect password";
+    if (!Validations.password(password)) errors.password = "Incorrect password";
 
-  if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
-  return errors;
-};
+    if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
+    return errors;
+  };
 
 export default function Signup({ verifyEmail, createUser, resendEmailVerification }) {
   const [passwordValidations, setPasswordValidations] = React.useState(
@@ -119,7 +118,6 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             }
             full
             {...getFieldProps("username")}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
 
           <motion.div layout>
@@ -136,7 +134,6 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
                   setPasswordValidations(validations);
                 },
               })}
-              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
               onClickIcon={() => toggleShowPassword(!showPassword)}
               icon={showPassword ? SVG.EyeOff : SVG.Eye}
             />
