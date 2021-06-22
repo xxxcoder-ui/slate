@@ -244,6 +244,20 @@ export const createUserViaTwitterWithVerification = async (data) => {
   });
 };
 
+export const linkTwitterAccount = async (data) => {
+  return await returnJSON(`/api/twitter/link`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const linkTwitterAccountWithVerification = async (data) => {
+  return await returnJSON(`/api/twitter/link-with-verification`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const updateViewer = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/users/update`, {
