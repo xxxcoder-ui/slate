@@ -770,6 +770,7 @@ export default class ApplicationPage extends React.Component {
     return (
       <React.Fragment>
         <ApplicationLayout
+          withPaddings={page.id !== "NAV_SIGN_IN"}
           page={page}
           onAction={this._handleAction}
           header={headerElement}
