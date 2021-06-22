@@ -28,7 +28,7 @@ const STYLES_ROOT = css`
   text-align: center;
   font-size: 1rem;
 
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   position: relative;
   overflow: hidden;
@@ -166,12 +166,23 @@ const BackgroundGenerator = ({ children, ...props }) => {
     const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
     return AUTH_BACKGROUNDS[backgroundIdx];
   }, []);
+
+  // NOTE(amine): fix for 100vh overflowing in mobile
+  //              https://bugs.webkit.org/show_bug.cgi?id=141832
+  const [height, setHeight] = React.useState();
+  React.useLayoutEffect(() => {
+    if (!window) return;
+    const windowInnerHeight = window.innerHeight;
+    setHeight(windowInnerHeight);
+  }, []);
+
   return (
-    <div style={{ backgroundImage: `url(${background})` }} {...props}>
+    <div style={{ backgroundImage: `url(${background})`, height }} {...props}>
       {children}
     </div>
   );
 };
+
 const WithCustomWrapper = (Component) => (props) => {
   return (
     <WebsitePrototypeWrapper>
