@@ -29,6 +29,8 @@ export default async (req, res) => {
       .send({ decorator: "SERVER_EMAIL_VERIFICATION_INVALID_TOKEN", error: true });
   }
 
+  const formattedUsername = Strings.createUsername(req.body.data.username);
+
   const verification = await Data.getVerificationBySid({
     sid: req.body.data.token,
   });
@@ -38,7 +40,7 @@ export default async (req, res) => {
   }
 
   const existing = await Data.getUserByUsername({
-    username: req.body.data.username.toLowerCase(),
+    username: formattedUsername,
   });
   if (existing) {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
@@ -60,12 +62,11 @@ export default async (req, res) => {
 
   // TODO(jim):
   // Don't do this once you refactor.
-  const newUsername = req.body.data.username.toLowerCase();
   const newEmail = verification.email;
 
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
-      username: newUsername,
+      username: formattedUsername,
       data: { tokens: { api } },
     },
   });
@@ -85,7 +86,7 @@ export default async (req, res) => {
   const user = await Data.createUser({
     password: hash,
     salt,
-    username: newUsername,
+    username: formattedUsername,
     email: newEmail,
     data: {
       photo,
@@ -122,6 +123,4 @@ export default async (req, res) => {
     from: slateEmail,
     templateId: welcomeTemplateId,
   });
-
-  Monitor.createUser({ user });
 };

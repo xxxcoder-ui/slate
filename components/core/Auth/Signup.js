@@ -3,6 +3,7 @@ import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
+import * as Strings from "~/common/strings";
 
 import Field from "~/components/core/Field";
 
@@ -29,6 +30,11 @@ const useCheckUser = () => {
   const usernamesTaken = React.useRef([]);
 
   return async ({ username }, errors) => {
+    if (!Validations.username(username)) {
+      errors.username = "Invalid username";
+      return;
+    }
+
     if (usernamesAllowed.current.some((value) => value === username)) {
       return;
     }
@@ -55,10 +61,6 @@ const createValidations =
   async ({ username, password, acceptTerms }, errors) => {
     await validateUsername({ username }, errors);
 
-    if (!Validations.username(username)) errors.username = "Invalid username";
-    // Note(amine): username should not be an email
-    if (Validations.email(username)) errors.username = "Username shouldn't be an email";
-
     if (!Validations.password(password)) errors.password = "Incorrect password";
 
     if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
@@ -76,6 +78,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
 
   const { getFieldProps, getFormProps, isSubmitting, isValidating } = useForm({
     initialValues: { username: "", password: "", acceptTerms: false },
+    format: { username: Strings.createUsername },
     validate: createValidations(validateUsername),
     onSubmit: async ({ username, password }) => await createUser({ username, password }),
   });
