@@ -39,10 +39,12 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -162,10 +164,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -176,14 +180,14 @@ export const useField = ({
       touched: false,
     }));
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = () => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let error = {};
     if (validateOnBlur && validate) error = validate(state.value);
     setState((prev) => ({ ...prev, touched: validateOnBlur, error }));
   };
 
-  const handleFormOnSubmit = (e) => {
+  const handleFormOnSubmit = () => {
     //NOTE(amine): touch all inputs
     setState((prev) => ({ ...prev, touched: true }));
 
@@ -218,4 +222,10 @@ export const useField = ({
   });
 
   return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
+};
+
+export const useToggle = (initialState = false) => {
+  const [state, setState] = React.useState(initialState);
+  const toggleState = () => setState((prev) => !prev);
+  return [state, toggleState];
 };
