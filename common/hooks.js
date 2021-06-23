@@ -27,6 +27,8 @@ export const useForm = ({
   onSubmit,
   validate,
   initialValues,
+  // NOTE(amine): you can format the value of each input before onChange. ex format:{username: formatUsername}
+  format = {},
   validateOnBlur = true,
   validateOnSubmit = true,
 }) => {
@@ -39,6 +41,13 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
+
+  const formatInputValue = (e) => {
+    if (typeof format !== "object" || !(e.target.name in format)) return e.target.value;
+    const formatInput = format[e.target.name];
+    return formatInput ? formatInput(e.target.value) : e.target.value;
+  };
+
   const _mergeEventHandlers =
     (events = []) =>
     (e) =>
@@ -50,7 +59,7 @@ export const useForm = ({
   const handleFieldChange = (e) =>
     setState((prev) => ({
       ...prev,
-      values: { ...prev.values, [e.target.name]: e.target.value },
+      values: { ...prev.values, [e.target.name]: formatInputValue(e) },
       errors: { ...prev.errors, [e.target.name]: undefined },
       touched: { ...prev.touched, [e.target.name]: false },
     }));
