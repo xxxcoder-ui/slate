@@ -4,6 +4,7 @@ import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
 import * as Actions from "~/common/actions";
 import * as Styles from "~/common/styles";
+import * as Strings from "~/common/strings";
 
 import Field from "~/components/core/Field";
 
@@ -37,6 +38,11 @@ const useCheckUser = () => {
   const usernamesTaken = React.useRef([]);
 
   return async ({ username }, errors) => {
+    if (!Validations.username(username)) {
+      errors.username = "Invalid username";
+      return;
+    }
+
     if (usernamesAllowed.current.some((value) => value === username)) {
       return;
     }
@@ -62,10 +68,6 @@ const createValidations =
   (validateUsername) =>
   async ({ username, email, acceptTerms }, errors) => {
     await validateUsername({ username }, errors);
-
-    if (!Validations.username(username)) errors.username = "Invalid username";
-    // Note(amine): username should not be an email
-    if (Validations.email(username)) errors.username = "Username shouldn't be an email";
 
     if (!Validations.email(email)) errors.email = "Invalid email";
 
@@ -99,6 +101,7 @@ export default function TwitterSignup({
     isValidating,
   } = useForm({
     initialValues: { username: "", email: initialEmail, acceptTerms: false },
+    format: { username: Strings.createUsername },
     validate: createValidations(validateUsername),
     onSubmit: async ({ username, email }) => {
       if (email !== initialEmail) {
