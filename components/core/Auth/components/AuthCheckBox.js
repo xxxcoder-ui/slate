@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as System from "~/components/system";
+import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 
@@ -46,6 +47,7 @@ export default function AuthCheckBox({ touched, error, ...props }) {
       containerStyles={STYLES_CHECKBOX_WRAPPER}
       labelStyles={STYLES_CHECKBOX_LABEL}
       inputStyles={STYLES_CHECKBOX}
+      boxStyle={{ backgroundColor: Constants.system.bgBlurWhiteTRN }}
       {...props}
     >
       I agree to the Slate{" "}
