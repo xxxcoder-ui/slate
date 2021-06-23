@@ -192,7 +192,7 @@ export default class SceneEditAccount extends React.Component {
   };
 
   _handleUsernameChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+    this.setState({ [e.target.name]: Strings.createUsername(e.target.value) });
   };
 
   _handleDelete = async (res) => {
