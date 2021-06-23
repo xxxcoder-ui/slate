@@ -47,7 +47,14 @@ export default function AuthCheckBox({ touched, error, ...props }) {
       containerStyles={STYLES_CHECKBOX_WRAPPER}
       labelStyles={STYLES_CHECKBOX_LABEL}
       inputStyles={STYLES_CHECKBOX}
-      boxStyle={{ backgroundColor: Constants.system.bgBlurWhiteTRN }}
+      boxStyle={
+        props.value
+          ? {
+              backgroundColor: Constants.system.brand,
+              boxShadow: `0 0 0 1px ${Constants.system.brand}`,
+            }
+          : { backgroundColor: Constants.system.bgBlurWhiteTRN }
+      }
       {...props}
     >
       I agree to the Slate{" "}

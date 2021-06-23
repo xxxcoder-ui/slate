@@ -31,7 +31,8 @@ const MotionLayout = ({ children, ...props }) => (
 );
 
 const handleValidation = async ({ username, password, acceptTerms }, errors) => {
-  if (!Validations.username(username)) errors.username = "Invalid username";
+  if (!Validations.username(username) && !Validations.email(username))
+    errors.username = "Invalid username";
 
   if (!Validations.legacyPassword(password)) errors.password = "Incorrect password";
 
@@ -42,6 +43,7 @@ const handleValidation = async ({ username, password, acceptTerms }, errors) => 
 export default function TwitterLinking({
   linkAccount,
   linkAccountWithVerification,
+  resendEmailVerification,
   createVerification,
 }) {
   const { scene, goToVerificationScene, goToEmailScene } = useTwitterLinking();
@@ -87,7 +89,7 @@ export default function TwitterLinking({
     const handleVerification = async ({ pin }) => {
       await linkAccountWithVerification({ pin });
     };
-    return <Verification onVerify={handleVerification} />;
+    return <Verification onVerify={handleVerification} onResend={resendEmailVerification} />;
   }
 
   if (scene === "email") {

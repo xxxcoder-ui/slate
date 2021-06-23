@@ -130,7 +130,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
       <TwitterSignup
         initialEmail={context.twitterEmail}
         createVerification={twitterProvider.createVerification}
-        resendEmailVerification={twitterProvider.resendEmailVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
         goToTwitterLinkingScene={goToTwitterLinkingScene}
         onSignupWithVerification={twitterProvider.signupWithVerification}
         onSignup={twitterProvider.signup}
@@ -142,6 +142,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
       <TwitterLinking
         linkAccount={twitterProvider.linkAccount}
         linkAccountWithVerification={twitterProvider.linkAccountWithVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
         createVerification={twitterProvider.createVerification}
       />
     );

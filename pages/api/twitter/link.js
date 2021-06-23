@@ -3,6 +3,7 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+import * as Logging from "~/common/logging";
 
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
@@ -13,7 +14,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_TWITTER_OAUTH_NO_OAUTH_TOKEN", error: true });
   }
 
-  if (!Validations.username(req.body?.data?.username)) {
+  if (Strings.isEmpty(req.body?.data?.username)) {
     return res
       .status(400)
       .send({ decorator: "SERVER_TWITTER_LINKING_INVALID_USERNAME", error: true });
@@ -27,9 +28,22 @@ export default async (req, res) => {
 
   const { username, password, token } = req.body.data;
 
-  const user = await Data.getUserByUsername({
-    username: username.toLowerCase(),
-  });
+  let user;
+  if (Validations.email(username)) {
+    try {
+      user = await Data.getUserByEmail({ email: username });
+    } catch (e) {
+      Logging.error(e);
+    }
+  } else {
+    try {
+      user = await Data.getUserByUsername({
+        username: req.body.data.username.toLowerCase(),
+      });
+    } catch (e) {
+      Logging.error(e);
+    }
+  }
 
   if (!user || user.error) {
     return res

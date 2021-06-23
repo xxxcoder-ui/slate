@@ -86,6 +86,7 @@ export default function TwitterSignup({
   initialEmail,
   onSignup,
   goToTwitterLinkingScene,
+  resendEmailVerification,
   createVerification,
   onSignupWithVerification,
 }) {
@@ -118,7 +119,7 @@ export default function TwitterSignup({
     const handleVerification = async ({ pin }) => {
       await onSignupWithVerification({ username, pin });
     };
-    return <Verification onVerify={handleVerification} />;
+    return <Verification onVerify={handleVerification} onResend={resendEmailVerification} />;
   }
 
   return (
