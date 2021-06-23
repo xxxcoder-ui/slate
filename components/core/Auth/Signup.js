@@ -24,7 +24,7 @@ const useSignup = () => {
 };
 
 const useCheckUser = () => {
-  const MESSAGE = "The username is taken.";
+  const MESSAGE = "That username is taken";
 
   const usernamesAllowed = React.useRef([]);
   const usernamesTaken = React.useRef([]);
@@ -48,7 +48,7 @@ const useCheckUser = () => {
       username,
     });
     if (response.data) {
-      errors.username = "The username is taken.";
+      errors.username = "That username is taken";
       usernamesTaken.current.push(username);
       return;
     }
@@ -56,16 +56,17 @@ const useCheckUser = () => {
   };
 };
 
-const createValidations =
-  (validateUsername) =>
-  async ({ username, password, acceptTerms }, errors) => {
-    await validateUsername({ username }, errors);
+const createValidations = (validateUsername) => async (
+  { username, password, acceptTerms },
+  errors
+) => {
+  await validateUsername({ username }, errors);
 
-    if (!Validations.password(password)) errors.password = "Incorrect password";
+  if (!Validations.password(password)) errors.password = "Incorrect password";
 
-    if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
-    return errors;
-  };
+  if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
+  return errors;
+};
 
 export default function Signup({ verifyEmail, createUser, resendEmailVerification }) {
   const [passwordValidations, setPasswordValidations] = React.useState(
@@ -103,7 +104,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             placeholder="Username"
             name="username"
             type="text"
-            success="The username is available."
+            success="That username is available"
             icon={
               isValidating
                 ? () => (

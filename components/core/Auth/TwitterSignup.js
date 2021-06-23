@@ -32,7 +32,7 @@ const useTwitterSignup = () => {
 };
 
 const useCheckUser = () => {
-  const MESSAGE = "The username is taken.";
+  const MESSAGE = "That username is taken";
 
   const usernamesAllowed = React.useRef([]);
   const usernamesTaken = React.useRef([]);
@@ -56,7 +56,7 @@ const useCheckUser = () => {
       username,
     });
     if (response.data) {
-      errors.username = "The username is taken.";
+      errors.username = "That username is taken";
       usernamesTaken.current.push(username);
       return;
     }
@@ -64,17 +64,18 @@ const useCheckUser = () => {
   };
 };
 
-const createValidations =
-  (validateUsername) =>
-  async ({ username, email, acceptTerms }, errors) => {
-    await validateUsername({ username }, errors);
+const createValidations = (validateUsername) => async (
+  { username, email, acceptTerms },
+  errors
+) => {
+  await validateUsername({ username }, errors);
 
-    if (!Validations.email(email)) errors.email = "Invalid email";
+  if (!Validations.email(email)) errors.email = "Invalid email";
 
-    if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
+  if (!acceptTerms) errors.acceptTerms = "Must accept terms and conditions";
 
-    return errors;
-  };
+  return errors;
+};
 
 const MotionLayout = ({ children, ...props }) => (
   <motion.div layout {...props}>
@@ -131,7 +132,7 @@ export default function TwitterSignup({
           placeholder="Username"
           name="username"
           type="text"
-          success="The username is available."
+          success="That username is available"
           icon={
             isValidating
               ? () => (
