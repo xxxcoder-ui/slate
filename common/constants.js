@@ -61,7 +61,7 @@ export const system = {
   active: "#00BB00",
   blurBlack: "#262626",
   bgBlurGray: "#403F42",
-  bgBlurWhiteTRN: "rgba(255,255,255,0.3)",
+  bgBlurWhiteTRN: "rgba(255,255,255,0.7)",
   grayLight2: "#AEAEB2",
   grayLight5: "#E5E5EA",
 };
