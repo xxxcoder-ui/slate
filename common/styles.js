@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 /* TYPOGRAPHY */
 
 export const HEADING_01 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1.953rem;
   font-weight: medium;
   line-height: 1.5;
@@ -21,25 +21,22 @@ export const HEADING_02 = css`
 `;
 
 export const HEADING_03 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1.25rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.02px;
 `;
 
 export const HEADING_04 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.01px;
 `;
 
 export const HEADING_05 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 0.875rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.01px;
 `;
@@ -144,5 +141,16 @@ export const MOBILE_ONLY = css`
   @media (min-width: ${Constants.sizes.mobile}px) {
     display: none;
     pointer-events: none;
+  }
+`;
+
+export const LINK = (theme) => css`
+  ${HOVERABLE};
+  ${HEADING_05};
+  &,
+  &:link,
+  &:visited {
+    color: ${theme.system.blue};
+    text-decoration: none;
   }
 `;

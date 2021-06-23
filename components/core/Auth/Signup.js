@@ -3,6 +3,7 @@ import * as System from "~/components/system";
 import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
+import * as Strings from "~/common/strings";
 
 import Field from "~/components/core/Field";
 
@@ -23,12 +24,17 @@ const useSignup = () => {
 };
 
 const useCheckUser = () => {
-  const MESSAGE = "The username is taken.";
+  const MESSAGE = "That username is taken";
 
   const usernamesAllowed = React.useRef([]);
   const usernamesTaken = React.useRef([]);
 
   return async ({ username }, errors) => {
+    if (!Validations.username(username)) {
+      errors.username = "Invalid username";
+      return;
+    }
+
     if (usernamesAllowed.current.some((value) => value === username)) {
       return;
     }
@@ -42,7 +48,7 @@ const useCheckUser = () => {
       username,
     });
     if (response.data) {
-      errors.username = "The username is taken.";
+      errors.username = "That username is taken";
       usernamesTaken.current.push(username);
       return;
     }
@@ -55,10 +61,6 @@ const createValidations = (validateUsername) => async (
   errors
 ) => {
   await validateUsername({ username }, errors);
-
-  if (!Validations.username(username)) errors.username = "Invalid username";
-  // Note(amine): username should not be an email
-  if (Validations.email(username)) errors.username = "Username shouldn't be an email";
 
   if (!Validations.password(password)) errors.password = "Incorrect password";
 
@@ -77,6 +79,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
 
   const { getFieldProps, getFormProps, isSubmitting, isValidating } = useForm({
     initialValues: { username: "", password: "", acceptTerms: false },
+    format: { username: Strings.createUsername },
     validate: createValidations(validateUsername),
     onSubmit: async ({ username, password }) => await createUser({ username, password }),
   });
@@ -101,7 +104,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             placeholder="Username"
             name="username"
             type="text"
-            success="The username is available."
+            success="That username is available"
             icon={
               isValidating
                 ? () => (
@@ -119,7 +122,6 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
             }
             full
             {...getFieldProps("username")}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
 
           <motion.div layout>
@@ -136,7 +138,6 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
                   setPasswordValidations(validations);
                 },
               })}
-              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
               onClickIcon={() => toggleShowPassword(!showPassword)}
               icon={showPassword ? SVG.EyeOff : SVG.Eye}
             />

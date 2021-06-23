@@ -27,6 +27,8 @@ export const useForm = ({
   onSubmit,
   validate,
   initialValues,
+  // NOTE(amine): you can format the value of each input before onChange. ex format:{username: formatUsername}
+  format = {},
   validateOnBlur = true,
   validateOnSubmit = true,
 }) => {
@@ -39,16 +41,25 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+
+  const formatInputValue = (e) => {
+    if (typeof format !== "object" || !(e.target.name in format)) return e.target.value;
+    const formatInput = format[e.target.name];
+    return formatInput ? formatInput(e.target.value) : e.target.value;
+  };
+
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
     setState((prev) => ({
       ...prev,
-      values: { ...prev.values, [e.target.name]: e.target.value },
+      values: { ...prev.values, [e.target.name]: formatInputValue(e) },
       errors: { ...prev.errors, [e.target.name]: undefined },
       touched: { ...prev.touched, [e.target.name]: false },
     }));
@@ -162,10 +173,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -176,14 +189,14 @@ export const useField = ({
       touched: false,
     }));
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = () => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let error = {};
     if (validateOnBlur && validate) error = validate(state.value);
     setState((prev) => ({ ...prev, touched: validateOnBlur, error }));
   };
 
-  const handleFormOnSubmit = (e) => {
+  const handleFormOnSubmit = () => {
     //NOTE(amine): touch all inputs
     setState((prev) => ({ ...prev, touched: true }));
 
@@ -218,4 +231,10 @@ export const useField = ({
   });
 
   return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
+};
+
+export const useToggle = (initialState = false) => {
+  const [state, setState] = React.useState(initialState);
+  const toggleState = () => setState((prev) => !prev);
+  return [state, toggleState];
 };

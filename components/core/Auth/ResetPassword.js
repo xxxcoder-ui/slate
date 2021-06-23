@@ -123,7 +123,6 @@ export default function ResetPassword({
                 setPasswordValidations(validations);
               },
             })}
-            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
             onClickIcon={() => toggleShowPassword(!showPassword)}
             icon={showPassword ? SVG.EyeOff : SVG.Eye}
           />
@@ -161,7 +160,6 @@ export default function ResetPassword({
           type="email"
           full
           {...getFieldProps("email")}
-          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
         <AnimateSharedLayout>
           <motion.div layout>

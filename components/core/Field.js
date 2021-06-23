@@ -44,20 +44,25 @@ const STYLES_INPUT = (theme) => css`
   background-color: rgba(242, 242, 247, 0.7);
   box-shadow: ${theme.shadow.large};
   border-radius: 8px;
+  box-shadow: 0 0 0 1px ${theme.system.white};
   &::placeholder {
     color: ${theme.system.textGrayDark};
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`
-  border: 1px solid ${theme.system.red};
-`;
-const STYLES_INPUT_SUCCESS = (theme) => css`
-  border: 1px solid ${theme.system.green};
+  box-shadow: 0 0 0 1px ${theme.system.red};
 `;
 
-const PasswordValidations = ({ validations }) => {
+const STYLES_INPUT_SUCCESS = (theme) => css`
+  box-shadow: 0 0 0 1px ${theme.system.green};
+`;
+
+const PasswordValidations = ({ validations, full, color }) => {
   return (
-    <div css={STYLES_PASSWORD_VALIDATIONS}>
+    <div
+      css={STYLES_PASSWORD_VALIDATIONS}
+      style={{ backgroundColor: color === "white" && "white", maxWidth: !full && "480px" }}
+    >
       <P css={STYLES_SMALL_TEXT}>Passwords should</P>
       <div css={STYLES_PASSWORD_VALIDATION}>
         <div css={[STYLES_CIRCLE, validations.validLength && STYLES_CIRCLE_SUCCESS]} />
@@ -91,6 +96,8 @@ export default function Field({
   validations,
   errorAs,
   containerAs,
+  full,
+  color = "transparent",
   ...props
 }) {
   const showError = touched && error;
@@ -106,10 +113,14 @@ export default function Field({
   return (
     <div>
       <ContainerComponent>
-        <Input inputCss={[STYLES_INPUT, STYLES_STATUS]} {...props} />
+        <Input
+          inputCss={[color === "transparent" && STYLES_INPUT, STYLES_STATUS]}
+          full={full}
+          {...props}
+        />
       </ContainerComponent>
       {props.name === "password" && validations && (
-        <PasswordValidations validations={validations} />
+        <PasswordValidations color={color} full={full} validations={validations} />
       )}
       {props.name !== "password" && (showError || showSuccess) && (
         <ErrorWrapper>

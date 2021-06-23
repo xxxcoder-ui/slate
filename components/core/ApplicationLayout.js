@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { GlobalTooltip } from "~/components/system/components/fragments/GlobalTooltip";
@@ -118,6 +119,10 @@ export default class ApplicationLayout extends React.Component {
     headerTop: 0,
   };
 
+  static defaultProps = {
+    withPaddings: true,
+  };
+
   componentDidMount = () => {
     this.prevScrollPos = window.pageYOffset;
     if (this.props.isMobile) {
@@ -169,7 +174,7 @@ export default class ApplicationLayout extends React.Component {
     }
     return (
       <React.Fragment>
-        <div css={STYLES_CONTENT}>
+        <div css={this.props.withPaddings && STYLES_CONTENT}>
           <GlobalTooltip />
           {this.props.header && (
             <div

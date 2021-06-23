@@ -3,7 +3,14 @@ import * as Utilities from "common/utilities";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 import { css } from "@emotion/react";
-import { Initial, Signin, Signup, TwitterSignup, ResetPassword } from "~/components/core/Auth";
+import {
+  Initial,
+  Signin,
+  Signup,
+  TwitterSignup,
+  TwitterLinking,
+  ResetPassword,
+} from "~/components/core/Auth";
 
 import {
   useAuthFlow,
@@ -21,7 +28,7 @@ const STYLES_ROOT = css`
   text-align: center;
   font-size: 1rem;
 
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   position: relative;
   overflow: hidden;
@@ -57,6 +64,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     goToSigninScene,
     goToSignupScene,
     goToTwitterSignupScene,
+    goToTwitterLinkingScene,
     goToResetPassword,
     clearMessages,
     goBack,
@@ -69,7 +77,8 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     onAuthenticate,
   });
   const twitterProvider = useTwitter({
-    onAuthenticate: onTwitterAuthenticate,
+    onTwitterAuthenticate: onTwitterAuthenticate,
+    onAuthenticate,
     goToTwitterSignupScene,
   });
 
@@ -121,12 +130,23 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
       <TwitterSignup
         initialEmail={context.twitterEmail}
         createVerification={twitterProvider.createVerification}
-        resendEmailVerification={twitterProvider.resendEmailVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
+        goToTwitterLinkingScene={goToTwitterLinkingScene}
         onSignupWithVerification={twitterProvider.signupWithVerification}
         onSignup={twitterProvider.signup}
       />
     );
 
+  if (scene === "twitter_linking") {
+    return (
+      <TwitterLinking
+        linkAccount={twitterProvider.linkAccount}
+        linkAccountWithVerification={twitterProvider.linkAccountWithVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
+        createVerification={twitterProvider.createVerification}
+      />
+    );
+  }
   // NOTE(amine): if the user goes back, we should prefill the email
   const initialEmail =
     prevScene === "signin" && context.emailOrUsername ? context.emailOrUsername : "";
@@ -142,18 +162,36 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     />
   );
 };
+const BackgroundGenerator = ({ children, ...props }) => {
+  const background = React.useMemo(() => {
+    const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
+    return AUTH_BACKGROUNDS[backgroundIdx];
+  }, []);
+
+  // NOTE(amine): fix for 100vh overflowing in mobile
+  //              https://bugs.webkit.org/show_bug.cgi?id=141832
+  const [height, setHeight] = React.useState();
+  React.useLayoutEffect(() => {
+    if (!window) return;
+    const windowInnerHeight = window.innerHeight;
+    setHeight(windowInnerHeight);
+  }, []);
+
+  return (
+    <div style={{ backgroundImage: `url(${background})`, height }} {...props}>
+      {children}
+    </div>
+  );
+};
 
 const WithCustomWrapper = (Component) => (props) => {
-  const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length);
-  console.log(backgroundIdx);
-  const background = AUTH_BACKGROUNDS[backgroundIdx];
   return (
     <WebsitePrototypeWrapper>
-      <div style={{ backgroundImage: `url(${background})` }} css={STYLES_ROOT}>
+      <BackgroundGenerator css={STYLES_ROOT}>
         <div css={STYLES_MIDDLE}>
           <Component {...props} />
         </div>
-      </div>
+      </BackgroundGenerator>
     </WebsitePrototypeWrapper>
   );
 };

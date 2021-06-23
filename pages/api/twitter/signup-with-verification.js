@@ -31,6 +31,8 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
   }
 
+  const formattedUsername = Strings.createUsername(username);
+
   const verification = await Data.getVerificationBySid({
     sid: req.body.data.token,
   });
@@ -70,7 +72,6 @@ export default async (req, res) => {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_TWITTER_EXISTS" });
   }
 
-  const newUsername = username.toLowerCase();
   const newEmail = verification.email.toLowerCase();
 
   // NOTE(Amine): If there is an account with the user's twitter email
@@ -78,7 +79,7 @@ export default async (req, res) => {
   if (userByEmail) return res.status(201).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN" });
 
   // NOTE(Amine): If there is an account with the provided username
-  const userByUsername = await Data.getUserByUsername({ username });
+  const userByUsername = await Data.getUserByUsername({ username: formattedUsername });
   if (userByUsername) {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
@@ -92,7 +93,7 @@ export default async (req, res) => {
   // Don't do this once you refactor.
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
-      username: newUsername,
+      username: formattedUsername,
       data: { tokens: { api } },
     },
   });
@@ -110,7 +111,7 @@ export default async (req, res) => {
   });
 
   const user = await Data.createUser({
-    username: newUsername,
+    username: formattedUsername,
     email: newEmail,
     twitterId: twitterUser.id_str,
     data: {
