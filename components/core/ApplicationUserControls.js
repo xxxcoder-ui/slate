@@ -103,15 +103,20 @@ const STYLES_ITEM_BOX = css`
 `;
 
 const OpenIntercom = ({ user }) => {
-  const { show } = useIntercom();
-
-  const showWithProps = () =>
-    show({
-      name: user.data.name || user.username,
-    });
+  const { show, update } = useIntercom();
 
   return (
-    <span style={{ cursor: "pointer", display: "block" }} onClick={() => showWithProps()}>
+    <span
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        update({
+          name: user.data.name,
+          username: user.username,
+          email: user.email,
+        });
+        show();
+      }}
+    >
       Help
     </span>
   );
