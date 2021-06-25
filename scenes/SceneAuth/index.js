@@ -162,7 +162,7 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     />
   );
 };
-const BackgroundGenerator = ({ children, ...props }) => {
+const BackgroundGenerator = ({ children, isMobile, ...props }) => {
   const background = React.useMemo(() => {
     const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
     return AUTH_BACKGROUNDS[backgroundIdx];
@@ -171,11 +171,21 @@ const BackgroundGenerator = ({ children, ...props }) => {
   // NOTE(amine): fix for 100vh overflowing in mobile
   //              https://bugs.webkit.org/show_bug.cgi?id=141832
   const [height, setHeight] = React.useState();
+
   React.useLayoutEffect(() => {
     if (!window) return;
-    const windowInnerHeight = window.innerHeight;
-    setHeight(windowInnerHeight);
-  }, []);
+    const updateHeight = () => {
+      const windowInnerHeight = window.innerHeight;
+      setHeight(windowInnerHeight);
+    };
+
+    updateHeight();
+    // NOTE(amine): don't update height on mobile
+    if (isMobile) return;
+
+    window.addEventListener("resize", updateHeight);
+    return () => window.addEventListener("resize", updateHeight);
+  }, [isMobile]);
 
   return (
     <div style={{ backgroundImage: `url(${background})`, height }} {...props}>
@@ -187,7 +197,7 @@ const BackgroundGenerator = ({ children, ...props }) => {
 const WithCustomWrapper = (Component) => (props) => {
   return (
     <WebsitePrototypeWrapper>
-      <BackgroundGenerator css={STYLES_ROOT}>
+      <BackgroundGenerator css={STYLES_ROOT} isMobile={props.isMobile}>
         <div css={STYLES_MIDDLE}>
           <Component {...props} />
         </div>
