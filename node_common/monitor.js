@@ -141,7 +141,9 @@ export const subscribeSlate = ({ user, targetSlate }) => {
     const userURL = getUserURL(user);
 
     const targetSlatePageURL = `https://slate.host/$/${targetSlate.id}`;
-    const targetSlateURL = `<${targetSlatePageURL}|${targetSlate.slateId}>`;
+    const targetSlateURL = `<${targetSlatePageURL}|${
+      targetSlate.data.name || targetSlate.slatename
+    }>`;
 
     const message = `*${userURL}* subscribed to ${targetSlateURL}`;
 
