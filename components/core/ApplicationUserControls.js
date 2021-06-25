@@ -8,7 +8,7 @@ import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
-import { useIntercom } from 'react-use-intercom';
+import { useIntercom } from "react-use-intercom";
 
 const STYLES_HEADER = css`
   position: relative;
@@ -104,17 +104,18 @@ const STYLES_ITEM_BOX = css`
 
 const OpenIntercom = ({ user }) => {
   const { show } = useIntercom();
-  
-  const showWithProps = () => show({ 
-    name: user.data.name || user.username, 
-  });
 
-  return(
-    <span style={{ cursor: "pointer" }} onClick={() => showWithProps()}>
+  const showWithProps = () =>
+    show({
+      name: user.data.name || user.username,
+    });
+
+  return (
+    <span style={{ cursor: "pointer", display: "block" }} onClick={() => showWithProps()}>
       Help
     </span>
   );
-} 
+};
 
 export class ApplicationUserControlsPopup extends React.Component {
   _handleAction = (props) => {
@@ -169,14 +170,22 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
+              <Link
+                href={`/$/user/${this.props.viewer.id}`}
+                style={{ display: "block" }}
+                onAction={this._handleAction}
+              >
                 Profile
               </Link>
             ),
           },
           {
             text: (
-              <Link href={"/_/directory"} onAction={this._handleAction}>
+              <Link
+                href={"/_/directory"}
+                style={{ display: "block" }}
+                onAction={this._handleAction}
+              >
                 Directory
               </Link>
             ),
@@ -185,21 +194,25 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link href={"/_/filecoin"} onAction={this._handleAction}>
+              <Link href={"/_/filecoin"} style={{ display: "block" }} onAction={this._handleAction}>
                 Filecoin
               </Link>
             ),
           },
           {
             text: (
-              <Link href={"/_/storage-deal"} onAction={this._handleAction}>
+              <Link
+                href={"/_/storage-deal"}
+                style={{ display: "block" }}
+                onAction={this._handleAction}
+              >
                 Storage deal
               </Link>
             ),
           },
           {
             text: (
-              <Link href={"/_/api"} onAction={this._handleAction}>
+              <Link href={"/_/api"} style={{ display: "block" }} onAction={this._handleAction}>
                 API
               </Link>
             ),
@@ -208,7 +221,7 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link href={"/_/settings"} onAction={this._handleAction}>
+              <Link href={"/_/settings"} style={{ display: "block" }} onAction={this._handleAction}>
                 Settings
               </Link>
             ),
@@ -216,9 +229,7 @@ export class ApplicationUserControlsPopup extends React.Component {
         ],
         [
           {
-            text: (
-              <OpenIntercom user={this.props.viewer} />
-            ),
+            text: <OpenIntercom style={{ display: "block" }} user={this.props.viewer} />,
           },
           {
             text: "Sign out",
