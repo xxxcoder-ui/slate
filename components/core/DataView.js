@@ -728,16 +728,36 @@ export default class DataView extends React.Component {
                       }}
                       onDragEnd={this._enableDragAndDropUploadEvent}
                       selectableKey={i}
-                      style={{
-                        boxShadow: numChecked
-                          ? `0px 0px 0px 1px ${Constants.system.lightBorder} inset,
-      0 0 40px 0 ${Constants.system.shadow}`
-                          : "",
-                      }}
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
                       onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                     >
-                      <ObjectPreview file={each} isSelected={i in this.state.checked} />
+                      <div style={{ position: "relative" }}>
+                        <ObjectPreview file={each} isSelected={i in this.state.checked} />
+                        <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
+                          {numChecked || this.state.hover === i || this.state.menu === each.id ? (
+                            <React.Fragment>
+                              <div
+                                style={{ position: "absolute", zIndex: 1, left: 16, top: 16 }}
+                                onClick={(e) => this._handleCheckBox(e, i)}
+                              >
+                                <CheckBox
+                                  name={i}
+                                  value={!!this.state.checked[i]}
+                                  boxStyle={{
+                                    height: 24,
+                                    width: 24,
+                                    borderRadius: "8px",
+                                    boxShadow: `0 0 0 1px ${Constants.system.white}`,
+                                    backgroundColor: this.state.checked[i]
+                                      ? Constants.system.brand
+                                      : "rgba(255, 255, 255, 0.75)",
+                                  }}
+                                />
+                              </div>
+                            </React.Fragment>
+                          ) : null}
+                        </span>
+                      </div>
                     </Selectable>
                   </Link>
                 );
