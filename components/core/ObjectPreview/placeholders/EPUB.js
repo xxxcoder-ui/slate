@@ -1,6 +1,17 @@
 import * as React from "react";
 
-function EpubPlaceholder(props) {
+import { css } from "@emotion/react";
+
+function EpubPlaceholder({ ratio = 1, ...props }) {
+  const STYLES_PLACEHOLDER = React.useMemo(
+    () => css`
+      overflow: visible !important;
+      width: ${(199 / 248) * 100 * ratio}%;
+      height: ${(123 / 248) * 100 * ratio}%;
+    `,
+    [ratio]
+  );
+
   return (
     <svg
       width={199}
@@ -8,6 +19,7 @@ function EpubPlaceholder(props) {
       viewBox="0 35 199 123"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      css={STYLES_PLACEHOLDER}
       {...props}
     >
       <rect x={101} y={36} width={98} height={123} rx={8} fill="#F2F2F7" />

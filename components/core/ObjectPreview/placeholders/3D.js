@@ -1,6 +1,17 @@
 import * as React from "react";
 
-export default function ObjectPlaceholder(props) {
+import { css } from "@emotion/react";
+
+export default function Object3DPlaceholder({ ratio = 1, ...props }) {
+  const STYLES_PLACEHOLDER = React.useMemo(
+    () => css`
+      overflow: visible !important;
+      width: ${(69 / 248) * 100 * ratio}%;
+      height: ${(76.65 / 248) * 100 * ratio}%;
+    `,
+    [ratio]
+  );
+
   return (
     <svg
       width={69}
@@ -8,6 +19,7 @@ export default function ObjectPlaceholder(props) {
       viewBox="50 37 69 76.65"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      css={STYLES_PLACEHOLDER}
       {...props}
     >
       <g filter="url(#prefix__filter0_d_3d)">

@@ -1,6 +1,17 @@
 import * as React from "react";
 
-export default function FilePlaceholder(props) {
+import { css } from "@emotion/react";
+
+export default function FilePlaceholder({ ratio = 1, ...props }) {
+  const STYLES_PLACEHOLDER = React.useMemo(
+    () => css`
+      overflow: visible !important;
+      width: ${(121 / 248) * 100 * ratio}%;
+      height: ${(151 / 248) * 100 * ratio}%;
+    `,
+    [ratio]
+  );
+
   return (
     <svg
       width={121}
@@ -8,6 +19,7 @@ export default function FilePlaceholder(props) {
       viewBox="0 4 121 151"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      css={STYLES_PLACEHOLDER}
       {...props}
     >
       <path

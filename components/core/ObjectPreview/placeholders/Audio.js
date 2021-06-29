@@ -1,8 +1,27 @@
 import * as React from "react";
 
-export default function AudioPlaceholder(props) {
+import { css } from "@emotion/react";
+
+export default function AudioPlaceholder({ ratio = 1, ...props }) {
+  const STYLES_PLACEHOLDER = React.useMemo(
+    () => css`
+      overflow: visible !important;
+      width: ${(163 / 248) * 100 * ratio}%;
+      height: ${(163 / 248) * 100 * ratio}%;
+    `,
+    [ratio]
+  );
+
   return (
-    <svg width={163} height={163} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      width={163}
+      height={163}
+      viewBox="0 0 163 163"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      css={STYLES_PLACEHOLDER}
+      {...props}
+    >
       <circle cx={81.5} cy={81.5} r={81.5} fill="url(#prefix__paint0_radial)" />
       <path
         d="M82 95.333c7.364 0 13.333-5.97 13.333-13.333 0-7.364-5.97-13.333-13.333-13.333-7.364 0-13.333 5.97-13.333 13.333 0 7.364 5.97 13.333 13.333 13.333z"
