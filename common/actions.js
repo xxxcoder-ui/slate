@@ -12,18 +12,6 @@ const REQUEST_HEADERS = {
   "Content-Type": "application/json",
 };
 
-const API_HEADERS = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-  Authorization: "Basic SLA42887290-7073-4f7c-961d-db84aea29b41TE",
-};
-
-const API_OPTIONS = {
-  method: "POST",
-  headers: API_HEADERS,
-  credentials: "include",
-};
-
 const DEFAULT_OPTIONS = {
   method: "POST",
   headers: REQUEST_HEADERS,
@@ -457,142 +445,86 @@ export const cleanDatabase = async () => {
   });
 };
 
-export const v1GetSlate = async (data) => {
-  return await returnJSON(`/api/v1/get-slate`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v1Get = async (data) => {
-  return await returnJSON(`/api/v1/get`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v1UpdateSlate = async (data) => {
-  return await returnJSON(`/api/v1/update-slate`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v2GetSlate = async (data) => {
-  return await returnJSON(`/api/v2/get-slate`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v2GetUser = async (data) => {
-  return await returnJSON(`/api/v2/get-user`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v2Get = async (data) => {
-  return await returnJSON(`/api/v2/get`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v2UpdateSlate = async (data) => {
-  return await returnJSON(`/api/v2/update-slate`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const v2UpdateFile = async (data) => {
-  return await returnJSON(`/api/v2/update-file`, {
-    ...API_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 export const createTwitterEmailVerification = async (data) => {
   return await returnJSON(`/api/verifications/twitter/create`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const verifyTwitterEmail = async (data) => {
   return await returnJSON(`/api/verifications/twitter/verify`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const createPasswordResetVerification = async (data) => {
   return await returnJSON(`/api/verifications/password-reset/create`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const resendPasswordResetVerification = async (data) => {
   return await returnJSON(`/api/verifications/password-reset/resend`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const verifyPasswordResetEmail = async (data) => {
   return await returnJSON(`/api/verifications/password-reset/verify`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const resetPassword = async (data) => {
   return await returnJSON(`/api/users/reset-password`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const createLegacyVerification = async (data) => {
   return await returnJSON(`/api/verifications/legacy/create`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const migrateUser = async (data) => {
   return await returnJSON(`/api/users/migrate`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const createVerification = async (data) => {
   return await returnJSON(`/api/verifications/create`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const verifyEmail = async (data) => {
   return await returnJSON(`/api/verifications/verify`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const resendVerification = async (data) => {
   return await returnJSON(`/api/verifications/resend`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
 
 export const getUserVersion = async (data) => {
   return await returnJSON(`/api/users/get-version`, {
-    ...API_OPTIONS,
+    ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
 };
