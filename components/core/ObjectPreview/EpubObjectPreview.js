@@ -11,11 +11,6 @@ import EpubPlaceholder from "./placeholders/EPUB";
 
 const STYLES_CONTAINER = css`
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(199 / 248) * 100}%;
-    height: ${(123 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`

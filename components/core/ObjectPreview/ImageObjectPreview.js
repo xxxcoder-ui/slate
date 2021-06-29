@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Strings from "~/common/strings";
 
 import { AspectRatio } from "~/components/system";
 import { useInView } from "~/common/hooks";
@@ -65,6 +66,8 @@ export default function ImageObjectPreview({ url, file, ...props }) {
 
   const shouldShowPlaceholder = isLoading && blurhash;
 
+  const imageUrl = coverImage ? Strings.getURLfromCID(coverImage?.cid) : url;
+
   return (
     <ObjectPreviewPremitive {...props}>
       <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
@@ -73,7 +76,7 @@ export default function ImageObjectPreview({ url, file, ...props }) {
             {/** NOTE(amine): if it's loaded */}
             <img
               css={STYLES_IMAGE}
-              src={url}
+              src={imageUrl}
               alt={`${file.name} preview`}
               onLoad={handleOnLoaded}
             />

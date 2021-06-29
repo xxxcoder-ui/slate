@@ -12,11 +12,6 @@ import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
 const STYLES_CONTAINER = css`
   position: relative;
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(123 / 248) * 100}%;
-    height: ${(151 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`

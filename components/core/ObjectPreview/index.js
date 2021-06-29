@@ -20,9 +20,9 @@ const ObjectPreview = ({ file, ...props }) => {
   const { likeCount, saveCount } = file;
   const { type, coverImage } = file.data;
 
-  const url = Validations.isPreviewableImage
+  const url = Validations.isPreviewableImage(type)
     ? Strings.getURLfromCID(file.cid)
-    : Strings.getURLfromCID(coverImage.cid);
+    : Strings.getURLfromCID(coverImage?.cid);
 
   if (Validations.isPreviewableImage(type)) {
     const fileType = type.split("/")[1];
@@ -47,6 +47,7 @@ const ObjectPreview = ({ file, ...props }) => {
         likes={likeCount}
         saves={saveCount}
         type={fileExtension}
+        file={file}
         url={url}
         {...props}
       />
@@ -67,6 +68,7 @@ const ObjectPreview = ({ file, ...props }) => {
         title={title}
         likes={likeCount}
         saves={saveCount}
+        file={file}
         {...props}
       />
     );
@@ -85,6 +87,7 @@ const ObjectPreview = ({ file, ...props }) => {
         title={title}
         likes={likeCount}
         saves={saveCount}
+        file={file}
         {...props}
       />
     );
@@ -98,6 +101,7 @@ const ObjectPreview = ({ file, ...props }) => {
         title={title}
         likes={likeCount}
         saves={saveCount}
+        file={file}
         {...props}
       />
     );
@@ -127,6 +131,7 @@ const ObjectPreview = ({ file, ...props }) => {
         title={title}
         likes={likeCount}
         saves={saveCount}
+        file={file}
         {...props}
       />
     );
@@ -134,7 +139,14 @@ const ObjectPreview = ({ file, ...props }) => {
 
   if (Validations.is3dFile(file.filename)) {
     return (
-      <Object3DPreview type="3D" title={title} likes={likeCount} saves={saveCount} {...props} />
+      <Object3DPreview
+        type="3D"
+        file={file}
+        title={title}
+        likes={likeCount}
+        saves={saveCount}
+        {...props}
+      />
     );
   }
 
@@ -144,6 +156,7 @@ const ObjectPreview = ({ file, ...props }) => {
       title={title}
       likes={likeCount}
       saves={saveCount}
+      file={file}
       {...props}
     />
   );

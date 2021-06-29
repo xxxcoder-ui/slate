@@ -1,11 +1,13 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { H4, P } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
+import { LikeButton, SaveButton } from "./components";
+
+import ImageObjectPreview from "./ImageObjectPreview";
 
 const STYLES_BACKGROUND_LIGHT = (theme) => css`
   background-color: ${theme.system.grayLight5};
@@ -95,7 +97,6 @@ const STYLES_DESCRIPTION_TAG = (theme) => css`
 
 const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
-  border-radius: 8px;
 `;
 
 export default function ObjectPreviewPremitive({
@@ -104,11 +105,34 @@ export default function ObjectPreviewPremitive({
   saves = 0,
   type,
   title,
+  file,
   isSelected,
   ...props
 }) {
+  if (file?.data?.coverImage) {
+    return (
+      <ImageObjectPreview
+        title={title}
+        file={file}
+        type={type}
+        likes={likes}
+        saves={saves}
+        isSelected={isSelected}
+      />
+    );
+  }
+
   return (
-    <div css={isSelected && STYLES_SELECTED_RING}>
+    <div
+      css={[
+        css({
+          boxShadow: `0 0 0 0px ${Constants.system.blue}`,
+          transition: "box-shadow 0.2s",
+          borderRadius: 8,
+        }),
+        isSelected && STYLES_SELECTED_RING,
+      ]}
+    >
       <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT} {...props}>
         <div css={STYLES_WRAPPER}>
           <AspectRatio ratio={1}>
@@ -126,11 +150,11 @@ export default function ObjectPreviewPremitive({
             <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_DESCRIPTION_META]}>
               <div css={STYLES_REACTIONS_CONTAINER}>
                 <div css={STYLES_REACTION}>
-                  <SVG.Heart />
+                  <LikeButton />
                   <P css={STYLES_METRICS}>{likes}</P>
                 </div>
                 <div css={STYLES_REACTION}>
-                  <SVG.FolderPlus />
+                  <SaveButton />
                   <P css={STYLES_METRICS}>{saves}</P>
                 </div>
               </div>

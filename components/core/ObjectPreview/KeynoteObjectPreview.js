@@ -11,11 +11,6 @@ import KeynotePlaceholder from "./placeholders/Keynote";
 
 const STYLES_CONTAINER = css`
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(183 / 248) * 100}%;
-    height: ${(115 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`

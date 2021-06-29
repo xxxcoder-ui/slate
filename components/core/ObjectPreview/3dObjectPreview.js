@@ -11,11 +11,6 @@ import ObjectPlaceholder from "./placeholders/3D";
 
 const STYLES_CONTAINER = css`
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(69 / 248) * 100}%;
-    height: ${(76.65 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`

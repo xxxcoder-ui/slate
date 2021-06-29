@@ -11,11 +11,6 @@ import CodePlaceholder from "./placeholders/Code";
 
 const STYLES_CONTAINER = css`
   height: 100%;
-  svg {
-    overflow: visible !important;
-    width: ${(121 / 248) * 100}%;
-    height: ${(151 / 248) * 100}%;
-  }
 `;
 
 const STYLES_TAG = (theme) => css`
