@@ -158,3 +158,11 @@ export const OBJECTS_PREVIEW_GRID = css`
     grid-template-columns: repeat(auto-fill, minmax(169px, 1fr));
   }
 `;
+
+export const BUTTON_RESET = css`
+  padding: 0;
+  margin: 0;
+  background-color: unset;
+  border: none;
+  ${HOVERABLE}
+`;
