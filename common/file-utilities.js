@@ -6,7 +6,9 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Logging from "~/common/logging";
+import * as Environment from "~/node_common/environment";
 
+import "isomorphic-fetch";
 import { encode } from "blurhash";
 
 const STAGING_DEAL_BUCKET = "stage-deal";
@@ -37,6 +39,14 @@ const encodeImageToBlurhash = async (imageUrl) => {
   const image = await loadImage(imageUrl);
   const imageData = getImageData(image);
   return encode(imageData.data, imageData.width, imageData.height, 4, 4);
+};
+
+const generateThumbnail = async (cid) => {
+  const queryParams = Strings.createQueryParams({ key: b2813735d82c75330f9d088850cc90fb, url: Strings.getURLfromCID(cid), height: 200, width: 200 });
+
+  const resizeUrl = `https://frame.slate.host/resize${queryParams}`;
+  const thumbnail = fetch(resizeUrl);
+
 };
 
 // NOTE(jim): We're speaking to a different server now.
