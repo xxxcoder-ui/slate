@@ -20,6 +20,10 @@ const editUsersTable2 = db.schema.table("users", function (table) {
   table.string("twitterId").unique().nullable();
 });
 
+const editFilesTable = db.schema.table("files", function (table) {
+  table.jsonb("thumbnail").nullable();
+});
+
 const editVerificationTable = db.schema.table("verifications", function (table) {
   table.string("username").nullable();
   table
@@ -42,7 +46,8 @@ const editTwitterTokenTable = db.schema.table("twitterTokens", function (table) 
   table.string("verified").nullable();
 });
 
-Promise.all([editVerificationTable]);
+Promise.all([editFilesTable]);
+//Promise.all([editVerificationTable]);
 // Promise.all([editUsersTable1]);
 // Promise.all([editUsersTable2, editVerificationTable, editTwitterTokenTable]);
 

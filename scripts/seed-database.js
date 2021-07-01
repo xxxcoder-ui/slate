@@ -71,6 +71,7 @@ const createFilesTable = db.schema.createTable("files", function (table) {
   table.jsonb("data").nullable();
   table.integer("likeCount").notNullable().defaultTo(0);
   table.integer("downloadCount").notNullable().defaultTo(0);
+  table.jsonb("thumbnail").nullable();
 });
 
 const createSlateFilesTable = db.schema.createTable("slate_files", function (table) {
