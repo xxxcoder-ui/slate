@@ -41,12 +41,18 @@ const encodeImageToBlurhash = async (imageUrl) => {
   return encode(imageData.data, imageData.width, imageData.height, 4, 4);
 };
 
+//takes a cid and sends the ipfs url to the proxy server to resize the image
+//returns the image thumbail from the response
 const generateThumbnail = async (cid) => {
-  const queryParams = Strings.createQueryParams({ key: b2813735d82c75330f9d088850cc90fb, url: Strings.getURLfromCID(cid), height: 200, width: 200 });
+  const queryParams = Strings.createQueryParams({
+    key: b2813735d82c75330f9d088850cc90fb,
+    url: Strings.getURLfromCID(cid),
+    height: 200,
+    width: 200,
+  });
 
   const resizeUrl = `https://frame.slate.host/resize${queryParams}`;
-  const thumbnail = fetch(resizeUrl);
-
+  return (thumbnail = fetch(resizeUrl));
 };
 
 // NOTE(jim): We're speaking to a different server now.
@@ -55,7 +61,14 @@ const getCookie = (name) => {
   if (match) return match[2];
 };
 
-export const upload = async ({ file, context, bucketName, routes, excludeFromLibrary }) => {
+export const upload = async ({
+  file,
+  context,
+  bucketName,
+  routes,
+  excludeFromLibrary,
+  isThumbnail = false,
+}) => {
   let formData = new FormData();
   const HEIC2ANY = require("heic2any");
 
@@ -180,12 +193,22 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
     return !res ? { decorator: "NO_RESPONSE_FROM_SERVER", error: true } : res;
   }
 
+  //generate thumbnail if the uploaded item isn't a thumbnail itself
+  //generate blurhash for blurred placeholder during upload
   let item = res.data.data;
   if (item.data.type.startsWith("image/")) {
+    let thumbnail;
+    if (!isThumbnail) {
+      thumbnail = await generateThumbnail(item.cid);
+    }
     let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);
       item.data.blurhash = blurhash;
+
+      let res = thumbnail
+        ? await upload({ file: thumbail, context: this, isThumbnail: true })
+        : null;
     } catch (e) {
       Logging.error(e);
     }
