@@ -207,8 +207,15 @@ export const upload = async ({
       item.data.blurhash = blurhash;
 
       let res = thumbnail
-        ? await upload({ file: thumbail, context: this, isThumbnail: true })
+        ? await upload({
+            file: thumbail,
+            context: this,
+            isThumbnail: true,
+            ...routes,
+            ...bucketName,
+          })
         : null;
+      item.data.thumbnail = res;
     } catch (e) {
       Logging.error(e);
     }
