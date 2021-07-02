@@ -102,16 +102,25 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-const OpenIntercom = ({ user }) => {
-  const { show } = useIntercom();
-
-  const showWithProps = () =>
-    show({
-      name: user.data.name || user.username,
-    });
+const OpenIntercom = ({ user, onTogglePopup }) => {
+  const { show, update } = useIntercom();
 
   return (
-    <span style={{ cursor: "pointer", display: "block" }} onClick={() => showWithProps()}>
+    <span
+      style={{ cursor: "pointer", display: "block" }}
+      onClick={() => {
+        onTogglePopup();
+        update({
+          name: user.data.name,
+          email: user.email,
+          customAttributes: {
+            slate_userid: user.id,
+            username: user.username,
+          },
+        });
+        show();
+      }}
+    >
       Help
     </span>
   );
@@ -229,7 +238,13 @@ export class ApplicationUserControlsPopup extends React.Component {
         ],
         [
           {
-            text: <OpenIntercom style={{ display: "block" }} user={this.props.viewer} />,
+            text: (
+              <OpenIntercom
+                style={{ display: "block" }}
+                user={this.props.viewer}
+                onTogglePopup={this.props.onTogglePopup}
+              />
+            ),
           },
           {
             text: "Sign out",

@@ -278,14 +278,24 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
 };
 
 const OpenIntercom = ({ user }) => {
-  const { show } = useIntercom();
-  
-  const showWithProps = () => show({ 
-    name: user.data.name || user.username, 
-  });
+  const { show, update } = useIntercom();
 
   return(
-    <span style={{ marginRight: 24, cursor: "pointer" }} onClick={() => showWithProps()}>
+    <span 
+      style={{ marginRight: 24, cursor: "pointer" }} 
+      onClick={() => {
+          update({
+            name: user.data.name,
+            email: user.email,
+            customAttributes: { 
+              slate_userid: user.id, 
+              username: user.username 
+            }
+          });
+          show()
+        }
+      }
+    >
       Contact Us
     </span>
   );
