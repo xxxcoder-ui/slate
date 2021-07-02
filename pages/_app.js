@@ -5,9 +5,9 @@ import * as React from "react";
 
 import { Global } from "@emotion/react";
 import { injectGlobalStyles, injectCodeBlockStyles } from "~/common/styles/global";
-import { IntercomProvider } from 'react-use-intercom';
+// import { IntercomProvider } from 'react-use-intercom';
 
-const INTERCOM_APP_ID = 'jwgbampk';
+// const INTERCOM_APP_ID = 'jwgbampk';
 
 // NOTE(wwwjim):
 // https://nextjs.org/docs/advanced-features/custom-app
@@ -17,9 +17,10 @@ function MyApp({ Component, pageProps }) {
       <React.Fragment>
         <Global styles={injectGlobalStyles()} />
         <Global styles={injectCodeBlockStyles()} />
-        <IntercomProvider appId={INTERCOM_APP_ID} autoBoot>
+        <Component {...pageProps} />
+        {/* <IntercomProvider appId={INTERCOM_APP_ID} autoBoot>
           <Component {...pageProps} />
-        </IntercomProvider>
+        </IntercomProvider> */}
       </React.Fragment>
     </ThemeProvider>
   );
