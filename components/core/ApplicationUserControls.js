@@ -102,7 +102,7 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-const OpenIntercom = ({ user }) => {
+const OpenIntercom = ({ user, onTogglePopup }) => {
   const { show, update } = useIntercom();
 
   return (
