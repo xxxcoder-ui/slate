@@ -8,7 +8,7 @@ import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
-// import { useIntercom } from "react-use-intercom";
+import { useIntercom } from "react-use-intercom";
 
 const STYLES_HEADER = css`
   position: relative;
@@ -102,20 +102,20 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-// const OpenIntercom = ({ user }) => {
-//   const { show } = useIntercom();
+const OpenIntercom = ({ user }) => {
+  const { show } = useIntercom();
 
-//   const showWithProps = () =>
-//     show({
-//       name: user.data.name || user.username,
-//     });
+  const showWithProps = () =>
+    show({
+      name: user.data.name || user.username,
+    });
 
-//   return (
-//     <span style={{ cursor: "pointer", display: "block" }} onClick={() => showWithProps()}>
-//       Help
-//     </span>
-//   );
-// };
+  return (
+    <span style={{ cursor: "pointer", display: "block" }} onClick={() => showWithProps()}>
+      Help
+    </span>
+  );
+};
 
 export class ApplicationUserControlsPopup extends React.Component {
   _handleAction = (props) => {
@@ -229,14 +229,7 @@ export class ApplicationUserControlsPopup extends React.Component {
         ],
         [
           {
-            text: "Help",
-            onClick: (e) => {
-              e.stopPropagation();
-              this._handleAction({
-                type: "SIDEBAR",
-                value: "SIDEBAR_HELP",
-              });
-            },
+            text: <OpenIntercom style={{ display: "block" }} user={this.props.viewer} />,
           },
           {
             text: "Sign out",
