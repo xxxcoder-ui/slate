@@ -81,6 +81,7 @@ export default async (req, res) => {
 
   if (user.authVersion === 1) {
     userUpdates.authVersion = 2;
+    userUpdates.revertedVersion = false;
   }
 
   if (updatePassword) {

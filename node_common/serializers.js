@@ -89,6 +89,7 @@ export const cleanUser = (entity) => {
     twitterId: entity.twitterId,
     authVersion: entity.authVersion,
     data: entity.data,
+    revertedVersion: entity.revertedVersion,
     // data: {
     //   name: entity.data?.name,
     //   photo: entity.data?.photo,
