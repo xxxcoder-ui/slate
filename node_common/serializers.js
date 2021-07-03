@@ -161,21 +161,25 @@ export const getUpdatedFile = (oldFile, updates) => {
 
 export const getUpdatedUser = (oldUser, updates) => {
   //NOTE(martina): we have this check here to make sure we never accidentally update the auth version without updating the password as well
-  // if (updates.authVersion && updates.authVersion > oldUser.authVersion) {
-  //   if (!updates.password) {
-  //     delete updates.authVersion;
-  //     Monitor.message(
-  //       "node_common/serializers.js",
-  //       `Tried to update authVersion but missing a password update. Update blocked for user ${oldUser.username}`
-  //     );
-  //   } else if (updates.password === oldUser.password) {
-  //     delete updates.authVersion;
-  //     Monitor.message(
-  //       "node_common/serializers.js",
-  //       `Tried to update authVersion but has the same password hash as before. Update blocked for user ${oldUser.username}`
-  //     );
-  //   }
-  // }
+  if (
+    !oldUser.revertedVersion &&
+    updates.authVersion &&
+    updates.authVersion > oldUser.authVersion
+  ) {
+    if (!updates.password) {
+      delete updates.authVersion;
+      Monitor.message(
+        "node_common/serializers.js",
+        `Tried to update authVersion but missing a password update. Update blocked for user ${oldUser.username}`
+      );
+    } else if (updates.password === oldUser.password) {
+      delete updates.authVersion;
+      Monitor.message(
+        "node_common/serializers.js",
+        `Tried to update authVersion but has the same password hash as before. Update blocked for user ${oldUser.username}`
+      );
+    }
+  }
   let updatedUser = cleanUser(updates);
   return { ...oldUser, ...updatedUser, data: { ...oldUser.data, ...updatedUser.data } };
 };
