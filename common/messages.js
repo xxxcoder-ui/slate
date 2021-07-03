@@ -220,6 +220,10 @@ export const error = {
   SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
   SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
   SERVER_SIGN_IN_WRONG_CREDENTIALS: "You have entered an invalid username or password",
+  SIGN_IN_RATE_LIMITED:
+    "You've tried to sign in too many times. Please wait 10 minutes before trying again",
+  SIGN_UP_RATE_LIMITED:
+    "You've sign up too many times in the past 10 minutes. Please wait 10 minutes before trying again",
 
   //Subscribe
   SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",

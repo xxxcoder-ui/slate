@@ -17,6 +17,15 @@ const getUserURL = (user) => {
   return userURL;
 };
 
+export const message = (location, msg) => {
+  try {
+    const message = `@martina there was a message at ${location}: ${msg}`;
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    Logging.error(e);
+  }
+};
+
 export const error = (location, e) => {
   try {
     const message = `@martina there was an error at ${location}: ${e}`;

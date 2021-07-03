@@ -1,3 +1,5 @@
+import * as Monitor from "~/node_common/monitor";
+
 //NOTE(martina): when you add any new variable to the user, file, or slate objects, add it in these structures
 //add it to sanitize___ if it should be sent to the front end
 //add it to clean____ if it should be saved to the database
@@ -158,6 +160,22 @@ export const getUpdatedFile = (oldFile, updates) => {
 };
 
 export const getUpdatedUser = (oldUser, updates) => {
+  //NOTE(martina): we have this check here to make sure we never accidentally update the auth version without updating the password as well
+  // if (updates.authVersion && updates.authVersion > oldUser.authVersion) {
+  //   if (!updates.password) {
+  //     delete updates.authVersion;
+  //     Monitor.message(
+  //       "node_common/serializers.js",
+  //       `Tried to update authVersion but missing a password update. Update blocked for user ${oldUser.username}`
+  //     );
+  //   } else if (updates.password === oldUser.password) {
+  //     delete updates.authVersion;
+  //     Monitor.message(
+  //       "node_common/serializers.js",
+  //       `Tried to update authVersion but has the same password hash as before. Update blocked for user ${oldUser.username}`
+  //     );
+  //   }
+  // }
   let updatedUser = cleanUser(updates);
   return { ...oldUser, ...updatedUser, data: { ...oldUser.data, ...updatedUser.data } };
 };
