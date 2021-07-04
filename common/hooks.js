@@ -39,10 +39,12 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -162,10 +164,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -176,14 +180,14 @@ export const useField = ({
       touched: false,
     }));
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = () => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let error = {};
     if (validateOnBlur && validate) error = validate(state.value);
     setState((prev) => ({ ...prev, touched: validateOnBlur, error }));
   };
 
-  const handleFormOnSubmit = (e) => {
+  const handleFormOnSubmit = () => {
     //NOTE(amine): touch all inputs
     setState((prev) => ({ ...prev, touched: true }));
 
@@ -220,21 +224,30 @@ export const useField = ({
   return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
 };
 
-// NOTE(amine): the intersection will be called one time
-export const useInView = ({ ref }) => {
-  const [isInView, setInView] = React.useState(false);
-  React.useEffect(() => {
+export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
+  React.useLayoutEffect(() => {
     if (!ref.current) return;
     const lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setInView(true);
-          lazyObserver.unobserve(ref.current);
+          onIntersect(lazyObserver, ref);
         }
       });
     });
     // start to observe element
     lazyObserver.observe(ref.current);
-  }, []);
+  }, dependencies);
+};
+
+// NOTE(amine): the intersection will be called one time
+export const useInView = ({ ref }) => {
+  const [isInView, setInView] = React.useState(false);
+  useIntersection({
+    ref,
+    onIntersect: (lazyObserver, ref) => {
+      setInView(true);
+      lazyObserver.unobserve(ref.current);
+    },
+  });
   return { isInView };
 };
