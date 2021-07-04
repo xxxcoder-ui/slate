@@ -1937,3 +1937,15 @@ export const PlayButton = (props) => (
     </defs>
   </svg>
 );
+
+export const RSS = (props) => (
+  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M3.333 9.667a7.5 7.5 0 017.5 7.5M3.333 3.833a13.333 13.333 0 0113.334 13.334M4.167 17.167a.833.833 0 100-1.667.833.833 0 000 1.667z"
+      stroke="#000002"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
