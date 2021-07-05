@@ -1,24 +1,16 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as Validations from "~/common/validations";
-import * as Window from "~/common/window";
-import * as SVG from "~/common/svg";
-import * as Actions from "~/common/actions";
-import * as Events from "~/common/custom-events";
-import * as ActivityUtilities from "~/common/activity-utilities";
+import * as Styles from "~/common/styles";
 
-import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { css } from "@emotion/react";
-import { TabGroup, PrimaryTabGroup, SecondaryTabGroup } from "~/components/core/TabGroup";
+import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
-import { Link } from "~/components/core/Link";
+import { useIntersection } from "common/hooks";
+import { useActivity } from "./hooks";
 
-import EmptyState from "~/components/core/EmptyState";
 import ScenePage from "~/components/core/ScenePage";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ActivityGroup from "~/components/core/ActivityGroup";
-
-import { useActivity } from "./hooks";
 
 const STYLES_GROUPS_CONTAINER = css`
   margin-top: 32px;
@@ -27,8 +19,29 @@ const STYLES_GROUPS_CONTAINER = css`
   }
 `;
 
-export default function SceneActivity({ page, viewer, onAction }) {
-  const { feed, tab } = useActivity({ page, viewer, onAction });
+const STYLES_LOADING_CONTAINER = css`
+  height: 48px;
+  margin-top: 32px;
+  ${Styles.CONTAINER_CENTERED}
+`;
+
+export default function SceneActivity({ page, viewer, external, onAction }) {
+  const { feed, tab, isLoading, updateFeed } = useActivity({
+    page,
+    viewer,
+    onAction,
+  });
+
+  const divRef = React.useRef();
+  useIntersection({
+    ref: divRef,
+    onIntersect: () => {
+      console.log(feed?.length);
+      if (feed?.length === 0 || isLoading) return;
+      updateFeed();
+    },
+  });
+
   return (
     <WebsitePrototypeWrapper
       title={`${page.pageTitle} • Slate`}
@@ -48,8 +61,17 @@ export default function SceneActivity({ page, viewer, onAction }) {
         )}
         <div css={STYLES_GROUPS_CONTAINER}>
           {feed?.map((group) => (
-            <ActivityGroup key={group.id} {...group} />
+            <ActivityGroup
+              key={group.id}
+              viewer={viewer}
+              external={external}
+              onAction={onAction}
+              {...group}
+            />
           ))}
+        </div>
+        <div ref={divRef} css={STYLES_LOADING_CONTAINER}>
+          {isLoading && <LoaderSpinner />}
         </div>
       </ScenePage>
     </WebsitePrototypeWrapper>

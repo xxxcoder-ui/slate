@@ -1,68 +1,61 @@
 import * as React from "react";
-import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as ActivityUtilities from "~/common/activity-utilities";
 
-const fetchExploreItems = (viewer, onAction, state, setState) => async (update) => {
-  const sections = viewer?.explore || state.explore || [];
-  const requestObject = {};
-  if (sections.length) {
-    if (update) {
-      requestObject.latestTimestamp = sections[0].createdAt;
-    } else {
-      requestObject.earliestTimestamp = sections[sections.length - 1].createdAt;
-    }
-  }
+const updateExploreFeed = async ({ viewer, state, onAction, setState, update }) => {
+  const currentItems = viewer?.explore?.items || state?.explore?.items || [];
+  const response = await ActivityUtilities.fetchExploreItems({ currentItems, update });
+  if (Events.hasError(response)) return;
 
-  const response = await Actions.getExplore(requestObject);
-  if (Events.hasError(response)) {
-    return;
-  }
+  const newItems = response.data;
 
-  const newItems = response.data || [];
-  const newSections = ActivityUtilities.processActivity(newItems);
-  const newExploreFeed = [...sections, ...newSections];
+  const currentFeed = viewer?.explore?.feed || state?.explore?.feed || [];
+  const newFeed = await ActivityUtilities.processActivity(newItems);
+
+  const newState = {
+    items: currentItems.concat(newItems),
+    feed: currentFeed.concat(newFeed),
+    shouldFetchMore: newItems.length > 0,
+  };
 
   if (viewer) {
-    onAction({ type: "UPDATE_VIEWER", viewer: { explore: newExploreFeed } });
+    onAction({ type: "UPDATE_VIEWER", viewer: { explore: newState } });
     return;
   }
 
-  setState({ explore: newExploreFeed });
+  setState((prev) => ({ ...prev, explore: newState }));
 };
 
-const fetchActivityItems = (viewer, onAction) => async (update) => {
-  const sections = viewer?.activity || [];
-  const requestObject = {};
-  if (sections.length) {
-    if (update) {
-      requestObject.latestTimestamp = sections[0].createdAt;
-    } else {
-      requestObject.earliestTimestamp = sections[sections.length - 1].createdAt;
-    }
-  }
-  requestObject.following = viewer.following.map((item) => item.id);
-  requestObject.subscriptions = viewer.subscriptions.map((item) => item.id);
+const updateActivityFeed = async ({ viewer, onAction, update }) => {
+  const currentItems = viewer?.activity?.items || [];
+  const response = await ActivityUtilities.fetchActivityItems({ currentItems, viewer, update });
+  if (Events.hasError(response)) return;
 
-  const response = await Actions.getActivity(requestObject);
-  if (Events.hasError(response)) {
-    return;
-  }
+  const newItems = response.data;
 
-  const newItems = response.data || [];
-  const newSections = ActivityUtilities.processActivity(newItems);
-  const newActivityFeed = [...sections, ...newSections];
+  const currentFeed = viewer?.activity?.feed || [];
+  const newFeed = ActivityUtilities.processActivity(newItems);
 
-  onAction({ type: "UPDATE_VIEWER", viewer: { activity: newActivityFeed } });
+  onAction({
+    type: "UPDATE_VIEWER",
+    viewer: {
+      activity: {
+        feed: currentFeed.concat(newFeed),
+        items: currentItems.concat(newItems),
+        shouldFetchMore: newItems.length > 0,
+      },
+    },
+  });
 };
 
-const getSections = (viewer, state, tab) => {
-  if (!viewer) return state.explore;
+// NOTE(amine): get the state for the selected tab.
+const getState = (viewer, state, tab) => {
+  if (!viewer) return state.explore || [];
 
   if (tab === "explore") {
-    return viewer.explore;
+    return viewer?.explore || {};
   }
-  return viewer.activity;
+  return viewer?.activity || {};
 };
 
 const getTab = (page, viewer) => {
@@ -75,24 +68,42 @@ const getTab = (page, viewer) => {
 };
 
 export function useActivity({ page, viewer, onAction }) {
-  const [state, setState] = React.useState({ explore: [], loading: true });
+  const [state, setState] = React.useState({
+    explore: {
+      feed: [],
+      items: [],
+      shouldFetchMore: true,
+    },
+    loading: false,
+  });
 
   const tab = getTab(page, viewer);
 
-  const fetchNewItems = React.useMemo(
-    () =>
-      viewer && tab === "activity"
-        ? fetchActivityItems(viewer, onAction)
-        : fetchExploreItems(viewer, onAction, state, setState),
-    [tab, viewer]
-  );
-  const feed = getSections(viewer, state, tab);
+  const updateFeed = React.useCallback(
+    async (update) => {
+      const currentState = getState(viewer, state, tab);
+      const { shouldFetchMore } = currentState || {};
+      if (typeof shouldFetchMore === "boolean" && !shouldFetchMore) {
+        return;
+      }
 
+      if (state.loading) return;
+      setState((prev) => ({ ...prev, loading: true }));
+      if (viewer && tab === "activity") {
+        await updateActivityFeed({ viewer, onAction, update });
+      } else {
+        await updateExploreFeed({ viewer, onAction, state, setState, update });
+      }
+      setState((prev) => ({ ...prev, loading: false }));
+    },
+    [tab, onAction, state, viewer]
+  );
+
+  const { feed = [] } = getState(viewer, state, tab);
   React.useEffect(() => {
     if (feed && feed?.length !== 0) return;
-
-    fetchNewItems(true);
+    updateFeed(true);
   }, [tab]);
 
-  return { fetActivityItems: fetchNewItems, feed, tab, isloading: state.loading };
+  return { updateFeed, feed, tab, isLoading: state.loading };
 }
