@@ -1,5 +1,39 @@
+/* eslint-disable no-prototype-builtins */
 import shuffle from "lodash/shuffle";
+import * as Actions from "~/common/actions";
 
+// NOTE(amine): fetch explore objects
+export const fetchExploreItems = async ({ currentItems, update }) => {
+  const requestObject = {};
+  if (currentItems.length) {
+    if (update) {
+      requestObject.latestTimestamp = currentItems[0].createdAt;
+    } else {
+      requestObject.earliestTimestamp = currentItems[currentItems.length - 1].createdAt;
+    }
+  }
+  const response = await Actions.getExplore(requestObject);
+  return response;
+};
+
+// NOTE(amine): fetch explore objects
+export const fetchActivityItems = async ({ currentItems, viewer, update }) => {
+  const requestObject = {};
+
+  if (currentItems.length) {
+    if (update) {
+      requestObject.latestTimestamp = currentItems[0].createdAt;
+    } else {
+      requestObject.earliestTimestamp = currentItems[currentItems.length - 1].createdAt;
+    }
+  }
+
+  requestObject.following = viewer.following.map((item) => item.id);
+  requestObject.subscriptions = viewer.subscriptions.map((item) => item.id);
+
+  const response = await Actions.getActivity(requestObject);
+  return response;
+};
 //NOTE(martina): our grouping schema is as follows: we group first by multiple people doing the same action to the same target, then by one person doing the same action to different targets
 // We remove repeat targets so that the user is not shown the same file/slate twice
 
@@ -37,8 +71,8 @@ export const processActivity = (activity) => {
   let activityByType = {};
   for (let item of activity) {
     if (item.type === "DOWNLOAD_FILE") continue;
-    const primary = ownerIdGroupings[item.type].primary;
-    const id = item[primary].id;
+    const { primary } = ownerIdGroupings[item.type];
+    const { id } = item[primary];
     if (ids[id]) {
       continue; //NOTE(martina): removing repeats from previous activity
     }
@@ -68,15 +102,15 @@ export const processActivity = (activity) => {
 
   //NOTE(martina): removing repeats within the group
   for (let item of finalActivity) {
-    const primary = ownerIdGroupings[item.type].primary;
-    let id = item[primary].id;
+    const { primary } = ownerIdGroupings[item.type];
+    let { id } = item[primary];
     ids[id] = true;
   }
   for (let [key, arr] of Object.entries(activityByType)) {
     let filteredArr = [];
     for (let item of arr) {
-      const primary = ownerIdGroupings[item.type].primary;
-      let id = item[primary].id;
+      const { primary } = ownerIdGroupings[item.type];
+      let { id } = item[primary];
       if (ids[id]) {
         continue;
       } else {
@@ -102,7 +136,7 @@ const groupByField = (activity, key) => {
   let ungrouped = {};
   let grouped = {};
   for (let item of activity) {
-    const id = item[key].id;
+    const { id } = item[key];
     let match = ungrouped[id];
     if (match) {
       grouped[id] = match;
