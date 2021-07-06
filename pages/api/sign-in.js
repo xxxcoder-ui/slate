@@ -66,10 +66,6 @@ export default async (req, res) => {
     if (user.authVersion === 1) {
       const clientHash = await encryptPasswordClient(req.body.data.password);
       hash = await Utilities.encryptPassword(clientHash, user.salt);
-      Monitor.message(
-        "pages/api/sign-in.js",
-        `User ${user.username} was rolled back to v1 when they were really v2! Correcting it now.`
-      );
       if (hash !== user.password) {
         return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_CREDENTIALS", error: true });
       }
