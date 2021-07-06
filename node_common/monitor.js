@@ -26,6 +26,15 @@ export const error = (location, e) => {
   }
 };
 
+export const message = (location, msg) => {
+  try {
+    const message = `@martina there was a message at ${location}: ${msg}`;
+    Social.sendSlackMessage(message);
+  } catch (e) {
+    Logging.error(e);
+  }
+};
+
 export const upload = ({ user, slate, files: targetFiles }) => {
   if (slate && !slate.isPublic) return;
   const files = Arrays.filterPublic(targetFiles);
