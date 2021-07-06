@@ -17,15 +17,6 @@ const getUserURL = (user) => {
   return userURL;
 };
 
-export const message = (location, msg) => {
-  try {
-    const message = `@martina there was a message at ${location}: ${msg}`;
-    Social.sendSlackMessage(message);
-  } catch (e) {
-    Logging.error(e);
-  }
-};
-
 export const error = (location, e) => {
   try {
     const message = `@martina there was an error at ${location}: ${e}`;
@@ -45,12 +36,13 @@ export const upload = ({ user, slate, files: targetFiles }) => {
     const userURL = getUserURL(user);
     const extra =
       files.length > 1
-        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s" : ""}`
         : "";
     let message;
     if (slate) {
       const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
-      message = `*${userURL}* uploaded ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
+      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+      message = `*${userURL}* uploaded ${objectURL}${extra} to ${slateURL}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
       message = `*${userURL}* uploaded ${objectURL}${extra}`;
@@ -72,7 +64,7 @@ export const download = ({ user, files: targetFiles }) => {
     const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
     const extra =
       files.length > 1
-        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s" : ""}`
         : "";
     const message = `*${userURL}* downloaded ${objectURL}${extra}`;
     Social.sendSlackMessage(message);
@@ -91,12 +83,13 @@ export const saveCopy = ({ slate, user, files: targetFiles }) => {
     const userURL = getUserURL(user);
     const extra =
       files.length > 1
-        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s " : " "}`
+        ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s" : ""}`
         : "";
     let message;
     if (slate) {
       const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
-      message = `*${userURL}* saved ${objectURL}${extra} to https://slate.host/${user.username}/${slate.slatename}`;
+      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+      message = `*${userURL}* saved ${objectURL}${extra} to ${slateURL}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
       message = `*${userURL}* saved ${objectURL}${extra}`;
@@ -112,7 +105,8 @@ export const createSlate = ({ user, slate }) => {
   if (!slate.isPublic) return;
   try {
     const userURL = getUserURL(user);
-    const message = `*${userURL}* created a collection: https://slate.host/${user.username}/${slate.slatename}`;
+    const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+    const message = `*${userURL}* created a collection ${slateURL}`;
 
     Social.sendSlackMessage(message);
   } catch (e) {
@@ -148,11 +142,7 @@ export const subscribeSlate = ({ user, targetSlate }) => {
   if (!targetSlate.isPublic) return;
   try {
     const userURL = getUserURL(user);
-
-    const targetSlatePageURL = `https://slate.host/$/${targetSlate.id}`;
-    const targetSlateURL = `<${targetSlatePageURL}|${
-      targetSlate.data.name || targetSlate.slatename
-    }>`;
+    const targetSlateURL = `<https://slate.host/$/${targetSlate.id}|${targetSlate.slateId}>`;
 
     const message = `*${userURL}* subscribed to ${targetSlateURL}`;
 
