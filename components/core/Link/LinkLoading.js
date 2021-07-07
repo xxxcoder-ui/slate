@@ -29,7 +29,7 @@ export default function LinkLoading({ file }) {
         <img src={image} style={{ width: "100%" }} />
       </div>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
-        <System.H3 style={{ marginBottom: 16, color: Constants.system.textBlack }}>
+        <System.H3 style={{ marginBottom: 16, color: Constants.semantic.textBlack }}>
           {name}
         </System.H3>
         <span style={{ marginBottom: 16 }}>
