@@ -51,7 +51,7 @@ export class Toggle extends React.Component {
           onClick={this._handleChange}
           style={{
             backgroundColor: this.props.active
-              ? Constants.system.brand
+              ? Constants.system.blue
               : this.props.dark
               ? Constants.system.grayBlack
               : null,

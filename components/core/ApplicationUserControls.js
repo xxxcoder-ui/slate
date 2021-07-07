@@ -98,7 +98,7 @@ const STYLES_ITEM_BOX = css`
   border-left: 2px solid ${Constants.system.foreground};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

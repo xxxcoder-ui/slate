@@ -45,7 +45,7 @@ const STYLES_H2 = css`
   font-size: ${Constants.typescale.lvl2};
   letter-spacing: -0.017rem;
   line-height: 1.3;
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
   margin-bottom: 1rem;
   width: 95%;
 
@@ -108,7 +108,7 @@ const STYLES_BUTTON_PRIMARY = css`
   align-items: center;
   justify-content: center;
   user-select: none;
-  background-color: ${Constants.system.newBlue};
+  background-color: ${Constants.system.blue};
   color: ${Constants.system.white};
   text-decoration: none;
   font-family: ${Constants.font.semiBold};
@@ -135,7 +135,7 @@ const STYLES_BUTTON_SECONDARY = css`
   justify-content: center;
   user-select: none;
   background-color: ${Constants.system.wallLight};
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
   text-decoration: none;
   font-family: ${Constants.font.semiBold};
   font-weight: 400;
@@ -150,7 +150,7 @@ const STYLES_BUTTON_SECONDARY = css`
 `;
 
 const STYLES_BLUE = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_HALFBLOCK = css`

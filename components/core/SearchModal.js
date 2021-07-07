@@ -16,7 +16,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
-import { useIntercom } from 'react-use-intercom';
+import { useIntercom } from "react-use-intercom";
 
 const STYLES_MOBILE_HIDDEN = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -280,26 +280,25 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
 const OpenIntercom = ({ user }) => {
   const { show, update } = useIntercom();
 
-  return(
-    <span 
-      style={{ marginRight: 24, cursor: "pointer" }} 
+  return (
+    <span
+      style={{ marginRight: 24, cursor: "pointer" }}
       onClick={() => {
-          update({
-            name: user.data.name,
-            email: user.email,
-            customAttributes: { 
-              slate_userid: user.id, 
-              username: user.username 
-            }
-          });
-          show()
-        }
-      }
+        update({
+          name: user.data.name,
+          email: user.email,
+          customAttributes: {
+            slate_userid: user.id,
+            username: user.username,
+          },
+        });
+        show();
+      }}
     >
       Contact Us
     </span>
   );
-} 
+};
 
 const STYLES_DROPDOWN_CONTAINER = css`
   box-sizing: border-box;
@@ -990,7 +989,7 @@ export class SearchModal extends React.Component {
           style={{
             marginRight: 0,
             marginLeft: 16,
-            color: this.state.scopeFilter ? Constants.system.brand : Constants.system.textGray,
+            color: this.state.scopeFilter ? Constants.system.blue : Constants.system.textGray,
           }}
           onClick={() => this.setState({ filterTooltip: !this.state.filterTooltip })}
         >
@@ -1017,7 +1016,7 @@ export class SearchModal extends React.Component {
                     text: (
                       <span
                         style={{
-                          color: this.state.scopeFilter ? "inherit" : Constants.system.brand,
+                          color: this.state.scopeFilter ? "inherit" : Constants.system.blue,
                         }}
                       >
                         All
@@ -1030,7 +1029,7 @@ export class SearchModal extends React.Component {
                       <span
                         style={{
                           color:
-                            this.state.scopeFilter === "MY" ? Constants.system.brand : "inherit",
+                            this.state.scopeFilter === "MY" ? Constants.system.blue : "inherit",
                         }}
                       >
                         My stuff
@@ -1044,7 +1043,7 @@ export class SearchModal extends React.Component {
                         style={{
                           color:
                             this.state.scopeFilter === "NETWORK"
-                              ? Constants.system.brand
+                              ? Constants.system.blue
                               : "inherit",
                         }}
                       >
@@ -1261,11 +1260,13 @@ export class SearchModal extends React.Component {
 
                 <span
                   style={{ marginRight: 24, cursor: "pointer" }}
-                  onClick={() => { window.open("https://help.slate.host/", "_blank") }}
+                  onClick={() => {
+                    window.open("https://help.slate.host/", "_blank");
+                  }}
                 >
                   FAQ
                 </span>
-                
+
                 {/* <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
                   I'm Feeling Lucky
                 </span> */}

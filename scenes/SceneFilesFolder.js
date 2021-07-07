@@ -353,7 +353,7 @@ export default class SceneFilesFolder extends React.Component {
                     height="18px"
                     style={{
                       color: this.state.filtersActive
-                        ? Constants.system.brand
+                        ? Constants.system.blue
                         : Constants.system.textGray,
                     }}
                   />
@@ -423,7 +423,7 @@ export default class SceneFilesFolder extends React.Component {
                       <div css={STYLES_PRIVACY_TOOLTIP}>
                         <div
                           style={{
-                            color: this.state.privacy === "ALL" ? Constants.system.brand : null,
+                            color: this.state.privacy === "ALL" ? Constants.system.blue : null,
                             cursor: "pointer",
                             marginTop: 1,
                           }}
@@ -434,7 +434,7 @@ export default class SceneFilesFolder extends React.Component {
                         <div
                           style={{
                             color:
-                              this.state.privacy === "PRIVATE" ? Constants.system.brand : "inherit",
+                              this.state.privacy === "PRIVATE" ? Constants.system.blue : "inherit",
                             cursor: "pointer",
                             marginTop: 17,
                           }}
@@ -445,7 +445,7 @@ export default class SceneFilesFolder extends React.Component {
                         <div
                           style={{
                             color:
-                              this.state.privacy === "PUBLIC" ? Constants.system.brand : "inherit",
+                              this.state.privacy === "PUBLIC" ? Constants.system.blue : "inherit",
                             cursor: "pointer",
                             marginTop: 18,
                           }}

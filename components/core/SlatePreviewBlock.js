@@ -191,7 +191,7 @@ const STYLES_ICON_BOX = css`
   color: ${Constants.system.darkGray};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

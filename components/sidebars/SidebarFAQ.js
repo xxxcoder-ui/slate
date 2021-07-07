@@ -84,7 +84,7 @@ export default class SidebarFAQ extends React.Component {
         <div css={STYLES_GROUPING}>
           <System.P
             css={STYLES_TEXT}
-            style={{ color: Constants.system.brand, cursor: "pointer" }}
+            style={{ color: Constants.system.blue, cursor: "pointer" }}
             onClick={() => this.props.onAction({ type: "SIDEBAR", value: "SIDEBAR_HELP" })}
           >
             Still have questions? Send us a message!

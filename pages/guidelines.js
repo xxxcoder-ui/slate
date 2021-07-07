@@ -101,10 +101,10 @@ const STYLES_LINK = css`
   color: ${Constants.system.slate};
 
   :hover {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
   :active {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
   :visited {
     color: ${Constants.system.slate};
@@ -113,7 +113,7 @@ const STYLES_LINK = css`
 
 const STYLES_COPY_EMAIL = css`
   display: inline;
-  color: ${Constants.system.newGreen};
+  color: ${Constants.system.green};
 `;
 
 export function CopyEmail() {

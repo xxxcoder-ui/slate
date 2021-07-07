@@ -21,7 +21,7 @@ const STYLES_BUTTON = css`
 
   :hover {
     color: ${Constants.system.white};
-    background-color: ${Constants.system.brand};
+    background-color: ${Constants.system.blue};
   }
 `;
 

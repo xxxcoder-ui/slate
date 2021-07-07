@@ -26,7 +26,7 @@ import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -43,12 +43,12 @@ const STYLES_ICON_BOX = css`
 const STYLES_CANCEL_BOX = css`
   height: 16px;
   width: 16px;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   border-radius: 3px;
   position: relative;
   right: 3px;
   cursor: pointer;
-  box-shadow: 0 0 0 1px ${Constants.system.brand};
+  box-shadow: 0 0 0 1px ${Constants.system.blue};
 `;
 
 const STYLES_HEADER_LINE = css`
@@ -87,7 +87,7 @@ const STYLES_ICON_BOX_HOVER = css`
   padding: 8px;
   cursor: pointer;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -212,7 +212,7 @@ const STYLES_TAG = css`
   list-style-type: none;
   border-radius: 4px;
   background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
+  color: ${Constants.system.black};
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;
@@ -753,7 +753,7 @@ export default class DataView extends React.Component {
                                   height: 24,
                                   width: 24,
                                   backgroundColor: this.state.checked[i]
-                                    ? Constants.system.brand
+                                    ? Constants.system.blue
                                     : "rgba(255, 255, 255, 0.75)",
                                 }}
                                 style={{

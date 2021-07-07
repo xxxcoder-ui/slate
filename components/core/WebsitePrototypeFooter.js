@@ -28,7 +28,7 @@ const STYLES_LINK = css`
   text-decoration: none;
   transition: 200ms ease color;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

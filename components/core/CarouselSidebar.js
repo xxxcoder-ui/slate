@@ -171,7 +171,7 @@ const STYLES_ACTION = css`
   display: flex;
   align-items: center;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
   :last-child {
     border: none;

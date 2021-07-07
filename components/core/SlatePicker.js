@@ -69,7 +69,7 @@ const STYLES_SLATE_LINE_DARK = css`
   border-bottom: 1px solid #3c3c3c;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 
   :last-child {
@@ -98,7 +98,7 @@ const STYLES_SLATE_CREATE_DARK = css`
   border: 1px solid #3c3c3c;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

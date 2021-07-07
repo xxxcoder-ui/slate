@@ -69,7 +69,7 @@ export default class SystemPageColors extends React.Component {
 
 {Constants.system.pitchBlack};
 
-{Constants.system.brand};
+{Constants.system.blue};
 
 {Constants.system.link};
 

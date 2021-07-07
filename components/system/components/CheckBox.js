@@ -95,8 +95,8 @@ export class CheckBox extends React.Component {
           style={
             this.props.value
               ? {
-                  backgroundColor: Constants.system.brand,
-                  boxShadow: `0 0 0 1px ${Constants.system.brand}`,
+                  backgroundColor: Constants.system.blue,
+                  boxShadow: `0 0 0 1px ${Constants.system.blue}`,
                   ...this.props.boxStyle,
                 }
               : {

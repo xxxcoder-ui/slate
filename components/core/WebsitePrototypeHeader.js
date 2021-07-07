@@ -39,7 +39,7 @@ const STYLES_LINK = css`
   height: 100%;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

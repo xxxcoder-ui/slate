@@ -42,7 +42,7 @@ const USER_SLATES = [
     url: "/_",
     username: "",
     preview: "",
-    style: { backgroundColor: Constants.system.newBlue, color: Constants.system.white },
+    style: { backgroundColor: Constants.system.blue, color: Constants.system.white },
   },
   {
     name: "Cryptovoxels History",
@@ -174,7 +174,7 @@ const STYLES_SECTIONCTA_WRAPPER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
   text-decoration: none;
   transition: 200ms ease none;
   font-family: ${Constants.font.medium};
@@ -202,40 +202,40 @@ const STYLES_LIST = css`
 `;
 
 const STYLES_HIGHLIGHT_GREEN = css`
-  color: ${Constants.system.newGreen};
+  color: ${Constants.system.green};
 `;
 
 const STYLES_HIGHLIGHT_YELLOW = css`
-  color: ${Constants.system.newYellow};
+  color: ${Constants.system.yellow};
 `;
 
 const STYLES_HIGHLIGHT_BLUE = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_HIGHLIGHT_RED = css`
-  color: ${Constants.system.newRed};
+  color: ${Constants.system.red};
 `;
 
 const STYLES_HR_GREEN = css`
   border: 0;
-  border-top: 1px solid ${Constants.system.newGreen};
+  border-top: 1px solid ${Constants.system.green};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-left: 0;
     width: 10%;
-    border-top: 2px solid ${Constants.system.newGreen};
+    border-top: 2px solid ${Constants.system.green};
   }
 `;
 
 const STYLES_HR_YELLOW = css`
   border: 0;
-  border-top: 1px solid ${Constants.system.newYellow};
+  border-top: 1px solid ${Constants.system.yellow};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-left: 0;
     width: 10%;
-    border-top: 2px solid ${Constants.system.newYellow};
+    border-top: 2px solid ${Constants.system.yellow};
   }
 `;
 

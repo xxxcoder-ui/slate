@@ -187,7 +187,7 @@ const STYLES_USER = css`
   grid-template-columns: auto 1fr;
   align-items: center;
   margin: 16px;
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvl1};
 

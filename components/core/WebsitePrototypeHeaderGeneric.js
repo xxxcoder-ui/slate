@@ -38,7 +38,7 @@ const STYLES_LINK = css`
   display: block;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

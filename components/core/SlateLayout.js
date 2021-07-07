@@ -1370,7 +1370,7 @@ export class SlateLayout extends React.Component {
                                 height: 24,
                                 width: 24,
                                 backgroundColor: this.state.checked[i]
-                                  ? Constants.system.brand
+                                  ? Constants.system.blue
                                   : "rgba(255, 255, 255, 0.75)",
                                 boxShadow: this.state.checked[i]
                                   ? "none"

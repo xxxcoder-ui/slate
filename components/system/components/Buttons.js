@@ -50,7 +50,7 @@ const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
 `;
 
 export const ButtonPrimary = (props) => {

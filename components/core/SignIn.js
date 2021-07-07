@@ -64,7 +64,7 @@ const STYLES_LINK_ITEM = css`
   }
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

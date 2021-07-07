@@ -38,7 +38,7 @@ const STYLES_LINK_ITEM = (theme) => css`
   }
 
   :hover {
-    color: ${theme.system.brand};
+    color: ${theme.system.blue};
   }
 `;
 

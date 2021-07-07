@@ -96,7 +96,7 @@ const STYLES_TAG = css`
   list-style-type: none;
   border-radius: 4px;
   background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
+  color: ${Constants.system.black};
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;

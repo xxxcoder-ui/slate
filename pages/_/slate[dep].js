@@ -90,7 +90,7 @@ const STYLES_CREATOR = css`
   color: ${Constants.system.black};
   font-family: ${Constants.font.medium};
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

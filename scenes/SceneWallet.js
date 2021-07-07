@@ -58,7 +58,7 @@ const STYLES_FOCUS = css`
 `;
 
 const STYLES_FOCUS_EMPAHSIS = css`
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_SUBTEXT = css`
@@ -204,7 +204,7 @@ export default class SceneWallet extends React.Component {
                   onClick={this._handleMakeAddressVisible}
                   style={{
                     marginRight: 16,
-                    backgroundColor: this.state.visible ? null : Constants.system.brand,
+                    backgroundColor: this.state.visible ? null : Constants.system.blue,
                   }}
                 >
                   <SVG.Privacy height="16px" />

@@ -36,7 +36,7 @@ const STYLES_TABLE_EXPAND_SECTION = css`
     transition: 200ms ease all;
   }
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

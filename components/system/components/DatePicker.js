@@ -85,7 +85,7 @@ const STYLES_DAY = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand} !important;
+    color: ${Constants.system.blue} !important;
   }
 `;
 
@@ -96,7 +96,7 @@ const STYLES_CHOSEN_DAY = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand} !important;
+    color: ${Constants.system.blue} !important;
   }
 
   :after {
@@ -107,7 +107,7 @@ const STYLES_CHOSEN_DAY = css`
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 1px solid ${Constants.system.brand};
+    border: 1px solid ${Constants.system.blue};
   }
 `;
 
@@ -136,7 +136,7 @@ const STYLES_ICON = css`
   margin: 0 10px;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

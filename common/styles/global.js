@@ -208,7 +208,7 @@ export const injectCodeBlockStyles = () => css`
     }
 
     .token.inserted {
-      color: ${Constants.system.brand};
+      color: ${Constants.system.blue};
     }
   }
 `;

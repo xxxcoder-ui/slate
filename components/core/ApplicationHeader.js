@@ -36,7 +36,7 @@ const STYLES_NAV_LINK = css`
   font-size: ${Constants.typescale.lvl1};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 
   @media (max-width: ${Constants.sizes.mobile}px) {

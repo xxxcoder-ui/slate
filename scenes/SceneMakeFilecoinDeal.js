@@ -61,7 +61,7 @@ const STYLES_RIGHT = css`
   transition: 200ms ease all;
   cursor: pointer;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

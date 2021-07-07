@@ -32,7 +32,7 @@ const STYLES_SLIDER_BAR = css`
 const STYLES_ACTIVE_SLIDER_BAR = css`
   height: 4px;
   border-radius: 2px 0px 0px 2px;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   position: relative;
   bottom: 4px;
 `;
@@ -59,7 +59,7 @@ const STYLES_SLIDER_HANDLE = css`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   cursor: pointer;
   position: relative;
   bottom: 18px;

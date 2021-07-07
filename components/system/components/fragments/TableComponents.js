@@ -246,7 +246,7 @@ export const TableContent = ({ type, text, action, data = {}, onAction }) => {
       return text == 1 ? <Tag style={{ background: Constants.system.green }}>Online</Tag> : null;
     case "DEAL_AUTO_RENEW":
       return text == 1 ? (
-        <Tag style={{ background: Constants.system.brand }}>True</Tag>
+        <Tag style={{ background: Constants.system.blue }}>True</Tag>
       ) : (
         <Tag>False</Tag>
       );

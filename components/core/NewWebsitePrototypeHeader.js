@@ -42,7 +42,7 @@ const STYLES_LINK = css`
   transition: 200ms ease color;
 
   :hover {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
 
   @media (max-width: ${Constants.sizes.mobile}px) {

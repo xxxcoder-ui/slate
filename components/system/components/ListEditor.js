@@ -60,7 +60,7 @@ const STYLES_DELETE = css`
   justify-self: end;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -72,7 +72,7 @@ const STYLES_REORDER = css`
   justify-self: start;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

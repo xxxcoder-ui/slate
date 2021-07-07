@@ -21,8 +21,8 @@ const STYLES_MODAL = css`
 
 const STYLES_BUTTON_SECONDARY = {
   backgroundColor: Constants.system.white,
-  boxShadow: `0 0 0 1px ${Constants.system.brand} inset`,
-  color: Constants.system.brand,
+  boxShadow: `0 0 0 1px ${Constants.system.blue} inset`,
+  color: Constants.system.blue,
   marginRight: 16,
   width: 160,
   textDecoration: `none`,

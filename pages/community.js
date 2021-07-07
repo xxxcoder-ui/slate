@@ -481,18 +481,18 @@ const STYLES_CHAT = css`
 `;
 
 const STYLES_HIGHLIGHT_GREEN = css`
-  color: ${Constants.system.newGreen};
+  color: ${Constants.system.green};
 `;
 const STYLES_HIGHLIGHT_GRAY = css`
   color: ${Constants.system.gray};
 `;
 
 const STYLES_HIGHLIGHT_YELLOW = css`
-  color: ${Constants.system.newYellow};
+  color: ${Constants.system.yellow};
 `;
 
 const STYLES_HIGHLIGHT_BLUE = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_DOT = css`

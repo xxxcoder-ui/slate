@@ -96,7 +96,7 @@ const STYLES_ICON = css`
   color: ${Constants.system.grayBlack};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

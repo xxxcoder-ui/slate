@@ -29,7 +29,7 @@ const STYLES_DATA = css`
 const STYLES_DATA_METER = css`
   flex-shrink: 0;
   height: 16px;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
 `;
 
 const STYLES_ROW = css`

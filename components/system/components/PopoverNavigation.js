@@ -40,7 +40,7 @@ const STYLES_POPOVER_ITEM = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

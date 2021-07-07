@@ -100,11 +100,11 @@ const STYLES_LINK = css`
   color: ${Constants.system.slate};
 
   :hover {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
 
   :active {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
 
   :visited {

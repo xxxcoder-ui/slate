@@ -58,7 +58,7 @@ const DROPDOWN_ITEM_STYLES = `
     opacity: 0;
 
     &:hover {
-      color: ${Constants.system.newBlack};
+      color: ${Constants.system.black};
     }
   }
 
@@ -76,7 +76,7 @@ const STYLES_DROPDOWN_ITEM = css`
 
     span,
     div:not(.dismiss) {
-      color: ${Constants.system.newBlack};
+      color: ${Constants.system.black};
     }
 
     div.dismiss {
@@ -163,7 +163,7 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   border: 0.5px solid ${Constants.system.grayLight5};
 
   span {
-    color: ${Constants.system.newBlack};
+    color: ${Constants.system.black};
   }
 
   span.value {
@@ -281,7 +281,7 @@ const STYLES_TAG = css`
   ${TAG_STYLES};
 
   background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
+  color: ${Constants.system.black};
 
   &:hover {
     background: ${Constants.system.grayLight4};

@@ -44,7 +44,7 @@ const STYLES_LINK = css`
   text-decoration: none;
   transition: 200ms ease color;
   :hover {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
     opacity: 1;
   }
 `;

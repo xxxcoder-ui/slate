@@ -83,7 +83,7 @@ const STYLES_LINK_ITEM = css`
   word-wrap: break-word;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

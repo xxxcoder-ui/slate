@@ -44,13 +44,13 @@ const STYLES_WARNING = css`
 
 const STYLES_INFO = css`
   ${STYLES_ALERT}
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
 
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);
     backdrop-filter: blur(25px);
     background-color: rgba(209, 233, 255, 0.75);
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

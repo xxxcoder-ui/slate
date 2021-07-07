@@ -26,7 +26,7 @@ const STYLES_TAB_GROUP_TAB = css`
   user-select: none;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

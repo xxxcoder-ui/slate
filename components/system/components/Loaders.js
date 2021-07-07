@@ -8,7 +8,7 @@ import { css } from "@emotion/react";
 const STYLES_LOADER_CIRCLE = `
   width: 24px;
   height: 24px;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   border-radius: 100%;
   display: inline-block;
   animation: slate-client-circle-bouncedelay 1.6s infinite ease-in-out both;
@@ -69,7 +69,7 @@ const STYLES_LOADER_DIAMOND = `
 
 const STYLES_LOADER_DIAMOND_ONE = css`
   ${STYLES_LOADER_DIAMOND}
-  background: ${Constants.system.brand};
+  background: ${Constants.system.blue};
   right: 0;
   bottom: 0;
   animation-direction: alternate-reverse;
@@ -99,7 +99,7 @@ const STYLES_LOADER_MOON_CIRCLE = css`
   background-color: ${Constants.system.foreground};
   box-sizing: border-box;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.25);
-  border-bottom: 10px solid ${Constants.system.brand};
+  border-bottom: 10px solid ${Constants.system.blue};
   border-radius: 50%;
   animation: slate-client-animation-spin 1.15s ease infinite;
 
@@ -128,7 +128,7 @@ const STYLES_LOADER_ROTATE_SQUARES = css`
   :before {
     position: absolute;
     content: "";
-    border: 2px solid ${Constants.system.brand};
+    border: 2px solid ${Constants.system.blue};
     width: 24px;
     height: 24px;
   }
@@ -188,7 +188,7 @@ const STYLES_LOADER_SPINNER = css`
   display: inline-block;
   width: 48px;
   height: 48px;
-  border: 2px solid ${Constants.system.brand};
+  border: 2px solid ${Constants.system.blue};
   border-radius: 50%;
   border-top-color: ${Constants.system.foreground};
   animation: slate-client-animation-spin 1s ease-in-out infinite;

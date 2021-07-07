@@ -13,7 +13,7 @@ const STYLES_VIEW_SOURCE_LINK = css`
   color: ${Constants.system.darkGray};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 
   :visited {

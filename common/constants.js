@@ -20,18 +20,12 @@ export const system = {
   darkGray: "#b2b2b2",
   grayBlack: "#666666",
   pitchBlack: "#0c0c0c",
-  brand: "#0084FF", //0666bb
   link: "#2935ff",
   slate: "#27292e",
   moonstone: "#807d78",
   wall: "#cfced3",
   wallLight: "#F1F0F2",
-  newBlue: "#043D96",
-  newGreen: "#377749",
-  newYellow: "#F2B256",
-  newRed: "#BE5234",
   shadow: "rgba(15, 14, 18, 0.03)",
-  newBlack: "#000000",
   bgGrayLight: "#E5E5EA",
   bgGray: "#F2F2F2",
 
@@ -199,7 +193,7 @@ export const typescale = {
 
 export const theme = {
   foreground: system.white,
-  ctaBackground: system.brand,
+  ctaBackground: system.blue,
   pageBackground: system.foreground,
   pageText: system.black,
 };

@@ -42,7 +42,7 @@ const STYLES_USERNAME = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

@@ -39,7 +39,7 @@ const STYLES_ICON = css`
   text-align: center;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

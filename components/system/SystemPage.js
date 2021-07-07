@@ -45,7 +45,7 @@ const STYLES_SIDEBAR = css`
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${Constants.system.brand};
+    background: ${Constants.system.blue};
   }
 
   @media (max-width: 568px) {
@@ -64,13 +64,13 @@ const STYLES_LINK = css`
   margin-top: 8px;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
 const STYLES_LINK_ACTIVE = css`
   font-family: ${Constants.font.semiBold};
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
   text-decoration: none;
   font-weight: 400;
   display: block;
@@ -118,7 +118,7 @@ const STYLES_SMALL_LINK = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
