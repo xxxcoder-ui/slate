@@ -16,11 +16,11 @@ const STYLES_POPOVER = css`
   color: ${Constants.system.pitchBlack};
   box-shadow: ${Constants.shadow.medium};
   padding: 16px;
-  border: 1px solid ${Constants.system.gray40};
+  border: 1px solid ${Constants.system.grayLight3};
 `;
 
 const STYLES_POPOVER_SECTION = css`
-  border-bottom: 1px solid ${Constants.system.gray40};
+  border-bottom: 1px solid ${Constants.system.grayLight3};
   padding-bottom: 6px;
   margin-bottom: 6px;
 

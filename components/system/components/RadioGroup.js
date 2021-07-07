@@ -16,7 +16,7 @@ const STYLES_RADIO = css`
   margin-bottom: 8px;
   cursor: pointer;
   padding: 8px 10px;
-  border: 1px solid ${Constants.system.gray30};
+  border: 1px solid ${Constants.system.grayLight4};
   border-radius: 4px;
 
   :last-child {

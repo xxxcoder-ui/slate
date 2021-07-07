@@ -71,7 +71,7 @@ const STYLES_META = (theme) => css`
   max-width: 687px;
   margin: 0 auto;
   font-size: 12px;
-  color: ${theme.darkmode ? theme.system.textGray : theme.system.gray70};
+  color: ${theme.darkmode ? theme.system.textGray : theme.system.grayDark3};
   letter-spacing: 0.2px;
   align-items: center;
   margin-bottom: 12px;
@@ -87,7 +87,7 @@ const STYLES_DIVIDER = (theme) => css`
   max-width: 687px;
   margin: 0 auto;
   margin-bottom: 58px;
-  background-color: ${theme.system.gray50};
+  background-color: ${theme.system.grayLight2};
   transition: height 0.3s;
 `;
 

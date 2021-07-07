@@ -29,7 +29,7 @@ const STYLES_DROPDOWN = css`
   overflow: hidden;
 
   li[data-item-active="true"] {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     svg {
@@ -69,10 +69,10 @@ const STYLES_DROPDOWN_ITEM = css`
   ${DROPDOWN_ITEM_STYLES};
 
   background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
+  border: 0.5px solid ${Constants.system.grayLight5};
 
   &:hover {
-    background: ${Constants.system.gray10};
+    background: ${Constants.system.grayLight6};
 
     span,
     div:not(.dismiss) {
@@ -97,7 +97,7 @@ const STYLES_DROPDOWN_ITEM_DARK = css`
   border: 0.5px solid ${Constants.system.bgBlurGray};
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     div:not(.dismiss) {
@@ -128,7 +128,7 @@ const STYLES_DROPDOWN_ITEM_DARK = css`
 
 const STYLES_DROPDOWN_ITEM_ICON = css`
   line-height: 0;
-  color: ${Constants.system.gray70};
+  color: ${Constants.system.grayDark3};
   display: flex;
   align-items: center;
 
@@ -160,7 +160,7 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
   background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
+  border: 0.5px solid ${Constants.system.grayLight5};
 
   span {
     color: ${Constants.system.newBlack};
@@ -171,10 +171,10 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   }
 
   &:hover {
-    background: ${Constants.system.gray10};
+    background: ${Constants.system.grayLight6};
 
     span.value {
-      background: ${Constants.system.gray30};
+      background: ${Constants.system.grayLight4};
     }
   }
 `;
@@ -191,12 +191,12 @@ const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
   }
 
   span.value {
-    background: ${Constants.system.gray70};
+    background: ${Constants.system.grayDark3};
     color: ${Constants.system.white};
   }
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     svg {
@@ -227,7 +227,7 @@ const STYLES_INPUT = css`
   width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight4} inset;
   background: ${Constants.system.white};
   color: ${Constants.system.black};
 
@@ -284,18 +284,18 @@ const STYLES_TAG = css`
   color: ${Constants.system.newBlack};
 
   &:hover {
-    background: ${Constants.system.gray30};
+    background: ${Constants.system.grayLight4};
   }
 `;
 
 const STYLES_TAG_DARK = css`
   ${TAG_STYLES};
 
-  background: ${Constants.system.gray80};
+  background: ${Constants.system.grayDark4};
   color: ${Constants.system.textGray};
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
   }
 `;
 

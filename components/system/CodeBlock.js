@@ -236,7 +236,7 @@ const STYLES_LANGSWITCHER = css`
   color: ${Constants.system.textGray};
   font-size: ${Constants.typescale.lvlN1};
   margin-right: 12px;
-  border: 1px solid ${Constants.system.gray80};
+  border: 1px solid ${Constants.system.grayDark4};
   border-radius: 4px;
   cursor: pointer;
   user-select: none;
@@ -256,7 +256,7 @@ const STYLES_LANG_SELECTED = css`
   align-items: center;
   flex-shrink: 0;
   color: ${Constants.system.white};
-  background: ${Constants.system.gray80};
+  background: ${Constants.system.grayDark4};
   border-radius: 3px;
   padding: 4px 8px;
 `;
@@ -271,7 +271,7 @@ const STYLES_COPY_BUTTON = css`
   position: relative;
 
   :hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
     color: ${Constants.system.white};
   }
 `;

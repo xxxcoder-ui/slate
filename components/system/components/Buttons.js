@@ -107,11 +107,11 @@ const STYLES_BUTTON_SECONDARY = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   color: ${Constants.system.black};
-  background-color: ${Constants.system.gray20};
+  background-color: ${Constants.system.grayLight5};
   box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 
   :hover {
-    background-color: ${Constants.system.gray30};
+    background-color: ${Constants.system.grayLight4};
   }
 
   :focus {

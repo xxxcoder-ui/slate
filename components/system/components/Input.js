@@ -60,7 +60,7 @@ const STYLES_INPUT = css`
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight4} inset;
   color: ${Constants.system.black};
 
   :focus {

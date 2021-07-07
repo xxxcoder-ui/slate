@@ -221,7 +221,7 @@ const STYLES_TAG = css`
     font-size: 14px;
   }
   &:hover {
-    background: ${Constants.system.gray30};
+    background: ${Constants.system.grayLight4};
   }
 `;
 

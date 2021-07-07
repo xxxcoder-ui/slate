@@ -107,7 +107,7 @@ const STYLES_TAG = css`
   }
 
   &:hover {
-    background: ${Constants.system.gray30};
+    background: ${Constants.system.grayLight4};
   }
 `;
 

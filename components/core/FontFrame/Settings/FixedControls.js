@@ -24,7 +24,8 @@ const CONTROLS_STYLES_WRAPPER = (theme) => css`
 const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
   display: flex;
   border-radius: 4px;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  border: 1px solid
+    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
   button {
     display: block;
     box-sizing: border-box;
@@ -40,15 +41,15 @@ const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
 
   .lightmode_btn {
     path {
-      stroke: ${theme.fontPreviewDarkMode ? theme.system.gray50 : theme.system.black};
+      stroke: ${theme.fontPreviewDarkMode ? theme.system.grayLight2 : theme.system.black};
     }
-    background-color: ${!theme.fontPreviewDarkMode ? theme.system.gray20 : "none"};
+    background-color: ${!theme.fontPreviewDarkMode ? theme.system.grayLight5 : "none"};
   }
   .darkmode_btn {
     path {
       stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGray};
     }
-    background-color: ${theme.fontPreviewDarkMode ? theme.system.gray80 : "none"};
+    background-color: ${theme.fontPreviewDarkMode ? theme.system.grayDark4 : "none"};
   }
 `;
 
@@ -57,11 +58,14 @@ const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
   margin: 0;
   border-radius: 4px;
   background: none;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  border: 1px solid
+    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
   cursor: pointer;
   ${isActive &&
   css`
-    background-color: ${theme.fontPreviewDarkMode ? theme.system.gray80 : theme.system.gray20};
+    background-color: ${theme.fontPreviewDarkMode
+      ? theme.system.grayDark4
+      : theme.system.grayLight5};
   `};
   path {
     ${isActive
@@ -69,7 +73,7 @@ const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
           stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
         `
       : css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.gray50 : theme.system.textGray};
+          stroke: ${theme.fontPreviewDarkMode ? theme.system.grayLight2 : theme.system.textGray};
         `}
   }
 `;

@@ -10,7 +10,7 @@ import Select from "~/components/core/FontFrame/Settings/Select";
 
 const STYLES_LABEL = (theme) => css`
   font-size: 0.875rem;
-  color: ${theme.fontPreviewDarkMode ? theme.system.gray70 : theme.system.textGrayLight};
+  color: ${theme.fontPreviewDarkMode ? theme.system.grayDark3 : theme.system.textGrayLight};
   margin-bottom: 4px;
 `;
 
@@ -58,15 +58,15 @@ export const Controller = ({
             sliderBarStyle={(theme) => css`
               height: 2px;
               background-color: ${theme.fontPreviewDarkMode
-                ? theme.system.gray70
-                : theme.system.gray30};
+                ? theme.system.grayDark3
+                : theme.system.grayLight4};
             `}
             activeBarStyle={(theme) => css`
               height: 2px;
               bottom: 2px;
               background-color: ${theme.fontPreviewDarkMode
                 ? theme.system.white
-                : theme.system.gray80};
+                : theme.system.grayDark4};
             `}
             handleStyle={(theme) => css`
               width: 15px;
@@ -74,7 +74,7 @@ export const Controller = ({
               bottom: 11px;
               background-color: ${theme.fontPreviewDarkMode
                 ? theme.system.white
-                : theme.system.gray80};
+                : theme.system.grayDark4};
 
               :hover {
                 box-shadow: 0 0 0 4px
@@ -100,7 +100,8 @@ const STYLES_CONTENT_SELECT = (theme) => css`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  border: 1px solid ${theme.fontPreviewDarkMode ? Constants.system.gray80 : Constants.system.gray20};
+  border: 1px solid
+    ${theme.fontPreviewDarkMode ? Constants.system.grayDark4 : Constants.system.grayLight5};
   padding: 8px 12px;
   border-radius: 4px;
 `;
@@ -126,7 +127,8 @@ export const ContentControl = ({ options, value, onChange, showLabel = true }) =
 const STYLES_ALIGNEMENT_BUTTON = (theme) => css`
   display: flex;
   border-radius: 4px;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  border: 1px solid
+    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
   margin-left: 16px;
   button {
     display: block;
@@ -147,12 +149,12 @@ const STYLES_ALIGNEMENT_BUTTON = (theme) => css`
 
 const getIconColor = (isActive, theme) => {
   const darkMode = isActive ? theme.system.white : theme.system.textGray;
-  const lightMode = isActive ? theme.system.gray80 : theme.system.textGray;
+  const lightMode = isActive ? theme.system.grayDark4 : theme.system.textGray;
   return theme.fontPreviewDarkMode ? darkMode : lightMode;
 };
 const getBackgroundColor = (isActive, theme) => {
   if (!isActive) return "transparent";
-  return theme.fontPreviewDarkMode ? theme.system.gray80 : theme.system.gray20;
+  return theme.fontPreviewDarkMode ? theme.system.grayDark4 : theme.system.grayLight5;
 };
 const STYLES_ALIGN_BUTTON = (isActive) => (theme) => css`
   background-color: ${getBackgroundColor(isActive, theme)};
@@ -210,7 +212,8 @@ const STYLES_SETTINGS_WRAPPER = (theme) => css`
   box-sizing: border-box;
   display: flex;
   border-radius: 4px;
-  border: 1px solid ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+  border: 1px solid
+    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
   justify-content: space-between;
   overflow: hidden;
   button {
@@ -235,7 +238,7 @@ const STYLES_SETTINGS_WRAPPER = (theme) => css`
   }
   .reset_button {
     border-left: 1px solid
-      ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.gray20};
+      ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
   }
 `;
 
