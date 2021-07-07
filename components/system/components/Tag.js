@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
+import { Input } from "~/components/system/components/Input";
 
 const STYLES_TAG_CONTAINER = css`
   width: 100%;
@@ -61,8 +62,6 @@ const DROPDOWN_ITEM_STYLES = `
       color: ${Constants.system.black};
     }
   }
-
-  
 `;
 
 const STYLES_DROPDOWN_ITEM = css`
@@ -205,24 +204,24 @@ const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
   }
 `;
 
-const INPUT_STYLES = `
-  box-sizing: border-box;
-  font-family: ${Constants.font.text};
-  -webkit-appearance: none;
-  border-radius: 4px;
-  display: flex;
-  padding: 8px 12px;
-  font-size: 14px;
-  align-items: center;
-  justify-content: flex-start;
-  outline: 0;
-  border: 0;
-  box-sizing: border-box;
-  transition: 200ms ease all;
-`;
+// const INPUT_STYLES = `
+//   box-sizing: border-box;
+//   font-family: ${Constants.font.text};
+//   -webkit-appearance: none;
+//   border-radius: 4px;
+//   display: flex;
+//   padding: 8px 12px;
+//   font-size: 14px;
+//   align-items: center;
+//   justify-content: flex-start;
+//   outline: 0;
+//   border: 0;
+//   box-sizing: border-box;
+//   transition: 200ms ease all;
+// `;
 
 const STYLES_INPUT = css`
-  ${INPUT_STYLES};
+  ${"" /* ${INPUT_STYLES}; */}
 
   width: 100%;
   text-overflow: ellipsis;
@@ -490,10 +489,10 @@ export const Tag = ({
   return (
     <div css={STYLES_TAG_CONTAINER} style={{ ...style }}>
       <div css={STYLES_INPUT_CONTAINER}>
-        <input
+        <Input
           name="tags"
           type="text"
-          css={type === "dark" ? STYLES_INPUT_DARK : STYLES_INPUT}
+          // css={type === "dark" ? STYLES_INPUT_DARK : STYLES_INPUT}
           style={{ ...inputStyles }}
           placeholder="Edit tags"
           value={value}

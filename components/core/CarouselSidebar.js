@@ -585,7 +585,7 @@ class CarouselSidebar extends React.Component {
             <LinkTag
               url={file.url}
               containerStyle={{
-                backgroundColor: Constants.system.bgBlurDark,
+                backgroundColor: Constants.system.grayDark4,
                 padding: "8px 16px",
                 borderRadius: 8,
                 marginBottom: 16,
@@ -638,8 +638,7 @@ class CarouselSidebar extends React.Component {
               type="dark"
               tags={this.state.tags}
               suggestions={this.state.suggestions}
-              style={{ margin: "0 0 8px" }}
-              inputStyles={{ padding: "16px" }}
+              inputStyles={STYLES_INPUT}
               dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
             />
@@ -667,7 +666,7 @@ class CarouselSidebar extends React.Component {
           <LinkTag
             url={file.url}
             containerStyle={{
-              backgroundColor: Constants.system.bgBlurDark,
+              backgroundColor: Constants.system.grayDark4,
               padding: "8px 16px",
               borderRadius: 8,
               marginBottom: 24,
