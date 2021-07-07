@@ -9,7 +9,7 @@ const STYLES_CONTAINER = css`
   bottom: 0;
   padding: 4px 32px;
   z-index: ${Constants.zindex.header};
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   font-family: ${Constants.font.text};
   font-weight: 400;
   font-size: ${Constants.typescale.lvlN1};
@@ -24,7 +24,7 @@ const STYLES_CONTAINER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
   text-decoration: none;
   transition: 200ms ease color;
   :hover {

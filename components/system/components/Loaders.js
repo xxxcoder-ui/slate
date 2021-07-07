@@ -96,7 +96,7 @@ const STYLES_LOADER_MOON_CIRCLE = css`
   margin: 4px;
   width: 48px;
   height: 48px;
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   box-sizing: border-box;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.25);
   border-bottom: 10px solid ${Constants.system.blue};
@@ -190,7 +190,7 @@ const STYLES_LOADER_SPINNER = css`
   height: 48px;
   border: 2px solid ${Constants.system.blue};
   border-radius: 50%;
-  border-top-color: ${Constants.system.foreground};
+  border-top-color: ${Constants.semantic.bgLight};
   animation: slate-client-animation-spin 1s ease-in-out infinite;
 
   @keyframes slate-client-animation-spin {

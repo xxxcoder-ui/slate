@@ -23,7 +23,7 @@ const SELECTION_BOX_WRAPPER = css`
 
 const SELECTION_BOX_INNER = css`
   background-color: rgba(255, 255, 255, 0.45);
-  border: 1px dashed ${Constants.system.border};
+  border: 1px dashed ${Constants.semantic.borderGrayLight};
   width: 100%;
   height: 100%;
   float: left;

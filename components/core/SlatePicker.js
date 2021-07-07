@@ -32,11 +32,11 @@ const STYLES_NO_VISIBLE_SCROLL = css`
   }
 
   ::-webkit-scrollbar-track {
-    background: ${Constants.system.foreground};
+    background: ${Constants.semantic.bgLight};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${Constants.system.darkGray};
+    background: ${Constants.system.grayLight2};
   }
 `;
 
@@ -53,13 +53,13 @@ const STYLES_SLATE_LINE = css`
   width: 100%;
   padding: 12px 16px;
   background-color: ${Constants.system.white};
-  border-bottom: 1px solid ${Constants.system.foreground};
+  border-bottom: 1px solid ${Constants.semantic.bgLight};
   cursor: pointer;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   height: 48px;
 
   :hover {
-    color: ${Constants.system.grayBlack};
+    color: ${Constants.system.grayDark2};
   }
 `;
 
@@ -84,11 +84,11 @@ const STYLES_SLATE_CREATE = css`
   padding: 12px 16px;
   background-color: ${Constants.system.white};
   cursor: pointer;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   border-radius: 4px;
 
   :hover {
-    color: ${Constants.system.grayBlack};
+    color: ${Constants.system.grayDark2};
   }
 `;
 

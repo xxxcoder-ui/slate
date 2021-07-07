@@ -9,7 +9,7 @@ const STYLES_VIEW_BUTTON = css`
   font-weight: 400;
   font-size: 14px;
   margin-top: 4px;
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
   cursor: pointer;
   width: 120px;
 `;

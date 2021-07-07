@@ -6,7 +6,8 @@ import { css } from "@emotion/react";
 
 const STYLES_CONTAINER = css`
   border-radius: 4px;
-  box-shadow: 0 0 0 1px ${Constants.system.lightBorder} inset, 0 0 40px 0 ${Constants.system.shadow};
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset,
+    0 0 40px 0 ${Constants.shadow.subtle};
   padding: 32px;
   max-width: 100%;
   width: 100%;
@@ -19,15 +20,15 @@ const STYLES_CONTAINER = css`
 
 const STYLES_ROW = css`
   font-family: ${Constants.font.code};
-  color: ${Constants.system.darkGray};
-  background-color: ${Constants.system.foreground};
+  color: ${Constants.system.grayLight2};
+  background-color: ${Constants.semantic.bgLight};
   display: inline-flex;
   height: 16px;
   width: 100%;
 `;
 
 const STYLES_STATS_ROW = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   width: 100%;
   border-radius: 3px;
   height: 16px;
@@ -45,7 +46,7 @@ const STYLES_NOTE = css`
   margin-top: 12px;
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   display: block;
 `;
 

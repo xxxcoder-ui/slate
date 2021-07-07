@@ -152,7 +152,7 @@ const STYLES_H1 = css`
   font-size: ${Constants.typescale.lvl5};
   letter-spacing: -0.022rem;
   line-height: 1.3;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   margin-bottom: 1rem;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -166,7 +166,7 @@ const STYLES_H2 = css`
   font-size: ${Constants.typescale.lvl4};
   letter-spacing: -0.022rem;
   line-height: 1.3;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   margin-bottom: 1rem;
   width: 80%;
 
@@ -183,7 +183,7 @@ const STYLES_P = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   opacity: 0.7;
   width: 80%;
 
@@ -214,7 +214,7 @@ const STYLES_BUTTON = css`
   justify-content: center;
   user-select: none;
   cursor: pointer;
-  background: ${Constants.system.slate};
+  background: ${Constants.system.grayDark6};
   color: ${Constants.system.white};
   font-family: ${Constants.font.semiBold};
   font-weight: 400;
@@ -225,7 +225,7 @@ const STYLES_BUTTON = css`
 
   :hover {
     background: ${Constants.system.white};
-    color: ${Constants.system.slate};
+    color: ${Constants.system.grayDark6};
   }
 `;
 
@@ -272,7 +272,7 @@ const STYLES_SPLIT_WIDTH = css`
 const STYLES_CODE_BLOCK = css`
   box-sizing: border-box;
   font-family: ${Constants.font.code};
-  background-color: ${Constants.system.pitchBlack};
+  background-color: ${Constants.system.black};
   color: ${Constants.system.white};
   border-color: ${Constants.system.yellow};
   font-size: 12px;
@@ -331,7 +331,7 @@ const STYLES_PRE = css`
 
 const STYLES_CODE = css`
   box-sizing: border-box;
-  background-color: ${Constants.system.pitchBlack};
+  background-color: ${Constants.system.black};
   font-family: ${Constants.font.code};
   color: ${Constants.system.gray};
   width: 100%;
@@ -441,7 +441,7 @@ const STYLES_FEATURE_TEXT = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 8px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 `;
 
 const STYLES_CONTRIBUTION_TEXT = css`
@@ -451,7 +451,7 @@ const STYLES_CONTRIBUTION_TEXT = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 8px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 `;
 
 const STYLES_CONTRIBUTION_IMG = css`
@@ -499,7 +499,7 @@ const STYLES_DOT = css`
   height: 12px;
   width: 12px;
   margin-right: 8px;
-  background-color: ${Constants.system.darkGray};
+  background-color: ${Constants.system.grayLight2};
   border-radius: 50%;
   display: inline-block;
 `;

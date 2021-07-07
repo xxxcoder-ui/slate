@@ -62,7 +62,7 @@ const STYLES_FILETYPE_TOOLTIP = css`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border-right: 1px solid ${Constants.system.lightBorder};
+  border-right: 1px solid ${Constants.semantic.borderLight};
   padding-right: 4px;
 `;
 
@@ -302,8 +302,8 @@ export default class SceneFilesFolder extends React.Component {
                     height="20px"
                     style={{
                       color: this.state.keyboardTooltip
-                        ? Constants.system.grayBlack
-                        : Constants.system.darkGray,
+                        ? Constants.system.grayDark2
+                        : Constants.system.grayLight2,
                     }}
                   />
                 </span>
@@ -323,19 +323,19 @@ export default class SceneFilesFolder extends React.Component {
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>shift + click</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         select a range of items between two selections
                       </p>
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>shift + drag</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         select items by draging over them
                       </p>
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>alt + drag</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         deselect items by draging over them
                       </p>
                     </div>

@@ -13,7 +13,7 @@ const STYLES_POPOVER = css`
   user-select: none;
   position: absolute;
   background-color: ${Constants.system.white};
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   box-shadow: ${Constants.shadow.medium};
   padding: 16px;
   border: 1px solid ${Constants.system.grayLight3};

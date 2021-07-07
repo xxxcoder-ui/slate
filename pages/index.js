@@ -78,7 +78,7 @@ const STYLES_ROOT = css`
   padding: 0 88px;
   margin: -88px auto 0 auto;
   width: 100%;
-  background-color: ${Constants.system.wallLight};
+  background-color: ${Constants.system.grayLight6};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 48px 24px 0 24px;
@@ -97,7 +97,7 @@ const STYLES_H1 = css`
   font-size: ${Constants.typescale.lvl4};
   letter-spacing: -0.022rem;
   line-height: 1.3;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   margin-bottom: 16px;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
@@ -112,7 +112,7 @@ const STYLES_P = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   width: 64%;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
@@ -197,7 +197,7 @@ const STYLES_LIST = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   padding: 0;
 `;
 
@@ -277,7 +277,7 @@ const STYLES_SLATE_CARD = css`
   height: 20vh;
   margin: -1px -1px 0 0;
   transition: 200ms ease box-shadow;
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
 
   :hover {
     transition: 200ms ease box-shadow;
@@ -309,7 +309,7 @@ const STYLES_CARDP = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: ${Constants.typescale.lvl0};

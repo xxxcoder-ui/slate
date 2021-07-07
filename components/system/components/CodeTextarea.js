@@ -12,7 +12,7 @@ const STYLES_CODE_TEXTAREA = css`
   max-width: 480px;
   border-radius: 4px;
   width: 100%;
-  background: ${Constants.system.pitchBlack};
+  background: ${Constants.system.black};
   min-height: 288px;
   padding: 24px;
   color: ${Constants.system.white};

@@ -124,7 +124,7 @@ const STYLES_BUTTON_SECONDARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 `;
 
 export const ButtonSecondary = (props) => {
@@ -187,7 +187,7 @@ const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 `;
 
 export const ButtonTertiary = (props) => {

@@ -23,7 +23,7 @@ const STYLES_CODE = css`
   background-color: ${Constants.system.white};
   border-radius: 4px;
   padding: 0.1em 0.2em;
-  border: 1px solid ${Constants.system.border};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
 `;
 
 const STYLES_CODE_COPYABLE = css`
@@ -32,7 +32,7 @@ const STYLES_CODE_COPYABLE = css`
   transition: 100ms ease in;
 
   :hover {
-    box-shadow: 0 1px 4px 0px ${Constants.system.border};
+    box-shadow: 0 1px 4px 0px ${Constants.semantic.borderGrayLight};
   }
 
   :active {

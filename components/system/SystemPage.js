@@ -8,7 +8,7 @@ import * as Constants from "~/common/constants";
 import { css } from "@emotion/react";
 
 const STYLES_PAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
 `;
 
 const STYLES_BODY = css`
@@ -29,7 +29,7 @@ const STYLES_SIDEBAR = css`
   left: 0;
   bottom: 0;
   width: 312px;
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
@@ -41,7 +41,7 @@ const STYLES_SIDEBAR = css`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${Constants.system.darkGray};
+    background: ${Constants.system.grayLight2};
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -57,7 +57,7 @@ const STYLES_SIDEBAR = css`
 
 const STYLES_LINK = css`
   font-family: ${Constants.font.semiBold};
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   text-decoration: none;
   font-weight: 400;
   display: block;
@@ -89,7 +89,7 @@ const STYLES_LABEL = css`
   display: block;
   font-size: 11px;
   text-transform: uppercase;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   letter-spacing: 0.6px;
 `;
 

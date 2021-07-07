@@ -9,12 +9,12 @@ const LINK_STYLES = `
   font-family: ${Constants.font.text};
   font-weight: 400;
   text-decoration: none;
-  color: ${Constants.system.moonstone};
+  color: ${Constants.system.grayLight2};
   cursor: pointer;
   transition: 200ms ease color;
 
   :hover {
-    color: ${Constants.system.slate};
+    color: ${Constants.system.grayDark6};
   }
 `;
 
@@ -23,7 +23,7 @@ const STYLES_LINK = css`
 `;
 
 const STYLES_LINK_DARK = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   :hover {
     color: ${Constants.system.white};

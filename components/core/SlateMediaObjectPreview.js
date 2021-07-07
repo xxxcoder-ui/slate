@@ -36,7 +36,7 @@ const STYLES_ENTITY = css`
   position: relative;
   height: 100%;
   width: 100%;
-  border: 1px solid ${Constants.system.foreground};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   font-size: 24px;
   display: flex;
@@ -126,7 +126,7 @@ export default class SlateMediaObjectPreview extends React.Component {
             css={STYLES_ENTITY}
             style={{
               ...this.props.imageStyle,
-              backgroundColor: Constants.system.foreground,
+              backgroundColor: Constants.semantic.bgLight,
             }}
           >
             <SVG.FileNotFound height="24px" />

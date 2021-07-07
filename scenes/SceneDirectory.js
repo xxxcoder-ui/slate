@@ -20,7 +20,7 @@ const STYLES_USER_ENTRY = css`
   align-items: center;
   font-size: ${Constants.typescale.lvl1};
   cursor: pointer;
-  ${"" /* border: 1px solid ${Constants.system.lightBorder}; */}
+  ${"" /* border: 1px solid ${Constants.semantic.borderLight}; */}
   border-radius: 4px;
   margin-bottom: 8px;
   background-color: ${Constants.system.white};
@@ -60,7 +60,7 @@ const STYLES_ITEM_BOX = css`
   justify-content: center;
   padding: 8px;
   margin-right: 16px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-right: 8px;
@@ -75,7 +75,7 @@ const STYLES_ACTION_BUTTON = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   height: 24px;
@@ -92,8 +92,8 @@ const STYLES_STATUS_INDICATOR = css`
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  border: 2px solid ${Constants.system.active};
-  background-color: ${Constants.system.active};
+  border: 2px solid ${Constants.system.green};
+  background-color: ${Constants.system.green};
 `;
 
 const STYLES_MESSAGE = css`

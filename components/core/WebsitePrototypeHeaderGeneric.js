@@ -31,7 +31,7 @@ const STYLES_NAV_CONTAINER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
   text-decoration: none;
   transition: 200ms ease color;
   text-align: left;
@@ -44,7 +44,7 @@ const STYLES_LINK = css`
 
 const STYLES_PARAGRAPH = css`
   font-family: ${Constants.font.text};
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   text-decoration: none;
   transition: 200ms ease color;
   overflow-wrap: break-word;

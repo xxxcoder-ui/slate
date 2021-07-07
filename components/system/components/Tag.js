@@ -93,8 +93,8 @@ const STYLES_DROPDOWN_ITEM = css`
 const STYLES_DROPDOWN_ITEM_DARK = css`
   ${DROPDOWN_ITEM_STYLES};
 
-  background: ${Constants.system.bgBlurGray};
-  border: 0.5px solid ${Constants.system.bgBlurGray};
+  background: ${Constants.semantic.bgBlurLight6};
+  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
 
   &:hover {
     background: ${Constants.system.grayDark4};
@@ -182,8 +182,8 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
 const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
-  background: ${Constants.system.bgBlurGray};
-  border: 0.5px solid ${Constants.system.bgBlurGray};
+  background: ${Constants.semantic.bgBlurLight6};
+  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
 
   span,
   svg {
@@ -233,18 +233,18 @@ const STYLES_INPUT = css`
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 `;
 
@@ -252,7 +252,7 @@ const STYLES_INPUT_DARK = css`
   ${STYLES_INPUT};
 
   box-shadow: 0 0 0 1px #3c3c3c inset;
-  background: ${Constants.system.blurBlack};
+  background: ${Constants.semantic.bgBlurBlack};
   color: ${Constants.system.white};
 `;
 

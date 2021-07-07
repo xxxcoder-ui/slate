@@ -283,13 +283,13 @@ export class SignIn extends React.Component {
                   <SVG.EyeOff
                     strokeWidth="1.5"
                     height="20px"
-                    style={{ color: Constants.system.grayBlack }}
+                    style={{ color: Constants.system.grayDark2 }}
                   />
                 ) : (
                   <SVG.Eye
                     strokeWidth="1.5"
                     height="20px"
-                    style={{ color: Constants.system.grayBlack }}
+                    style={{ color: Constants.system.grayDark2 }}
                   />
                 )}
               </div> */}

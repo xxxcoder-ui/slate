@@ -10,7 +10,7 @@ const STYLES_PARAGRAPH_WRAPPER = (theme) => css`
   .font_frame_paragraph {
     width: 100%;
     margin-top: 12px;
-    color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.pitchBlack};
+    color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
     padding: 0px 32px 28px;
     word-break: break-word;
     white-space: pre-wrap;

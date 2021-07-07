@@ -42,7 +42,7 @@ const STYLES_ICON_SQUARE = css`
   height: 48px;
   width: 48px;
   border-radius: 4px;
-  border: 1px solid ${Constants.system.foreground};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   color: #bfbfbf;
   display: flex;
@@ -71,7 +71,7 @@ const STYLES_MODAL = css`
 `;
 
 const STYLES_PROFILE_PREVIEW = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   height: 48px;
@@ -100,7 +100,7 @@ const UserEntry = ({ user }) => {
 };
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   flex-shrink: 0;

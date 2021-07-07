@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 
 const STYLES_BUTTON = css`
   background-color: ${Constants.system.white};
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   display: inline-flex;
   width: 40px;
   height: 40px;

@@ -113,7 +113,7 @@ export class RadioGroup extends React.Component {
                 </span>
                 <span
                   css={STYLES_RADIO_CUSTOM}
-                  style={this.props.dark ? { backgroundColor: Constants.system.grayBlack } : null}
+                  style={this.props.dark ? { backgroundColor: Constants.system.grayDark2 } : null}
                 >
                   <span
                     css={STYLES_RADIO_CUSTOM_SELECTED}

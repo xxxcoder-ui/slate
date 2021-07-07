@@ -100,7 +100,7 @@ const STYLES_BACKGROUND = css`
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: ${Constants.system.bgBlurGrayBlack};
+  background-color: ${Constants.semantic.bgBlurDark6};
   pointer-events: auto;
 
   @keyframes fade-in {

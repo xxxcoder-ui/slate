@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 
 const STYLES_GLYPHS_WRAPPER = (theme) => css`
   padding: 0px 32px 28px;
-  color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.pitchBlack};
+  color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
 `;
 const STYLES_GLYPHS_LETTER = css`
   font-size: 128px;

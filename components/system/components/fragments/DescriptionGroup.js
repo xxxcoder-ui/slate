@@ -34,16 +34,16 @@ const STYLES_DESCRIPTION_GROUP_DESCRIPTION = css`
   a {
     font-family: ${Constants.font.text};
     font-weight: 400;
-    color: ${Constants.system.moonstone};
+    color: ${Constants.system.grayLight2};
     cursor: pointer;
     transition: 200ms ease color;
 
     :visited {
-      color: ${Constants.system.moonstone};
+      color: ${Constants.system.grayLight2};
     }
 
     :hover {
-      color: ${Constants.system.slate};
+      color: ${Constants.system.grayDark6};
     }
   }
 `;

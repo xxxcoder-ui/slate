@@ -14,8 +14,8 @@ const STYLES_ASSET = (theme) => css`
   height: 100%;
   overflow-y: scroll;
   will-change: transform;
-  color: ${theme.darkmode ? theme.system.wallLight : theme.system.pitchBlack};
-  background-color: ${theme.darkmode ? theme.system.pitchBlack : theme.system.wallLight};
+  color: ${theme.darkmode ? theme.system.grayLight6 : theme.system.black};
+  background-color: ${theme.darkmode ? theme.system.black : theme.system.grayLight6};
 `;
 
 const STYLES_BODY = css`
@@ -103,7 +103,7 @@ const STYLES_INTENT = (theme) => css`
   height: 8px;
   background: linear-gradient(
     180deg,
-    ${theme.darkmode ? theme.system.pitchBlack : theme.system.wallLight} 0%,
+    ${theme.darkmode ? theme.system.black : theme.system.grayLight6} 0%,
     ${theme.darkmode ? "rgba(12, 12, 12, 0)" : "rgba(241, 240, 242, 0)"} 100%
   );
 `;

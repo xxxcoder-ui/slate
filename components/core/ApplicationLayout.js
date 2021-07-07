@@ -19,10 +19,10 @@ const STYLES_NO_VISIBLE_SCROLL = css`
     display: none;
   }
   ::-webkit-scrollbar-track {
-    background: ${Constants.system.foreground};
+    background: ${Constants.semantic.bgLight};
   }
   ::-webkit-scrollbar-thumb {
-    background: ${Constants.system.darkGray};
+    background: ${Constants.system.grayLight2};
   }
 `;
 
@@ -38,7 +38,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_CONTENT = css`
-  background: ${Constants.system.foreground};
+  background: ${Constants.semantic.bgLight};
   width: 100%;
   min-width: 10%;
   min-height: 100vh;

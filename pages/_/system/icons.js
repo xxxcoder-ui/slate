@@ -33,7 +33,7 @@ const ICONS = [
 
 const STYLES_ICON = css`
   padding: 24px;
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   display: inline-flex;
   transition: 200ms ease color;
   text-align: center;

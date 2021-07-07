@@ -11,7 +11,7 @@ const STYLES_NOTIFICATION = css`
 `;
 
 const STYLES_NOTIFICATION_DATE = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 `;
 
 const STYLES_NOTIFICATION_BODY = css`

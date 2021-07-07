@@ -161,7 +161,7 @@ const STYLES_CODE = css`
 const STYLES_CODE_BLOCK_PLAIN = css`
   box-sizing: border-box;
   font-family: ${Constants.font.code};
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   color: ${Constants.system.black};
   border-color: ${Constants.system.yellow};
   font-size: 12px;
@@ -288,7 +288,7 @@ const STYLES_TOOLTIP = css`
   left: 0;
   z-index: ${Constants.zindex.tooltip};
   padding: 12px;
-  background-color: ${Constants.system.bgBlurGrayBlack};
+  background-color: ${Constants.semantic.bgBlurDark6};
   border-radius: 4px;
   color: ${Constants.system.white};
   font-size: ${Constants.typescale.lvlN1};

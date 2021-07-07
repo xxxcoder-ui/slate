@@ -7,7 +7,7 @@ const STYLES_ROOT = css`
   padding: 96px 88px 96px 88px;
   width: 100%;
   margin: 0 auto;
-  background-color: ${Constants.system.wall};
+  background-color: ${Constants.system.grayLight5};
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
     justify-content: left;
@@ -29,7 +29,7 @@ const STYLES_P = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 `;
 
 const STYLES_LINK = css`
@@ -39,7 +39,7 @@ const STYLES_LINK = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   opacity: 0.7;
   text-decoration: none;
   transition: 200ms ease color;
@@ -64,7 +64,7 @@ const STYLES_CONTENT_BLOCK = css`
 `;
 
 const STYLES_HR = css`
-  background-color: ${Constants.system.darkGray};
+  background-color: ${Constants.system.grayLight2};
   width: 100%;
   height: 1px;
   margin-bottom: 16px;

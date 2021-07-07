@@ -19,8 +19,8 @@ const STYLES_SECTION = css`
 `;
 
 const STYLES_HEADER = css`
-  background: ${Constants.system.foreground};
-  border-bottom: 1px solid ${Constants.system.border};
+  background: ${Constants.semantic.bgLight};
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvl1};
   border-radius: 4px 4px 0 0;
@@ -62,7 +62,7 @@ const STYLES_BUTTON = css`
   letter-spacing: 0.2px;
   font-family: ${Constants.font.semiBold};
   transition: 200ms ease all;
-  box-shadow: 0 0 0 1px ${Constants.system.border}, 0 1px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight}, 0 1px 4px rgba(0, 0, 0, 0.07);
   cursor: pointer;
   background-color: ${Constants.system.white};
   color: ${Constants.system.black};

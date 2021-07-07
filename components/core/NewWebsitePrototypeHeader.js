@@ -37,7 +37,7 @@ const STYLES_CONTAINER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   text-decoration: none;
   transition: 200ms ease color;
 
@@ -46,7 +46,7 @@ const STYLES_LINK = css`
   }
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    color: ${Constants.system.slate};
+    color: ${Constants.system.grayDark6};
   }
 `;
 
@@ -96,7 +96,7 @@ const STYLES_BURGER = css`
 const STYLES_BURGER_BUN = css`
   width: 20px;
   height: 2px;
-  background: ${Constants.system.darkGray};
+  background: ${Constants.system.grayLight2};
   transition: all 0.2s linear;
   position: relative;
   transform-origin: 1.5px;
@@ -104,7 +104,7 @@ const STYLES_BURGER_BUN = css`
   transistion-property: transform;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    background: ${Constants.system.slate};
+    background: ${Constants.system.grayDark6};
   }
 `;
 
@@ -115,7 +115,7 @@ const openBurgerBun = {
 const STYLES_BURGER_BUN2 = css`
   width: 20px;
   height: 2px;
-  background: ${Constants.system.darkGray};
+  background: ${Constants.system.grayLight2};
   transition: all 0.2s linear;
   position: relative;
   transform-origin: 1.5px;
@@ -123,7 +123,7 @@ const STYLES_BURGER_BUN2 = css`
   transistion-property: transform;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    background: ${Constants.system.slate};
+    background: ${Constants.system.grayDark6};
   }
 `;
 
@@ -138,7 +138,7 @@ const STYLES_MENU = css`
     display: none;
     flex-direction: column;
     justify-content: center;
-    background: ${Constants.system.wall};
+    background: ${Constants.system.grayLight3};
     height: 100vh;
     width: 100vw;
     text-align: left;
@@ -157,7 +157,7 @@ const STYLES_NAVLINK = css`
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 8px 0;
-    color: ${Constants.system.slate};
+    color: ${Constants.system.grayDark6};
     text-decoration: none;
     transition: color 0.3s linear;
     transition-property: transform;
@@ -169,7 +169,7 @@ const STYLES_NAVLINK = css`
     text-align: left;
 
     :hover {
-      color: ${Constants.system.darkGray};
+      color: ${Constants.system.grayLight2};
     }
   }
 `;

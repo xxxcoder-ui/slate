@@ -16,7 +16,8 @@ const STYLES_CARD_TAB_GROUP = css`
   width: 100%;
   display: flex;
   align-items: flex-start;
-  box-shadow: 0 -1px 0 0 ${Constants.system.border}, 0 1px 0 0 ${Constants.system.border};
+  box-shadow: 0 -1px 0 0 ${Constants.semantic.borderGrayLight},
+    0 1px 0 0 ${Constants.semantic.borderGrayLight};
 `;
 
 const STYLES_CARD_TAB_GROUP_TAB = css`

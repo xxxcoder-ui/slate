@@ -28,7 +28,7 @@ const STYLES_PROFILE = css`
   min-width: 10%;
   width: 204px;
 
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   background-color: ${Constants.system.white};
   font-size: 12px;
   text-decoration: none;
@@ -49,7 +49,7 @@ const STYLES_PROFILE_MOBILE = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   flex-shrink: 0;
@@ -84,7 +84,7 @@ const STYLES_ITEM_BOX_MOBILE = css`
   background-color: ${Constants.system.white};
   cursor: pointer;
   border-radius: 4px;
-  border-left: 2px solid ${Constants.system.foreground};
+  border-left: 2px solid ${Constants.semantic.bgLight};
 `;
 
 const STYLES_ITEM_BOX = css`
@@ -95,7 +95,7 @@ const STYLES_ITEM_BOX = css`
   padding: 8px;
   padding-right: 9px;
   transition: 200ms ease all;
-  border-left: 2px solid ${Constants.system.foreground};
+  border-left: 2px solid ${Constants.semantic.bgLight};
 
   :hover {
     color: ${Constants.system.blue};

@@ -184,8 +184,8 @@ const STYLES_IMAGE_BOX = css`
     margin: 12px auto;
   }
   :hover {
-    box-shadow: 0px 0px 0px 1px ${Constants.system.lightBorder} inset,
-      0 0 40px 0 ${Constants.system.shadow};
+    box-shadow: 0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
+      0 0 40px 0 ${Constants.shadow.subtle};
   }
 `;
 
@@ -699,7 +699,7 @@ export default class DataView extends React.Component {
                     this.lastSelectedItemIndex = null;
                   }}
                 >
-                  <SVG.Dismiss height="20px" style={{ color: Constants.system.darkGray }} />
+                  <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
                 </div>
               </div>
             </div>
@@ -734,8 +734,8 @@ export default class DataView extends React.Component {
                         width: this.state.imageSize,
                         height: this.state.imageSize,
                         boxShadow: numChecked
-                          ? `0px 0px 0px 1px ${Constants.system.lightBorder} inset,
-      0 0 40px 0 ${Constants.system.shadow}`
+                          ? `0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
+      0 0 40px 0 ${Constants.shadow.subtle}`
                           : "",
                       }}
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}

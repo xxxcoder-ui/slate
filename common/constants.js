@@ -14,26 +14,6 @@ export const sizes = {
 };
 
 export const system = {
-  foreground: "#f8f8f8",
-  lightBorder: "#ececec",
-  border: "#d8d8d8",
-  darkGray: "#b2b2b2",
-  grayBlack: "#666666",
-  pitchBlack: "#0c0c0c",
-  link: "#2935ff",
-  slate: "#27292e",
-  moonstone: "#807d78",
-  wall: "#cfced3",
-  wallLight: "#F1F0F2",
-  shadow: "rgba(15, 14, 18, 0.03)",
-
-  bgBlurGrayBlack: "rgba(15, 14, 18, 0.8)",
-  bgBlurBlack: "rgba(15, 14, 18, 0.9)",
-  active: "#00BB00",
-  blurBlack: "#262626",
-  bgBlurGray: "#403F42",
-  bgBlurWhiteTRN: "rgba(255,255,255,0.7)",
-
   //system color
   white: "#FFFFFF",
   grayLight6: "#F2F5F7",
@@ -50,7 +30,7 @@ export const system = {
   black: "#00050A",
 
   blue: "#0084FF",
-  green: "34D159",
+  green: "#34D159",
   yellow: "#FFD600",
   red: "#FF4530",
   purple: "#585CE6",
@@ -118,7 +98,7 @@ export const semantic = {
   bgBlurWhiteTRN: "rgba(system.white, 0.3)",
   bgBlurlight6: "rgba(system.grayLight6, 0.7)",
   bgBlurLight6OP: "rgba(system.grayLight6, 0.85)",
-  bgBlurLightTRN: "rgba(system.grayLight6, 0.3)",
+  bgBlurLight6TRN: "rgba(system.grayLight6, 0.3)",
 
   bgDark: system.grayDark6,
   bgLightDark: system.grayDark5,
@@ -129,6 +109,11 @@ export const semantic = {
   bgBlurDark6OP: "rgba(system.black, 0.85)",
   bgBlurDark6TRN: "rgba(system.black, 0.3)",
 
+  borderLight: system.grayLight6,
+  borderGrayLight: system.grayLight5,
+  borderDark: system.grayDark6,
+  borderGrayDark: system.grayDark5,
+
   bgBlue: system.blueLight6,
   bgGreen: system.greenLight6,
   bgYellow: system.yellowLight6,
@@ -136,10 +121,10 @@ export const semantic = {
 };
 
 export const shadow = {
+  subtle: "0 1px 0 0 rgba(15, 14, 18, 0.04)",
   light: "0 3px 6px 0 rgba(178, 178, 178, 0.15)",
   medium: "0 8px 24px 0 rgba(178, 178, 178, 0.2)",
   large: "0 12px 48px 0 rgba(178, 178, 178, 0.3)",
-  subtle: "0 1px 0 0 rgba(15, 14, 18, 0.04)",
 };
 
 export const zindex = {
@@ -184,7 +169,7 @@ export const typescale = {
 export const theme = {
   foreground: system.white,
   ctaBackground: system.blue,
-  pageBackground: system.foreground,
+  pageBackground: semantic.bgLight,
   pageText: system.black,
 };
 

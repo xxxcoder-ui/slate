@@ -75,7 +75,7 @@ export const injectGlobalStyles = () => css`
   }
 
   html, body {
-    background: ${Constants.system.foreground};
+    background: ${Constants.semantic.bgLight};
     color: ${Constants.system.black};
     font-size: 16px;
     font-family: ${Constants.font.text};

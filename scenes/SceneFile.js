@@ -15,11 +15,11 @@ const STYLES_FLEX = css`
   justify-content: space-between;
   flex-direction: column;
   height: 100vh;
-  background-color: ${Constants.system.pitchBlack};
+  background-color: ${Constants.system.black};
 `;
 
 const STYLES_TOP = css`
-  background: ${Constants.system.pitchBlack};
+  background: ${Constants.system.black};
   border-bottom: 1px solid ${Constants.system.black};
   color: ${Constants.system.white};
   width: 100%;
@@ -50,7 +50,7 @@ const STYLES_RIGHT = css`
 `;
 
 const STYLES_BOTTOM = css`
-  background: ${Constants.system.pitchBlack};
+  background: ${Constants.system.black};
   color: ${Constants.system.white};
   padding: 12px 16px 12px 48px;
   width: 100%;

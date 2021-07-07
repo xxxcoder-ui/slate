@@ -11,7 +11,7 @@ const STYLES_CSS_LABEL = css`
   display: block;
   letter-spacing: 0.2px;
   font-size: 12px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin-bottom: 8px;
 `;
 

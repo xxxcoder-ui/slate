@@ -470,7 +470,7 @@ class SlatePage extends React.Component {
                 {isOwner && !isPublic && (
                   <SVG.SecurityLock
                     height="24px"
-                    style={{ marginLeft: 16, color: Constants.system.darkGray }}
+                    style={{ marginLeft: 16, color: Constants.system.grayLight2 }}
                   />
                 )}
               </span>
@@ -480,7 +480,7 @@ class SlatePage extends React.Component {
                 {isOwner && !isPublic && (
                   <SVG.SecurityLock
                     height="24px"
-                    style={{ marginLeft: 16, color: Constants.system.darkGray }}
+                    style={{ marginLeft: 16, color: Constants.system.grayLight2 }}
                   />
                 )}
               </span>

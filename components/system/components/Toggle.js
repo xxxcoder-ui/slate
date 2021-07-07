@@ -25,7 +25,7 @@ const STYLES_DIAL = css`
   border-radius: 24px;
   margin-top: 4px;
   margin-left: 4px;
-  background: ${Constants.system.foreground};
+  background: ${Constants.semantic.bgLight};
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   transition: transform 200ms ease;
 `;
@@ -53,7 +53,7 @@ export class Toggle extends React.Component {
             backgroundColor: this.props.active
               ? Constants.system.blue
               : this.props.dark
-              ? Constants.system.grayBlack
+              ? Constants.system.grayDark2
               : null,
           }}
         >
@@ -61,7 +61,7 @@ export class Toggle extends React.Component {
             css={STYLES_DIAL}
             style={{
               transform: this.props.active ? `translateX(28px)` : null,
-              background: this.props.dark ? Constants.system.border : null,
+              background: this.props.dark ? Constants.semantic.borderGrayLight : null,
             }}
           />
         </div>
