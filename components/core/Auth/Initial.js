@@ -8,12 +8,10 @@ import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { AnimateSharedLayout } from "framer-motion";
-import { useField } from "~/common/hooks";
-import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
-import { LoaderSpinner } from "~/components/system/components/Loaders";
-
+import { motion, AnimateSharedLayout } from "framer-motion";
+import { useForm, useField } from "~/common/hooks";
 import Field from "~/components/core/Field";
+import { Toggle, SignUpPopover } from "~/components/core/Auth/components";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
@@ -73,14 +71,18 @@ export default function Initial({
   const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler(page);
 
   // NOTE(amine): Signup view form
-  const { getFieldProps: getSignupFielProps, isSubmitting: isCheckingEmail } = useField({
+  const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
     validateOnBlur: false,
-    initialValues: initialEmail || "",
-    validate: (email) => {
-      if (Strings.isEmpty(email)) return "Please provide an email";
-      else if (!Validations.email(email)) return "Invalid email address";
+    initialValues: { email: initialEmail || "" },
+    validate: ({ email }, errors) => {
+      if (Strings.isEmpty(email)) {
+        errors.email = "Please provide an email";
+      } else if (!Validations.email(email)) {
+        errors.email = "Invalid email address";
+      }
+      return errors;
     },
-    onSubmit: async (email) => {
+    onSubmit: async ({ email }) => {
       const response = await Actions.checkEmail({ email });
       if (response?.data?.twitter) {
         Events.dispatchMessage({
@@ -156,7 +158,7 @@ export default function Initial({
               autoFocus
               label="Email address or username"
               placeholder="Email/username"
-              icon={ArrowButton}
+              icon={SVG.RightArrow}
               name="email/username"
               type="text"
               full
@@ -181,33 +183,31 @@ export default function Initial({
           </>
         ) : (
           <AnimateSharedLayout>
-            <Field
-              autoFocus
-              label="Sign up with email"
-              placeholder="Email"
-              type="text"
-              name="email"
-              full
-              icon={
-                isCheckingEmail
-                  ? () => (
-                      <LoaderSpinner
-                        style={{
-                          height: 16,
-                          width: 16,
-                          marginLeft: 16,
-                          position: "absolute",
-                          right: 12,
-                        }}
-                      />
-                    )
-                  : ArrowButton
-              }
-              // NOTE(amine): the input component internally is using 16px margin top
-              containerStyle={{ marginTop: "4px" }}
-              {...getSignupFielProps("email")}
-            />
+            <form {...getFormProps()}>
+              <Field
+                autoFocus
+                label="Sign up with email"
+                placeholder="Email"
+                type="email"
+                name="email"
+                full
+                style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+                // NOTE(amine): the input component internally is using 16px margin top
+                containerStyle={{ marginTop: "4px" }}
+                {...getFieldProps("email")}
+              />
 
+              <motion.div layout>
+                <System.ButtonPrimary
+                  full
+                  type="submit"
+                  style={{ marginTop: "16px" }}
+                  loading={isCheckingEmail}
+                >
+                  Send verification link
+                </System.ButtonPrimary>
+              </motion.div>
+            </form>
             <div style={{ marginTop: "auto" }}>
               <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
                 <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>

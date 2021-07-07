@@ -1,5 +1,3 @@
-import * as Monitor from "~/node_common/monitor";
-
 //NOTE(martina): when you add any new variable to the user, file, or slate objects, add it in these structures
 //add it to sanitize___ if it should be sent to the front end
 //add it to clean____ if it should be saved to the database
@@ -63,7 +61,6 @@ export const sanitizeFile = (entity) => {
       author: entity.data?.author,
       blurhash: entity.data?.blurhash,
       coverImage: entity.data?.coverImage,
-      downloads: entity.data?.downloads, //NOTE(martina): newly added
       tags: entity.data?.tags, //NOTE(martina): newly added
       unity: entity.data?.unity, //NOTE(martina): newly added
       link: entity.data?.link, //NOTE(martina): newly added
@@ -71,6 +68,8 @@ export const sanitizeFile = (entity) => {
     likeCount: entity.likeCount,
     downloadCount: entity.downloadCount,
     saveCount: entity.saveCount,
+    isLink: entity.isLink,
+    url: entity.url,
   };
 };
 
@@ -89,7 +88,6 @@ export const cleanUser = (entity) => {
     twitterId: entity.twitterId,
     authVersion: entity.authVersion,
     data: entity.data,
-    revertedVersion: entity.revertedVersion,
     // data: {
     //   name: entity.data?.name,
     //   photo: entity.data?.photo,
@@ -130,6 +128,8 @@ export const cleanFile = (entity) => {
     isPublic: entity.isPublic,
     filename: entity.filename,
     data: entity.data,
+    isLink: entity.isLink,
+    url: entity.url,
     // data: {
     //   type: entity.data?.type,
     //   name: entity.data?.name,
@@ -161,26 +161,41 @@ export const getUpdatedFile = (oldFile, updates) => {
 };
 
 export const getUpdatedUser = (oldUser, updates) => {
-  //NOTE(martina): we have this check here to make sure we never accidentally update the auth version without updating the password as well
-  if (
-    !oldUser.revertedVersion &&
-    updates.authVersion &&
-    updates.authVersion > oldUser.authVersion
-  ) {
-    if (!updates.password) {
-      delete updates.authVersion;
-      Monitor.message(
-        "node_common/serializers.js",
-        `Tried to update authVersion but missing a password update. Update blocked for user ${oldUser.username}`
-      );
-    } else if (updates.password === oldUser.password) {
-      delete updates.authVersion;
-      Monitor.message(
-        "node_common/serializers.js",
-        `Tried to update authVersion but has the same password hash as before. Update blocked for user ${oldUser.username}`
-      );
-    }
-  }
   let updatedUser = cleanUser(updates);
   return { ...oldUser, ...updatedUser, data: { ...oldUser.data, ...updatedUser.data } };
 };
+
+//NOTE(martina): list of the properties of the tables that should be returned by db queries
+export const slateProperties = [
+  "slates.id",
+  "slates.slatename",
+  "slates.data",
+  "slates.ownerId",
+  "slates.isPublic",
+  "slates.subscriberCount",
+  "slates.fileCount",
+];
+
+export const userProperties = [
+  "users.id",
+  "users.username",
+  "users.data",
+  "users.fileCount",
+  "users.slateCount",
+  "users.followerCount",
+];
+
+export const fileProperties = [
+  "files.id",
+  "files.ownerId",
+  "files.cid",
+  "files.isPublic",
+  "files.filename",
+  "files.data",
+  "files.createdAt",
+  "files.likeCount",
+  "files.downloadCount",
+  "files.saveCount",
+  "files.isLink",
+  "files.url",
+];

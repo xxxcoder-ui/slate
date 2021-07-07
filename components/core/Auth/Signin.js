@@ -8,7 +8,7 @@ import * as Styles from "~/common/styles";
 
 import Field from "~/components/core/Field";
 
-import { P } from "~/components/system";
+import { P1 } from "~/components/system";
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { useForm } from "~/common/hooks";
 import { css } from "@emotion/react";
@@ -163,6 +163,7 @@ export default function Signin({
             type="email"
             full
             {...getEmailFieldProps("email")}
+            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
           />
           <AnimateSharedLayout>
             <motion.div layout>
@@ -185,7 +186,7 @@ export default function Signin({
       <form {...getFormProps()} style={{ marginTop: message ? 24 : 41 }}>
         {message && (
           <div css={STYLES_MESSAGE}>
-            <P css={STYLES_MESSAGE_PARAGRAPH}>{message}</P>
+            <P1 css={STYLES_MESSAGE_PARAGRAPH}>{message}</P1>
             <button css={STYLES_MESSAGE_BUTTON} onClick={clearMessages}>
               <SVG.Dismiss />
             </button>
@@ -201,6 +202,7 @@ export default function Signin({
           onClickIcon={() => toggleShowPassword(!showPassword)}
           icon={showPassword ? SVG.EyeOff : SVG.Eye}
           {...getFieldProps("password")}
+          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
         <AnimateSharedLayout>
           <motion.div layout>
@@ -213,7 +215,7 @@ export default function Signin({
               Sign in
             </System.ButtonPrimary>
             <button type="button" onClick={goToResetPassword} css={STYLES_FORGOT_PASSWORD_BUTTON}>
-              <P css={Styles.HEADING_05}> Forgot Password?</P>
+              <P1 css={Styles.H5}> Forgot Password?</P1>
             </button>
           </motion.div>
         </AnimateSharedLayout>
@@ -221,7 +223,7 @@ export default function Signin({
       <button css={STYLES_BACK_BUTTON} type="button" onClick={goBack}>
         <span>
           <SVG.RightArrow height="16px" style={{ transform: "rotate(180deg)" }} />
-          <P css={Styles.HEADING_05}>Back</P>
+          <P1 css={Styles.H5}>Back</P1>
         </span>
       </button>
     </SignUpPopover>

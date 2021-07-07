@@ -11,40 +11,36 @@ const db = knex(envConfig);
 
 Logging.log(`RUNNING:  adjust.js`);
 
-const editUsersTable1 = db.schema.table("users", function (table) {
-  table.integer("authVersion").notNullable().defaultTo(1);
+const addNewFieldsLinks = db.schema.table("files", function (table) {
+  table.string("url").nullable();
+  table.boolean("isLink").notNullable().defaultTo(false);
 });
 
-const editUsersTable2 = db.schema.table("users", function (table) {
-  table.integer("authVersion").notNullable().defaultTo(2).alter();
-  table.string("twitterId").unique().nullable();
+const addNewFieldsFiles = db.schema.table("files", function (table) {
+  table.string("type").nullable();
+  table.integer("size").notNullable().defaultTo(0);
+  table.string("name").nullable();
+  table.string("body").nullable();
+  table.jsonb("coverImage").nullable();
+  table.string("author").nullable();
+  table.string("source").nullable();
 });
 
-const editVerificationTable = db.schema.table("verifications", function (table) {
-  table.string("username").nullable();
-  table
-    .enu("type", [
-      "email_verification",
-      "email_twitter_verification",
-      "password_reset",
-      "user_migration",
-    ])
-    .defaultTo("email_verification");
-  table.boolean("passwordChanged").nullable();
+const addNewFieldsUsers = db.schema.table("users", function (table) {
+  table.string("name").nullable();
+  table.string("body").nullable();
+  table.string("photo").nullable();
+  table.string("twitter").nullable();
+  table.boolean("twitterVerified").notNullable().defaultTo(false);
 });
 
-const editTwitterTokenTable = db.schema.table("twitterTokens", function (table) {
-  table.string("token").primary().unique().notNullable();
-  table.string("tokenSecret").notNullable();
-  table.string("email").nullable();
-  table.string("id_str").nullable();
-  table.string("screen_name").nullable();
-  table.string("verified").nullable();
+const addNewFieldsSlates = db.schema.table("slates", function (table) {
+  table.string("name").nullable();
+  table.string("body").nullable();
+  table.string("preview").nullable();
 });
 
-Promise.all([editVerificationTable]);
-// Promise.all([editUsersTable1]);
-// Promise.all([editUsersTable2, editVerificationTable, editTwitterTokenTable]);
+Promise.all([addNewFieldsLinks]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

@@ -8,7 +8,7 @@ import * as SVG from "~/common/svg";
 import Field from "~/components/core/Field";
 
 import { AnimateSharedLayout, motion } from "framer-motion";
-import { P } from "~/components/system";
+import { P1 } from "~/components/system";
 import { useForm } from "~/common/hooks";
 import { css } from "@emotion/react";
 
@@ -123,6 +123,7 @@ export default function ResetPassword({
                 setPasswordValidations(validations);
               },
             })}
+            style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
             onClickIcon={() => toggleShowPassword(!showPassword)}
             icon={showPassword ? SVG.EyeOff : SVG.Eye}
           />
@@ -160,6 +161,7 @@ export default function ResetPassword({
           type="email"
           full
           {...getFieldProps("email")}
+          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         />
         <AnimateSharedLayout>
           <motion.div layout>
@@ -177,7 +179,7 @@ export default function ResetPassword({
       <button css={STYLES_BACK_BUTTON} type="button" onClick={goBack}>
         <span>
           <SVG.RightArrow height="16px" style={{ transform: "rotate(180deg)" }} />
-          <P>Back</P>
+          <P1>Back</P1>
         </span>
       </button>
     </SignUpPopover>

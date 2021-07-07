@@ -12,7 +12,7 @@ import {
 import { css, keyframes } from "@emotion/react";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system";
-import { Logo, Symbol } from "~/common/logo";
+import { DarkSymbol } from "~/common/logo";
 import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
 
@@ -43,7 +43,7 @@ const STYLES_NAV_LINK = css`
     border-bottom: 1px solid ${Constants.system.grayLight2};
     margin: 0px 24px;
     padding: 12px 0px;
-    ${Styles.BODY_02};
+    ${Styles.P2};
   }
 `;
 
@@ -64,7 +64,7 @@ const STYLES_APPLICATION_HEADER = css`
   align-items: center;
   ${"" /* justify-content: space-between; */}
   width: 100%;
-  height: 56px;
+  height: ${Constants.sizes.header}px;
   ${"" /* padding: 0 24px 0 16px; */}
   padding: 0px 32px;
 
@@ -112,6 +112,16 @@ const STYLES_BACKGROUND = css`
     }
   }
   animation: fade-in 200ms ease-out;
+`;
+
+const STYLES_UPLOAD_BUTTON = css`
+  background-color: ${Constants.system.bgGrayLight};
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  pointer-events: auto;
+  ${Styles.CONTAINER_CENTERED};
 `;
 
 export default class ApplicationHeader extends React.Component {
@@ -180,7 +190,7 @@ export default class ApplicationHeader extends React.Component {
             height="16px"
             style={{ color: Constants.semantic.textGrayDark, marginRight: 8 }}
           />
-          <span css={Styles.BODY_02} style={{ color: Constants.semantic.textGray }}>
+          <span css={Styles.P2} style={{ color: Constants.semantic.textGray }}>
             Search Slate...
           </span>
         </div>
@@ -191,7 +201,13 @@ export default class ApplicationHeader extends React.Component {
         <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
           <div css={STYLES_APPLICATION_HEADER}>
             <div css={STYLES_LEFT}>
-              <Symbol style={{ height: 24, marginRight: 16 }} />
+              <Link
+                onAction={this.props.onAction}
+                href="/_/activity"
+                style={{ pointerEvents: "auto", marginRight: 16 }}
+              >
+                <DarkSymbol style={{ height: 24, display: "block" }} />
+              </Link>
               <div css={Styles.MOBILE_ONLY}>{searchComponent}</div>
             </div>
             <div css={STYLES_MIDDLE}>
@@ -312,7 +328,25 @@ export default class ApplicationHeader extends React.Component {
           <span css={Styles.MOBILE_HIDDEN}>
             <div css={STYLES_APPLICATION_HEADER}>
               <div css={STYLES_LEFT}>
-                <Symbol style={{ height: 24 }} />
+                <Link
+                  onAction={this.props.onAction}
+                  href="/_/activity"
+                  style={{ pointerEvents: "auto" }}
+                >
+                  <DarkSymbol style={{ height: 24, display: "block" }} />
+                </Link>
+                <div
+                  css={STYLES_UPLOAD_BUTTON}
+                  onClick={() => {
+                    this.props.onAction({
+                      type: "SIDEBAR",
+                      value: "SIDEBAR_ADD_FILE_TO_BUCKET",
+                    });
+                  }}
+                  style={{ marginRight: 24, marginLeft: 24 }}
+                >
+                  <SVG.Plus height="16px" />
+                </div>
               </div>
               <div css={STYLES_MIDDLE}>
                 <div css={STYLES_NAV_LINKS} style={{ pointerEvents: "auto" }}>
@@ -359,7 +393,13 @@ export default class ApplicationHeader extends React.Component {
                 </div>
               </div>
               <div css={STYLES_MIDDLE}>
-                <Symbol style={{ height: 24 }} />
+                <Link
+                  onAction={this.props.onAction}
+                  href="/_/activity"
+                  style={{ pointerEvents: "auto" }}
+                >
+                  <DarkSymbol style={{ height: 24, display: "block" }} />
+                </Link>
               </div>
               <div css={STYLES_RIGHT}>
                 <span style={{ pointerEvents: "auto", marginLeft: 24 }}>

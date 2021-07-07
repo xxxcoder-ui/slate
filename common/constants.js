@@ -7,7 +7,7 @@ export const sizes = {
   mobile: 768,
   navigation: 288,
   sidebar: 416,
-  header: 72,
+  header: 56,
   tablet: 960,
   desktop: 1024,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise

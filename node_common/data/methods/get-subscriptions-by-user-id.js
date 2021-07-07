@@ -19,7 +19,7 @@ export default async ({ ownerId }) => {
           "objects",
         ]);
 
-      const query = await DB.select(...Constants.slateProperties, slateFiles())
+      const query = await DB.select(...Serializers.slateProperties, slateFiles())
         .from("slates")
         .join("subscriptions", "subscriptions.slateId", "=", "slates.id")
         .join("slate_files", "slate_files.slateId", "=", "slates.id")

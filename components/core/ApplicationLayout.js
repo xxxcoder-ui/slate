@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
-import * as Utilities from "~/common/utilities";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { GlobalTooltip } from "~/components/system/components/fragments/GlobalTooltip";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { Alert } from "~/components/core/Alert";
+
+const MODAL_MARGIN = 56;
 
 const STYLES_NO_VISIBLE_SCROLL = css`
   overflow-y: scroll;
@@ -82,6 +84,34 @@ const STYLES_SIDEBAR = css`
   z-index: ${Constants.zindex.sidebar};
 `;
 
+const STYLES_MODAL = css`
+  z-index: ${Constants.zindex.modal};
+  top: ${Constants.sizes.header}px;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: calc(100vh - ${Constants.sizes.header}px);
+  position: fixed;
+  left: 0;
+  padding: ${MODAL_MARGIN}px;
+
+  background-color: ${Constants.system.bgBlurLight};
+
+  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+`;
+
+const STYLES_MODAL_ELEMENTS = css`
+  border-radius: 8px;
+  background-color: ${Constants.system.white};
+  width: 100%;
+  height: calc(100vh - ${Constants.sizes.header}px - ${MODAL_MARGIN * 2}px);
+  padding: 30px;
+  position: relative;
+`;
+
 const STYLES_SIDEBAR_HEADER = css`
   display: flex;
   justify-content: flex-end;
@@ -107,7 +137,21 @@ const STYLES_BLOCK = css`
   justify-content: center;
   transition: 200ms ease all;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.25);
+  color: ${Constants.system.textGray};
+`;
+
+const STYLES_DISMISS = css`
+  ${Styles.ICON_CONTAINER}
+
+  color: ${Constants.system.textGray};
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    color: ${Constants.system.brand};
+  }
 `;
 
 export default class ApplicationLayout extends React.Component {
@@ -117,10 +161,6 @@ export default class ApplicationLayout extends React.Component {
 
   state = {
     headerTop: 0,
-  };
-
-  static defaultProps = {
-    withPaddings: true,
   };
 
   componentDidMount = () => {
@@ -157,24 +197,73 @@ export default class ApplicationLayout extends React.Component {
   render() {
     let sidebarElements = null;
     if (this.props.sidebar) {
-      sidebarElements = (
-        <React.Fragment>
-          {/* <GlobalTooltip
-            elementRef={this._sidebar}
-            allowedTypes={["sidebar"]}
-          /> */}
-          <div css={STYLES_SIDEBAR_HEADER}>
-            <div css={STYLES_BLOCK} onClick={this._handleDismiss}>
-              <SVG.Dismiss height="24px" />
-            </div>
+      if (this.props.sidebarName === "SIDEBAR_ADD_FILE_TO_BUCKET") {
+        sidebarElements = (
+          <div css={STYLES_MODAL}>
+            <Boundary
+              onMouseDown
+              captureResize={false}
+              captureScroll={false}
+              enabled
+              onOutsideRectEvent={this._handleDismiss}
+            >
+              <div
+                css={STYLES_MODAL_ELEMENTS}
+                ref={(c) => {
+                  this._sidebar = c;
+                }}
+              >
+                <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 30 }}>
+                  <div css={STYLES_DISMISS} onClick={this._handleDismiss}>
+                    <SVG.Dismiss height="24px" />
+                  </div>
+                </div>
+                <div
+                  css={STYLES_SIDEBAR_CONTENT}
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {this.props.sidebar}
+                </div>
+              </div>
+            </Boundary>
           </div>
-          <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
-        </React.Fragment>
-      );
+        );
+      } else {
+        sidebarElements = (
+          <Boundary
+            onMouseDown
+            captureResize={false}
+            captureScroll={false}
+            enabled
+            onOutsideRectEvent={this._handleDismiss}
+          >
+            <div css={STYLES_SIDEBAR}>
+              <div
+                css={STYLES_SIDEBAR_ELEMENTS}
+                ref={(c) => {
+                  this._sidebar = c;
+                }}
+              >
+                <div css={STYLES_SIDEBAR_HEADER}>
+                  <div css={STYLES_BLOCK} onClick={this._handleDismiss}>
+                    <SVG.Dismiss height="24px" />
+                  </div>
+                </div>
+                <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
+              </div>
+            </div>
+          </Boundary>
+        );
+      }
     }
     return (
       <React.Fragment>
-        <div css={this.props.withPaddings && STYLES_CONTENT}>
+        <div css={STYLES_CONTENT}>
           <GlobalTooltip />
           {this.props.header && (
             <div
@@ -210,26 +299,7 @@ export default class ApplicationLayout extends React.Component {
           {this.props.children}
         </div>
 
-        {this.props.sidebar ? (
-          <Boundary
-            onMouseDown
-            captureResize={false}
-            captureScroll={false}
-            enabled
-            onOutsideRectEvent={this._handleDismiss}
-          >
-            <div css={STYLES_SIDEBAR}>
-              <div
-                css={STYLES_SIDEBAR_ELEMENTS}
-                ref={(c) => {
-                  this._sidebar = c;
-                }}
-              >
-                {sidebarElements}
-              </div>
-            </div>
-          </Boundary>
-        ) : null}
+        {sidebarElements ? sidebarElements : null}
       </React.Fragment>
     );
   }

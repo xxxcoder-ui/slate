@@ -39,7 +39,7 @@ export const sendEmail = async ({
 export const sendTemplate = async ({ to, from, templateId, templateData }) => {
   const msg = {
     to: to,
-    from: { email: from, name: "Slate Storage" },
+    from: from,
     templateId: templateId,
     dynamic_template_data: { ...templateData },
   };

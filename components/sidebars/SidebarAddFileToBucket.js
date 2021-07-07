@@ -4,7 +4,9 @@ import * as Strings from "~/common/strings";
 import * as System from "~/components/system";
 import * as Store from "~/common/store";
 import * as SVG from "~/common/svg";
+import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
+import * as FileUtilities from "~/common/file-utilities";
 
 import { css } from "@emotion/react";
 import { DataMeterBar } from "~/components/core/DataMeter";
@@ -76,15 +78,21 @@ const STYLES_PERFORMANCE = css`
 `;
 
 export default class SidebarAddFileToBucket extends React.Component {
+  state = {
+    url: "",
+    slate: this.props.page.id === "NAV_SLATE" && this.props.data?.id ? this.props.data : null,
+  };
+
   _handleUpload = (e) => {
     this.props.onUpload({
       files: e.target.files,
-      slate:
-        this.props.page.id === "NAV_SLATE" && this.props.data?.id
-          ? { id: this.props.data.id }
-          : null,
+      slate: this.state.slate,
     });
     this.props.onCancel();
+  };
+
+  _handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   _handleCancel = (e, key) => {
@@ -93,6 +101,11 @@ export default class SidebarAddFileToBucket extends React.Component {
     Events.dispatchCustomEvent({ name: `cancel-${key}` }); //NOTE(martina): so that will cancel if is in the middle of uploading
     Store.setCancelled(key); //NOTE(martina): so that will cancel if hasn't started uploading yet
     this.props.onAction({ type: "REGISTER_FILE_CANCELLED", value: key }); //NOTE(martina): so that fileLoading registers it
+  };
+
+  _handleUploadLink = () => {
+    FileUtilities.uploadLink({ url: this.state.url, slate: this.state.slate });
+    this.props.onCancel();
   };
 
   render() {
@@ -108,7 +121,7 @@ export default class SidebarAddFileToBucket extends React.Component {
     }
     return (
       <React.Fragment>
-        <System.P
+        <System.P1
           style={{
             fontFamily: Constants.font.semiBold,
             fontSize: Constants.typescale.lvl3,
@@ -118,7 +131,7 @@ export default class SidebarAddFileToBucket extends React.Component {
           {this.props.fileLoading && Object.keys(this.props.fileLoading).length
             ? "Upload progress"
             : "Upload data"}
-        </System.P>
+        </System.P1>
 
         <input
           css={STYLES_FILE_HIDDEN}
@@ -132,7 +145,7 @@ export default class SidebarAddFileToBucket extends React.Component {
           <React.Fragment>
             <FileTypeGroup style={{ margin: "64px 0px" }} />
 
-            <System.P>
+            <System.P1>
               Click below or drop a file anywhere on the page to upload a file
               {this.props.data?.slatename || this.props.data?.data.name ? (
                 <span>
@@ -143,12 +156,37 @@ export default class SidebarAddFileToBucket extends React.Component {
                 ""
               )}
               .
-            </System.P>
+            </System.P1>
 
             <SidebarWarningMessage />
 
+            <System.Input
+              name="url"
+              type="url"
+              value={this.state.url}
+              placeholder="URL"
+              onChange={this._handleChange}
+              style={{ marginTop: 48 }}
+            />
+
+            <System.ButtonPrimary
+              full
+              type="label"
+              style={{ marginTop: 24 }}
+              onClick={this._handleUploadLink}
+            >
+              Add link
+            </System.ButtonPrimary>
+
+            <System.Divider
+              color="#AEAEB2"
+              width="45px"
+              height="0.5px"
+              style={{ margin: "0px auto", marginTop: "20px" }}
+            />
+
             <System.ButtonPrimary full type="label" htmlFor="file" style={{ marginTop: 24 }}>
-              Add file
+              Upload file
             </System.ButtonPrimary>
             <br />
           </React.Fragment>

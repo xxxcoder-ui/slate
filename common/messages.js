@@ -138,15 +138,15 @@ export const error = {
   SERVER_CREATE_USER_FAILED:
     "We're having trouble creating your account right now. Please try again later",
 
+  //Check email
+  SERVER_CHECK_EMAIL_ERROR: "We ran into issues while validating that email",
+
   // Twitter
   SERVER_CREATE_USER_TWITTER_EXISTS: "There is already an account linked with your twitter",
   SERVER_TWITTER_OAUTH_NOT_ALLOWED: "You can only authenticate via twitter while on slate.host",
   SERVER_TWITTER_LOGIN_ONLY:
     "This login is associated with a Twitter account. Please continue with Twitter instead",
-  SERVER_TWITTER_LINKING_INVALID_USERNAME: "Please choose a valid username/email",
-  SERVER_TWITTER_LINKING_INVALID_PASSWORD: "Please choose a valid password",
-  SERVER_TWITTER_LINKING_WRONG_CREDENTIALS: "You have entered an invalid username or password",
-  SERVER_TWITTER_LINKING_FAILED: "SERVER_CREATE_USER_FAILED",
+
   // Email Verifications
   SERVER_EMAIL_VERIFICATION_INVALID_PIN: "Please enter a valid pin",
   SERVER_EMAIL_VERIFICATION_FAILED:
@@ -220,10 +220,6 @@ export const error = {
   SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
   SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
   SERVER_SIGN_IN_WRONG_CREDENTIALS: "You have entered an invalid username or password",
-  SIGN_IN_RATE_LIMITED:
-    "You've tried to sign in too many times. Please wait 10 minutes before trying again",
-  SIGN_UP_RATE_LIMITED:
-    "You've sign up too many times in the past 10 minutes. Please wait 10 minutes before trying again",
 
   //Subscribe
   SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",

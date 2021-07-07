@@ -49,7 +49,7 @@ export default async (req, res) => {
     return res.status(404).send({ decorator: "SERVER_CREATE_VERIFICATION_FAILED", error: true });
   }
 
-  const confTemplateId = "d-0bde6fd8eabf4ed4ae7fd409ddd532dd";
+  const confTemplateId = "d-823d8ae5e838452f903e94ee4115bffc";
   const slateEmail = "hello@slate.host";
 
   const sentEmail = await EmailManager.sendTemplate({

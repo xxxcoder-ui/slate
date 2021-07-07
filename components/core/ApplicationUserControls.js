@@ -8,7 +8,6 @@ import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
-import { useIntercom } from "react-use-intercom";
 
 const STYLES_HEADER = css`
   position: relative;
@@ -102,30 +101,6 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-const OpenIntercom = ({ user, onTogglePopup }) => {
-  const { show, update } = useIntercom();
-
-  return (
-    <span
-      style={{ cursor: "pointer", display: "block" }}
-      onClick={() => {
-        onTogglePopup();
-        update({
-          name: user.data.name,
-          email: user.email,
-          customAttributes: {
-            slate_userid: user.id,
-            username: user.username,
-          },
-        });
-        show();
-      }}
-    >
-      Help
-    </span>
-  );
-};
-
 export class ApplicationUserControlsPopup extends React.Component {
   _handleAction = (props) => {
     this.props.onTogglePopup();
@@ -160,14 +135,14 @@ export class ApplicationUserControlsPopup extends React.Component {
               justifyContent: "space-between",
             }}
           >
-            <div css={Styles.HEADING_04}>
+            <div css={Styles.H4}>
               {this.props.viewer.data.name || `@${this.props.viewer.username}`}
             </div>
             <div css={Styles.HORIZONTAL_CONTAINER}>
-              <span css={Styles.SMALL_TEXT} style={{ marginRight: 8 }}>{`${
+              <span css={Styles.P3} style={{ marginRight: 8 }}>{`${
                 this.props.viewer.library.length
               } File${this.props.viewer.library.length === 1 ? "" : "s"}`}</span>
-              <span css={Styles.SMALL_TEXT}>{`${this.props.viewer.slates.length} Collection${
+              <span css={Styles.P3}>{`${this.props.viewer.slates.length} Collection${
                 this.props.viewer.slates.length === 1 ? "" : "s"
               }`}</span>
             </div>
@@ -179,22 +154,14 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link
-                href={`/$/user/${this.props.viewer.id}`}
-                style={{ display: "block" }}
-                onAction={this._handleAction}
-              >
+              <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
                 Profile
               </Link>
             ),
           },
           {
             text: (
-              <Link
-                href={"/_/directory"}
-                style={{ display: "block" }}
-                onAction={this._handleAction}
-              >
+              <Link href={"/_/directory"} onAction={this._handleAction}>
                 Directory
               </Link>
             ),
@@ -203,25 +170,21 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link href={"/_/filecoin"} style={{ display: "block" }} onAction={this._handleAction}>
+              <Link href={"/_/filecoin"} onAction={this._handleAction}>
                 Filecoin
               </Link>
             ),
           },
           {
             text: (
-              <Link
-                href={"/_/storage-deal"}
-                style={{ display: "block" }}
-                onAction={this._handleAction}
-              >
+              <Link href={"/_/storage-deal"} onAction={this._handleAction}>
                 Storage deal
               </Link>
             ),
           },
           {
             text: (
-              <Link href={"/_/api"} style={{ display: "block" }} onAction={this._handleAction}>
+              <Link href={"/_/api"} onAction={this._handleAction}>
                 API
               </Link>
             ),
@@ -230,7 +193,7 @@ export class ApplicationUserControlsPopup extends React.Component {
         [
           {
             text: (
-              <Link href={"/_/settings"} style={{ display: "block" }} onAction={this._handleAction}>
+              <Link href={"/_/settings"} onAction={this._handleAction}>
                 Settings
               </Link>
             ),
@@ -238,13 +201,14 @@ export class ApplicationUserControlsPopup extends React.Component {
         ],
         [
           {
-            text: (
-              <OpenIntercom
-                style={{ display: "block" }}
-                user={this.props.viewer}
-                onTogglePopup={this.props.onTogglePopup}
-              />
-            ),
+            text: "Help",
+            onClick: (e) => {
+              e.stopPropagation();
+              this._handleAction({
+                type: "SIDEBAR",
+                value: "SIDEBAR_HELP",
+              });
+            },
           },
           {
             text: "Sign out",
@@ -274,7 +238,7 @@ export class ApplicationUserControlsPopup extends React.Component {
                   background: "none",
                   pointerEvents: "auto",
                 }}
-                css={Styles.HEADING_04}
+                css={Styles.H4}
                 itemStyle={{ fontSize: Constants.typescale.lvl0 }}
                 topSection={topSection}
                 navigation={navigation}
@@ -294,7 +258,7 @@ export class ApplicationUserControlsPopup extends React.Component {
                   right: 0,
                   width: "max-content",
                 }}
-                css={Styles.HEADING_04}
+                css={Styles.H4}
                 itemStyle={{ fontSize: Constants.typescale.lvl0 }}
                 topSection={topSection}
                 navigation={navigation}

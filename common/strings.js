@@ -273,21 +273,6 @@ export const copyText = (str) => {
   return true;
 };
 
-//NOTE(martina): createUsername is like createSlug, except allowing _ instead of -, and instead of replacing invalid characters it simply removes them
-export const createUsername = (text) => {
-  if (isEmpty(text)) {
-    return "";
-  }
-
-  text = text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9_]/g, "");
-
-  return text;
-};
-
 // SOURCE(jim):
 // https://gist.github.com/mathewbyrne/1280286
 // modified to support chinese characters, base case, and german.

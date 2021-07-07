@@ -22,7 +22,7 @@ export default async ({ sanitize = false, includeFiles = false, publicOnly = fal
       let slates;
       if (publicOnly) {
         if (includeFiles) {
-          slates = await DB.select(...Constants.slateProperties, slateFiles())
+          slates = await DB.select(...Serializers.slateProperties, slateFiles())
             .from("slates")
             .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
             .leftJoin("files", "slate_files.fileId", "=", "files.id")
@@ -33,7 +33,7 @@ export default async ({ sanitize = false, includeFiles = false, publicOnly = fal
         }
       } else {
         if (includeFiles) {
-          slates = await DB.select(...Constants.slateProperties, slateFiles())
+          slates = await DB.select(...Serializers.slateProperties, slateFiles())
             .from("slates")
             .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
             .leftJoin("files", "slate_files.fileId", "=", "files.id")

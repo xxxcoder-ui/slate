@@ -9,7 +9,7 @@ export default async (req, res) => {
   });
 
   if (!user) {
-    return res.status(200).send({ decorator: "SERVER_USER_NOT_FOUND" });
+    return res.status(200).send({ decorator: "SERVER_CHECK_USERNAME" });
   }
 
   if (user.error) {

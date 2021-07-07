@@ -2,7 +2,6 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
-import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
@@ -23,6 +22,26 @@ const INPUT_STYLES = css`
   border: none;
   box-sizing: border-box;
   transition: 200ms ease all;
+
+  :focus {
+    outline: 0;
+  }
+
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: ${Constants.system.darkGray};
+    opacity: 1; /* Firefox */
+  }
+
+  :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: ${Constants.system.darkGray};
+  }
+
+  ::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: ${Constants.system.darkGray};
+  }
 `;
 
 const STYLES_UNIT = css`
@@ -214,7 +233,7 @@ export class Input extends React.Component {
             description={this.props.description}
           />
           <div
-            css={Utilities.extendEmotionCss(STYLES_INPUT, this.props.inputCss)}
+            css={[STYLES_INPUT, this.props.inputCss]}
             style={{
               width: "100%",
               position: "relative",
@@ -271,7 +290,12 @@ export class Input extends React.Component {
                 onClick={this.props.onClickIcon || this.props.onSubmit || this._handleSubmit}
               />
             ) : this.props.copyable ? (
-              <SVG.CopyAndPaste height="16px" css={STYLES_ICON} onClick={this._handleCopy} />
+              <SVG.CopyAndPaste
+                height="16px"
+                css={STYLES_ICON}
+                style={{ cursor: "pointer" }}
+                onClick={this._handleCopy}
+              />
             ) : null}
           </div>
         </div>

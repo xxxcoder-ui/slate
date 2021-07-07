@@ -24,10 +24,10 @@ const STYLES_BUTTON = css`
     background-color: rgb(253, 253, 253);
   }
 
-  @media (max-width: ${Constants.sizes.mobile}px) {
+  ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {
     width: 32px;
     height: 32px;
-  }
+  } */}
 `;
 
 export const SquareButtonGray = (props) => {

@@ -137,101 +137,7 @@ export const hydrate = async () => {
   return JSON.parse(JSON.stringify(response.data));
 };
 
-export const formatPastedImages = ({ clipboardItems }) => {
-  let files = [];
-  let fileLoading = {};
-  for (let i = 0; i < clipboardItems.length; i++) {
-    // Note(Amine): skip content if it's not an image
-    if (clipboardItems[i].type.indexOf("image") === -1) continue;
-    const file = clipboardItems[i].getAsFile();
-    files.push(file);
-    fileLoading[`${file.lastModified}-${file.name}`] = {
-      name: file.name,
-      loaded: 0,
-      total: file.size,
-    };
-  }
-  return { fileLoading, toUpload: files };
-};
-
-export const formatDroppedFiles = async ({ dataTransfer }) => {
-  // NOTE(jim): If this is true, then drag and drop came from a slate object.
-  const data = dataTransfer.getData("slate-object-drag-data");
-  if (data) {
-    return;
-  }
-
-  const files = [];
-  let fileLoading = {};
-  if (dataTransfer.items && dataTransfer.items.length) {
-    for (var i = 0; i < dataTransfer.items.length; i++) {
-      const data = dataTransfer.items[i];
-
-      let file = null;
-      if (data.kind === "file") {
-        file = data.getAsFile();
-      } else if (data.kind == "string" && data.type == "text/uri-list") {
-        try {
-          const dataAsString = new Promise((resolve, reject) =>
-            data.getAsString((d) => resolve(d))
-          );
-          const resp = await fetch(await dataAsString);
-          const blob = resp.blob();
-
-          file = new File(blob, `data-${uuid()}`);
-          file.name = `data-${uuid()}`;
-        } catch (e) {
-          Events.dispatchMessage({
-            message: "File type not supported. Please try a different file",
-          });
-
-          return { error: true };
-        }
-      }
-
-      files.push(file);
-      fileLoading[`${file.lastModified}-${file.name}`] = {
-        name: file.name,
-        loaded: 0,
-        total: file.size,
-      };
-    }
-  }
-
-  if (!files.length) {
-    Events.dispatchMessage({ message: "File type not supported. Please try a different file" });
-  }
-
-  return { fileLoading, files, numFailed: dataTransfer.items.length - files.length };
-};
-
-export const formatUploadedFiles = ({ files }) => {
-  let toUpload = [];
-  let fileLoading = {};
-  for (let i = 0; i < files.length; i++) {
-    let file = files[i];
-
-    if (!file) {
-      continue;
-    }
-
-    toUpload.push(file);
-    fileLoading[`${file.lastModified}-${file.name}`] = {
-      name: file.name,
-      loaded: 0,
-      total: file.size,
-    };
-  }
-
-  if (!toUpload.length) {
-    Events.dispatchMessage({ message: "We could not find any files to upload." });
-    return false;
-  }
-
-  return { toUpload, fileLoading, numFailed: files.length - toUpload.length };
-};
-
-export const uploadImage = async (file, resources, excludeFromLibrary) => {
+export const uploadImage = async (file, resources) => {
   if (!file) {
     Events.dispatchMessage({ message: "Something went wrong with the upload. Please try again" });
     return;
@@ -296,7 +202,9 @@ export const removeFromSlate = async ({ slate, ids }) => {
 //NOTE(martina): save copy includes add to slate now. If it's already in the user's files but not in that slate, it'll skip the adding to files and just add to slate
 export const saveCopy = async ({ files, slate }) => {
   let response = await Actions.saveCopy({ files, slate });
+  console.log("after this");
   if (Events.hasError(response)) {
+    console.log("returning false");
     return false;
   }
   let message = Strings.formatAsUploadMessage(response.data.added, response.data.skipped, slate);
@@ -306,7 +214,8 @@ export const saveCopy = async ({ files, slate }) => {
 
 export const download = async (file) => {
   Actions.createDownloadActivity({ file });
-  if (file.data.type === "application/unity") {
+  if (file.isLink) return;
+  if (Validations.isUnityType(file.data.type)) {
     return await downloadZip(file);
   }
   let uri = Strings.getURLfromCID(file.cid);
@@ -366,17 +275,17 @@ const _nativeDownload = ({ url, onError }) => {
 };
 
 export const compressAndDownloadFiles = async ({ files, name = "slate.zip", resourceURI }) => {
-  Actions.createDownloadActivity({ files });
   const errorMessage = "Something went wrong with the download. Please try again";
   try {
-    if (!(files && files.length > 0)) {
+    if (!files || files.length == 0) {
       Events.dispatchMessage({ message: "No files in collection to download" });
       return;
     }
     Events.dispatchMessage({ message: "We're preparing your files to download", status: "INFO" });
     let downloadFiles = [];
     for (const file of files) {
-      if (file.type === "application/unity") {
+      if (file.isLink) continue;
+      if (Validations.isUnityType(file.data.type)) {
         const { data } = await Actions.getZipFilePaths(file);
         const unityFiles = data.filesPaths.map((item) => ({
           url: item.replace(`/${file.id}/`, `${Strings.getURLfromCID(file.cid)}/`),
@@ -392,7 +301,14 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
         url: Strings.getURLfromCID(file.cid),
       });
     }
+    if (downloadFiles.length == 0) {
+      Events.dispatchMessage({
+        message: "Links cannot be downloaded",
+      });
+      return;
+    }
 
+    Actions.createDownloadActivity({ files });
     const res = await Actions.createZipToken({ files: downloadFiles, resourceURI });
     const downloadLink = Actions.downloadZip({ token: res.data.token, name, resourceURI });
     await _nativeDownload({

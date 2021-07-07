@@ -8,7 +8,7 @@ export default async ({ ownerId }) => {
   return await runQuery({
     label: "GET_LIKES_BY_USER_ID",
     queryFn: async (DB) => {
-      const query = await DB.select(...Constants.fileProperties)
+      const query = await DB.select(...Serializers.fileProperties)
         .from("files")
         .join("likes", "likes.fileId", "=", "files.id")
         .where({ "likes.userId": ownerId, "files.isPublic": true })

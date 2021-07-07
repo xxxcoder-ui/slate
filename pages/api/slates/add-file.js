@@ -1,3 +1,5 @@
+//NOTE(martina): this file is deprecated. To add things to a slate, use save-copy and pass in a slate. That will duplicate the file if needed (or skip that if it already is owned)
+
 import * as Constants from "~/node_common/constants";
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";

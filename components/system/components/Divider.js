@@ -1,6 +1,13 @@
 import * as React from "react";
 
-export const Divider = ({ width = "100%", height = "1px", color, ...props }) => {
+import * as Constants from "~/common/constants";
+
+export const Divider = ({
+  width = "100%",
+  height = "0.5px",
+  color = Constants.system.grayLight4,
+  ...props
+}) => {
   return (
     <div
       css={(theme) => ({

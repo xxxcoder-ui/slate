@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as System from "~/components/system";
+import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 
 import Field from "~/components/core/Field";
@@ -8,7 +9,7 @@ import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { useField } from "~/common/hooks";
-import { SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
+import { SignUpPopover } from "~/components/core/Auth/components";
 
 const STYLES_HELPER = (theme) => css`
   text-align: center;
@@ -72,9 +73,9 @@ const ResendButton = ({ onResend }) => {
   }, [status]);
 
   return (
-    <System.P css={STYLES_RESEND_BUTTON} style={{ display: "inline" }} onClick={handleResend}>
+    <System.P1 css={STYLES_RESEND_BUTTON} style={{ display: "inline" }} onClick={handleResend}>
       {getResendText({ status, timeLeft: timer })}
-    </System.P>
+    </System.P1>
   );
 };
 
@@ -109,19 +110,20 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
                   style={{ height: 16, width: 16, marginLeft: 16, position: "absolute", right: 12 }}
                 />
               )
-            : ArrowButton
+            : SVG.RightArrow
         }
         textStyle={{ width: "100% !important" }}
         containerStyle={{ marginTop: "28px" }}
+        style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
         name="pin"
         type="pin"
         {...getFieldProps()}
       />
       <AnimateSharedLayout>
         <motion.div layout>
-          <System.P css={STYLES_HELPER}>
+          <System.P1 css={STYLES_HELPER}>
             Didn’t receive an email? <ResendButton onResend={onResend} />
-          </System.P>
+          </System.P1>
         </motion.div>
       </AnimateSharedLayout>
     </SignUpPopover>
