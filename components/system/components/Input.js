@@ -75,11 +75,11 @@ const STYLES_INPUT = css`
   align-items: center;
   justify-content: flex-start;
   height: 40px;
-  border-radius: 4px;
+  border-radius: 8px;
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px ${Constants.system.grayLight4} inset;
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset;
   color: ${Constants.system.black};
 
   :focus {

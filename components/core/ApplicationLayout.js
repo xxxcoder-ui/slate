@@ -59,7 +59,7 @@ const STYLES_SIDEBAR_ELEMENTS = css`
   width: ${Constants.sizes.sidebar}px;
   padding: 0;
   flex-shrink: 0;
-  background-color: rgba(195, 195, 196, 1);
+  background-color: ${Constants.semantic.bgGrayLight};
   top: 0;
   right: 0;
   ${STYLES_NO_VISIBLE_SCROLL}

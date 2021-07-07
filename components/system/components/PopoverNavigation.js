@@ -9,18 +9,18 @@ const STYLES_POPOVER = css`
   box-sizing: border-box;
   font-family: ${Constants.font.text};
   min-width: 200px;
-  border-radius: 4px;
+  border-radius: 8px;
   user-select: none;
   position: absolute;
   background-color: ${Constants.system.white};
   color: ${Constants.system.black};
   box-shadow: ${Constants.shadow.lightMedium};
   padding: 16px;
-  border: 1px solid ${Constants.system.grayLight3};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
 `;
 
 const STYLES_POPOVER_SECTION = css`
-  border-bottom: 1px solid ${Constants.system.grayLight3};
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
   padding-bottom: 6px;
   margin-bottom: 6px;
 
