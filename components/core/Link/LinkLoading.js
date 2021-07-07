@@ -36,7 +36,7 @@ export default function LinkLoading({ file }) {
           <LinkTag
             url={url}
             containerStyle={{
-              backgroundColor: Constants.system.brand,
+              backgroundColor: Constants.system.blue,
               borderRadius: 8,
               padding: "8px 16px",
             }}

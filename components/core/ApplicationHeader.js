@@ -115,7 +115,7 @@ const STYLES_BACKGROUND = css`
 `;
 
 const STYLES_UPLOAD_BUTTON = css`
-  background-color: ${Constants.system.bgGrayLight};
+  background-color: ${Constants.semantic.bgGrayLight};
   border-radius: 8px;
   width: 24px;
   height: 24px;

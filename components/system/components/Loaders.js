@@ -189,7 +189,7 @@ const STYLES_LOADER_PROGRESS = css`
 //   display: inline-block;
 //   width: 48px;
 //   height: 48px;
-//   border: 2px solid ${Constants.system.brand};
+//   border: 2px solid ${Constants.system.blue};
 //   border-radius: 50%;
 //   border-top-color: ${Constants.semantic.bgLight};
 //   animation: slate-client-animation-spin 1s ease-in-out infinite;

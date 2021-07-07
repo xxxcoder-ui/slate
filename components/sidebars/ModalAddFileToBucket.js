@@ -197,7 +197,7 @@ export default class ModalAddFileToBucket extends React.Component {
                           ) : file.loaded === file.total ? (
                             <SVG.CheckBox
                               height="24px"
-                              style={{ color: Constants.system.darkGray }}
+                              style={{ color: Constants.system.grayLight2 }}
                             />
                           ) : (
                             <System.LoaderSpinner
@@ -264,7 +264,7 @@ export default class ModalAddFileToBucket extends React.Component {
             value={this.state.url}
             style={{
               height: 48,
-              backgroundColor: Constants.system.bgLight,
+              backgroundColor: Constants.semantic.bgLight,
               boxShadow: this.state.urlError ? `0 0 0 1px ${Constants.system.red} inset` : "none",
             }}
             containerStyle={{ maxWidth: 540 }}
@@ -279,7 +279,7 @@ export default class ModalAddFileToBucket extends React.Component {
 
           <System.H4
             style={{
-              color: Constants.system.textGrayDark,
+              color: Constants.semantic.textGrayDark,
               textAlign: "center",
               marginBottom: 8,
             }}
@@ -289,7 +289,7 @@ export default class ModalAddFileToBucket extends React.Component {
           </System.H4>
           <System.P3
             style={{
-              color: Constants.system.textGray,
+              color: Constants.semantic.textGray,
               maxWidth: 456,
               textAlign: "center",
             }}

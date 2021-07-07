@@ -29,18 +29,18 @@ const INPUT_STYLES = css`
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 `;
 

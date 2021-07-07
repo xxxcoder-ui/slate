@@ -27,6 +27,7 @@ export default function ThemeProvider({ children }) {
       zindex: Constants.zindex,
       font: Constants.font,
       typescale: Constants.typescale,
+      semantic: Constants.semantic,
       ...theme,
     }),
     [theme]

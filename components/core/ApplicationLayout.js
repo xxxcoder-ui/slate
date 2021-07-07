@@ -137,20 +137,20 @@ const STYLES_BLOCK = css`
   justify-content: center;
   transition: 200ms ease all;
   cursor: pointer;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
 `;
 
 const STYLES_DISMISS = css`
   ${Styles.ICON_CONTAINER}
 
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
 
   :focus {
     outline: none;
   }
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

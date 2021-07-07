@@ -21,7 +21,7 @@ const STYLES_CARD = css`
   border-radius: 8px;
   overflow: hidden;
   box-shadow: ${Constants.shadow.large};
-  background-color: ${Constants.system.bgGrayLight};
+  background-color: ${Constants.semantic.bgGrayLight};
 `;
 
 const STYLES_IMAGE_CONTAINER = css`
@@ -56,7 +56,7 @@ const STYLES_BODY = css`
   -webkit-line-clamp: 3; /* number of lines to show */
   -webkit-box-orient: vertical;
   margin-bottom: 8px;
-  color: ${Constants.system.textGrayDark};
+  color: ${Constants.semantic.textGrayDark};
 `;
 
 export default function LinkCard({ file }) {
@@ -77,7 +77,7 @@ export default function LinkCard({ file }) {
           <div css={STYLES_BODY}>
             <System.P1>{body}</System.P1>
           </div>
-          <LinkTag url={url} style={{ color: Constants.system.textGray }} />
+          <LinkTag url={url} style={{ color: Constants.semantic.textGray }} />
         </div>
       </div>
     </a>
