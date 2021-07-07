@@ -42,7 +42,7 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
 
 const STYLES_INPUT = (theme) => css`
   background-color: rgba(242, 242, 247, 0.7);
-  box-shadow: ${theme.shadow.large};
+  box-shadow: ${theme.shadow.lightLarge};
   border-radius: 8px;
   box-shadow: 0 0 0 1px ${theme.system.white};
   &::placeholder {

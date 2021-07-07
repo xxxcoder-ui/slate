@@ -17,7 +17,7 @@ const TABLE_COLUMN_WIDTH_DEFAULTS = {
 
 const STYLES_CONTAINER = css`
   border: 1px solid ${Constants.semantic.borderLight};
-  box-shadow: 0 0 40px 0 ${Constants.shadow.subtle};
+  box-shadow: 0 0 40px 0 ${Constants.shadow.lightSmall};
 `;
 
 const STYLES_TABLE_ROW = css`

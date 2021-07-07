@@ -14,7 +14,7 @@ const STYLES_POPOVER = css`
   position: absolute;
   background-color: ${Constants.system.white};
   color: ${Constants.system.black};
-  box-shadow: ${Constants.shadow.medium};
+  box-shadow: ${Constants.shadow.lightMedium};
   padding: 16px;
   border: 1px solid ${Constants.system.grayLight3};
 `;

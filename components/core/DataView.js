@@ -185,7 +185,7 @@ const STYLES_IMAGE_BOX = css`
   }
   :hover {
     box-shadow: 0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
-      0 0 40px 0 ${Constants.shadow.subtle};
+      0 0 40px 0 ${Constants.shadow.lightSmall};
   }
 `;
 
@@ -735,7 +735,7 @@ export default class DataView extends React.Component {
                         height: this.state.imageSize,
                         boxShadow: numChecked
                           ? `0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
-      0 0 40px 0 ${Constants.shadow.subtle}`
+      0 0 40px 0 ${Constants.shadow.lightSmall}`
                           : "",
                       }}
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}

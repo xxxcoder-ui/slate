@@ -121,10 +121,12 @@ export const semantic = {
 };
 
 export const shadow = {
-  subtle: "0 1px 0 0 rgba(15, 14, 18, 0.04)",
-  light: "0 3px 6px 0 rgba(178, 178, 178, 0.15)",
-  medium: "0 8px 24px 0 rgba(178, 178, 178, 0.2)",
-  large: "0 12px 48px 0 rgba(178, 178, 178, 0.3)",
+  lightSmall: "0px 4px 16px 0 rgba(system.grayLight2, 0.1)",
+  lightMedium: "0px 8px 32px 0 rgba(system.grayLight2, 0.2)",
+  lightLarge: "0px 12px 64px 0 rgba(system.grayLight2, 0.3)",
+  darkSmall: "0px 4px 16px 0 rgba(system.grayDark2, 0.1)",
+  darkMedium: "0px 8px 32px 0 rgba(system.grayDark2, 0.2)",
+  darkLarge: "0px 12px 64px 0 rgba(system.grayDark2, 0.3)",
 };
 
 export const zindex = {

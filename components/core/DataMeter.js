@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 const STYLES_CONTAINER = css`
   border-radius: 4px;
   box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset,
-    0 0 40px 0 ${Constants.shadow.subtle};
+    0 0 40px 0 ${Constants.shadow.lightSmall};
   padding: 32px;
   max-width: 100%;
   width: 100%;
