@@ -16,7 +16,6 @@ const STYLES_RADIO = css`
   margin-bottom: 8px;
   cursor: pointer;
   padding: 8px 10px;
-  border: 1px solid ${Constants.system.grayLight4};
   border-radius: 4px;
 
   :last-child {
@@ -104,7 +103,9 @@ export class RadioGroup extends React.Component {
                 css={STYLES_RADIO}
                 style={{
                   ...this.props.containerStyle,
-                  border: this.props.dark ? "1px solid #3c3c3c" : "inherit",
+                  border: this.props.dark
+                    ? "1px solid #3c3c3c"
+                    : `1px solid ${Constants.system.grayLight4}`,
                 }}
                 key={`radio-${radio.value}`}
               >
