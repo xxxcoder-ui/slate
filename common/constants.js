@@ -93,21 +93,21 @@ export const semantic = {
 
   bgLight: system.grayLight6,
   bgGrayLight: system.grayLight5,
-  bgBlurWhite: "rgba(system.white, 0.7)",
-  bgBlurWhiteOP: "rgba(system.white, 0.85)",
-  bgBlurWhiteTRN: "rgba(system.white, 0.3)",
-  bgBlurLight6: "rgba(system.grayLight6, 0.7)",
-  bgBlurLight6OP: "rgba(system.grayLight6, 0.85)",
-  bgBlurLight6TRN: "rgba(system.grayLight6, 0.3)",
+  bgBlurWhite: "rgba(255, 255, 255, 0.7)",
+  bgBlurWhiteOP: "rgba(255, 255, 255, 0.85)",
+  bgBlurWhiteTRN: "rgba(255, 255, 255, 0.3)",
+  bgBlurLight6: "rgba(242, 245, 247, 0.7)",
+  bgBlurLight6OP: "rgba(242, 245, 247, 0.85)",
+  bgBlurLight6TRN: "rgba(242, 245, 247, 0.3)",
 
   bgDark: system.grayDark6,
   bgLightDark: system.grayDark5,
-  bgBlurBlack: "rgba(system.black, 0.5)",
-  bgBlurBlackOP: "rgba(system.black, 0.85)",
-  bgBlurBlackTRN: "rgba(system.black, 0.3)",
-  bgBlurDark6: "rgba(system.black, 0.5)",
-  bgBlurDark6OP: "rgba(system.black, 0.85)",
-  bgBlurDark6TRN: "rgba(system.black, 0.3)",
+  bgBlurBlack: "rgba(0, 5, 10, 0.5)",
+  bgBlurBlackOP: "rgba(0, 5, 10, 0.85)",
+  bgBlurBlackTRN: "rgba(0, 5, 10, 0.3)",
+  bgBlurDark6: "rgba(28, 29, 30, 0.5)",
+  bgBlurDark6OP: "rgba(28, 29, 30, 0.85)",
+  bgBlurDark6TRN: "rgba(28, 29, 30, 0.3)",
 
   borderLight: system.grayLight6,
   borderGrayLight: system.grayLight5,
@@ -121,12 +121,12 @@ export const semantic = {
 };
 
 export const shadow = {
-  lightSmall: "0px 4px 16px 0 rgba(system.grayLight2, 0.1)",
-  lightMedium: "0px 8px 32px 0 rgba(system.grayLight2, 0.2)",
-  lightLarge: "0px 12px 64px 0 rgba(system.grayLight2, 0.3)",
-  darkSmall: "0px 4px 16px 0 rgba(system.grayDark2, 0.1)",
-  darkMedium: "0px 8px 32px 0 rgba(system.grayDark2, 0.2)",
-  darkLarge: "0px 12px 64px 0 rgba(system.grayDark2, 0.3)",
+  lightSmall: "0px 4px 16px 0 rgba(174, 176, 178, 0.1)",
+  lightMedium: "0px 8px 32px 0 rgba(174, 176, 178, 0.2)",
+  lightLarge: "0px 12px 64px 0 rgba(174, 176, 178, 0.3)",
+  darkSmall: "0px 4px 16px 0 rgba(99, 101, 102, 0.1)",
+  darkMedium: "0px 8px 32px 0 rgba(99, 101, 102, 0.2)",
+  darkLarge: "0px 12px 64px 0 rgba(99, 101, 102, 0.3)",
 };
 
 export const zindex = {
