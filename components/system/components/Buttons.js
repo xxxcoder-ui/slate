@@ -42,7 +42,7 @@ const STYLES_BUTTON_PRIMARY = css`
 const STYLES_BUTTON_PRIMARY_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
-  background-color: ${Constants.system.bgBlue};
+  background-color: ${Constants.semantic.bgBlue};
   color: ${Constants.system.white};
 `;
 
@@ -286,7 +286,7 @@ const STYLES_BUTTON_WARNING_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
   color: ${Constants.system.white};
-  background-color: ${Constants.system.bgRed};
+  background-color: ${Constants.semantic.bgRed};
   box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
 `;
 

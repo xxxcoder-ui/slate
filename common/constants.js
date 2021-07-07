@@ -29,10 +29,6 @@ export const system = {
   bgGrayLight: "#E5E5EA",
   bgGray: "#F2F2F2",
 
-  bgBlue: "#C0D8EE",
-  bgGreen: "#C0DACD",
-  bgYellow: "#FEEDC4",
-  bgRed: "#F1C4C4",
   textGray: "#8E8E93",
   textGrayLight: "#C3C3C4",
   textGrayDark: "#48484A",
