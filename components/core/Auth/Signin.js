@@ -15,7 +15,7 @@ import { css } from "@emotion/react";
 import { SignUpPopover, Verification } from "~/components/core/Auth/components";
 
 const STYLES_BACK_BUTTON = css`
-  color: ${Constants.system.textGrayDark};
+  color: ${Constants.semantic.textGrayDark};
   background: none;
   border-style: none;
   cursor: pointer;
@@ -74,7 +74,7 @@ const STYLES_MESSAGE_BUTTON = (theme) => css`
   padding: 0;
   margin: 0;
   svg {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
     height: 16px;
     width: 16px;
   }

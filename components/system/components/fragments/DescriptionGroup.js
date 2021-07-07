@@ -23,7 +23,7 @@ const STYLES_DESCRIPTION_GROUP_DESCRIPTION = css`
   box-sizing: border-box;
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   margin-bottom: 16px;
   line-height: 1.5;
   display: block;

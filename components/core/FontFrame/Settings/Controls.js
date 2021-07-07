@@ -10,7 +10,7 @@ import Select from "~/components/core/FontFrame/Settings/Select";
 
 const STYLES_LABEL = (theme) => css`
   font-size: 0.875rem;
-  color: ${theme.fontPreviewDarkMode ? theme.system.grayDark3 : theme.system.textGrayLight};
+  color: ${theme.fontPreviewDarkMode ? theme.system.grayDark3 : theme.semantic.textGrayLight};
   margin-bottom: 4px;
 `;
 
@@ -128,7 +128,7 @@ const STYLES_ALIGNEMENT_BUTTON = (theme) => css`
   display: flex;
   border-radius: 4px;
   border: 1px solid
-    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
+    ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
   margin-left: 16px;
   button {
     display: block;
@@ -148,8 +148,8 @@ const STYLES_ALIGNEMENT_BUTTON = (theme) => css`
 `;
 
 const getIconColor = (isActive, theme) => {
-  const darkMode = isActive ? theme.system.white : theme.system.textGray;
-  const lightMode = isActive ? theme.system.grayDark4 : theme.system.textGray;
+  const darkMode = isActive ? theme.system.white : theme.semantic.textGray;
+  const lightMode = isActive ? theme.system.grayDark4 : theme.semantic.textGray;
   return theme.fontPreviewDarkMode ? darkMode : lightMode;
 };
 const getBackgroundColor = (isActive, theme) => {
@@ -213,7 +213,7 @@ const STYLES_SETTINGS_WRAPPER = (theme) => css`
   display: flex;
   border-radius: 4px;
   border: 1px solid
-    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
+    ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
   justify-content: space-between;
   overflow: hidden;
   button {
@@ -224,7 +224,7 @@ const STYLES_SETTINGS_WRAPPER = (theme) => css`
     margin: 0;
     border: none;
     background: none;
-    color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGrayDark};
+    color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.semantic.textGrayDark};
   }
   button:focus {
     outline: none;
@@ -233,12 +233,12 @@ const STYLES_SETTINGS_WRAPPER = (theme) => css`
   svg {
     display: block;
     path {
-      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGrayDark};
+      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.semantic.textGrayDark};
     }
   }
   .reset_button {
     border-left: 1px solid
-      ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
+      ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
   }
 `;
 

@@ -44,7 +44,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_SUB_HEADER = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
   font-family: ${Constants.font.text};
   margin-top: 16px;

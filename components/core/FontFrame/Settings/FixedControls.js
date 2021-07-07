@@ -25,7 +25,7 @@ const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
   display: flex;
   border-radius: 4px;
   border: 1px solid
-    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
+    ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
   button {
     display: block;
     box-sizing: border-box;
@@ -47,7 +47,7 @@ const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
   }
   .darkmode_btn {
     path {
-      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGray};
+      stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.semantic.textGray};
     }
     background-color: ${theme.fontPreviewDarkMode ? theme.system.grayDark4 : "none"};
   }
@@ -59,7 +59,7 @@ const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
   border-radius: 4px;
   background: none;
   border: 1px solid
-    ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.grayLight5};
+    ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
   cursor: pointer;
   ${isActive &&
   css`
@@ -73,7 +73,7 @@ const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
           stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
         `
       : css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.grayLight2 : theme.system.textGray};
+          stroke: ${theme.fontPreviewDarkMode ? theme.system.grayLight2 : theme.semantic.textGray};
         `}
   }
 `;

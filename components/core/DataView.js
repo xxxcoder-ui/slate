@@ -112,7 +112,7 @@ const STYLES_ACTION_BAR = css`
   border-radius: 4px;
   padding: 0px 32px;
   box-sizing: border-box;
-  background-color: ${Constants.system.textGrayDark};
+  background-color: ${Constants.semantic.textGrayDark};
   width: 90vw;
   max-width: 878px;
   height: 48px;

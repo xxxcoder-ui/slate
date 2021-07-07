@@ -19,7 +19,9 @@ const STYLES_SENTENCE_WRAPPER = (theme) => css`
 const STYLES_TYPE_TO_EDIT = (isFocused) => (theme) => css`
   .font_frame_sentence::after {
     content: " type to edit";
-    color: ${theme.fontPreviewDarkMode ? theme.system.textGrayDark : theme.system.textGrayLight};
+    color: ${theme.fontPreviewDarkMode
+      ? theme.semantic.textGrayDark
+      : theme.semantic.textGrayLight};
     opacity: ${isFocused ? 0 : 1};
   }
 `;

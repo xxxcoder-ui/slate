@@ -48,7 +48,7 @@ const DROPDOWN_ITEM_STYLES = `
   span {
     font-size: 14px;
     line-height: 1.5;
-    color: ${Constants.system.textGray};
+    color: ${Constants.semantic.textGray};
     font-family: ${Constants.font.text};
     margin: 0 0 0 8px;
   }
@@ -187,7 +187,7 @@ const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
 
   span,
   svg {
-    color: ${Constants.system.textGray};
+    color: ${Constants.semantic.textGray};
   }
 
   span.value {
@@ -292,7 +292,7 @@ const STYLES_TAG_DARK = css`
   ${TAG_STYLES};
 
   background: ${Constants.system.grayDark4};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
 
   &:hover {
     background: ${Constants.system.grayDark4};
@@ -301,7 +301,7 @@ const STYLES_TAG_DARK = css`
 
 const STYLES_SHOW_MORE = css`
   font-family: ${Constants.font.text};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: 14px;
   display: flex;
   align-items: center;

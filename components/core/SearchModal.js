@@ -144,7 +144,7 @@ const STYLES_TEXT_ROWS = css`
 const STYLES_TITLE = css`
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvl1};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -154,7 +154,7 @@ const STYLES_TITLE = css`
 
 const STYLES_SUBTITLE = css`
   font-size: ${Constants.typescale.lvlN1};
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -191,7 +191,7 @@ const STYLES_PREVIEW_IMAGE = css`
 const STYLES_PREVIEW_TEXT = css`
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvlN1};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   margin: 4px 16px;
   word-break: break-word;
 `;
@@ -342,7 +342,7 @@ const STYLES_INPUT = css`
   width: 100%;
   height: 56px;
   background: ${Constants.semantic.bgGrayLight};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   display: flex;
   font-size: 14px;
   align-items: center;
@@ -360,16 +360,16 @@ const STYLES_INPUT = css`
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
     opacity: 1; /* Firefox */
   }
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
   }
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
   }
 `;
 
@@ -385,7 +385,7 @@ const STYLES_RETURN = css`
   position: absolute;
   right: 16px;
   top: 20px;
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   font-size: ${Constants.typescale.lvlN1};
   display: flex;
   align-items: center;
@@ -395,7 +395,7 @@ const STYLES_FILTER_BUTTON = css`
   padding: 11px;
   border-radius: 4px;
   border: 1px solid ${Constants.semantic.bgLight};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   margin-right: 8px;
   display: flex;
   align-items: center;
@@ -422,7 +422,7 @@ const STYLES_PREVIEW_PANEL = css`
 `;
 
 const STYLES_BOTTOM_BUTTONS = css`
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvlN1};
   letter-spacing: -0.1px;
@@ -443,7 +443,7 @@ const STYLES_INLINE_TAG_CONTAINER = css`
 
 const STYLES_INLINE_TAG = css`
   font-family: ${Constants.font.medium};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -459,7 +459,7 @@ const STYLES_DISMISS_BOX = css`
   top: 16px;
   padding: 2px;
   cursor: pointer;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   outline: 0;
 `;
 
@@ -989,7 +989,7 @@ export class SearchModal extends React.Component {
           style={{
             marginRight: 0,
             marginLeft: 16,
-            color: this.state.scopeFilter ? Constants.system.blue : Constants.system.textGray,
+            color: this.state.scopeFilter ? Constants.system.blue : Constants.semantic.textGray,
           }}
           onClick={() => this.setState({ filterTooltip: !this.state.filterTooltip })}
         >
@@ -1007,7 +1007,7 @@ export class SearchModal extends React.Component {
                 right: 0,
                 top: 44,
                 borderColor: Constants.semantic.bgLight,
-                color: Constants.system.textGray,
+                color: Constants.semantic.textGray,
                 width: 124,
               }}
               navigation={[

@@ -21,7 +21,7 @@ const STYLES_GROUPING = css`
 `;
 
 const STYLES_TEXT = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
 `;
 

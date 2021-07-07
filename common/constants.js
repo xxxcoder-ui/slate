@@ -27,10 +27,6 @@ export const system = {
   wallLight: "#F1F0F2",
   shadow: "rgba(15, 14, 18, 0.03)",
 
-  textGray: "#8E8E93",
-  textGrayLight: "#C3C3C4",
-  textGrayDark: "#48484A",
-  textBlack: "#0F0E12",
   bgBlurGrayBlack: "rgba(15, 14, 18, 0.8)",
   bgBlurBlack: "rgba(15, 14, 18, 0.9)",
   active: "#00BB00",

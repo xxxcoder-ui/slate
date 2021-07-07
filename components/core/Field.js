@@ -46,7 +46,7 @@ const STYLES_INPUT = (theme) => css`
   border-radius: 8px;
   box-shadow: 0 0 0 1px ${theme.system.white};
   &::placeholder {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`

@@ -13,7 +13,7 @@ const STYLES_BOX = css`
 const STYLES_MESSAGE = css`
   line-height: 1.5;
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
 `;
 
 export class WarningMessage extends React.Component {

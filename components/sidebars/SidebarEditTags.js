@@ -118,7 +118,7 @@ export default class SidebarEditTags extends React.Component {
             style={{
               fontFamily: Constants.font.text,
               fontSize: Constants.typescale.lvl0,
-              color: Constants.system.textGray,
+              color: Constants.semantic.textGray,
               marginBottom: 16,
             }}
           >

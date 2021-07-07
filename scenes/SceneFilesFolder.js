@@ -354,7 +354,7 @@ export default class SceneFilesFolder extends React.Component {
                     style={{
                       color: this.state.filtersActive
                         ? Constants.system.blue
-                        : Constants.system.textGray,
+                        : Constants.semantic.textGray,
                     }}
                   />
                 </ButtonTertiary>

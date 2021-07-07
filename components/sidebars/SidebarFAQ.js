@@ -24,7 +24,7 @@ const STYLES_GROUPING = css`
 
 const STYLES_TEXT = css`
   line-height: 1.5;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
 `;
 

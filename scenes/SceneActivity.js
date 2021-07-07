@@ -177,7 +177,7 @@ const ActivityRectangle = ({ item, width, height }) => {
         <div
           css={STYLES_SECONDARY}
           style={{
-            color: Constants.system.textGrayLight,
+            color: Constants.semantic.textGrayLight,
             width,
           }}
         >
