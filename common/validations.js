@@ -1,9 +1,8 @@
 import * as Strings from "~/common/strings";
-import * as Utilities from "~/common/utilities";
 
 import JSZip from "jszip";
 
-const USERNAME_REGEX = new RegExp("^[a-z0-9_]{0,}[a-z]+[0-9]*$");
+const USERNAME_REGEX = new RegExp("^[a-zA-Z0-9_]{0,}[a-zA-Z]+[0-9]*$");
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_REGEX = /^[\w.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9_]+?\.[a-zA-Z]{2,50}$/;
 const CONTAINS_DIGIT_REGEX = /\d/;
@@ -11,6 +10,8 @@ const CONTAINS_UPPERCASE_REGEX = /[A-Z]/;
 const CONTAINS_LOWERCASE_REGEX = /[a-z]/;
 const CONTAINS_SYMBOL_REGEX = /[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/;
 const PIN_REGEX = /^[0-9]{6}$/;
+// const URL_REGEX = /(http(s)?:\/\/.)?(www.)?[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&\/=]*)/;
+const IFRAMELY_URL_REGEX = /^https?:\/\//i;
 
 // TODO(jim): Regex should cover some of this.
 const REJECT_LIST = [
@@ -185,12 +186,33 @@ export const password = (text) => {
   return reqCount === 4;
 };
 
+export const endsWithAny = (options, string = "") =>
+  options.some((option) => {
+    if (string) {
+      return string.endsWith(option);
+    } else {
+      return false;
+    }
+  });
+
 export const verificationPin = (pin) => {
   if (Strings.isEmpty(pin)) {
     return false;
   }
 
   return PIN_REGEX.test(pin);
+};
+
+export const link = (text) => {
+  if (Strings.isEmpty(text)) {
+    return false;
+  }
+
+  if (text.length < 4) {
+    return false;
+  }
+
+  return IFRAMELY_URL_REGEX.test(text);
 };
 
 export const isPreviewableImage = (type = "") => {
@@ -200,37 +222,31 @@ export const isPreviewableImage = (type = "") => {
 };
 
 export const isImageType = (type = "") => {
-  if (type.startsWith("image/")) {
-    return true;
-  }
+  return type.startsWith("image/");
 };
 
 export const isAudioType = (type = "") => {
-  if (type.startsWith("audio/")) {
-    return true;
-  }
+  return type.startsWith("audio/");
 };
 
 export const isVideoType = (type = "") => {
-  if (type.startsWith("video/")) {
-    return true;
-  }
+  return type.startsWith("video/");
 };
 
 export const isPdfType = (type = "") => {
-  if (type.startsWith("application/pdf")) {
-    return true;
-  }
+  return type.startsWith("application/pdf");
 };
 
 export const isEpubType = (type = "") => {
-  if (type.startsWith("application/epub")) {
-    return true;
-  }
+  return type.startsWith("application/epub");
+};
+
+export const isUnityType = (type = "") => {
+  return type === "application/unity";
 };
 
 export const isFontFile = (fileName = "") => {
-  return Utilities.endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
+  return endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
 };
 
 export const isMarkdown = (filename = "", type = "") => {

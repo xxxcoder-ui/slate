@@ -106,12 +106,17 @@ export default class SlateMediaObjectPreview extends React.Component {
     const file = this.props.file;
     const type = this.props.file.data?.type;
     const coverImage = this.props.file.data?.coverImage;
+
     let url;
     if (type && Validations.isPreviewableImage(type)) {
       url = Strings.getURLfromCID(this.props.file.cid);
     } else if (coverImage) {
-      url = Strings.getURLfromCID(coverImage.cid);
+      url = coverImage.data?.url || Strings.getURLfromCID(coverImage.cid);
     }
+
+    // if (Validations.isLinkType(type)) {
+    //   url = file.data.link.image;
+    // }
 
     if (url) {
       const blurhash =
@@ -192,7 +197,7 @@ export default class SlateMediaObjectPreview extends React.Component {
     }
     let element = (
       <FileTypeIcon
-        type={file.data?.type}
+        file={file}
         height={this.props.previewPanel ? "26px" : "20px"}
         style={{ color: Constants.semantic.textGray }}
       />

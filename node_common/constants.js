@@ -17,35 +17,3 @@ export const MIN_ARCHIVE_SIZE_BYTES = 104857600;
 
 // NOTE(amine): 15 minutes
 export const TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000;
-
-export const slateProperties = [
-  "slates.id",
-  "slates.slatename",
-  "slates.data",
-  "slates.ownerId",
-  "slates.isPublic",
-  "slates.subscriberCount",
-  "slates.fileCount",
-];
-
-export const userProperties = [
-  "users.id",
-  "users.username",
-  "users.data",
-  "users.fileCount",
-  "users.slateCount",
-  "users.followerCount",
-];
-
-export const fileProperties = [
-  "files.id",
-  "files.ownerId",
-  "files.cid",
-  "files.isPublic",
-  "files.filename",
-  "files.data",
-  "files.createdAt",
-  "files.likeCount",
-  "files.downloadCount",
-  "files.saveCount",
-];

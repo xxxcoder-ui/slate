@@ -30,8 +30,6 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
   }
 
-  const formattedUsername = Strings.createUsername(username);
-
   const storedAuthToken = req.cookies[COOKIE_NAME];
 
   // NOTE(amine): additional security check
@@ -61,7 +59,7 @@ export default async (req, res) => {
   }
 
   // NOTE(Amine): If there is an account with the provided username
-  const userByUsername = await Data.getUserByUsername({ username: formattedUsername });
+  const userByUsername = await Data.getUserByUsername({ username });
   if (userByUsername) {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
@@ -71,11 +69,12 @@ export default async (req, res) => {
   const identity = await PrivateKey.fromRandom();
   const api = identity.toString();
 
+  const newUsername = username.toLowerCase();
   const newEmail = email.toLowerCase();
 
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
-      username: formattedUsername,
+      username: newUsername,
       data: { tokens: { api } },
     },
   });
@@ -93,7 +92,7 @@ export default async (req, res) => {
   });
 
   const user = await Data.createUser({
-    username: formattedUsername,
+    username: newUsername,
     email: newEmail,
     twitterId: twitterUser.id_str,
     data: {

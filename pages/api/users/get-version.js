@@ -5,10 +5,6 @@ import * as Environment from "~/node_common/environment";
 import * as Logging from "~/common/logging";
 
 export default async (req, res) => {
-  if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_USER_NOT_ALLOWED", error: true });
-  }
-
   const username = req.body.data.username.toLowerCase();
   let user;
   if (Validations.email(username)) {

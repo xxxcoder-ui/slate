@@ -60,7 +60,7 @@ export const ButtonPrimary = (props) => {
         css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
       >
-        <LoaderSpinner style={{ height: 16, width: 16 }} />
+        <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
     );
   }

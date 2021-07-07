@@ -35,15 +35,6 @@ export const generateNumberByStep = ({ min, max, step = 1 }) => {
   return numbers[randomIndex];
 };
 
-export const endsWithAny = (options, string) =>
-  options.some((option) => {
-    if (string) {
-      return string.endsWith(option);
-    } else {
-      return false;
-    }
-  });
-
 export const encryptPasswordClient = async (text) => {
   const salt = "$2a$06$Yl.tEYt9ZxMcem5e6AbeUO";
   let hash = text;
@@ -65,13 +56,4 @@ export const coerceToArray = (input) => {
   } else {
     return [input];
   }
-};
-
-export const getRandomNumberBetween = (min, max) => {
-  return Math.round(Math.random() * (max - min) + min);
-};
-
-export const extendEmotionCss = (styles, propStyles) => {
-  if (!propStyles) return styles;
-  return [styles, propStyles].flat();
 };

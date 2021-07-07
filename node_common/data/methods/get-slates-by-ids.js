@@ -20,14 +20,14 @@ export default async ({ ids, sanitize = false, includeFiles = false }) => {
         ]);
 
       if (includeFiles) {
-        query = await DB.select(...Constants.slateProperties, slateFiles())
+        query = await DB.select(...Serializers.slateProperties, slateFiles())
           .from("slates")
           .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
           .leftJoin("files", "slate_files.fileId", "=", "files.id")
           .whereIn("slates.id", ids)
           .groupBy("slates.id");
       } else {
-        query = await DB.select(...Constants.slateProperties)
+        query = await DB.select(...Serializers.slateProperties)
           .from("slates")
           .whereIn("id", ids);
       }

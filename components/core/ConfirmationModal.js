@@ -39,8 +39,7 @@ const STYLES_HEADER = css`
   color: ${Constants.system.black};
   font-size: ${Constants.typescale.lvl1};
   font-family: ${Constants.font.semiBold};
-  word-break: break-word;
-  white-space: pre-line;
+  word-break: break-all;
 `;
 
 const STYLES_SUB_HEADER = css`

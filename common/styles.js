@@ -4,78 +4,141 @@ import { css } from "@emotion/react";
 
 /* TYPOGRAPHY */
 
-export const HEADING_01 = css`
-  font-family: ${Constants.font.medium};
+export const LINK = css`
+  text-decoration: none;
+  color: ${Constants.system.blue};
+  cursor: pointer;
+  transition: 200ms ease color;
+
+  :visited {
+    color: ${Constants.system.blue};
+  }
+`;
+
+const TEXT = css`
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+
+  a {
+    ${LINK}
+  }
+`;
+
+export const H1 = css`
+  font-family: ${Constants.font.text};
   font-size: 1.953rem;
   font-weight: medium;
   line-height: 1.5;
-  letter-spacing: -0.02px;
+  letter-spacing: -0.021px;
+
+  ${TEXT}
 `;
 
-export const HEADING_02 = css`
+export const H2 = css`
   font-family: ${Constants.font.text};
   font-size: 1.563rem;
   font-weight: medium;
   line-height: 1.5;
-  letter-spacing: -0.02px;
+  letter-spacing: -0.019px;
+
+  ${TEXT}
 `;
 
-export const HEADING_03 = css`
-  font-family: ${Constants.font.medium};
+export const H3 = css`
+  font-family: ${Constants.font.text};
   font-size: 1.25rem;
+  font-weight: medium;
   line-height: 1.5;
-  letter-spacing: -0.02px;
+  letter-spacing: -0.017px;
+
+  ${TEXT}
 `;
 
-export const HEADING_04 = css`
-  font-family: ${Constants.font.medium};
+export const H4 = css`
+  font-family: ${Constants.font.text};
   font-size: 1rem;
+  font-weight: medium;
   line-height: 1.5;
-  letter-spacing: -0.01px;
+  letter-spacing: -0.011px;
+
+  ${TEXT}
 `;
 
-export const HEADING_05 = css`
-  font-family: ${Constants.font.medium};
+export const H5 = css`
+  font-family: ${Constants.font.text};
   font-size: 0.875rem;
+  font-weight: medium;
   line-height: 1.5;
-  letter-spacing: -0.01px;
+  letter-spacing: -0.006px;
+
+  ${TEXT}
 `;
 
-export const BODY_01 = css`
+export const P1 = css`
   font-family: ${Constants.font.text};
   font-size: 1rem;
   font-weight: regular;
   line-height: 1.5;
-  letter-spacing: -0.01px;
+  letter-spacing: -0.011px;
+
+  ${TEXT}
 `;
 
-export const BODY_02 = css`
+export const P2 = css`
   font-family: ${Constants.font.text};
   font-size: 0.875rem;
   font-weight: regular;
   line-height: 1.5;
-  letter-spacing: -0.01px;
+  letter-spacing: -0.006px;
+
+  ${TEXT}
 `;
 
-export const SMALL_TEXT = css`
+export const P3 = css`
   font-family: ${Constants.font.text};
   font-size: 0.75rem;
   font-weight: normal;
   line-height: 1.3;
+  letter-spacing: 0px;
+
+  ${TEXT}
 `;
 
-export const CODE_01 = css`
+export const C1 = css`
   font-family: ${Constants.font.code};
   font-size: 0.75rem;
   font-weight: normal;
   line-height: 1.3;
+
+  ${TEXT}
 `;
 
-export const CODE_02 = css`
+export const C2 = css`
   font-family: ${Constants.font.code};
   font-size: 0.875rem;
   font-weight: normal;
   line-height: 1.5;
+
+  ${TEXT}
+`;
+
+export const C3 = css`
+  font-family: ${Constants.font.code};
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 1.5;
+
+  ${TEXT}
+`;
+
+export const B1 = css`
+  font-family: ${Constants.font.text};
+  font-size: 0.875rem;
+  font-weight: medium;
+  line-height: 1;
+  letter-spacing: -0.006px;
+
+  ${TEXT}
 `;
 
 /* FREQUENTLY USED */
@@ -141,16 +204,5 @@ export const MOBILE_ONLY = css`
   @media (min-width: ${Constants.sizes.mobile}px) {
     display: none;
     pointer-events: none;
-  }
-`;
-
-export const LINK = (theme) => css`
-  ${HOVERABLE};
-  ${HEADING_05};
-  &,
-  &:link,
-  &:visited {
-    color: ${theme.system.blue};
-    text-decoration: none;
   }
 `;

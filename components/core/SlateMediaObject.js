@@ -3,11 +3,12 @@ import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Strings from "~/common/strings";
+import * as Actions from "~/common/actions";
 
 import UnityFrame from "~/components/core/UnityFrame";
 import FontFrame from "~/components/core/FontFrame/index.js";
 import MarkdownFrame from "~/components/core/MarkdownFrame";
-import { endsWithAny } from "~/common/utilities";
+import SlateLinkObject from "~/components/core/SlateLinkObject";
 
 import { css } from "@emotion/react";
 
@@ -76,8 +77,8 @@ export default class SlateMediaObject extends React.Component {
   };
 
   componentDidMount() {
+    const file = this.props.file;
     if (this.props.isMobile) {
-      const file = this.props.file;
       if (file.data.type && file.data.type.startsWith("application/pdf")) {
         const url = Strings.getURLfromCID(file.cid);
         this.openLink(url);
@@ -87,13 +88,18 @@ export default class SlateMediaObject extends React.Component {
 
   render() {
     const { file, isMobile } = this.props;
-    const url = Strings.getURLfromCID(file.cid);
     const type = file.data.type || "";
+    console.log(file);
+    if (file.isLink) {
+      return <SlateLinkObject {...this.props} />;
+    }
+
+    const url = Strings.getURLfromCID(file.cid);
     const playType = typeMap[type] ? typeMap[type] : type;
 
     let element = <div css={STYLES_FAILURE}>No Preview</div>;
 
-    if (type.startsWith("application/pdf")) {
+    if (Validations.isPdfType(type)) {
       return (
         <>
           {isMobile ? (
@@ -116,7 +122,7 @@ export default class SlateMediaObject extends React.Component {
       );
     }
 
-    if (type.startsWith("video/")) {
+    if (Validations.isVideoType(type)) {
       return (
         <video
           playsInline
@@ -137,7 +143,7 @@ export default class SlateMediaObject extends React.Component {
       );
     }
 
-    if (type.startsWith("audio/")) {
+    if (Validations.isAudioType(type)) {
       return (
         <div css={STYLES_ASSET}>
           <audio
@@ -190,7 +196,7 @@ export default class SlateMediaObject extends React.Component {
     }
 
     // TODO(jim): We will need to revisit this later.
-    if (type.startsWith("application/unity")) {
+    if (Validations.isUnityType(type)) {
       const { config, loader } = file.data.unity;
 
       return <UnityFrame url={url} unityGameConfig={config} unityGameLoader={loader} key={url} />;

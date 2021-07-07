@@ -19,6 +19,7 @@ import { Textarea } from "~/components/system/components/Textarea";
 import { Tag } from "~/components/system/components/Tag";
 import { Link } from "~/components/core/Link";
 
+import LinkTag from "~/components/core/Link/LinkTag";
 import isEqual from "lodash/isEqual";
 import cloneDeep from "lodash/cloneDeep";
 import ProcessedText from "~/components/core/ProcessedText";
@@ -280,10 +281,10 @@ export const FileTypeDefaultPreview = (props) => {
 
 class CarouselSidebar extends React.Component {
   state = {
-    name: this.props.file.data.name || this.props.file.filename,
-    body: this.props.file.data.body,
-    source: this.props.file.data.source,
-    author: this.props.file.data.author,
+    name: this.props.file.data.name || this.props.file.filename || "",
+    body: this.props.file.data.body || "",
+    source: this.props.file.data.source || "",
+    author: this.props.file.data.author || "",
     tags: this.props.file.data.tags || [],
     suggestions: this.props.viewer?.tags || [],
     selected: {},
@@ -382,10 +383,13 @@ class CarouselSidebar extends React.Component {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    this.setState({ loading: "savingCopy" });
-
-    await UserBehaviors.saveCopy({ files: [data] });
-    this.setState({ loading: false });
+    this.setState({ loading: "savingCopy" }, async () => {
+      console.log("before the call");
+      let response = await UserBehaviors.saveCopy({ files: [data] });
+      console.log("after the call");
+      Events.hasError(response);
+      this.setState({ loading: false });
+    });
   };
 
   _handleUpload = async (e) => {
@@ -567,12 +571,27 @@ class CarouselSidebar extends React.Component {
     const { coverImage, type, size } = file.data;
     const editingAllowed = this.props.isOwner && !this.props.isRepost && !this.props.external;
 
-    const isUnityGame = type === "application/unity";
+    const isUnityGame = Validations.isUnityType(type);
+    const isLink = file.isLink;
+
+    const showPreviewImageSection =
+      editingAllowed && type && !isLink && !Validations.isPreviewableImage(type);
 
     const elements = [];
     if (editingAllowed && !isUnityGame) {
       elements.push(
         <div key="sidebar-media-object-info" style={{ marginTop: 8 }}>
+          {isLink && (
+            <LinkTag
+              url={file.url}
+              containerStyle={{
+                backgroundColor: Constants.system.grayDark4,
+                padding: "8px 16px",
+                borderRadius: 8,
+                marginBottom: 16,
+              }}
+            />
+          )}
           <Input
             full
             value={this.state.name}
@@ -586,6 +605,7 @@ class CarouselSidebar extends React.Component {
             }}
             textStyle={{ color: Constants.system.white }}
           />
+
           <Textarea
             name="body"
             placeholder="Add notes or a description..."
@@ -618,8 +638,7 @@ class CarouselSidebar extends React.Component {
               type="dark"
               tags={this.state.tags}
               suggestions={this.state.suggestions}
-              style={{ margin: "0 0 16px" }}
-              inputStyles={{ padding: "16px" }}
+              inputStyles={STYLES_INPUT}
               dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
             />
@@ -639,6 +658,20 @@ class CarouselSidebar extends React.Component {
               <ProcessedText dark text={file.data.name || file.filename} />
             </div>
           </div>
+        );
+      }
+
+      if (isLink) {
+        elements.push(
+          <LinkTag
+            url={file.url}
+            containerStyle={{
+              backgroundColor: Constants.system.grayDark4,
+              padding: "8px 16px",
+              borderRadius: 8,
+              marginBottom: 24,
+            }}
+          />
         );
       }
 
@@ -706,21 +739,23 @@ class CarouselSidebar extends React.Component {
         : null;
     }
 
-    actions.push(
-      <div key="download" css={STYLES_ACTION} onClick={this._handleDownload}>
-        {this.state.isDownloading ? (
-          <>
-            <LoaderSpinner css={STYLES_SPINNER} />
-            <span style={{ marginLeft: 16 }}>Downloading</span>
-          </>
-        ) : (
-          <>
-            <SVG.Download height="24px" />
-            <span style={{ marginLeft: 16 }}>Download</span>
-          </>
-        )}
-      </div>
-    );
+    if (!isLink) {
+      actions.push(
+        <div key="download" css={STYLES_ACTION} onClick={this._handleDownload}>
+          {this.state.isDownloading ? (
+            <>
+              <LoaderSpinner css={STYLES_SPINNER} />
+              <span style={{ marginLeft: 16 }}>Downloading</span>
+            </>
+          ) : (
+            <>
+              <SVG.Download height="24px" />
+              <span style={{ marginLeft: 16 }}>Download</span>
+            </>
+          )}
+        </div>
+      );
+    }
 
     if (!this.props.isOwner || this.props.isRepost) {
       actions.push(
@@ -756,15 +791,15 @@ class CarouselSidebar extends React.Component {
     }
 
     let uploadCoverImage;
-    if (editingAllowed && type && !Validations.isPreviewableImage(type)) {
+    if (showPreviewImageSection) {
       uploadCoverImage = (
         <div style={{ marginBottom: 48 }}>
-          <System.P css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
+          <System.P1 css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
             Preview image
-          </System.P>
+          </System.P1>
           {coverImage ? (
             <>
-              <System.P css={STYLES_TEXT}>This is the preview image of your file.</System.P>
+              <System.P1 css={STYLES_TEXT}>This is the preview image of your file.</System.P1>
               <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
                 <img
                   src={Strings.getURLfromCID(coverImage.cid)}
@@ -774,7 +809,7 @@ class CarouselSidebar extends React.Component {
               </div>
             </>
           ) : (
-            <System.P css={STYLES_TEXT}>Add a preview image for your file.</System.P>
+            <System.P1 css={STYLES_TEXT}>Add a preview image for your file.</System.P1>
           )}
           <div style={{ marginTop: 16 }}>
             <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleUpload} />
@@ -790,19 +825,23 @@ class CarouselSidebar extends React.Component {
     if (editingAllowed) {
       privacy = (
         <div>
-          <System.P css={STYLES_SECTION_HEADER} style={{ marginBottom: 12 }}>
+          <System.P1 css={STYLES_SECTION_HEADER} style={{ marginBottom: 12 }}>
             Visibility
-          </System.P>
-          <System.P
+          </System.P1>
+          <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
             {isPublic
-              ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
+              ? `This ${
+                  isLink ? "link" : "file"
+                } is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore.`
+              : isLink
+              ? "This link is only visible to you"
               : "This file is only visible to those with the link."}
-          </System.P>
+          </System.P1>
           <RadioGroup
             name="isPublic"
             options={[
@@ -831,10 +870,10 @@ class CarouselSidebar extends React.Component {
             selected={isPublic}
             onChange={this._handleToggleVisibility}
           />
-          {!isPublic && (
+          {!isPublic && !isLink && (
             <Input
               full
-              value={Strings.getURLfromCID(file.cid)}
+              value={isLink ? file.data.link.url : Strings.getURLfromCID(file.cid)}
               name="copyLink"
               readOnly
               copyable

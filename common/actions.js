@@ -1,23 +1,35 @@
 import "isomorphic-fetch";
+import microlink from "@microlink/mql";
 
+import * as Events from "~/common/custom-events";
 import * as Websockets from "~/common/browser-websockets";
 import * as Strings from "~/common/strings";
+import * as Credentials from "~/common/credentials";
 
 //NOTE(martina): call Websockets.checkWebsocket() before any api call that uses websockets to return updates
 //  to make sure that websockets are properly connected (and to reconnect them if they are not)
 //  otherwise updates may not occur properly
+
+//NOTE(martina): if the server is the slate backend, you should set credentials: "include". If it is cross origin (aka a call to shovel or lens), you will not be able to use credentials
+// Instead, if a cross origin server requires authorization, pass an API key with Authorization: getCookie(Credentials.session.key)
+const getCookie = (name) => {
+  var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  if (match) return match[2];
+};
 
 const REQUEST_HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",
 };
 
+//NOTE(martina): used for calls to the server
 const DEFAULT_OPTIONS = {
   method: "POST",
   headers: REQUEST_HEADERS,
   credentials: "include",
 };
 
+//NOTE(martina): used for calls to other servers (where sending credentials isn't allowed b/c it's cross origin) which also don't require API keys
 const CORS_OPTIONS = {
   method: "POST",
   headers: REQUEST_HEADERS,
@@ -25,10 +37,14 @@ const CORS_OPTIONS = {
 };
 
 const returnJSON = async (route, options) => {
-  const response = await fetch(route, options);
-  const json = await response.json();
+  try {
+    const response = await fetch(route, options);
+    const json = await response.json();
 
-  return json;
+    return json;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const createZipToken = async ({ files, resourceURI }) => {
@@ -67,6 +83,18 @@ export const sendFilecoin = async (data) => {
     body: JSON.stringify({ data }),
   });
 };
+
+// export const mql = async (url) => {
+//   try {
+//     const res = await microlink(url, { screenshot: true });
+//     return res;
+//   } catch (e) {
+//     console.log(e);
+//     if (e.description) {
+//       Events.dispatchMessage({ message: e.description });
+//     }
+//   }
+// };
 
 export const checkUsername = async (data) => {
   return await returnJSON(`/api/users/check-username`, {
@@ -197,6 +225,14 @@ export const createFile = async (data) => {
   });
 };
 
+export const createLink = async (data) => {
+  await Websockets.checkWebsocket();
+  return await returnJSON(`/api/data/create-link`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const addFileToSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/add-file`, {
@@ -227,20 +263,6 @@ export const createUserViaTwitter = async (data) => {
 
 export const createUserViaTwitterWithVerification = async (data) => {
   return await returnJSON(`/api/twitter/signup-with-verification`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const linkTwitterAccount = async (data) => {
-  return await returnJSON(`/api/twitter/link`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const linkTwitterAccountWithVerification = async (data) => {
-  return await returnJSON(`/api/twitter/link-with-verification`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });
@@ -461,13 +483,6 @@ export const verifyTwitterEmail = async (data) => {
 
 export const createPasswordResetVerification = async (data) => {
   return await returnJSON(`/api/verifications/password-reset/create`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
-export const resendPasswordResetVerification = async (data) => {
-  return await returnJSON(`/api/verifications/password-reset/resend`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });

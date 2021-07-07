@@ -871,7 +871,7 @@ export default class DataView extends React.Component {
               >
                 <div css={STYLES_CONTAINER_HOVER}>
                   <div css={STYLES_ICON_BOX_HOVER} style={{ paddingLeft: 0, paddingRight: 18 }}>
-                    <FileTypeIcon type={each.data.type} height="24px" />
+                    <FileTypeIcon file={each} height="24px" />
                   </div>
                   <div css={STYLES_LINK}>{each.data.name || each.filename}</div>
                 </div>

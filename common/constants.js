@@ -7,7 +7,7 @@ export const sizes = {
   mobile: 768,
   navigation: 288,
   sidebar: 416,
-  header: 72,
+  header: 56,
   tablet: 960,
   desktop: 1024,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
@@ -96,7 +96,7 @@ export const semantic = {
   bgBlurWhite: "rgba(system.white, 0.7)",
   bgBlurWhiteOP: "rgba(system.white, 0.85)",
   bgBlurWhiteTRN: "rgba(system.white, 0.3)",
-  bgBlurlight6: "rgba(system.grayLight6, 0.7)",
+  bgBlurLight6: "rgba(system.grayLight6, 0.7)",
   bgBlurLight6OP: "rgba(system.grayLight6, 0.85)",
   bgBlurLight6TRN: "rgba(system.grayLight6, 0.3)",
 

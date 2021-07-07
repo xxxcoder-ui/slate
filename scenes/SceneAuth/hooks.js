@@ -15,10 +15,7 @@ const AUTH_STATE_GRAPH = {
     RESET_PASSWORD: "password_reset",
   },
   signup: {},
-  twitter_signup: {
-    LINK_EXISTING_ACCOUNT: "twitter_linking",
-  },
-  twitter_linking: {},
+  twitter_signup: {},
   password_reset: { BACK: "signin" },
 };
 
@@ -43,7 +40,6 @@ export const useAuthFlow = () => {
       goToTwitterSignupScene: ({ twitterEmail }) =>
         send({ event: "SIGNUP_WITH_TWITTER", context: { twitterEmail } }),
       goToResetPassword: () => send({ event: "RESET_PASSWORD" }),
-      goToTwitterLinkingScene: () => send({ event: "LINK_EXISTING_ACCOUNT" }),
       goBack: () => send({ event: "BACK" }),
       clearMessages: () => send({ ...state, context: { ...state.context, message: "" } }),
     }),
@@ -137,7 +133,7 @@ export const usePasswordReset = ({ onAuthenticate }) => {
   };
 
   const resendVerification = async () => {
-    const response = await Actions.resendPasswordResetVerification({
+    const response = await Actions.resendVerification({
       token: verificationToken.current,
     });
     if (Events.hasError(response)) {
@@ -210,9 +206,8 @@ export const useSignup = ({ onAuthenticate }) => {
   return { createVerification, verifyEmail, createUser, resendVerification };
 };
 
-export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterSignupScene }) => {
+export const useTwitter = ({ onAuthenticate, goToTwitterSignupScene }) => {
   const verificationToken = React.useRef();
-  const credentialsRef = React.useRef();
   const popupRef = React.useRef();
 
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
@@ -267,9 +262,7 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
               reject("getAuthTokenAndVerifier Error 2");
             }
           }
-        } catch (e) {
-          Logging.error(e);
-        }
+        } catch (e) {}
       }, 500);
     });
 
@@ -301,7 +294,7 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
       }
 
       if (response.token) {
-        await onTwitterAuthenticate(response);
+        await onAuthenticate(response);
         setIsLoggingIn(false);
         return;
       }
@@ -315,72 +308,6 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
     }
   };
 
-  const linkAccount = async ({ username, password }) => {
-    const { authToken } = twitterTokens.current;
-    credentialsRef.current = { username, password };
-
-    const userVersionResponse = await Actions.getUserVersion({ username });
-    if (Events.hasError(userVersionResponse)) return;
-
-    let hashedPassword;
-    if (userVersionResponse?.data?.version === 2) {
-      hashedPassword = await Utilities.encryptPasswordClient(password);
-    } else {
-      hashedPassword = password;
-    }
-    // NOTE(amine): handling client hash if the user is v2
-
-    const response = await Actions.linkTwitterAccount({
-      username,
-      password: hashedPassword,
-      token: authToken,
-    });
-
-    if (response.shouldMigrate) {
-      return response;
-    }
-
-    if (Events.hasError(response)) {
-      return;
-    }
-
-    const authResponse = await onAuthenticate({ username, password: hashedPassword });
-    if (Events.hasError(authResponse)) {
-      return;
-    }
-  };
-
-  const linkAccountWithVerification = async ({ pin }) => {
-    const { username, password } = credentialsRef.current;
-
-    const userVersionResponse = await Actions.getUserVersion({ username });
-    if (Events.hasError(userVersionResponse)) return;
-
-    let hashedPassword;
-    if (userVersionResponse?.data?.version === 2) {
-      hashedPassword = await Utilities.encryptPasswordClient(password);
-    } else {
-      hashedPassword = password;
-    }
-
-    // NOTE(amine): handling client hash if the user is v2
-    const response = await Actions.linkTwitterAccountWithVerification({
-      username,
-      password: hashedPassword,
-      token: verificationToken.current,
-      pin,
-    });
-
-    if (Events.hasError(response)) {
-      return;
-    }
-
-    const authResponse = await onAuthenticate({ username, password: hashedPassword });
-    if (Events.hasError(authResponse)) {
-      return;
-    }
-  };
-
   const signup = async ({ email = "", username = "" }) => {
     const { authToken } = twitterTokens.current;
     const response = await Actions.createUserViaTwitter({
@@ -390,7 +317,7 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
     });
     if (Events.hasError(response)) return;
     if (response.token) {
-      await onTwitterAuthenticate(response);
+      await onAuthenticate(response);
       return;
     }
     return response;
@@ -405,7 +332,7 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
 
     if (Events.hasError(response)) return;
     if (response.token) {
-      await onTwitterAuthenticate(response);
+      await onAuthenticate(response);
       return;
     }
     return response;
@@ -436,8 +363,6 @@ export const useTwitter = ({ onAuthenticate, onTwitterAuthenticate, goToTwitterS
   return {
     isLoggingIn,
     signin,
-    linkAccount,
-    linkAccountWithVerification,
     signup,
     signupWithVerification,
     createVerification,

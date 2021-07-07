@@ -4,7 +4,6 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import * as Monitor from "~/node_common/monitor";
 
 import { encryptPasswordClient } from "~/common/utilities";
 
@@ -56,37 +55,20 @@ export default async (req, res) => {
     return res.status(403).send({ decorator: "SERVER_TWITTER_LOGIN_ONLY", error: true });
   }
 
-  let userUpdates = { id: user.id, lastActive: new Date() };
-
-  let hash = await Utilities.encryptPassword(req.body.data.password, user.salt);
-
-  let updatePassword = user.authVersion === 1; //NOTE(martina): if they are v1, we may need to update their password
+  const hash = await Utilities.encryptPassword(req.body.data.password, user.salt);
   if (hash !== user.password) {
-    //NOTE(martina): this was added to deal with a specific case where the passwords of some v1 users could either be the v1 hashing schema or v2 (so we try both)
-    if (user.authVersion === 1) {
-      const clientHash = await encryptPasswordClient(req.body.data.password);
-      hash = await Utilities.encryptPassword(clientHash, user.salt);
-      if (hash !== user.password) {
-        return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_CREDENTIALS", error: true });
-      }
-      updatePassword = false; //NOTE(martina): means the user's password is already v2 hashed, and doesn't need to be updated
-    } else {
-      return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_CREDENTIALS", error: true });
-    }
+    return res.status(403).send({ decorator: "SERVER_SIGN_IN_WRONG_CREDENTIALS", error: true });
   }
 
+  let userUpdates = {};
   if (user.authVersion === 1) {
-    userUpdates.authVersion = 2;
-    userUpdates.revertedVersion = false;
-  }
-
-  if (updatePassword) {
     const newHash = await encryptPasswordClient(req.body.data.password);
     const doubledHash = await Utilities.encryptPassword(newHash, user.salt);
-    userUpdates.password = doubledHash;
+
+    userUpdates = { id: user.id, lastActive: new Date(), authVersion: 2, password: doubledHash };
   }
 
-  await Data.updateUserById(userUpdates);
+  await Data.updateUserById({ id: user.id, lastActive: new Date(), ...userUpdates });
 
   if (!user.email) {
     return res

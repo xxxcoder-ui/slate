@@ -38,8 +38,7 @@ export default async (req, res) => {
   let files;
   if (req.body.data.file) {
     files = [req.body.data.file];
-  }
-  if (req.body.data.files) {
+  } else if (req.body.data.files) {
     files = req.body.data.files;
   } else {
     return res.status(400).send({ decorator: "SERVER_CREATE_FILE_NO_FILE_PROVIDED", error: true });
@@ -77,7 +76,7 @@ export default async (req, res) => {
 
   let filesToAddToSlate = createdFiles.concat(duplicateFiles); //NOTE(martina): files that are already owned by the user are included in case they aren't yet in that specific slate
   if (slate && filesToAddToSlate.length) {
-    const { decorator: returnedDecorator, added: addedToSlate } = await addToSlate({
+    const { decorator: returnedDecorator, added: addedToSlate } = await Utilities.addToSlate({
       slate,
       files: filesToAddToSlate,
       user,
@@ -101,26 +100,4 @@ export default async (req, res) => {
     decorator,
     data: { added, skipped: files.length - added },
   });
-};
-
-const addToSlate = async ({ slate, files, user }) => {
-  let { filteredFiles } = await ArrayUtilities.removeDuplicateSlateFiles({
-    files,
-    slate,
-  });
-
-  if (!filteredFiles.length) {
-    return { added: 0 };
-  }
-
-  let response = await Data.createSlateFiles({ owner: user, slate, files: filteredFiles });
-  if (!response || response.error) {
-    return { decorator: "SERVER_CREATE_FILE_ADD_TO_SLATE_FAILED", added: 0 };
-  }
-
-  Monitor.upload({ user, slate, files: filteredFiles });
-
-  await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
-
-  return { added: response.length };
 };

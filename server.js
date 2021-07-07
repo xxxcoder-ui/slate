@@ -154,12 +154,6 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
-    const isBucketsAvailable = await Utilities.checkTextile();
-
-    if (!isBucketsAvailable && Environment.IS_PRODUCTION) {
-      return res.redirect("/maintenance");
-    }
-
     return res.redirect("/_/activity");
     // let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     // let isMac = Window.isMac(req.headers["user-agent"]);
@@ -211,9 +205,12 @@ app.prepare().then(async () => {
     }
 
     let { page, redirected } = NavigationData.getByHref(req.path, viewer);
-    if (!redirected) {
-      page.params = req.query;
+    if (redirected) {
+      return res.redirect(page.pathname);
     }
+    // if (!redirected) {
+    page.params = req.query;
+    // }
 
     if (!page) {
       return handler(req, res, req.url, {

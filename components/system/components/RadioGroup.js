@@ -16,7 +16,6 @@ const STYLES_RADIO = css`
   margin-bottom: 8px;
   cursor: pointer;
   padding: 8px 10px;
-  border: 1px solid ${Constants.system.grayLight4};
   border-radius: 4px;
 
   :last-child {
@@ -38,7 +37,7 @@ const STYLES_RADIO_INPUT = css`
 
 const STYLES_RADIO_CUSTOM = css`
   box-sizing: border-box;
-  background-color: ${Constants.semantic.bgLight};
+  background-color: ${Constants.system.grayLight5};
   cursor: pointer;
   height: 24px;
   width: 24px;
@@ -52,8 +51,8 @@ const STYLES_RADIO_CUSTOM = css`
 
 const STYLES_RADIO_CUSTOM_SELECTED = css`
   box-sizing: border-box;
-  background-color: ${Constants.semantic.bgGrayLight};
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+  background-color: ${Constants.system.gray};
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.6);
   height: 16px;
   width: 16px;
   border-radius: 16px;
@@ -104,7 +103,9 @@ export class RadioGroup extends React.Component {
                 css={STYLES_RADIO}
                 style={{
                   ...this.props.containerStyle,
-                  border: this.props.dark ? "1px solid #3c3c3c" : "inherit",
+                  border: this.props.dark
+                    ? "1px solid #3c3c3c"
+                    : `1px solid ${Constants.system.grayLight4}`,
                 }}
                 key={`radio-${radio.value}`}
               >

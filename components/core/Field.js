@@ -1,6 +1,7 @@
 import * as React from "react";
+import * as SVG from "~/common/svg";
 
-import { P } from "~/components/system/components/Typography";
+import { P1 } from "~/components/system/components/Typography";
 import { Input } from "~/components/system";
 import { css } from "@emotion/react";
 
@@ -21,13 +22,14 @@ const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
   border-radius: 8px;
 `;
 
-const STYLES_PASSWORD_VALIDATION = css`
-  display: flex;
-  align-items: center;
-  & > * + * {
-    margin-left: 8px;
-  }
-`;
+const STYLES_PASSWORD_VALIDATION = (theme) =>
+  css`
+    display: flex;
+    align-items: center;
+    & > * + * {
+      margin-left: 8px;
+    }
+  `;
 
 const STYLES_CIRCLE = (theme) => css`
   height: 8px;
@@ -44,29 +46,32 @@ const STYLES_INPUT = (theme) => css`
   background-color: rgba(242, 242, 247, 0.7);
   box-shadow: ${theme.shadow.lightLarge};
   border-radius: 8px;
-  box-shadow: 0 0 0 1px ${theme.system.white};
   &::placeholder {
     color: ${theme.semantic.textGrayDark};
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`
-  box-shadow: 0 0 0 1px ${theme.system.red};
+  background-color: rgba(242, 242, 247, 0.5);
+  border: 1px solid ${theme.system.red};
+  &::placeholder {
+    color: ${theme.system.textGrayDark};
+  }
 `;
-
 const STYLES_INPUT_SUCCESS = (theme) => css`
-  box-shadow: 0 0 0 1px ${theme.system.green};
+  background-color: rgba(242, 242, 247, 0.5);
+  border: 1px solid ${theme.system.green};
+  &::placeholder {
+    color: ${theme.system.textGrayDark};
+  }
 `;
 
-const PasswordValidations = ({ validations, full, color }) => {
+const PasswordValidations = ({ validations }) => {
   return (
-    <div
-      css={STYLES_PASSWORD_VALIDATIONS}
-      style={{ backgroundColor: color === "white" && "white", maxWidth: !full && "480px" }}
-    >
-      <P css={STYLES_SMALL_TEXT}>Passwords should</P>
+    <div css={STYLES_PASSWORD_VALIDATIONS}>
+      <P1 css={STYLES_SMALL_TEXT}>Passwords should</P1>
       <div css={STYLES_PASSWORD_VALIDATION}>
         <div css={[STYLES_CIRCLE, validations.validLength && STYLES_CIRCLE_SUCCESS]} />
-        <P css={STYLES_SMALL_TEXT}>Be at least 8 characters long</P>
+        <P1 css={STYLES_SMALL_TEXT}>Be at least 8 characters long</P1>
       </div>
       <div css={STYLES_PASSWORD_VALIDATION}>
         <div
@@ -75,15 +80,15 @@ const PasswordValidations = ({ validations, full, color }) => {
             validations.containsLowerCase && validations.containsUpperCase && STYLES_CIRCLE_SUCCESS,
           ]}
         />
-        <P css={STYLES_SMALL_TEXT}>Contain both uppercase and lowercase letters</P>
+        <P1 css={STYLES_SMALL_TEXT}>Contain both uppercase and lowercase letters</P1>
       </div>
       <div css={STYLES_PASSWORD_VALIDATION}>
         <div css={[STYLES_CIRCLE, validations.containsNumbers && STYLES_CIRCLE_SUCCESS]} />
-        <P css={STYLES_SMALL_TEXT}>Contain at least 1 number</P>
+        <P1 css={STYLES_SMALL_TEXT}>Contain at least 1 number</P1>
       </div>
       <div css={STYLES_PASSWORD_VALIDATION}>
         <div css={[STYLES_CIRCLE, validations.containsSymbol && STYLES_CIRCLE_SUCCESS]} />
-        <P css={STYLES_SMALL_TEXT}>Contain at least 1 symbol</P>
+        <P1 css={STYLES_SMALL_TEXT}>Contain at least 1 symbol</P1>
       </div>
     </div>
   );
@@ -96,16 +101,15 @@ export default function Field({
   validations,
   errorAs,
   containerAs,
-  full,
-  color = "transparent",
   ...props
 }) {
   const showError = touched && error;
   const showSuccess = touched && !error;
 
-  const STYLES_STATUS = React.useMemo(() => {
+  const STYLES = React.useMemo(() => {
     if (showError) return STYLES_INPUT_ERROR;
     if (showSuccess) return STYLES_INPUT_SUCCESS;
+    return STYLES_INPUT;
   }, [touched, error]);
 
   const ContainerComponent = containerAs || "div";
@@ -113,20 +117,15 @@ export default function Field({
   return (
     <div>
       <ContainerComponent>
-        <Input
-          inputCss={[color === "transparent" && STYLES_INPUT, STYLES_STATUS]}
-          full={full}
-          {...props}
-        />
+        <Input inputCss={STYLES} {...props} />
       </ContainerComponent>
-      {props.name === "password" && validations && (
-        <PasswordValidations color={color} full={full} validations={validations} />
-      )}
-      {props.name !== "password" && (showError || showSuccess) && (
+      {props.name === "password" && validations ? (
+        <PasswordValidations validations={validations} />
+      ) : (
         <ErrorWrapper>
-          <P css={STYLES_SMALL_TEXT} style={{ marginTop: "8px" }}>
+          <P1 css={STYLES_SMALL_TEXT} style={{ marginTop: "8px" }}>
             {(showError && error) || (showSuccess && success)}
-          </P>
+          </P1>
         </ErrorWrapper>
       )}
     </div>
