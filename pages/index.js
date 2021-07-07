@@ -42,7 +42,7 @@ const USER_SLATES = [
     url: "/_",
     username: "",
     preview: "",
-    style: { backgroundColor: Constants.system.newBlue, color: Constants.system.white },
+    style: { backgroundColor: Constants.system.blue, color: Constants.system.white },
   },
   {
     name: "Cryptovoxels History",
@@ -78,7 +78,7 @@ const STYLES_ROOT = css`
   padding: 0 88px;
   margin: -88px auto 0 auto;
   width: 100%;
-  background-color: ${Constants.system.wallLight};
+  background-color: ${Constants.system.grayLight6};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 48px 24px 0 24px;
@@ -97,7 +97,7 @@ const STYLES_H1 = css`
   font-size: ${Constants.typescale.lvl4};
   letter-spacing: -0.022rem;
   line-height: 1.3;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   margin-bottom: 16px;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
@@ -112,7 +112,7 @@ const STYLES_P = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   width: 64%;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
@@ -174,7 +174,7 @@ const STYLES_SECTIONCTA_WRAPPER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
   text-decoration: none;
   transition: 200ms ease none;
   font-family: ${Constants.font.medium};
@@ -197,45 +197,45 @@ const STYLES_LIST = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   padding: 0;
 `;
 
 const STYLES_HIGHLIGHT_GREEN = css`
-  color: ${Constants.system.newGreen};
+  color: ${Constants.system.green};
 `;
 
 const STYLES_HIGHLIGHT_YELLOW = css`
-  color: ${Constants.system.newYellow};
+  color: ${Constants.system.yellow};
 `;
 
 const STYLES_HIGHLIGHT_BLUE = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_HIGHLIGHT_RED = css`
-  color: ${Constants.system.newRed};
+  color: ${Constants.system.red};
 `;
 
 const STYLES_HR_GREEN = css`
   border: 0;
-  border-top: 1px solid ${Constants.system.newGreen};
+  border-top: 1px solid ${Constants.system.green};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-left: 0;
     width: 10%;
-    border-top: 2px solid ${Constants.system.newGreen};
+    border-top: 2px solid ${Constants.system.green};
   }
 `;
 
 const STYLES_HR_YELLOW = css`
   border: 0;
-  border-top: 1px solid ${Constants.system.newYellow};
+  border-top: 1px solid ${Constants.system.yellow};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-left: 0;
     width: 10%;
-    border-top: 2px solid ${Constants.system.newYellow};
+    border-top: 2px solid ${Constants.system.yellow};
   }
 `;
 
@@ -277,7 +277,7 @@ const STYLES_SLATE_CARD = css`
   height: 20vh;
   margin: -1px -1px 0 0;
   transition: 200ms ease box-shadow;
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
 
   :hover {
     transition: 200ms ease box-shadow;
@@ -309,7 +309,7 @@ const STYLES_CARDP = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: ${Constants.typescale.lvl0};

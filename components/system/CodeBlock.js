@@ -161,7 +161,7 @@ const STYLES_CODE = css`
 const STYLES_CODE_BLOCK_PLAIN = css`
   box-sizing: border-box;
   font-family: ${Constants.font.code};
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   color: ${Constants.system.black};
   border-color: ${Constants.system.yellow};
   font-size: 12px;
@@ -221,7 +221,7 @@ const STYLES_TOPBAR_PLAIN = css`
 
 const STYLES_TOPBAR_TITLE = css`
   text-transform: uppercase;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvlN1};
   font-family: ${Constants.font.medium};
   user-select: none;
@@ -233,10 +233,10 @@ const STYLES_LANGSWITCHER = css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvlN1};
   margin-right: 12px;
-  border: 1px solid ${Constants.system.gray80};
+  border: 1px solid ${Constants.system.grayDark4};
   border-radius: 4px;
   cursor: pointer;
   user-select: none;
@@ -246,7 +246,7 @@ const STYLES_LANG = css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   border-radius: 3px;
   padding: 4px 8px;
 `;
@@ -256,7 +256,7 @@ const STYLES_LANG_SELECTED = css`
   align-items: center;
   flex-shrink: 0;
   color: ${Constants.system.white};
-  background: ${Constants.system.gray80};
+  background: ${Constants.system.grayDark4};
   border-radius: 3px;
   padding: 4px 8px;
 `;
@@ -264,14 +264,14 @@ const STYLES_LANG_SELECTED = css`
 const STYLES_COPY_BUTTON = css`
   display: flex;
   align-items: center;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
   position: relative;
 
   :hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
     color: ${Constants.system.white};
   }
 `;
@@ -288,7 +288,7 @@ const STYLES_TOOLTIP = css`
   left: 0;
   z-index: ${Constants.zindex.tooltip};
   padding: 12px;
-  background-color: ${Constants.system.bgBlurGrayBlack};
+  background-color: ${Constants.semantic.bgBlurDark6};
   border-radius: 4px;
   color: ${Constants.system.white};
   font-size: ${Constants.typescale.lvlN1};

@@ -21,7 +21,7 @@ const STYLES_GROUPING = css`
 `;
 
 const STYLES_TEXT = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
 `;
 
@@ -82,7 +82,7 @@ export default class SidebarCreateSlate extends React.Component {
         <div css={STYLES_GROUPING} style={{ marginTop: 24 }}>
           <System.P
             css={STYLES_TEXT}
-            style={{ color: Constants.system.brand, cursor: "pointer" }}
+            style={{ color: Constants.system.blue, cursor: "pointer" }}
             onClick={() => this.props.onAction({ type: "SIDEBAR", value: "SIDEBAR_FAQ" })}
           >
             Check out our FAQ here!

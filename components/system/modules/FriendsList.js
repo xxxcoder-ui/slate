@@ -33,7 +33,7 @@ const STYLES_HEADER = css`
 
 const STYLES_ACCEPT_BUTTON = css`
   ${STYLES_BUTTON}
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_REJECT_BUTTON = css`

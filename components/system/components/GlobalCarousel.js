@@ -67,7 +67,7 @@ const STYLES_BOX = css`
   align-items: center;
   justify-content: center;
   z-index: ${Constants.zindex.modal};
-  background: ${Constants.system.pitchBlack};
+  background: ${Constants.system.black};
   color: ${Constants.system.white};
   cursor: pointer;
   margin: auto;
@@ -78,7 +78,7 @@ const STYLES_BOX = css`
 `;
 
 const STYLES_EXPANDER = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   position: absolute;
   padding: 4px;
   top: 16px;
@@ -94,7 +94,7 @@ const STYLES_DISMISS_BOX = css`
   position: absolute;
   top: 16px;
   right: 16px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   cursor: pointer;
 
   :hover {

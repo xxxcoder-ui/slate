@@ -27,7 +27,7 @@ const NOTIF_COLOR_MAP = {
   SUCCESS: Constants.system.green,
   ERROR: Constants.system.red,
   WARNING: Constants.system.yellow,
-  INFO: Constants.system.brand,
+  INFO: Constants.system.blue,
   GENERIC: Constants.system.black,
 };
 
@@ -89,9 +89,7 @@ export class GlobalNotification extends React.Component {
                   ? {
                       backgroundColor: Constants.system.black,
                       color: Constants.system.white,
-                      boxShadow: `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${
-                        NOTIF_COLOR_MAP["GENERIC"]
-                      }`,
+                      boxShadow: `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${NOTIF_COLOR_MAP["GENERIC"]}`,
                     }
                   : {
                       boxShadow: `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${

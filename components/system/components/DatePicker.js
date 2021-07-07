@@ -45,7 +45,7 @@ const STYLES_CALENDAR = css`
   min-width: 320px;
   width: 100%;
   background-color: ${Constants.system.white};
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
   border-radius: 4px;
   padding: 5px;
   animation: ${expand} 200ms ease-out 1;
@@ -72,7 +72,7 @@ const STYLES_WEEKDAYS = css`
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
   width: 100%;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin: 10px 0;
   font-size: 0.9em;
   border-bottom: 1px solid ${Constants.system.gray};
@@ -85,7 +85,7 @@ const STYLES_DAY = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand} !important;
+    color: ${Constants.system.blue} !important;
   }
 `;
 
@@ -96,7 +96,7 @@ const STYLES_CHOSEN_DAY = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand} !important;
+    color: ${Constants.system.blue} !important;
   }
 
   :after {
@@ -107,7 +107,7 @@ const STYLES_CHOSEN_DAY = css`
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 1px solid ${Constants.system.brand};
+    border: 1px solid ${Constants.system.blue};
   }
 `;
 
@@ -126,7 +126,7 @@ const STYLES_DATES = css`
   align-items: center;
   text-align: center;
   width: 100%;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin: 5px 0;
 `;
 
@@ -136,7 +136,7 @@ const STYLES_ICON = css`
   margin: 0 10px;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -280,7 +280,7 @@ export class DatePicker extends React.Component {
           style={{
             color: day.isSame(this.state.cal, "month")
               ? Constants.system.black
-              : Constants.system.darkGray,
+              : Constants.system.grayLight2,
           }}
           css={
             this.isDisabled(day)

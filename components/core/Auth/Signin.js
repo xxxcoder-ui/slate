@@ -15,7 +15,7 @@ import { css } from "@emotion/react";
 import { SignUpPopover, Verification } from "~/components/core/Auth/components";
 
 const STYLES_BACK_BUTTON = css`
-  color: ${Constants.system.textGrayDark};
+  color: ${Constants.semantic.textGrayDark};
   background: none;
   border-style: none;
   cursor: pointer;
@@ -53,7 +53,7 @@ const STYLES_MESSAGE = (theme) => css`
   border: 1px solid ${theme.system.white};
   background-color: white;
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-    background-color: ${theme.system.bgBlurWhiteTRN};
+    background-color: ${theme.semantic.bgBlurWhiteTRN};
     backdrop-filter: blur(75px);
   }
   padding: 8px 12px;
@@ -74,7 +74,7 @@ const STYLES_MESSAGE_BUTTON = (theme) => css`
   padding: 0;
   margin: 0;
   svg {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
     height: 16px;
     width: 16px;
   }

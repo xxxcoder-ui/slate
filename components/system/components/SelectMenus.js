@@ -59,13 +59,13 @@ const STYLES_SELECT_MENU_ANCHOR = css`
 const STYLES_SELECT_MENU_LABEL = css`
   ${INPUT_STYLES}
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15),
-    inset 0 0 0 1px ${Constants.system.darkGray};
+    inset 0 0 0 1px ${Constants.system.grayLight2};
   padding: 0 48px 0 24px;
 `;
 
 const STYLES_SELECT_MENU_CATEGORY = css`
   box-sizing: border-box;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin-left: 4px;
 `;
 

@@ -56,11 +56,11 @@ const STYLES_DELETE = css`
   box-sizing: border-box;
   height: 18px;
   cursor: pointer;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   justify-self: end;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -68,11 +68,11 @@ const STYLES_REORDER = css`
   box-sizing: border-box;
   height: 14px;
   margin-top: 1px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   justify-self: start;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -85,7 +85,7 @@ const STYLES_LIST = css`
   max-height: 400px;
   overflow-y: scroll;
   background-color: ${Constants.system.white};
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
   padding: 4px;
   border-radius: 4px;
   animation: ${expand} 500ms ease-out 1;

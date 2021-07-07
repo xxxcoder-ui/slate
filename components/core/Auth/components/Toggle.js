@@ -6,7 +6,7 @@ import { css } from "@emotion/react";
 const STYLES_WRAPPER = (theme) => css`
   width: fit-content;
   display: flex;
-  background-color: ${theme.system.bgGrayLight};
+  background-color: ${theme.semantic.bgGrayLight};
   border-radius: 8px;
 `;
 
@@ -16,7 +16,7 @@ const STYLES_BUTTON = (theme) => css`
   border-radius: 8px;
   font-family: ${theme.font.medium};
   font-size: ${theme.typescale.lvl0};
-  color: ${theme.system.textGray};
+  color: ${theme.semantic.textGray};
   background-color: transparent;
   outline-style: none;
   cursor: pointer;
@@ -25,11 +25,11 @@ const STYLES_BUTTON = (theme) => css`
 
 const STYLES_ACTIVE = (theme) => css`
   background-color: ${theme.system.white};
-  color: ${theme.system.textBlack};
+  color: ${theme.semantic.textBlack};
 `;
 
 const STYLES_BUTTON_ACTIVE = (theme) => css`
-  color: ${theme.system.textBlack};
+  color: ${theme.semantic.textBlack};
 `;
 
 export default function Toggle({ options = [], onChange, toggleValue = "signin", ...props }) {

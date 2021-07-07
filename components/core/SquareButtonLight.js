@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 
 const STYLES_BUTTON = css`
   background-color: ${Constants.system.white};
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   display: inline-flex;
   width: 36px;
   height: 36px;
@@ -21,7 +21,7 @@ const STYLES_BUTTON = css`
 
   :hover {
     color: ${Constants.system.white};
-    background-color: ${Constants.system.brand};
+    background-color: ${Constants.system.blue};
   }
 `;
 

@@ -36,7 +36,7 @@ const STYLES_TABLE_EXPAND_SECTION = css`
     transition: 200ms ease all;
   }
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -54,7 +54,7 @@ const STYLES_TABLE_ROW = css`
   position: relative;
   box-sizing: border-box;
   padding: 0 8px 0 8px;
-  border-bottom: 1px solid ${Constants.system.lightBorder};
+  border-bottom: 1px solid ${Constants.semantic.borderLight};
   display: flex;
   align-items: flex-start;
   width: 100%;
@@ -66,17 +66,17 @@ const STYLES_TABLE_ROW = css`
 `;
 
 const STYLES_TABLE_SELECTED_ROW = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   box-sizing: border-box;
   display: block;
-  border-bottom: 1px solid ${Constants.system.lightBorder};
+  border-bottom: 1px solid ${Constants.semantic.borderLight};
 `;
 
 const STYLES_TABLE_TOP_ROW = css`
   box-sizing: border-box;
   font-family: ${Constants.font.semiBold};
   padding: 0 8px 0 8px;
-  border-bottom: 1px solid ${Constants.system.lightBorder};
+  border-bottom: 1px solid ${Constants.semantic.borderLight};
   display: flex;
   width: 100%;
   align-items: flex-start;

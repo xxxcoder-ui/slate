@@ -21,7 +21,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_TEXT = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
 `;
 
@@ -194,7 +194,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           <System.P
             style={{
               marginTop: 12,
-              color: Constants.system.textGrayLight,
+              color: Constants.semantic.textGrayLight,
               fontSize: Constants.typescale.lvl0,
             }}
           >

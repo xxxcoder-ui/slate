@@ -57,21 +57,19 @@ export default class SystemPageColors extends React.Component {
         <CodeBlock>
           {`{Constants.system.white};
 
-{Constants.system.foreground};
+{Constants.semantic.bgLight};
 
 {Constants.system.gray};
 
-{Constants.system.border};
+{Constants.semantic.borderGrayLight};
 
-{Constants.system.darkGray};
+{Constants.system.grayLight2};
 
 {Constants.system.black};
 
-{Constants.system.pitchBlack};
+{Constants.system.black};
 
-{Constants.system.brand};
-
-{Constants.system.link};
+{Constants.system.blue};
 
 {Constants.system.green};
 

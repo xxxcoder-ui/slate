@@ -62,7 +62,7 @@ const STYLES_FILETYPE_TOOLTIP = css`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border-right: 1px solid ${Constants.system.lightBorder};
+  border-right: 1px solid ${Constants.semantic.borderLight};
   padding-right: 4px;
 `;
 
@@ -96,7 +96,7 @@ const STYLES_TOOLTIP_TEXT = css`
 `;
 
 const STYLES_COMMAND_TOOLTIP_ANCHOR = css`
-  border: 1px solid ${Constants.system.bgGray};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   border-radius: 4px;
   display: flex;
@@ -302,8 +302,8 @@ export default class SceneFilesFolder extends React.Component {
                     height="20px"
                     style={{
                       color: this.state.keyboardTooltip
-                        ? Constants.system.grayBlack
-                        : Constants.system.darkGray,
+                        ? Constants.system.grayDark2
+                        : Constants.system.grayLight2,
                     }}
                   />
                 </span>
@@ -323,19 +323,19 @@ export default class SceneFilesFolder extends React.Component {
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>shift + click</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         select a range of items between two selections
                       </p>
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>shift + drag</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         select items by draging over them
                       </p>
                     </div>
                     <div>
                       <p css={STYLES_TOOLTIP_TEXT}>alt + drag</p>
-                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                      <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.grayLight2 }}>
                         deselect items by draging over them
                       </p>
                     </div>
@@ -353,8 +353,8 @@ export default class SceneFilesFolder extends React.Component {
                     height="18px"
                     style={{
                       color: this.state.filtersActive
-                        ? Constants.system.brand
-                        : Constants.system.textGray,
+                        ? Constants.system.blue
+                        : Constants.semantic.textGray,
                     }}
                   />
                 </ButtonTertiary>
@@ -423,7 +423,7 @@ export default class SceneFilesFolder extends React.Component {
                       <div css={STYLES_PRIVACY_TOOLTIP}>
                         <div
                           style={{
-                            color: this.state.privacy === "ALL" ? Constants.system.brand : null,
+                            color: this.state.privacy === "ALL" ? Constants.system.blue : null,
                             cursor: "pointer",
                             marginTop: 1,
                           }}
@@ -434,7 +434,7 @@ export default class SceneFilesFolder extends React.Component {
                         <div
                           style={{
                             color:
-                              this.state.privacy === "PRIVATE" ? Constants.system.brand : "inherit",
+                              this.state.privacy === "PRIVATE" ? Constants.system.blue : "inherit",
                             cursor: "pointer",
                             marginTop: 17,
                           }}
@@ -445,7 +445,7 @@ export default class SceneFilesFolder extends React.Component {
                         <div
                           style={{
                             color:
-                              this.state.privacy === "PUBLIC" ? Constants.system.brand : "inherit",
+                              this.state.privacy === "PUBLIC" ? Constants.system.blue : "inherit",
                             cursor: "pointer",
                             marginTop: 18,
                           }}

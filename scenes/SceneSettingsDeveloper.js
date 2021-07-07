@@ -190,14 +190,14 @@ export default class SceneSettingsDeveloper extends React.Component {
           <div>
             <span
               css={STYLES_LINK}
-              style={{ color: this.state.docs === "GET" ? Constants.system.brand : null }}
+              style={{ color: this.state.docs === "GET" ? Constants.system.blue : null }}
               onClick={() => this._changeDocs("GET")}
             >
               Get all slates
             </span>
             <span
               css={STYLES_LINK}
-              style={{ color: this.state.docs === "GET_SLATE" ? Constants.system.brand : null }}
+              style={{ color: this.state.docs === "GET_SLATE" ? Constants.system.blue : null }}
               onClick={() => this._changeDocs("GET_SLATE")}
             >
               Get slate by ID
@@ -205,7 +205,7 @@ export default class SceneSettingsDeveloper extends React.Component {
             <span
               css={STYLES_LINK}
               style={{
-                color: this.state.docs === "UPLOAD_TO_SLATE" ? Constants.system.brand : null,
+                color: this.state.docs === "UPLOAD_TO_SLATE" ? Constants.system.blue : null,
               }}
               onClick={() => this._changeDocs("UPLOAD_TO_SLATE")}
             >
@@ -213,7 +213,7 @@ export default class SceneSettingsDeveloper extends React.Component {
             </span>
             <span
               css={STYLES_LINK}
-              style={{ color: this.state.docs === "UPDATE_SLATE" ? Constants.system.brand : null }}
+              style={{ color: this.state.docs === "UPDATE_SLATE" ? Constants.system.blue : null }}
               onClick={() => this._changeDocs("UPDATE_SLATE")}
             >
               Update slate
@@ -275,7 +275,7 @@ export default class SceneSettingsDeveloper extends React.Component {
         <div css={STYLES_LANGUAGE_CONTAINER}>
           <div
             css={STYLES_LANGUAGE_TILE}
-            style={{ color: this.state.language === "javascript" ? Constants.system.brand : null }}
+            style={{ color: this.state.language === "javascript" ? Constants.system.blue : null }}
             onClick={() => this._handleChangeLanguage("javascript")}
           >
             <span style={{ marginBottom: 32 }}>JS ICON</span>
@@ -283,7 +283,7 @@ export default class SceneSettingsDeveloper extends React.Component {
           </div>
           <div
             css={STYLES_LANGUAGE_TILE}
-            style={{ color: this.state.language === "python" ? Constants.system.brand : null }}
+            style={{ color: this.state.language === "python" ? Constants.system.blue : null }}
             onClick={() => this._handleChangeLanguage("python")}
           >
             <span style={{ marginBottom: 32 }}>PY ICON</span>

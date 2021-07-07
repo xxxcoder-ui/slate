@@ -23,7 +23,7 @@ const STYLES_DESCRIPTION_GROUP_DESCRIPTION = css`
   box-sizing: border-box;
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   margin-bottom: 16px;
   line-height: 1.5;
   display: block;
@@ -34,16 +34,16 @@ const STYLES_DESCRIPTION_GROUP_DESCRIPTION = css`
   a {
     font-family: ${Constants.font.text};
     font-weight: 400;
-    color: ${Constants.system.moonstone};
+    color: ${Constants.system.grayLight2};
     cursor: pointer;
     transition: 200ms ease color;
 
     :visited {
-      color: ${Constants.system.moonstone};
+      color: ${Constants.system.grayLight2};
     }
 
     :hover {
-      color: ${Constants.system.slate};
+      color: ${Constants.system.grayDark6};
     }
   }
 `;

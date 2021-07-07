@@ -17,7 +17,7 @@ const GET_STYLES_CONTAINER = (theme) => css`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: ${theme.fontPreviewDarkMode ? theme.system.pitchBlack : theme.system.white};
+  background-color: ${theme.fontPreviewDarkMode ? theme.system.black : theme.system.white};
   padding-top: 14px;
 `;
 

@@ -26,7 +26,7 @@ import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -43,12 +43,12 @@ const STYLES_ICON_BOX = css`
 const STYLES_CANCEL_BOX = css`
   height: 16px;
   width: 16px;
-  background-color: ${Constants.system.brand};
+  background-color: ${Constants.system.blue};
   border-radius: 3px;
   position: relative;
   right: 3px;
   cursor: pointer;
-  box-shadow: 0 0 0 1px ${Constants.system.brand};
+  box-shadow: 0 0 0 1px ${Constants.system.blue};
 `;
 
 const STYLES_HEADER_LINE = css`
@@ -87,7 +87,7 @@ const STYLES_ICON_BOX_HOVER = css`
   padding: 8px;
   cursor: pointer;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -112,7 +112,7 @@ const STYLES_ACTION_BAR = css`
   border-radius: 4px;
   padding: 0px 32px;
   box-sizing: border-box;
-  background-color: ${Constants.system.textGrayDark};
+  background-color: ${Constants.semantic.textGrayDark};
   width: 90vw;
   max-width: 878px;
   height: 48px;
@@ -184,8 +184,8 @@ const STYLES_IMAGE_BOX = css`
     margin: 12px auto;
   }
   :hover {
-    box-shadow: 0px 0px 0px 1px ${Constants.system.lightBorder} inset,
-      0 0 40px 0 ${Constants.system.shadow};
+    box-shadow: 0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
+      0 0 40px 0 ${Constants.shadow.lightSmall};
   }
 `;
 
@@ -211,8 +211,8 @@ const STYLES_LIST = css`
 const STYLES_TAG = css`
   list-style-type: none;
   border-radius: 4px;
-  background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
+  background: ${Constants.semantic.bgLight};
+  color: ${Constants.system.black};
   font-family: ${Constants.font.text};
   padding: 2px 8px;
   margin: 8px 8px 0 0;
@@ -221,7 +221,7 @@ const STYLES_TAG = css`
     font-size: 14px;
   }
   &:hover {
-    background: ${Constants.system.gray30};
+    background: ${Constants.system.grayLight4};
   }
 `;
 
@@ -699,7 +699,7 @@ export default class DataView extends React.Component {
                     this.lastSelectedItemIndex = null;
                   }}
                 >
-                  <SVG.Dismiss height="20px" style={{ color: Constants.system.darkGray }} />
+                  <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
                 </div>
               </div>
             </div>
@@ -734,8 +734,8 @@ export default class DataView extends React.Component {
                         width: this.state.imageSize,
                         height: this.state.imageSize,
                         boxShadow: numChecked
-                          ? `0px 0px 0px 1px ${Constants.system.lightBorder} inset,
-      0 0 40px 0 ${Constants.system.shadow}`
+                          ? `0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
+      0 0 40px 0 ${Constants.shadow.lightSmall}`
                           : "",
                       }}
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
@@ -753,7 +753,7 @@ export default class DataView extends React.Component {
                                   height: 24,
                                   width: 24,
                                   backgroundColor: this.state.checked[i]
-                                    ? Constants.system.brand
+                                    ? Constants.system.blue
                                     : "rgba(255, 255, 255, 0.75)",
                                 }}
                                 style={{

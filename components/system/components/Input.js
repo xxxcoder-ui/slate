@@ -28,7 +28,7 @@ const INPUT_STYLES = css`
 const STYLES_UNIT = css`
   font-family: ${Constants.font.text};
   font-size: 14px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -60,7 +60,7 @@ const STYLES_INPUT = css`
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight4} inset;
   color: ${Constants.system.black};
 
   :focus {
@@ -69,18 +69,18 @@ const STYLES_INPUT = css`
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 `;
 
@@ -93,10 +93,10 @@ const STYLES_ICON = css`
   top: 50%;
   transform: translateY(-50%);
   transition: 200ms ease all;
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

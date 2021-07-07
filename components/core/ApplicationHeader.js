@@ -27,7 +27,7 @@ const STYLES_NAV_LINKS = css`
 `;
 
 const STYLES_NAV_LINK = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   text-decoration: none;
   transition: 200ms ease color;
   display: block;
@@ -36,7 +36,7 @@ const STYLES_NAV_LINK = css`
   font-size: ${Constants.typescale.lvl1};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -100,7 +100,7 @@ const STYLES_BACKGROUND = css`
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: ${Constants.system.bgBlurGrayBlack};
+  background-color: ${Constants.semantic.bgBlurDark6};
   pointer-events: auto;
 
   @keyframes fade-in {
@@ -178,9 +178,9 @@ export default class ApplicationHeader extends React.Component {
         >
           <SVG.Search
             height="16px"
-            style={{ color: Constants.system.textGrayDark, marginRight: 8 }}
+            style={{ color: Constants.semantic.textGrayDark, marginRight: 8 }}
           />
-          <span css={Styles.BODY_02} style={{ color: Constants.system.textGray }}>
+          <span css={Styles.BODY_02} style={{ color: Constants.semantic.textGray }}>
             Search Slate...
           </span>
         </div>

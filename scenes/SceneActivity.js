@@ -28,11 +28,11 @@ const STYLES_LOADER = css`
 const STYLES_IMAGE_BOX = css`
   cursor: pointer;
   position: relative;
-  box-shadow: ${Constants.shadow.light};
+  box-shadow: ${Constants.shadow.lightSmall};
   margin: 10px;
 
   :hover {
-    box-shadow: ${Constants.shadow.medium};
+    box-shadow: ${Constants.shadow.lightMedium};
   }
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -177,7 +177,7 @@ const ActivityRectangle = ({ item, width, height }) => {
         <div
           css={STYLES_SECONDARY}
           style={{
-            color: Constants.system.textGrayLight,
+            color: Constants.semantic.textGrayLight,
             width,
           }}
         >

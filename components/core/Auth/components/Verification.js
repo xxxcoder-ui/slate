@@ -14,7 +14,7 @@ const STYLES_HELPER = (theme) => css`
   text-align: center;
   margin-top: 8px;
   font-size: ${theme.typescale.lvl0};
-  color: ${theme.system.textGrayDark};
+  color: ${theme.semantic.textGrayDark};
 `;
 
 const STYLES_RESEND_BUTTON = (theme) => css`

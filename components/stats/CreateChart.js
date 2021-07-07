@@ -19,11 +19,11 @@ const STYLES_X_LINE = css`
 
 const STYLES_CHART_CIRCLE = css`
   stroke: none;
-  fill: ${Constants.system.brand};
+  fill: ${Constants.system.blue};
 `;
 
 const STYLES_CHART_LINE = css`
-  stroke: ${Constants.system.brand};
+  stroke: ${Constants.system.blue};
   fill: none;
 `;
 

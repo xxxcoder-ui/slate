@@ -13,7 +13,7 @@ import { Input } from "~/components/system/components/Input.js";
 import { Boundary } from "~/components/system/components/fragments/Boundary.js";
 
 const STYLES_TRANSPARENT_BG = css`
-  background-color: ${Constants.system.bgBlurGrayBlack};
+  background-color: ${Constants.semantic.bgBlurDark6};
   z-index: ${Constants.zindex.modal};
   width: 100vw;
   height: 100vh;
@@ -44,7 +44,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_SUB_HEADER = css`
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvl0};
   font-family: ${Constants.font.text};
   margin-top: 16px;

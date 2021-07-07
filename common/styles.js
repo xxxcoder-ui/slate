@@ -118,7 +118,7 @@ export const ICON_CONTAINER = css`
   color: ${Constants.system.black};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -126,7 +126,7 @@ export const HOVERABLE = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

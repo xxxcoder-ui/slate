@@ -12,7 +12,7 @@ const STYLES_CONTAINER = css`
   border-radius: 4px;
   background-color: ${Constants.system.white};
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid ${Constants.system.border};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   max-width: 320px;
   width: 100%;
 `;

@@ -26,7 +26,7 @@ const STYLES_ROOT = css`
   grid-template-rows: auto 1fr auto;
   font-size: 1rem;
   min-height: 100vh;
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
 `;
 
 export default class ProfilePage extends React.Component {

@@ -17,7 +17,7 @@ const STYLES_CHECKBOX = css`
 
 const STYLES_CHECKBOX_FIGURE = css`
   box-sizing: border-box;
-  box-shadow: 0 0 0 1px ${Constants.system.darkGray};
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight2};
   background-color: ${Constants.system.white};
   border-radius: 4px;
   display: inline-flex;
@@ -66,16 +66,16 @@ const STYLES_CHECKBOX_LABEL = css`
   a {
     font-family: ${Constants.font.text};
     font-weight: 400;
-    color: ${Constants.system.moonstone};
+    color: ${Constants.system.grayLight2};
     cursor: pointer;
     transition: 200ms ease color;
 
     :visited {
-      color: ${Constants.system.moonstone};
+      color: ${Constants.system.grayLight2};
     }
 
     :hover {
-      color: ${Constants.system.slate};
+      color: ${Constants.system.grayDark6};
     }
   }
 `;
@@ -95,8 +95,8 @@ export class CheckBox extends React.Component {
           style={
             this.props.value
               ? {
-                  backgroundColor: Constants.system.brand,
-                  boxShadow: `0 0 0 1px ${Constants.system.brand}`,
+                  backgroundColor: Constants.system.blue,
+                  boxShadow: `0 0 0 1px ${Constants.system.blue}`,
                   ...this.props.boxStyle,
                 }
               : {

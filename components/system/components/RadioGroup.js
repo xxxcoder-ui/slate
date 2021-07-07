@@ -16,7 +16,7 @@ const STYLES_RADIO = css`
   margin-bottom: 8px;
   cursor: pointer;
   padding: 8px 10px;
-  border: 1px solid ${Constants.system.gray30};
+  border: 1px solid ${Constants.system.grayLight4};
   border-radius: 4px;
 
   :last-child {
@@ -38,7 +38,7 @@ const STYLES_RADIO_INPUT = css`
 
 const STYLES_RADIO_CUSTOM = css`
   box-sizing: border-box;
-  background-color: ${Constants.system.bgGray};
+  background-color: ${Constants.semantic.bgLight};
   cursor: pointer;
   height: 24px;
   width: 24px;
@@ -52,7 +52,7 @@ const STYLES_RADIO_CUSTOM = css`
 
 const STYLES_RADIO_CUSTOM_SELECTED = css`
   box-sizing: border-box;
-  background-color: ${Constants.system.bgGrayLight};
+  background-color: ${Constants.semantic.bgGrayLight};
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
   height: 16px;
   width: 16px;
@@ -113,7 +113,7 @@ export class RadioGroup extends React.Component {
                 </span>
                 <span
                   css={STYLES_RADIO_CUSTOM}
-                  style={this.props.dark ? { backgroundColor: Constants.system.grayBlack } : null}
+                  style={this.props.dark ? { backgroundColor: Constants.system.grayDark2 } : null}
                 >
                   <span
                     css={STYLES_RADIO_CUSTOM_SELECTED}

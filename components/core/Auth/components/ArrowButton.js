@@ -14,10 +14,10 @@ const STYLES_BUTTON = (theme) => css`
   &:disabled {
     cursor: not-allowed;
     background-color: ${theme.system.grayLight5};
-    color: ${theme.system.textGray};
+    color: ${theme.semantic.textGray};
   }
   &:disabled:hover {
-    color: ${theme.system.textGray};
+    color: ${theme.semantic.textGray};
   }
 `;
 

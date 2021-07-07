@@ -45,10 +45,10 @@ const STYLES_NO_VISIBLE_SCROLL = css`
     display: none;
   }
   ::-webkit-scrollbar-track {
-    background: ${Constants.system.foreground};
+    background: ${Constants.semantic.bgLight};
   }
   ::-webkit-scrollbar-thumb {
-    background: ${Constants.system.darkGray};
+    background: ${Constants.system.grayLight2};
   }
 `;
 
@@ -63,7 +63,7 @@ const STYLES_BODY = css`
 const STYLES_SIDEBAR_INPUT_LABEL = css`
   font-size: 16px;
   font-family: ${Constants.font.semiBold};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin-bottom: 8px;
 `;
 
@@ -92,7 +92,7 @@ const STYLES_DISMISS_BOX = css`
   position: absolute;
   top: 16px;
   right: 16px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   cursor: pointer;
   :hover {
     color: ${Constants.system.white};
@@ -130,7 +130,7 @@ const STYLES_TAG = css`
   margin-right: 24px;
   padding: 0px 2px;
   border-radius: 2px;
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
 `;
 
 const STYLES_OPTIONS_SECTION = css`
@@ -142,7 +142,7 @@ const STYLES_OPTIONS_SECTION = css`
 `;
 
 const STYLES_META_DETAILS = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   text-transform: uppercase;
   margin: 24px 0px;
   font-family: ${Constants.font.medium};
@@ -171,7 +171,7 @@ const STYLES_ACTION = css`
   display: flex;
   align-items: center;
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
   :last-child {
     border: none;
@@ -200,7 +200,7 @@ const STYLES_IMAGE_BOX = css`
   justify-content: center;
   background-color: ${Constants.system.black};
   overflow: hidden;
-  ${"" /* box-shadow: 0 0 0 1px ${Constants.system.border} inset; */}
+  ${"" /* box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset; */}
   border-radius: 4px;
 `;
 
@@ -215,7 +215,7 @@ const STYLES_FILE_HIDDEN = css`
 `;
 
 const STYLES_TEXT = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   line-height: 1.5;
 `;
 
@@ -658,7 +658,7 @@ class CarouselSidebar extends React.Component {
             <div css={STYLES_SIDEBAR_INPUT_LABEL} style={{ position: "relative" }}>
               Source:
             </div>
-            <p css={STYLES_BODY} style={{ color: Constants.system.darkGray }}>
+            <p css={STYLES_BODY} style={{ color: Constants.system.grayLight2 }}>
               <ProcessedText dark text={file.data.source} />
             </p>
           </div>
@@ -671,7 +671,7 @@ class CarouselSidebar extends React.Component {
             <div css={STYLES_SIDEBAR_INPUT_LABEL} style={{ position: "relative" }}>
               Author:
             </div>
-            <p css={STYLES_BODY} style={{ color: Constants.system.darkGray }}>
+            <p css={STYLES_BODY} style={{ color: Constants.system.grayLight2 }}>
               <ProcessedText dark text={file.data.author} />
             </p>
           </div>
@@ -937,7 +937,7 @@ export default withTheme(CarouselSidebar);
                 <div css={STYLES_TEXT}>{isVisible ? "Everyone" : "Link only"}</div>
                 <Toggle dark active={isVisible} onChange={this._handleToggleVisibility} />
               </div>
-              <div style={{ color: Constants.system.darkGray, marginTop: 8 }}>
+              <div style={{ color: Constants.system.grayLight2, marginTop: 8 }}>
                 {isVisible
                   ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
                   : "This file is currently not visible to others unless they have the link."}

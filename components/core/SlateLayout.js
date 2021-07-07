@@ -108,7 +108,7 @@ const STYLES_CONTAINER = css`
 const STYLES_CONTAINER_EDITING = css`
   ${STYLES_CONTAINER}
   background-image: radial-gradient(
-    ${Constants.system.darkGray} 10%,
+    ${Constants.system.grayLight2} 10%,
     transparent 0
   );
   background-size: 30px 30px;
@@ -177,7 +177,7 @@ const STYLES_ITEM_EDITING = css`
 
 const STYLES_FILE_TAG = css`
   font-family: ${Constants.font.text};
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
   display: flex;
   align-items: center;
   width: 100%;
@@ -196,7 +196,7 @@ const STYLES_FILE_NAME = css`
 `;
 
 const STYLES_FILE_TYPE = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   text-transform: uppercase;
   flex-shrink: 0;
   margin-left: 16px;
@@ -222,7 +222,7 @@ const STYLES_ACTION_BAR = css`
   border-radius: 4px;
   padding: 0px 32px;
   box-sizing: border-box;
-  background-color: ${Constants.system.textGrayDark};
+  background-color: ${Constants.semantic.textGrayDark};
   width: 90vw;
   max-width: 878px;
   height: 48px;
@@ -1193,8 +1193,8 @@ export class SlateLayout extends React.Component {
                         height="20px"
                         style={{
                           color: this.state.keyboardTooltip
-                            ? Constants.system.grayBlack
-                            : Constants.system.darkGray,
+                            ? Constants.system.grayDark2
+                            : Constants.system.grayLight2,
                         }}
                         onMouseEnter={() => this.setState({ keyboardTooltip: true })}
                       />
@@ -1216,19 +1216,28 @@ export class SlateLayout extends React.Component {
                         </div>
                         <div>
                           <p css={STYLES_TOOLTIP_TEXT}>shift + drag</p>
-                          <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                          <p
+                            css={STYLES_TOOLTIP_TEXT}
+                            style={{ color: Constants.system.grayLight2 }}
+                          >
                             keep x value or y value while moving file
                           </p>
                         </div>
                         <div>
                           <p css={STYLES_TOOLTIP_TEXT}>shift + resize</p>
-                          <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                          <p
+                            css={STYLES_TOOLTIP_TEXT}
+                            style={{ color: Constants.system.grayLight2 }}
+                          >
                             keep aspect ratio while resizing
                           </p>
                         </div>
                         <div>
                           <p css={STYLES_TOOLTIP_TEXT}>ctrl + drag</p>
-                          <p css={STYLES_TOOLTIP_TEXT} style={{ color: Constants.system.darkGray }}>
+                          <p
+                            css={STYLES_TOOLTIP_TEXT}
+                            style={{ color: Constants.system.grayLight2 }}
+                          >
                             move without snapping to the dot grid
                           </p>
                         </div>
@@ -1236,7 +1245,7 @@ export class SlateLayout extends React.Component {
                           <p css={STYLES_TOOLTIP_TEXT}>ctrl + resize</p>
                           <p
                             css={STYLES_TOOLTIP_TEXT}
-                            style={{ color: Constants.system.darkGray, paddingBottom: "12px" }}
+                            style={{ color: Constants.system.grayLight2, paddingBottom: "12px" }}
                           >
                             resize without snapping to the dot grid
                           </p>
@@ -1370,7 +1379,7 @@ export class SlateLayout extends React.Component {
                                 height: 24,
                                 width: 24,
                                 backgroundColor: this.state.checked[i]
-                                  ? Constants.system.brand
+                                  ? Constants.system.blue
                                   : "rgba(255, 255, 255, 0.75)",
                                 boxShadow: this.state.checked[i]
                                   ? "none"
@@ -1800,7 +1809,7 @@ export class SlateLayout extends React.Component {
                       {Strings.pluralize("Delete file", numChecked)}
                     </ButtonWarning>
                     <div css={STYLES_ICON_BOX} onClick={() => this.setState({ checked: {} })}>
-                      <SVG.Dismiss height="20px" style={{ color: Constants.system.darkGray }} />
+                      <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
                     </div>
                   </div>
                 ) : (
@@ -1820,7 +1829,7 @@ export class SlateLayout extends React.Component {
                       Save
                     </ButtonPrimary>
                     <div css={STYLES_ICON_BOX} onClick={() => this.setState({ checked: {} })}>
-                      <SVG.Dismiss height="20px" style={{ color: Constants.system.darkGray }} />
+                      <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
                     </div>
                   </div>
                 )}

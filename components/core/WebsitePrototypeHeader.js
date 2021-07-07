@@ -30,7 +30,7 @@ const STYLES_CONTAINER = css`
 `;
 
 const STYLES_LINK = css`
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
   text-decoration: none;
   transition: 200ms ease color;
   display: block;
@@ -39,7 +39,7 @@ const STYLES_LINK = css`
   height: 100%;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

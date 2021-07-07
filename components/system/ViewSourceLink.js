@@ -10,10 +10,10 @@ const STYLES_VIEW_SOURCE_LINK = css`
   display: inline-block;
   transition: 200ms ease all;
   cursor: pointer;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 
   :visited {

@@ -11,7 +11,7 @@ const STYLES_ROOT = css`
   width: 100%;
   margin: -88px auto 0 auto;
   padding: 0 88px 128px 88px;
-  background-color: ${Constants.system.wallLight};
+  background-color: ${Constants.system.grayLight6};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 48px 24px;
@@ -30,7 +30,7 @@ const STYLES_H1 = css`
   font-size: ${Constants.typescale.lvl4};
   letter-spacing: -0.022rem;
   line-height: 1.3;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   margin-bottom: 1rem;
   width: 95%;
 
@@ -45,7 +45,7 @@ const STYLES_H2 = css`
   font-size: ${Constants.typescale.lvl2};
   letter-spacing: -0.017rem;
   line-height: 1.3;
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
   margin-bottom: 1rem;
   width: 95%;
 
@@ -61,7 +61,7 @@ const STYLES_P = css`
   letter-spacing: -0.011rem;
   line-height: 1.5;
   margin: 4px 0 0 0;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
   width: 80%;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -108,7 +108,7 @@ const STYLES_BUTTON_PRIMARY = css`
   align-items: center;
   justify-content: center;
   user-select: none;
-  background-color: ${Constants.system.newBlue};
+  background-color: ${Constants.system.blue};
   color: ${Constants.system.white};
   text-decoration: none;
   font-family: ${Constants.font.semiBold};
@@ -127,15 +127,15 @@ const STYLES_BUTTON_SECONDARY = css`
   margin: 32px 0 16px 0;
   min-height: 48px;
   box-sizing: border-box;
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
   border-radius: 4px;
   padding: 0 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   user-select: none;
-  background-color: ${Constants.system.wallLight};
-  color: ${Constants.system.newBlue};
+  background-color: ${Constants.system.grayLight6};
+  color: ${Constants.system.blue};
   text-decoration: none;
   font-family: ${Constants.font.semiBold};
   font-weight: 400;
@@ -150,7 +150,7 @@ const STYLES_BUTTON_SECONDARY = css`
 `;
 
 const STYLES_BLUE = css`
-  color: ${Constants.system.newBlue};
+  color: ${Constants.system.blue};
 `;
 
 const STYLES_HALFBLOCK = css`
@@ -181,7 +181,7 @@ const STYLES_IMG = css`
 const STYLES_VR = css`
   width: 1px;
   height: 48px;
-  background-color: ${Constants.system.darkGray};
+  background-color: ${Constants.system.grayLight2};
   margin: 0 auto;
 `;
 

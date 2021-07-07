@@ -26,7 +26,7 @@ export default function Select({
           (theme) => css`
             display: flex;
             padding: 4px 0px;
-            color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.textGrayDark};
+            color: ${theme.fontPreviewDarkMode ? theme.system.white : theme.semantic.textGrayDark};
             align-items: center;
             & > * + * {
               margin-left: 8px;

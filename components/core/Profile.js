@@ -66,7 +66,7 @@ const STYLES_INFO = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   width: 120px;
@@ -88,8 +88,8 @@ const STYLES_STATUS_INDICATOR = css`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid ${Constants.system.active};
-  background-color: ${Constants.system.active};
+  border: 2px solid ${Constants.system.green};
+  background-color: ${Constants.system.green};
 `;
 
 const STYLES_NAME = css`
@@ -108,7 +108,7 @@ const STYLES_NAME = css`
 
 const STYLES_DESCRIPTION = css`
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   max-width: 100%;
   overflow-wrap: break-word;
   white-space: pre-wrap;
@@ -128,7 +128,7 @@ const STYLES_STATS = css`
   margin: 16px auto;
   display: flex;
   justify-content: center;
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
 `;
 
 const STYLES_STAT = css`
@@ -163,7 +163,7 @@ const STYLES_ITEM_BOX = css`
   justify-content: center;
   padding: 8px;
   margin-right: 16px;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-right: 8px;
@@ -176,7 +176,7 @@ const STYLES_USER_ENTRY = css`
   align-items: center;
   font-size: ${Constants.typescale.lvl1};
   cursor: pointer;
-  ${"" /* border: 1px solid ${Constants.system.lightBorder}; */}
+  ${"" /* border: 1px solid ${Constants.semantic.borderLight}; */}
   border-radius: 4px;
   margin-bottom: 8px;
   background-color: ${Constants.system.white};
@@ -187,7 +187,7 @@ const STYLES_USER = css`
   grid-template-columns: auto 1fr;
   align-items: center;
   margin: 16px;
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvl1};
 
@@ -197,7 +197,7 @@ const STYLES_USER = css`
 `;
 
 const STYLES_DIRECTORY_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   height: 24px;
@@ -214,8 +214,8 @@ const STYLES_DIRECTORY_STATUS_INDICATOR = css`
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  border: 1.2px solid ${Constants.system.active};
-  background-color: ${Constants.system.active};
+  border: 1.2px solid ${Constants.system.green};
+  background-color: ${Constants.system.green};
 `;
 
 const STYLES_MESSAGE = css`
@@ -639,13 +639,13 @@ export default class Profile extends React.Component {
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
                     {library.length}{" "}
-                    <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
+                    <span style={{ color: `${Constants.system.grayLight2}` }}>Files</span>
                   </div>
                 </div>
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
                     {user.slates?.length || 0}{" "}
-                    <span style={{ color: `${Constants.system.darkGray}` }}>Collections</span>
+                    <span style={{ color: `${Constants.system.grayLight2}` }}>Collections</span>
                   </div>
                 </div>
               </div>

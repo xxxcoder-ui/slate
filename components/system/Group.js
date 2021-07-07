@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 
 const STYLES_GROUP_CONTAINER = css`
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  border: 1px solid ${Constants.system.border};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   border-radius: 4px;
 `;
 

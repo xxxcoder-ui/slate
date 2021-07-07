@@ -36,7 +36,7 @@ const STYLES_ENTITY = css`
   position: relative;
   height: 100%;
   width: 100%;
-  border: 1px solid ${Constants.system.foreground};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   font-size: 24px;
   display: flex;
@@ -55,7 +55,7 @@ const STYLES_TITLE = css`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: 16px;
   font-family: ${Constants.font.medium};
 `;
@@ -126,7 +126,7 @@ export default class SlateMediaObjectPreview extends React.Component {
             css={STYLES_ENTITY}
             style={{
               ...this.props.imageStyle,
-              backgroundColor: Constants.system.foreground,
+              backgroundColor: Constants.semantic.bgLight,
             }}
           >
             <SVG.FileNotFound height="24px" />
@@ -194,7 +194,7 @@ export default class SlateMediaObjectPreview extends React.Component {
       <FileTypeIcon
         type={file.data?.type}
         height={this.props.previewPanel ? "26px" : "20px"}
-        style={{ color: Constants.system.textGray }}
+        style={{ color: Constants.semantic.textGray }}
       />
     );
 
@@ -204,7 +204,7 @@ export default class SlateMediaObjectPreview extends React.Component {
           css={STYLES_ENTITY}
           style={{
             ...this.props.style,
-            border: this.props.previewPanel ? `1px solid ${Constants.system.bgGray}` : "auto",
+            border: this.props.previewPanel ? `1px solid ${Constants.semantic.bgLight}` : "auto",
           }}
         >
           <FontObjectPreview
@@ -228,7 +228,7 @@ export default class SlateMediaObjectPreview extends React.Component {
                   css={STYLES_TITLE}
                   style={{
                     fontSize: 12,
-                    color: Constants.system.textGrayLight,
+                    color: Constants.semantic.textGrayLight,
                     fontFamily: Constants.font.medium,
                   }}
                 >
@@ -246,7 +246,7 @@ export default class SlateMediaObjectPreview extends React.Component {
         css={STYLES_ENTITY}
         style={{
           ...this.props.style,
-          border: this.props.previewPanel ? `1px solid ${Constants.system.bgGray}` : "auto",
+          border: this.props.previewPanel ? `1px solid ${Constants.semantic.bgLight}` : "auto",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -265,7 +265,7 @@ export default class SlateMediaObjectPreview extends React.Component {
                 css={STYLES_TITLE}
                 style={{
                   fontSize: 12,
-                  color: Constants.system.textGrayLight,
+                  color: Constants.semantic.textGrayLight,
                   fontFamily: Constants.font.medium,
                 }}
               >

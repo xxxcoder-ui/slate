@@ -16,7 +16,8 @@ const STYLES_CARD_TAB_GROUP = css`
   width: 100%;
   display: flex;
   align-items: flex-start;
-  box-shadow: 0 -1px 0 0 ${Constants.system.border}, 0 1px 0 0 ${Constants.system.border};
+  box-shadow: 0 -1px 0 0 ${Constants.semantic.borderGrayLight},
+    0 1px 0 0 ${Constants.semantic.borderGrayLight};
 `;
 
 const STYLES_CARD_TAB_GROUP_TAB = css`
@@ -37,7 +38,7 @@ const STYLES_CARD_TAB_GROUP_TAB = css`
   }
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -59,9 +60,9 @@ export class CardTabGroup extends React.Component {
               css={STYLES_CARD_TAB_GROUP_TAB}
               key={tab.value}
               style={{
-                color: selected ? Constants.system.brand : null,
+                color: selected ? Constants.system.blue : null,
                 backgroundColor: selected ? Constants.system.white : null,
-                borderBottom: selected ? `2px solid ${Constants.system.brand}` : null,
+                borderBottom: selected ? `2px solid ${Constants.system.blue}` : null,
                 width: TAB_GROUP_SIZE_MAP[this.props.options.length],
                 cursor: !selected ? "pointer" : null,
               }}

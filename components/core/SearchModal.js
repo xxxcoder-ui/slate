@@ -16,7 +16,7 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
-import { useIntercom } from 'react-use-intercom';
+import { useIntercom } from "react-use-intercom";
 
 const STYLES_MOBILE_HIDDEN = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -42,7 +42,7 @@ const STYLES_ICON_SQUARE = css`
   height: 48px;
   width: 48px;
   border-radius: 4px;
-  border: 1px solid ${Constants.system.foreground};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   color: #bfbfbf;
   display: flex;
@@ -71,7 +71,7 @@ const STYLES_MODAL = css`
 `;
 
 const STYLES_PROFILE_PREVIEW = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   height: 48px;
@@ -100,7 +100,7 @@ const UserEntry = ({ user }) => {
 };
 
 const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   background-size: cover;
   background-position: 50% 50%;
   flex-shrink: 0;
@@ -144,7 +144,7 @@ const STYLES_TEXT_ROWS = css`
 const STYLES_TITLE = css`
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvl1};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -154,7 +154,7 @@ const STYLES_TITLE = css`
 
 const STYLES_SUBTITLE = css`
   font-size: ${Constants.typescale.lvlN1};
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -191,7 +191,7 @@ const STYLES_PREVIEW_IMAGE = css`
 const STYLES_PREVIEW_TEXT = css`
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvlN1};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   margin: 4px 16px;
   word-break: break-word;
 `;
@@ -202,7 +202,7 @@ const STYLES_EMPTY_SLATE_PREVIEW = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${Constants.system.bgGray};
+  border: 1px solid ${Constants.semantic.bgLight};
 `;
 
 const SlatePreview = ({ slate, user }) => {
@@ -280,26 +280,25 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
 const OpenIntercom = ({ user }) => {
   const { show, update } = useIntercom();
 
-  return(
-    <span 
-      style={{ marginRight: 24, cursor: "pointer" }} 
+  return (
+    <span
+      style={{ marginRight: 24, cursor: "pointer" }}
       onClick={() => {
-          update({
-            name: user.data.name,
-            email: user.email,
-            customAttributes: { 
-              slate_userid: user.id, 
-              username: user.username 
-            }
-          });
-          show()
-        }
-      }
+        update({
+          name: user.data.name,
+          email: user.email,
+          customAttributes: {
+            slate_userid: user.id,
+            username: user.username,
+          },
+        });
+        show();
+      }}
     >
       Contact Us
     </span>
   );
-} 
+};
 
 const STYLES_DROPDOWN_CONTAINER = css`
   box-sizing: border-box;
@@ -342,8 +341,8 @@ const STYLES_INPUT = css`
   -webkit-appearance: none;
   width: 100%;
   height: 56px;
-  background: ${Constants.system.bgGrayLight};
-  color: ${Constants.system.textGray};
+  background: ${Constants.semantic.bgGrayLight};
+  color: ${Constants.semantic.textGray};
   display: flex;
   font-size: 14px;
   align-items: center;
@@ -361,16 +360,16 @@ const STYLES_INPUT = css`
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
     opacity: 1; /* Firefox */
   }
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
   }
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.textGrayLight};
+    color: ${Constants.semantic.textGrayLight};
   }
 `;
 
@@ -386,7 +385,7 @@ const STYLES_RETURN = css`
   position: absolute;
   right: 16px;
   top: 20px;
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   font-size: ${Constants.typescale.lvlN1};
   display: flex;
   align-items: center;
@@ -395,8 +394,8 @@ const STYLES_RETURN = css`
 const STYLES_FILTER_BUTTON = css`
   padding: 11px;
   border-radius: 4px;
-  border: 1px solid ${Constants.system.bgGray};
-  color: ${Constants.system.textGray};
+  border: 1px solid ${Constants.semantic.bgLight};
+  color: ${Constants.semantic.textGray};
   margin-right: 8px;
   display: flex;
   align-items: center;
@@ -423,7 +422,7 @@ const STYLES_PREVIEW_PANEL = css`
 `;
 
 const STYLES_BOTTOM_BUTTONS = css`
-  color: ${Constants.system.textGrayLight};
+  color: ${Constants.semantic.textGrayLight};
   font-family: ${Constants.font.medium};
   font-size: ${Constants.typescale.lvlN1};
   letter-spacing: -0.1px;
@@ -434,7 +433,7 @@ const STYLES_BOTTOM_BUTTONS = css`
 
 const STYLES_INLINE_TAG_CONTAINER = css`
   height: 56px;
-  background: ${Constants.system.bgGrayLight};
+  background: ${Constants.semantic.bgGrayLight};
   display: flex;
   align-items: center;
   margin-bottom: 8px;
@@ -444,7 +443,7 @@ const STYLES_INLINE_TAG_CONTAINER = css`
 
 const STYLES_INLINE_TAG = css`
   font-family: ${Constants.font.medium};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -460,7 +459,7 @@ const STYLES_DISMISS_BOX = css`
   top: 16px;
   padding: 2px;
   cursor: pointer;
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   outline: 0;
 `;
 
@@ -990,7 +989,7 @@ export class SearchModal extends React.Component {
           style={{
             marginRight: 0,
             marginLeft: 16,
-            color: this.state.scopeFilter ? Constants.system.brand : Constants.system.textGray,
+            color: this.state.scopeFilter ? Constants.system.blue : Constants.semantic.textGray,
           }}
           onClick={() => this.setState({ filterTooltip: !this.state.filterTooltip })}
         >
@@ -1007,8 +1006,8 @@ export class SearchModal extends React.Component {
               style={{
                 right: 0,
                 top: 44,
-                borderColor: Constants.system.bgGray,
-                color: Constants.system.textGray,
+                borderColor: Constants.semantic.bgLight,
+                color: Constants.semantic.textGray,
                 width: 124,
               }}
               navigation={[
@@ -1017,7 +1016,7 @@ export class SearchModal extends React.Component {
                     text: (
                       <span
                         style={{
-                          color: this.state.scopeFilter ? "inherit" : Constants.system.brand,
+                          color: this.state.scopeFilter ? "inherit" : Constants.system.blue,
                         }}
                       >
                         All
@@ -1030,7 +1029,7 @@ export class SearchModal extends React.Component {
                       <span
                         style={{
                           color:
-                            this.state.scopeFilter === "MY" ? Constants.system.brand : "inherit",
+                            this.state.scopeFilter === "MY" ? Constants.system.blue : "inherit",
                         }}
                       >
                         My stuff
@@ -1044,7 +1043,7 @@ export class SearchModal extends React.Component {
                         style={{
                           color:
                             this.state.scopeFilter === "NETWORK"
-                              ? Constants.system.brand
+                              ? Constants.system.blue
                               : "inherit",
                         }}
                       >
@@ -1148,7 +1147,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "SLATE"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("SLATE")}
@@ -1163,7 +1162,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "USER"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("USER")}
@@ -1178,7 +1177,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "FILE"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("FILE")}
@@ -1261,11 +1260,13 @@ export class SearchModal extends React.Component {
 
                 <span
                   style={{ marginRight: 24, cursor: "pointer" }}
-                  onClick={() => { window.open("https://help.slate.host/", "_blank") }}
+                  onClick={() => {
+                    window.open("https://help.slate.host/", "_blank");
+                  }}
                 >
                   FAQ
                 </span>
-                
+
                 {/* <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
                   I'm Feeling Lucky
                 </span> */}

@@ -29,7 +29,7 @@ const STYLES_DROPDOWN = css`
   overflow: hidden;
 
   li[data-item-active="true"] {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     svg {
@@ -48,7 +48,7 @@ const DROPDOWN_ITEM_STYLES = `
   span {
     font-size: 14px;
     line-height: 1.5;
-    color: ${Constants.system.textGray};
+    color: ${Constants.semantic.textGray};
     font-family: ${Constants.font.text};
     margin: 0 0 0 8px;
   }
@@ -58,7 +58,7 @@ const DROPDOWN_ITEM_STYLES = `
     opacity: 0;
 
     &:hover {
-      color: ${Constants.system.newBlack};
+      color: ${Constants.system.black};
     }
   }
 
@@ -69,14 +69,14 @@ const STYLES_DROPDOWN_ITEM = css`
   ${DROPDOWN_ITEM_STYLES};
 
   background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
+  border: 0.5px solid ${Constants.system.grayLight5};
 
   &:hover {
-    background: ${Constants.system.gray10};
+    background: ${Constants.system.grayLight6};
 
     span,
     div:not(.dismiss) {
-      color: ${Constants.system.newBlack};
+      color: ${Constants.system.black};
     }
 
     div.dismiss {
@@ -93,11 +93,11 @@ const STYLES_DROPDOWN_ITEM = css`
 const STYLES_DROPDOWN_ITEM_DARK = css`
   ${DROPDOWN_ITEM_STYLES};
 
-  background: ${Constants.system.bgBlurGray};
-  border: 0.5px solid ${Constants.system.bgBlurGray};
+  background: ${Constants.semantic.bgBlurLight6};
+  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     div:not(.dismiss) {
@@ -128,7 +128,7 @@ const STYLES_DROPDOWN_ITEM_DARK = css`
 
 const STYLES_DROPDOWN_ITEM_ICON = css`
   line-height: 0;
-  color: ${Constants.system.gray70};
+  color: ${Constants.system.grayDark3};
   display: flex;
   align-items: center;
 
@@ -160,21 +160,21 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
   background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.gray20};
+  border: 0.5px solid ${Constants.system.grayLight5};
 
   span {
-    color: ${Constants.system.newBlack};
+    color: ${Constants.system.black};
   }
 
   span.value {
-    background: ${Constants.system.bgGray};
+    background: ${Constants.semantic.bgLight};
   }
 
   &:hover {
-    background: ${Constants.system.gray10};
+    background: ${Constants.system.grayLight6};
 
     span.value {
-      background: ${Constants.system.gray30};
+      background: ${Constants.system.grayLight4};
     }
   }
 `;
@@ -182,21 +182,21 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
 const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
-  background: ${Constants.system.bgBlurGray};
-  border: 0.5px solid ${Constants.system.bgBlurGray};
+  background: ${Constants.semantic.bgBlurLight6};
+  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
 
   span,
   svg {
-    color: ${Constants.system.textGray};
+    color: ${Constants.semantic.textGray};
   }
 
   span.value {
-    background: ${Constants.system.gray70};
+    background: ${Constants.system.grayDark3};
     color: ${Constants.system.white};
   }
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
 
     span,
     svg {
@@ -227,24 +227,24 @@ const STYLES_INPUT = css`
   width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight4} inset;
   background: ${Constants.system.white};
   color: ${Constants.system.black};
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 `;
 
@@ -252,7 +252,7 @@ const STYLES_INPUT_DARK = css`
   ${STYLES_INPUT};
 
   box-shadow: 0 0 0 1px #3c3c3c inset;
-  background: ${Constants.system.blurBlack};
+  background: ${Constants.semantic.bgBlurBlack};
   color: ${Constants.system.white};
 `;
 
@@ -280,28 +280,28 @@ const TAG_STYLES = `
 const STYLES_TAG = css`
   ${TAG_STYLES};
 
-  background: ${Constants.system.bgGray};
-  color: ${Constants.system.newBlack};
+  background: ${Constants.semantic.bgLight};
+  color: ${Constants.system.black};
 
   &:hover {
-    background: ${Constants.system.gray30};
+    background: ${Constants.system.grayLight4};
   }
 `;
 
 const STYLES_TAG_DARK = css`
   ${TAG_STYLES};
 
-  background: ${Constants.system.gray80};
-  color: ${Constants.system.textGray};
+  background: ${Constants.system.grayDark4};
+  color: ${Constants.semantic.textGray};
 
   &:hover {
-    background: ${Constants.system.gray80};
+    background: ${Constants.system.grayDark4};
   }
 `;
 
 const STYLES_SHOW_MORE = css`
   font-family: ${Constants.font.text};
-  color: ${Constants.system.textGray};
+  color: ${Constants.semantic.textGray};
   font-size: 14px;
   display: flex;
   align-items: center;

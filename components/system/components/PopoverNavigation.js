@@ -13,14 +13,14 @@ const STYLES_POPOVER = css`
   user-select: none;
   position: absolute;
   background-color: ${Constants.system.white};
-  color: ${Constants.system.pitchBlack};
-  box-shadow: ${Constants.shadow.medium};
+  color: ${Constants.system.black};
+  box-shadow: ${Constants.shadow.lightMedium};
   padding: 16px;
-  border: 1px solid ${Constants.system.gray40};
+  border: 1px solid ${Constants.system.grayLight3};
 `;
 
 const STYLES_POPOVER_SECTION = css`
-  border-bottom: 1px solid ${Constants.system.gray40};
+  border-bottom: 1px solid ${Constants.system.grayLight3};
   padding-bottom: 6px;
   margin-bottom: 6px;
 
@@ -40,7 +40,7 @@ const STYLES_POPOVER_ITEM = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

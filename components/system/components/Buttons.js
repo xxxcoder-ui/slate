@@ -42,7 +42,7 @@ const STYLES_BUTTON_PRIMARY = css`
 const STYLES_BUTTON_PRIMARY_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
-  background-color: ${Constants.system.bgBlue};
+  background-color: ${Constants.semantic.bgBlue};
   color: ${Constants.system.white};
 `;
 
@@ -50,7 +50,7 @@ const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.brand};
+  color: ${Constants.system.blue};
 `;
 
 export const ButtonPrimary = (props) => {
@@ -107,11 +107,11 @@ const STYLES_BUTTON_SECONDARY = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   color: ${Constants.system.black};
-  background-color: ${Constants.system.gray20};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  background-color: ${Constants.system.grayLight5};
+  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
 
   :hover {
-    background-color: ${Constants.system.gray30};
+    background-color: ${Constants.system.grayLight4};
   }
 
   :focus {
@@ -124,7 +124,7 @@ const STYLES_BUTTON_SECONDARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 `;
 
 export const ButtonSecondary = (props) => {
@@ -171,7 +171,7 @@ const STYLES_BUTTON_TERTIARY = css`
   cursor: pointer;
   color: ${Constants.system.black};
   background-color: ${Constants.system.white};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
 
   :hover {
     background-color: #fcfcfc;
@@ -187,7 +187,7 @@ const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 `;
 
 export const ButtonTertiary = (props) => {
@@ -233,8 +233,8 @@ const STYLES_BUTTON_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
   background-color: ${Constants.system.white};
-  color: ${Constants.system.textGrayLight};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  color: ${Constants.semantic.textGrayLight};
+  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
 
   :focus {
     outline: 0;
@@ -286,8 +286,8 @@ const STYLES_BUTTON_WARNING_DISABLED = css`
   ${STYLES_BUTTON}
   cursor: not-allowed;
   color: ${Constants.system.white};
-  background-color: ${Constants.system.bgRed};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  background-color: ${Constants.semantic.bgRed};
+  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
 `;
 
 const STYLES_BUTTON_WARNING_TRANSPARENT = css`

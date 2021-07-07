@@ -12,7 +12,7 @@ const STYLES_ROOT = css`
   padding: 0 88px 128px 88px;
   margin: -88px auto 0 auto;
   width: 100%;
-  background-color: ${Constants.system.wallLight};
+  background-color: ${Constants.system.grayLight6};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
@@ -34,7 +34,7 @@ const STYLES_H1 = css`
   padding: 0px gutterpx 16px gutterpx;
   letter-spacing: -0.021rem;
   width: 100%;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: ${Constants.typescale.lvl4};
@@ -53,7 +53,7 @@ const STYLES_H2 = css`
   letter-spacing: -0.019rem;
   margin-top: 24px;
   width: 100%;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: ${Constants.typescale.lvl2};
@@ -97,18 +97,18 @@ const STYLES_LIST = css`
 const STYLES_LINK = css`
   text-decoration: none;
   transition: 200ms ease none;
-  color: ${Constants.system.slate};
+  color: ${Constants.system.grayDark6};
 
   :hover {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
 
   :active {
-    color: ${Constants.system.newBlue};
+    color: ${Constants.system.blue};
   }
 
   :visited {
-    color: ${Constants.system.slate};
+    color: ${Constants.system.grayDark6};
   }
 `;
 

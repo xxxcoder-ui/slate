@@ -45,7 +45,7 @@ const STYLES_RIGHT = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 

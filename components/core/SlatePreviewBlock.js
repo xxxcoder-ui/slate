@@ -28,7 +28,7 @@ const STYLES_ITEM_BOX = css`
   height: calc(33.33% - 4px);
   overflow: hidden;
   margin: 0px 0px 4px 4px;
-  box-shadow: 0px 0px 0px 1px ${Constants.system.lightBorder} inset;
+  box-shadow: 0px 0px 0px 1px ${Constants.semantic.borderLight} inset;
   cursor: pointer;
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 0 8px;
@@ -106,7 +106,7 @@ const STYLES_MOBILE_ONLY = css`
 `;
 
 const STYLES_CREATE_NEW = css`
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   box-shadow: 0px 0px 0px 1px rgba(229, 229, 229, 0.5) inset;
   display: flex;
   flex-direction: column;
@@ -125,7 +125,7 @@ const STYLES_CREATE_NEW = css`
 
 const STYLES_BLOCK = css`
   border-radius: 4px;
-  box-shadow: 0 0 40px 0 ${Constants.system.shadow};
+  box-shadow: 0 0 40px 0 ${Constants.shadow.lightSmall};
   padding: 24px;
   font-size: 12px;
   text-align: left;
@@ -169,7 +169,7 @@ const STYLES_TAG = css`
 const STYLES_BODY = css`
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   margin-bottom: 16px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -188,10 +188,10 @@ const STYLES_ICON_BOX = css`
   align-items: center;
   justify-content: center;
   position: relative;
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -215,7 +215,7 @@ const STYLES_PREVIEW = css`
 const STYLES_OBJECT_COUNT = css`
   width: auto;
   font-size: ${Constants.typescale.lvlN1};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 8px 0 16px 0;
@@ -376,7 +376,7 @@ export class SlatePreviewBlock extends React.Component {
           <div css={STYLES_TITLE_LINE}>
             <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
             {this.props.isOwner && !this.props.slate.isPublic && (
-              <div style={{ color: Constants.system.darkGray, margin: `2px 0 0 0` }}>
+              <div style={{ color: Constants.system.grayLight2, margin: `2px 0 0 0` }}>
                 <SVG.SecurityLock height="20px" />
               </div>
             )}

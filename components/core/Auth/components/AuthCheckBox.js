@@ -50,10 +50,10 @@ export default function AuthCheckBox({ touched, error, ...props }) {
       boxStyle={
         props.value
           ? {
-              backgroundColor: Constants.system.brand,
-              boxShadow: `0 0 0 1px ${Constants.system.brand}`,
+              backgroundColor: Constants.system.blue,
+              boxShadow: `0 0 0 1px ${Constants.system.blue}`,
             }
-          : { backgroundColor: Constants.system.bgBlurWhiteTRN }
+          : { backgroundColor: Constants.semantic.bgBlurWhiteTRN }
       }
       {...props}
     >

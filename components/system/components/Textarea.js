@@ -24,22 +24,22 @@ const STYLES_TEXTAREA = css`
   border: 0;
   transition: 200ms ease all;
   padding: 16px;
-  box-shadow: 0 0 0 1px ${Constants.system.gray30} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight3} inset;
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
     opacity: 1; /* Firefox */
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 
   ::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${Constants.system.darkGray};
+    color: ${Constants.system.grayLight2};
   }
 `;
 

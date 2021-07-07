@@ -8,7 +8,7 @@ const STYLES_ISSUE_CARD = css`
   height: calc(100vh / 4);
   margin: -1px 0 0 -1px;
   transition: 200ms ease box-shadow;
-  border: 1px solid ${Constants.system.darkGray};
+  border: 1px solid ${Constants.system.grayLight2};
   :hover {
     transition: 200ms ease box-shadow;
     box-shadow: 0px 10px 40px 20px rgba(0, 0, 0, 0.1);
@@ -53,11 +53,11 @@ const STYLES_ISSUE_CARD_PARAGRAPH = css`
   font-size: ${Constants.typescale.lvl0};
   text-align: left;
   text-decoration: none;
-  color: ${Constants.system.pitchBlack};
+  color: ${Constants.system.black};
   transition: 200ms ease all;
   :hover,
   :active {
-    color: ${Constants.system.pitchBlack};
+    color: ${Constants.system.black};
     background-color: transparent;
   }
 

@@ -38,7 +38,7 @@ const DEFAULT_AUDIO =
 const STYLES_ROOT = css`
   display: block;
   min-height: 100vh;
-  background-color: ${Constants.system.foreground};
+  background-color: ${Constants.semantic.bgLight};
   padding: 0px 32px 24px 32px;
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 0px;
@@ -90,7 +90,7 @@ const STYLES_CREATOR = css`
   color: ${Constants.system.black};
   font-family: ${Constants.font.medium};
   :hover {
-    color: ${Constants.system.brand};
+    color: ${Constants.system.blue};
   }
 `;
 
@@ -107,7 +107,7 @@ const STYLES_TITLE = css`
 
 const STYLES_DESCRIPTION = css`
   font-size: ${Constants.typescale.lvl0};
-  color: ${Constants.system.darkGray};
+  color: ${Constants.system.grayLight2};
   width: 50%;
   overflow-wrap: break-word;
   white-space: pre-wrap;
@@ -128,7 +128,7 @@ const STYLES_STATS = css`
   margin: 16px 0;
   display: flex;
   width: 100%;
-  color: ${Constants.system.grayBlack};
+  color: ${Constants.system.grayDark2};
 `;
 
 const STYLES_STAT = css`
@@ -292,13 +292,13 @@ export default class SlatePage extends React.Component {
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.medium}` }}>
                     {this.props.slate.objects.length}{" "}
-                    <span style={{ color: `${Constants.system.darkGray}` }}>Files</span>
+                    <span style={{ color: `${Constants.system.grayLight2}` }}>Files</span>
                   </div>
                 </div>
                 {/* <div css={STYLES_STAT}>
                 <div style={{ fontFamily: `${Constants.font.medium}` }}>
                   {contributorsCount}{" "}
-                  <span style={{ color: `${Constants.system.darkGray}` }}>Contributors</span>
+                  <span style={{ color: `${Constants.system.grayLight2}` }}>Contributors</span>
                 </div>
               </div> */}
               </div>

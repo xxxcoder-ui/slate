@@ -28,7 +28,7 @@ const STYLES_FILE_LINE = css`
   width: 100%;
   padding: 12px 16px;
   background-color: ${Constants.system.white};
-  border-bottom: 1px solid ${Constants.system.foreground};
+  border-bottom: 1px solid ${Constants.semantic.bgLight};
 `;
 
 const STYLES_FILE_NAME = css`

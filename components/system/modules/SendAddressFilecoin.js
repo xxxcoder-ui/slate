@@ -11,7 +11,7 @@ const STYLES_CONTAINER = css`
   padding: 24px;
   border-radius: 4px;
   background-color: ${Constants.system.white};
-  border: 1px solid ${Constants.system.border};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   max-width: 320px;
   width: 100%;

@@ -14,7 +14,7 @@ const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
   border: 1px solid ${theme.system.white};
   background-color: white;
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-    background-color: ${theme.system.bgBlurWhiteTRN};
+    background-color: ${theme.semantic.bgBlurWhiteTRN};
     backdrop-filter: blur(75px);
   }
   padding: 8px 12px;
@@ -42,11 +42,11 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
 
 const STYLES_INPUT = (theme) => css`
   background-color: rgba(242, 242, 247, 0.7);
-  box-shadow: ${theme.shadow.large};
+  box-shadow: ${theme.shadow.lightLarge};
   border-radius: 8px;
   box-shadow: 0 0 0 1px ${theme.system.white};
   &::placeholder {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
   }
 `;
 const STYLES_INPUT_ERROR = (theme) => css`
