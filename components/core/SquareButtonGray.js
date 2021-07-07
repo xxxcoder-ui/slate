@@ -18,7 +18,7 @@ const STYLES_BUTTON = css`
   cursor: pointer;
   user-select: none;
   flex-shrink: 0;
-  ${"" /* box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset; */}
+  ${"" /* box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset; */}
 
   :hover {
     background-color: rgb(253, 253, 253);

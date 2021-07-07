@@ -167,7 +167,7 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
   }
 
   span.value {
-    background: ${Constants.system.bgGray};
+    background: ${Constants.semantic.bgLight};
   }
 
   &:hover {
@@ -280,7 +280,7 @@ const TAG_STYLES = `
 const STYLES_TAG = css`
   ${TAG_STYLES};
 
-  background: ${Constants.system.bgGray};
+  background: ${Constants.semantic.bgLight};
   color: ${Constants.system.black};
 
   &:hover {

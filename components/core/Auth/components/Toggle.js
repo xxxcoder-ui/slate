@@ -6,7 +6,7 @@ import { css } from "@emotion/react";
 const STYLES_WRAPPER = (theme) => css`
   width: fit-content;
   display: flex;
-  background-color: ${theme.system.bgGrayLight};
+  background-color: ${theme.semantic.bgGrayLight};
   border-radius: 8px;
 `;
 

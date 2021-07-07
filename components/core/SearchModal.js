@@ -202,7 +202,7 @@ const STYLES_EMPTY_SLATE_PREVIEW = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${Constants.system.bgGray};
+  border: 1px solid ${Constants.semantic.bgLight};
 `;
 
 const SlatePreview = ({ slate, user }) => {
@@ -341,7 +341,7 @@ const STYLES_INPUT = css`
   -webkit-appearance: none;
   width: 100%;
   height: 56px;
-  background: ${Constants.system.bgGrayLight};
+  background: ${Constants.semantic.bgGrayLight};
   color: ${Constants.system.textGray};
   display: flex;
   font-size: 14px;
@@ -394,7 +394,7 @@ const STYLES_RETURN = css`
 const STYLES_FILTER_BUTTON = css`
   padding: 11px;
   border-radius: 4px;
-  border: 1px solid ${Constants.system.bgGray};
+  border: 1px solid ${Constants.semantic.bgLight};
   color: ${Constants.system.textGray};
   margin-right: 8px;
   display: flex;
@@ -433,7 +433,7 @@ const STYLES_BOTTOM_BUTTONS = css`
 
 const STYLES_INLINE_TAG_CONTAINER = css`
   height: 56px;
-  background: ${Constants.system.bgGrayLight};
+  background: ${Constants.semantic.bgGrayLight};
   display: flex;
   align-items: center;
   margin-bottom: 8px;
@@ -1006,7 +1006,7 @@ export class SearchModal extends React.Component {
               style={{
                 right: 0,
                 top: 44,
-                borderColor: Constants.system.bgGray,
+                borderColor: Constants.semantic.bgLight,
                 color: Constants.system.textGray,
                 width: 124,
               }}
@@ -1147,7 +1147,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "SLATE"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("SLATE")}
@@ -1162,7 +1162,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "USER"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("USER")}
@@ -1177,7 +1177,7 @@ export class SearchModal extends React.Component {
                           style={{
                             backgroundColor:
                               this.state.typeFilter === "FILE"
-                                ? Constants.system.bgGray
+                                ? Constants.semantic.bgLight
                                 : Constants.system.white,
                           }}
                           onClick={() => this._handleFilterType("FILE")}

@@ -96,7 +96,7 @@ const STYLES_TOOLTIP_TEXT = css`
 `;
 
 const STYLES_COMMAND_TOOLTIP_ANCHOR = css`
-  border: 1px solid ${Constants.system.bgGray};
+  border: 1px solid ${Constants.semantic.bgLight};
   background-color: ${Constants.system.white};
   border-radius: 4px;
   display: flex;

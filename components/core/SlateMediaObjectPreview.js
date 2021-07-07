@@ -204,7 +204,7 @@ export default class SlateMediaObjectPreview extends React.Component {
           css={STYLES_ENTITY}
           style={{
             ...this.props.style,
-            border: this.props.previewPanel ? `1px solid ${Constants.system.bgGray}` : "auto",
+            border: this.props.previewPanel ? `1px solid ${Constants.semantic.bgLight}` : "auto",
           }}
         >
           <FontObjectPreview
@@ -246,7 +246,7 @@ export default class SlateMediaObjectPreview extends React.Component {
         css={STYLES_ENTITY}
         style={{
           ...this.props.style,
-          border: this.props.previewPanel ? `1px solid ${Constants.system.bgGray}` : "auto",
+          border: this.props.previewPanel ? `1px solid ${Constants.semantic.bgLight}` : "auto",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>

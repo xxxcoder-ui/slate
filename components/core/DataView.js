@@ -211,7 +211,7 @@ const STYLES_LIST = css`
 const STYLES_TAG = css`
   list-style-type: none;
   border-radius: 4px;
-  background: ${Constants.system.bgGray};
+  background: ${Constants.semantic.bgLight};
   color: ${Constants.system.black};
   font-family: ${Constants.font.text};
   padding: 2px 8px;
