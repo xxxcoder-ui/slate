@@ -44,7 +44,7 @@ const websocketSend = async (type, data) => {
 
 export const hydratePartial = async (
   id,
-  { viewer, slates, keys, library, subscriptions, following, followers }
+  { viewer, slates, keys, library, subscriptions, following, followers, likes }
 ) => {
   if (!id) return;
 
@@ -103,6 +103,11 @@ export const hydratePartial = async (
     update.followers = followers;
   }
 
+  if (likes) {
+    const likes = await Data.getLikesByUserId({ ownerId: id });
+    update.likes = likes;
+  }
+
   websocketSend("UPDATE", update);
 };
 
@@ -155,6 +160,7 @@ export const getById = async ({ id }) => {
   const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
   const following = await Data.getFollowingByUserId({ ownerId: id });
   const followers = await Data.getFollowersByUserId({ userId: id });
+  const likes = await Data.getLikesByUserId({ ownerId: id });
 
   let cids = {};
   let bytes = 0;
@@ -223,6 +229,7 @@ export const getById = async ({ id }) => {
     subscriptions,
     following,
     followers,
+    likes,
   };
 
   return viewer;
