@@ -35,13 +35,13 @@ export const HEADING_04 = css`
 `;
 
 export const HEADING_05 = css`
-  font-family: ${Constants.font.medium};
+  font-family: ${Constants.font.text};
   font-size: 0.875rem;
   line-height: 1.5;
   letter-spacing: -0.01px;
 `;
 
-export const BODY_01 = css`
+export const PARA_01 = css`
   font-family: ${Constants.font.text};
   font-size: 1rem;
   font-weight: regular;
@@ -49,7 +49,7 @@ export const BODY_01 = css`
   letter-spacing: -0.01px;
 `;
 
-export const BODY_02 = css`
+export const PARA_02 = css`
   font-family: ${Constants.font.text};
   font-size: 0.875rem;
   font-weight: regular;
@@ -57,7 +57,7 @@ export const BODY_02 = css`
   letter-spacing: -0.01px;
 `;
 
-export const SMALL_TEXT = css`
+export const PARA_03 = css`
   font-family: ${Constants.font.text};
   font-size: 0.75rem;
   font-weight: normal;
@@ -152,7 +152,7 @@ export const OBJECTS_PREVIEW_GRID = css`
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     grid-gap: 20px 8px;
-    grid-template-columns: repeat(auto-fill, minmax(169px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(166px, 1fr));
   }
 `;
 
@@ -162,4 +162,28 @@ export const BUTTON_RESET = css`
   background-color: unset;
   border: none;
   ${HOVERABLE}
+`;
+
+export const COLLECTIONS_PREVIEW_GRID = css`
+  display: grid;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(432px, 1fr));
+  grid-gap: 24px 16px;
+
+  @media (max-width: ${Constants.sizes.desktop}px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px 8px;
+  }
+`;
+
+export const PROFILE_PREVIEW_GRID = css`
+  display: grid;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(432px, 1fr));
+  grid-gap: 24px 16px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    grid-gap: 20px 8px;
+    grid-template-columns: repeat(auto-fill, minmax(344px, 1fr));
+  }
 `;
