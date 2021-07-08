@@ -732,7 +732,11 @@ export default class DataView extends React.Component {
                       onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                     >
                       <div style={{ position: "relative" }}>
-                        <ObjectPreview file={each} isSelected={i in this.state.checked} />
+                        <ObjectPreview
+                          viewer={this.props.viewer}
+                          file={each}
+                          isSelected={i in this.state.checked}
+                        />
                         <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
                           {numChecked || this.state.hover === i || this.state.menu === each.id ? (
                             <React.Fragment>
