@@ -225,17 +225,22 @@ export const useField = ({
 };
 
 export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
+  // NOTE(amine): fix for stale closure caused by hooks
+  const onIntersectRef = React.useRef();
+  onIntersectRef.current = onIntersect;
+
   React.useLayoutEffect(() => {
     if (!ref.current) return;
     const lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          onIntersect(lazyObserver, ref);
+          if (onIntersectRef.current) onIntersectRef.current(lazyObserver, ref);
         }
       });
     });
     // start to observe element
     lazyObserver.observe(ref.current);
+    return () => lazyObserver.unobserve(ref.current);
   }, dependencies);
 };
 
