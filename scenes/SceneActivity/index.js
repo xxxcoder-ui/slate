@@ -36,7 +36,6 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
   useIntersection({
     ref: divRef,
     onIntersect: () => {
-      console.log(feed?.length);
       if (feed?.length === 0 || isLoading) return;
       updateFeed();
     },
@@ -66,7 +65,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
               viewer={viewer}
               external={external}
               onAction={onAction}
-              {...group}
+              group={group}
             />
           ))}
         </div>

@@ -197,9 +197,7 @@ export default class SlateMediaObjectPreview extends React.Component {
         style={{ color: Constants.system.textGray }}
       />
     );
-    // if (!file.filename) {
-    //   console.log(file);
-    // }
+
     if (Validations.isFontFile(file.filename)) {
       return (
         <article
