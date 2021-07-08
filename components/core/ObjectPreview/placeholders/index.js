@@ -1,5 +1,9 @@
 import * as React from "react";
 import * as Validations from "~/common/validations";
+import * as Utilities from "~/common/utilities";
+import * as Typography from "~/components/system/components/Typography";
+
+import { css } from "@emotion/react";
 
 import PdfPlaceholder from "./PDF";
 import AudioPlaceholder from "./Audio";
@@ -9,23 +13,38 @@ import TextPlaceholder from "./Text";
 import KeynotePlaceholder from "./Keynote";
 import Object3DPlaceholder from "./3D";
 import FilePlaceholder from "./File";
+import VideoPlaceholder from "./Video";
 
-export default function Placeholders({ file, ratio }) {
+const STYLES_PLACEHOLDER_CONTAINER = (theme) => css`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  width: 86px;
+  min-width: 64px;
+  border-radius: 4px;
+  background-color: ${theme.system.bgLight};
+`;
+
+const STYLES_TAG = (theme) => css`
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  border: 1px solid ${theme.system.grayLight5};
+  background-color: ${theme.system.bgLight};
+  padding: 2px 8px;
+  border-radius: 4px;
+`;
+
+const PlaceholderPremitive = ({ file, ratio }) => {
   const { type } = file.data;
 
-  //   if (type.startsWith("video/")) {
-  //     const fileExtension = type.split("/")[1];
-  //     return (
-  //       <VideoObjectPreview
-  //         title={title}
-  //         likes={likeCount}
-  //         saves={saveCount}
-  //         type={fileExtension}
-  //         url={url}
-  //         {...props}
-  //       />
-  //     );
-  //   }
+  if (type.startsWith("video/")) {
+    return <VideoPlaceholder ratio={ratio} />;
+  }
 
   if (Validations.isPdfType(type)) {
     return <PdfPlaceholder ratio={ratio} />;
@@ -56,4 +75,36 @@ export default function Placeholders({ file, ratio }) {
   }
 
   return <FilePlaceholder ratio={ratio} />;
+};
+
+export default function Placeholder({ file, containerCss, ratio, showTag }) {
+  const { type } = file.data;
+
+  const tag = React.useMemo(() => {
+    if (!showTag) return false;
+    if (type.startsWith("video/")) return type.split("/")[1];
+    if (Validations.isPdfType(type)) return "pdf";
+    if (type.startsWith("audio/")) return Utilities.getFileExtension(file.filename) || "audio";
+    if (type === "application/epub+zip") return "epub";
+    if (file.filename.endsWith(".key")) return "keynote";
+    if (Validations.isCodeFile(file.filename))
+      return Utilities.getFileExtension(file.filename) || "code";
+    if (Validations.isFontFile(file.filename))
+      return Utilities.getFileExtension(file.filename) || "font";
+    if (Validations.isMarkdown(file.filename, type))
+      return Utilities.getFileExtension(file.filename) || "text";
+    if (Validations.is3dFile(file.filename)) return "3d";
+    return "file";
+  }, [file]);
+
+  return (
+    <div css={[STYLES_PLACEHOLDER_CONTAINER, containerCss]}>
+      {showTag && (
+        <div css={STYLES_TAG}>
+          <Typography.P variant="para-03">{tag}</Typography.P>
+        </div>
+      )}
+      <PlaceholderPremitive ratio={ratio} file={file} />
+    </div>
+  );
 }

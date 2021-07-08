@@ -1,7 +1,7 @@
 import * as React from "react";
 import { css } from "@emotion/react";
 
-export default function VideoPlaceholder({ ratio, ...props }) {
+export default function VideoPlaceholder({ ratio = 1, ...props }) {
   const STYLES_PLACEHOLDER = React.useMemo(
     () => css`
       overflow: visible !important;
