@@ -15,9 +15,9 @@ const STYLES_BUTTON = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  letter-spacing: 0.2px;
-  font-family: ${Constants.font.semiBold};
+  font-size: 0.875rem;
+  letter-spacing: -0.006px;
+  font-family: ${Constants.font.medium};
   transition: 200ms ease all;
   overflow-wrap: break-word;
   user-select: none;
@@ -171,7 +171,7 @@ const STYLES_BUTTON_TERTIARY = css`
   cursor: pointer;
   color: ${Constants.system.black};
   background-color: ${Constants.system.white};
-  box-shadow: 0 0 0 1px ${Constants.system.bgGray} inset;
+  box-shadow: 0 0 0 1px ${Constants.system.bgGrayLight} inset;
 
   :hover {
     background-color: #fcfcfc;
