@@ -25,8 +25,29 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
   ];
   const slateQuery = `WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${slateFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??)`;
 
+  const userFilesFields = ["files", "files.createdAt", "files.id", "objects"];
+  const userFilesQuery = `coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??`;
+  const userFields = [
+    "user_table",
+    "users.id",
+    "users.createdAt",
+    "users.username",
+    "users.data",
+    "users.followerCount",
+    "users.fileCount",
+    "users.slateCount",
+    ...userFilesFields,
+    "users",
+    "files",
+    "users.id",
+    "files.ownerId",
+    "users.id",
+  ];
+  const userQuery = `, ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${userFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??)`;
+
   const selectFields = [
     ...slateFields,
+    ...userFields,
     "activity.id",
     "activity.type",
     "activity.createdAt",
@@ -34,7 +55,7 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
     "slate",
     "files",
     "file",
-    "users",
+    "user_table",
     "user",
     "owners",
     "owner",
@@ -42,18 +63,18 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
     "slate_table",
     "slate_table.id",
     "activity.slateId",
-    "users",
-    "users.id",
+    "user_table",
+    "user_table.id",
     "activity.userId",
     "files",
     "files.id",
     "activity.fileId",
-    "users",
+    "user_table",
     "owners",
     "owners.id",
     "activity.ownerId",
   ];
-  const selectQuery = `${slateQuery} SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??`;
+  const selectQuery = `${slateQuery} ${userQuery} SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??`;
 
   return await runQuery({
     label: "GET_EXPLORE",
@@ -63,22 +84,18 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
         //NOTE(martina): for pagination, fetching the "next 100" results
         let date = new Date(earliestTimestamp);
         date.setSeconds(date.getSeconds() - 1);
-        query = await DB.raw(`${selectQuery} WHERE ?? < ?? ORDER BY ?? DESC LIMIT 100`, [
-          ...selectFields,
-          "activity.createdAt",
-          date.toISOString(),
-          "activity.createdAt",
-        ]);
+        query = await DB.raw(
+          `${selectQuery} WHERE ?? < '${date.toISOString()}' ORDER BY ?? DESC LIMIT 100`,
+          [...selectFields, "activity.createdAt", "activity.createdAt"]
+        );
       } else if (latestTimestamp) {
         //NOTE(martina): for fetching new updates since the last time they loaded
         let date = new Date(latestTimestamp);
         date.setSeconds(date.getSeconds() + 1);
-        query = await DB.raw(`${selectQuery} WHERE ?? > ?? ORDER BY ?? DESC LIMIT 100`, [
-          ...selectFields,
-          "activity.createdAt",
-          date.toISOString(),
-          "activity.createdAt",
-        ]);
+        query = await DB.raw(
+          `${selectQuery} WHERE ?? > '${date.toISOString()}' ORDER BY ?? DESC LIMIT 100`,
+          [...selectFields, "activity.createdAt", "activity.createdAt"]
+        );
       } else {
         //NOTE(martina): for the first fetch they make, when they have not loaded any explore events yet
         query = await DB.raw(`${selectQuery} ORDER BY ?? DESC LIMIT 100`, [
@@ -94,7 +111,7 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
 
       return JSON.parse(JSON.stringify(query));
     },
-    errorFn: async (e) => {
+    errorFn: async () => {
       console.log({
         error: true,
         decorator: "GET_EXPLORE",
