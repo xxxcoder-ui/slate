@@ -69,7 +69,7 @@ export const coerceToArray = (input) => {
 
 export const getFileExtension = (filename) => filename?.split(".").pop();
 
-export const getTimeUnitBetween = (date) => {
+export const getTimeDifferenceFromNow = (date) => {
   const pastDate = new Date(date);
   const now = new Date();
 
@@ -93,6 +93,13 @@ export const getTimeUnitBetween = (date) => {
     return differenceInDays + "d";
   }
 
-  const differenceInMonths = Math.floor(differenceInDays / 30);
-  return differenceInMonths + "M";
+  const day = pastDate.getDay();
+  const month = pastDate.toLocaleString("default", { month: "long" });
+  const year = pastDate.getFullYear();
+  const currentYear = now.getFullYear();
+
+  if (year === currentYear) {
+    return `${day} ${month}`;
+  }
+  return `${day} ${month} ${year}`;
 };
