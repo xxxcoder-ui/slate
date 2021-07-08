@@ -57,10 +57,12 @@ const STYLES_PROFILE_IMAGE = css`
   border-radius: 2px;
   cursor: pointer;
 
-  ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {
+  ${
+    "" /* @media (max-width: ${Constants.sizes.mobile}px) {
     height: 24px;
     width: 24px;
-  } */}
+  } */
+  }
 `;
 
 const STYLES_PROFILE_USERNAME = css`
@@ -139,10 +141,10 @@ export class ApplicationUserControlsPopup extends React.Component {
               {this.props.viewer.data.name || `@${this.props.viewer.username}`}
             </div>
             <div css={Styles.HORIZONTAL_CONTAINER}>
-              <span css={Styles.SMALL_TEXT} style={{ marginRight: 8 }}>{`${
+              <span css={Styles.PARA_03} style={{ marginRight: 8 }}>{`${
                 this.props.viewer.library.length
               } File${this.props.viewer.library.length === 1 ? "" : "s"}`}</span>
-              <span css={Styles.SMALL_TEXT}>{`${this.props.viewer.slates.length} Collection${
+              <span css={Styles.PARA_03}>{`${this.props.viewer.slates.length} Collection${
                 this.props.viewer.slates.length === 1 ? "" : "s"
               }`}</span>
             </div>
