@@ -1,5 +1,6 @@
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
+import * as ViewerManager from "~/node_common/managers/viewer";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -21,7 +22,9 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_LIKE_FILE_NO_FILE_PROVIDED", error: true });
   }
 
-  const existingResponse = await Data.getLikeByFile({ userId: user.id, fileId: file.id });
+  const fileId = req.body.data.id;
+
+  const existingResponse = await Data.getLikeByFile({ userId: user.id, fileId });
 
   if (existingResponse && existingResponse.error) {
     return res.status(500).send({
@@ -36,7 +39,7 @@ export default async (req, res) => {
   if (existingResponse) {
     response = await Data.deleteLikeByFile({
       userId: user.id,
-      fileId: file.id,
+      fileId,
     });
 
     if (!response) {
@@ -47,7 +50,7 @@ export default async (req, res) => {
       return res.status(500).send({ decorator: "SERVER_UNLIKE_FILE_FAILED", error: true });
     }
   } else {
-    response = await Data.createLike({ userId: user.id, fileId: file.id });
+    response = await Data.createLike({ userId: user.id, fileId });
 
     if (!response) {
       return res.status(404).send({ decorator: "SERVER_LIKE_FILE_FAILED", error: true });
@@ -57,6 +60,8 @@ export default async (req, res) => {
       return res.status(500).send({ decorator: "SERVER_LIKE_FILE_FAILED", error: true });
     }
   }
+
+  ViewerManager.hydratePartial(id, { likes: true });
 
   return res.status(200).send({
     decorator: "SERVER_LIKE_FILE",
