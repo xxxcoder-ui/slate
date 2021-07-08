@@ -55,7 +55,9 @@ export default function ImageObjectPreview({ url, file, ...props }) {
     ref: previewerRef,
   });
 
-  const coverImage = file?.data?.coverImage;
+  const { type, coverImage } = file.data;
+  const tag = type.split("/")[1];
+
   const blurhash = React.useMemo(() => {
     return file.data.blurhash && isBlurhashValid(file.data.blurhash)
       ? file.data.blurhash
@@ -69,7 +71,7 @@ export default function ImageObjectPreview({ url, file, ...props }) {
   const imageUrl = coverImage ? Strings.getURLfromCID(coverImage?.cid) : url;
 
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPremitive file={file} tag={tag} isImage {...props}>
       <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
         {isInView && (
           <AspectRatio ratio={186 / 302}>

@@ -24,13 +24,13 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function Object3DPreview({ type, ...props }) {
+export default function Object3DPreview(props) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <ObjectPlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">3D</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

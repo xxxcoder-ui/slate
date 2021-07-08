@@ -24,13 +24,13 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function KeynoteObjectPreview({ type, ...props }) {
+export default function KeynoteObjectPreview(props) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <KeynotePlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">KEYNOTE</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

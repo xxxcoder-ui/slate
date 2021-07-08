@@ -24,13 +24,15 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function VideoObjectPreview({ type, ...props }) {
+export default function VideoObjectPreview({ file, ...props }) {
+  const { type } = file.data;
+  const tag = type.split("/")[1];
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPremitive file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <VideoPlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">{tag}</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

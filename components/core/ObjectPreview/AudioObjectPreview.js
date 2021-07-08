@@ -2,6 +2,7 @@ import "isomorphic-fetch";
 
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Utilities from "~/common/utilities";
 
 import { P } from "~/components/system";
 
@@ -25,13 +26,14 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function AudioObjectPreview({ type, ...props }) {
+export default function AudioObjectPreview({ file, ...props }) {
+  const tag = Utilities.getFileExtension(file.filename) || "audio";
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPremitive file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <AudioPlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">{tag}</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

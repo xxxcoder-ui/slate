@@ -2,6 +2,7 @@ import "isomorphic-fetch";
 
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Utilities from "~/common/utilities";
 
 import { P } from "~/components/system";
 import { css } from "@emotion/react";
@@ -35,13 +36,10 @@ const STYLES_TEXT_PREVIEW = (theme) =>
     backgroundColor: "#FFF",
     borderRadius: "8px",
     boxShadow: theme.shadow.large,
+    padding: "16px",
   });
 
-const STYLES_CONTENT_PADDING = css`
-  padding: 16px;
-`;
-
-export default function TextObjectPreview({ url, type, ...props }) {
+export default function TextObjectPreview({ url, file, ...props }) {
   const [{ content, error }, setState] = React.useState({ content: "", error: undefined });
 
   React.useLayoutEffect(() => {
@@ -55,19 +53,21 @@ export default function TextObjectPreview({ url, type, ...props }) {
       });
   }, []);
 
+  const tag = Utilities.getFileExtension(file.filename) || "text";
+
   return (
-    <ObjectPreviewPremitive type={!error && type} {...props}>
+    <ObjectPreviewPremitive tag={!error && tag} file={file} {...props}>
       <div css={[STYLES_CONTAINER, error && Styles.CONTAINER_CENTERED]}>
         {error ? (
           <>
             <TextPlaceholder />
             <div css={STYLES_TAG}>
-              <P css={Styles.SMALL_TEXT}>{type}</P>
+              <P variant="para-03">{tag}</P>
             </div>
           </>
         ) : (
           <div css={STYLES_TEXT_PREVIEW}>
-            <P css={[Styles.SMALL_TEXT, STYLES_CONTENT_PADDING]}>{content}</P>
+            <P variant="para-03">{content}</P>
           </div>
         )}
       </div>

@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { H4, P } from "~/components/system/components/Typography";
@@ -34,30 +36,15 @@ const STYLES_DESCRIPTION = (theme) => css`
     backdrop-filter: blur(75px);
     -webkit-backdrop-filter: blur(75px);
   }
-`;
 
-const STYLES_DESCRIPTION_HEADING = (theme) => css`
-  overflow: hidden;
-  line-height: 1.5;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 1;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: ${theme.typescale.lvl0};
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 8px;
   }
 `;
 
 const STYLES_DESCRIPTION_META = css`
   justify-content: space-between;
   margin-top: 12px;
-`;
-
-const STYLES_METRICS = (theme) => css`
-  font-size: ${theme.typescale.lvl0};
-  color: ${theme.system.textGrayDark};
-  line-height: 21px;
 `;
 
 const STYLES_REACTIONS_CONTAINER = css`
@@ -99,29 +86,58 @@ const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
 `;
 
+const useLikeHandler = ({ file, viewer }) => {
+  const likedFile = React.useMemo(() => viewer?.likes?.find((item) => item.id === file.id), []);
+  const [state, setState] = React.useState({
+    isLiked: !!likedFile,
+    likeCount: likedFile?.likeCount ?? file.likeCount,
+  });
+
+  const handleLikeState = () => {
+    setState((prev) => {
+      if (prev.isLiked) {
+        return {
+          isLiked: false,
+          likeCount: prev.likeCount - 1,
+        };
+      }
+      return {
+        isLiked: true,
+        likeCount: prev.likeCount + 1,
+      };
+    });
+  };
+  const like = async () => {
+    // NOTE(amine): optimistic update
+    handleLikeState();
+    const response = await Actions.like({ id: file.id });
+    if (Events.hasError(response)) {
+      // NOTE(amine): revert back to old state if there is an error
+      handleLikeState();
+      return;
+    }
+  };
+
+  return { like, ...state };
+};
 export default function ObjectPreviewPremitive({
   children,
-  likes = 0,
-  saves = 0,
-  type,
-  title,
+  tag,
   file,
   isSelected,
-  ...props
+  viewer,
+  // NOTE(amine): internal prop used to display
+  isImage,
 }) {
-  if (file?.data?.coverImage) {
-    return (
-      <ImageObjectPreview
-        title={title}
-        file={file}
-        type={type}
-        likes={likes}
-        saves={saves}
-        isSelected={isSelected}
-      />
-    );
-  }
+  const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
 
+  const title = file.data.name || file.filename;
+  const { saveCount } = file;
+
+  if (file?.data?.coverImage && !isImage) {
+    return <ImageObjectPreview file={file} isSelected={isSelected} />;
+  }
+  const showSaveButton = viewer?.id !== file?.ownerId;
   return (
     <div
       css={[
@@ -133,30 +149,36 @@ export default function ObjectPreviewPremitive({
         isSelected && STYLES_SELECTED_RING,
       ]}
     >
-      <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT} {...props}>
+      <AspectRatio ratio={295 / 248} css={STYLES_BACKGROUND_LIGHT}>
         <div css={STYLES_WRAPPER}>
           <AspectRatio ratio={1}>
             <div>{children}</div>
           </AspectRatio>
 
           <article css={STYLES_DESCRIPTION}>
-            {type && (
+            {tag && (
               <div css={STYLES_DESCRIPTION_TAG}>
-                <P css={Styles.SMALL_TEXT}>{type}</P>
+                <P variant="para-03">{tag}</P>
               </div>
             )}
-            <H4 css={STYLES_DESCRIPTION_HEADING}>{title}</H4>
+            <H4 nbrOflines={1}>{title}</H4>
 
             <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_DESCRIPTION_META]}>
               <div css={STYLES_REACTIONS_CONTAINER}>
                 <div css={STYLES_REACTION}>
-                  <LikeButton />
-                  <P css={STYLES_METRICS}>{likes}</P>
+                  <LikeButton onClick={like} isLiked={isLiked} />
+                  <P variant="para-02" color="textGrayDark">
+                    {likeCount}
+                  </P>
                 </div>
-                <div css={STYLES_REACTION}>
-                  <SaveButton />
-                  <P css={STYLES_METRICS}>{saves}</P>
-                </div>
+                {showSaveButton && (
+                  <div css={STYLES_REACTION}>
+                    <SaveButton />
+                    <P variant="para-02" color="textGrayDark">
+                      {saveCount}
+                    </P>
+                  </div>
+                )}
               </div>
               <span
                 css={STYLES_PROFILE_IMAGE}

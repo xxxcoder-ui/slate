@@ -24,13 +24,13 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function EpubObjectPreview({ type, ...props }) {
+export default function EpubObjectPreview(props) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <EpubPlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">EPUB</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

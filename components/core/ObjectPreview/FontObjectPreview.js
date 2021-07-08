@@ -2,6 +2,7 @@ import "isomorphic-fetch";
 
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
@@ -23,11 +24,12 @@ const STYLES_LETTER = (theme) => css`
   font-size: ${theme.typescale.lvl8};
 `;
 
-export default function FontObjectPreview({ file, type, ...props }) {
+export default function FontObjectPreview({ file, ...props }) {
   const { fontName } = useFont({ cid: file.cid }, [file.cid]);
 
+  const tag = Utilities.getFileExtension(file.filename) || "font";
   return (
-    <ObjectPreviewPremitive type={type} {...props}>
+    <ObjectPreviewPremitive tag={tag} file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_PREVIEW]}>
         <div style={{ fontFamily: fontName }}>
           <div css={STYLES_LETTER}>Aa</div>

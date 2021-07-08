@@ -25,13 +25,13 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function PDFObjectPreview({ type, ...props }) {
+export default function PDFObjectPreview(props) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <PdfPlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P css={Styles.PARA_03}>PDF</P>
         </div>
       </div>
     </ObjectPreviewPremitive>

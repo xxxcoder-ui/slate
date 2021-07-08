@@ -22,13 +22,13 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-export default function DefaultObjectPreview({ type, ...props }) {
+export default function DefaultObjectPreview(props) {
   return (
     <ObjectPreviewPremitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <FilePlaceholder />
         <div css={STYLES_TAG}>
-          <P css={Styles.SMALL_TEXT}>{type}</P>
+          <P variant="para-03">FILE</P>
         </div>
       </div>
     </ObjectPreviewPremitive>
