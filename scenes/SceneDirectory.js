@@ -81,7 +81,7 @@ const STYLES_PROFILE_IMAGE = css`
   height: 24px;
   width: 24px;
   margin-right: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   position: relative;
 `;
 

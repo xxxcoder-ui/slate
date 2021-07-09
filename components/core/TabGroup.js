@@ -44,7 +44,7 @@ const STYLES_TAB_GROUP = css`
   box-sizing: border-box;
   width: 100%;
   flex-wrap: wrap;
-  border-bottom: 1px solid ${Constants.system.gray};
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 24px 0px 24px 0px;

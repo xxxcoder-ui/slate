@@ -7,7 +7,7 @@ const STYLES_SECTION = css`
   flex-shrink: 0;
   width: 100%;
   min-width: 960px;
-  box-shadow: 0 0 0 1px ${Constants.system.gray}, 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   border-radius: 4px;
   font-weight: 400;
   margin-top: 24px;

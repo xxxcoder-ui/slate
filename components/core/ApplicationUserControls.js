@@ -54,7 +54,7 @@ const STYLES_PROFILE_IMAGE = css`
   flex-shrink: 0;
   height: 24px;
   width: 24px;
-  border-radius: 2px;
+  border-radius: 8px;
   cursor: pointer;
 
   ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {

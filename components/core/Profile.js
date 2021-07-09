@@ -72,7 +72,7 @@ const STYLES_PROFILE_IMAGE = css`
   width: 120px;
   height: 120px;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   margin: 0 auto;
   position: relative;
   @media (max-width: ${Constants.sizes.mobile}px) {

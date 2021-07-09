@@ -107,7 +107,7 @@ const STYLES_PROFILE_IMAGE = css`
   height: 182px;
   width: 182px;
   margin-bottom: 12px;
-  border-radius: 4px;
+  border-radius: 8px;
 `;
 
 const UserPreview = ({ user }) => {
