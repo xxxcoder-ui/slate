@@ -13,7 +13,7 @@ const STYLES_ROOT = css`
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  mix-blend-mode: difference;
+
   z-index: ${Constants.zindex.header};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
