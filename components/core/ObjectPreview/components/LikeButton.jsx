@@ -3,7 +3,6 @@ import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-
 import { motion, useAnimation } from "framer-motion";
 
 const STYLES_BUTTON_HOVER = (theme) => css`

@@ -2,12 +2,14 @@ import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Typography from "~/components/system/components/Typography";
 import * as Styles from "~/common/styles";
-import * as SVG from "~/common/svg";
 
 import { Divider } from "~/components/system/components/Divider";
 import { Logo } from "~/common/logo";
 import { css } from "@emotion/react";
 import { LikeButton, SaveButton } from "~/components/core/ObjectPreview/components";
+import { useLikeHandler, useSaveHandler } from "~/common/hooks";
+import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
+import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
 
 import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 
@@ -21,6 +23,7 @@ const STYLES_CONTAINER = (theme) => css`
   overflow: hidden;
   background-color: ${theme.system.white};
   height: 311px;
+  box-shadow: 0 0 0 1px ${theme.system.bgGrayLight};
   @media (max-width: ${theme.sizes.mobile}px) {
     height: 281px;
   }
@@ -106,12 +109,12 @@ const STYLES_PLACEHOLDER = css`
   width: 86px;
 `;
 
-const CollectionPreviewFile = ({ file }) => {
+const CollectionPreviewFile = ({ file, viewer }) => {
+  const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
+  const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
+
   const title = file.data.name || file.filename;
   const { body } = file.data;
-
-  const likeCount = file.likeCount || 0;
-  const saveCount = file.saveCount || 0;
 
   return (
     <div css={[Styles.HORIZONTAL_CONTAINER]}>
@@ -125,13 +128,13 @@ const CollectionPreviewFile = ({ file }) => {
         </Typography.P>
         <div style={{ marginTop: "auto" }} css={Styles.HORIZONTAL_CONTAINER}>
           <div css={Styles.CONTAINER_CENTERED}>
-            <LikeButton />
+            <LikeButton isLiked={isLiked} onClick={like} />
             <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
               {likeCount}
             </Typography.P>
           </div>
           <div style={{ marginLeft: 48 }} css={Styles.CONTAINER_CENTERED}>
-            <SaveButton />
+            <SaveButton onSave={save} isSaved={isSaved} />
             <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
               {saveCount}
             </Typography.P>
@@ -149,7 +152,8 @@ const useCollectionCarrousel = ({ objects }) => {
   return { selectBatchIdx, selectedBatch, selectedIdx };
 };
 
-export default function CollectionPreview({ collection }) {
+export default function CollectionPreview({ collection, viewer }) {
+  const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
   const filePreviews = React.useMemo(() => {
     const files = collection?.objects || [];
     let previews = [];
@@ -170,6 +174,8 @@ export default function CollectionPreview({ collection }) {
   const nbrOfFiles = collection?.objects?.length || 0;
   const isCollectionEmpty = nbrOfFiles === 0;
 
+  const showFollowButton = collection.ownerId !== viewer?.id;
+
   return (
     <div css={STYLES_CONTAINER}>
       <div css={STYLES_FILES_PREVIEWS} style={{ display: "flex" }}>
@@ -178,7 +184,7 @@ export default function CollectionPreview({ collection }) {
             selectedBatch.map((file, i) => (
               <React.Fragment key={file.id}>
                 {i === 1 && <Divider color="bgLight" style={{ margin: "8px 0px" }} />}
-                <CollectionPreviewFile file={file} />
+                <CollectionPreviewFile file={file} viewer={viewer} />
               </React.Fragment>
             ))
           ) : (
@@ -236,9 +242,9 @@ export default function CollectionPreview({ collection }) {
 
         <div css={[STYLES_METRICS]}>
           <div css={Styles.CONTAINER_CENTERED}>
-            <SVG.RSS width={20} height={20} />
+            <FollowButton isFollowed={isFollowed} onFollow={showFollowButton && follow} />
             <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
-              {collection?.subscriberCount}
+              {followCount}
             </Typography.P>
           </div>
           <div css={Styles.CONTAINER_CENTERED}>
