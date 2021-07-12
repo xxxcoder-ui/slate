@@ -2,14 +2,14 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Typography from "~/components/system/components/Typography";
 import * as Strings from "~/common/strings";
-import * as Events from "~/common/custom-events";
-import * as Actions from "~/common/actions";
 
 import { Divider } from "~/components/system/components/Divider";
 import { Logo } from "~/common/logo";
 import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
 import { css } from "@emotion/react";
 import { LikeButton, SaveButton } from "~/components/core/ObjectPreview/components";
+import { useLikeHandler, useSaveHandler } from "~/common/hooks";
+import { useFollowProfileHandler } from "~/common/hooks";
 
 import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 
@@ -19,7 +19,7 @@ const STYLES_CONTROLLS = css`
   align-items: flex-end;
 `;
 
-const useCollectionCarrousel = ({ objects }) => {
+const useProfileCarrousel = ({ objects }) => {
   const [selectedIdx, setSelectedIdx] = React.useState(0);
   const selectBatchIdx = (idx) => setSelectedIdx(idx);
   const selectedBatch = objects[selectedIdx];
@@ -46,13 +46,12 @@ const STYLES_PLACEHOLDER = css`
   width: 86px;
 `;
 
-const CollectionPreviewFile = ({ file }) => {
+const ProfilePreviewFile = ({ file, viewer }) => {
+  const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
+  const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
+
   const title = file.data.name || file.filename;
   const { body } = file.data;
-
-  const likeCount = file.likeCount || 0;
-  const saveCount = file.saveCount || 0;
-
   return (
     <div css={[Styles.HORIZONTAL_CONTAINER]}>
       <ObjectPlaceholder ratio={1.1} file={file} containerCss={STYLES_PLACEHOLDER} showTag />
@@ -65,13 +64,13 @@ const CollectionPreviewFile = ({ file }) => {
         </Typography.P>
         <div style={{ marginTop: "auto" }} css={Styles.HORIZONTAL_CONTAINER}>
           <div css={Styles.CONTAINER_CENTERED}>
-            <LikeButton />
+            <LikeButton isLiked={isLiked} onClick={like} />
             <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
               {likeCount}
             </Typography.P>
           </div>
           <div style={{ marginLeft: 48 }} css={Styles.CONTAINER_CENTERED}>
-            <SaveButton />
+            <SaveButton onSave={save} isSaved={isSaved} />
             <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
               {saveCount}
             </Typography.P>
@@ -85,6 +84,7 @@ const CollectionPreviewFile = ({ file }) => {
 const STYLES_CONTAINER = (theme) => css`
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 0 0 1px ${theme.system.bgGrayLight};
   background-color: ${theme.system.bgGrayLight};
 `;
 
@@ -110,56 +110,7 @@ const STYLES_FILES_PREVIEWS = css`
   height: 176px;
 `;
 
-const useProfileFollow = ({ onAction, user, viewer, external }) => {
-  const [isFollowing, setFollowing] = React.useState(false);
-
-  React.useLayoutEffect(() => {
-    setFollowing(
-      external || user.id === viewer?.id
-        ? false
-        : !!viewer?.following.some((entry) => {
-            return entry.id === user.id;
-          })
-    );
-  }, [external]);
-
-  const handleFollow = (userId) => async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (external) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-
-    setFollowing((prev) => !prev);
-    await Actions.createSubscription({
-      userId,
-    });
-
-    onAction({
-      type: "UPDATE_VIEWER",
-      viewer: {
-        following: isFollowing
-          ? viewer.following.filter((user) => user.id !== userId)
-          : viewer.following.concat([
-              {
-                id: user.id,
-                data: user.data,
-                fileCount: user.fileCount,
-                followerCount: user.followerCount + 1,
-                slateCount: user.slateCount,
-                username: user.username,
-              },
-            ]),
-      },
-    });
-  };
-
-  return { handleFollow, isFollowing };
-};
-
-export default function PorfilePreviewBlock({ onAction, viewer, profile, external }) {
+export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
   const filePreviews = React.useMemo(() => {
     const files = profile?.objects || [];
     let previews = [];
@@ -173,21 +124,20 @@ export default function PorfilePreviewBlock({ onAction, viewer, profile, externa
     return previews;
   }, [profile]);
 
-  const { selectBatchIdx, selectedBatch, selectedIdx } = useCollectionCarrousel({
+  const { selectBatchIdx, selectedBatch, selectedIdx } = useProfileCarrousel({
     objects: filePreviews,
   });
 
-  const { handleFollow, isFollowing } = useProfileFollow({
+  const { handleFollow, isFollowing } = useFollowProfileHandler({
     onAction,
     viewer,
     user: profile,
-    external,
   });
 
   const isOwner = viewer?.id === profile.id;
 
   const nbrOfFiles = profile?.objects?.length || 0;
-  const isCollectionEmpty = nbrOfFiles === 0;
+  const doesProfileHaveFiles = nbrOfFiles === 0;
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -215,14 +165,22 @@ export default function PorfilePreviewBlock({ onAction, viewer, profile, externa
             (isFollowing ? (
               <ButtonTertiary
                 style={{ marginTop: "auto", maxWidth: "91px" }}
-                onClick={handleFollow(profile.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleFollow(profile.id);
+                }}
               >
                 Following
               </ButtonTertiary>
             ) : (
               <ButtonPrimary
                 style={{ marginTop: "auto", maxWidth: "91px" }}
-                onClick={handleFollow(profile.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleFollow(profile.id);
+                }}
               >
                 Follow
               </ButtonPrimary>
@@ -231,11 +189,11 @@ export default function PorfilePreviewBlock({ onAction, viewer, profile, externa
       </div>
       <div css={STYLES_FILES_PREVIEWS} style={{ display: "flex" }}>
         <div style={{ width: "100%" }}>
-          {!isCollectionEmpty ? (
+          {!doesProfileHaveFiles ? (
             selectedBatch.map((file, i) => (
               <React.Fragment key={file.id}>
                 {i === 1 && <Divider color="grayLight4" style={{ margin: "8px 0px" }} />}
-                <CollectionPreviewFile file={file} />
+                <ProfilePreviewFile file={file} viewer={viewer} />
               </React.Fragment>
             ))
           ) : (
