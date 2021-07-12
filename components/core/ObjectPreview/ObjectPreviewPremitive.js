@@ -1,19 +1,18 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
-import * as Actions from "~/common/actions";
-import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { H4, P } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 import { LikeButton, SaveButton } from "./components";
+import { useLikeHandler, useSaveHandler } from "~/common/hooks";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
 const STYLES_BACKGROUND_LIGHT = (theme) => css`
-  background-color: ${theme.system.grayLight5};
-  box-shadow: ${theme.shadow.medium};
+  background-color: ${theme.system.bgLight};
+  box-shadow: 0 0 0 1px ${theme.system.bgLight};
   border-radius: 8px;
 `;
 
@@ -86,40 +85,6 @@ const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
 `;
 
-const useLikeHandler = ({ file, viewer }) => {
-  const likedFile = React.useMemo(() => viewer?.likes?.find((item) => item.id === file.id), []);
-  const [state, setState] = React.useState({
-    isLiked: !!likedFile,
-    likeCount: likedFile?.likeCount ?? file.likeCount,
-  });
-
-  const handleLikeState = () => {
-    setState((prev) => {
-      if (prev.isLiked) {
-        return {
-          isLiked: false,
-          likeCount: prev.likeCount - 1,
-        };
-      }
-      return {
-        isLiked: true,
-        likeCount: prev.likeCount + 1,
-      };
-    });
-  };
-  const like = async () => {
-    // NOTE(amine): optimistic update
-    handleLikeState();
-    const response = await Actions.like({ id: file.id });
-    if (Events.hasError(response)) {
-      // NOTE(amine): revert back to old state if there is an error
-      handleLikeState();
-      return;
-    }
-  };
-
-  return { like, ...state };
-};
 export default function ObjectPreviewPremitive({
   children,
   tag,
@@ -130,9 +95,9 @@ export default function ObjectPreviewPremitive({
   isImage,
 }) {
   const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
+  const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
 
   const title = file.data.name || file.filename;
-  const { saveCount } = file;
 
   if (file?.data?.coverImage && !isImage) {
     return <ImageObjectPreview file={file} isSelected={isSelected} />;
@@ -161,7 +126,9 @@ export default function ObjectPreviewPremitive({
                 <P variant="para-03">{tag}</P>
               </div>
             )}
-            <H4 nbrOflines={1}>{title}</H4>
+            <H4 nbrOflines={1} color="textBlack">
+              {title}
+            </H4>
 
             <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_DESCRIPTION_META]}>
               <div css={STYLES_REACTIONS_CONTAINER}>
@@ -173,7 +140,7 @@ export default function ObjectPreviewPremitive({
                 </div>
                 {showSaveButton && (
                   <div css={STYLES_REACTION}>
-                    <SaveButton />
+                    <SaveButton onSave={save} isSaved={isSaved} />
                     <P variant="para-02" color="textGrayDark">
                       {saveCount}
                     </P>

@@ -57,6 +57,8 @@ export const hydratePartial = async (
         id,
         includeFiles: true,
       });
+      update.libraryCids =
+        user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
     } else {
       user = await Data.getUserById({
         id,
@@ -161,6 +163,8 @@ export const getById = async ({ id }) => {
   const following = await Data.getFollowingByUserId({ ownerId: id });
   const followers = await Data.getFollowersByUserId({ userId: id });
   const likes = await Data.getLikesByUserId({ ownerId: id });
+  const libraryCids =
+    user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
 
   let cids = {};
   let bytes = 0;
@@ -184,7 +188,7 @@ export const getById = async ({ id }) => {
     } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
       pdfBytes += each.data.size;
     }
-    let coverImage = each.data.coverImage;
+    let { coverImage } = each.data;
     if (coverImage && !cids[coverImage.cid]) {
       imageBytes += coverImage.data.size;
       cids[coverImage.cid] = true;
@@ -230,6 +234,7 @@ export const getById = async ({ id }) => {
     following,
     followers,
     likes,
+    libraryCids,
   };
 
   return viewer;
