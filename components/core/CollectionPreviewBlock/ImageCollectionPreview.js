@@ -2,12 +2,13 @@ import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Typography from "~/components/system/components/Typography";
 import * as Styles from "~/common/styles";
-import * as SVG from "~/common/svg";
 
 import { useInView } from "~/common/hooks";
 import { isBlurhashValid } from "blurhash";
 import { Blurhash } from "react-blurhash";
 import { css } from "@emotion/react";
+import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
+import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
 
 const STYLES_CONTAINER = (theme) => css`
   display: flex;
@@ -128,7 +129,9 @@ const useCollectionCarrousel = ({ objects }) => {
   };
 };
 
-export default function ImageCollectionPreview({ collection }) {
+export default function ImageCollectionPreview({ collection, viewer }) {
+  const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
+
   const filePreviews = React.useMemo(() => {
     const previews = collection.objects.map((object) => {
       const coverImage = object?.data?.coverImage;
@@ -148,6 +151,8 @@ export default function ImageCollectionPreview({ collection }) {
     useCollectionCarrousel({ objects: filePreviews });
 
   const nbrOfFiles = collection?.objects?.length || 0;
+
+  const showFollowButton = collection.ownerId !== viewer?.id;
   return (
     <div ref={previewerRef} css={STYLES_CONTAINER}>
       {isInView && (
@@ -207,9 +212,9 @@ export default function ImageCollectionPreview({ collection }) {
 
         <div css={STYLES_METRICS}>
           <div css={Styles.CONTAINER_CENTERED}>
-            <SVG.RSS width={20} height={20} />
-            <Typography.P style={{ marginLeft: 8 }} color="textGrayDark">
-              {collection?.subscriberCount}
+            <FollowButton onFollow={showFollowButton && follow} isFollowed={isFollowed} />
+            <Typography.P style={{ marginLeft: 8 }} variant="para-01" color="textGrayDark">
+              {followCount}
             </Typography.P>
           </div>
           <div css={Styles.CONTAINER_CENTERED}>

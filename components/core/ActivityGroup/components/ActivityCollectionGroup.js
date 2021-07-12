@@ -14,7 +14,7 @@ const STYLES_GROUP_GRID = (theme) => css`
   display: grid;
   grid-template-columns: 260px 1fr;
   grid-row-gap: 32px;
-  border-bottom: 1px solid #e5e5ea;
+  border-bottom: 1px solid ${theme.system.bgGray};
   padding-bottom: 24px;
   @media (max-width: ${theme.sizes.mobile}px) {
     grid-row-gap: 24px;
@@ -29,7 +29,7 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityCollectionGroup({ onAction, group, ...props }) {
+export default function ActivityCollectionGroup({ onAction, viewer, group, ...props }) {
   const { owner, slate, type, createdAt } = group;
   const { elements, restElements } = React.useMemo(() => {
     if (!Array.isArray(slate)) {
@@ -53,12 +53,18 @@ export default function ActivityCollectionGroup({ onAction, group, ...props }) {
 
   return (
     <div css={STYLES_GROUP_GRID} {...props}>
-      <ProfileInfo time={timeSinceUploaded} owner={owner} action={action} onAction={onAction} />
+      <ProfileInfo
+        time={timeSinceUploaded}
+        owner={owner}
+        viewer={viewer}
+        action={action}
+        onAction={onAction}
+      />
       <div>
         <div css={Styles.COLLECTIONS_PREVIEW_GRID}>
           {elements.map((collection) => (
             <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-              <CollectionPreviewBlock collection={collection} />
+              <CollectionPreviewBlock collection={collection} viewer={viewer} />
             </Link>
           ))}
           {showMore &&
@@ -71,12 +77,12 @@ export default function ActivityCollectionGroup({ onAction, group, ...props }) {
                   key={collection.id}
                 >
                   <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-                    <CollectionPreviewBlock collection={collection} />
+                    <CollectionPreviewBlock collection={collection} viewer={viewer} />
                   </Link>
                 </motion.div>
               ) : (
                 <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-                  <CollectionPreviewBlock collection={collection} />
+                  <CollectionPreviewBlock collection={collection} viewer={viewer} />
                 </Link>
               )
             )}
