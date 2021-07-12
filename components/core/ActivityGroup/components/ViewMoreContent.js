@@ -4,12 +4,12 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
-import { P } from "~/components/system/components/Typography";
+import { H5 } from "~/components/system/components/Typography";
 
 import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 
 const STYLES_VIEW_MORE_CONTAINER = (theme) => css`
-  background-color: ${theme.system.white};
+  background-color: ${theme.system.bgLight};
   border: none;
   padding: 8px;
   border-radius: 8px;
@@ -59,9 +59,9 @@ export default function ViewMoreContent({ items, children, ...props }) {
             })}
           </div>
         )}
-        <P style={{ marginLeft: items ? 12 : 0 }} css={Styles.HEADING_05}>
+        <H5 style={{ marginLeft: items ? 12 : 0 }} color="textGrayDark">
           {children}
-        </P>
+        </H5>
       </div>
     </button>
   );

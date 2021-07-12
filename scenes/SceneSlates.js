@@ -68,7 +68,11 @@ export default class SceneSlates extends React.Component {
                       href={`/$/slate/${slate.id}`}
                       onAction={this.props.onAction}
                     >
-                      <CollectionPreviewBlock key={slate.id} collection={slate} />
+                      <CollectionPreviewBlock
+                        key={slate.id}
+                        collection={slate}
+                        viewer={this.props.viewer}
+                      />
                     </Link>
                   ))}
                 </div>
@@ -94,7 +98,11 @@ export default class SceneSlates extends React.Component {
                       href={`/$/slate/${slate.id}`}
                       onAction={this.props.onAction}
                     >
-                      <CollectionPreviewBlock key={slate.id} collection={slate} />
+                      <CollectionPreviewBlock
+                        key={slate.id}
+                        collection={slate}
+                        viewer={this.props.viewer}
+                      />
                     </Link>
                   ))}
                 </div>

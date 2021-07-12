@@ -15,7 +15,7 @@ const STYLES_GROUP_GRID = (theme) => css`
   display: grid;
   grid-template-columns: 260px 1fr;
   grid-row-gap: 32px;
-  border-bottom: 1px solid #e5e5ea;
+  border-bottom: 1px solid ${theme.system.bgGray};
   padding-bottom: 24px;
   @media (max-width: ${theme.sizes.mobile}px) {
     grid-row-gap: 24px;
@@ -51,6 +51,7 @@ export default function ActivityProfileGroup({ viewer, external, group, onAction
         time={timeSinceUploaded}
         owner={owner}
         action={"started following"}
+        viewer={viewer}
         onAction={onAction}
       />
       <div>

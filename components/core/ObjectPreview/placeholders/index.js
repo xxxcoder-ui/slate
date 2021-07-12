@@ -24,7 +24,7 @@ const STYLES_PLACEHOLDER_CONTAINER = (theme) => css`
   width: 86px;
   min-width: 64px;
   border-radius: 4px;
-  background-color: ${theme.system.bgLight};
+  background-color: ${theme.system.bgGray};
 `;
 
 const STYLES_TAG = (theme) => css`

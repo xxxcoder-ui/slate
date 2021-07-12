@@ -4,10 +4,9 @@ import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { motion } from "framer-motion";
+import { ViewMoreContent, ProfileInfo } from "~/components/core/ActivityGroup/components";
 
 import ObjectPreview from "~/components/core/ObjectPreview";
-
-import { ViewMoreContent, ProfileInfo } from "~/components/core/ActivityGroup/components";
 
 const STYLES_OBJECT_GRID = (theme) => css`
   display: grid;
@@ -24,7 +23,7 @@ const STYLES_GROUP_GRID = (theme) => css`
   display: grid;
   grid-template-columns: 260px 1fr;
   grid-row-gap: 32px;
-  border-bottom: 1px solid #e5e5ea;
+  border-bottom: 1px solid ${theme.system.bgGray};
   padding-bottom: 24px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
@@ -55,14 +54,15 @@ export default function ActivityCreateFileGroup({ viewer, group, onAction }) {
   const timeSinceAction = Utilities.getTimeDifferenceFromNow(createdAt);
   const nbrOfFiles = elements.length + (restElements?.length || 0);
   const action = React.useMemo(() => {
-    if (type === "CREATE_FILE") {
+    if (type === "CREATE_FILE")
       return `uploaded ${nbrOfFiles} ${Strings.pluralize("file", nbrOfFiles)} ${
         slate ? `to ${slate.slatename}` : ""
       }`;
-    }
-    if (type === "LIKE_FILE") {
-      return `liked ${nbrOfFiles} ${Strings.pluralize("file", nbrOfFiles)}`;
-    }
+
+    if (type === "LIKE_FILE") return `liked ${nbrOfFiles} ${Strings.pluralize("file", nbrOfFiles)}`;
+
+    if (type === "SAVE_COPY") return `saved ${nbrOfFiles} ${Strings.pluralize("file", nbrOfFiles)}`;
+
     return `added ${nbrOfFiles} ${Strings.pluralize("file", nbrOfFiles)} ${
       slate && `to ${slate.slatename}`
     }`;
@@ -70,7 +70,13 @@ export default function ActivityCreateFileGroup({ viewer, group, onAction }) {
 
   return (
     <div css={STYLES_GROUP_GRID}>
-      <ProfileInfo time={timeSinceAction} owner={owner} action={action} onAction={onAction} />
+      <ProfileInfo
+        time={timeSinceAction}
+        owner={owner}
+        action={action}
+        viewer={viewer}
+        onAction={onAction}
+      />
       <div>
         <div css={STYLES_OBJECT_GRID}>
           {elements.map((file) => (
