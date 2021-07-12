@@ -6,6 +6,7 @@ import * as Actions from "~/common/actions";
 import * as Utilities from "~/common/utilities";
 import * as Events from "~/common/custom-events";
 import * as Window from "~/common/window";
+import * as Styles from "~/common/styles";
 
 import { useState } from "react";
 import { Link } from "~/components/core/Link";
@@ -20,9 +21,9 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import ProcessedText from "~/components/core/ProcessedText";
 import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
-import CTATransition from "~/components/core/CTATransition";
 import DataView from "~/components/core/DataView";
 import EmptyState from "~/components/core/EmptyState";
+import CollectionPreviewBlock from "~/components/core/CollectionPreviewBlock";
 
 const STYLES_PROFILE_BACKGROUND = css`
   background-color: ${Constants.system.white};
@@ -345,7 +346,11 @@ function CollectionsPage({
         style={{ margin: "0 0 24px 0" }}
       />
       {slates?.length ? (
-        <SlatePreviewBlocks external={!viewer} slates={slates || []} onAction={onAction} />
+        <div css={Styles.COLLECTIONS_PREVIEW_GRID}>
+          {slates.map((collection) => (
+            <CollectionPreviewBlock key={collection.id} collection={collection} viewer={viewer} />
+          ))}
+        </div>
       ) : (
         <EmptyState>
           {tab === "collections" || fetched ? (
@@ -436,7 +441,7 @@ function PeersPage({
       ) : null;
 
     return (
-      <Link href={`/$/user/${relation.id}`} onAction={onAction}>
+      <Link key={relation.id} href={`/$/user/${relation.id}`} onAction={onAction}>
         <UserEntry key={relation.id} user={relation} button={button} checkStatus={checkStatus} />
       </Link>
     );
