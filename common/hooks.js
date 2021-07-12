@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as Logging from "~/common/logging";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 export const useMounted = () => {
   const isMounted = React.useRef(true);
@@ -255,4 +257,137 @@ export const useInView = ({ ref }) => {
     },
   });
   return { isInView };
+};
+
+// NOTE(amine): manage like state
+export const useLikeHandler = ({ file, viewer }) => {
+  const likedFile = React.useMemo(() => viewer?.likes?.find((item) => item.id === file.id), []);
+  const [state, setState] = React.useState({
+    isLiked: !!likedFile,
+    // NOTE(amine): viewer will have the hydrated state
+    likeCount: likedFile?.likeCount ?? file.likeCount,
+  });
+
+  const handleLikeState = () => {
+    setState((prev) => {
+      if (prev.isLiked) {
+        return {
+          isLiked: false,
+          likeCount: prev.likeCount - 1,
+        };
+      }
+      return {
+        isLiked: true,
+        likeCount: prev.likeCount + 1,
+      };
+    });
+  };
+  const like = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    // NOTE(amine): optimistic update
+    handleLikeState();
+    const response = await Actions.like({ id: file.id });
+    if (Events.hasError(response)) {
+      // NOTE(amine): revert back to old state if there is an error
+      handleLikeState();
+      return;
+    }
+  };
+
+  return { like, ...state };
+};
+
+// NOTE(amine): manage file saving state
+export const useSaveHandler = ({ file, viewer }) => {
+  const savedFile = React.useMemo(() => viewer?.libraryCids[file.cid], [viewer]);
+  const [state, setState] = React.useState({
+    isSaved: !!savedFile,
+    // NOTE(amine): viewer will have the hydrated state
+    saveCount: file.saveCount,
+  });
+
+  const handleSaveState = () => {
+    setState((prev) => {
+      if (prev.isSaved) {
+        return {
+          isSaved: false,
+          saveCount: prev.saveCount - 1,
+        };
+      }
+      return {
+        isSaved: true,
+        saveCount: prev.saveCount + 1,
+      };
+    });
+  };
+
+  const save = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    // NOTE(amine): optimistic update
+    handleSaveState();
+    const response =
+      state.isSaved && savedFile
+        ? await Actions.deleteFiles({ ids: [savedFile.id] })
+        : await Actions.saveCopy({ files: [file] });
+    if (Events.hasError(response)) {
+      // NOTE(amine): revert back to old state if there is an error
+      handleSaveState();
+      return;
+    }
+  };
+
+  return { save, ...state };
+};
+
+export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
+  const [isFollowing, setFollowing] = React.useState(
+    !viewer
+      ? false
+      : !!viewer?.following.some((entry) => {
+          return entry.id === user.id;
+        })
+  );
+
+  const handleFollow = async (userId) => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+
+    setFollowing((prev) => !prev);
+    const response = await Actions.createSubscription({
+      userId,
+    });
+
+    if (Events.hasError(response)) {
+      setFollowing((prev) => !prev);
+      return;
+    }
+
+    onAction({
+      type: "UPDATE_VIEWER",
+      viewer: {
+        following: isFollowing
+          ? viewer.following.filter((user) => user.id !== userId)
+          : viewer.following.concat([
+              {
+                id: user.id,
+                data: user.data,
+                fileCount: user.fileCount,
+                followerCount: user.followerCount + 1,
+                slateCount: user.slateCount,
+                username: user.username,
+              },
+            ]),
+      },
+    });
+  };
+
+  return { handleFollow, isFollowing };
 };
