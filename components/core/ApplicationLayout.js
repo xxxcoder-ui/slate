@@ -37,7 +37,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_CONTENT = css`
-  background: ${Constants.system.bgLight};
+  background-color: ${Constants.system.white};
   width: 100%;
   min-width: 10%;
   min-height: 100vh;

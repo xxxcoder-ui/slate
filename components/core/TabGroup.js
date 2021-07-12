@@ -44,7 +44,6 @@ const STYLES_TAB_GROUP = css`
   box-sizing: border-box;
   width: 100%;
   flex-wrap: wrap;
-  border-bottom: 1px solid ${Constants.system.gray};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 24px 0px 24px 0px;
@@ -107,7 +106,7 @@ export class SecondaryTabGroup extends React.Component {
                   color: disabled || selected ? Constants.system.black : "rgba(0,0,0,0.25)",
                   cursor: disabled ? "auto" : "pointer",
                   ...this.props.itemStyle,
-                  backgroundColor: selected ? Constants.system.white : "transparent",
+                  backgroundColor: selected ? Constants.system.bgLight : "transparent",
                 }}
                 // onClick={disabled || selected ? () => {} : () => this.props.onChange(tab.value)}
               >
