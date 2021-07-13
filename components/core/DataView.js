@@ -879,7 +879,7 @@ export default class DataView extends React.Component {
             </FilePreviewBubble>
           </Selectable>
         ),
-        tags: <>{each.data.tags?.length && <Tags tags={each.data.tags} />}</>,
+        tags: <>{each.data.tags?.length ? <Tags tags={each.data.tags} /> : null}</>,
         size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.data.size)}</div>,
         more: this.props.isOwner ? (
           <div
