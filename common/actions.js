@@ -1,6 +1,7 @@
 import "isomorphic-fetch";
 import microlink from "@microlink/mql";
 
+import * as Logging from "~/common/logging";
 import * as Events from "~/common/custom-events";
 import * as Websockets from "~/common/browser-websockets";
 import * as Strings from "~/common/strings";
@@ -43,7 +44,7 @@ const returnJSON = async (route, options) => {
 
     return json;
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 

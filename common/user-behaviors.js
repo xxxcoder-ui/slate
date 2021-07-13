@@ -202,9 +202,7 @@ export const removeFromSlate = async ({ slate, ids }) => {
 //NOTE(martina): save copy includes add to slate now. If it's already in the user's files but not in that slate, it'll skip the adding to files and just add to slate
 export const saveCopy = async ({ files, slate }) => {
   let response = await Actions.saveCopy({ files, slate });
-  console.log("after this");
   if (Events.hasError(response)) {
-    console.log("returning false");
     return false;
   }
   let message = Strings.formatAsUploadMessage(response.data.added, response.data.skipped, slate);

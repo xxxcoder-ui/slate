@@ -8,6 +8,7 @@ import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as FileUtilities from "~/common/file-utilities";
+import * as Logging from "~/common/logging";
 
 import { css } from "@emotion/react";
 import { DataMeterBar } from "~/components/core/DataMeter";
@@ -140,7 +141,7 @@ export default class ModalAddFileToBucket extends React.Component {
     try {
       const url = new URL(this.state.url);
     } catch (e) {
-      console.log(e);
+      Logging.error(e);
       this.setState({ urlError: true });
       return;
     }

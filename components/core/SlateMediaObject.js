@@ -89,7 +89,7 @@ export default class SlateMediaObject extends React.Component {
   render() {
     const { file, isMobile } = this.props;
     const type = file.data.type || "";
-    console.log(file);
+
     if (file.isLink) {
       return <SlateLinkObject {...this.props} />;
     }

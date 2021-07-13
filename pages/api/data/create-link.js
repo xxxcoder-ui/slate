@@ -5,14 +5,7 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
-import * as Environment from "~/node_common/environment";
-
-import "isomorphic-fetch";
-
-import JWT from "jsonwebtoken";
-import microlink from "@microlink/mql";
-import CID from "cids";
-import multihashing from "multihashing-async";
+import * as LinkUtilities from "~/node_common/link-utilities";
 
 export default async (req, res) => {
   const id = Utilities.getIdFromCookie(req);
@@ -55,7 +48,7 @@ export default async (req, res) => {
 
   let files = [];
   for (let url of urls) {
-    const cid = await getCIDFromURL(url);
+    const cid = await LinkUtilities.getCIDofString(url);
     files.push({ cid, url });
   }
 
@@ -72,18 +65,18 @@ export default async (req, res) => {
 
   for (let file of filteredFiles) {
     const url = file.url;
-    const data = await fetchLinkData(url);
+    const data = await LinkUtilities.fetchLinkData(url);
     if (!data) {
       continue;
     }
 
     const filename = Strings.createSlug(data.title);
 
-    const domain = getDomainFromURL(url);
+    const domain = LinkUtilities.getDomainFromURL(url);
 
-    const html = await fetchEmbed(url);
+    const html = await LinkUtilities.fetchEmbed(url);
 
-    const iFrameAllowed = await testIframe(url);
+    const iFrameAllowed = await LinkUtilities.testIframe(url);
 
     const newFile = {
       filename,
@@ -147,7 +140,7 @@ export default async (req, res) => {
   }
 
   for (let file of createdFiles) {
-    uploadScreenshot(file, user);
+    LinkUtilities.uploadScreenshot(file, user);
   }
 
   let added = createdFiles?.length || 0;
@@ -178,93 +171,4 @@ export default async (req, res) => {
     decorator,
     data: { added, skipped: files.length - added },
   });
-};
-
-const fetchLinkData = async (url) => {
-  let mql;
-  try {
-    mql = await microlink(url, { screenshot: true });
-  } catch (e) {
-    console.log(e);
-  }
-  if (!mql || mql.status !== "success") {
-    return;
-  }
-  return mql?.data;
-};
-
-export const getDomainFromURL = (url = "") => {
-  let parsedURL;
-  try {
-    parsedURL = new URL(url);
-  } catch (e) {
-    console.log(e);
-    return;
-  }
-  const domain = parsedURL.hostname.replace("www.", ""); //NOTE(martina): returns example.com
-  return domain;
-};
-
-export const getCIDFromURL = async (url = "") => {
-  const bytes = new TextEncoder().encode(url);
-  const hash = await multihashing(bytes, "sha2-256");
-  const cid = new CID(1, "dag-pb", hash);
-  return cid.toString();
-};
-
-const fetchEmbed = async (url) => {
-  try {
-    const request = await fetch(
-      `https://iframe.ly/api/oembed?url=${encodeURIComponent(url)}&api_key=${
-        Environment.IFRAMELY_API_KEY
-      }&iframe=1&omit_script=1`,
-      {
-        method: "GET",
-      }
-    );
-    const data = await request.json();
-    return data?.html;
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const testIframe = async (url) => {
-  try {
-    const request = await fetch(url, {
-      method: "GET",
-    });
-    if (request?.headers && request?.headers.get("x-frame-options")) {
-      return false;
-    }
-    return true;
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-};
-
-const uploadScreenshot = async (file, user) => {
-  const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
-  const data = {
-    url: file.data.coverImage.data.url,
-    updateType: "COVER_IMAGE",
-    targetId: file.id,
-  };
-  try {
-    const request = await fetch(`${Environment.RESOURCE_URI_UPLOAD}/api/data/url`, {
-      method: "POST",
-      credentials: "omit",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ data }),
-    });
-    return true;
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
 };

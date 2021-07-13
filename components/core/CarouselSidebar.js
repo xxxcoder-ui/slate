@@ -384,9 +384,7 @@ class CarouselSidebar extends React.Component {
       return;
     }
     this.setState({ loading: "savingCopy" }, async () => {
-      console.log("before the call");
       let response = await UserBehaviors.saveCopy({ files: [data] });
-      console.log("after the call");
       Events.hasError(response);
       this.setState({ loading: false });
     });
