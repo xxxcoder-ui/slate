@@ -2,20 +2,16 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Social from "~/node_common/social";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
-  if (Strings.isEmpty(req.body.data.cid)) {
+  if (Strings.isEmpty(req.body.data?.cid)) {
     return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_NO_CID", error: true });
   }
-
-  const user = await Data.getUserById({
-    id,
-  });
 
   const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
     user,

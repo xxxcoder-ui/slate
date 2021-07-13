@@ -1,21 +1,11 @@
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({ id });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   if (!req.body.data?.id) {
     return res.status(500).send({ decorator: "SERVER_LIKE_FILE_NO_FILE_PROVIDED", error: true });

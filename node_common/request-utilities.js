@@ -75,5 +75,5 @@ export const checkAuthorizationExternal = async (req, res) => {
     });
   }
 
-  return { id, user };
+  return { id: user.id, key, user };
 };

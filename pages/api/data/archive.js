@@ -3,6 +3,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as Strings from "~/common/strings";
 import * as Logging from "~/common/logging";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 import { v4 as uuid } from "uuid";
 import { MAX_BUCKET_COUNT, MIN_ARCHIVE_SIZE_BYTES } from "~/node_common/constants";
@@ -10,28 +11,9 @@ import { MAX_BUCKET_COUNT, MIN_ARCHIVE_SIZE_BYTES } from "~/node_common/constant
 const STAGING_DEAL_BUCKET = "stage-deal";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
-  if (user.error) {
-    return res.status(500).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   let bucketName = null;
   if (req.body.data && req.body.data.bucketName) {

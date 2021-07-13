@@ -29,10 +29,6 @@ const STYLES_TEXT = css`
 `;
 
 export default class SidebarFAQ extends React.Component {
-  _handleSubmit = async () => {
-    this.props.onAction({ type: "SIDEBAR", value: "SIDEBAR_HELP" });
-  };
-
   render() {
     return (
       <div style={{ marginBottom: 64 }}>
@@ -88,7 +84,7 @@ export default class SidebarFAQ extends React.Component {
           </System.P1>
         </div>
 
-        <div css={STYLES_GROUPING}>
+        {/* <div css={STYLES_GROUPING}>
           <System.P1
             css={STYLES_TEXT}
             style={{ color: Constants.system.blue, cursor: "pointer" }}
@@ -96,7 +92,7 @@ export default class SidebarFAQ extends React.Component {
           >
             Still have questions? Send us a message!
           </System.P1>
-        </div>
+        </div> */}
       </div>
     );
   }

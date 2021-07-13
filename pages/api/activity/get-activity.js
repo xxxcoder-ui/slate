@@ -2,6 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Serializers from "~/node_common/serializers";
 import * as Strings from "~/common/strings";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 /**
  * This endpoint is used to get the activity feed items that involve the users in FOLLOWING or slates in SUBSCRIPTIONS, paginated 100 at a time.
@@ -14,11 +15,9 @@ import * as Strings from "~/common/strings";
  */
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   let following = req.body.data?.following;
   let subscriptions = req.body.data?.subscriptions;

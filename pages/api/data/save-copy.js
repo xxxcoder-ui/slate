@@ -4,30 +4,18 @@ import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 /**
  * Save copy is equivalent to downloading then reuploading. So an entirely new files table entry should
  * be created with a new id, ownerId, and createdAt
  */
 export default async (req, res) => {
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
+
   let decorator = "SERVER_SAVE_COPY";
-
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
 
   let { buckets, bucketKey, bucketRoot, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user,

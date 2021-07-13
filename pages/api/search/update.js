@@ -3,24 +3,12 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as SearchManager from "~/node_common/managers/search";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   let action;
   if (req.body.data === "create-user") {

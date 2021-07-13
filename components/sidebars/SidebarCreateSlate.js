@@ -63,6 +63,7 @@ export default class SidebarCreateSlate extends React.Component {
       body: this.state.body,
       tags: this.state.tags,
     });
+    console.log(response);
 
     if (Events.hasError(response)) {
       this.setState({ loading: false });

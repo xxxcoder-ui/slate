@@ -2,46 +2,12 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Powergate from "~/node_common/powergate";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  if (Strings.isEmpty(req.headers.authorization)) {
-    return res.status(404).send({
-      decorator: "NO_API_KEY_PROVIDED",
-      error: true,
-    });
-  }
-
-  const parsed = Strings.getKey(req.headers.authorization);
-
-  const key = await Data.getAPIKeyByKey({
-    key: parsed,
-  });
-
-  if (!key) {
-    return res.status(403).send({
-      decorator: "NO_MATCHING_API_KEY_FOUND",
-      error: true,
-    });
-  }
-
-  if (key.error) {
-    return res.status(500).send({
-      decorator: "ERROR_WHILE_VERIFYING_API_KEY",
-      error: true,
-    });
-  }
-
-  const user = await Data.getUserById({
-    id: key.ownerId,
-  });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "API_KEY_OWNER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationExternal(req, res);
+  if (!userInfo) return;
+  const { id, key, user } = userInfo;
 
   let userId = req.body?.data?.id;
 

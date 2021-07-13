@@ -4,30 +4,12 @@ import * as Utilities from "~/node_common/utilities";
 import * as Serializers from "~/node_common/serializers";
 import * as Validations from "~/common/validations";
 import * as ViewerManager from "~/node_common/managers/viewer";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
-  }
-
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
-
-  if (user.error) {
-    return res.status(500).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   let updateResponse;
   if (req.body.data?.onboarding) {

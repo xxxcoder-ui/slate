@@ -3,22 +3,12 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as SearchManager from "~/node_common/managers/search";
+import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
-  const id = Utilities.getIdFromCookie(req);
-  if (!id) {
-    return res.status(500).send({ decorator: "SERVER_USER_DELETE", error: true });
-  }
-
-  const user = await Data.getUserById({ id, includeFiles: true });
-
-  if (!user) {
-    return res.status(404).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
-
-  if (user.error) {
-    return res.status(500).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
-  }
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  if (!userInfo) return;
+  const { id, user } = userInfo;
 
   // NOTE(jim): remove their public slates and files from the search cache.
   let slates = await Data.getSlatesByUserId({ ownerId: user.id, publicOnly: true });
