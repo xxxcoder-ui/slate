@@ -27,7 +27,7 @@ const EXAMPLE_CODE_PY = (key, slateId) =>
 
 headers = {
     "content-type": "application/json",
-    "Authorization": "Basic ${key}", // API key
+    "Authorization": "Basic ${key}", # API key
 }
 
 json = { "id": "${slateId}" } # collection ID

@@ -25,6 +25,7 @@ import APIDocsGetUserV2 from "~/components/api-docs/v2/get-user.js";
 import APIDocsUpdateSlateV2 from "~/components/api-docs/v2/update-slate.js";
 import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
 import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
+import APIDocsCreateLinkV2 from "~/components/api-docs/v2/create-link.js";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_API_KEY = css`
@@ -341,6 +342,12 @@ export default class SceneSettingsDeveloper extends React.Component {
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsUploadToSlateV2
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsCreateLinkV2
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
