@@ -8,16 +8,18 @@ export default async ({
 }) => {
   let usersFollowing = following || [];
   if (!following?.length || following.length < 3) {
-    usersFollowing.push([
-      "f292c19f-1337-426c-8002-65e128b95096",
-      "708559e6-cfc9-4b82-8241-3f4e5046028d",
-      "1195e8bb-3f94-4b47-9deb-b30d6a6f82c4",
-      "231d5d53-f341-448b-9e92-0b7847c5b667",
-      "a280fce9-d85f-455a-9523-88f2bacd7d63",
-      "d909728d-f699-4474-a7d4-584b62907c53",
-      "20c15eab-ad33-40fd-a434-958a5f1ccb67",
-      "3cad78ea-01ad-4c92-8983-a97524fb9e35",
-    ]);
+    usersFollowing.push(
+      ...[
+        "f292c19f-1337-426c-8002-65e128b95096",
+        "708559e6-cfc9-4b82-8241-3f4e5046028d",
+        "1195e8bb-3f94-4b47-9deb-b30d6a6f82c4",
+        "231d5d53-f341-448b-9e92-0b7847c5b667",
+        "a280fce9-d85f-455a-9523-88f2bacd7d63",
+        "d909728d-f699-4474-a7d4-584b62907c53",
+        "20c15eab-ad33-40fd-a434-958a5f1ccb67",
+        "3cad78ea-01ad-4c92-8983-a97524fb9e35",
+      ]
+    );
   }
   // const slateFiles = DB.raw(
   //   "coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??",
@@ -101,7 +103,6 @@ export default async ({
   //   "SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
 
   const conditionFields = ["activity.ownerId", usersFollowing, "activity.slateId", subscriptions];
-
   return await runQuery({
     label: "GET_ACTIVITY_FOR_USER_ID",
     queryFn: async (DB) => {

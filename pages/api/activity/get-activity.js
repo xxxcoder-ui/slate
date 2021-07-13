@@ -1,7 +1,5 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
-import * as Serializers from "~/node_common/serializers";
-import * as Strings from "~/common/strings";
 
 /**
  * This endpoint is used to get the activity feed items that involve the users in FOLLOWING or slates in SUBSCRIPTIONS, paginated 100 at a time.
