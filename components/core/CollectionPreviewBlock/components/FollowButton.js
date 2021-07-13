@@ -6,10 +6,13 @@ import { css } from "@emotion/react";
 import { motion, useAnimation } from "framer-motion";
 
 const STYLES_BUTTON_HOVER = (theme) => css`
-  display: flex;
-  :hover path {
+  :hover .button_path {
     stroke: ${theme.system.brand};
   }
+`;
+
+const STYLES_INLINE = css`
+  display: flex;
 `;
 
 const animate = async (controls) => {
@@ -27,7 +30,7 @@ const useMounted = (callback, depedencies) => {
   }, depedencies);
 };
 
-export default function FollowButton({ onFollow, isFollowed, ...props }) {
+export default function FollowButton({ onFollow, isFollowed, disabled, ...props }) {
   const controls = useAnimation();
 
   useMounted(() => {
@@ -39,8 +42,9 @@ export default function FollowButton({ onFollow, isFollowed, ...props }) {
 
   return (
     <button
-      css={[Styles.BUTTON_RESET, STYLES_BUTTON_HOVER]}
+      css={[Styles.BUTTON_RESET, STYLES_INLINE, !disabled && STYLES_BUTTON_HOVER]}
       onClick={(e) => {
+        if (disabled) return;
         e.preventDefault();
         e.stopPropagation();
         if (onFollow) onFollow();
