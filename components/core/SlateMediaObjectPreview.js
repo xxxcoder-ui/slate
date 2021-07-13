@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
+import * as Utilities from "~/common/utilities";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 
@@ -107,16 +108,7 @@ export default class SlateMediaObjectPreview extends React.Component {
     const type = this.props.file.data?.type;
     const coverImage = this.props.file.data?.coverImage;
 
-    let url;
-    if (type && Validations.isPreviewableImage(type)) {
-      url = Strings.getURLfromCID(this.props.file.cid);
-    } else if (coverImage) {
-      url = coverImage.data?.url || Strings.getURLfromCID(coverImage.cid);
-    }
-
-    // if (Validations.isLinkType(type)) {
-    //   url = file.data.link.image;
-    // }
+    let url = Utilities.getImageUrlIfExists(file);
 
     if (url) {
       const blurhash =
