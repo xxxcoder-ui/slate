@@ -74,7 +74,10 @@ export function useActivity({ page, viewer, onAction }) {
       items: [],
       shouldFetchMore: true,
     },
-    loading: false,
+    loading: {
+      explore: false,
+      activity: false,
+    },
   });
 
   const tab = getTab(page, viewer);
@@ -87,14 +90,14 @@ export function useActivity({ page, viewer, onAction }) {
         return;
       }
 
-      if (state.loading) return;
-      setState((prev) => ({ ...prev, loading: true }));
+      if (state.loading[tab]) return;
+      setState((prev) => ({ ...prev, loading: { ...prev.loading, [tab]: true } }));
       if (viewer && tab === "activity") {
         await updateActivityFeed({ viewer, onAction, update });
       } else {
         await updateExploreFeed({ viewer, onAction, state, setState, update });
       }
-      setState((prev) => ({ ...prev, loading: false }));
+      setState((prev) => ({ ...prev, loading: { ...prev.loading, [tab]: false } }));
     },
     [tab, onAction, state, viewer]
   );

@@ -70,7 +70,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
           ))}
         </div>
         <div ref={divRef} css={STYLES_LOADING_CONTAINER}>
-          {isLoading && <LoaderSpinner />}
+          {isLoading[tab] && <LoaderSpinner />}
         </div>
       </ScenePage>
     </WebsitePrototypeWrapper>
