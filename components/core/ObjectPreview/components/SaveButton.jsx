@@ -44,7 +44,7 @@ export default function SaveButton({ onSave, isSaved, ...props }) {
           strokeLinejoin="round"
         />
         <motion.path
-          initial={{ pathLength: 0 }}
+          initial={{ pathLength: isSaved ? 1 : 0 }}
           animate={{
             pathLength: isSaved ? 1 : 0,
             stroke: "#fff",

@@ -266,6 +266,7 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
 
 function FilesPage({
   library,
+  user,
   isOwner,
   isMobile,
   viewer,
@@ -296,6 +297,7 @@ function FilesPage({
       {library.length ? (
         <DataView
           key="scene-profile"
+          user={user}
           onAction={onAction}
           viewer={viewer}
           isOwner={isOwner}
@@ -348,7 +350,14 @@ function CollectionsPage({
       {slates?.length ? (
         <div css={Styles.COLLECTIONS_PREVIEW_GRID}>
           {slates.map((collection) => (
-            <CollectionPreviewBlock key={collection.id} collection={collection} viewer={viewer} />
+            <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
+              <CollectionPreviewBlock
+                onAction={onAction}
+                collection={collection}
+                viewer={viewer}
+                owner={user}
+              />
+            </Link>
           ))}
         </div>
       ) : (
@@ -669,7 +678,9 @@ export default class Profile extends React.Component {
             style={{ marginTop: 0, marginBottom: 32 }}
             itemStyle={{ margin: "0px 16px" }}
           />
-          {subtab === "files" ? <FilesPage {...this.props} library={library} tab={tab} /> : null}
+          {subtab === "files" ? (
+            <FilesPage {...this.props} user={user} library={library} tab={tab} />
+          ) : null}
           {subtab === "collections" ? (
             <CollectionsPage
               {...this.props}

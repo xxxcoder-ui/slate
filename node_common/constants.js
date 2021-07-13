@@ -49,3 +49,5 @@ export const fileProperties = [
   "files.downloadCount",
   "files.saveCount",
 ];
+
+export const userPreviewProperties = ["users.id", "users.data", "users.username"];

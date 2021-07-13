@@ -38,7 +38,7 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityCreateFileGroup({ viewer, group, onAction }) {
+export default function ActivityFileGroup({ viewer, group, onAction }) {
   const { file, owner, slate, type, createdAt } = group;
 
   const { elements, restElements } = React.useMemo(() => {
@@ -80,7 +80,7 @@ export default function ActivityCreateFileGroup({ viewer, group, onAction }) {
       <div>
         <div css={STYLES_OBJECT_GRID}>
           {elements.map((file) => (
-            <ObjectPreview viewer={viewer} key={file.id} file={file} />
+            <ObjectPreview viewer={viewer} owner={file.owner} key={file.id} file={file} />
           ))}
           {showMore &&
             restElements.map((file, i) =>
@@ -91,10 +91,10 @@ export default function ActivityCreateFileGroup({ viewer, group, onAction }) {
                   animate={{ opacity: 1, y: 0 }}
                   key={file.id}
                 >
-                  <ObjectPreview viewer={viewer} file={file} />
+                  <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
                 </motion.div>
               ) : (
-                <ObjectPreview viewer={viewer} file={file} />
+                <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
               )
             )}
         </div>

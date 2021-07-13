@@ -1,3 +1,5 @@
+import * as Constants from "~/node_common/constants";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({
@@ -69,15 +71,28 @@ export default async ({
   ];
   const userQuery = `, ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${userFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??)`;
 
+  const fileFields = [
+    "files_table",
+    "files.*",
+    ...Constants.userPreviewProperties,
+    "owner",
+    "files",
+    "users",
+    "files.ownerId",
+    "users.id",
+  ];
+  const fileQuery = `, ?? as (SELECT ??, json_build_object('id', ??, 'data', ??, 'username', ??) as ?? FROM ?? LEFT JOIN ?? on ?? = ??)`;
+
   const selectFields = [
     ...slateFields,
     ...userFields,
+    ...fileFields,
     "activity.id",
     "activity.type",
     "activity.createdAt",
     "slate_table",
     "slate",
-    "files",
+    "files_table",
     "file",
     "user_table",
     "user",
@@ -90,15 +105,15 @@ export default async ({
     "user_table",
     "user_table.id",
     "activity.userId",
-    "files",
-    "files.id",
+    "files_table",
+    "files_table.id",
     "activity.fileId",
     "user_table",
     "owners",
     "owners.id",
     "activity.ownerId",
   ];
-  const selectQuery = `${slateQuery} ${userQuery} SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??`;
+  const selectQuery = `${slateQuery} ${userQuery} ${fileQuery} SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??`;
   // const selectQuery =
   //   "SELECT ??, ??, ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ??, row_to_json(??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? ON ?? = ?? LEFT JOIN ?? AS ?? ON ?? = ??";
 

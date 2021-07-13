@@ -7,6 +7,7 @@ import { H4, P } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 import { LikeButton, SaveButton } from "./components";
 import { useLikeHandler, useSaveHandler } from "~/common/hooks";
+import { Link } from "~/components/core/Link";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -61,10 +62,10 @@ const STYLES_REACTION = css`
 `;
 
 const STYLES_PROFILE_IMAGE = css`
+  display: block;
   background-color: ${Constants.system.foreground};
-  background-size: cover;
-  background-position: 50% 50%;
   flex-shrink: 0;
+  object-fit: cover;
   height: 20px;
   width: 20px;
   border-radius: 2px;
@@ -91,8 +92,10 @@ export default function ObjectPreviewPremitive({
   file,
   isSelected,
   viewer,
+  owner,
   // NOTE(amine): internal prop used to display
   isImage,
+  onAction,
 }) {
   const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
   const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
@@ -100,7 +103,9 @@ export default function ObjectPreviewPremitive({
   const title = file.data.name || file.filename;
 
   if (file?.data?.coverImage && !isImage) {
-    return <ImageObjectPreview file={file} isSelected={isSelected} />;
+    return (
+      <ImageObjectPreview file={file} owner={owner} isSelected={isSelected} onAction={onAction} />
+    );
   }
   const showSaveButton = viewer?.id !== file?.ownerId;
   return (
@@ -147,12 +152,20 @@ export default function ObjectPreviewPremitive({
                   </div>
                 )}
               </div>
-              <span
-                css={STYLES_PROFILE_IMAGE}
-                style={{
-                  backgroundImage: `url('https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i')`,
-                }}
-              />
+              {owner && (
+                <Link
+                  href={`/$/user/${owner.id}`}
+                  onAction={onAction}
+                  aria-label={`Visit ${owner.username}'s profile`}
+                  title={`Visit ${owner.username}'s profile`}
+                >
+                  <img
+                    css={STYLES_PROFILE_IMAGE}
+                    src={owner.data.photo}
+                    alt={`${owner.username} profile`}
+                  />
+                </Link>
+              )}
             </div>
           </article>
         </div>
