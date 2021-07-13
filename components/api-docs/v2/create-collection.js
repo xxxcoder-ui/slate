@@ -4,7 +4,7 @@ import * as System from "~/components/system";
 import CodeBlock from "~/components/system/CodeBlock";
 
 const EXAMPLE_CODE_JS = (key, slateId) => {
-  return `const response = await fetch("https://slate.host/api/v2/create-link", {
+  return `const response = await fetch("https://slate.host/api/v2/create-collection", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,8 +12,10 @@ const EXAMPLE_CODE_JS = (key, slateId) => {
     },
     body: JSON.stringify({
       data: {
-        url: "https://google.com",
-        slate: { id: "${slateId}" }, // Optional slate ID
+        name: "My Dog Fido",
+        isPublic: true,
+        body: "This is an album of my dog, Fido, a golden retriever",
+        tags: ["dogs", "retrievers", "golden retriever"]
       },
     }),
   });`;
@@ -29,16 +31,18 @@ headers = {
 
 postJson = {
     data: {
-      url: "https://google.com",
-      slate: { id: "${slateId}" }, # Optional slate ID
-    },
+        name: "My Dog Fido",
+        isPublic: true,
+        body: "This is an album of my dog, Fido, a golden retriever",
+        tags: ["dogs", "retrievers", "golden retriever"]
+    }
   }
 
-url = "https://slate.host/api/v2/create-link"
+url = "https://slate.host/api/v2/create-collection"
 
 r = requests.post(url, headers=headers, json=postJson)`;
 
-export default class APIDocsCreateLink extends React.Component {
+export default class APIDocsCreateCollection extends React.Component {
   render() {
     let language = this.props.language;
     let key = this.props.APIKey;
@@ -52,14 +56,14 @@ export default class APIDocsCreateLink extends React.Component {
       <React.Fragment>
         <System.DescriptionGroup
           style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
-          label="Create link"
-          description="This API endpoint allows you to upload a link and optionally add it to a slate. Include a slate id to add it to a slate."
+          label="Create Collection"
+          description="This API endpoint allows you to create a collection. All fields except name are optional."
         />
         <CodeBlock
           children={code}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Create link"
+          title="Create collection"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />

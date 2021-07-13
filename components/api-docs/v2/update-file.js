@@ -61,7 +61,7 @@ export default class APIDocsUpdateFile extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
           label="Update file"
           description="This API endpoint allows you to modify a file by saving the collection object in the response from get-collection, modifying it, and sending it back"
         />

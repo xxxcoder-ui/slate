@@ -60,7 +60,7 @@ export default class APIDocsUpdateSlate extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
           label="Update collection"
           description="This API endpoint allows you to modify a collection by saving the response from get-slate, modifying it, and sending it back"
         />

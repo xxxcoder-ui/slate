@@ -75,8 +75,8 @@ export default class APIDocsUploadToSlate extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
-          label="Upload"
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
+          label="Upload file"
           description={
             "This API endpoint allows you to upload file(s) to your collection. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network."
           }
@@ -85,7 +85,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           children={uploadCode}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Upload"
+          title="Upload file"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />
@@ -94,7 +94,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           children={slateUploadCode}
           style={{ maxWidth: "820px" }}
           language={language}
-          title="Upload to collection"
+          title="Upload file to collection"
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />

@@ -50,9 +50,9 @@ export default async (req, res) => {
     });
   }
 
-  if (!req.body.data) {
+  if (!req.body?.data?.id) {
     return res.status(500).send({
-      decorator: "V2_UPDATE_COLLECTION_MUST_PROVIDE_DATA",
+      decorator: "UPDATE_COLLECTION_MUST_PROVIDE_DATA",
       error: true,
     });
   }
@@ -166,5 +166,5 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 
-  return res.status(200).send({ decorator: "V2_UPDATE_COLLECTION", collection: updatedSlate });
+  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: updatedSlate });
 };

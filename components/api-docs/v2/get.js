@@ -119,7 +119,7 @@ export default class APIDocsGet extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
           label="Get your data"
           description="This API request returns your user data and collections. If the request body is omitted, the request will return only your public collections by default."
         />

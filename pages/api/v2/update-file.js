@@ -49,7 +49,7 @@ export default async (req, res) => {
     });
   }
 
-  if (!req.body.data?.id) {
+  if (!req.body?.data?.id) {
     return res.status(500).send({ decorator: "NO_FILE_ID_PROVIDED", error: true });
   }
 
@@ -105,7 +105,7 @@ export default async (req, res) => {
   ViewerManager.hydratePartial(user.id, { library: true, slates: true });
 
   return res.status(200).send({
-    decorator: "V2_UPDATE_FILE",
+    decorator: "UPDATE_FILE",
     file: response,
   });
 };

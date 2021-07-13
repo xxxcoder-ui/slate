@@ -72,5 +72,5 @@ export default async (req, res) => {
     return each;
   });
 
-  return res.status(200).send({ decorator: "V2_GET", user, collections: slates });
+  return res.status(200).send({ decorator: "GET", user, collections: slates });
 };

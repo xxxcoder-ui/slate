@@ -60,7 +60,7 @@ export default class APIDocsGetUser extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
           label="Get user by ID"
           description="This API request will return a specific user"
         />

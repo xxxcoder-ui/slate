@@ -61,17 +61,17 @@ export default async (req, res) => {
 
     if (!slate || slate.error) {
       slate = null;
-      decorator = "SERVER_CREATE_LINK_SLATE_NOT_FOUND";
+      decorator = "SLATE_NOT_FOUND";
     }
   }
 
   let urls;
-  if (req.body.data.url) {
+  if (req.body?.data?.url) {
     urls = [req.body.data.url];
-  } else if (req.body.data.urls) {
+  } else if (req.body?.data?.urls) {
     urls = req.body.data.urls;
   } else {
-    return res.status(400).send({ decorator: "SERVER_CREATE_LINK_NO_LINK_PROVIDED", error: true });
+    return res.status(400).send({ decorator: "NO_LINK_PROVIDED", error: true });
   }
 
   let files = [];
@@ -86,7 +86,7 @@ export default async (req, res) => {
   });
 
   if (!filteredFiles?.length) {
-    return res.status(400).send({ decorator: "SERVER_CREATE_LINK_DUPLICATE", error: true });
+    return res.status(200).send({ decorator: "LINK_DUPLICATE", data: duplicateFiles });
   }
 
   files = [];
@@ -197,6 +197,6 @@ export default async (req, res) => {
 
   return res.status(200).send({
     decorator,
-    data: { added, skipped: files.length - added },
+    data: filesToAddToSlate,
   });
 };

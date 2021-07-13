@@ -43,7 +43,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER", error: true });
   }
 
-  let slateId = req.body.data ? req.body.data.id : null;
+  let slateId = req.body?.data?.id;
   let slate;
 
   if (Strings.isEmpty(slateId)) {
@@ -73,5 +73,5 @@ export default async (req, res) => {
     });
   }
 
-  return res.status(200).send({ decorator: "V2_GET_COLLECTION", collection: slate });
+  return res.status(200).send({ decorator: "GET_COLLECTION", collection: slate });
 };

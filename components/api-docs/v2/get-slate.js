@@ -60,7 +60,7 @@ export default class APIDocsGetCollection extends React.Component {
     return (
       <React.Fragment>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 64 }}
+          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
           label="Get collection by ID"
           description="This API request will return a specific collection. You can save the response locally and send this JSON back to our API server using the route /api/v2/update-collection to update your collection."
         />
