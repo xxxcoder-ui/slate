@@ -6,6 +6,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
+import ProfilePhoto from "~/components/core/ProfilePhoto"; 
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 
@@ -118,16 +119,14 @@ export class ApplicationUserControlsPopup extends React.Component {
     if (this.props.popup === "profile") {
       const topSection = (
         <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginBottom: 14 }}>
-          <span
-            css={STYLES_PROFILE_IMAGE}
-            style={{
-              cursor: "default",
-              width: 46,
-              height: 46,
-              marginRight: 16,
-              backgroundImage: `url('${this.props.viewer.data.photo}')`,
-            }}
-          />
+          <div style={{ marginRight: '16px', cursor: 'default' }} >
+            <ProfilePhoto 
+              size={46}
+              userId={this.props.viewer.id}
+              photo={this.props.viewer.data.photo} 
+            />
+          </div>
+
           <div
             css={Styles.VERTICAL_CONTAINER}
             style={{
@@ -273,17 +272,20 @@ export class ApplicationUserControlsPopup extends React.Component {
 }
 
 export class ApplicationUserControls extends React.Component {
+
   render() {
     let tooltip = <ApplicationUserControlsPopup {...this.props} />;
     return (
       <div css={STYLES_HEADER}>
-        <div css={STYLES_PROFILE_MOBILE} style={{ position: "relative" }}>
-          <span
-            css={STYLES_PROFILE_IMAGE}
-            onClick={() => this.props.onTogglePopup("profile")}
-            style={{
-              backgroundImage: `url('${this.props.viewer.data.photo}')`,
-            }}
+        <div 
+          css={STYLES_PROFILE_MOBILE} 
+          onClick={() => this.props.onTogglePopup("profile")} 
+          style={{ position: "relative", cursor: 'pointer' }}
+        >
+          <ProfilePhoto 
+            photo={this.props.viewer.data.photo}
+            userId={this.props.viewer.id} 
+            size={24} 
           />
           {this.props.popup === "profile" ? tooltip : null}
         </div>
