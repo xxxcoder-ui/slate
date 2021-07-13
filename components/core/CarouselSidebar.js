@@ -638,8 +638,9 @@ class CarouselSidebar extends React.Component {
               type="dark"
               tags={this.state.tags}
               suggestions={this.state.suggestions}
-              inputStyles={STYLES_INPUT}
-              dropdownStyles={{ top: "50px" }}
+              style={STYLES_INPUT}
+              textStyle={{ color: Constants.system.white }}
+              // dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
             />
           </div>

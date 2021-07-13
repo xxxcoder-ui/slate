@@ -21,13 +21,15 @@ const STYLES_INPUT_CONTAINER = css`
 const STYLES_DROPDOWN = css`
   margin: 0;
   position: absolute;
-  top: 33px;
+  top: 60px;
   left: 0;
   width: 100%;
   z-index: 30;
   box-shadow: 0px 12px 24px rgba(178, 178, 178, 0.3);
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
+  background: ${Constants.system.white};
+  border: 1px solid ${Constants.system.grayLight5};
 
   li[data-item-active="true"] {
     background: ${Constants.system.grayDark4};
@@ -37,6 +39,13 @@ const STYLES_DROPDOWN = css`
       color: ${Constants.system.white};
     }
   }
+`;
+
+const STYLES_DROPDOWN_DARK = css`
+  ${STYLES_DROPDOWN}
+  background: ${Constants.system.grayDark6};
+  border: 1px solid #3c3c3c;
+  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.2);
 `;
 
 const DROPDOWN_ITEM_STYLES = `
@@ -67,8 +76,7 @@ const DROPDOWN_ITEM_STYLES = `
 const STYLES_DROPDOWN_ITEM = css`
   ${DROPDOWN_ITEM_STYLES};
 
-  background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.grayLight5};
+  border-bottom: 1px solid ${Constants.system.grayLight5};
 
   &:hover {
     background: ${Constants.system.grayLight6};
@@ -92,8 +100,7 @@ const STYLES_DROPDOWN_ITEM = css`
 const STYLES_DROPDOWN_ITEM_DARK = css`
   ${DROPDOWN_ITEM_STYLES};
 
-  background: ${Constants.semantic.bgBlurLight6};
-  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
+  border-bottom: 1px solid #3c3c3c;
 
   &:hover {
     background: ${Constants.system.grayDark4};
@@ -158,8 +165,8 @@ const DROPDOWN_ITEM_ADD_STYLES = `
 const STYLES_DROPDOWN_ADD_ITEM = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
-  background: ${Constants.system.white};
-  border: 0.5px solid ${Constants.system.grayLight5};
+  ${"" /* background: ${Constants.system.white}; */}
+  ${"" /* border: 0.5px solid ${Constants.system.grayLight5}; */}
 
   span {
     color: ${Constants.system.black};
@@ -181,8 +188,8 @@ const STYLES_DROPDOWN_ADD_ITEM = css`
 const STYLES_DROPDOWN_ADD_ITEM_DARK = css`
   ${DROPDOWN_ITEM_ADD_STYLES};
 
-  background: ${Constants.semantic.bgBlurLight6};
-  border: 0.5px solid ${Constants.semantic.bgBlurLight6};
+  ${"" /* background: ${Constants.system.grayDark6}; */}
+  ${"" /* border: 0.5px solid ${Constants.semantic.bgBlurLight6}; */}
 
   span,
   svg {
@@ -356,10 +363,9 @@ const Dropdown = ({
   return (
     <div ref={dropdownEl}>
       <ul
-        css={STYLES_DROPDOWN}
+        css={type === "dark" ? STYLES_DROPDOWN_DARK : STYLES_DROPDOWN}
         style={{
           display: open ? "block" : "none",
-          boxShadow: type === "dark" && "0px 12px 24px rgba(0, 0, 0, 0.2)",
           ...dropdownStyles,
         }}
       >
@@ -426,10 +432,11 @@ export const Tag = ({
   tags = [],
   suggestions = [],
   style,
-  inputStyles,
+  textStyle,
   dropdownStyles,
   onChange,
   handleClick,
+  containerStyle,
 }) => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -487,13 +494,14 @@ export const Tag = ({
   const _handleFocus = () => setOpen(true);
 
   return (
-    <div css={STYLES_TAG_CONTAINER} style={{ ...style }}>
+    <div css={STYLES_TAG_CONTAINER} style={containerStyle}>
       <div css={STYLES_INPUT_CONTAINER}>
         <Input
           name="tags"
           type="text"
           // css={type === "dark" ? STYLES_INPUT_DARK : STYLES_INPUT}
-          style={{ ...inputStyles }}
+          style={style}
+          textStyle={textStyle}
           placeholder="Edit tags"
           value={value}
           onChange={_handleChange}
@@ -508,9 +516,10 @@ export const Tag = ({
           tags={tags}
           suggestions={suggestions}
           value={value}
-          dropdownStyles={dropdownStyles}
+          // dropdownStyles={dropdownStyles}
           handleAdd={_handleAdd}
           handleRemove={_handleRemove}
+          dropdownStyles={{ top: "50px" }}
         />
       </div>
 

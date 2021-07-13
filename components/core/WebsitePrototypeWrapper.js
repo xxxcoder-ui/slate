@@ -13,8 +13,6 @@ export default class WebsitePrototypeWrapper extends React.Component {
   };
 
   render() {
-    console.log("website prototype wrapper image:");
-    console.log(this.props.image);
     return (
       <React.Fragment>
         <Head>
