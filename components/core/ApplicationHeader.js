@@ -184,7 +184,7 @@ export default class ApplicationHeader extends React.Component {
         <div
           onClick={this._handleCreateSearch}
           css={Styles.HORIZONTAL_CONTAINER_CENTERED}
-          style={{ border: "none", pointerEvents: "auto", cursor: "pointer" }}
+          style={{ border: "none", pointerEvents: "auto", cursor: "pointer", paddingLeft: 12 }}
         >
           <SVG.Search
             height="16px"
@@ -204,7 +204,7 @@ export default class ApplicationHeader extends React.Component {
               <Link
                 onAction={this.props.onAction}
                 href="/_/activity"
-                style={{ pointerEvents: "auto", marginRight: 16 }}
+                style={{ pointerEvents: "auto" }}
               >
                 <DarkSymbol style={{ height: 24, display: "block" }} />
               </Link>

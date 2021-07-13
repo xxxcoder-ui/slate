@@ -12,7 +12,7 @@ const STYLES_POPOVER = (theme) => css`
   height: 544px;
   width: 95vw;
   border-radius: 8px;
-  padding: 36px 32px;
+  padding: 48px 32px 36px 32px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     flex-grow: 1;
@@ -60,7 +60,7 @@ export default function SignUpPopover({ children, title, logoStyle, titleStyle, 
     <div css={STYLES_POPOVER} {...props}>
       <div>
         <div style={{ textAlign: "center" }}>
-          <DarkSymbol height="40" width="40" style={{ marginBottom: "8px", ...logoStyle }} />
+          <DarkSymbol height="48" width="48" style={{ marginBottom: "8px", ...logoStyle }} />
         </div>
         <System.H3
           style={{ textAlign: "center", lineHeight: "30px", padding: "0 24px", ...titleStyle }}
