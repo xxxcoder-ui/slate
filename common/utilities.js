@@ -1,8 +1,34 @@
 import BCrypt from "bcryptjs";
 
+import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
+
 //NOTE(martina): this file is for utility functions that do not involve API calls
 //For API related utility functions, see common/user-behaviors.js
 //And for uploading related utility functions, see common/file-utilities.js
+
+export const getImageUrlIfExists = (file, sizeLimit = null) => {
+  if (!file) return;
+  const coverImage = file.data?.coverImage;
+  if (coverImage) {
+    if (sizeLimit && coverImage.data.size && coverImage.data.size > sizeLimit) {
+      return;
+    }
+    if (coverImage?.data.url) {
+      return coverImage.data.url;
+    }
+    if (coverImage?.cid) {
+      return Strings.getURLfromCID(coverImage.cid);
+    }
+  }
+
+  if (file.data.type && Validations.isPreviewableImage(file.data.type)) {
+    if (sizeLimit && file.data.size > sizeLimit) {
+      return;
+    }
+    return Strings.getURLfromCID(file.cid);
+  }
+};
 
 export const getPublicAndPrivateFiles = ({ viewer }) => {
   let publicFileIds = [];

@@ -165,14 +165,7 @@ export default class SceneProfile extends React.Component {
     if (file) {
       title = `${file.data.name || file.filename}`;
       description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
-      if (file.data.coverImage?.cid) {
-        image = Strings.getURLfromCID(file.data.coverImage.cid);
-      } else if (
-        Validations.isPreviewableImage(file.data.type) &&
-        file.data.size < Constants.linkPreviewSizeLimit
-      ) {
-        image = Strings.getURLfromCID(file.cid);
-      }
+      image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
     } else {
       image = user.data.photo;
       if (user.data.body) {

@@ -5,6 +5,7 @@ import * as Validations from "~/common/validations";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
+import * as Utilities from "~/common/utilities";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
 
@@ -213,14 +214,7 @@ export default class SceneSlate extends React.Component {
         description = file.data.body
           ? file.data.body
           : `View ${title}, a file in the collection ${name} on Slate`;
-        if (file.data.coverImage?.cid) {
-          image = Strings.getURLfromCID(file.data.coverImage.cid);
-        } else if (
-          Validations.isPreviewableImage(file.data.type) &&
-          file.data.size < Constants.linkPreviewSizeLimit
-        ) {
-          image = Strings.getURLfromCID(file.cid);
-        }
+        image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
       } else {
         if (slate.data.body) {
           description = `${name}. ${slate.data.body}`;

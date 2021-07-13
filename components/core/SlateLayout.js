@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
+import * as Utilities from "~/common/utilities";
 import * as Window from "~/common/window";
 import * as Validations from "~/common/validations";
 import * as UserBehaviors from "~/common/user-behaviors";
@@ -59,7 +60,8 @@ const generateLayout = (items) => {
 
 const preload = (item) =>
   new Promise((resolve, reject) => {
-    if (!item.data.type || !Validations.isPreviewableImage(item.data.type)) {
+    const url = Utilities.getImageUrlIfExists(item);
+    if (!url) {
       resolve(200);
     }
     const img = new Image();
@@ -67,7 +69,6 @@ const preload = (item) =>
       resolve((200 * img.height) / img.width);
     };
     img.onerror = reject;
-    const url = Strings.getURLfromCID(item.cid);
     img.src = url;
   });
 
