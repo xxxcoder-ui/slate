@@ -57,7 +57,7 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
     "files.ownerId",
     "users.id",
   ];
-  const fileQuery = `, ?? as (SELECT sd ??, json_build_object('id', ??, 'data', ??, 'username', ??) as ?? FROM ?? LEFT JOIN ?? on ?? = ??)`;
+  const fileQuery = `, ?? as (SELECT ??, json_build_object('id', ??, 'data', ??, 'username', ??) as ?? FROM ?? LEFT JOIN ?? on ?? = ??)`;
 
   const selectFields = [
     ...slateFields,
