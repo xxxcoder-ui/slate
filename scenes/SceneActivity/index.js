@@ -36,7 +36,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
   useIntersection({
     ref: divRef,
     onIntersect: () => {
-      if (feed?.length === 0 || isLoading) return;
+      if (feed?.length === 0 || isLoading[tab]) return;
       updateFeed();
     },
   });
