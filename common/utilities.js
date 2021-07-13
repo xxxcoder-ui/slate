@@ -93,13 +93,15 @@ export const getTimeDifferenceFromNow = (date) => {
     return differenceInDays + "d";
   }
 
+  const currentYear = now.getFullYear();
+
   const day = pastDate.getDay();
   const month = pastDate.toLocaleString("default", { month: "long" });
   const year = pastDate.getFullYear();
-  const currentYear = now.getFullYear();
 
   if (year === currentYear) {
     return `${day} ${month}`;
   }
+
   return `${day} ${month} ${year}`;
 };
