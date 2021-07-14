@@ -8,7 +8,7 @@ import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
 
 import { css } from "@emotion/react";
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 
 const STYLES_PLACEHOLDER_ABSOLUTE = css`
   position: absolute;
@@ -71,7 +71,7 @@ export default function ImageObjectPreview({ url, file, ...props }) {
   const imageUrl = coverImage ? Strings.getURLfromCID(coverImage?.cid) : url;
 
   return (
-    <ObjectPreviewPremitive file={file} tag={tag} isImage {...props}>
+    <ObjectPreviewPrimitive file={file} tag={tag} isImage {...props}>
       <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
         {isInView && (
           <AspectRatio ratio={186 / 302}>
@@ -86,6 +86,6 @@ export default function ImageObjectPreview({ url, file, ...props }) {
         )}
         {shouldShowPlaceholder && <ImagePlaceholder blurhash={blurhash} />}
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

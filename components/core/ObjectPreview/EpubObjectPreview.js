@@ -6,7 +6,7 @@ import * as Styles from "~/common/styles";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import EpubPlaceholder from "./placeholders/EPUB";
 
 const STYLES_CONTAINER = css`
@@ -26,13 +26,13 @@ const STYLES_TAG = (theme) => css`
 
 export default function EpubObjectPreview(props) {
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPrimitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <EpubPlaceholder />
         <div css={STYLES_TAG}>
           <P3>EPUB</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

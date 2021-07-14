@@ -7,7 +7,7 @@ import * as Utilities from "~/common/utilities";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import TextPlaceholder from "./placeholders/Text";
 
 const STYLES_CONTAINER = css`
@@ -56,7 +56,7 @@ export default function TextObjectPreview({ url, file, ...props }) {
   const tag = Utilities.getFileExtension(file.filename) || "text";
 
   return (
-    <ObjectPreviewPremitive tag={!error && tag} file={file} {...props}>
+    <ObjectPreviewPrimitive tag={!error && tag} file={file} {...props}>
       <div css={[STYLES_CONTAINER, error && Styles.CONTAINER_CENTERED]}>
         {error ? (
           <>
@@ -71,6 +71,6 @@ export default function TextObjectPreview({ url, file, ...props }) {
           </div>
         )}
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }
