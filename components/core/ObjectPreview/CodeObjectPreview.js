@@ -7,7 +7,7 @@ import * as Utilities from "~/common/utilities";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import CodePlaceholder from "./placeholders/Code";
 
 const STYLES_CONTAINER = css`
@@ -28,13 +28,13 @@ const STYLES_TAG = (theme) => css`
 export default function CodeObjectPreview({ file, ...props }) {
   const tag = Utilities.getFileExtension(file.filename) || "code";
   return (
-    <ObjectPreviewPremitive file={file} {...props}>
+    <ObjectPreviewPrimitive file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <CodePlaceholder />
         <div css={STYLES_TAG}>
           <P3>{tag}</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

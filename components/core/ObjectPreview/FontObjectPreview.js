@@ -6,7 +6,7 @@ import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import { useFont } from "~/components/core/FontFrame/hooks";
 
 const STYLES_TEXT_PREVIEW = (theme) => css`
@@ -29,12 +29,12 @@ export default function FontObjectPreview({ file, ...props }) {
 
   const tag = Utilities.getFileExtension(file.filename) || "font";
   return (
-    <ObjectPreviewPremitive tag={tag} file={file} {...props}>
+    <ObjectPreviewPrimitive tag={tag} file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_PREVIEW]}>
         <div style={{ fontFamily: fontName }}>
           <div css={STYLES_LETTER}>Aa</div>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

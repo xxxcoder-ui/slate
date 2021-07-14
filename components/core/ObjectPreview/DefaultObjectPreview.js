@@ -4,7 +4,7 @@ import * as Styles from "~/common/styles";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import FilePlaceholder from "./placeholders/File";
 
 const STYLES_CONTAINER = css`
@@ -24,13 +24,13 @@ const STYLES_TAG = (theme) => css`
 
 export default function DefaultObjectPreview(props) {
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPrimitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <FilePlaceholder />
         <div css={STYLES_TAG}>
           <P3>FILE</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }
