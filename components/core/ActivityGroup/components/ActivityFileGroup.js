@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Utilities from "~/common/utilities";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { motion } from "framer-motion";
@@ -8,20 +9,9 @@ import { ViewMoreContent, ProfileInfo } from "~/components/core/ActivityGroup/co
 
 import ObjectPreview from "~/components/core/ObjectPreview";
 
-const STYLES_OBJECT_GRID = (theme) => css`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
-  grid-gap: 20px 12px;
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    grid-row-gap: 24px;
-    grid-template-columns: repeat(auto-fill, minmax(169px, 1fr));
-  }
-`;
-
 const STYLES_GROUP_GRID = (theme) => css`
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: ${theme.grids.activity.profileInfo.width}px 1fr;
   grid-row-gap: 32px;
   border-bottom: 1px solid ${theme.semantic.bgLight};
   padding-bottom: 24px;
@@ -38,14 +28,17 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityFileGroup({ viewer, group, onAction }) {
+export default function ActivityFileGroup({ viewer, group, onAction, nbrOfObjectsPerRow = 4 }) {
   const { file, owner, slate, type, createdAt } = group;
 
   const { elements, restElements } = React.useMemo(() => {
     if (!Array.isArray(file)) {
       return { elements: [file] };
     }
-    return { elements: file.slice(0, 4), restElements: file.slice(4) };
+    return {
+      elements: file.slice(0, nbrOfObjectsPerRow),
+      restElements: file.slice(nbrOfObjectsPerRow),
+    };
   }, [file]);
 
   const [showMore, setShowMore] = React.useState(false);
@@ -78,7 +71,7 @@ export default function ActivityFileGroup({ viewer, group, onAction }) {
         onAction={onAction}
       />
       <div>
-        <div css={STYLES_OBJECT_GRID}>
+        <div css={Styles.OBJECTS_PREVIEW_GRID}>
           {elements.map((file) => (
             <ObjectPreview viewer={viewer} owner={file.owner} key={file.id} file={file} />
           ))}

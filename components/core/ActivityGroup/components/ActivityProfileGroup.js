@@ -30,14 +30,23 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityProfileGroup({ viewer, external, group, onAction }) {
+export default function ActivityProfileGroup({
+  viewer,
+  external,
+  group,
+  nbrOfProfilesPerRow = 2,
+  onAction,
+}) {
   const { owner, user, createdAt } = group;
 
   const { elements, restElements } = React.useMemo(() => {
     if (!Array.isArray(user)) {
       return { elements: [user] };
     }
-    return { elements: user.slice(0, 3), restElements: user.slice(3) };
+    return {
+      elements: user.slice(0, nbrOfProfilesPerRow),
+      restElements: user.slice(nbrOfProfilesPerRow),
+    };
   }, [user]);
 
   const [showMore, setShowMore] = React.useState(false);
