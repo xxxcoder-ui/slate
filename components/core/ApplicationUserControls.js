@@ -8,6 +8,7 @@ import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
+import { useIntercom } from "react-use-intercom";
 
 const STYLES_HEADER = css`
   position: relative;
@@ -100,6 +101,30 @@ const STYLES_ITEM_BOX = css`
     color: ${Constants.system.blue};
   }
 `;
+
+const OpenIntercom = ({ user, onTogglePopup }) => {
+  const { show, update } = useIntercom();
+
+  return (
+    <span
+      style={{ cursor: "pointer", display: "block" }}
+      onClick={() => {
+        onTogglePopup();
+        update({
+          name: user.data.name,
+          email: user.email,
+          customAttributes: {
+            slate_userid: user.id,
+            username: user.username,
+          },
+        });
+        show();
+      }}
+    >
+      Help
+    </span>
+  );
+};
 
 export class ApplicationUserControlsPopup extends React.Component {
   _handleAction = (props) => {
@@ -201,14 +226,13 @@ export class ApplicationUserControlsPopup extends React.Component {
         ],
         [
           {
-            text: "Help",
-            onClick: (e) => {
-              e.stopPropagation();
-              this._handleAction({
-                type: "SIDEBAR",
-                value: "SIDEBAR_HELP",
-              });
-            },
+            text: (
+              <OpenIntercom
+                style={{ display: "block" }}
+                user={this.props.viewer}
+                onTogglePopup={this.props.onTogglePopup}
+              />
+            ),
           },
           {
             text: "Sign out",
