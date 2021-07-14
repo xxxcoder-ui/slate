@@ -1256,6 +1256,8 @@ export class SearchModal extends React.Component {
               </div>
 
               <div css={STYLES_BOTTOM_BUTTONS}>
+                <OpenIntercom user={this.props.viewer} />
+
                 <span
                   style={{ marginRight: 24, cursor: "pointer" }}
                   onClick={() => {
