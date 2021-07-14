@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Strings from "~/common/strings";
-import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
@@ -50,7 +49,6 @@ export default function ActivityCollectionGroup({
   const [showMore, setShowMore] = React.useState(false);
   const viewMoreFiles = () => setShowMore(true);
 
-  const timeSinceUploaded = Utilities.getTimeDifferenceFromNow(createdAt);
   // const timeSinceUploaded = Utilities.getTimeDifferenceFromNow(elements[0].createdAt);
   const nbrOfFilesUploaded = elements.length + (restElements?.length || 0);
   const action = React.useMemo(() => {
@@ -63,7 +61,7 @@ export default function ActivityCollectionGroup({
   return (
     <div css={STYLES_GROUP_GRID} {...props}>
       <ProfileInfo
-        time={timeSinceUploaded}
+        time={createdAt}
         owner={owner}
         viewer={viewer}
         action={action}
