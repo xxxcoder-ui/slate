@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Strings from "~/common/strings";
-import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { ProfileInfo } from "~/components/core/ActivityGroup/components";
@@ -52,12 +51,10 @@ export default function ActivityProfileGroup({
   const [showMore, setShowMore] = React.useState(false);
   const viewMoreFiles = () => setShowMore(true);
 
-  const timeSinceUploaded = Utilities.getTimeDifferenceFromNow(createdAt);
-
   return (
     <div css={STYLES_GROUP_GRID}>
       <ProfileInfo
-        time={timeSinceUploaded}
+        time={createdAt}
         owner={owner}
         action={"started following"}
         viewer={viewer}
