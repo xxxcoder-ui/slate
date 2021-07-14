@@ -15,11 +15,9 @@ import CodeObjectPreview from "./CodeObjectPreview";
 import FontObjectPreview from "./FontObjectPreview";
 
 const ObjectPreview = ({ file, ...props }) => {
-  const { type, coverImage } = file.data;
+  const { type } = file.data;
 
-  const url = Validations.isPreviewableImage(type)
-    ? Strings.getURLfromCID(file.cid)
-    : Strings.getURLfromCID(coverImage?.cid);
+  const url = Strings.getURLfromCID(file.cid);
 
   if (Validations.isPreviewableImage(type)) {
     return <ImageObjectPreview file={file} url={url} {...props} />;
