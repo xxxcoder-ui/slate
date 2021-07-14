@@ -10,7 +10,9 @@ const updateExploreFeed = async ({ viewer, state, onAction, setState, update }) 
   const newItems = response.data;
 
   const currentFeed = viewer?.explore?.feed || state?.explore?.feed || [];
-  const newFeed = await ActivityUtilities.processActivity(newItems);
+  const newFeed = await ActivityUtilities.processActivity(newItems).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
   const newState = {
     items: currentItems.concat(newItems),
@@ -34,7 +36,9 @@ const updateActivityFeed = async ({ viewer, onAction, update }) => {
   const newItems = response.data;
 
   const currentFeed = viewer?.activity?.feed || [];
-  const newFeed = ActivityUtilities.processActivity(newItems);
+  const newFeed = ActivityUtilities.processActivity(newItems).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
   onAction({
     type: "UPDATE_VIEWER",
