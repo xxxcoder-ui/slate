@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Utilities from "~/common/utilities";
+import * as Strings from "~/common/strings";
 
 import { Link } from "~/components/core/Link";
 import { css } from "@emotion/react";
@@ -44,6 +46,14 @@ export default function ProfileInfo({ owner, viewer, time, action, onAction }) {
   const { username, data = {} } = owner;
   const { photo } = data;
 
+  const formattedDate = Utilities.getTimeDifferenceFromNow(time);
+  const mobileFormattedDate = Utilities.getTimeDifferenceFromNow(time, {
+    seconds: (time) => `${time} ${Strings.pluralize("second", time)} ago`,
+    minutes: (time) => `${time} ${Strings.pluralize("minute", time)} ago`,
+    hours: (time) => `${time} ${Strings.pluralize("hour", time)} ago`,
+    days: (time) => `${time} ${Strings.pluralize("day", time)} ago`,
+  });
+
   const isOwner = viewer?.id === owner.id;
   return (
     <Link href={`/$/user/${owner.id}`} onAction={onAction}>
@@ -61,7 +71,8 @@ export default function ProfileInfo({ owner, viewer, time, action, onAction }) {
               &nbsp;•&nbsp;
             </H4>
             <P2 color="textGrayDark" style={{ display: "inline" }}>
-              {time}
+              <span css={Styles.MOBILE_HIDDEN}>{formattedDate}</span>
+              <span css={Styles.MOBILE_ONLY}>{mobileFormattedDate}</span>
             </P2>
           </span>
           <P2 color="textGrayDark" nbrOflines={2}>
