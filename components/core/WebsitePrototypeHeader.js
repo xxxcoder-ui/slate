@@ -62,7 +62,7 @@ const WebsitePrototypeHeader = (props) => {
     <div css={STYLES_CONTAINER} style={props.style}>
       <div css={STYLES_LEFT}>
         <a css={STYLES_LINK} href="/" style={{ marginRight: 16, position: "relative", top: "1px" }}>
-          <Logo style={{ height: 20 }} />
+          <Logo style={{ height: 20, color: Constants.system.blueDark6 }} />
         </a>
       </div>
       {/* <div css={STYLES_RIGHT}>

@@ -352,7 +352,14 @@ export class SlatePreviewBlock extends React.Component {
                 ...this.props.imageStyle,
               }}
             >
-              <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
+              <Logo
+                style={{
+                  height: 18,
+                  marginRight: 32,
+                  position: "relative",
+                  color: Constants.system.white,
+                }}
+              />
               No files in this collection
             </div>
           ) : objects.length < 4 ? (
@@ -403,7 +410,14 @@ export class SlatePreviewBlock extends React.Component {
                   ...this.props.imageStyle,
                 }}
               >
-                <Logo style={{ height: 18, marginRight: 32, position: "relative", top: 2 }} />
+                <Logo
+                  style={{
+                    height: 18,
+                    marginRight: 32,
+                    position: "relative",
+                    color: Constants.system.white,
+                  }}
+                />
                 No files in this collection
               </div>
             )}

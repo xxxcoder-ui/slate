@@ -5,6 +5,7 @@ import * as SlateManager from "~/node_common/managers/slate";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
 import * as EmailManager from "~/node_common/managers/emails";
+import * as Monitor from "~/node_common/monitor";
 
 import BCrypt from "bcrypt";
 

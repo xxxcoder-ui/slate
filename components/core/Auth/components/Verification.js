@@ -2,6 +2,7 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
+import * as Styles from "~/common/styles";
 
 import Field from "~/components/core/Field";
 
@@ -106,9 +107,12 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
         icon={
           isSubmitting
             ? () => (
-                <LoaderSpinner
-                  style={{ height: 16, width: 16, marginLeft: 16, position: "absolute", right: 12 }}
-                />
+                <div
+                  style={{ width: 24, height: 24, marginRight: 4 }}
+                  css={Styles.CONTAINER_CENTERED}
+                >
+                  <LoaderSpinner height="16px" />
+                </div>
               )
             : SVG.RightArrow
         }

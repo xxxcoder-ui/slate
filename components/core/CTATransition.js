@@ -131,7 +131,14 @@ export default class CTATransition extends React.Component {
                 onOutsideRectEvent={this._handleClose}
               >
                 <div css={STYLES_POPOVER}>
-                  <Logo height="36px" style={{ display: "block", margin: "56px auto 0px auto" }} />
+                  <Logo
+                    height="36px"
+                    style={{
+                      color: Constants.system.blueDark6,
+                      display: "block",
+                      margin: "56px auto 0px auto",
+                    }}
+                  />
 
                   <System.P1 style={{ margin: "56px 0", textAlign: "center" }}>
                     An open-source file sharing network for research and collaboration

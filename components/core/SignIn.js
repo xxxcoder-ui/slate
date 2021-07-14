@@ -190,7 +190,14 @@ export class SignIn extends React.Component {
       return (
         <React.Fragment>
           <div css={STYLES_POPOVER} key={this.state.scene}>
-            <Logo height="36px" style={{ display: "block", margin: "56px auto 0px auto" }} />
+            <Logo
+              height="36px"
+              style={{
+                display: "block",
+                margin: "56px auto 0px auto",
+                color: Constants.system.blueDark6,
+              }}
+            />
 
             <System.P1 style={{ margin: "56px 0", textAlign: "center" }}>
               An open-source file sharing network for research and collaboration
