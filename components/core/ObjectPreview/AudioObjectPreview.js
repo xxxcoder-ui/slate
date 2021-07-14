@@ -8,7 +8,7 @@ import { P3 } from "~/components/system";
 
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import AudioPlaceholder from "./placeholders/Audio";
 
 const STYLES_CONTAINER = css`
@@ -29,13 +29,13 @@ const STYLES_TAG = (theme) => css`
 export default function AudioObjectPreview({ file, ...props }) {
   const tag = Utilities.getFileExtension(file.filename) || "audio";
   return (
-    <ObjectPreviewPremitive file={file} {...props}>
+    <ObjectPreviewPrimitive file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <AudioPlaceholder />
         <div css={STYLES_TAG}>
           <P3>{tag}</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

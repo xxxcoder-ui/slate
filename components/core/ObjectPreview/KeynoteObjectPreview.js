@@ -6,7 +6,7 @@ import * as Styles from "~/common/styles";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import KeynotePlaceholder from "./placeholders/Keynote";
 
 const STYLES_CONTAINER = css`
@@ -26,13 +26,13 @@ const STYLES_TAG = (theme) => css`
 
 export default function KeynoteObjectPreview(props) {
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPrimitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <KeynotePlaceholder />
         <div css={STYLES_TAG}>
           <P3>KEYNOTE</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

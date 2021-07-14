@@ -7,7 +7,7 @@ import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
 import PdfPlaceholder from "./placeholders/PDF";
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 
 const STYLES_CONTAINER = css`
   position: relative;
@@ -27,13 +27,13 @@ const STYLES_TAG = (theme) => css`
 
 export default function PDFObjectPreview(props) {
   return (
-    <ObjectPreviewPremitive {...props}>
+    <ObjectPreviewPrimitive {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <PdfPlaceholder />
         <div css={STYLES_TAG}>
           <P3>PDF</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

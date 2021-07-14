@@ -6,7 +6,7 @@ import * as Styles from "~/common/styles";
 import { P3 } from "~/components/system";
 import { css } from "@emotion/react";
 
-import ObjectPreviewPremitive from "./ObjectPreviewPremitive";
+import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
 import VideoPlaceholder from "./placeholders/Video";
 
 const STYLES_CONTAINER = css`
@@ -28,13 +28,13 @@ export default function VideoObjectPreview({ file, ...props }) {
   const { type } = file.data;
   const tag = type.split("/")[1];
   return (
-    <ObjectPreviewPremitive file={file} {...props}>
+    <ObjectPreviewPrimitive file={file} {...props}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_CONTAINER]}>
         <VideoPlaceholder />
         <div css={STYLES_TAG}>
           <P3>{tag}</P3>
         </div>
       </div>
-    </ObjectPreviewPremitive>
+    </ObjectPreviewPrimitive>
   );
 }

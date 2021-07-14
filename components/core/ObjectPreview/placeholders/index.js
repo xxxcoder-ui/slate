@@ -39,7 +39,7 @@ const STYLES_TAG = (theme) => css`
   border-radius: 4px;
 `;
 
-const PlaceholderPremitive = ({ file, ratio }) => {
+const PlaceholderPrimitive = ({ file, ratio }) => {
   const { type } = file.data;
 
   if (type.startsWith("video/")) {
@@ -104,7 +104,7 @@ export default function Placeholder({ file, containerCss, ratio, showTag }) {
           <Typography.P3>{tag}</Typography.P3>
         </div>
       )}
-      <PlaceholderPremitive ratio={ratio} file={file} />
+      <PlaceholderPrimitive ratio={ratio} file={file} />
     </div>
   );
 }
