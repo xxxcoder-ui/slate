@@ -41,6 +41,9 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
   });
 
   const divRef = React.useRef();
+
+  const nbrOfCardsInRow = useNbrOfCardsPerRow(divRef);
+
   useIntersection({
     ref: divRef,
     onIntersect: () => {
@@ -69,6 +72,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
         <div css={STYLES_GROUPS_CONTAINER}>
           {feed?.map((group) => (
             <ActivityGroup
+              nbrOfCardsPerRow={nbrOfCardsInRow}
               key={group.id}
               viewer={viewer}
               external={external}
@@ -83,4 +87,51 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
       </ScenePage>
     </WebsitePrototypeWrapper>
   );
+}
+
+let NbrOfCardsInRow = {};
+
+function useNbrOfCardsPerRow(ref) {
+  const calculateNbrOfCards = (card) => {
+    const isMobile = window.matchMedia(`(max-width: ${Constants.sizes.mobile}px)`).matches;
+
+    const profileInfoWidth = isMobile ? 0 : Constants.grids.activity.profileInfo.width;
+    const containerWidth = ref.current.offsetWidth - profileInfoWidth;
+
+    const nbrOfCardsWithoutGap = Math.floor(containerWidth / card.width);
+    const gapsWidth = (nbrOfCardsWithoutGap - 1) * card.gap;
+    return Math.floor((containerWidth - gapsWidth) / card.width) || 1;
+  };
+
+  React.useEffect(() => {
+    if (JSON.stringify(NbrOfCardsInRow) !== "{}") return;
+
+    const isMobile = window.matchMedia(`(max-width: ${Constants.sizes.mobile}px)`).matches;
+    const responsiveKey = isMobile ? "mobile" : "desktop";
+
+    const { width: objectPreviewWidth, rowGap: objectPreviewGridRowGap } =
+      Constants.grids.object[responsiveKey];
+
+    NbrOfCardsInRow.object = calculateNbrOfCards({
+      width: objectPreviewWidth,
+      gap: objectPreviewGridRowGap,
+    });
+
+    const { width: collectionPreviewWidth, rowGap: collectionPreviewGridRowGap } =
+      Constants.grids.collection[responsiveKey];
+
+    NbrOfCardsInRow.collection = calculateNbrOfCards({
+      width: collectionPreviewWidth,
+      gap: collectionPreviewGridRowGap,
+    });
+
+    const { width: profilePreviewWidth, rowGap: profilePreviewGridRowGap } =
+      Constants.grids.profile[responsiveKey];
+    NbrOfCardsInRow.profile = calculateNbrOfCards({
+      width: profilePreviewWidth,
+      gap: profilePreviewGridRowGap,
+    });
+  }, []);
+
+  return NbrOfCardsInRow;
 }

@@ -219,14 +219,14 @@ export const MOBILE_ONLY = css`
 `;
 
 /* COMMON GRIDS */
-export const OBJECTS_PREVIEW_GRID = css`
+export const OBJECTS_PREVIEW_GRID = (theme) => css`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
-  grid-gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.object.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.object.desktop.rowGap}px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    grid-gap: 20px 8px;
-    grid-template-columns: repeat(auto-fill, minmax(166px, 1fr));
+    grid-gap: 20px ${theme.grids.object.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.object.mobile.width}px, 1fr));
   }
 `;
 
@@ -238,26 +238,24 @@ export const BUTTON_RESET = css`
   ${HOVERABLE}
 `;
 
-export const COLLECTIONS_PREVIEW_GRID = css`
+export const COLLECTIONS_PREVIEW_GRID = (theme) => css`
   display: grid;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(432px, 1fr));
-  grid-gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.collection.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.collection.desktop.rowGap}px;
 
   @media (max-width: ${Constants.sizes.desktop}px) {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 20px 8px;
+    grid-gap: 20px ${theme.grids.collection.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.collection.mobile.width}px, 1fr));
   }
 `;
 
-export const PROFILE_PREVIEW_GRID = css`
+export const PROFILE_PREVIEW_GRID = (theme) => css`
   display: grid;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(432px, 1fr));
-  grid-gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.profile.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.profile.desktop.rowGap}px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    grid-gap: 20px 8px;
-    grid-template-columns: repeat(auto-fill, minmax(344px, 1fr));
+    grid-gap: 20px ${theme.grids.profile.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.profile.mobile.width}px, 1fr));
   }
 `;

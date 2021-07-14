@@ -29,13 +29,22 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityCollectionGroup({ onAction, viewer, group, ...props }) {
+export default function ActivityCollectionGroup({
+  onAction,
+  viewer,
+  group,
+  nbrOfCollectionsPerRow = 2,
+  ...props
+}) {
   const { owner, slate, type, createdAt } = group;
   const { elements, restElements } = React.useMemo(() => {
     if (!Array.isArray(slate)) {
       return { elements: [slate] };
     }
-    return { elements: slate.slice(0, 2), restElements: slate.slice(2) };
+    return {
+      elements: slate.slice(0, nbrOfCollectionsPerRow),
+      restElements: slate.slice(nbrOfCollectionsPerRow),
+    };
   }, [slate]);
 
   const [showMore, setShowMore] = React.useState(false);

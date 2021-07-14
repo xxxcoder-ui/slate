@@ -16,7 +16,7 @@ const STYLES_GROUP_GRID = (theme) => css`
   padding-bottom: 24px;
 `;
 
-export default function ActivityGroup({ onAction, viewer, external, group }) {
+export default function ActivityGroup({ onAction, viewer, external, group, nbrOfCardsPerRow }) {
   const { type } = group;
   if (
     type === "CREATE_FILE" ||
@@ -24,16 +24,36 @@ export default function ActivityGroup({ onAction, viewer, external, group }) {
     type === "LIKE_FILE" ||
     type === "SAVE_COPY"
   ) {
-    return <ActivityFileGroup viewer={viewer} onAction={onAction} group={group} />;
+    return (
+      <ActivityFileGroup
+        nbrOfObjectsPerRow={nbrOfCardsPerRow.object}
+        viewer={viewer}
+        onAction={onAction}
+        group={group}
+      />
+    );
   }
 
   if (type === "CREATE_SLATE" || type === "SUBSCRIBE_SLATE") {
-    return <ActivityCollectionGroup onAction={onAction} viewer={viewer} group={group} />;
+    return (
+      <ActivityCollectionGroup
+        onAction={onAction}
+        viewer={viewer}
+        group={group}
+        nbrOfCollectionsPerRow={nbrOfCardsPerRow.collection}
+      />
+    );
   }
 
   if (type === "SUBSCRIBE_USER") {
     return (
-      <ActivityProfileGroup onAction={onAction} viewer={viewer} external={external} group={group} />
+      <ActivityProfileGroup
+        nbrOfProfilesPerRow={nbrOfCardsPerRow.profile}
+        onAction={onAction}
+        viewer={viewer}
+        external={external}
+        group={group}
+      />
     );
   }
 
