@@ -244,14 +244,14 @@ const STYLES_DIRECTORY_NAME = css`
 
 function UserEntry({ user, button, onClick, message, checkStatus }) {
   const isOnline = checkStatus({ id: user.id });
+
   return (
     <div key={user.username} css={STYLES_USER_ENTRY}>
       <div css={STYLES_USER} onClick={onClick}>
         <div css={STYLES_DIRECTORY_PROFILE_IMAGE}>
           <ProfilePhoto 
-            photo={user.data.photo}
-            userId={user.id}
-            size={24}
+            user={user} 
+            size={24} 
           />
           {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
         </div>
@@ -597,12 +597,11 @@ export default class Profile extends React.Component {
         />
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>
-            <div
-              css={STYLES_PROFILE_IMAGE}
-              style={{
-                backgroundImage: `url('${user.data.photo}')`,
-              }}
-            >
+            <div css={STYLES_PROFILE_IMAGE}>
+              <ProfilePhoto 
+                user={user} 
+                size={120} 
+              />
               {showStatusIndicator && this.checkStatus({ id: user.id }) && (
                 <div css={STYLES_STATUS_INDICATOR} />
               )}

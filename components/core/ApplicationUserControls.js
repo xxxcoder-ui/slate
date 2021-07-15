@@ -121,9 +121,8 @@ export class ApplicationUserControlsPopup extends React.Component {
         <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginBottom: 14 }}>
           <div style={{ marginRight: '16px', cursor: 'default' }} >
             <ProfilePhoto 
+              user={this.props.viewer}
               size={46}
-              userId={this.props.viewer.id}
-              photo={this.props.viewer.data.photo} 
             />
           </div>
 
@@ -283,8 +282,7 @@ export class ApplicationUserControls extends React.Component {
           style={{ position: "relative", cursor: 'pointer' }}
         >
           <ProfilePhoto 
-            photo={this.props.viewer.data.photo}
-            userId={this.props.viewer.id} 
+            user={this.props.viewer}
             size={24} 
           />
           {this.props.popup === "profile" ? tooltip : null}

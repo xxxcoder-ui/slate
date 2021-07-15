@@ -199,9 +199,8 @@ export default class SceneEditAccount extends React.Component {
               <div css={STYLES_HEADER}>Your Avatar</div>
 
               <ProfilePhoto 
+                user={this.props.viewer}
                 size={256} 
-                photo={this.props.viewer.data.photo} 
-                userId={this.props.viewer.id} 
               />
 
               <div style={{ marginTop: 24 }}>

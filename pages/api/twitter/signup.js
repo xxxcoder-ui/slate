@@ -90,7 +90,6 @@ export default async (req, res) => {
     email: newEmail,
     twitterId: twitterUser.id_str,
     data: {
-      photo: "",
       body: "",
       settings: {
         settings_deals_auto_approve: false,

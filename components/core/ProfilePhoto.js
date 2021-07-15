@@ -67,13 +67,13 @@ function UploadedAvatar(props) {
   )
 }
 
-export default class ProfilePhoto extends React.Component {
+export default class ProfilePhoto extends React.Component {  
   render() {
     return (
       <>
-        {this.props.photo
-          ? <UploadedAvatar url={this.props.photo} size={this.props.size} />
-          : <BoringAvatar userId={this.props.userId} size={this.props.size} />
+        {this.props.user.data.photo
+          ? <UploadedAvatar url={this.props.user.data.photo} size={this.props.size} />
+          : <BoringAvatar userId={this.props.user.id} size={this.props.size} />
         }
       </>
     );

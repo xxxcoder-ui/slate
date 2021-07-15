@@ -82,7 +82,6 @@ export default async (req, res) => {
     username: newUsername,
     email: newEmail,
     data: {
-      photo: "",
       body: "",
       settings: {
         settings_deals_auto_approve: false,
