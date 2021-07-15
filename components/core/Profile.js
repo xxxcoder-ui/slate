@@ -354,7 +354,7 @@ function CollectionsPage({
                 onAction={onAction}
                 collection={collection}
                 viewer={viewer}
-                owner={user}
+                owner={tab === "collections" ? user : collection.owner}
               />
             </Link>
           ))}
