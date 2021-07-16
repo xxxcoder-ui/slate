@@ -9,16 +9,18 @@ import CID from "cids";
 import multihashing from "multihashing-async";
 
 export const fetchLinkData = async (url) => {
-  let mql;
   try {
-    mql = await microlink(url, { screenshot: true });
+    const { status, data, response } = await microlink(url, {
+      screenshot: true,
+      apiKey: Environment.MICROLINK_API_KEY,
+    });
+    if (status !== "success") {
+      return;
+    }
+    return data;
   } catch (e) {
     Logging.error(e);
   }
-  if (!mql || mql.status !== "success") {
-    return;
-  }
-  return mql?.data;
 };
 
 export const getDomainFromURL = (url = "") => {

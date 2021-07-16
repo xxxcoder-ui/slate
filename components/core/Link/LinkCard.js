@@ -68,7 +68,7 @@ export default function LinkCard({ file }) {
     <a css={Styles.LINK} href={url} target="_blank" onClick={(e) => e.stopPropagation()}>
       <div css={[Styles.VERTICAL_CONTAINER, STYLES_CARD]}>
         <div css={STYLES_IMAGE_CONTAINER}>
-          <img src={image} style={{ width: "100%" }} />
+          <img src={image} css={Styles.IMAGE_FILL} />
         </div>
         <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>
           <div css={STYLES_NAME}>

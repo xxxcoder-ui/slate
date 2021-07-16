@@ -206,3 +206,17 @@ export const MOBILE_ONLY = css`
     pointer-events: none;
   }
 `;
+
+//NOTE(martina): resize so the image is fills its container from edge to edge, while maintaining aspect ratio. Any overflow is clipped
+export const IMAGE_FILL = css`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+//NOTE(martina): resize so the image is contained within the bounds of its container, while maintaining aspect ratio. There is no overflow
+export const IMAGE_FIT = css`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`;

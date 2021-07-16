@@ -26,7 +26,7 @@ export default function LinkLoading({ file }) {
       style={{ backgroundColor: Constants.semantic.bgLight, height: "100%" }}
     >
       <div css={STYLES_IMAGE_CONTAINER}>
-        <img src={image} style={{ width: "100%" }} />
+        <img src={image} css={Styles.IMAGE_FILL} />
       </div>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
         <System.H3
