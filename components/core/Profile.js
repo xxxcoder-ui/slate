@@ -490,6 +490,7 @@ export default class Profile extends React.Component {
             return entry.id === this.props.user.id;
           }),
     fetched: false,
+    index: -1,
   };
 
   componentDidMount = () => {
@@ -592,6 +593,8 @@ export default class Profile extends React.Component {
           isMobile={this.props.isMobile}
           external={this.props.external}
           params={this.props.page.params}
+          index={this.state.index}
+          onChange={(index) => this.setState({ index })}
         />
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>

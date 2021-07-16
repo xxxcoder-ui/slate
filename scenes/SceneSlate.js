@@ -266,6 +266,7 @@ class SlatePage extends React.Component {
           return subscription.id === this.props.data.id;
         })
       : false,
+    index: -1,
   };
 
   componentDidMount() {
@@ -500,6 +501,8 @@ class SlatePage extends React.Component {
               params={this.props.page.params}
               isOwner={isOwner}
               external={this.props.external}
+              index={this.state.index}
+              onChange={(index) => this.setState({ index })}
             />
             {this.props.isMobile ? (
               <SlateLayoutMobile

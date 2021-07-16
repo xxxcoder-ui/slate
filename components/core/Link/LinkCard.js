@@ -22,6 +22,11 @@ const STYLES_CARD = css`
   overflow: hidden;
   box-shadow: ${Constants.shadow.large};
   background-color: ${Constants.semantic.bgGrayLight};
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    width: 90vw;
+    height: 50vh;
+  }
 `;
 
 const STYLES_IMAGE_CONTAINER = css`

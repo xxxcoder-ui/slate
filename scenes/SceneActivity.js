@@ -404,16 +404,16 @@ export default class SceneActivity extends React.Component {
             carouselType="ACTIVITY"
             viewer={this.props.viewer}
             objects={items}
-            onAction={this.props.onAction}
-            index={this.state.carouselIndex}
+            onAction={(props) => {}}
+            index={this.state.index}
             onChange={(index) => {
+              this.setState({ index });
               if (index >= items.length - 4) {
                 this.fetchActivityItems();
               }
-              this.setState({ carouselIndex: index });
             }}
             isMobile={this.props.isMobile}
-            // params={this.props.page.params}
+            params={this.props.page.params}
             isOwner={false}
           />
           {activity.length ? (
@@ -433,7 +433,7 @@ export default class SceneActivity extends React.Component {
                         // }
                         href={`/$/slate/${item.slateId}`}
                         onAction={this.props.onAction}
-                        onClick={() => this.setState({ carouselIndex: i })}
+                        onClick={() => this.setState({ index: i })}
                       >
                         {/* <span
                       key={item.id}
@@ -470,7 +470,7 @@ export default class SceneActivity extends React.Component {
                         // }
                         href={`/$/slate/${item.slateId}?cid=${item.file.cid}`}
                         onAction={this.props.onAction}
-                        onClick={() => this.setState({ carouselIndex: i })}
+                        onClick={() => this.setState({ index: i })}
                         // onClick={
                         //   this.props.isMobile
                         //     ? () => {}

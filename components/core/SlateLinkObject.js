@@ -30,6 +30,7 @@ export default class SlateLinkObject extends React.Component {
   };
 
   render() {
+    const isMobile = this.props.isMobile;
     const url = this.props.file.url;
     const link = this.props.file.data.link;
     const { html, iFrameAllowed } = link;
@@ -42,7 +43,7 @@ export default class SlateLinkObject extends React.Component {
           }}
         />
       );
-    } else if (iFrameAllowed) {
+    } else if (iFrameAllowed && !isMobile) {
       return (
         <div
           style={{ position: "relative", display: "block", width: "100%", height: "100%" }}

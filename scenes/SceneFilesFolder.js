@@ -127,6 +127,7 @@ export default class SceneFilesFolder extends React.Component {
     privacy: "ALL",
     filteredFiles: this.props.viewer?.library,
     keyboardTooltip: false,
+    index: -1,
   };
 
   // componentDidMount = () => {
@@ -254,6 +255,8 @@ export default class SceneFilesFolder extends React.Component {
             isMobile={this.props.isMobile}
             params={this.props.page.params}
             isOwner={true}
+            index={this.state.index}
+            onChange={(index) => this.setState({ index })}
           />
           <DataMeter
             stats={this.props.viewer.stats}

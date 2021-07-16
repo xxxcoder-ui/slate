@@ -121,6 +121,10 @@ export class GlobalCarousel extends React.Component {
 
   componentDidMount = () => {
     window.addEventListener("keydown", this._handleKeyDown);
+    if (this.props.params?.cid) {
+      const index = this.findSelectedIndex();
+      this.props.onChange(index);
+    }
     // window.addEventListener("slate-global-open-carousel", this._handleOpen);
     // window.addEventListener("slate-global-close-carousel", this._handleClose);
   };
@@ -129,6 +133,15 @@ export class GlobalCarousel extends React.Component {
     window.removeEventListener("keydown", this._handleKeyDown);
     // window.removeEventListener("slate-global-open-carousel", this._handleOpen);
     // window.removeEventListener("slate-global-close-carousel", this._handleClose);
+  };
+
+  componentDidUpdate = (prevProps) => {
+    if (this.props.index === -1 && this.props.params?.cid !== prevProps.params?.cid) {
+      const index = this.findSelectedIndex();
+      if (index !== this.props.index) {
+        this.props.onChange(index);
+      }
+    }
   };
 
   findSelectedIndex = () => {
@@ -227,17 +240,18 @@ export class GlobalCarousel extends React.Component {
       e.stopPropagation();
       e.preventDefault();
     }
-    if (this.props.onChange) {
-      this.props.onChange(-1);
-    } else {
-      let params = { ...this.props.params };
-      delete params.cid;
-      this.props.onAction({
-        type: "UPDATE_PARAMS",
-        params,
-        redirect: true,
-      });
-    }
+    // if (this.props.onChange) {
+    //   this.props.onChange(-1);
+    // } else {
+    let params = { ...this.props.params };
+    delete params.cid;
+    this.props.onAction({
+      type: "UPDATE_PARAMS",
+      params,
+      redirect: true,
+    });
+    this.props.onChange(-1);
+    // }
 
     // this.setState({ visible: false, index: 0 });
     // this.setWindowState();
@@ -247,27 +261,27 @@ export class GlobalCarousel extends React.Component {
     if (e) {
       e.stopPropagation();
     }
-    if (this.props.onChange) {
-      let index = this.props.index + 1;
-      if (index >= this.props.objects.length) {
-        this._handleClose();
-        return;
-      }
-      this.props.onChange(index);
-    } else {
-      let index = this.findSelectedIndex() + 1;
-      if (index >= this.props.objects.length) {
-        this._handleClose();
-        return;
-      }
-      let cid = this.props.objects[index].cid;
-      // this.setState({ index });
-      this.props.onAction({
-        type: "UPDATE_PARAMS",
-        params: { ...this.props.params, cid },
-        redirect: true,
-      });
+    // if (this.props.onChange) {
+    //   let index = this.props.index + 1;
+    //   if (index >= this.props.objects.length) {
+    //     this._handleClose();
+    //     return;
+    //   }
+    //   this.props.onChange(index);
+    // } else {
+    let index = this.props.index + 1;
+    if (index >= this.props.objects.length) {
+      // this._handleClose();
+      return;
     }
+    let cid = this.props.objects[index].cid;
+    this.props.onChange(index);
+    this.props.onAction({
+      type: "UPDATE_PARAMS",
+      params: { ...this.props.params, cid },
+      redirect: true,
+    });
+    // }
     // const data = this.props.objects[index];
     // this.setWindowState(data);
   };
@@ -281,27 +295,27 @@ export class GlobalCarousel extends React.Component {
     if (e) {
       e.stopPropagation();
     }
-    if (this.props.onChange) {
-      let index = this.props.index - 1;
-      if (index < 0) {
-        this._handleClose();
-        return;
-      }
-      this.props.onChange(index);
-    } else {
-      let index = this.findSelectedIndex() - 1;
-      if (index < 0) {
-        this._handleClose();
-        return;
-      }
-      let cid = this.props.objects[index].cid;
-      // this.setState({ index });
-      this.props.onAction({
-        type: "UPDATE_PARAMS",
-        params: { ...this.props.params, cid },
-        redirect: true,
-      });
+    // if (this.props.onChange) {
+    //   let index = this.props.index - 1;
+    //   if (index < 0) {
+    //     this._handleClose();
+    //     return;
+    //   }
+    //   this.props.onChange(index);
+    // } else {
+    let index = this.props.index - 1;
+    if (index < 0) {
+      // this._handleClose();
+      return;
     }
+    let cid = this.props.objects[index].cid;
+    this.props.onChange(index);
+    this.props.onAction({
+      type: "UPDATE_PARAMS",
+      params: { ...this.props.params, cid },
+      redirect: true,
+    });
+    // }
     // const data = this.props.objects[index];
     // this.setWindowState(data);
   };
@@ -314,12 +328,7 @@ export class GlobalCarousel extends React.Component {
   };
 
   render() {
-    let index;
-    if (this.props.onChange) {
-      index = this.props.index;
-    } else {
-      index = this.findSelectedIndex();
-    }
+    let index = this.props.index;
     if (!this.props.carouselType || index < 0 || index >= this.props.objects.length) {
       return null;
     }
