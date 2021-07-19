@@ -86,7 +86,7 @@ const UserEntry = ({ user }) => {
       <div css={STYLES_ENTRY_CONTAINER}>
         <div css={STYLES_PROFILE_PREVIEW}>
           <ProfilePhoto 
-            user={this.props.viewer}
+            user={user}
             size={48} 
           />
         </div>
@@ -121,8 +121,7 @@ const UserPreview = ({ user }) => {
     <div>
       <div css={STYLES_PROFILE_IMAGE}>
         <ProfilePhoto 
-          photo={user.data.photo}
-          userId={user.id} 
+          user={user}
           size={182} 
         />
       </div>
