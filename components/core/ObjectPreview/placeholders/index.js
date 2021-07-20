@@ -9,7 +9,6 @@ import PdfPlaceholder from "./PDF";
 import AudioPlaceholder from "./Audio";
 import CodePlaceholder from "./Code";
 import EpubPlaceholder from "./EPUB";
-import TextPlaceholder from "./Text";
 import KeynotePlaceholder from "./Keynote";
 import Object3DPlaceholder from "./3D";
 import FilePlaceholder from "./File";
@@ -64,10 +63,6 @@ const PlaceholderPrimitive = ({ file, ratio }) => {
 
   if (Validations.isCodeFile(file.filename)) {
     return <CodePlaceholder ratio={ratio} />;
-  }
-
-  if (Validations.isMarkdown(file.filename, type)) {
-    return <TextPlaceholder ratio={ratio} />;
   }
 
   if (Validations.is3dFile(file.filename)) {
