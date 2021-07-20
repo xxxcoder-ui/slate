@@ -25,12 +25,14 @@ const STYLES_FLUID_CONTAINER = css`
 
 const STYLES_IMAGE = css`
   object-fit: cover;
+  height: 100%;
+  width: 100%;
 `;
 
 const ImagePlaceholder = ({ blurhash }) => (
   <div css={STYLES_PLACEHOLDER_ABSOLUTE}>
     <div css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
-      <AspectRatio ratio={186 / 302}>
+      <AspectRatio ratio={1}>
         <div>
           <Blurhash
             hash={blurhash}
@@ -46,7 +48,13 @@ const ImagePlaceholder = ({ blurhash }) => (
   </div>
 );
 
-export default function ImageObjectPreview({ url, file, ...props }) {
+export default function ImageObjectPreview({
+  url,
+  file,
+  //NOTE(amine): ImageObjectPreview is used to display cover image for other objects, so we need to pass the tag down
+  tag,
+  ...props
+}) {
   const previewerRef = React.useRef();
   const [isLoading, setLoading] = React.useState(true);
   const handleOnLoaded = () => setLoading(false);
@@ -56,7 +64,7 @@ export default function ImageObjectPreview({ url, file, ...props }) {
   });
 
   const { type, coverImage } = file.data;
-  const tag = type.split("/")[1];
+  const imgTag = type.split("/")[1];
 
   const blurhash = React.useMemo(() => {
     return file.data.blurhash && isBlurhashValid(file.data.blurhash)
@@ -71,18 +79,15 @@ export default function ImageObjectPreview({ url, file, ...props }) {
   const imageUrl = coverImage ? Strings.getURLfromCID(coverImage?.cid) : url;
 
   return (
-    <ObjectPreviewPrimitive file={file} tag={tag} isImage {...props}>
+    <ObjectPreviewPrimitive file={file} tag={tag || imgTag} isImage {...props}>
       <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
         {isInView && (
-          <AspectRatio ratio={186 / 302}>
-            {/** NOTE(amine): if it's loaded */}
-            <img
-              css={STYLES_IMAGE}
-              src={imageUrl}
-              alt={`${file.name} preview`}
-              onLoad={handleOnLoaded}
-            />
-          </AspectRatio>
+          <img
+            css={STYLES_IMAGE}
+            src={imageUrl}
+            alt={`${file.name} preview`}
+            onLoad={handleOnLoaded}
+          />
         )}
         {shouldShowPlaceholder && <ImagePlaceholder blurhash={blurhash} />}
       </div>
