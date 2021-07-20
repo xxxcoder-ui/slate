@@ -16,7 +16,7 @@ export const sizes = {
 export const system = {
   //system color
   white: "#FFFFFF",
-  grayLight6: "#F2F5F7",
+  grayLight6: "#F7F8F9",
   grayLight5: "#E5E8EA",
   grayLight4: "#D1D4D6",
   grayLight3: "#C7CACC",
@@ -96,9 +96,9 @@ export const semantic = {
   bgBlurWhite: "rgba(255, 255, 255, 0.7)",
   bgBlurWhiteOP: "rgba(255, 255, 255, 0.85)",
   bgBlurWhiteTRN: "rgba(255, 255, 255, 0.3)",
-  bgBlurLight6: "rgba(242, 245, 247, 0.7)",
-  bgBlurLight6OP: "rgba(242, 245, 247, 0.85)",
-  bgBlurLight6TRN: "rgba(242, 245, 247, 0.3)",
+  bgBlurLight6: "rgba(247, 248, 249, 0.7)",
+  bgBlurLight6OP: "rgba(247, 248, 249, 0.85)",
+  bgBlurLight6TRN: "rgba(247, 248, 249, 0.3)",
 
   bgDark: system.grayDark6,
   bgLightDark: system.grayDark5,
