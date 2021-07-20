@@ -5,51 +5,48 @@ export default function VideoPlaceholder({ ratio = 1, ...props }) {
   const STYLES_PLACEHOLDER = React.useMemo(
     () => css`
       overflow: visible !important;
-      width: ${(188 / 248) * 100 * ratio}%;
-      height: ${(125 / 248) * 100 * ratio}%;
+      width: ${(96 / 248) * 100 * ratio}%;
+      height: ${(64 / 248) * 100 * ratio}%;
     `,
     [ratio]
   );
 
   return (
     <svg
-      width={188}
-      height={125}
-      viewBox="0 0 188 125"
+      viewBox="64 52 96 64"
+      width={96}
+      height={64}
+      css={STYLES_PLACEHOLDER}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      css={STYLES_PLACEHOLDER}
       {...props}
     >
-      <rect width={188} height={125} rx={8} fill="url(#prefix__paint0_linear)" />
+      <g filter="url(#prefix__filter0_d_video)">
+        <rect x={64} y={52} width={96} height={64} rx={8} fill="#fff" />
+      </g>
       <path
-        d="M94 73.333c7.364 0 13.333-5.97 13.333-13.333 0-7.364-5.969-13.333-13.333-13.333S80.667 52.637 80.667 60c0 7.364 5.97 13.333 13.333 13.333z"
-        fill="#fff"
-        stroke="#fff"
-        strokeWidth={1.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M112 94c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z"
+        fill="#F7F8F9"
       />
-      <path
-        d="M91.333 54.667l8 5.333-8 5.333V54.667z"
-        fill="#C7C7CC"
-        stroke="#C7C7CC"
-        strokeWidth={1.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M110 80l6 4-6 4v-8z" fill="#C7CACC" />
       <defs>
-        <linearGradient
-          id="prefix__paint0_linear"
-          x1={182}
-          y1={99}
-          x2={0}
-          y2={100}
-          gradientUnits="userSpaceOnUse"
+        <filter
+          id="prefix__filter0_d_video"
+          x={0}
+          y={0}
+          width={224}
+          height={192}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
         >
-          <stop stopColor="#fff" />
-          <stop offset={1} stopColor="#F2F2F7" />
-        </linearGradient>
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset dy={12} />
+          <feGaussianBlur stdDeviation={32} />
+          <feColorMatrix values="0 0 0 0 0.682353 0 0 0 0 0.690196 0 0 0 0 0.698039 0 0 0 0.3 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
       </defs>
     </svg>
   );
