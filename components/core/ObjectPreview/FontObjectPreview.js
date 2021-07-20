@@ -19,7 +19,6 @@ const STYLES_TEXT_PREVIEW = (theme) => css`
 `;
 
 const STYLES_LETTER = (theme) => css`
-  transform: translateY(-25%);
   overflow: hidden;
   font-size: ${theme.typescale.lvl8};
 `;
