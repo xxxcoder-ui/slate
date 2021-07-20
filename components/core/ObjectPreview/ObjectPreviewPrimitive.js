@@ -23,12 +23,20 @@ const STYLES_DESCRIPTION = (theme) => css`
   border-radius: 0px 0px 16px 16px;
   box-sizing: border-box;
   width: 100%;
-  padding: 9px 16px 8px;
+  max-height: 61px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     padding: 8px;
   }
 `;
+
+const STYLES_DESCRIPTION_INNER = (theme) => css`
+  background-color: ${theme.semantic.bgLight};
+  padding: 9px 16px 8px;
+  border-radius: 16px;
+  height: calc(170px + 61px);
+`;
+
 const STYLES_PREVIEW = css`
   overflow: hidden;
 `;
@@ -60,10 +68,16 @@ export default function ObjectPreviewPrimitive({
 }) {
   const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
   const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
+  const showSaveButton = viewer?.id !== file?.ownerId;
 
-  const [showControls, setShowControls] = React.useState(false);
-  const showControlsVisibility = () => setShowControls(true);
-  const hideControlsVisibility = () => setShowControls(false);
+  const [areControlsVisible, setShowControls] = React.useState(false);
+  const showControls = () => setShowControls(true);
+  const hideControls = () => setShowControls(false);
+
+  const [isBodyVisible, setShowBody] = React.useState(false);
+  const showBody = () => setShowBody(true);
+  const hideBody = () => setShowBody(false);
+  const body = file?.data?.body;
 
   const title = file.data.name || file.filename;
 
@@ -78,11 +92,9 @@ export default function ObjectPreviewPrimitive({
       />
     );
   }
-  const showSaveButton = viewer?.id !== file?.ownerId;
+
   return (
     <div
-      onMouseEnter={showControlsVisibility}
-      onMouseLeave={hideControlsVisibility}
       css={[
         STYLES_WRAPPER,
         css({
@@ -92,7 +104,7 @@ export default function ObjectPreviewPrimitive({
       ]}
     >
       <AnimatePresence>
-        {showControls && (
+        {areControlsVisible && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -105,23 +117,34 @@ export default function ObjectPreviewPrimitive({
         )}
       </AnimatePresence>
       <AspectRatio ratio={248 / 248}>
-        <div css={STYLES_PREVIEW}>{children}</div>
+        <div css={STYLES_PREVIEW} onMouseEnter={showControls} onMouseLeave={hideControls}>
+          {children}
+        </div>
       </AspectRatio>
-      <article css={STYLES_DESCRIPTION}>
-        <div>
+      <article css={STYLES_DESCRIPTION} onMouseEnter={showBody} onMouseLeave={hideBody}>
+        <motion.div
+          css={STYLES_DESCRIPTION_INNER}
+          initial={{ y: 0 }}
+          animate={{ y: isBodyVisible ? -170 : 0 }}
+          transition={{ type: "spring", stiffness: 170, damping: 26 }}
+        >
           <H5 nbrOflines={1} color="textBlack">
             {title}
           </H5>
-          <P3
-            css={css({
-              marginTop: 3,
-              textTransform: "uppercase",
-            })}
-            color="textGray"
-          >
+          <P3 css={css({ marginTop: 3, textTransform: "uppercase" })} color="textGray">
             {tag}
           </P3>
-        </div>
+          <H5
+            as={motion.h5}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isBodyVisible ? 1 : 0 }}
+            style={{ marginTop: 5 }}
+            nbrOflines={8}
+            color="textGrayDark"
+          >
+            {body ? body : "sorry, no description available."}
+          </H5>
+        </motion.div>
       </article>
     </div>
   );
