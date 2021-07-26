@@ -1969,3 +1969,22 @@ export const RSS = (props) => (
     />
   </svg>
 );
+
+export const Box = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M14 10.667V5.333a1.333 1.333 0 00-.667-1.153L8.667 1.513a1.333 1.333 0 00-1.334 0L2.667 4.18A1.333 1.333 0 002 5.333v5.334a1.334 1.334 0 00.667 1.153l4.666 2.667a1.334 1.334 0 001.334 0l4.666-2.667A1.333 1.333 0 0014 10.667z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M2.18 4.64L8 8.007l5.82-3.367M8 14.72V8"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
