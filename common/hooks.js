@@ -3,16 +3,15 @@ import * as Logging from "~/common/logging";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 
-export const useMounted = () => {
-  const isMounted = React.useRef(true);
+export const useMounted = (callback, depedencies) => {
+  const mountedRef = React.useRef(false);
   React.useLayoutEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-  return isMounted.current;
+    if (mountedRef.current && callback) {
+      callback();
+    }
+    mountedRef.current = true;
+  }, depedencies);
 };
-
 /** NOTE(amine):
  * useForm handles three main responsabilities
  *  - control inputs
