@@ -52,7 +52,7 @@ export default function ViewMoreContent({ items, children, ...props }) {
                   {isImageFile ? (
                     <img src={getImageCover(file)} alt="File Preview" />
                   ) : (
-                    <ObjectPlaceholder ratio={0.4} file={file} />
+                    <ObjectPlaceholder ratio={0.9} file={file} />
                   )}
                 </div>
               );

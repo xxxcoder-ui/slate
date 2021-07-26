@@ -16,6 +16,7 @@ const STYLES_WRAPPER = (theme) => css`
   box-shadow: 0 0 0 0.5px ${theme.semantic.bgGrayLight}, ${theme.shadow.lightSmall};
   border-radius: 16px;
   overflow: hidden;
+  cursor: pointer;
 `;
 
 const STYLES_DESCRIPTION = (theme) => css`
@@ -39,6 +40,7 @@ const STYLES_DESCRIPTION_INNER = (theme) => css`
 
 const STYLES_PREVIEW = css`
   overflow: hidden;
+  position: relative;
 `;
 
 const STYLES_SELECTED_RING = (theme) => css`
@@ -53,6 +55,10 @@ const STYLES_CONTROLS = css`
   & > * + * {
     margin-top: 8px !important;
   }
+`;
+
+const STYLES_UPPERCASE = css`
+  text-transform: uppercase;
 `;
 
 export default function ObjectPreviewPrimitive({
@@ -94,33 +100,27 @@ export default function ObjectPreviewPrimitive({
   }
 
   return (
-    <div
-      css={[
-        STYLES_WRAPPER,
-        css({
-          borderRadius: 16,
-        }),
-        isSelected && STYLES_SELECTED_RING,
-      ]}
-    >
-      <AnimatePresence>
-        {areControlsVisible && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            css={STYLES_CONTROLS}
-          >
-            <LikeButton onClick={like} isLiked={isLiked} likeCount={likeCount} />
-            {showSaveButton && <SaveButton onSave={save} isSaved={isSaved} saveCount={saveCount} />}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AspectRatio ratio={248 / 248}>
-        <div css={STYLES_PREVIEW} onMouseEnter={showControls} onMouseLeave={hideControls}>
-          {children}
-        </div>
-      </AspectRatio>
+    <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
+      <div css={STYLES_PREVIEW} onMouseEnter={showControls} onMouseLeave={hideControls}>
+        <AnimatePresence>
+          {areControlsVisible && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              css={STYLES_CONTROLS}
+            >
+              <LikeButton onClick={like} isLiked={isLiked} likeCount={likeCount} />
+              {showSaveButton && (
+                <SaveButton onSave={save} isSaved={isSaved} saveCount={saveCount} />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AspectRatio ratio={248 / 248}>
+          <div>{children}</div>
+        </AspectRatio>
+      </div>
       <article css={STYLES_DESCRIPTION} onMouseEnter={showBody} onMouseLeave={hideBody}>
         <motion.div
           css={STYLES_DESCRIPTION_INNER}
@@ -128,21 +128,21 @@ export default function ObjectPreviewPrimitive({
           animate={{ y: isBodyVisible ? -170 : 0 }}
           transition={{ type: "spring", stiffness: 170, damping: 26 }}
         >
-          <H5 nbrOflines={1} color="textBlack">
+          <H5 as="h2" nbrOflines={1} color="textBlack">
             {title}
           </H5>
-          <P3 css={css({ marginTop: 3, textTransform: "uppercase" })} color="textGray">
+          <P3 as="small" style={{ marginTop: 3 }} css={STYLES_UPPERCASE} color="textGray">
             {tag}
           </P3>
           <H5
-            as={motion.h5}
+            as={motion.p}
             initial={{ opacity: 0 }}
             animate={{ opacity: isBodyVisible ? 1 : 0 }}
             style={{ marginTop: 5 }}
             nbrOflines={8}
             color="textGrayDark"
           >
-            {body ? body : "sorry, no description available."}
+            {body || "sorry, no description available."}
           </H5>
         </motion.div>
       </article>
