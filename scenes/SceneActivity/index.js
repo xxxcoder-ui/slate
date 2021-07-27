@@ -3,7 +3,7 @@ import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { SecondaryTabGroup } from "~/components/core/TabGroup";
+// import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useIntersection } from "common/hooks";
 import { useActivity } from "./hooks";
@@ -58,7 +58,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
       url={`${Constants.hostname}${page.pathname}`}
     >
       <ScenePage>
-        {viewer && (
+        {/* {viewer && (
           <SecondaryTabGroup
             tabs={[
               { title: "My network", value: { tab: "activity" } },
@@ -68,7 +68,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
             onAction={onAction}
             style={{ marginTop: 0 }}
           />
-        )}
+        )} */}
         <div css={STYLES_GROUPS_CONTAINER}>
           {feed?.map((group) => (
             <ActivityGroup

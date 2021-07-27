@@ -84,7 +84,8 @@ export function useActivity({ page, viewer, onAction }) {
     },
   });
 
-  const tab = getTab(page, viewer);
+  // const tab = getTab(page, viewer);
+  const tab = "explore";
 
   const updateFeed = React.useCallback(
     async (update) => {
