@@ -136,14 +136,15 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
   );
 };
 
-const WithCustomWrapper = (Component) => (props) => (
-  <WebsitePrototypeWrapper>
-    <div css={STYLES_ROOT}>
-      <div css={STYLES_MIDDLE}>
-        <Component {...props} />
+const WithCustomWrapper = (Component) => (props) =>
+  (
+    <WebsitePrototypeWrapper>
+      <div css={STYLES_ROOT}>
+        <div css={STYLES_MIDDLE}>
+          <Component {...props} />
+        </div>
       </div>
-    </div>
-  </WebsitePrototypeWrapper>
-);
+    </WebsitePrototypeWrapper>
+  );
 
 export default WithCustomWrapper(SigninScene);
