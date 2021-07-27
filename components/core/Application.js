@@ -27,6 +27,7 @@ import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
 import SceneDirectory from "~/scenes/SceneDirectory";
 import SceneProfile from "~/scenes/SceneProfile";
+import SceneSurvey from "~/scenes/SceneSurvey";
 
 // NOTE(jim):
 // Sidebars each have a decorator and can be shown to with _handleAction
@@ -72,6 +73,7 @@ const SCENES = {
   NAV_ERROR: <SceneError />,
   NAV_SIGN_IN: <SceneAuth />,
   ...(Environment.ACTIVITY_FEATURE_FLAG ? { NAV_ACTIVITY: <SceneActivity /> } : {}),
+  NAV_SURVEY: <SceneSurvey />,
   NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
@@ -417,7 +419,7 @@ export default class ApplicationPage extends React.Component {
       page = NavigationData.getById(null, this.state.viewer);
     }
     let headerElement;
-    if (page.id !== "NAV_SIGN_IN") {
+    if (page.id !== "NAV_SIGN_IN" && page.id !== "NAV_SURVEY") {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}

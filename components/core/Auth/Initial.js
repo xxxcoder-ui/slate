@@ -16,8 +16,9 @@ import { Toggle, SignUpPopover } from "~/components/core/Auth/components";
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex-grow: 1;
 `;
+
 const STYLES_LINK_ITEM = (theme) => css`
   display: block;
   text-decoration: none;
@@ -71,7 +72,11 @@ export default function Initial({
   const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler(page);
 
   // NOTE(amine): Signup view form
-  const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
+  const {
+    getFieldProps,
+    getFormProps,
+    isSubmitting: isCheckingEmail,
+  } = useForm({
     validateOnBlur: false,
     initialValues: { email: initialEmail || "" },
     validate: ({ email }, errors) => {
