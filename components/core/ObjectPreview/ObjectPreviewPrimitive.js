@@ -3,9 +3,9 @@ import * as React from "react";
 import { css } from "@emotion/react";
 import { H5, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
-import { LikeButton, SaveButton } from "./components";
-import { useLikeHandler, useSaveHandler } from "~/common/hooks";
-import { motion, AnimatePresence } from "framer-motion";
+// import { LikeButton, SaveButton } from "./components";
+// import { useLikeHandler, useSaveHandler } from "~/common/hooks";
+import { motion } from "framer-motion";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -47,15 +47,15 @@ const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
 `;
 
-const STYLES_CONTROLS = css`
-  position: absolute;
-  z-index: 1;
-  right: 16px;
-  top: 16px;
-  & > * + * {
-    margin-top: 8px !important;
-  }
-`;
+// const STYLES_CONTROLS = css`
+//   position: absolute;
+//   z-index: 1;
+//   right: 16px;
+//   top: 16px;
+//   & > * + * {
+//     margin-top: 8px !important;
+//   }
+// `;
 
 const STYLES_UPPERCASE = css`
   text-transform: uppercase;
@@ -66,19 +66,19 @@ export default function ObjectPreviewPrimitive({
   tag = "FILE",
   file,
   isSelected,
-  viewer,
+  // viewer,
   owner,
   // NOTE(amine): internal prop used to display
   isImage,
   onAction,
 }) {
-  const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
-  const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
-  const showSaveButton = viewer?.id !== file?.ownerId;
+  // const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
+  // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
+  // const showSaveButton = viewer?.id !== file?.ownerId;
 
-  const [areControlsVisible, setShowControls] = React.useState(false);
-  const showControls = () => setShowControls(true);
-  const hideControls = () => setShowControls(false);
+  // const [areControlsVisible, setShowControls] = React.useState(false);
+  // const showControls = () => setShowControls(true);
+  // const hideControls = () => setShowControls(false);
 
   const [isBodyVisible, setShowBody] = React.useState(false);
   const showBody = () => setShowBody(true);
@@ -101,8 +101,11 @@ export default function ObjectPreviewPrimitive({
 
   return (
     <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
-      <div css={STYLES_PREVIEW} onMouseEnter={showControls} onMouseLeave={hideControls}>
-        <AnimatePresence>
+      <div
+        css={STYLES_PREVIEW}
+        //  onMouseEnter={showControls} onMouseLeave={hideControls}
+      >
+        {/* <AnimatePresence>
           {areControlsVisible && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -116,7 +119,7 @@ export default function ObjectPreviewPrimitive({
               )}
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
         <AspectRatio ratio={248 / 248}>
           <div>{children}</div>
         </AspectRatio>
