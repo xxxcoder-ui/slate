@@ -519,3 +519,10 @@ export const getUserVersion = async (data) => {
     body: JSON.stringify({ data }),
   });
 };
+
+export const createSurvey = async (data) => {
+  return await returnJSON(`/api/surveys/create`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
