@@ -13,15 +13,26 @@ import { ButtonPrimary } from "~/components/system/components/Buttons";
 import { useForm } from "~/common/hooks";
 import { Input } from "~/components/system";
 
-const TOOLS_OPTIONS = ["Dropbox", "Google Drive", "Are.na", "Pinterest", "Browser Bookmarks"];
-const SLATE_USECASES = [
-  "Personal Storage",
-  "Public File Sharing",
-  "Moodboarding",
-  "Archiving",
-  "Bookmarking",
-];
-const REFERRAL = ["Twitter", "IPFS/Filecoin Community", "From a friend"];
+const TOOLS_OPTIONS = {
+  Dropbox: "DROPBOX",
+  "Google Drive": "GOOGLE_DRIVE",
+  "Are.na": "ARENA",
+  Pinterest: "PINTEREST",
+  "Browser Bookmarks": "BROWSER_BOOKMARKS",
+};
+const SLATE_USECASES_OPTIONS = {
+  "Personal Storage": "PERSONAL_STORAGE",
+  "Public File Sharing": "PUBLIC_FILE_SHARING",
+  Moodboarding: "MOODBOARDING",
+  Archiving: "ARCHIVING",
+  Bookmarking: "BOOKMARKING",
+};
+
+const REFERRAL_OPTIONS = {
+  Twitter: "TWITTER",
+  "IPFS/Filecoin Community": "IPFS_FILECOIN",
+  "From a friend": "FRIEND",
+};
 
 // NOTE(amine): form styles
 const STYLES_FORM_WRAPPER = css`
@@ -81,7 +92,7 @@ const STYLES_CHECKBOX_INPUT = css`
   ${Styles.HOVERABLE};
 `;
 
-export default function SceneSurvey() {
+function SceneSurvey() {
   const [step, setStep] = React.useState(1);
   const surveyResults = React.useRef({});
 
@@ -89,7 +100,7 @@ export default function SceneSurvey() {
     return (
       <ToolsForm
         onSubmit={(value) => {
-          surveyResults.current.tools = value.join(",");
+          surveyResults.current.tools = value.map((item) => TOOLS_OPTIONS[item] || item).join(",");
           setStep(2);
         }}
       />
@@ -100,7 +111,9 @@ export default function SceneSurvey() {
     return (
       <UsecasesForm
         onSubmit={(value) => {
-          surveyResults.current.useCases = value.join(",");
+          surveyResults.current.useCases = value
+            .map((item) => SLATE_USECASES_OPTIONS[item] || item)
+            .join(",");
           setStep(3);
         }}
       />
@@ -110,25 +123,19 @@ export default function SceneSurvey() {
   return (
     <ReferralForm
       onSubmit={async (value) => {
-        surveyResults.current.referrals = value.join(",");
+        surveyResults.current.referrals = value
+          .map((item) => REFERRAL_OPTIONS[item] || item)
+          .join(",");
         // call endpoint
         const response = await Actions.createSurvey(surveyResults.current);
         if (Events.hasError(response)) {
           return;
         }
+        window.location.replace("/_/data");
       }}
     />
   );
 }
-
-const Checkbox = ({ touched, value, style, isSelected, ...props }) => {
-  return (
-    <div style={style} css={[STYLES_CHECKBOX_WRAPPER, isSelected && STYLES_CHECKBOX_SELECTED]}>
-      <H5 color="textBlack">{value}</H5>
-      <input value={value} css={STYLES_CHECKBOX_INPUT} type="checkbox" {...props} />
-    </div>
-  );
-};
 
 const ToolsForm = ({ onSubmit }) => {
   const { getFieldProps, getFormProps, values } = useForm({
@@ -154,7 +161,7 @@ const ToolsForm = ({ onSubmit }) => {
           >
             Select all that apply
           </H5>
-          {TOOLS_OPTIONS.map((item, i) => (
+          {Object.keys(TOOLS_OPTIONS).map((item, i) => (
             <Checkbox
               key={i}
               style={{ marginTop: 12 }}
@@ -204,7 +211,7 @@ const UsecasesForm = ({ onSubmit }) => {
           <H5 style={{ marginTop: 24 }} color="textGrayDark">
             Select all that apply
           </H5>
-          {SLATE_USECASES.map((item, i) => (
+          {Object.keys(SLATE_USECASES_OPTIONS).map((item, i) => (
             <Checkbox
               key={i}
               style={{ marginTop: 12 }}
@@ -254,7 +261,7 @@ const ReferralForm = ({ onSubmit }) => {
           <H5 style={{ marginTop: 24 }} color="textGrayDark">
             Select all that apply
           </H5>
-          {REFERRAL.map((item, i) => (
+          {Object.keys(REFERRAL_OPTIONS).map((item, i) => (
             <Checkbox
               key={i}
               style={{ marginTop: 12 }}
@@ -282,3 +289,56 @@ const ReferralForm = ({ onSubmit }) => {
     </div>
   );
 };
+
+const Checkbox = ({ touched, value, style, isSelected, ...props }) => {
+  return (
+    <div style={style} css={[STYLES_CHECKBOX_WRAPPER, isSelected && STYLES_CHECKBOX_SELECTED]}>
+      <H5 color="textBlack">{value}</H5>
+      <input value={value} css={STYLES_CHECKBOX_INPUT} type="checkbox" {...props} />
+    </div>
+  );
+};
+
+const background_image =
+  "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
+
+const STYLES_ROOT = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 1rem;
+
+  min-height: 100vh;
+  width: 100vw;
+  position: absolute;
+  overflow: hidden;
+  background-image: url(${background_image});
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
+const STYLES_MIDDLE = css`
+  position: relative;
+  min-height: 10%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+  padding: 24px;
+`;
+const WithCustomWrapper = (Component) => (props) =>
+  (
+    <WebsitePrototypeWrapper>
+      <div css={STYLES_ROOT}>
+        <div css={STYLES_MIDDLE}>
+          <Component {...props} />
+        </div>
+      </div>
+    </WebsitePrototypeWrapper>
+  );
+
+export default WithCustomWrapper(SceneSurvey);
