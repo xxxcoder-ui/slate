@@ -147,7 +147,7 @@ export class SignIn extends React.Component {
       });
     }
     if (response && !response.error) {
-      window.location.replace("/_/activity");
+      window.location.replace("/_/data");
     }
     this.setState({ loading: false });
   };

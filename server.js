@@ -154,7 +154,7 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
-    return res.redirect("/_/activity");
+    return res.redirect("/_/data");
     // let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     // let isMac = Window.isMac(req.headers["user-agent"]);
 

@@ -1,5 +1,5 @@
-import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
+import * as Environment from "~/common/environment";
 
 export const getById = (id, viewer) => {
   let target;
@@ -12,7 +12,7 @@ export const getById = (id, viewer) => {
   }
 
   if (viewer && target.id === authPage.id) {
-    return { ...activityPage }; //NOTE(martina): authenticated users should be redirected to the home page rather than the
+    return { ...dataPage }; //NOTE(martina): authenticated users should be redirected to the home page rather than the
   }
 
   if (!viewer && !target.externalAllowed) {
@@ -31,7 +31,7 @@ export const getByHref = (href, viewer) => {
     return { page: { ...errorPage } };
   }
   if (pathname === "/_") {
-    return { page: { ...activityPage } };
+    return { page: { ...dataPage } };
   }
 
   let page = navigation.find((each) => pathname.startsWith(each.pathname));
@@ -65,7 +65,7 @@ export const getByHref = (href, viewer) => {
 
   if (viewer && page.id === authPage.id) {
     redirected = true;
-    page = { ...activityPage };
+    page = { ...dataPage };
   }
 
   if (!viewer && !page.externalAllowed) {
@@ -105,6 +105,15 @@ const dataPage = {
   mainNav: true,
 };
 
+const collectionsPage = {
+  id: "NAV_SLATES",
+  name: "Collections",
+  pageTitle: "Your Collections",
+  ignore: true,
+  pathname: "/_/collections",
+  mainNav: true,
+};
+
 const activityPage = {
   id: "NAV_ACTIVITY",
   name: "Activity",
@@ -112,7 +121,7 @@ const activityPage = {
   ignore: true,
   externalAllowed: true,
   pathname: "/_/activity",
-  mainNav: true,
+  mainNav: Environment.ACTIVITY_FEATURE_FLAG,
 };
 
 const slatePage = {
@@ -145,16 +154,9 @@ const errorPage = {
 export const navigation = [
   errorPage,
   authPage,
-  activityPage,
+  ...(Environment.ACTIVITY_FEATURE_FLAG ? [activityPage] : []),
+  collectionsPage,
   dataPage,
-  {
-    id: "NAV_SLATES",
-    name: "Collections",
-    pageTitle: "Your Collections",
-    ignore: true,
-    pathname: "/_/collections",
-    mainNav: true,
-  },
   // {
   //   id: "NAV_SEARCH",
   //   name: "Search",

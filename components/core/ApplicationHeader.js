@@ -202,11 +202,7 @@ export default class ApplicationHeader extends React.Component {
         <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
           <div css={STYLES_APPLICATION_HEADER}>
             <div css={STYLES_LEFT}>
-              <Link
-                onAction={this.props.onAction}
-                href="/_/activity"
-                style={{ pointerEvents: "auto" }}
-              >
+              <Link onAction={this.props.onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
                 <DarkSymbol style={{ height: 24, display: "block" }} />
               </Link>
               <div css={Styles.MOBILE_ONLY}>{searchComponent}</div>
@@ -331,7 +327,7 @@ export default class ApplicationHeader extends React.Component {
               <div css={STYLES_LEFT}>
                 <Link
                   onAction={this.props.onAction}
-                  href="/_/activity"
+                  href="/_/data"
                   style={{ pointerEvents: "auto" }}
                 >
                   <DarkSymbol style={{ height: 24, display: "block" }} />
@@ -396,7 +392,7 @@ export default class ApplicationHeader extends React.Component {
               <div css={STYLES_MIDDLE}>
                 <Link
                   onAction={this.props.onAction}
-                  href="/_/activity"
+                  href="/_/data"
                   style={{ pointerEvents: "auto" }}
                 >
                   <DarkSymbol style={{ height: 24, display: "block" }} />
