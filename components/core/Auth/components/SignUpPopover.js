@@ -9,7 +9,7 @@ const STYLES_POPOVER = (theme) => css`
   flex-direction: column;
   box-sizing: border-box;
   max-width: 432px;
-  height: 544px;
+  min-height: 544px;
   width: 95vw;
   border-radius: 8px;
   padding: 48px 32px 36px 32px;
@@ -25,8 +25,8 @@ const STYLES_POPOVER = (theme) => css`
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background: radial-gradient(
       80.79% 80.79% at 50% 50%,
-      rgba(242, 242, 247, 0.5) 0%,
-      rgba(242, 242, 247, 0) 100%
+      rgba(242, 242, 247, 0.85) 0%,
+      rgba(242, 242, 247, 0.65) 100%
     );
     backdrop-filter: blur(75px);
   }
@@ -51,6 +51,7 @@ const STYLES_POPOVER_BODY = (theme) => css`
   height: 100%;
   flex-direction: column;
   justify-content: flex-start;
+  flex-grow: 1;
   @media (max-width: ${theme.sizes.mobile}px) {
     justify-content: center;
   }
