@@ -5,6 +5,7 @@ import * as Styles from "~/common/styles";
 import { css } from "@emotion/react";
 import { motion } from "framer-motion";
 import { ViewMoreContent, ProfileInfo } from "~/components/core/ActivityGroup/components";
+import { Link } from "~/components/core/Link";
 
 import ObjectPreview from "~/components/core/ObjectPreview";
 
@@ -27,18 +28,24 @@ const STYLES_VIEWMORE_CONTAINER = (theme) => css`
   }
 `;
 
-export default function ActivityFileGroup({ viewer, group, onAction, nbrOfObjectsPerRow = 4 }) {
-  const { file, owner, slate, type, createdAt } = group;
+export default function ActivityFileGroup({
+  viewer,
+  group,
+  onFileClick,
+  onAction,
+  nbrOfObjectsPerRow = 4,
+}) {
+  const { file: files, owner, slate, type, createdAt } = group;
 
   const { elements, restElements } = React.useMemo(() => {
-    if (!Array.isArray(file)) {
-      return { elements: [file] };
+    if (!Array.isArray(files)) {
+      return { elements: [files] };
     }
     return {
-      elements: file.slice(0, nbrOfObjectsPerRow),
-      restElements: file.slice(nbrOfObjectsPerRow),
+      elements: files.slice(0, nbrOfObjectsPerRow),
+      restElements: files.slice(nbrOfObjectsPerRow),
     };
-  }, [file]);
+  }, [files]);
 
   const [showMore, setShowMore] = React.useState(false);
   const viewMoreFiles = () => setShowMore(true);
@@ -70,8 +77,17 @@ export default function ActivityFileGroup({ viewer, group, onAction, nbrOfObject
       />
       <div>
         <div css={Styles.OBJECTS_PREVIEW_GRID}>
-          {elements.map((file) => (
-            <ObjectPreview viewer={viewer} owner={file.owner} key={file.id} file={file} />
+          {elements.map((file, i) => (
+            <>
+              <button
+                key={file.id}
+                style={{ width: "100%" }}
+                css={Styles.BUTTON_RESET}
+                onClick={() => onFileClick(i, files)}
+              >
+                <ObjectPreview viewer={viewer} owner={file.owner} key={file.id} file={file} />
+              </button>
+            </>
           ))}
           {showMore &&
             restElements.map((file, i) =>
@@ -82,10 +98,24 @@ export default function ActivityFileGroup({ viewer, group, onAction, nbrOfObject
                   animate={{ opacity: 1, y: 0 }}
                   key={file.id}
                 >
-                  <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
+                  <button
+                    key={file.id}
+                    style={{ width: "100%" }}
+                    css={Styles.BUTTON_RESET}
+                    onClick={() => onFileClick(i + nbrOfObjectsPerRow, files)}
+                  >
+                    <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
+                  </button>
                 </motion.div>
               ) : (
-                <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
+                <button
+                  key={file.id}
+                  style={{ width: "100%" }}
+                  css={Styles.BUTTON_RESET}
+                  onClick={() => onFileClick(i + nbrOfObjectsPerRow, files)}
+                >
+                  <ObjectPreview viewer={viewer} owner={file.owner} file={file} />
+                </button>
               )
             )}
         </div>

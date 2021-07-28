@@ -16,7 +16,14 @@ const STYLES_GROUP_GRID = (theme) => css`
   padding-bottom: 24px;
 `;
 
-export default function ActivityGroup({ onAction, viewer, external, group, nbrOfCardsPerRow }) {
+export default function ActivityGroup({
+  onAction,
+  viewer,
+  onFileClick,
+  external,
+  group,
+  nbrOfCardsPerRow,
+}) {
   const { type } = group;
   if (
     type === "CREATE_FILE" ||
@@ -30,6 +37,7 @@ export default function ActivityGroup({ onAction, viewer, external, group, nbrOf
         viewer={viewer}
         onAction={onAction}
         group={group}
+        onFileClick={onFileClick}
       />
     );
   }

@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useIntersection } from "common/hooks";
 import { useActivity } from "./hooks";
+import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 
 import ScenePage from "~/components/core/ScenePage";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
@@ -33,7 +34,7 @@ const STYLES_LOADER = css`
   width: 100%;
 `;
 
-export default function SceneActivity({ page, viewer, external, onAction }) {
+export default function SceneActivity({ page, viewer, external, onAction, ...props }) {
   const { feed, tab, isLoading, updateFeed } = useActivity({
     page,
     viewer,
@@ -43,6 +44,14 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
   const divRef = React.useRef();
 
   const nbrOfCardsInRow = useNbrOfCardsPerRow(divRef);
+
+  const [globalCarouselState, setGlobalCarouselState] = React.useState({
+    currentCarrousel: -1,
+    currentObjects: [],
+  });
+  const handleFileClick = (fileIdx, groupFiles) =>
+    setGlobalCarouselState({ currentCarrousel: fileIdx, currentObjects: groupFiles });
+  console.log(globalCarouselState.currentCarrousel, globalCarouselState.currentObjects.length);
 
   useIntersection({
     ref: divRef,
@@ -78,6 +87,7 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
               external={external}
               onAction={onAction}
               group={group}
+              onFileClick={handleFileClick}
             />
           ))}
         </div>
@@ -85,6 +95,17 @@ export default function SceneActivity({ page, viewer, external, onAction }) {
           {isLoading[tab] && <LoaderSpinner style={{ height: 32, width: 32 }} />}
         </div>
       </ScenePage>
+
+      <GlobalCarousel
+        carouselType="ACTIVITY"
+        viewer={viewer}
+        objects={globalCarouselState.currentObjects}
+        index={globalCarouselState.currentCarrousel}
+        isMobile={props.isMobile}
+        onChange={(idx) => setGlobalCarouselState((prev) => ({ ...prev, currentCarrousel: idx }))}
+        isOwner={false}
+        onAction={() => {}}
+      />
     </WebsitePrototypeWrapper>
   );
 }
