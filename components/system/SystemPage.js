@@ -132,6 +132,10 @@ export default class SystemPage extends React.Component {
           <title>{title}</title>
           <meta name="title" content={title} />
           <meta name="description" content={description} />
+          <meta
+            name="google-site-verification"
+            content="INHmYWYLRrINvdmu9BXrXaJnphG0-wF5e2YGaDx2v7k"
+          />
 
           <meta property="og:type" content="website" />
           <meta property="og:url" content={url} />
