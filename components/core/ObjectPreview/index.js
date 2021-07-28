@@ -6,10 +6,6 @@ import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
-import ImageObjectPreview from "./ImageObjectPreview";
-import TextObjectPreview from "./TextObjectPreview";
-import FontObjectPreview from "./FontObjectPreview";
-
 // Note(amine): placeholders
 import PdfPlaceholder from "~/components/core/ObjectPreview/placeholders/PDF";
 import VideoPlaceholder from "~/components/core/ObjectPreview/placeholders/Video";
@@ -21,12 +17,20 @@ import Object3DPlaceholder from "~/components/core/ObjectPreview/placeholders/3D
 import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
 
 // NOTE(amine): previews
+import ImageObjectPreview from "~/components/core/ObjectPreview/ImageObjectPreview";
+import TextObjectPreview from "~/components/core/ObjectPreview/TextObjectPreview";
+import FontObjectPreview from "~/components/core/ObjectPreview/FontObjectPreview";
+import LinkObjectPreview from "~/components/core/ObjectPreview/LinkObjectPreview";
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const ObjectPreview = ({ file, ...props }) => {
-  const { type } = file.data;
+  const { type, link } = file.data;
 
   const url = Strings.getURLfromCID(file.cid);
+
+  if (link) {
+    return <LinkObjectPreview file={file} />;
+  }
 
   if (Validations.isPreviewableImage(type)) {
     return <ImageObjectPreview file={file} url={url} {...props} />;

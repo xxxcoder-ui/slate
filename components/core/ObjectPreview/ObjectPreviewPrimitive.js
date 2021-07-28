@@ -134,9 +134,15 @@ export default function ObjectPreviewPrimitive({
           <H5 as="h2" nbrOflines={1} color="textBlack">
             {title}
           </H5>
-          <P3 as="small" style={{ marginTop: 3 }} css={STYLES_UPPERCASE} color="textGray">
-            {tag}
-          </P3>
+          <div style={{ marginTop: 3 }}>
+            {typeof tag === "string" ? (
+              <P3 as="small" css={STYLES_UPPERCASE} color="textGray">
+                {tag}
+              </P3>
+            ) : (
+              tag
+            )}
+          </div>
           <H5
             as={motion.p}
             initial={{ opacity: 0 }}
