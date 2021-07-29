@@ -55,6 +55,10 @@ export const encryptPasswordClient = async (text) => {
   return hash;
 };
 
+export const getRandomNumberBetween = (min, max) => {
+  return Math.round(Math.random() * (max - min) + min);
+};
+
 export const coerceToArray = (input) => {
   if (!input) {
     return [];

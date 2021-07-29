@@ -9,6 +9,7 @@ export const Loader = (props) => {
       strokeLinejoin="round"
       height={props.height}
       style={props.style}
+      {...props}
     >
       <path d="M8 1.68237V4.34904" />
       <path d="M8 12.3491V15.0158" />

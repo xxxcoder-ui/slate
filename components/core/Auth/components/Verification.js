@@ -10,7 +10,7 @@ import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { useField } from "~/common/hooks";
-import { SignUpPopover } from "~/components/core/Auth/components";
+import { SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
 
 const STYLES_HELPER = (theme) => css`
   text-align: center;
@@ -114,7 +114,7 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
                   <LoaderSpinner height="16px" />
                 </div>
               )
-            : SVG.RightArrow
+            : ArrowButton
         }
         textStyle={{ width: "100% !important" }}
         containerStyle={{ marginTop: "28px" }}

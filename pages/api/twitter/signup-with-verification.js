@@ -3,9 +3,9 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import SearchManager from "~/node_common/managers/search";
 import * as Constants from "~/node_common/constants";
 
+import SearchManager from "~/node_common/managers/search";
 import JWT from "jsonwebtoken";
 
 export default async (req, res) => {
@@ -68,7 +68,7 @@ export default async (req, res) => {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_TWITTER_EXISTS" });
   }
 
-  const newUsername = username.toLowerCase();
+  const newUsername = Strings.createUsername(username);
   const newEmail = verification.email.toLowerCase();
 
   // NOTE(Amine): If there is an account with the user's twitter email
@@ -76,17 +76,13 @@ export default async (req, res) => {
   if (userByEmail) return res.status(201).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN" });
 
   // NOTE(Amine): If there is an account with the provided username
-  const userByUsername = await Data.getUserByUsername({ username });
+  const userByUsername = await Data.getUserByUsername({ username: newUsername });
   if (userByUsername) {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
 
-  const {
-    textileKey,
-    textileToken,
-    textileThreadID,
-    textileBucketCID,
-  } = await Utilities.createBucket({});
+  const { textileKey, textileToken, textileThreadID, textileBucketCID } =
+    await Utilities.createBucket({});
 
   if (!textileKey || !textileToken || !textileThreadID || !textileBucketCID) {
     return res

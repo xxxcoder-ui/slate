@@ -204,7 +204,6 @@ const STYLES_LOADER_PROGRESS = css`
 // export const LoaderSpinner = (props) => <div css={STYLES_LOADER_SPINNER} {...props} />;
 
 const STYLES_LOADER_SPINNER = css`
-  display: inline-block;
   animation: slate-client-animation-spin 1.5s cubic-bezier(0.5, 0.1, 0.4, 0.7) infinite;
 
   @keyframes slate-client-animation-spin {
@@ -221,10 +220,11 @@ const STYLES_LOADER_SPINNER = css`
 
 export const LoaderProgress = (props) => <div css={STYLES_LOADER_PROGRESS} {...props} />;
 
-export const LoaderSpinner = (props) => (
-  <span css={STYLES_LOADER_SPINNER}>
+export const LoaderSpinner = ({ css, ...props }) => (
+  <span>
     <SVG.Loader
       {...props}
+      css={[STYLES_LOADER_SPINNER, css]}
       style={{
         display: "block",
         color: Constants.system.blue,
