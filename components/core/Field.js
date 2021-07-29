@@ -43,7 +43,7 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
 `;
 
 const STYLES_INPUT = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.7);
+  background-color: rgba(242, 242, 247, 0.5);
   box-shadow: ${theme.shadow.lightLarge};
   border-radius: 12px;
   &::placeholder {
@@ -53,6 +53,7 @@ const STYLES_INPUT = (theme) => css`
 const STYLES_INPUT_ERROR = (theme) => css`
   background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.red};
+  border-radius: 8px;
   &::placeholder {
     color: ${theme.semantic.textGrayDark};
   }
@@ -60,6 +61,7 @@ const STYLES_INPUT_ERROR = (theme) => css`
 const STYLES_INPUT_SUCCESS = (theme) => css`
   background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.green};
+  border-radius: 8px;
   &::placeholder {
     color: ${theme.semantic.textGrayDark};
   }

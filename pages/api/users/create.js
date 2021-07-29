@@ -1,13 +1,13 @@
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
-import SearchManager from "~/node_common/managers/search";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
 import * as EmailManager from "~/node_common/managers/emails";
 import * as Monitor from "~/node_common/monitor";
 
 import BCrypt from "bcrypt";
+import SearchManager from "~/node_common/managers/search";
 
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
@@ -36,14 +36,17 @@ export default async (req, res) => {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_UNVERIFIED", error: true });
   }
 
+  const newUsername = Strings.createUsername(req.body.data.username);
+  const newEmail = verification.email;
+
   const existing = await Data.getUserByUsername({
-    username: req.body.data.username.toLowerCase(),
+    username: newUsername,
   });
   if (existing) {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN", error: true });
   }
 
-  const existingViaEmail = await Data.getUserByEmail({ email: verification.email });
+  const existingViaEmail = await Data.getUserByEmail({ email: newEmail });
   if (existingViaEmail) {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_EMAIL_TAKEN", error: true });
   }
@@ -52,15 +55,8 @@ export default async (req, res) => {
   const salt = await BCrypt.genSalt(rounds);
   const hash = await Utilities.encryptPassword(req.body.data.password, salt);
 
-  const newUsername = req.body.data.username.toLowerCase();
-  const newEmail = verification.email;
-
-  const {
-    textileKey,
-    textileToken,
-    textileThreadID,
-    textileBucketCID,
-  } = await Utilities.createBucket({});
+  const { textileKey, textileToken, textileThreadID, textileBucketCID } =
+    await Utilities.createBucket({});
 
   if (!textileKey || !textileToken || !textileThreadID || !textileBucketCID) {
     return res

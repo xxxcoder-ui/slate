@@ -7,7 +7,7 @@ export const Loader = (props) => {
       strokeWidth="1.25"
       strokeLinecap="round"
       strokeLinejoin="round"
-      height={props.height}
+      {...props}
       style={{ display: "block", ...props.style }}
     >
       <path d="M8 1.68237V4.34904" />

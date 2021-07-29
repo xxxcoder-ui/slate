@@ -527,3 +527,24 @@ export const createSurvey = async (data) => {
     body: JSON.stringify({ data }),
   });
 };
+
+export const linkTwitterAccount = async (data) => {
+  return await returnJSON(`/api/twitter/link`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const linkTwitterAccountWithVerification = async (data) => {
+  return await returnJSON(`/api/twitter/link-with-verification`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const resendPasswordResetVerification = async (data) => {
+  return await returnJSON(`/api/verifications/password-reset/resend`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
