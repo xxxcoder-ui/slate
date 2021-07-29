@@ -12,6 +12,7 @@ import { css } from "@emotion/react";
 import { ButtonPrimary } from "~/components/system/components/Buttons";
 import { useForm } from "~/common/hooks";
 import { Input } from "~/components/system";
+import { BackgroundGenerator } from "~/components/core/Auth/components";
 
 const TOOLS_OPTIONS = {
   Dropbox: "DROPBOX",
@@ -330,15 +331,17 @@ const STYLES_MIDDLE = css`
   text-align: left;
   padding: 24px;
 `;
-const WithCustomWrapper = (Component) => (props) =>
-  (
+
+const WithCustomWrapper = (Component) => (props) => {
+  return (
     <WebsitePrototypeWrapper>
-      <div css={STYLES_ROOT}>
+      <BackgroundGenerator css={STYLES_ROOT} isMobile={props.isMobile}>
         <div css={STYLES_MIDDLE}>
           <Component {...props} />
         </div>
-      </div>
+      </BackgroundGenerator>
     </WebsitePrototypeWrapper>
   );
+};
 
 export default WithCustomWrapper(SceneSurvey);
