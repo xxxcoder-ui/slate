@@ -127,7 +127,6 @@ export const useForm = ({
       let errors = {};
       try {
         setInternal((prev) => ({ ...prev, isValidating: true }));
-        console.log("submitting errors", state);
         errors = await validate(state.values, {});
         if (_hasError(errors)) return;
       } catch (e) {
