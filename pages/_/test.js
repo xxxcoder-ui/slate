@@ -18,7 +18,7 @@ export default class SlateReactSystemPage extends React.Component {
     const url = "/api/v1/get";
     const response = await fetch(url, {
       headers: {
-        Authorization: "Basic SLA85621d2d-1bc1-4c35-9e3a-1e43689c155fTE",
+        Authorization: "SLA85621d2d-1bc1-4c35-9e3a-1e43689c155fTE",
       },
     });
 
@@ -36,7 +36,7 @@ export default class SlateReactSystemPage extends React.Component {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization: "Basic --",
+        Authorization: "--",
       },
       body: data,
     });

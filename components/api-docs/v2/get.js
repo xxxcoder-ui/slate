@@ -7,7 +7,7 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Basic ${key}',
+    Authorization: '${key}',
   }
 });
 
@@ -30,7 +30,7 @@ import json as JSON
 url = "https://slate.host/api/v2/get"
 headers = {
     "content-type": "application/json",
-    "Authorization": "Basic ${key}",
+    "Authorization": "${key}",
 }
 
 r = requests.get(url, headers=headers)

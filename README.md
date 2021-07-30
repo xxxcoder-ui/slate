@@ -118,7 +118,7 @@ const response = await fetch("https://slate.host/api/v1/get", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Authorization: "Basic XXX-YOUR-SLATE-KEY-XXX",
+    Authorization: "XXX-YOUR-SLATE-KEY-XXX",
   },
 });
 ```

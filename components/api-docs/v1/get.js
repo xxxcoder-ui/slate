@@ -7,7 +7,7 @@ const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.ho
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Basic ${key}',
+    Authorization: '${key}',
   },
   body: JSON.stringify({ data: {
     private: false // set private = true to include private collections 
@@ -38,7 +38,7 @@ import json as JSON
 url = "https://slate.host/api/v1/get"
 headers = {
     "content-type": "application/json",
-    "Authorization": "Basic ${key}",
+    "Authorization": "${key}",
 }
 
 json = {

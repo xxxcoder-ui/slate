@@ -211,11 +211,8 @@ const NewWebsitePrototypeHeader = (props) => {
           </a>
         </div>
         <div css={STYLES_RIGHT}>
-          <a css={STYLES_LINK} style={{ marginRight: 24 }} href={communityURL}>
-            Get involved
-          </a>
           <a css={STYLES_LINK} href={signInURL}>
-            Sign in
+            Use Slate
           </a>
         </div>
         <div css={STYLES_MOBILENAV}>
@@ -224,11 +221,8 @@ const NewWebsitePrototypeHeader = (props) => {
             <div css={STYLES_BURGER_BUN2} style={styleBurgerBun2} />
           </div>
           <div css={STYLES_MENU} style={styleMenu}>
-            <a css={STYLES_NAVLINK} style={styleNavLink} href={communityURL}>
-              Get involved
-            </a>
             <a css={STYLES_NAVLINK} style={styleNavLink} href={signInURL}>
-              Sign in
+              Use Slate
             </a>
           </div>
         </div>

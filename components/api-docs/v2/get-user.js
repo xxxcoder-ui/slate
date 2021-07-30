@@ -10,7 +10,7 @@ const EXAMPLE_CODE_JS = (
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Basic ${key}',
+    Authorization: '${key}',
   },
   body: JSON.stringify({ data: {
     id: '${userId}' // user ID
@@ -35,7 +35,7 @@ import json as JSON
 url = 'https://slate.host/api/v2/get-user'
 headers = {
   'content-type': 'application/json',
-  'Authorization': 'Basic ${key}'
+  'Authorization': '${key}'
 }
 
 json = {

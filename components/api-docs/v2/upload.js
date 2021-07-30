@@ -12,7 +12,7 @@ data.append("data", file);
 const response = await fetch(url, {
   method: 'POST',
   headers: {
-    Authorization: 'Basic ${key}', // API key
+    Authorization: '${key}', // API key
   },
   body: data
 });`;
@@ -24,7 +24,7 @@ files = {
   "file": open("example-file.txt", "rb")
 }
 headers = {
-  "Authorization": "Basic ${key}" # API key
+  "Authorization": "${key}" # API key
 }
 
 r = requests.post(url, headers=headers, files=files)`;
@@ -41,10 +41,11 @@ data.append("data", file);
 const response = await fetch(url, {
   method: 'POST',
   headers: {
-    Authorization: 'Basic ${key}', // API key
+    Authorization: '${key}', // API key
   },
   body: data
-});`;
+});
+const json = await response.json();`;
 
 const SLATE_EXAMPLE_CODE_PY = (key, slateId) => `import requests
 
@@ -53,7 +54,7 @@ files = {
   "file": open("example-file.txt", "rb")
 }
 headers = {
-  "Authorization": "Basic ${key}" # API key
+  "Authorization": "${key}" # API key
 }
 
 r = requests.post(url, headers=headers, files=files)`;

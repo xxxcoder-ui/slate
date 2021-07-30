@@ -15,7 +15,7 @@ const response = await fetch('https://slate.host/api/v1/update-slate', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Basic ${key}', // API key
+    Authorization: '${key}', // API key
   },
   body: JSON.stringify({ data: collection })
 });`;
@@ -26,7 +26,7 @@ const EXAMPLE_CODE_PY = (key, slateId) =>
 
 headers = {
     "content-type": "application/json",
-    "Authorization": "Basic ${key}", # API key
+    "Authorization": "${key}", # API key
 }
 
 json = { "id": "${slateId}" } # slate ID

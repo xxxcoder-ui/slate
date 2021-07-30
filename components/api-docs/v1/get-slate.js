@@ -10,7 +10,7 @@ const EXAMPLE_CODE_JS = (
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Basic ${key}',
+    Authorization: '${key}',
   },
   body: JSON.stringify({ data: {
     id: '${slateId}' // collection ID
@@ -35,7 +35,7 @@ import json as JSON
 url = 'https://slate.host/api/v1/get-slate'
 headers = {
   'content-type': 'application/json',
-  'Authorization': 'Basic ${key}'
+  'Authorization': '${key}'
 }
 
 json = {

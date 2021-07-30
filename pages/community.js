@@ -725,7 +725,7 @@ method: 'POST',
     headers: {
     'Content-Type': 'application/json',
     // NOTE: your API key
-    Authorization: 'Basic SLATE-API-KEY-FROM-ACCOUNT-SETTINGS',
+    Authorization: 'SLATE-API-KEY-FROM-ACCOUNT-SETTINGS',
     },
     body: JSON.stringify({ data: {
     // NOTE: optional, if you want your private collections too.
