@@ -1,10 +1,10 @@
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId }) => {
+export default async ({ userId }) => {
   return await runQuery({
     label: "GET_SURVEY_BY_USER_ID",
     queryFn: async (DB) => {
-      let query = await DB.select("*").from("surveys").where({ ownerId });
+      let query = await DB.select("*").from("surveys").where({ userId });
 
       if (!query || query.error) {
         return null;

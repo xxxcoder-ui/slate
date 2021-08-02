@@ -21,7 +21,7 @@ export default async (req, res) => {
   const { id } = userInfo;
 
   const survey = Data.createSurvey({
-    ownerId: id,
+    userId: id,
     prevTools: tools,
     usecases: useCases,
     referrals,

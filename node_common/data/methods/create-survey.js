@@ -1,11 +1,11 @@
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId, prevTools, usecases, referrals }) => {
+export default async ({ userId, prevTools, usecases, referrals }) => {
   return await runQuery({
     label: "CREATE_SURVEY",
     queryFn: async (DB) => {
       let query = await DB.insert({
-        ownerId,
+        userId,
         prevTools,
         usecases,
         referrals,

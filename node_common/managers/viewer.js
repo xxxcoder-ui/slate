@@ -159,7 +159,7 @@ export const getById = async ({ id }) => {
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),
       Data.getFollowersByUserId({ userId: id }),
-      Data.getSurveyByUserId({ ownerId: id }),
+      Data.getSurveyByUserId({ userId: id }),
     ])
   ).map((item) => item.value);
 
