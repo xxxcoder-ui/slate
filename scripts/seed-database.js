@@ -185,7 +185,7 @@ const createTwitterTokensTable = db.schema.createTable("twitterTokens", function
 
 const createSurveysTable = db.schema.createTable("surveys", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.uuid("ownerId").references("id").inTable("users");
+  table.uuid("userId").references("id").inTable("users");
   table.string("prevTools").notNullable();
   table.string("usecases").notNullable();
   table.string("referrals").notNullable();
