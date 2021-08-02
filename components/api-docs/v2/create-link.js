@@ -49,9 +49,9 @@ export default class APIDocsCreateLink extends React.Component {
       python: EXAMPLE_CODE_PY(key, slateId),
     };
     return (
-      <React.Fragment>
+      <div css={this.props.cssValue} style={this.props.style}>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
+          style={{ maxWidth: 640 }}
           label="Create link"
           description="This API endpoint allows you to upload a link and optionally add it to a slate. Include a slate id to add it to a slate."
         />
@@ -63,7 +63,7 @@ export default class APIDocsCreateLink extends React.Component {
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />
-      </React.Fragment>
+      </div>
     );
   }
 }

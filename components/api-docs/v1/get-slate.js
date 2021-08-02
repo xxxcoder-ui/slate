@@ -58,9 +58,9 @@ export default class APIDocsGetSlate extends React.Component {
     };
 
     return (
-      <React.Fragment>
+      <div css={this.props.cssValue} style={this.props.style}>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
+          style={{ maxWidth: 640 }}
           label="Get collection by ID"
           description="This API request will return a specific collection. You can save the response locally and send this JSON back to our API server using the route /api/v1/update-slate to update your collection."
         />
@@ -72,7 +72,7 @@ export default class APIDocsGetSlate extends React.Component {
           onLanguageChange={this.props.onLanguageChange}
           multiLang="true"
         />
-      </React.Fragment>
+      </div>
     );
   }
 }

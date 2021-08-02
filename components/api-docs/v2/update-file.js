@@ -60,9 +60,9 @@ export default class APIDocsUpdateFile extends React.Component {
       python: EXAMPLE_CODE_PY(key, slateId),
     };
     return (
-      <React.Fragment>
+      <div css={this.props.cssValue} style={this.props.style}>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
+          style={{ maxWidth: 640 }}
           label="Update file"
           description="This API endpoint allows you to modify a file by saving the collection object in the response from get-collection, modifying it, and sending it back"
         />
@@ -74,7 +74,7 @@ export default class APIDocsUpdateFile extends React.Component {
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />
-      </React.Fragment>
+      </div>
     );
   }
 }

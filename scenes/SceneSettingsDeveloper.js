@@ -27,6 +27,8 @@ import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
 import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
 import APIDocsCreateLinkV2 from "~/components/api-docs/v2/create-link.js";
 import APIDocsCreateCollectionV2 from "~/components/api-docs/v2/create-collection.js";
+import APIDocsUploadByCidV2 from "~/components/api-docs/v2/upload-by-cid.js";
+import APIDocsUploadByUrlV2 from "~/components/api-docs/v2/upload-by-url.js";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_API_KEY = css`
@@ -48,6 +50,15 @@ const STYLES_KEY_CONTAINER = css`
   flex-direction: row;
   align-items: center;
   margin-bottom: 8px;
+`;
+
+const STYLES_EXAMPLE = css`
+  margin-bottom: 48px;
+`;
+
+const STYLES_SECTION_HEADER = css`
+  margin-top: 48px;
+  margin-bottom: 24px;
 `;
 
 class Key extends React.Component {
@@ -313,56 +324,73 @@ export default class SceneSettingsDeveloper extends React.Component {
 
           {tab === "v2" ? (
             <>
-              <System.H2 style={{ marginTop: 64 }}>Read operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Get</System.H2>
               <APIDocsGetV2
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsGetSlateV2
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsGetUserV2
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 userId={userId}
                 onLanguageChange={this._handleChangeLanguage}
               />
-
-              <System.H2 style={{ marginTop: 64 }}>Update operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Update</System.H2>
               <APIDocsUpdateSlateV2
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsUpdateFileV2
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
-
-              <System.H2 style={{ marginTop: 64 }}>Create operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Create</System.H2>
               <APIDocsCreateCollectionV2
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsUploadToSlateV2
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadByCidV2
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadByUrlV2
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsCreateLinkV2
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
@@ -371,30 +399,31 @@ export default class SceneSettingsDeveloper extends React.Component {
             </>
           ) : (
             <>
-              <System.H2 style={{ marginTop: 64 }}>Read operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Read operations</System.H2>
               <APIDocsGetV1
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <APIDocsGetSlateV1
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
-              <System.H2 style={{ marginTop: 64 }}>Update operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Update operations</System.H2>
               <APIDocsUpdateSlateV1
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
                 onLanguageChange={this._handleChangeLanguage}
               />
-              <System.H2 style={{ marginTop: 64 }}>Create operations</System.H2>
+              <System.H2 css={STYLES_SECTION_HEADER}>Create operations</System.H2>
               <APIDocsUploadToSlateV1
-                style={{ marginTop: 24 }}
+                cssValue={STYLES_EXAMPLE}
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}

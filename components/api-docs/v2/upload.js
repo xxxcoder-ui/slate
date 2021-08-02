@@ -74,10 +74,10 @@ export default class APIDocsUploadToSlate extends React.Component {
       python: SLATE_EXAMPLE_CODE_PY(key, slateId),
     };
     return (
-      <React.Fragment>
+      <div css={this.props.cssValue} style={this.props.style}>
         <System.DescriptionGroup
-          style={{ maxWidth: 640, marginTop: 48, ...this.props.style }}
-          label="Upload file"
+          style={{ maxWidth: 640 }}
+          label="Upload File"
           description={
             "This API endpoint allows you to upload file(s) to your collection. This uses our data transfer microservice to interact with Textile Buckets and upload data to the IPFS/Filecoin network."
           }
@@ -99,7 +99,7 @@ export default class APIDocsUploadToSlate extends React.Component {
           multiLang="true"
           onLanguageChange={this.props.onLanguageChange}
         />
-      </React.Fragment>
+      </div>
     );
   }
 }
