@@ -13,14 +13,14 @@ const STYLES_WRAPPER = (theme) => css`
   position: relative;
   background-color: ${theme.semantic.bgLight};
   transition: box-shadow 0.2s;
-  box-shadow: 0 0 0 0.5px ${theme.semantic.bgGrayLight}, ${theme.shadow.lightSmall};
+  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
 `;
 
 const STYLES_DESCRIPTION = (theme) => css`
-  box-shadow: 0 -0.5px 0.5px ${theme.semantic.bgGrayLight};
+  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
   border-radius: 0px 0px 16px 16px;
   box-sizing: border-box;
   width: 100%;
@@ -41,6 +41,7 @@ const STYLES_DESCRIPTION_INNER = (theme) => css`
 const STYLES_PREVIEW = css`
   overflow: hidden;
   position: relative;
+  bottom: 0.5px;
 `;
 
 const STYLES_SELECTED_RING = (theme) => css`
@@ -151,7 +152,7 @@ export default function ObjectPreviewPrimitive({
             nbrOflines={8}
             color="textGrayDark"
           >
-            {body || "sorry, no description available."}
+            {body || ""}
           </H5>
         </motion.div>
       </article>

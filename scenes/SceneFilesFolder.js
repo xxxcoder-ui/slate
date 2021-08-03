@@ -45,7 +45,7 @@ const STYLES_COMMAND_WRAPPER = css`
 
 //TODO(toast): Constants for SDS in future
 const STYLES_TOOLTIP_ANCHOR = css`
-  border: 1px solid #f2f2f2;
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   background-color: ${Constants.system.white};
   border-radius: 4px;
   right: 0px;
@@ -62,7 +62,7 @@ const STYLES_FILETYPE_TOOLTIP = css`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border-right: 1px solid ${Constants.semantic.borderLight};
+  border-right: 1px solid ${Constants.semantic.borderGrayLight};
   padding-right: 4px;
 `;
 

@@ -4,7 +4,7 @@ import * as Constants from "~/common/constants";
 import { css } from "@emotion/react";
 
 const STYLES_BUTTON = css`
-  background-color: ${Constants.system.white};
+  background-color: ${Constants.semantic.bgGrayLight};
   color: ${Constants.system.black};
   display: inline-flex;
   width: 40px;
@@ -21,7 +21,7 @@ const STYLES_BUTTON = css`
   ${"" /* box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset; */}
 
   :hover {
-    background-color: rgb(253, 253, 253);
+    background-color: ${Constants.system.grayLight4};
   }
 
   ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {

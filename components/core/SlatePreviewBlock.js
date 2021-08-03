@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+import * as Typography from "~/components/system/components/Typography";
 
 import { Logo } from "~/common/logo";
 import { css } from "@emotion/react";
@@ -352,15 +353,8 @@ export class SlatePreviewBlock extends React.Component {
                 ...this.props.imageStyle,
               }}
             >
-              <Logo
-                style={{
-                  height: 18,
-                  marginRight: 32,
-                  position: "relative",
-                  color: Constants.system.white,
-                }}
-              />
-              No files in this collection
+              <Logo style={{ height: 24, marginBottom: 8, color: Constants.system.grayLight2 }} />
+              <Typography.P2 color="grayLight2">This collection is empty</Typography.P2>
             </div>
           ) : objects.length < 4 ? (
             <div
@@ -410,15 +404,8 @@ export class SlatePreviewBlock extends React.Component {
                   ...this.props.imageStyle,
                 }}
               >
-                <Logo
-                  style={{
-                    height: 18,
-                    marginRight: 32,
-                    position: "relative",
-                    color: Constants.system.white,
-                  }}
-                />
-                No files in this collection
+                <Logo style={{ height: 24, marginBottom: 8, color: Constants.system.grayLight2 }} />
+                <Typography.P2 color="grayLight2">This collection is empty</Typography.P2>
               </div>
             )}
           </div>

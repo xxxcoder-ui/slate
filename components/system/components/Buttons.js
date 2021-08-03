@@ -171,7 +171,7 @@ const STYLES_BUTTON_TERTIARY = css`
   cursor: pointer;
   color: ${Constants.system.black};
   background-color: ${Constants.system.white};
-  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset;
 
   :hover {
     background-color: #fcfcfc;

@@ -16,14 +16,14 @@ const TABLE_COLUMN_WIDTH_DEFAULTS = {
 };
 
 const STYLES_CONTAINER = css`
-  border: 1px solid ${Constants.semantic.borderLight};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   box-shadow: ${Constants.shadow.lightSmall};
 `;
 
 const STYLES_TABLE_ROW = css`
   position: relative;
   box-sizing: border-box;
-  border-bottom: 1px solid ${Constants.semantic.borderLight};
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
   display: flex;
   align-items: center;
   width: 100%;
@@ -37,7 +37,7 @@ const STYLES_TABLE_ROW = css`
 const STYLES_TABLE_TOP_ROW = css`
   box-sizing: border-box;
   font-family: ${Constants.font.semiBold};
-  border-bottom: 1px solid ${Constants.semantic.borderLight};
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
   display: flex;
   width: 100%;
   align-items: center;

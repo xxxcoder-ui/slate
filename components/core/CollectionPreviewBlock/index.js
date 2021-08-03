@@ -150,8 +150,8 @@ const Preview = ({ collection, children, ...props }) => {
     return (
       <div css={STYLES_EMPTY_CONTAINER} {...props}>
         {children}
-        <Logo style={{ height: 18, marginBottom: 8 }} />
-        <Typography.P1 color="textGrayDark">No files in this collection</Typography.P1>
+        <Logo style={{ height: 24, marginBottom: 8, color: Constants.system.grayLight2 }} />
+        <Typography.P2 color="grayLight2">This collection is empty</Typography.P2>
       </div>
     );
   }
@@ -252,7 +252,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
             animate={{ opacity: isBodyVisible ? 1 : 0 }}
             >
               <Typography.P2 color="textGrayDark" nbrOflines={5}>
-                {body || "sorry, no description available."}
+                {body || ""}
               </Typography.P2>
             </div>
           )} */}
