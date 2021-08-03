@@ -2,6 +2,7 @@ import BCrypt from "bcryptjs";
 
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+import * as Constants from "~/common/constants";
 
 //NOTE(martina): this file is for utility functions that do not involve API calls
 //For API related utility functions, see common/user-behaviors.js
@@ -133,3 +134,33 @@ export const getTimeDifferenceFromNow = (date, format = {}) => {
 
   return formatDate.default(month, day, year);
 };
+
+const isObject = (val) => val instanceof Object;
+
+/**
+ NOTE(amine): This will take a prop and return a responsive object that we can use with emotion.
+ Let's say we have a size prop with current values {base: 64, mobile: 120}, and a mapper function 
+ (size)=> ({width: size, height: size}). 
+ It will return a responsive object 
+ { width: 64, height: 64, 
+  '@media (min-width: 768px':{ width: 120, height: 120 } }
+ */
+export function mapResponsiveProp(prop, mapper) {
+  if (isObject(prop)) {
+    const { base, ...restProps } = prop;
+    let initialStyles = mapper(base) || {};
+
+    return Object.keys(restProps).reduce((styles, size) => {
+      const media = `@media (min-width: ${Constants.sizes[size]}px)`;
+      const mediaStyles = mapper(restProps[size]);
+      styles[media] = mediaStyles;
+      return styles;
+    }, initialStyles);
+  }
+
+  if (prop !== null) {
+    return mapper(prop);
+  }
+
+  return null;
+}
