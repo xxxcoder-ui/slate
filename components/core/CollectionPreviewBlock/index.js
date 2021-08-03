@@ -143,6 +143,8 @@ const Preview = ({ collection, children, ...props }) => {
     ref: previewerRef,
   });
 
+  const object = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
+
   const isCollectionEmpty = collection.fileCount === 0;
   if (isCollectionEmpty) {
     return (
@@ -154,7 +156,6 @@ const Preview = ({ collection, children, ...props }) => {
     );
   }
 
-  const object = getObjectToPreview(collection.objects);
   if (object.isImage) {
     const { coverImage } = object.data;
     const blurhash = getFileBlurHash(object);
