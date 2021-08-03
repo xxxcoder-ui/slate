@@ -23,7 +23,7 @@ const STYLES_CONTAINER = (theme) => css`
   display: flex;
   flex-direction: column;
   background-color: ${theme.semantic.bgLight};
-  box-shadow: 0 0 0 0.5px ${theme.semantic.bgGrayLight}, ${theme.shadow.lightSmall};
+  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
   border-radius: 16px;
   width: 100%;
   overflow: hidden;
@@ -51,7 +51,7 @@ const STYLES_DESCRIPTION_CONTAINER = (theme) => css`
   position: relative;
   padding: 9px 16px 12px;
   border-radius: 0px 0px 16px 16px;
-  box-shadow: 0 -0.5px 0.5px ${theme.semantic.bgGrayLight};
+  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
   width: 100%;
   margin-top: auto;
 `;

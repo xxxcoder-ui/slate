@@ -25,25 +25,18 @@ const STYLES_FILE_HIDDEN = css`
   left: -1px;
 `;
 
+const STYLES_FILE_LIST = css`
+  box-shadow: 0 0 0 1px inset ${Constants.semantic.borderGrayLight};
+  border-radius: 8px;
+`;
+
 const STYLES_FILE_LINE = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   padding: 12px 16px;
-  ${"" /* background-color: ${Constants.semantic.bgLight}; */}
-  border: 1px solid ${Constants.system.gray};
-  border-bottom: none;
-  ${"" /* box-shadow: 0 0 0 1px ${Constants.system.gray} inset; */}
-
-  :first-child {
-    border-radius: 4px 4px 0 0;
-  }
-
-  :last-child {
-    border-bottom: 1px solid ${Constants.system.gray};
-    border-radius: 0 0 4px 4px;
-  }
+  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
 `;
 
 const STYLES_FILE_NAME = css`
@@ -78,9 +71,9 @@ const STYLES_FILE_STATUS = css`
 
 const STYLES_BAR_CONTAINER = css`
   ${"" /* background: ${Constants.semantic.bgLight}; */}
-  border: 1px solid ${Constants.system.gray};
-  border-radius: 4px;
-  padding: 16px;
+  box-shadow: 0 0 0 1px inset ${Constants.semantic.borderGrayLight};
+  border-radius: 8px;
+  padding: 24px;
   ${"" /* margin-top: 48px; */}
 `;
 
@@ -171,7 +164,7 @@ export default class ModalAddFileToBucket extends React.Component {
             </strong>
             <DataMeterBar bytes={loaded} maximumBytes={total} />
           </div>
-          <div style={{ marginTop: 36, overflow: "hidden" }}>
+          <div css={STYLES_FILE_LIST} style={{ marginTop: 36, overflow: "hidden" }}>
             {this.props.fileLoading
               ? Object.entries(this.props.fileLoading).map((entry) => {
                   let file = entry[1];

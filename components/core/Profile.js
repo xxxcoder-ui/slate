@@ -178,7 +178,7 @@ const STYLES_USER_ENTRY = css`
   align-items: center;
   font-size: ${Constants.typescale.lvl1};
   cursor: pointer;
-  ${"" /* border: 1px solid ${Constants.semantic.borderLight}; */}
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   border-radius: 4px;
   margin-bottom: 8px;
   background-color: ${Constants.system.white};
