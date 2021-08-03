@@ -177,24 +177,32 @@ export const getById = async ({ id }) => {
     if (cids[each.cid]) {
       continue;
     }
-    if (each.data.type && each.data.type.startsWith("image/")) {
-      imageBytes += each.data.size;
-    } else if (each.data.type && each.data.type.startsWith("video/")) {
-      videoBytes += each.data.size;
-    } else if (each.data.type && each.data.type.startsWith("audio/")) {
-      audioBytes += each.data.size;
-    } else if (each.data.type && each.data.type.startsWith("application/epub")) {
-      epubBytes += each.data.size;
-    } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
-      pdfBytes += each.data.size;
-    }
-    let { coverImage } = each.data;
-    if (coverImage && !cids[coverImage.cid]) {
-      imageBytes += coverImage.data.size;
-      cids[coverImage.cid] = true;
-    }
-    bytes += each.data.size;
+
     cids[each.cid] = true;
+    let size = each.data.size;
+    if (typeof size === "number") {
+      bytes += size;
+      if (each.data.type && each.data.type.startsWith("image/")) {
+        imageBytes += size;
+      } else if (each.data.type && each.data.type.startsWith("video/")) {
+        videoBytes += size;
+      } else if (each.data.type && each.data.type.startsWith("audio/")) {
+        audioBytes += size;
+      } else if (each.data.type && each.data.type.startsWith("application/epub")) {
+        epubBytes += size;
+      } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
+        pdfBytes += size;
+      }
+    }
+
+    let coverImage = each.data.coverImage;
+    if (coverImage && !cids[coverImage.cid]) {
+      cids[coverImage.cid] = true;
+      size = coverImage.data.size;
+      if (typeof size === "number") {
+        imageBytes += size;
+      }
+    }
   }
 
   const tags = Utilities.getUserTags({ library: user.library, slates });

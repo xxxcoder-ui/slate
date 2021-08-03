@@ -19,6 +19,10 @@ export default class WebsitePrototypeWrapper extends React.Component {
           <title>{this.props.title}</title>
           <meta name="title" content={this.props.title} />
           <meta name="description" content={this.props.description} />
+          <meta
+            name="google-site-verification"
+            content="INHmYWYLRrINvdmu9BXrXaJnphG0-wF5e2YGaDx2v7k"
+          />
 
           <meta property="og:type" content="website" />
           <meta property="og:url" content={this.props.url} />
