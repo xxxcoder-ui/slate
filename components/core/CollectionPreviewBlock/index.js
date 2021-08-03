@@ -145,7 +145,7 @@ const Preview = ({ collection, children, ...props }) => {
 
   const object = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
 
-  const isCollectionEmpty = collection.fileCount === 0;
+  const isCollectionEmpty = collection.objects.length === 0;
   if (isCollectionEmpty) {
     return (
       <div css={STYLES_EMPTY_CONTAINER} {...props}>
