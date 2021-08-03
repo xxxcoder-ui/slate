@@ -3,7 +3,61 @@ import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
 import * as Strings from "~/common/strings";
 
-import { css } from "@emotion/react";
+import { css, jsx } from "@emotion/react";
+
+const LINK_STYLES = `
+  font-family: ${Constants.font.text};
+  font-weight: 400;
+  text-decoration: none;
+  color: ${Constants.system.grayLight2};
+  cursor: pointer;
+  transition: 200ms ease color;
+  :hover {
+    color: ${Constants.system.grayDark6};
+  }
+`;
+
+const useColorProp = (color) =>
+  React.useMemo(
+    () => (theme) => {
+      if (!color) return;
+      if (!(color in theme.system) && !(color in theme.semantic)) {
+        console.warn(`${color} doesn't exist in our design system`);
+        return;
+      }
+      return css({ color: theme.system[color] || theme.semantic[color] });
+    },
+    [color]
+  );
+
+const truncateElements = (nbrOfLines) =>
+  nbrOfLines &&
+  css`
+    overflow: hidden;
+    line-height: 1.5;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: ${nbrOfLines};
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  `;
+
+const STYLES_LINK = css`
+  ${LINK_STYLES}
+`;
+
+const STYLES_LINK_DARK = css`
+  color: ${Constants.system.grayLight2};
+  :hover {
+    color: ${Constants.system.white};
+  }
+`;
+
+const ANCHOR = `
+  a {
+    ${LINK_STYLES}
+  }
+`;
 
 const onDeepLink = async (object) => {
   let slug = object.deeplink
@@ -28,6 +82,7 @@ export const A = ({ href, children, dark }) => {
     rel: isExternal(href) ? "external nofollow" : "",
     css: Styles.LINK,
     children,
+    // css: dark ? STYLES_LINK_DARK : STYLES_LINK,
   };
 
   // process all types of Slate links
@@ -52,7 +107,7 @@ export const A = ({ href, children, dark }) => {
     default: {
     }
   }
-  return <a {...linkProps} />;
+  return <a {...linkProps}>{children}</a>;
 };
 
 // const STYLES_H1 = css`
@@ -82,68 +137,135 @@ export const A = ({ href, children, dark }) => {
 //   ${ANCHOR}
 // `;
 
-export const H1 = (props) => {
-  return <h1 {...props} css={[Styles.H1, props?.css]} />;
+export const H1 = ({ as = "h1", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.H1, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const H2 = (props) => {
-  return <h2 {...props} css={[Styles.H2, props?.css]} />;
+export const H2 = ({ as = "h2", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.H2, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const H3 = (props) => {
-  return <h3 {...props} css={[Styles.H3, props?.css]} />;
+export const H3 = ({ as = "h3", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.H3, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const H4 = (props) => {
-  return <h4 {...props} css={[Styles.H4, props?.css]} />;
+export const H4 = ({ as = "h4", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.H4, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const H5 = (props) => {
-  return <h5 {...props} css={[Styles.H5, props?.css]} />;
+export const H5 = ({ as = "h5", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.H5, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-// const STYLES_P = css`
-//   box-sizing: border-box;
-//   font-family: ${Constants.font.text};
-//   font-size: ${Constants.typescale.lvl1};
-//   line-height: 1.5;
-//   overflow-wrap: break-word;
+export const P1 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
 
-//   strong,
-//   b {
-//     font-family: ${Constants.font.semiBold};
-//     font-weight: 400;
-//   }
-
-//   ${ANCHOR}
-// `;
-
-export const P1 = (props) => {
-  return <p {...props} css={[Styles.P1, props?.css]} />;
+  return jsx(
+    as,
+    { ...props, css: [Styles.P1, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const P2 = (props) => {
-  return <p {...props} css={[Styles.P2, props?.css]} />;
+export const P2 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.P2, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const P3 = (props) => {
-  return <p {...props} css={[Styles.P3, props?.css]} />;
+export const P3 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+  return jsx(
+    as,
+    { ...props, css: [Styles.P3, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const C1 = (props) => {
-  return <p {...props} css={[Styles.C1, props?.css]} />;
+export const C1 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.C1, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const C2 = (props) => {
-  return <p {...props} css={[Styles.C2, props?.css]} />;
+export const C2 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.C2, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const C3 = (props) => {
-  return <p {...props} css={[Styles.C3, props?.css]} />;
+export const C3 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.C3, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
-export const B1 = (props) => {
-  return <p {...props} css={[Styles.B1, props?.css]} />;
+export const B1 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+  const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
+  const COLOR_STYLES = useColorProp(color);
+
+  return jsx(
+    as,
+    { ...props, css: [Styles.B1, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    children
+  );
 };
 
 const STYLES_UL = css`
@@ -151,29 +273,25 @@ const STYLES_UL = css`
   padding-left: 24px;
 `;
 
-export const UL = (props) => {
-  return <ul css={STYLES_UL} {...props} />;
-};
+export const UL = ({ as = "ul", children, props }) =>
+  jsx(as, { ...props, css: [STYLES_UL, props?.css] }, children);
 
 const STYLES_OL = css`
   box-sizing: border-box;
   padding-left: 24px;
 `;
 
-export const OL = (props) => {
-  return <ol css={STYLES_OL} {...props} />;
-};
+export const OL = ({ as = "ol", children, props }) =>
+  jsx(as, { ...props, css: [STYLES_OL, props?.css] }, children);
 
 const STYLES_LI = css`
   box-sizing: border-box;
   margin-top: 12px;
-
   strong {
     font-family: ${Constants.font.semiBold};
     font-weight: 400;
   }
 `;
 
-export const LI = (props) => {
-  return <li css={STYLES_LI} {...props} />;
-};
+export const LI = ({ as = "li", children, props }) =>
+  jsx(as, { ...props, css: [STYLES_LI, props?.css] }, children);

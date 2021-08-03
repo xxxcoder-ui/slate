@@ -13,6 +13,7 @@ import * as Websockets from "~/common/browser-websockets";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
 import * as Logging from "~/common/logging";
+import * as Environment from "~/common/environment";
 
 // NOTE(jim):
 // Scenes each have an ID and can be navigated to with _handleAction
@@ -79,7 +80,7 @@ const SIDEBARS = {
 const SCENES = {
   NAV_ERROR: <SceneError />,
   NAV_SIGN_IN: <SceneAuth />,
-  NAV_ACTIVITY: <SceneActivity />,
+  ...(Environment.ACTIVITY_FEATURE_FLAG ? { NAV_ACTIVITY: <SceneActivity /> } : {}),
   NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
@@ -88,7 +89,6 @@ const SCENES = {
   NAV_API: <SceneSettingsDeveloper />,
   NAV_SETTINGS: <SceneEditAccount />,
   NAV_SLATES: <SceneSlates />,
-  NAV_DIRECTORY: <SceneDirectory />,
   NAV_FILECOIN: <SceneArchive />,
   NAV_STORAGE_DEAL: <SceneMakeFilecoinDeal />,
 };
@@ -433,7 +433,7 @@ export default class ApplicationPage extends React.Component {
     // if (!redirected) {
     //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
     // }
-    this._handleNavigateTo({ href: "/_/activity", redirect: true });
+    this._handleNavigateTo({ href: "/_/data", redirect: true });
 
     return response;
   };

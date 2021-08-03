@@ -154,7 +154,7 @@ app.prepare().then(async () => {
   });
 
   server.get("/_", async (req, res) => {
-    return res.redirect("/_/activity");
+    return res.redirect("/_/data");
     // let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     // let isMac = Window.isMac(req.headers["user-agent"]);
 
@@ -176,7 +176,7 @@ app.prepare().then(async () => {
     // if (viewer) {
     //   return res.redirect("/_/data");
     // } else {
-    //   return res.redirect("/_/explore");
+    //   return res.redirect("/_/activity");
     // }
 
     // let page = NavigationData.getById(null, viewer);

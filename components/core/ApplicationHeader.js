@@ -47,9 +47,10 @@ const STYLES_NAV_LINK = css`
   }
 `;
 
-const STYLES_APPLICATION_HEADER_CONTAINER = css`
+const STYLES_APPLICATION_HEADER_CONTAINER = (theme) => css`
   width: 100%;
-  background-color: ${Constants.system.white};
+  background-color: ${theme.system.white};
+  box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
 
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);
@@ -201,11 +202,7 @@ export default class ApplicationHeader extends React.Component {
         <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
           <div css={STYLES_APPLICATION_HEADER}>
             <div css={STYLES_LEFT}>
-              <Link
-                onAction={this.props.onAction}
-                href="/_/activity"
-                style={{ pointerEvents: "auto" }}
-              >
+              <Link onAction={this.props.onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
                 <DarkSymbol style={{ height: 24, display: "block" }} />
               </Link>
               <div css={Styles.MOBILE_ONLY}>{searchComponent}</div>
@@ -330,7 +327,7 @@ export default class ApplicationHeader extends React.Component {
               <div css={STYLES_LEFT}>
                 <Link
                   onAction={this.props.onAction}
-                  href="/_/activity"
+                  href="/_/data"
                   style={{ pointerEvents: "auto" }}
                 >
                   <DarkSymbol style={{ height: 24, display: "block" }} />
@@ -395,7 +392,7 @@ export default class ApplicationHeader extends React.Component {
               <div css={STYLES_MIDDLE}>
                 <Link
                   onAction={this.props.onAction}
-                  href="/_/activity"
+                  href="/_/data"
                   style={{ pointerEvents: "auto" }}
                 >
                   <DarkSymbol style={{ height: 24, display: "block" }} />
