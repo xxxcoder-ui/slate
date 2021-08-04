@@ -24,8 +24,14 @@ const STYLES_COPY_PASTE = css`
   }
 `;
 
-const STYLES_TAG_BACKGROUND = css`
+const STYLES_CONTAINER = css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED}
+`;
+
+const STYLES_CONTAINER_FILL = css`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 24px 1fr 24px;
 `;
 
 export default function LinkTag({ url, ...props }) {
@@ -46,8 +52,9 @@ export default function LinkTag({ url, ...props }) {
   // }
   return (
     <a css={Styles.LINK} href={url} target="_blank">
+      <input ref={_ref} readOnly value={url} css={STYLES_COPY_INPUT} />
       <div
-        css={STYLES_TAG_BACKGROUND}
+        css={props.fillWidth ? STYLES_CONTAINER_FILL : STYLES_CONTAINER}
         style={{
           maxWidth: 480,
           ...props.containerStyle,
@@ -75,7 +82,6 @@ export default function LinkTag({ url, ...props }) {
             <SVG.CopyAndPaste style={{ display: "block", ...props.style }} height="16px" />
           </DynamicIcon>
         </div>
-        <input ref={_ref} readOnly value={url} css={STYLES_COPY_INPUT} />
       </div>
     </a>
   );

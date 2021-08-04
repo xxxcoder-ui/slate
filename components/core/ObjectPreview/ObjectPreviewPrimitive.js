@@ -85,10 +85,11 @@ export default function ObjectPreviewPrimitive({
   const showBody = () => setShowBody(true);
   const hideBody = () => setShowBody(false);
   const body = file?.data?.body;
+  const isLink = file.isLink;
 
   const title = file.data.name || file.filename;
 
-  if (file?.data?.coverImage && !isImage) {
+  if (file?.data?.coverImage && !isImage && !isLink) {
     return (
       <ImageObjectPreview
         file={file}

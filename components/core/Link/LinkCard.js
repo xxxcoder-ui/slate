@@ -82,7 +82,7 @@ export default function LinkCard({ file }) {
           <div css={STYLES_BODY}>
             <System.P1>{body}</System.P1>
           </div>
-          <LinkTag url={url} style={{ color: Constants.semantic.textGray }} />
+          <LinkTag url={url} fillWidth={false} style={{ color: Constants.semantic.textGray }} />
         </div>
       </div>
     </a>
@@ -99,7 +99,7 @@ export default function LinkCard({ file }) {
         <System.H3 style={{ marginBottom: 16, color: Constants.semantic.textBlack }}>
           {name}
         </System.H3>
-        <LinkTag url={url} style={{ marginBottom: 16 }} />
+        <LinkTag fillWidth={false} url={url} style={{ marginBottom: 16 }} />
         <LoaderSpinner style={{ height: 24, width: 24 }} />
       </div>
     </div> */

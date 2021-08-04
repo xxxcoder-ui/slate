@@ -581,6 +581,7 @@ class CarouselSidebar extends React.Component {
         <div key="sidebar-media-object-info" style={{ marginTop: 8 }}>
           {isLink && (
             <LinkTag
+              fillWidth={true}
               url={file.url}
               containerStyle={{
                 backgroundColor: Constants.system.grayDark4,
@@ -664,6 +665,7 @@ class CarouselSidebar extends React.Component {
         elements.push(
           <LinkTag
             url={file.url}
+            fillWidth={true}
             containerStyle={{
               backgroundColor: Constants.system.grayDark4,
               padding: "8px 16px",

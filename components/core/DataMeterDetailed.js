@@ -5,7 +5,7 @@ import * as Strings from "~/common/strings";
 import { css } from "@emotion/react";
 
 const STYLES_CONTAINER = css`
-  border-radius: 4px;
+  border-radius: 16px;
   box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset, ${Constants.shadow.lightSmall};
   padding: 32px;
   max-width: 100%;

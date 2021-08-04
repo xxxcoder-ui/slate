@@ -32,6 +32,13 @@ export const error = {
   SERVER_BUCKET_REMOVE_NO_MATCHING_CID: "There were no matching files found",
   SERVER_BUCKET_REMOVE_FAILED: "We were not able to delete that file",
 
+  //Link create
+  SERVER_CREATE_LINK_DUPLICATE: "You've already saved this link",
+  SERVER_CREATE_LINK_SLATE_NOT_FOUND: "We were unable to locate that collection",
+  SERVER_CREATE_LINK_NO_LINK_PROVIDED: "Please provide a link to save",
+  SERVER_CREATE_LINK_INVALID_LINK: "Link is invalid",
+  SERVER_CREATE_LINK_FAILED: "We ran into issues while saving that link. Please try again",
+
   //File create
   SERVER_CREATE_FILE_NO_FILE_PROVIDED:
     "We ran into issues while creating a file. No file was provided",

@@ -36,6 +36,7 @@ export default function LinkLoading({ file }) {
         </System.H3>
         <span style={{ marginBottom: 16 }}>
           <LinkTag
+            fillWidth={true}
             url={url}
             containerStyle={{
               backgroundColor: Constants.system.blue,

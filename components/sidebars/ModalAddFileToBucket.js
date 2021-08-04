@@ -245,7 +245,7 @@ export default class ModalAddFileToBucket extends React.Component {
       );
     } else {
       return (
-        <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
+        <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ width: "100%" }}>
           <input
             css={STYLES_FILE_HIDDEN}
             multiple
@@ -261,7 +261,7 @@ export default class ModalAddFileToBucket extends React.Component {
               backgroundColor: Constants.semantic.bgLight,
               boxShadow: this.state.urlError ? `0 0 0 1px ${Constants.system.red} inset` : "none",
             }}
-            containerStyle={{ maxWidth: 540 }}
+            containerStyle={{ maxWidth: 600 }}
             name="url"
             type="url"
             onChange={this._handleChange}
