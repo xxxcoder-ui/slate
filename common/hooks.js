@@ -390,3 +390,17 @@ export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
 
   return { handleFollow, isFollowing };
 };
+
+// NOTE(amine): use this hook when we need to evaluate dependencies manually
+export function useMemoCompare(next, compare) {
+  const previousRef = React.useRef();
+  const previous = previousRef.current;
+
+  const isEqual = compare(previous, next);
+
+  if (!isEqual) {
+    previousRef.current = next;
+  }
+
+  return isEqual ? previous : next;
+}

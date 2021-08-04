@@ -612,7 +612,7 @@ export default class Profile extends React.Component {
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>
             <div css={STYLES_PROFILE_IMAGE}>
-              <ProfilePhoto user={user} size={120} />
+              <ProfilePhoto user={user} size={{ base: 64, mobile: 120 }} />
               {showStatusIndicator && this.checkStatus({ id: user.id }) && (
                 <div css={STYLES_STATUS_INDICATOR} />
               )}
