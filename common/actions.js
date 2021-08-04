@@ -6,6 +6,7 @@ import * as Events from "~/common/custom-events";
 import * as Websockets from "~/common/browser-websockets";
 import * as Strings from "~/common/strings";
 import * as Credentials from "~/common/credentials";
+import * as Environment from "~/common/environment";
 
 //NOTE(martina): call Websockets.checkWebsocket() before any api call that uses websockets to return updates
 //  to make sure that websockets are properly connected (and to reconnect them if they are not)
@@ -48,15 +49,15 @@ const returnJSON = async (route, options) => {
   }
 };
 
-export const createZipToken = async ({ files, resourceURI }) => {
-  return await returnJSON(`${resourceURI}/api/download/create-zip-token`, {
+export const createZipToken = async (files) => {
+  return await returnJSON(`${Environment.URI_SHOVEL}/api/download/create-zip-token`, {
     ...CORS_OPTIONS,
     body: JSON.stringify({ files }),
   });
 };
 
-export const downloadZip = ({ token, name, resourceURI }) =>
-  `${resourceURI}/api/download/download-by-token?downloadId=${token}&name=${name}`;
+export const downloadZip = ({ token, name }) =>
+  `${Environment.URI_SHOVEL}/api/download/download-by-token?downloadId=${token}&name=${name}`;
 
 export const health = async (data = {}) => {
   await Websockets.checkWebsocket();
@@ -209,10 +210,7 @@ export const search = async (data) => {
     return { decorator: "NO_SERVER_TRIP", data: { results: [] } };
   }
 
-  if (Strings.isEmpty(data.resourceURI)) {
-    return { decorator: "NO_RESOURCE_URI", data: { results: [] } };
-  }
-  return await returnJSON(`${data.resourceURI}/search`, {
+  return await returnJSON(`${Environment.URI_LENS}/search`, {
     ...CORS_OPTIONS,
     body: JSON.stringify({ data }),
   });

@@ -173,7 +173,6 @@ export default class ApplicationPage extends React.Component {
       files: toUpload,
       slate,
       keys: Object.keys(fileLoading),
-      resources: this.props.resources,
       context: this,
     });
   };
@@ -244,18 +243,16 @@ export default class ApplicationPage extends React.Component {
       await Websockets.deleteClient();
       wsclient = null;
     }
-    if (this.props.resources && !Strings.isEmpty(this.props.resources.pubsub)) {
-      if (!this.state.viewer) {
-        Logging.error("WEBSOCKET: NOT AUTHENTICATED");
-        return;
-      }
-      wsclient = Websockets.init({
-        resource: this.props.resources.pubsub,
-        viewer: this.state.viewer,
-        onUpdate: this._handleUpdateViewer,
-        onNewActiveUser: this._handleNewActiveUser,
-      });
+    if (!this.state.viewer) {
+      Logging.error("WEBSOCKET: NOT AUTHENTICATED");
+      return;
     }
+    wsclient = Websockets.init({
+      resource: Environment.URI_FIJI,
+      viewer: this.state.viewer,
+      onUpdate: this._handleUpdateViewer,
+      onNewActiveUser: this._handleNewActiveUser,
+    });
     if (!wsclient) {
       Events.dispatchMessage({
         message:
@@ -316,7 +313,6 @@ export default class ApplicationPage extends React.Component {
       slate,
       keys: Object.keys(fileLoading),
       numFailed,
-      resources: this.props.resources,
       context: this,
     });
   };
@@ -330,7 +326,6 @@ export default class ApplicationPage extends React.Component {
       slate,
       keys: Object.keys(fileLoading),
       numFailed,
-      resources: this.props.resources,
       context: this,
     });
   };
@@ -593,7 +588,6 @@ export default class ApplicationPage extends React.Component {
       onUpload: this._handleUploadFiles,
       isMobile: this.state.isMobile,
       isMac: this.props.isMac,
-      resources: this.props.resources,
       activeUsers: this.state.activeUsers,
       userBucketCID: this.state.userBucketCID,
       external: !!!this.state.viewer,
@@ -612,7 +606,6 @@ export default class ApplicationPage extends React.Component {
         onCancel: this._handleDismissSidebar,
         onUpload: this._handleUploadFiles,
         onAction: this._handleAction,
-        resources: this.props.resources,
       });
     }
 
@@ -669,7 +662,6 @@ export default class ApplicationPage extends React.Component {
           viewer={this.state.viewer}
           onAction={this._handleAction}
           isMobile={this.props.isMobile}
-          resourceURI={this.props.resources.search}
         />
         <CTATransition onAction={this._handleAction} />
         {/* {!this.state.loaded ? (

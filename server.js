@@ -1,7 +1,6 @@
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
-import * as Serializers from "~/node_common/serializers";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as Websocket from "~/node_common/nodejs-websocket";
 import * as Logging from "~/common/logging";
@@ -18,7 +17,7 @@ import cors from "cors";
 import morgan from "morgan";
 import path from "path";
 
-import { FilecoinNumber, Converter } from "@glif/filecoin-number";
+import { FilecoinNumber } from "@glif/filecoin-number";
 
 const app = next({
   dev: !Environment.IS_PRODUCTION,
@@ -48,23 +47,6 @@ const loginLimiter = limit({
 
 const handler = app.getRequestHandler();
 
-const EXTERNAL_RESOURCES = {
-  storageDealUpload: Strings.isEmpty(Environment.RESOURCE_URI_STORAGE_UPLOAD)
-    ? null
-    : Environment.RESOURCE_URI_STORAGE_UPLOAD,
-  upload: Strings.isEmpty(Environment.RESOURCE_URI_UPLOAD)
-    ? null
-    : Environment.RESOURCE_URI_STORAGE_UPLOAD,
-  uploadZip: Strings.isEmpty(Environment.RESOURCE_URI_UPLOAD)
-    ? null
-    : Environment.RESOURCE_URI_STORAGE_UPLOAD,
-  download: Strings.isEmpty(Environment.RESOURCE_URI_UPLOAD)
-    ? null
-    : Environment.RESOURCE_URI_STORAGE_UPLOAD,
-  pubsub: Strings.isEmpty(Environment.RESOURCE_URI_PUBSUB) ? null : Environment.RESOURCE_URI_PUBSUB,
-  search: Strings.isEmpty(Environment.RESOURCE_URI_SEARCH) ? null : Environment.RESOURCE_URI_SEARCH,
-};
-
 app.prepare().then(async () => {
   const server = express();
 
@@ -83,19 +65,19 @@ app.prepare().then(async () => {
   server.get("/system/:c", async (r, s) => s.redirect(`/_/system/${r.params.c}`));
   server.get("/experiences/:m", async (r, s) => s.redirect(`/_/experiences/${r.params.m}`));
 
-  server.all("/api/users/create", createLimiter, async (r, s, next) => {
+  server.all("/api/users/create", createLimiter, async (r, s) => {
     return handler(r, s, r.url);
   });
 
-  server.all("/api/sign-in", loginLimiter, async (r, s, next) => {
+  server.all("/api/sign-in", loginLimiter, async (r, s) => {
     return handler(r, s, r.url);
   });
 
-  server.all("/api/:a", async (r, s, next) => {
+  server.all("/api/:a", async (r, s) => {
     return handler(r, s, r.url);
   });
 
-  server.all("/api/:a/:b", async (r, s, next) => {
+  server.all("/api/:a/:b", async (r, s) => {
     return handler(r, s, r.url);
   });
 
@@ -137,7 +119,6 @@ app.prepare().then(async () => {
     //   isMac,
     //   page,
     //   data: null,
-    //   resources: EXTERNAL_RESOURCES,
     // });
   });
 
@@ -165,7 +146,6 @@ app.prepare().then(async () => {
     if (!page) {
       return handler(req, res, req.url, {
         isMobile,
-        resources: EXTERNAL_RESOURCES,
       });
     }
 
@@ -175,7 +155,6 @@ app.prepare().then(async () => {
       viewer,
       page,
       data: null,
-      resources: EXTERNAL_RESOURCES,
     });
   });
 
@@ -249,7 +228,6 @@ app.prepare().then(async () => {
     if (!Validations.userRoute(username)) {
       return handler(req, res, req.url, {
         isMobile,
-        resources: EXTERNAL_RESOURCES,
       });
     }
 
@@ -296,7 +274,6 @@ app.prepare().then(async () => {
       isMac,
       data: user,
       page,
-      resources: EXTERNAL_RESOURCES,
     });
   });
 
@@ -354,7 +331,6 @@ app.prepare().then(async () => {
   //     isMac,
   //     page,
   //     data: user,
-  //     resources: EXTERNAL_RESOURCES,
   //   });
   // });
 
@@ -369,7 +345,6 @@ app.prepare().then(async () => {
     if (!Validations.userRoute(username)) {
       return handler(req, res, req.url, {
         isMobile,
-        resources: EXTERNAL_RESOURCES,
       });
     }
 
@@ -419,7 +394,6 @@ app.prepare().then(async () => {
       isMac,
       data: slate,
       page,
-      resources: EXTERNAL_RESOURCES,
     });
   });
 
@@ -484,13 +458,12 @@ app.prepare().then(async () => {
   //     isMac,
   //     data: slate,
   //     page,
-  //     resources: EXTERNAL_RESOURCES,
   //   });
   // });
 
   server.all("*", async (r, s) => handler(r, s, r.url));
 
-  const listenServer = server.listen(Environment.PORT, async (e) => {
+  server.listen(Environment.PORT, async (e) => {
     if (e) throw e;
     Websocket.create();
 

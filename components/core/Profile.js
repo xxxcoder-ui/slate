@@ -105,12 +105,10 @@ const STYLES_DESCRIPTION = css`
   max-width: 100%;
   overflow-wrap: break-word;
   white-space: pre-wrap;
-
   ul,
   ol {
     white-space: normal;
   }
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-top: 24px;
   }
@@ -132,7 +130,6 @@ const STYLES_STAT = css`
 
 const STYLES_BUTTON = css`
   margin-bottom: 32px;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-bottom: 16px;
   }
@@ -289,7 +286,7 @@ export default class Profile extends React.Component {
   render() {
     let tab = this.props.page.params?.tab;
     let { user, isOwner } = this.props;
-    let fileCount = user.library?.length || 0;
+    // let fileCount = user.library?.length || 0;
 
     const showStatusIndicator = this.props.isAuthenticated;
 

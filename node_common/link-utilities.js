@@ -82,7 +82,7 @@ export const uploadScreenshot = async (file, user) => {
     targetId: file.id,
   };
   try {
-    const request = await fetch(`${Environment.RESOURCE_URI_UPLOAD}/api/data/url`, {
+    const request = await fetch(`${Environment.}/api/data/url`, {
       method: "POST",
       credentials: "omit",
       headers: {

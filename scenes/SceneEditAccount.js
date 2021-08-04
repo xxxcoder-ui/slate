@@ -50,8 +50,8 @@ export default class SceneEditAccount extends React.Component {
     photo: this.props.viewer.data.photo,
     name: this.props.viewer.data.name,
     deleting: false,
-    allow_filecoin_directory_listing: this.props.viewer.data.settings
-      ?.allow_filecoin_directory_listing,
+    allow_filecoin_directory_listing:
+      this.props.viewer.data.settings?.allow_filecoin_directory_listing,
     allow_automatic_data_storage: this.props.viewer.data.settings?.allow_automatic_data_storage,
     allow_encrypted_data_storage: this.props.viewer.data.settings?.allow_encrypted_data_storage,
     changingPassword: false,
@@ -64,7 +64,7 @@ export default class SceneEditAccount extends React.Component {
 
   _handleUpload = async (e) => {
     this.setState({ changingAvatar: true });
-    let file = await UserBehaviors.uploadImage(e.target.files[0], this.props.resources, true);
+    let file = await UserBehaviors.uploadImage(e.target.files[0]);
     if (!file) {
       this.setState({ changingAvatar: false });
       return;
@@ -198,10 +198,7 @@ export default class SceneEditAccount extends React.Component {
             <div>
               <div css={STYLES_HEADER}>Your Avatar</div>
 
-              <ProfilePhoto 
-                user={this.props.viewer}
-                size={256} 
-              />
+              <ProfilePhoto user={this.props.viewer} size={256} />
 
               <div style={{ marginTop: 24 }}>
                 <input

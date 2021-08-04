@@ -111,7 +111,6 @@ export default class SceneMakeFilecoinDeal extends React.Component {
 
       const response = await FileUtilities.upload({
         bucketName: STAGING_DEAL_BUCKET,
-        routes: this.props.resources,
         file,
       });
     }

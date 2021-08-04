@@ -1,15 +1,15 @@
 import * as Actions from "~/common/actions";
 import * as Store from "~/common/store";
-import * as Constants from "~/common/constants";
 import * as Credentials from "~/common/credentials";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Logging from "~/common/logging";
-import * as UserBehaviors from "~/common/user-behaviors";
+import * as Environment from "~/common/environment";
 import * as Window from "~/common/window";
 
 import { encode } from "blurhash";
+import { v4 as uuid } from "uuid";
 
 const STAGING_DEAL_BUCKET = "stage-deal";
 
@@ -158,7 +158,7 @@ export const upload = async ({ file, context, bucketName }) => {
   }
 
   const _privateUploadMethod = (path, file) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       const XHR = new XMLHttpRequest();
 
       window.addEventListener(`cancel-${currentFileKey}`, () => {
@@ -211,12 +211,10 @@ export const upload = async ({ file, context, bucketName }) => {
       };
       XHR.send(formData);
     });
-  const resources = context.props.resources;
-  const storageDealRoute = resources?.storageDealUpload
-    ? `${resources.storageDealUpload}/api/deal/`
-    : null;
-  const generalRoute = resources?.upload ? `${resources.upload}/api/data/` : null;
-  const zipUploadRoute = resources?.uploadZip ? `${resources.uploadZip}/api/data/zip/` : null;
+
+  const storageDealRoute = `${Environment.URI_SHOVEL}/api/deal/`;
+  const generalRoute = `${Environment.URI_SHOVEL}/api/data/`;
+  const zipUploadRoute = `${Environment.URI_SHOVEL}/api/data/zip/`;
 
   if (!storageDealRoute || !generalRoute || !zipUploadRoute) {
     Events.dispatchMessage({ message: "We could not find our upload server." });
@@ -302,9 +300,7 @@ export const formatDroppedFiles = async ({ dataTransfer }) => {
         file = data.getAsFile();
       } else if (data.kind == "string" && data.type == "text/uri-list") {
         try {
-          const dataAsString = new Promise((resolve, reject) =>
-            data.getAsString((d) => resolve(d))
-          );
+          const dataAsString = new Promise((resolve) => data.getAsString((d) => resolve(d)));
           const resp = await fetch(await dataAsString);
           const blob = resp.blob();
 

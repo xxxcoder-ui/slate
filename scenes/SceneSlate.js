@@ -402,7 +402,6 @@ class SlatePage extends React.Component {
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,
       name: `${slateName}.zip`,
-      resourceURI: this.props.resources.download,
     });
   };
 
@@ -527,7 +526,6 @@ class SlatePage extends React.Component {
                   preview={preview}
                   onSavePreview={this._handleSavePreview}
                   items={objects}
-                  resources={this.props.resources}
                   onSelect={this._handleSelect}
                   defaultLayout={layouts && layouts.ver === "2.0" ? layouts.defaultLayout : true}
                   onAction={this.props.onAction}

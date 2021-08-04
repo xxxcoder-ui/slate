@@ -248,7 +248,6 @@ export default class SceneFilesFolder extends React.Component {
         <ScenePage>
           <GlobalCarousel
             carouselType="DATA"
-            resources={this.props.resources}
             viewer={this.props.viewer}
             objects={files}
             onAction={this.props.onAction}
@@ -472,7 +471,6 @@ export default class SceneFilesFolder extends React.Component {
               user={this.props.viewer}
               items={files}
               view={tab}
-              resources={this.props.resources}
               isOwner={true}
               page={this.props.page}
             />

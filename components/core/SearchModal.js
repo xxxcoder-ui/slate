@@ -717,7 +717,6 @@ export class SearchModal extends React.Component {
     let res;
     if (!refilter) {
       let response = await Actions.search({
-        resourceURI: this.props.resourceURI,
         query: this.state.inputValue,
         type: this.state.typeFilter,
       });
