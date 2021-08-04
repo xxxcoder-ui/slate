@@ -14,7 +14,7 @@ import { css } from "@emotion/react";
 import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
 import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
 import { Link } from "~/components/core/Link";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 
@@ -46,9 +46,11 @@ const STYLES_PREVIEW = css`
 `;
 
 const STYLES_DESCRIPTION_CONTAINER = (theme) => css`
+  background-color: ${theme.semantic.bgLight};
+  position: absolute;
+  bottom: 0%;
   display: flex;
   flex-direction: column;
-  position: relative;
   padding: 9px 16px 12px;
   border-radius: 0px 0px 16px 16px;
   box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
@@ -68,11 +70,8 @@ const STYLES_PROFILE_IMAGE = (theme) => css`
   object-fit: cover;
 `;
 
-const STYLES_METRICS = (theme) => css`
-  margin-top: 7px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    margin-top: 12px;
-  }
+const STYLES_METRICS = css`
+  margin-top: auto;
   ${Styles.CONTAINER_CENTERED};
   ${STYLES_SPACE_BETWEEN}
 `;
@@ -128,11 +127,6 @@ const getObjectToPreview = (objects = []) => {
 
   return { ...objects[objectIdx], isImage };
 };
-
-const STYLES_DESCRIPTION_INNER = (theme) => css`
-  background-color: ${theme.semantic.bgLight};
-  border-radius: 16px;
-`;
 
 const Preview = ({ collection, children, ...props }) => {
   const [isLoading, setLoading] = React.useState(true);
@@ -199,10 +193,8 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const showControls = () => setShowControls(true);
   const hideControls = () => setShowControls(false);
 
-  // const [isBodyVisible, setShowBody] = React.useState(false);
-  // const showBody = () => setShowBody(true);
-  // const hideBody = () => setShowBody(false);
-  // const body = collection?.data?.body;
+  const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription();
+  const description = collection?.data?.body;
 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
@@ -211,89 +203,112 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   return (
     <div css={STYLES_CONTAINER}>
       <Preview collection={collection} onMouseEnter={showControls} onMouseLeave={hideControls}>
-        <AnimatePresence>
-          {areControlsVisible && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              css={STYLES_CONTROLS}
-            >
-              <FollowButton
-                onClick={follow}
-                isFollowed={isFollowed}
-                followCount={followCount}
-                disabled={collection.ownerId === viewer?.id}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: areControlsVisible ? 1 : 0 }}
+          css={STYLES_CONTROLS}
+        >
+          <FollowButton
+            onClick={follow}
+            isFollowed={isFollowed}
+            followCount={followCount}
+            disabled={collection.ownerId === viewer?.id}
+          />
+        </motion.div>
       </Preview>
-      <div
-        css={STYLES_DESCRIPTION_CONTAINER}
-        //  onMouseEnter={showBody} onMouseLeave={hideBody}
-      >
-        <div
-          css={STYLES_DESCRIPTION_INNER}
-          // initial={{ y: 0 }}
-          // animate={{ y: isBodyVisible ? -170 : 0 }}
-          // transition={{ type: "spring", stiffness: 170, damping: 26 }}
+
+      <div style={{ position: "relative", height: 61 }}>
+        <motion.div
+          css={STYLES_DESCRIPTION_CONTAINER}
+          onMouseEnter={showDescription}
+          onMouseLeave={hideDescription}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_SPACE_BETWEEN]}>
             <Typography.H5 color="textBlack" nbrOflines={1}>
               {collection.slatename}
             </Typography.H5>
           </div>
-
-          {/* {isBodyVisible && (
-            <div
+          <motion.div
             style={{ marginTop: 4 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isBodyVisible ? 1 : 0 }}
+            initial={{ height: 0 }}
+            animate={{
+              height: isDescriptionVisible ? 108 : 0,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 170,
+              damping: 26,
+              delay: isDescriptionVisible ? 0 : 0.25,
+            }}
+          >
+            <Typography.P2
+              as={motion.p}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: isDescriptionVisible ? 1 : 0,
+              }}
+              transition={{ delay: isDescriptionVisible ? 0.25 : 0 }}
+              color="textGrayDark"
+              nbrOflines={5}
             >
-              <Typography.P2 color="textGrayDark" nbrOflines={5}>
-                {body || ""}
-              </Typography.P2>
+              {description || ""}
+            </Typography.P2>
+          </motion.div>
+          <div css={STYLES_METRICS}>
+            <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_GRAY]}>
+              <SVG.Box />
+              <Typography.P3 style={{ marginLeft: 4 }} color="textGray">
+                {fileCount}
+              </Typography.P3>
             </div>
-          )} */}
-        </div>
-
-        <div css={STYLES_METRICS}>
-          <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_GRAY]}>
-            <SVG.Box />
-            <Typography.P3 style={{ marginLeft: 4 }} color="textGray">
-              {fileCount}
-            </Typography.P3>
+            {owner && (
+              <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
+                <Link
+                  href={`/$/user/${owner.id}`}
+                  onAction={onAction}
+                  aria-label={`Visit ${owner.username}'s profile`}
+                  title={`Visit ${owner.username}'s profile`}
+                >
+                  <img
+                    css={STYLES_PROFILE_IMAGE}
+                    src={owner?.data?.photo}
+                    alt={`${owner.username} profile`}
+                    onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+                  />
+                </Link>
+                <Link
+                  href={`/$/user/${owner.id}`}
+                  onAction={onAction}
+                  aria-label={`Visit ${owner.username}'s profile`}
+                  title={`Visit ${owner.username}'s profile`}
+                >
+                  <Typography.P3 style={{ marginLeft: 8 }} color="textGray">
+                    {owner.username}
+                  </Typography.P3>
+                </Link>
+              </div>
+            )}
           </div>
-          {owner && (
-            <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
-              <Link
-                href={`/$/user/${owner.id}`}
-                onAction={onAction}
-                aria-label={`Visit ${owner.username}'s profile`}
-                title={`Visit ${owner.username}'s profile`}
-              >
-                <img
-                  css={STYLES_PROFILE_IMAGE}
-                  src={owner?.data?.photo}
-                  alt={`${owner.username} profile`}
-                  onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
-                />
-              </Link>
-              <Link
-                href={`/$/user/${owner.id}`}
-                onAction={onAction}
-                aria-label={`Visit ${owner.username}'s profile`}
-                title={`Visit ${owner.username}'s profile`}
-              >
-                <Typography.P3 style={{ marginLeft: 8 }} color="textGray">
-                  {owner.username}
-                </Typography.P3>
-              </Link>
-            </div>
-          )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
 }
+
+const useShowDescription = () => {
+  const [isDescriptionVisible, setShowDescription] = React.useState(false);
+  const timeoutId = React.useRef();
+
+  const showDescription = () => {
+    clearTimeout(timeoutId.current);
+    const id = setTimeout(() => setShowDescription(true), 250);
+    timeoutId.current = id;
+  };
+  const hideDescription = () => {
+    clearTimeout(timeoutId.current);
+    setShowDescription(false);
+  };
+
+  return { isDescriptionVisible, showDescription, hideDescription };
+};
