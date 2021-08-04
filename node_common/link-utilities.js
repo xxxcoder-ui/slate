@@ -11,7 +11,7 @@ import multihashing from "multihashing-async";
 export const fetchLinkData = async (url) => {
   try {
     const { status, data, response } = await microlink(url, {
-      screenshot: true,
+      // screenshot: true,
       apiKey: Environment.MICROLINK_API_KEY,
     });
     if (status !== "success") {
