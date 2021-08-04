@@ -33,7 +33,7 @@ const STYLES_API_KEY = css`
   height: 40px;
   border-radius: 4px;
   cursor: copy;
-  background-color: ${Constants.system.white};
+  background-color: ${Constants.semantic.bgLight};
   outline: none;
   border: none;
   width: 380px;

@@ -93,7 +93,7 @@ const STYLES_LOADER = css`
 `;
 
 const STYLES_EDIT_CONTAINER = css`
-  border: 1px solid ${Constants.system.gray};
+  border: 1px solid ${Constants.system.grayLight4};
   padding: 24px;
   overflow: hidden;
 `;
@@ -148,8 +148,8 @@ const STYLES_TOOLTIP_TEXT = css`
 
 const STYLES_TOGGLE_BOX = css`
   ${STYLES_BUTTONS_ROW}
-  border: 1px solid ${Constants.system.gray};
-  border-radius: 4px;
+  border: 1px solid ${Constants.system.grayLight4};
+  border-radius: 8px;
   height: 40px;
   padding: 0 16px;
 `;

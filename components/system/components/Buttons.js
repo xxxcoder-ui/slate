@@ -234,7 +234,7 @@ const STYLES_BUTTON_DISABLED = css`
   cursor: not-allowed;
   background-color: ${Constants.system.white};
   color: ${Constants.semantic.textGrayLight};
-  box-shadow: 0 0 0 1px ${Constants.semantic.bgLight} inset;
+  box-shadow: 0 0 0 1px ${Constants.semantic.bgGrayLight} inset;
 
   :focus {
     outline: 0;

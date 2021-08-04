@@ -55,7 +55,7 @@ export class PopoverNavigation extends React.Component {
           e.preventDefault();
         }}
       >
-        {this.props.topSection}
+        {this.props.topSection ? this.props.topSection : null}
         {this.props.navigation.map((section, i) => (
           <div css={STYLES_POPOVER_SECTION}>
             {section.map((each, j) => (

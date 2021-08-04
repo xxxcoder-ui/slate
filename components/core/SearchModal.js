@@ -17,7 +17,7 @@ import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { useIntercom } from "react-use-intercom";
-import ProfilePhoto from "~/components/core/ProfilePhoto"; 
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 const STYLES_MOBILE_HIDDEN = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -43,7 +43,7 @@ const STYLES_ICON_SQUARE = css`
   height: 48px;
   width: 48px;
   border-radius: 4px;
-  border: 1px solid ${Constants.semantic.bgLight};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   background-color: ${Constants.system.white};
   color: #bfbfbf;
   display: flex;
@@ -85,10 +85,7 @@ const UserEntry = ({ user }) => {
     <div css={STYLES_ENTRY}>
       <div css={STYLES_ENTRY_CONTAINER}>
         <div css={STYLES_PROFILE_PREVIEW}>
-          <ProfilePhoto 
-            user={user}
-            size={48} 
-          />
+          <ProfilePhoto user={user} size={48} />
         </div>
         <div css={STYLES_TEXT_ROWS}>
           {user.data.name ? (
@@ -120,10 +117,7 @@ const UserPreview = ({ user }) => {
   return (
     <div>
       <div css={STYLES_PROFILE_IMAGE}>
-        <ProfilePhoto 
-          user={user}
-          size={182} 
-        />
+        <ProfilePhoto user={user} size={182} />
       </div>
 
       {user.data.name ? <div css={STYLES_PREVIEW_TEXT}>{user.data.name}</div> : null}
@@ -214,7 +208,7 @@ const STYLES_EMPTY_SLATE_PREVIEW = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${Constants.semantic.bgLight};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
 `;
 
 const SlatePreview = ({ slate, user }) => {
@@ -289,29 +283,6 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
   );
 };
 
-const OpenIntercom = ({ user }) => {
-  const { show, update } = useIntercom();
-
-  return (
-    <span
-      style={{ marginRight: 24, cursor: "pointer" }}
-      onClick={() => {
-        update({
-          name: user.data.name,
-          email: user.email,
-          customAttributes: {
-            slate_userid: user.id,
-            username: user.username,
-          },
-        });
-        show();
-      }}
-    >
-      Contact Us
-    </span>
-  );
-};
-
 const STYLES_DROPDOWN_CONTAINER = css`
   box-sizing: border-box;
   z-index: ${Constants.zindex.modal};
@@ -353,7 +324,7 @@ const STYLES_INPUT = css`
   -webkit-appearance: none;
   width: 100%;
   height: 56px;
-  background: ${Constants.semantic.bgGrayLight};
+  background: ${Constants.semantic.bgLight};
   color: ${Constants.semantic.textGray};
   display: flex;
   font-size: 14px;
@@ -406,7 +377,7 @@ const STYLES_RETURN = css`
 const STYLES_FILTER_BUTTON = css`
   padding: 11px;
   border-radius: 4px;
-  border: 1px solid ${Constants.semantic.bgLight};
+  border: 1px solid ${Constants.semantic.borderGrayLight};
   color: ${Constants.semantic.textGray};
   margin-right: 8px;
   display: flex;
@@ -433,19 +404,9 @@ const STYLES_PREVIEW_PANEL = css`
   }
 `;
 
-const STYLES_BOTTOM_BUTTONS = css`
-  color: ${Constants.semantic.textGrayLight};
-  font-family: ${Constants.font.medium};
-  font-size: ${Constants.typescale.lvlN1};
-  letter-spacing: -0.1px;
-  position: absolute;
-  bottom: 16px;
-  left: 24px;
-`;
-
 const STYLES_INLINE_TAG_CONTAINER = css`
   height: 56px;
-  background: ${Constants.semantic.bgGrayLight};
+  background: ${Constants.semantic.bgLight};
   display: flex;
   align-items: center;
   margin-bottom: 8px;
@@ -1018,7 +979,7 @@ export class SearchModal extends React.Component {
               style={{
                 right: 0,
                 top: 44,
-                borderColor: Constants.semantic.bgLight,
+                borderColor: Constants.semantic.borderGrayLight,
                 color: Constants.semantic.textGray,
                 width: 124,
               }}
@@ -1265,23 +1226,6 @@ export class SearchModal extends React.Component {
                     ) : null}
                   </React.Fragment>
                 )}
-              </div>
-
-              <div css={STYLES_BOTTOM_BUTTONS}>
-                <OpenIntercom user={this.props.viewer} />
-
-                <span
-                  style={{ marginRight: 24, cursor: "pointer" }}
-                  onClick={() => {
-                    window.open("https://help.slate.host/", "_blank");
-                  }}
-                >
-                  FAQ
-                </span>
-
-                {/* <span style={{ cursor: "pointer" }} onClick={() => this._handleRedirect("FMU")}>
-                  I'm Feeling Lucky
-                </span> */}
               </div>
             </div>
           </Boundary>

@@ -6,7 +6,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
-import ProfilePhoto from "~/components/core/ProfilePhoto"; 
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { useIntercom } from "react-use-intercom";
@@ -103,29 +103,29 @@ const STYLES_ITEM_BOX = css`
   }
 `;
 
-const OpenIntercom = ({ user, onTogglePopup }) => {
-  const { show, update } = useIntercom();
+// const OpenIntercom = ({ user, onTogglePopup }) => {
+//   const { show, update } = useIntercom();
 
-  return (
-    <span
-      style={{ cursor: "pointer", display: "block" }}
-      onClick={() => {
-        onTogglePopup();
-        update({
-          name: user.data.name,
-          email: user.email,
-          customAttributes: {
-            slate_userid: user.id,
-            username: user.username,
-          },
-        });
-        show();
-      }}
-    >
-      Help
-    </span>
-  );
-};
+//   return (
+//     <span
+//       style={{ cursor: "pointer", display: "block" }}
+//       onClick={() => {
+//         onTogglePopup();
+//         update({
+//           name: user.data.name,
+//           email: user.email,
+//           customAttributes: {
+//             slate_userid: user.id,
+//             username: user.username,
+//           },
+//         });
+//         show();
+//       }}
+//     >
+//       Help
+//     </span>
+//   );
+// };
 
 export class ApplicationUserControlsPopup extends React.Component {
   _handleAction = (props) => {
@@ -144,11 +144,8 @@ export class ApplicationUserControlsPopup extends React.Component {
     if (this.props.popup === "profile") {
       const topSection = (
         <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginBottom: 14 }}>
-          <div style={{ marginRight: '16px', cursor: 'default' }} >
-            <ProfilePhoto 
-              user={this.props.viewer}
-              size={46}
-            />
+          <div style={{ marginRight: "16px", cursor: "default" }}>
+            <ProfilePhoto user={this.props.viewer} size={46} />
           </div>
 
           <div
@@ -223,15 +220,15 @@ export class ApplicationUserControlsPopup extends React.Component {
           },
         ],
         [
-          {
-            text: (
-              <OpenIntercom
-                style={{ display: "block" }}
-                user={this.props.viewer}
-                onTogglePopup={this.props.onTogglePopup}
-              />
-            ),
-          },
+          // {
+          //   text: (
+          //     <OpenIntercom
+          //       style={{ display: "block" }}
+          //       user={this.props.viewer}
+          //       onTogglePopup={this.props.onTogglePopup}
+          //     />
+          //   ),
+          // },
           {
             text: "Sign out",
             onClick: (e) => {
@@ -295,20 +292,16 @@ export class ApplicationUserControlsPopup extends React.Component {
 }
 
 export class ApplicationUserControls extends React.Component {
-
   render() {
     let tooltip = <ApplicationUserControlsPopup {...this.props} />;
     return (
       <div css={STYLES_HEADER}>
-        <div 
-          css={STYLES_PROFILE_MOBILE} 
-          onClick={() => this.props.onTogglePopup("profile")} 
-          style={{ position: "relative", cursor: 'pointer' }}
+        <div
+          css={STYLES_PROFILE_MOBILE}
+          onClick={() => this.props.onTogglePopup("profile")}
+          style={{ position: "relative", cursor: "pointer" }}
         >
-          <ProfilePhoto 
-            user={this.props.viewer}
-            size={24} 
-          />
+          <ProfilePhoto user={this.props.viewer} size={24} />
           {this.props.popup === "profile" ? tooltip : null}
         </div>
       </div>
