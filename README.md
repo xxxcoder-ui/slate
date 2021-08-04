@@ -69,10 +69,9 @@ TEXTILE_HUB_SECRET=XXX
 JWT_SECRET=XXX
 ALLOWED_HOST=localhost:1337
 PUBSUB_SECRET=pKLO4lbzdMrhAFKwPo9bnmq03bxQrtu3
-RESOURCE_URI_UPLOAD=http://localhost:4242
-RESOURCE_URI_STORAGE_UPLOAD=http://localhost:4242
-RESOURCE_URI_PUBSUB=ws://localhost:6464
-RESOURCE_URI_SEARCH=http://localhost:1313
+NEXT_PUBLIC_URI_SHOVEL=http://localhost:4242
+NEXT_PUBLIC_URI_FIJI=ws://localhost:6464
+NEXT_PUBLIC_URI_LENS=http://localhost:1313
 ```
 
 ### Setup pubsub server
