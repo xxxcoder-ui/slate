@@ -753,7 +753,6 @@ export default class DataView extends React.Component {
                                     height: 24,
                                     width: 24,
                                     borderRadius: "8px",
-                                    boxShadow: `0 0 0 1px ${Constants.system.white}`,
                                     backgroundColor: this.state.checked[i]
                                       ? Constants.system.blue
                                       : "rgba(255, 255, 255, 0.75)",
