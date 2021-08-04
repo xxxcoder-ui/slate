@@ -134,7 +134,7 @@ export default function ObjectPreviewPrimitive({
           }}
           transition={{ type: "spring", stiffness: 170, damping: 26 }}
         >
-          <H5 as="h2" nbrOflines={1} color="textBlack">
+          <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
             {title}
           </H5>
           <div style={{ marginTop: 3, display: "flex" }}>

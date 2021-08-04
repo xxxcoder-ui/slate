@@ -225,7 +225,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <div css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_SPACE_BETWEEN]}>
-            <Typography.H5 color="textBlack" nbrOflines={1}>
+            <Typography.H5 color="textBlack" nbrOflines={1} title={collection.slatename}>
               {collection.slatename}
             </Typography.H5>
           </div>
