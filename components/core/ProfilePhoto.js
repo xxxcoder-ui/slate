@@ -1,7 +1,10 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
+import { useMemoCompare } from "~/common/hooks";
+import isEqual from "lodash/isEqual";
 
 import Dismissible from "~/components/core/Dismissible";
 
@@ -26,56 +29,59 @@ const STYLES_AVATAR_ONLINE = css`
   border-radius: 16px;
 `;
 
-function BoringAvatar(props) {
-  let colors = ['A9B9C1', '5B6B74', '3C444A', 'D4DBDF', '293137'];
+function BoringAvatar({ avatarCss, ...props }) {
+  let colors = ["A9B9C1", "5B6B74", "3C444A", "D4DBDF", "293137"];
   let avatarUrl = `https://source.boringavatars.com/marble/${props.size}/${props.userId}?square&colors=${colors}`;
   return (
-    <Dismissible
-      captureResize={false}
-      captureScroll={true}
-    >
-      <img 
-        src={avatarUrl} 
-        css={STYLES_AVATAR}
+    <Dismissible captureResize={false} captureScroll={true}>
+      <img
+        src={avatarUrl}
+        css={[avatarCss, STYLES_AVATAR]}
         style={{
-          width: `${props.size}px`, 
-          height: `${props.size}px`,
           cursor: "pointer",
-        }} 
+        }}
+        alt="profile preview"
       />
     </Dismissible>
   );
 }
 
-function UploadedAvatar(props) {
+function UploadedAvatar({ avatarCss, ...props }) {
   return (
     <Dismissible
-        css={STYLES_AVATAR}
-        captureResize={false}
-        captureScroll={true}
-        style={{
-          ...props.style,
-          width: `${props.size}px`,
-          height: `${props.size}px`,
-          backgroundImage: `url('${props.url}')`,
-          cursor: "pointer",
-        }}
-      >
-        {props.visible ? props.popover : null}
-        {props.online ? <span css={STYLES_AVATAR_ONLINE} /> : null}
-      </Dismissible> 
-  )
+      css={[avatarCss, STYLES_AVATAR]}
+      captureResize={false}
+      captureScroll={true}
+      style={{
+        ...props.style,
+        backgroundImage: `url('${props.url}')`,
+        cursor: "pointer",
+      }}
+    >
+      {props.visible ? props.popover : null}
+      {props.online ? <span css={STYLES_AVATAR_ONLINE} /> : null}
+    </Dismissible>
+  );
 }
 
-export default class ProfilePhoto extends React.Component {  
-  render() {
-    return (
-      <>
-        {this.props.user.data.photo
-          ? <UploadedAvatar url={this.props.user.data.photo} size={this.props.size} />
-          : <BoringAvatar userId={this.props.user.id} size={this.props.size} />
-        }
-      </>
-    );
-  }
+export default function ProfilePhoto({ size, ...props }) {
+  // NOTE(amine): will calculate only when the size prop changes
+  const memoizedSizeProp = useMemoCompare(size, isEqual);
+  const STYLES_SIZE = React.useMemo(() => {
+    const responsiveStyles = Utilities.mapResponsiveProp(size, (size) => ({
+      width: size,
+      height: size,
+    }));
+    return css(responsiveStyles);
+  }, [memoizedSizeProp]);
+
+  return (
+    <>
+      {props.user.data.photo ? (
+        <UploadedAvatar url={props.user.data.photo} avatarCss={STYLES_SIZE} />
+      ) : (
+        <BoringAvatar userId={props.user.id} avatarCss={STYLES_SIZE} />
+      )}
+    </>
+  );
 }
