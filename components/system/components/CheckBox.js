@@ -17,7 +17,7 @@ const STYLES_CHECKBOX = css`
 
 const STYLES_CHECKBOX_FIGURE = css`
   box-sizing: border-box;
-  box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight};
+  box-shadow: 0 0 0 1px ${Constants.system.grayLight4};
   background-color: ${Constants.system.white};
   border-radius: 4px;
   display: inline-flex;
