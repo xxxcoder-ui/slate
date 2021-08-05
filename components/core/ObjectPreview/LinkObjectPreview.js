@@ -3,7 +3,7 @@ import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
 import * as Typography from "~/components/system/components/Typography";
 
-import { H5, P3 } from "~/components/system/components/Typography";
+import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
 import { Logo } from "~/common/logo";
 
@@ -25,7 +25,7 @@ const STYLES_EMPTY_CONTAINER = css`
   width: 100%;
 `;
 
-export default function LinkObjectPreview({ file }) {
+export default function LinkObjectPreview({ file, ...props }) {
   const {
     data: { link },
   } = file;
@@ -40,14 +40,14 @@ export default function LinkObjectPreview({ file }) {
           css={STYLES_SOURCE_LOGO}
         />
       )}
-      <P3 as="small" color="textGray">
+      <P3 as="small" color="textGray" nbrOflines={1}>
         {link.source}
       </P3>
     </div>
   );
 
   return (
-    <ObjectPreviewPrimitive file={file} tag={tag}>
+    <ObjectPreviewPrimitive file={file} tag={tag} {...props}>
       {link.image ? (
         <img src={link.image} alt="Link preview" css={Styles.IMAGE_FILL} />
       ) : (
