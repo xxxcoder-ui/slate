@@ -131,13 +131,16 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
           <motion.div
             css={STYLES_INNER_DESCRIPTION}
             style={{ position: "absolute", left: 0, top: 0 }}
-            initial={{ y: 0 }}
-            animate={{ y: isDescriptionVisible ? -descriptionHeight.current : 0 }}
+            initial={false}
+            animate={{
+              y: isDescriptionVisible ? -descriptionHeight.current : 0,
+              borderRadius: isDescriptionVisible ? "16px" : "0px",
+            }}
             transition={{
               type: "spring",
               stiffness: 170,
               damping: 26,
-              delay: isDescriptionVisible ? 0 : 0.2,
+              delay: isDescriptionVisible ? 0 : 0.3,
             }}
           >
             <Typography.H5 color="textBlack" nbrOflines={1} title={collection.slatename}>
@@ -145,17 +148,17 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
             </Typography.H5>
             {description && (
               <div ref={descriptionRef}>
-                <Typography.P3
+                <Typography.P2
                   as={motion.p}
                   style={{ paddingTop: 3 }}
-                  nbrOflines={1}
+                  nbrOflines={7}
                   color="textGrayDark"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: isDescriptionVisible ? 1 : 0 }}
-                  transition={{ delay: isDescriptionVisible ? 0.2 : 0 }}
+                  transition={{ duration: 0.3, delay: isDescriptionVisible ? 0.2 : 0 }}
                 >
                   {description}
-                </Typography.P3>
+                </Typography.P2>
               </div>
             )}
           </motion.div>

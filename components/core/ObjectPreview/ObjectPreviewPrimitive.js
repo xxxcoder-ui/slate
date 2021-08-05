@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { css } from "@emotion/react";
-import { H5, P3 } from "~/components/system/components/Typography";
+import { H5, P2, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
 // import { useLikeHandler, useSaveHandler } from "~/common/hooks";
@@ -160,13 +160,16 @@ export default function ObjectPreviewPrimitive({
 
           <motion.div
             css={STYLES_INNER_DESCRIPTION}
-            initial={{ y: 0 }}
-            animate={{ y: isDescriptionVisible ? -descriptionHeight.current : 0 }}
+            initial={false}
+            animate={{
+              y: isDescriptionVisible ? -descriptionHeight.current : 0,
+              borderRadius: isDescriptionVisible ? "16px" : "0px",
+            }}
             transition={{
               type: "spring",
               stiffness: 170,
               damping: 26,
-              delay: isDescriptionVisible ? 0 : 0.2,
+              delay: isDescriptionVisible ? 0 : 0.3,
             }}
           >
             <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
@@ -174,17 +177,17 @@ export default function ObjectPreviewPrimitive({
             </H5>
             {description && (
               <div ref={descriptionRef}>
-                <P3
+                <P2
                   as={motion.p}
                   style={{ paddingTop: 3 }}
-                  nbrOflines={1}
+                  nbrOflines={7}
                   color="textGrayDark"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: isDescriptionVisible ? 1 : 0 }}
-                  transition={{ delay: isDescriptionVisible ? 0.2 : 0 }}
+                  transition={{ duration: 0.3, delay: isDescriptionVisible ? 0.2 : 0 }}
                 >
-                  {description || ""}
-                </P3>
+                  {description}
+                </P2>
               </div>
             )}
           </motion.div>
