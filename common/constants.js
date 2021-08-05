@@ -209,8 +209,8 @@ export const grids = {
     mobile: { width: 166, rowGap: 12 },
   },
   collection: {
-    desktop: { width: 432, rowGap: 16 },
-    mobile: { width: 300, rowGap: 8 },
+    desktop: { width: 382, rowGap: 16 },
+    mobile: { width: 280, rowGap: 8 },
   },
   profile: {
     desktop: { width: 248, rowGap: 16 },

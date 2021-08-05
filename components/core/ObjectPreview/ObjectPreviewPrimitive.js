@@ -33,6 +33,10 @@ const STYLES_DESCRIPTION = (theme) => css`
 `;
 
 const STYLES_INNER_DESCRIPTION = (theme) => css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-color: ${theme.semantic.bgLight};
   padding: 9px 16px 0px;
   box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
@@ -156,7 +160,6 @@ export default function ObjectPreviewPrimitive({
 
           <motion.div
             css={STYLES_INNER_DESCRIPTION}
-            style={{ position: "absolute", left: 0, top: 0 }}
             initial={{ y: 0 }}
             animate={{ y: isDescriptionVisible ? -descriptionHeight.current : 0 }}
             transition={{
