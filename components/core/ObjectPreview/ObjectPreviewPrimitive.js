@@ -20,22 +20,20 @@ const STYLES_WRAPPER = (theme) => css`
 `;
 
 const STYLES_DESCRIPTION = (theme) => css`
+  position: relative;
   box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
   border-radius: 0px 0px 16px 16px;
   box-sizing: border-box;
   width: 100%;
-  max-height: 61px;
+  background-color: ${theme.semantic.bgLight};
+  border-radius: 16px;
+  height: calc(170px + 61px);
+  padding: 9px 16px 8px;
+  z-index: 1;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     padding: 8px;
   }
-`;
-
-const STYLES_DESCRIPTION_INNER = (theme) => css`
-  background-color: ${theme.semantic.bgLight};
-  padding: 9px 16px 8px;
-  border-radius: 16px;
-  height: calc(170px + 61px);
 `;
 
 const STYLES_PREVIEW = css`
@@ -73,6 +71,7 @@ export default function ObjectPreviewPrimitive({
   isImage,
   onAction,
 }) {
+  const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription();
   // const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
   // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
   // const showSaveButton = viewer?.id !== file?.ownerId;
@@ -81,11 +80,8 @@ export default function ObjectPreviewPrimitive({
   // const showControls = () => setShowControls(true);
   // const hideControls = () => setShowControls(false);
 
-  const [isBodyVisible, setShowBody] = React.useState(false);
-  const showBody = () => setShowBody(true);
-  const hideBody = () => setShowBody(false);
   const body = file?.data?.body;
-  const isLink = file.isLink;
+  const { isLink } = file;
 
   const title = file.data.name || file.filename;
 
@@ -126,17 +122,22 @@ export default function ObjectPreviewPrimitive({
           <div>{children}</div>
         </AspectRatio>
       </div>
-      <article css={STYLES_DESCRIPTION} onMouseEnter={showBody} onMouseLeave={hideBody}>
-        <motion.div
-          css={STYLES_DESCRIPTION_INNER}
+      <div style={{ maxHeight: 61 }}>
+        <motion.article
+          css={STYLES_DESCRIPTION}
+          onMouseMove={showDescription}
+          onMouseLeave={hideDescription}
           initial={{ y: 0 }}
-          animate={{ y: isBodyVisible ? -170 : 0 }}
+          animate={{
+            y: isDescriptionVisible ? -170 : 0,
+            borderRadius: isDescriptionVisible ? "16px" : "0px",
+          }}
           transition={{ type: "spring", stiffness: 170, damping: 26 }}
         >
-          <H5 as="h2" nbrOflines={1} color="textBlack">
+          <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
             {title}
           </H5>
-          <div style={{ marginTop: 3 }}>
+          <div style={{ marginTop: 3, display: "flex" }}>
             {typeof tag === "string" ? (
               <P3 as="small" css={STYLES_UPPERCASE} color="textGray">
                 {tag}
@@ -148,15 +149,32 @@ export default function ObjectPreviewPrimitive({
           <H5
             as={motion.p}
             initial={{ opacity: 0 }}
-            animate={{ opacity: isBodyVisible ? 1 : 0 }}
+            animate={{ opacity: isDescriptionVisible ? 1 : 0 }}
             style={{ marginTop: 5 }}
             nbrOflines={8}
             color="textGrayDark"
           >
             {body || ""}
           </H5>
-        </motion.div>
-      </article>
+        </motion.article>
+      </div>
     </div>
   );
 }
+
+const useShowDescription = () => {
+  const [isDescriptionVisible, setShowDescription] = React.useState(false);
+  const timeoutId = React.useRef();
+
+  const showDescription = () => {
+    clearTimeout(timeoutId.current);
+    const id = setTimeout(() => setShowDescription(true), 250);
+    timeoutId.current = id;
+  };
+  const hideDescription = () => {
+    clearTimeout(timeoutId.current);
+    setShowDescription(false);
+  };
+
+  return { isDescriptionVisible, showDescription, hideDescription };
+};

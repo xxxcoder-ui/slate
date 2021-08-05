@@ -11,9 +11,9 @@ export default async ({ ownerId }) => {
       // const slateFiles = () =>
       //   DB.raw("json_agg(?? order by ?? asc) as ??", ["files", "slate_files.createdAt", "objects"]);
 
-      const ownerQueryFields = ["*", ...Constants.userPreviewProperties, "owner"];
+      const ownerQueryFields = [...Constants.userPreviewProperties, "owner"];
       const ownerQuery = DB.raw(
-        `??, json_build_object('id', ??, 'data', ??, 'username', ??) as ??`,
+        `json_build_object('id', ??, 'data', ??, 'username', ??) as ??`,
         ownerQueryFields
       );
 
@@ -36,7 +36,7 @@ export default async ({ ownerId }) => {
           // .orderBy("subscriptions.createdAt", "desc");
           .groupBy("slates.id")
       )
-        .select(ownerQuery)
+        .select(...Serializers.slateProperties, "objects", ownerQuery)
         .from("slates")
         .join("users", "slates.ownerId", "users.id");
 

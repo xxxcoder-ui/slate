@@ -18,6 +18,7 @@ export const LINK = css`
 const TEXT = css`
   box-sizing: border-box;
   overflow-wrap: break-word;
+  text-align: left;
 
   a {
     ${LINK}
