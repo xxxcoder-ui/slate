@@ -13,7 +13,7 @@ const STYLES_WRAPPER = (theme) => css`
   position: relative;
   background-color: ${theme.semantic.bgLight};
   transition: box-shadow 0.2s;
-  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
+  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.card};
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -118,7 +118,7 @@ export default function ObjectPreviewPrimitive({
             </motion.div>
           )}
         </AnimatePresence> */}
-        <AspectRatio ratio={248 / 248}>
+        <AspectRatio ratio={192 / 248}>
           <div>{children}</div>
         </AspectRatio>
       </div>
