@@ -4,6 +4,7 @@ import * as Content from "~/components/core/FontFrame/Views/content";
 import * as Strings from "~/common/strings";
 
 import { generateNumberByStep } from "~/common/utilities";
+import { useIsomorphicLayoutEffect } from "~/common/hooks";
 
 export const useFont = ({ cid }, deps) => {
   const url = Strings.getURLfromCID(cid);
@@ -191,7 +192,7 @@ export const useFontControls = () => {
 
   const FONT_PREVIEW_STORAGE_TOKEN = "SLATE_FONT_PREVIEW_SETTINGS";
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const initialState = JSON.parse(localStorage.getItem(FONT_PREVIEW_STORAGE_TOKEN));
     if (initialState) handlers.initialState(initialState);
   }, []);

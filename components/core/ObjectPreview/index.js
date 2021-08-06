@@ -28,8 +28,10 @@ const ObjectPreview = ({ file, ...props }) => {
 
   const url = Strings.getURLfromCID(file.cid);
 
+  const PLACEHOLDER_RATIO = 1.3;
+
   if (link) {
-    return <LinkObjectPreview file={file} />;
+    return <LinkObjectPreview file={file} ratio={PLACEHOLDER_RATIO} {...props} />;
   }
 
   if (Validations.isPreviewableImage(type)) {
@@ -40,7 +42,7 @@ const ObjectPreview = ({ file, ...props }) => {
     const tag = type.split("/")[1];
     return (
       <PlaceholderWrapper tag={tag} file={file} {...props}>
-        <VideoPlaceholder />
+        <VideoPlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -48,7 +50,7 @@ const ObjectPreview = ({ file, ...props }) => {
   if (Validations.isPdfType(type)) {
     return (
       <PlaceholderWrapper tag="PDF" file={file} {...props}>
-        <PdfPlaceholder />
+        <PdfPlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -57,7 +59,7 @@ const ObjectPreview = ({ file, ...props }) => {
     const tag = Utilities.getFileExtension(file.filename) || "audio";
     return (
       <PlaceholderWrapper tag={tag} file={file} {...props}>
-        <AudioPlaceholder />
+        <AudioPlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -65,7 +67,7 @@ const ObjectPreview = ({ file, ...props }) => {
   if (type === "application/epub+zip") {
     return (
       <PlaceholderWrapper tag="epub" file={file} {...props}>
-        <EbookPlaceholder />
+        <EbookPlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -73,7 +75,7 @@ const ObjectPreview = ({ file, ...props }) => {
   if (file.filename.endsWith(".key")) {
     return (
       <PlaceholderWrapper tag="keynote" file={file} {...props}>
-        <KeynotePlaceholder />
+        <KeynotePlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -82,7 +84,7 @@ const ObjectPreview = ({ file, ...props }) => {
     const tag = Utilities.getFileExtension(file.filename) || "code";
     return (
       <PlaceholderWrapper tag={tag} file={file} {...props}>
-        <CodePlaceholder />
+        <CodePlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
@@ -98,14 +100,14 @@ const ObjectPreview = ({ file, ...props }) => {
   if (Validations.is3dFile(file.filename)) {
     return (
       <PlaceholderWrapper tag="3d" file={file} {...props}>
-        <Object3DPlaceholder />
+        <Object3DPlaceholder ratio={PLACEHOLDER_RATIO} />
       </PlaceholderWrapper>
     );
   }
 
   return (
     <PlaceholderWrapper tag="file" file={file} {...props}>
-      <FilePlaceholder />
+      <FilePlaceholder ratio={PLACEHOLDER_RATIO} />
     </PlaceholderWrapper>
   );
 };

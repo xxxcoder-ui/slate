@@ -13,6 +13,7 @@ import KeynotePlaceholder from "./Keynote";
 import Object3DPlaceholder from "./3D";
 import FilePlaceholder from "./File";
 import VideoPlaceholder from "./Video";
+import LinkPlaceholder from "./Link";
 
 const STYLES_PLACEHOLDER_CONTAINER = (theme) => css`
   position: relative;
@@ -39,8 +40,11 @@ const STYLES_TAG = (theme) => css`
 `;
 
 const PlaceholderPrimitive = ({ file, ratio }) => {
-  const { type } = file.data;
+  const { type, link } = file.data;
 
+  if (link) {
+    return <LinkPlaceholder ratio={ratio} />;
+  }
   if (type.startsWith("video/")) {
     return <VideoPlaceholder ratio={ratio} />;
   }

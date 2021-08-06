@@ -1,11 +1,13 @@
 import * as React from "react";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { H5, P3 } from "~/components/system/components/Typography";
+import { H5, P2, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
 // import { useLikeHandler, useSaveHandler } from "~/common/hooks";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useMounted } from "~/common/hooks";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -13,7 +15,7 @@ const STYLES_WRAPPER = (theme) => css`
   position: relative;
   background-color: ${theme.semantic.bgLight};
   transition: box-shadow 0.2s;
-  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
+  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.card};
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -21,14 +23,10 @@ const STYLES_WRAPPER = (theme) => css`
 
 const STYLES_DESCRIPTION = (theme) => css`
   position: relative;
-  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
   border-radius: 0px 0px 16px 16px;
   box-sizing: border-box;
   width: 100%;
   background-color: ${theme.semantic.bgLight};
-  border-radius: 16px;
-  height: calc(170px + 61px);
-  padding: 9px 16px 8px;
   z-index: 1;
 
   @media (max-width: ${theme.sizes.mobile}px) {
@@ -36,10 +34,28 @@ const STYLES_DESCRIPTION = (theme) => css`
   }
 `;
 
+const STYLES_INNER_DESCRIPTION = (theme) => css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: ${theme.semantic.bgLight};
+  padding: 9px 16px 0px;
+  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
+`;
+
+const STYLES_TAG = css`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  padding: 4px 16px 8px;
+`;
+
 const STYLES_PREVIEW = css`
   overflow: hidden;
   position: relative;
   bottom: 0.5px;
+  flex-grow: 1;
 `;
 
 const STYLES_SELECTED_RING = (theme) => css`
@@ -71,7 +87,6 @@ export default function ObjectPreviewPrimitive({
   isImage,
   onAction,
 }) {
-  const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription();
   // const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
   // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
   // const showSaveButton = viewer?.id !== file?.ownerId;
@@ -80,7 +95,20 @@ export default function ObjectPreviewPrimitive({
   // const showControls = () => setShowControls(true);
   // const hideControls = () => setShowControls(false);
 
-  const body = file?.data?.body;
+  const description = file?.data?.body;
+  const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
+    disabled: !description,
+  });
+
+  const extendedDescriptionRef = React.useRef();
+  const descriptionRef = React.useRef();
+
+  const animationController = useAnimateDescription({
+    extendedDescriptionRef: extendedDescriptionRef,
+    descriptionRef: descriptionRef,
+    isDescriptionVisible,
+  });
+
   const { isLink } = file;
 
   const title = file.data.name || file.filename;
@@ -99,11 +127,13 @@ export default function ObjectPreviewPrimitive({
 
   return (
     <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
-      <div
-        css={STYLES_PREVIEW}
-        //  onMouseEnter={showControls} onMouseLeave={hideControls}
-      >
-        {/* <AnimatePresence>
+      <AspectRatio ratio={248 / 248}>
+        <div css={Styles.VERTICAL_CONTAINER}>
+          <div
+            css={STYLES_PREVIEW}
+            //  onMouseEnter={showControls} onMouseLeave={hideControls}
+          >
+            {/* <AnimatePresence>
           {areControlsVisible && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -118,63 +148,150 @@ export default function ObjectPreviewPrimitive({
             </motion.div>
           )}
         </AnimatePresence> */}
-        <AspectRatio ratio={248 / 248}>
-          <div>{children}</div>
-        </AspectRatio>
-      </div>
-      <div style={{ maxHeight: 61 }}>
-        <motion.article
-          css={STYLES_DESCRIPTION}
-          onMouseMove={showDescription}
-          onMouseLeave={hideDescription}
-          initial={{ y: 0 }}
-          animate={{
-            y: isDescriptionVisible ? -170 : 0,
-            borderRadius: isDescriptionVisible ? "16px" : "0px",
-          }}
-          transition={{ type: "spring", stiffness: 170, damping: 26 }}
-        >
-          <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
-            {title}
-          </H5>
-          <div style={{ marginTop: 3, display: "flex" }}>
-            {typeof tag === "string" ? (
-              <P3 as="small" css={STYLES_UPPERCASE} color="textGray">
-                {tag}
-              </P3>
-            ) : (
-              tag
-            )}
+            {children}
           </div>
-          <H5
-            as={motion.p}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isDescriptionVisible ? 1 : 0 }}
-            style={{ marginTop: 5 }}
-            nbrOflines={8}
-            color="textGrayDark"
+
+          <motion.article
+            css={STYLES_DESCRIPTION}
+            onMouseMove={showDescription}
+            onMouseLeave={hideDescription}
           >
-            {body || ""}
-          </H5>
-        </motion.article>
-      </div>
+            <div style={{ position: "relative", paddingTop: 9 }}>
+              <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
+                {title}
+              </H5>
+
+              <div ref={descriptionRef}>
+                <P3
+                  style={{ paddingTop: 3, visibility: "hidden" }}
+                  nbrOflines={1}
+                  color="textGrayDark"
+                >
+                  {description}
+                </P3>
+              </div>
+
+              <motion.div
+                css={STYLES_INNER_DESCRIPTION}
+                initial={false}
+                animate={isDescriptionVisible ? "hovered" : "initial"}
+                variants={animationController.containerVariants}
+              >
+                <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
+                  {title}
+                </H5>
+                {!isDescriptionVisible && (
+                  <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
+                    {description}
+                  </P3>
+                )}
+                {description && (
+                  <div ref={extendedDescriptionRef}>
+                    <P2
+                      as={motion.p}
+                      style={{ paddingTop: 3 }}
+                      nbrOflines={7}
+                      initial={{ opacity: 0 }}
+                      color="textGrayDark"
+                      animate={animationController.descriptionControls}
+                    >
+                      {description}
+                    </P2>
+                  </div>
+                )}
+              </motion.div>
+            </div>
+
+            <TagComponent tag={tag} />
+          </motion.article>
+        </div>
+      </AspectRatio>
     </div>
   );
 }
 
-const useShowDescription = () => {
+const TagComponent = ({ tag }) => (
+  <div css={STYLES_TAG}>
+    {typeof tag === "string" ? (
+      <P3 as="small" css={STYLES_UPPERCASE} color="textGray">
+        {tag}
+      </P3>
+    ) : (
+      tag
+    )}
+  </div>
+);
+
+const useShowDescription = ({ disabled }) => {
   const [isDescriptionVisible, setShowDescription] = React.useState(false);
   const timeoutId = React.useRef();
 
   const showDescription = () => {
+    if (disabled) return;
+
     clearTimeout(timeoutId.current);
     const id = setTimeout(() => setShowDescription(true), 250);
     timeoutId.current = id;
   };
   const hideDescription = () => {
+    if (disabled) return;
+
     clearTimeout(timeoutId.current);
     setShowDescription(false);
   };
 
   return { isDescriptionVisible, showDescription, hideDescription };
+};
+
+const useAnimateDescription = ({
+  extendedDescriptionRef,
+  descriptionRef,
+  isDescriptionVisible,
+}) => {
+  const descriptionHeights = React.useRef({
+    extended: 0,
+    static: 0,
+  });
+
+  React.useEffect(() => {
+    const extendedDescriptionElement = extendedDescriptionRef.current;
+    const descriptionElement = descriptionRef.current;
+    if (descriptionElement && extendedDescriptionElement) {
+      descriptionHeights.current.static = descriptionElement.offsetHeight;
+      descriptionHeights.current.extended = extendedDescriptionElement.offsetHeight;
+    }
+  }, []);
+
+  const containerVariants = {
+    initial: {
+      borderRadius: "0px",
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 170,
+        damping: 26,
+        delay: 0.3,
+      },
+    },
+    hovered: {
+      borderRadius: "16px",
+      y: -descriptionHeights.current.extended + descriptionHeights.current.static,
+      transition: {
+        type: "spring",
+        stiffness: 170,
+        damping: 26,
+      },
+    },
+  };
+  const descriptionControls = useAnimation();
+
+  useMounted(() => {
+    if (isDescriptionVisible) {
+      descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
+      return;
+    }
+    descriptionControls.set({ opacity: 0 });
+  }, [isDescriptionVisible]);
+
+  return { containerVariants, descriptionControls };
 };

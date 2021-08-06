@@ -5,7 +5,7 @@ import * as Events from "~/common/custom-events";
 
 export const useMounted = (callback, depedencies) => {
   const mountedRef = React.useRef(false);
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (mountedRef.current && callback) {
       callback();
     }
@@ -230,7 +230,7 @@ export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
   const onIntersectRef = React.useRef();
   onIntersectRef.current = onIntersect;
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!ref.current) return;
     const lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -404,3 +404,10 @@ export function useMemoCompare(next, compare) {
 
   return isEqual ? previous : next;
 }
+
+/**
+ * NOTE(amine): use this hook to get rid of nextJs warnings
+ * source: https://medium.com/@alexandereardon/uselayouteffect-and-ssr-192986cdcf7a
+ */
+export const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;

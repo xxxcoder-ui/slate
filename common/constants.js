@@ -127,6 +127,7 @@ export const shadow = {
   darkSmall: "0px 4px 16px 0 rgba(99, 101, 102, 0.1)",
   darkMedium: "0px 8px 32px 0 rgba(99, 101, 102, 0.2)",
   darkLarge: "0px 12px 64px 0 rgba(99, 101, 102, 0.3)",
+  card: "0px 0px 32px #E5E8EA;",
 };
 
 export const zindex = {
@@ -204,12 +205,12 @@ export const grids = {
     },
   },
   object: {
-    desktop: { width: 248, rowGap: 16 },
-    mobile: { width: 166, rowGap: 8 },
+    desktop: { width: 248, rowGap: 20 },
+    mobile: { width: 166, rowGap: 12 },
   },
   collection: {
-    desktop: { width: 432, rowGap: 16 },
-    mobile: { width: 300, rowGap: 8 },
+    desktop: { width: 382, rowGap: 16 },
+    mobile: { width: 280, rowGap: 8 },
   },
   profile: {
     desktop: { width: 248, rowGap: 16 },
