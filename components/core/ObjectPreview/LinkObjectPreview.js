@@ -20,6 +20,18 @@ const STYLES_PLACEHOLDER_CONTAINER = css`
   ${Styles.CONTAINER_CENTERED}
 `;
 
+const STYLES_SOURCE = css`
+  transition: color 0.4s;
+  max-width: 80%;
+`;
+
+const STYLES_LINK = (theme) => css`
+  ${Styles.LINK}
+  :hover small {
+    color: ${theme.semantic.textGrayDark};
+  }
+`;
+
 const STYLES_TAG_CONTAINER = (theme) => css`
   color: ${theme.semantic.textGrayLight};
   svg {
@@ -61,7 +73,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
 
   const tag = (
     <a
-      css={Styles.LINK}
+      css={STYLES_LINK}
       href={file.url}
       target="_blank"
       rel="noreferrer"
@@ -77,7 +89,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
             css={STYLES_SOURCE_LOGO}
           />
         )}
-        <P3 as="small" color="textGray" nbrOflines={1}>
+        <P3 css={STYLES_SOURCE} as="small" color="textGray" nbrOflines={1}>
           {link.source}
         </P3>
         <SVG.ExternalLink height={12} width={12} style={{ marginLeft: 4 }} />
