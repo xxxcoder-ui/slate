@@ -1,11 +1,13 @@
 import * as React from "react";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { H5, P2, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
 // import { useLikeHandler, useSaveHandler } from "~/common/hooks";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useMounted } from "~/common/hooks";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -53,6 +55,7 @@ const STYLES_PREVIEW = css`
   overflow: hidden;
   position: relative;
   bottom: 0.5px;
+  flex-grow: 1;
 `;
 
 const STYLES_SELECTED_RING = (theme) => css`
@@ -97,14 +100,14 @@ export default function ObjectPreviewPrimitive({
     disabled: !description,
   });
 
+  const extendedDescriptionRef = React.useRef();
   const descriptionRef = React.useRef();
-  const descriptionHeight = React.useRef();
-  React.useEffect(() => {
-    const element = descriptionRef.current;
-    if (element) {
-      descriptionHeight.current = element.offsetHeight;
-    }
-  }, []);
+
+  const animationController = useAnimateDescription({
+    extendedDescriptionRef: extendedDescriptionRef,
+    descriptionRef: descriptionRef,
+    isDescriptionVisible,
+  });
 
   const { isLink } = file;
 
@@ -124,11 +127,13 @@ export default function ObjectPreviewPrimitive({
 
   return (
     <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
-      <div
-        css={STYLES_PREVIEW}
-        //  onMouseEnter={showControls} onMouseLeave={hideControls}
-      >
-        {/* <AnimatePresence>
+      <AspectRatio ratio={248 / 248}>
+        <div css={Styles.VERTICAL_CONTAINER}>
+          <div
+            css={STYLES_PREVIEW}
+            //  onMouseEnter={showControls} onMouseLeave={hideControls}
+          >
+            {/* <AnimatePresence>
           {areControlsVisible && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -143,58 +148,64 @@ export default function ObjectPreviewPrimitive({
             </motion.div>
           )}
         </AnimatePresence> */}
-        <AspectRatio ratio={192 / 248}>
-          <div>{children}</div>
-        </AspectRatio>
-      </div>
+            {children}
+          </div>
 
-      <motion.article
-        css={STYLES_DESCRIPTION}
-        onMouseMove={showDescription}
-        onMouseLeave={hideDescription}
-      >
-        <div style={{ position: "relative", paddingTop: 9 }}>
-          <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
-            {title}
-          </H5>
-
-          <motion.div
-            css={STYLES_INNER_DESCRIPTION}
-            initial={false}
-            animate={{
-              y: isDescriptionVisible ? -descriptionHeight.current : 0,
-              borderRadius: isDescriptionVisible ? "16px" : "0px",
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 170,
-              damping: 26,
-              delay: isDescriptionVisible ? 0 : 0.3,
-            }}
+          <motion.article
+            css={STYLES_DESCRIPTION}
+            onMouseMove={showDescription}
+            onMouseLeave={hideDescription}
           >
-            <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
-              {title}
-            </H5>
-            {description && (
+            <div style={{ position: "relative", paddingTop: 9 }}>
+              <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
+                {title}
+              </H5>
+
               <div ref={descriptionRef}>
-                <P2
-                  as={motion.p}
-                  style={{ paddingTop: 3 }}
-                  nbrOflines={7}
+                <P3
+                  style={{ paddingTop: 3, visibility: "hidden" }}
+                  nbrOflines={1}
                   color="textGrayDark"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isDescriptionVisible ? 1 : 0 }}
-                  transition={{ duration: 0.3, delay: isDescriptionVisible ? 0.2 : 0 }}
                 >
                   {description}
-                </P2>
+                </P3>
               </div>
-            )}
-          </motion.div>
-        </div>
 
-        <TagComponent tag={tag} />
-      </motion.article>
+              <motion.div
+                css={STYLES_INNER_DESCRIPTION}
+                initial={false}
+                animate={isDescriptionVisible ? "hovered" : "initial"}
+                variants={animationController.containerVariants}
+              >
+                <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
+                  {title}
+                </H5>
+                {!isDescriptionVisible && (
+                  <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
+                    {description}
+                  </P3>
+                )}
+                {description && (
+                  <div ref={extendedDescriptionRef}>
+                    <P2
+                      as={motion.p}
+                      style={{ paddingTop: 3 }}
+                      nbrOflines={7}
+                      initial={{ opacity: 0 }}
+                      color="textGrayDark"
+                      animate={animationController.descriptionControls}
+                    >
+                      {description}
+                    </P2>
+                  </div>
+                )}
+              </motion.div>
+            </div>
+
+            <TagComponent tag={tag} />
+          </motion.article>
+        </div>
+      </AspectRatio>
     </div>
   );
 }
@@ -230,4 +241,57 @@ const useShowDescription = ({ disabled }) => {
   };
 
   return { isDescriptionVisible, showDescription, hideDescription };
+};
+
+const useAnimateDescription = ({
+  extendedDescriptionRef,
+  descriptionRef,
+  isDescriptionVisible,
+}) => {
+  const descriptionHeights = React.useRef({
+    extended: 0,
+    static: 0,
+  });
+
+  React.useEffect(() => {
+    const extendedDescriptionElement = extendedDescriptionRef.current;
+    const descriptionElement = descriptionRef.current;
+    if (descriptionElement && extendedDescriptionElement) {
+      descriptionHeights.current.static = descriptionElement.offsetHeight;
+      descriptionHeights.current.extended = extendedDescriptionElement.offsetHeight;
+    }
+  }, []);
+
+  const containerVariants = {
+    initial: {
+      borderRadius: "0px",
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 170,
+        damping: 26,
+        delay: 0.3,
+      },
+    },
+    hovered: {
+      borderRadius: "16px",
+      y: -descriptionHeights.current.extended + descriptionHeights.current.static,
+      transition: {
+        type: "spring",
+        stiffness: 170,
+        damping: 26,
+      },
+    },
+  };
+  const descriptionControls = useAnimation();
+
+  useMounted(() => {
+    if (isDescriptionVisible) {
+      descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
+      return;
+    }
+    descriptionControls.set({ opacity: 0 });
+  }, [isDescriptionVisible]);
+
+  return { containerVariants, descriptionControls };
 };
