@@ -230,7 +230,7 @@ const useShowDescription = ({ disabled }) => {
     if (disabled) return;
 
     clearTimeout(timeoutId.current);
-    const id = setTimeout(() => setShowDescription(true), 250);
+    const id = setTimeout(() => setShowDescription(true), 200);
     timeoutId.current = id;
   };
   const hideDescription = () => {
@@ -270,7 +270,6 @@ const useAnimateDescription = ({
         type: "spring",
         stiffness: 170,
         damping: 26,
-        delay: 0.3,
       },
     },
     hovered: {

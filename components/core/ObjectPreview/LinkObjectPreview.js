@@ -26,6 +26,8 @@ const STYLES_SOURCE = css`
 `;
 
 const STYLES_LINK = (theme) => css`
+  display: block;
+  width: 100%;
   ${Styles.LINK}
   :hover small {
     color: ${theme.semantic.textGrayDark};
