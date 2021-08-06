@@ -99,6 +99,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
   const { fileCount } = collection;
+  const title = collection?.data?.name || collection.slatename;
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -126,7 +127,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
           >
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 nbrOflines={1} style={{ visibility: "hidden" }}>
-                {collection.slatename}
+                {title}
               </H5>
 
               <div ref={descriptionRef}>
@@ -145,8 +146,8 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 animate={isDescriptionVisible ? "hovered" : "initial"}
                 variants={animationController.containerVariants}
               >
-                <H5 color="textBlack" nbrOflines={1} title={collection.slatename}>
-                  {collection.slatename}
+                <H5 color="textBlack" nbrOflines={1} title={title}>
+                  {title}
                 </H5>
                 {!isDescriptionVisible && (
                   <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
