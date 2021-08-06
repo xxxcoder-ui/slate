@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
+import * as Constants from "~/common/constants";
 
 import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
@@ -36,6 +37,28 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
     data: { link },
   } = file;
 
+  const [imgState, setImgState] = React.useState({
+    isLoaded: false,
+    show: false,
+  });
+
+  React.useEffect(() => {
+    if (!link.image) setImgState({ show: false, isLoaded: true });
+
+    const img = new Image();
+    img.src = link.image;
+    img.onload = () => {
+      if (img.naturalWidth < Constants.grids.object.desktop.width) {
+        setImgState({ isLoaded: true, show: false });
+      } else {
+        setImgState({ isLoaded: true, show: true });
+      }
+    };
+    img.onerror = () => {
+      setImgState({ isLoaded: true, show: true });
+    };
+  }, []);
+
   const tag = (
     <a
       css={Styles.LINK}
@@ -64,13 +87,14 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
 
   return (
     <ObjectPreviewPrimitive file={file} tag={tag} {...props}>
-      {link.image ? (
-        <img src={link.image} alt="Link preview" css={Styles.IMAGE_FILL} />
-      ) : (
-        <div css={STYLES_PLACEHOLDER_CONTAINER}>
-          <LinkPlaceholder ratio={ratio} />
-        </div>
-      )}
+      {imgState.isLoaded &&
+        (imgState.show ? (
+          <img src={link.image} alt="Link preview" css={Styles.IMAGE_FILL} />
+        ) : (
+          <div css={STYLES_PLACEHOLDER_CONTAINER}>
+            <LinkPlaceholder ratio={ratio} />
+          </div>
+        ))}
     </ObjectPreviewPrimitive>
   );
 }
