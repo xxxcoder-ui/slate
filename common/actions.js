@@ -404,14 +404,6 @@ export const updateFile = async (data) => {
   });
 };
 
-export const toggleFilePrivacy = async (data) => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/toggle-privacy`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 export const deleteFiles = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/delete`, {

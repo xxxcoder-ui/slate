@@ -16,7 +16,6 @@ export default async (req, res) => {
   //NOTE(martina): cleans the input to remove fields they should not be changing like ownerId, createdAt, filename, size, type etc.
   let updates = {
     id: req.body.data.id,
-    isPublic: req.body.data.isPublic,
     data: {
       name: req.body.data.data?.name,
       body: req.body.data.data?.body,
@@ -32,24 +31,6 @@ export default async (req, res) => {
       decorator: "NOT_FILE_OWNER_UPDATE_NOT_PERMITTED",
       error: true,
     });
-  }
-
-  if (typeof updates.isPublic !== "undefined" && updates.isPublic !== file.isPublic) {
-    let response = await Data.updateFilePrivacy({
-      ownerId: file.ownerId,
-      id: updates.id,
-      isPublic: updates.isPublic,
-    });
-
-    if (!response || response.error) {
-      return res.status(500).send({ decorator: "UPDATE_FILE_PRIVACY_FAILED", error: true });
-    }
-
-    if (response.isPublic) {
-      SearchManager.updateFile(response, "ADD");
-    } else {
-      SearchManager.updateFile(response, "REMOVE");
-    }
   }
 
   let response = await Data.updateFileById(updates);
