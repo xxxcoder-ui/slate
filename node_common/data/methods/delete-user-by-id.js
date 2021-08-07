@@ -35,13 +35,6 @@ export default async ({ id }) => {
 
       const usage = await DB.from("usage").where("userId", id).del();
 
-      const likes = await DB.from("likes").where({ userId: id }).del().returning("fileId");
-
-      if (likes) {
-        // const fileIds = likes.map((like) => like.fileId);
-        const summaryQuery = await DB.from("files").whereIn("id", likes).decrement("likeCount", 1);
-      }
-
       const data = await DB.from("users").where({ id }).del();
 
       return 1 === data;

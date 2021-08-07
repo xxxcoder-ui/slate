@@ -28,13 +28,6 @@ import updateFileById from "~/node_common/data/methods/update-file-by-id";
 import incrementFileSavecount from "~/node_common/data/methods/increment-file-savecount";
 import recalcFilePrivacy from "~/node_common/data/methods/recalc-file-privacy";
 
-// NOTE(martina):
-// Like postgres queries
-import createLike from "~/node_common/data/methods/create-like";
-import deleteLikeByFile from "~/node_common/data/methods/delete-like-by-file";
-import getLikeByFile from "~/node_common/data/methods/get-like-by-file";
-import getLikesByUserId from "~/node_common/data/methods/get-likes-by-user-id";
-
 //NOTE(martina):
 // Slate file postgres queries
 import createSlateFiles from "~/node_common/data/methods/create-slate-files";
@@ -122,11 +115,6 @@ export {
   updateFileById,
   incrementFileSavecount,
   recalcFilePrivacy,
-  // NOTE(martina): Like postgres queries
-  createLike,
-  deleteLikeByFile,
-  getLikeByFile,
-  getLikesByUserId,
   // NOTE(martina): Slate file operations
   createSlateFiles,
   deleteSlateFiles,

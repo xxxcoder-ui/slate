@@ -40,12 +40,10 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers =
-    (events = []) =>
-    (e) =>
-      events.forEach((event) => {
-        if (event) event(e);
-      });
+  const _mergeEventHandlers = (events = []) => (e) =>
+    events.forEach((event) => {
+      if (event) event(e);
+    });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -165,12 +163,10 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers =
-    (events = []) =>
-    (e) =>
-      events.forEach((event) => {
-        if (event) event(e);
-      });
+  const _mergeEventHandlers = (events = []) => (e) =>
+    events.forEach((event) => {
+      if (event) event(e);
+    });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -256,47 +252,6 @@ export const useInView = ({ ref }) => {
     },
   });
   return { isInView };
-};
-
-// NOTE(amine): manage like state
-export const useLikeHandler = ({ file, viewer }) => {
-  const likedFile = React.useMemo(() => viewer?.likes?.find((item) => item.id === file.id), []);
-  const [state, setState] = React.useState({
-    isLiked: !!likedFile,
-    // NOTE(amine): viewer will have the hydrated state
-    likeCount: likedFile?.likeCount ?? file.likeCount,
-  });
-
-  const handleLikeState = () => {
-    setState((prev) => {
-      if (prev.isLiked) {
-        return {
-          isLiked: false,
-          likeCount: prev.likeCount - 1,
-        };
-      }
-      return {
-        isLiked: true,
-        likeCount: prev.likeCount + 1,
-      };
-    });
-  };
-  const like = async () => {
-    if (!viewer) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-    // NOTE(amine): optimistic update
-    handleLikeState();
-    const response = await Actions.like({ id: file.id });
-    if (Events.hasError(response)) {
-      // NOTE(amine): revert back to old state if there is an error
-      handleLikeState();
-      return;
-    }
-  };
-
-  return { like, ...state };
 };
 
 // NOTE(amine): manage file saving state

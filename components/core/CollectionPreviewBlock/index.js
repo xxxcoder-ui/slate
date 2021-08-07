@@ -98,7 +98,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
-  const { fileCount } = collection;
+  const fileCount = collection.objects.length;
 
   return (
     <div css={STYLES_CONTAINER}>

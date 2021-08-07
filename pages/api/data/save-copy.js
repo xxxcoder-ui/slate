@@ -57,7 +57,7 @@ export default async (req, res) => {
 
   filteredFiles = filteredFiles
     .filter((file) => foundCids.includes(file.cid)) //NOTE(martina): make sure the file being copied exists
-    .map(({ createdAt, likeCount, downloadCount, saveCount, ...keepAttrs }) => {
+    .map(({ createdAt, downloadCount, saveCount, ...keepAttrs }) => {
       //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
       return { ...keepAttrs, isPublic: slate?.isPublic || false };
     });

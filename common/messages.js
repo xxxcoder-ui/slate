@@ -61,14 +61,6 @@ export const error = {
   SERVER_EDIT_DATA_NO_FILE: "We ran into issues while editing a file. No file was provided",
   SERVER_EDIT_DATA_FAILED: "We're having trouble updating that file right now",
 
-  //Like file
-  SERVER_LIKE_FILE_NO_FILE_PROVIDED:
-    "We are having trouble finding that file right now. Please try again later",
-  SERVER_LIKE_FILE_CHECK_ERROR:
-    "We are having trouble determining whether you've already favorited that file yet. Please try again later",
-  SERVER_UNLIKE_FILE_FAILED: "We are having trouble unfavoriting that file right now",
-  SERVER_LIKE_FILE_FAILED: "We weren't able to favorite that file. Please try again later",
-
   //Delete api key
   SERVER_DELETE_API_KEY_NOT_FOUND:
     "We weren't able to locate that API key. It may have already been deleted",

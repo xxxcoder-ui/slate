@@ -34,8 +34,6 @@ export default async ({ ids, ownerId }) => {
 
       const activity = await DB("activity").whereIn("fileId", ids).del();
 
-      const likes = await DB("likes").whereIn("fileId", ids).del();
-
       const files = await DB("files").whereIn("id", ids).del().returning("*");
 
       const publicCount = Arrays.countPublic(files);

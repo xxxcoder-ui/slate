@@ -64,7 +64,6 @@ export const sanitizeFile = (entity) => {
       unity: entity.data?.unity, //NOTE(martina): newly added
       link: entity.data?.link, //NOTE(martina): newly added
     },
-    likeCount: entity.likeCount,
     downloadCount: entity.downloadCount,
     saveCount: entity.saveCount,
     isLink: entity.isLink,
@@ -192,7 +191,6 @@ export const fileProperties = [
   "files.filename",
   "files.data",
   "files.createdAt",
-  "files.likeCount",
   "files.downloadCount",
   "files.saveCount",
   "files.isLink",

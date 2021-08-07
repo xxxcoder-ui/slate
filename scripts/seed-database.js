@@ -69,7 +69,6 @@ const createFilesTable = db.schema.createTable("files", function (table) {
   table.string("filename").nullable();
   table.boolean("isPublic").notNullable().defaultTo(false);
   table.jsonb("data").nullable();
-  table.integer("likeCount").notNullable().defaultTo(0);
   table.integer("downloadCount").notNullable().defaultTo(0);
   table.string("url").nullable();
   table.boolean("isLink").notNullable().defaultTo(false);
@@ -100,13 +99,6 @@ const createActivityTable = db.schema.createTable("activity", function (table) {
   table.string("type");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
   table.boolean("ignore").notNullable().defaultTo(false);
-});
-
-const createLikesTable = db.schema.createTable("likes", function (table) {
-  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.uuid("userId").references("id").inTable("users");
-  table.uuid("fileId").references("id").inTable("files");
-  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
 const createStatsTable = db.schema.createTable("stats", function (table) {
@@ -173,7 +165,6 @@ Promise.all([
   createKeysTable,
   createFilesTable,
   createSlateFilesTable,
-  createLikesTable,
   createSubscriptionsTable,
   createActivityTable,
   createStatsTable,

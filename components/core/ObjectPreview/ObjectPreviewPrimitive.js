@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { H5, P2, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
-// import { useLikeHandler, useSaveHandler } from "~/common/hooks";
+// import { useSaveHandler } from "~/common/hooks";
 import { motion, useAnimation } from "framer-motion";
 import { useMounted } from "~/common/hooks";
 
@@ -87,7 +87,6 @@ export default function ObjectPreviewPrimitive({
   isImage,
   onAction,
 }) {
-  // const { like, isLiked, likeCount } = useLikeHandler({ file, viewer });
   // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
   // const showSaveButton = viewer?.id !== file?.ownerId;
 
