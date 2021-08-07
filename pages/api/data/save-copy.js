@@ -108,6 +108,7 @@ export default async (req, res) => {
   }
 
   if (slate?.isPublic) {
+    Utilities.addToPublicCollectionUpdatePrivacy({ files: filesToAddToSlate });
     SearchManager.updateFile(createdFiles, "ADD");
   }
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
