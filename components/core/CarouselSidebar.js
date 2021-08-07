@@ -518,51 +518,6 @@ class CarouselSidebar extends React.Component {
     this.props.onNext();
   };
 
-  _handleToggleVisibility = async (e) => {
-    if (this.props.external || !this.props.isOwner || !this.props.viewer) return;
-    const isPublic = this.props.file.isPublic;
-    const slateIsPublic = this.props.data?.isPublic;
-    let selected = cloneDeep(this.state.selected);
-
-    const slateIds = Object.entries(this.state.selected)
-      .filter((entry) => entry[1])
-      .map((entry) => entry[0]);
-    const publicSlateIds = [];
-    const publicSlateNames = [];
-    for (let slate of this.props.viewer.slates) {
-      if (slate.isPublic && slateIds.includes(slate.id)) {
-        publicSlateNames.push(slate.data.name);
-        publicSlateIds.push(slate.id);
-        selected[slate.id] = false;
-      }
-    }
-    if (publicSlateNames.length) {
-      const slateNames = publicSlateNames.join(", ");
-      const message = `Making this file link-viewing only will remove it from the following public collections: ${slateNames}. Do you wish to continue?`;
-      if (!window.confirm(message)) {
-        return;
-      }
-    }
-
-    if (this.props.carouselType === "SLATE" && slateIsPublic) {
-      const slateId = this.props.data.id;
-      let slates = cloneDeep(this.props.viewer.slates);
-      for (let slate of slates) {
-        if (slate.id === slateId) {
-          slate.objects = slate.objects.filter((obj) => obj.id !== this.props.file.id);
-          break;
-        }
-      }
-      this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
-    }
-
-    let response = await Actions.toggleFilePrivacy({ ...this.props.file, isPublic: !isPublic });
-    Events.hasError(response);
-    if (isPublic) {
-      this.setState({ selected });
-    }
-  };
-
   render() {
     const isPublic = this.props.file.isPublic;
     const file = this.props.file;
@@ -822,74 +777,6 @@ class CarouselSidebar extends React.Component {
       );
     }
 
-    let privacy;
-    if (editingAllowed) {
-      privacy = (
-        <div>
-          <System.P1 css={STYLES_SECTION_HEADER} style={{ marginBottom: 12 }}>
-            Visibility
-          </System.P1>
-          <System.P1
-            css={STYLES_TEXT}
-            style={{
-              marginTop: 12,
-            }}
-          >
-            {isPublic
-              ? `This ${
-                  isLink ? "link" : "file"
-                } is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore.`
-              : isLink
-              ? "This link is only visible to you"
-              : "This file is only visible to those with the link."}
-          </System.P1>
-          <RadioGroup
-            name="isPublic"
-            options={[
-              {
-                value: true,
-                label: (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <SVG.Globe height="16px" style={{ marginRight: 8 }} />
-                    Public
-                  </div>
-                ),
-              },
-              {
-                value: false,
-                label: (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <SVG.SecurityLock height="16px" style={{ marginRight: 8 }} />
-                    Link-viewing only
-                  </div>
-                ),
-              },
-            ]}
-            dark={true}
-            style={{ marginTop: 12 }}
-            labelStyle={{ fontFamily: Constants.font.medium }}
-            selected={isPublic}
-            onChange={this._handleToggleVisibility}
-          />
-          {!isPublic && !isLink && (
-            <Input
-              full
-              value={isLink ? file.data.link.url : Strings.getURLfromCID(file.cid)}
-              name="copyLink"
-              readOnly
-              copyable
-              style={{
-                fontSize: Constants.typescale.lvl1,
-                ...STYLES_INPUT,
-                marginTop: 12,
-              }}
-              textStyle={{ color: Constants.system.white }}
-            />
-          )}
-        </div>
-      );
-    }
-
     return (
       <>
         {this.state.modalShow && (
@@ -913,7 +800,6 @@ class CarouselSidebar extends React.Component {
           </div>
           {elements}
           <div css={STYLES_ACTIONS}>{actions}</div>
-          {privacy}
           {uploadCoverImage}
           {!this.props.external && this.props.viewer && (
             <>
@@ -967,20 +853,3 @@ class CarouselSidebar extends React.Component {
 }
 
 export default withTheme(CarouselSidebar);
-
-{
-  /* <>
-              <div css={STYLES_SECTION_HEADER} style={{ margin: "48px 0px 8px 0px" }}>
-                Visibility
-              </div>
-              <div css={STYLES_OPTIONS_SECTION}>
-                <div css={STYLES_TEXT}>{isVisible ? "Everyone" : "Link only"}</div>
-                <Toggle dark active={isVisible} onChange={this._handleToggleVisibility} />
-              </div>
-              <div style={{ color: Constants.system.grayLight2, marginTop: 8 }}>
-                {isVisible
-                  ? "This file is currently visible to everyone and searchable within Slate. It may appear in activity feeds and explore."
-                  : "This file is currently not visible to others unless they have the link."}
-              </div>
-            </> */
-}

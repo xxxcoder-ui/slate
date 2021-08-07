@@ -35,20 +35,7 @@ export default async (req, res) => {
   SearchManager.updateSlate(slate, "REMOVE");
 
   if (slate.isPublic) {
-    //NOTE(martina): if any of the files in it are now private (because they are no longer in any public slates) remove them from search
-    const files = slate.objects;
-
-    const publicFiles = await Data.getFilesByIds({
-      ids: files.map((file) => file.id),
-      publicOnly: true,
-    });
-    const publicIds = publicFiles.map((file) => file.id);
-
-    let privateFiles = files.filter((file) => !publicIds.includes(file.id));
-
-    if (privateFiles.length) {
-      SearchManager.updateFile(privateFiles, "REMOVE");
-    }
+    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
   }
 
   return res.status(200).send({ decorator: "SERVER_DELETE_SLATE", error: false });

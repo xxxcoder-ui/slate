@@ -319,7 +319,6 @@ app.prepare().then(async () => {
 
     let user = await Data.getUserByUsername({
       username,
-      includeFiles: true,
       sanitize: true,
       publicOnly: true,
     });

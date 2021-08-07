@@ -210,8 +210,8 @@ export default class SidebarCreateSlate extends React.Component {
               marginTop: 12,
             }}
           >
-            All collections are public by default. This means they can be discovered and seen by
-            anyone on the internet. If you make it private, only you will be able to see it.
+            Public collections can be discovered and seen by anyone on the internet. If you make it
+            private, only you will be able to see it.
           </System.P1>
           <RadioGroup
             name="isPublic"

@@ -6,6 +6,8 @@ import * as Social from "~/node_common/social";
 import * as Logging from "~/common/logging";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
+import * as Arrays from "~/common/arrays";
+import * as SearchManager from "~/node_common/managers/search";
 
 import crypto from "crypto";
 import JWT from "jsonwebtoken";
@@ -284,4 +286,36 @@ export const addToSlate = async ({ slate, files, user, saveCopy = false }) => {
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 
   return { added: response.length };
+};
+
+export const removeFromPublicCollectionUpdatePrivacy = async ({ files }) => {
+  let targetFiles = Arrays.filterPublic(files);
+  let madePrivate = [];
+  for (let file of targetFiles) {
+    let updatedFile = await Data.recalcFilePrivacy({ fileId: file.id });
+    if (!updatedFile) continue;
+    if (file.isPublic && !updatedFile.isPublic) {
+      madePrivate.push(updatedFile);
+    }
+  }
+  if (madePrivate.length) {
+    SearchManager.updateFile(madePrivate, "REMOVE");
+  }
+  return madePrivate;
+};
+
+export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
+  let targetFiles = Arrays.filterPrivate(files);
+  let madePublic = [];
+  for (let file of targetFiles) {
+    let updatedFile = await Data.recalcFilePrivacy({ fileId: file.id });
+    if (!updatedFile) continue;
+    if (!file.isPublic && updatedFile.isPublic) {
+      madePublic.push(updatedFile);
+    }
+  }
+  if (madePublic.length) {
+    SearchManager.updateFile(madePublic, "ADD");
+  }
+  return madePublic;
 };

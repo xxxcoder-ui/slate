@@ -20,7 +20,7 @@ export default async (req, res) => {
     });
   }
 
-  const slate = await Data.getSlateById({ id: req.body.data.slateId });
+  const slate = await Data.getSlateById({ id: req.body.data.slateId, includeFiles: true });
 
   if (!slate) {
     return res.status(404).send({
@@ -46,18 +46,7 @@ export default async (req, res) => {
   }
 
   if (slate.isPublic) {
-    const publicFiles = await Data.getFilesByIds({ ids: fileIds, publicOnly: true });
-    const publicIds = publicFiles.map((file) => file.id);
-
-    let privateFiles = fileIds
-      .filter((id) => !publicIds.includes(id))
-      .map((id) => {
-        return { id };
-      });
-
-    if (privateFiles.length) {
-      SearchManager.updateFile(privateFiles, "REMOVE");
-    }
+    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
   }
 
   ViewerManager.hydratePartial(id, { slates: true });
