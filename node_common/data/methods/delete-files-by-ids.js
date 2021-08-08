@@ -36,14 +36,6 @@ export default async ({ ids, ownerId }) => {
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");
 
-      const publicCount = Arrays.countPublic(files);
-
-      if (publicCount) {
-        const summaryQuery = await DB.from("users")
-          .where("id", ownerId)
-          .decrement("fileCount", publicCount);
-      }
-
       return files.length === ids.length;
     },
     errorFn: async (e) => {

@@ -50,7 +50,6 @@ export default async ({ earliestTimestamp, latestTimestamp }) => {
     "users.username",
     "users.data",
     "users.followerCount",
-    "users.fileCount",
     "users.slateCount",
     ...userFilesFields,
     "users",

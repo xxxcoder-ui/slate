@@ -289,7 +289,7 @@ export default class Profile extends React.Component {
   render() {
     let tab = this.props.page.params?.tab;
     let { user, isOwner } = this.props;
-    let { fileCount } = user;
+    let fileCount = user.library?.length || 0;
 
     const showStatusIndicator = this.props.isAuthenticated;
 
@@ -334,12 +334,12 @@ export default class Profile extends React.Component {
                 </div>
               ) : null}
               <div css={STYLES_STATS}>
-                <div css={STYLES_STAT}>
+                {/* <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
                     {fileCount}{" "}
                     <span style={{ color: `${Constants.system.grayLight2}` }}>Files</span>
                   </div>
-                </div>
+                </div> */}
                 <div css={STYLES_STAT}>
                   <div style={{ fontFamily: `${Constants.font.text}` }}>
                     {user.slates?.length || 0}{" "}

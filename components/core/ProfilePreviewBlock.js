@@ -55,12 +55,6 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
         css={Styles.HORIZONTAL_CONTAINER}
         style={{ marginTop: 6, color: Constants.semantic.textGray }}
       >
-        <div css={Styles.HORIZONTAL_CONTAINER}>
-          <SVG.Box />
-          <Typography.P3 color="textGray" style={{ marginLeft: 4 }}>
-            {profile.fileCount} {Strings.pluralize("file", profile.fileCount)}
-          </Typography.P3>
-        </div>
         <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginLeft: 16 }}>
           <SVG.Layers height={16} width={16} />
           <Typography.P3 color="textGray" style={{ marginLeft: 4 }}>

@@ -235,7 +235,6 @@ export const getById = async ({ id }) => {
     subscriptions,
     following,
     followers,
-    likes,
     libraryCids,
   };
 

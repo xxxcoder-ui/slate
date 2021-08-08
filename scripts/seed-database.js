@@ -36,7 +36,6 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.string("salt").nullable();
   table.jsonb("data").nullable();
   table.integer("followerCount").notNullable().defaultTo(0);
-  table.integer("fileCount").notNullable().defaultTo(0);
   table.integer("slateCount").notNullable().defaultTo(0);
   table.integer("authVersion").notNullable().defaultTo(2);
 });

@@ -74,7 +74,6 @@ export default async ({
     "users.username",
     "users.data",
     "users.followerCount",
-    "users.fileCount",
     "users.slateCount",
     ...userFilesFields,
     "users",

@@ -333,7 +333,6 @@ export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
               {
                 id: user.id,
                 data: user.data,
-                fileCount: user.fileCount,
                 followerCount: user.followerCount + 1,
                 slateCount: user.slateCount,
                 username: user.username,
