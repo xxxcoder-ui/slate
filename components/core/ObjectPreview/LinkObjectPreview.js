@@ -21,6 +21,7 @@ const STYLES_SOURCE_LOGO = css`
 `;
 
 const STYLES_PLACEHOLDER_CONTAINER = css`
+  width: 100%;
   height: 100%;
   ${Styles.CONTAINER_CENTERED}
 `;
