@@ -72,6 +72,7 @@ PUBSUB_SECRET=pKLO4lbzdMrhAFKwPo9bnmq03bxQrtu3
 NEXT_PUBLIC_URI_SHOVEL=http://localhost:4242
 NEXT_PUBLIC_URI_FIJI=ws://localhost:6464
 NEXT_PUBLIC_URI_LENS=http://localhost:1313
+NEXT_PUBLIC_NODE_ENV=development
 ```
 
 ### Setup pubsub server
