@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
+import * as Constants from "~/common/constants";
 
 import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
@@ -46,7 +47,7 @@ const STYLES_LINK = (theme) => css`
   }
 `;
 
-const STYLES_IMG_PREVIEW = css`
+const STYLES_SMALL_IMG = css`
   max-width: 100%;
   height: auto;
   object-fit: cover;
@@ -62,8 +63,11 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
     data: { link },
   } = file;
 
-  const previewImgState = useImage(link.image);
-  const faviconImgState = useImage(link.logo);
+  const previewImgState = useImage({
+    src: link.image,
+    maxWidth: Constants.grids.object.desktop.width,
+  });
+  const faviconImgState = useImage({ src: link.logo });
 
   const tag = (
     <a
@@ -107,26 +111,37 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
               <LinkPlaceholder ratio={ratio} />
             </div>
           ) : (
-            <img src={link.image} alt="Link preview" css={STYLES_IMG_PREVIEW} />
+            <img
+              src={link.image}
+              alt="Link preview"
+              css={previewImgState.overflow ? STYLES_SMALL_IMG : Styles.IMAGE_FILL}
+            />
           ))}
       </div>
     </ObjectPreviewPrimitive>
   );
 }
 
-const useImage = (link) => {
+const useImage = ({ src, maxWidth }) => {
   const [imgState, setImgState] = React.useState({
     loaded: false,
     error: true,
+    overflow: false,
   });
 
   React.useEffect(() => {
-    if (!link) setImgState({ error: true, loaded: true });
+    if (!src) setImgState({ error: true, loaded: true });
 
     const img = new Image();
-    img.src = link;
+    img.src = src;
 
-    img.onload = () => setImgState({ loaded: true, error: false });
+    img.onload = () => {
+      if (maxWidth && img.naturalWidth < maxWidth) {
+        setImgState((prev) => ({ ...prev, loaded: true, error: false, overflow: true }));
+      } else {
+        setImgState({ loaded: true, error: false });
+      }
+    };
     img.onerror = () => setImgState({ loaded: true, error: true });
   }, []);
 
