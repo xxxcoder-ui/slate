@@ -7,7 +7,7 @@ import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
 // import { useLikeHandler, useSaveHandler } from "~/common/hooks";
 import { motion, useAnimation } from "framer-motion";
-import { useMounted } from "~/common/hooks";
+import { useMounted, useMediaQuery } from "~/common/hooks";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -28,10 +28,6 @@ const STYLES_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   z-index: 1;
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: 8px;
-  }
 `;
 
 const STYLES_INNER_DESCRIPTION = (theme) => css`
@@ -96,8 +92,9 @@ export default function ObjectPreviewPrimitive({
   // const hideControls = () => setShowControls(false);
 
   const description = file?.data?.body;
+  const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
-    disabled: !description,
+    disabled: !description || media.mobile,
   });
 
   const extendedDescriptionRef = React.useRef();

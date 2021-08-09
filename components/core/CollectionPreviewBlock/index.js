@@ -11,7 +11,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Preview } from "~/components/core/CollectionPreviewBlock/components";
 import { AspectRatio } from "~/components/system";
 import { P3, H5, P2 } from "~/components/system/components/Typography";
-import { useMounted } from "~/common/hooks";
+import { useMediaQuery, useMounted } from "~/common/hooks";
 
 const STYLES_CONTAINER = (theme) => css`
   position: relative;
@@ -83,8 +83,9 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const hideControls = () => setShowControls(false);
 
   const description = collection?.data?.body;
+  const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
-    disabled: !description,
+    disabled: !description || media.mobile,
   });
 
   const extendedDescriptionRef = React.useRef();
@@ -266,7 +267,6 @@ const useAnimateDescription = ({
         type: "spring",
         stiffness: 170,
         damping: 26,
-        delay: 0.3,
       },
     },
     hovered: {
