@@ -151,31 +151,31 @@ export default function ObjectPreviewPrimitive({
             {children}
           </div>
 
-          <motion.article
-            css={STYLES_DESCRIPTION}
-            onMouseMove={showDescription}
-            onMouseLeave={hideDescription}
-          >
+          <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
                 {title}
               </H5>
 
-              <div ref={descriptionRef}>
-                <P3
-                  style={{ paddingTop: 3, visibility: "hidden" }}
-                  nbrOflines={1}
-                  color="textGrayDark"
-                >
-                  {description}
-                </P3>
-              </div>
+              {description && (
+                <div ref={descriptionRef}>
+                  <P3
+                    style={{ paddingTop: 3, visibility: "hidden" }}
+                    nbrOflines={1}
+                    color="textGrayDark"
+                  >
+                    {description}
+                  </P3>
+                </div>
+              )}
 
               <motion.div
                 css={STYLES_INNER_DESCRIPTION}
                 initial={false}
                 animate={isDescriptionVisible ? "hovered" : "initial"}
                 variants={animationController.containerVariants}
+                onMouseMove={showDescription}
+                onMouseLeave={hideDescription}
               >
                 <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
                   {title}
@@ -286,10 +286,11 @@ const useAnimateDescription = ({
 
   useMounted(() => {
     if (isDescriptionVisible) {
-      descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
+      descriptionControls.start({ visibility: "initial", opacity: 1, transition: { delay: 0.2 } });
       return;
     }
-    descriptionControls.set({ opacity: 0 });
+
+    descriptionControls.set({ opacity: 0, visibility: "hidden" });
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };

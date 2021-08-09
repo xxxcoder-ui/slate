@@ -112,7 +112,7 @@ export const P3 = css`
   font-family: ${Constants.font.text};
   font-size: 0.75rem;
   font-weight: normal;
-  line-height: 1.33;
+  line-height: 1.334;
   letter-spacing: 0px;
 
   ${TEXT}
