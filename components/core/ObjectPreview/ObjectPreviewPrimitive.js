@@ -282,12 +282,16 @@ const useAnimateDescription = ({
   const descriptionControls = useAnimation();
 
   useMounted(() => {
+    const extendedDescriptionElement = extendedDescriptionRef.current;
+    if (!extendedDescriptionElement) return;
+
     if (isDescriptionVisible) {
-      descriptionControls.start({ visibility: "initial", opacity: 1, transition: { delay: 0.2 } });
+      extendedDescriptionElement.style.opacity = 1;
+      descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
       return;
     }
 
-    descriptionControls.set({ opacity: 0, visibility: "hidden" });
+    extendedDescriptionElement.style.opacity = 0;
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };
