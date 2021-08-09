@@ -61,6 +61,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
 
     const img = new Image();
     img.src = link.image;
+
     img.onload = () => {
       if (img.naturalWidth < Constants.grids.object.desktop.width) {
         setImgState({ isLoaded: true, show: false });
@@ -68,9 +69,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
         setImgState({ isLoaded: true, show: true });
       }
     };
-    img.onerror = () => {
-      setImgState({ isLoaded: true, show: true });
-    };
+    img.onerror = () => setImgState({ isLoaded: true, show: false });
   }, []);
 
   const tag = (
