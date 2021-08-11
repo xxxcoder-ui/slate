@@ -212,7 +212,6 @@ export default class SlatePage extends React.Component {
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,
       name: `${slateName}.zip`,
-      resourceURI: this.props.resources.download,
     });
   };
 

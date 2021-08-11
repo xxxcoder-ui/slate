@@ -1,5 +1,6 @@
-export const NODE = process.env.NODE_ENV || "development";
-export const IS_PRODUCTION = NODE === "production";
+/* eslint-disable prefer-destructuring */
+export const NODE_ENV = process.env.NEXT_PUBLIC_NODE_ENV;
+export const IS_PRODUCTION = NODE_ENV === "production";
 export const PORT = process.env.PORT || 1337;
 export const SOURCE = process.env.SOURCE;
 
@@ -36,10 +37,9 @@ export const SUPPORT_SLACK_WEBHOOK_KEY = process.env.SUPPORT_SLACK_WEBHOOK_KEY;
 export const TEXTILE_SLACK_WEBHOOK_KEY = process.env.TEXTILE_SLACK_WEBHOOK_KEY;
 
 // NOTE(jim): External servers
-export const RESOURCE_URI_UPLOAD = process.env.RESOURCE_URI_UPLOAD;
-export const RESOURCE_URI_STORAGE_UPLOAD = process.env.RESOURCE_URI_STORAGE_UPLOAD;
-export const RESOURCE_URI_PUBSUB = process.env.RESOURCE_URI_PUBSUB;
-export const RESOURCE_URI_SEARCH = process.env.RESOURCE_URI_SEARCH;
+export const URI_SHOVEL = process.env.NEXT_PUBLIC_URI_SHOVEL;
+export const URI_FIJI = process.env.NEXT_PUBLIC_URI_FIJI;
+export const URI_LENS = process.env.NEXT_PUBLIC_URI_LENS;
 
 //NOTE(amine): Twitter
 export const TWITTER_API_KEY = process.env.TWITTER_API_KEY;

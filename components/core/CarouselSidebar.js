@@ -399,7 +399,7 @@ class CarouselSidebar extends React.Component {
       this.setState({ isUploading: false });
       return;
     }
-    let file = await UserBehaviors.uploadImage(e.target.files[0], this.props.resources, true);
+    let file = await UserBehaviors.uploadImage(e.target.files[0]);
     if (!file) {
       this.setState({ isUploading: false });
       return;

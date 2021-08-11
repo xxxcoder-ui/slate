@@ -4,14 +4,12 @@ import * as Actions from "~/common/actions";
 import * as Window from "~/common/window";
 import * as Validations from "~/common/validations";
 import * as Strings from "~/common/strings";
-import * as Store from "~/common/store";
 import * as FileUtilities from "~/common/file-utilities";
 import * as Events from "~/common/custom-events";
 
 import Cookies from "universal-cookie";
 import JSZip from "jszip";
 
-import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
 
 //NOTE(martina): this file is for utility *API-calling* functions
@@ -137,7 +135,7 @@ export const hydrate = async () => {
   return JSON.parse(JSON.stringify(response.data));
 };
 
-export const uploadImage = async (file, resources) => {
+export const uploadImage = async (file) => {
   if (!file) {
     Events.dispatchMessage({ message: "Something went wrong with the upload. Please try again" });
     return;
@@ -148,7 +146,7 @@ export const uploadImage = async (file, resources) => {
     return;
   }
 
-  const response = await FileUtilities.upload({ file, routes: resources });
+  const response = await FileUtilities.upload({ file });
 
   if (Events.hasError(response)) {
     return false;
@@ -267,12 +265,12 @@ const _nativeDownload = ({ url, onError }) => {
     }
   };
   window.addEventListener("message", handleIframeErrors);
-  iframe.onload = (e) => window.removeEventListener("message", handleIframeErrors);
+  iframe.onload = () => window.removeEventListener("message", handleIframeErrors);
 
   document.body.appendChild(iframe);
 };
 
-export const compressAndDownloadFiles = async ({ files, name = "slate.zip", resourceURI }) => {
+export const compressAndDownloadFiles = async ({ files, name = "slate.zip" }) => {
   const errorMessage = "Something went wrong with the download. Please try again";
   try {
     if (!files || files.length == 0) {
@@ -307,11 +305,11 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip", reso
     }
 
     Actions.createDownloadActivity({ files });
-    const res = await Actions.createZipToken({ files: downloadFiles, resourceURI });
-    const downloadLink = Actions.downloadZip({ token: res.data.token, name, resourceURI });
+    const res = await Actions.createZipToken(downloadFiles);
+    const downloadLink = Actions.downloadZip({ token: res.data.token, name });
     await _nativeDownload({
       url: downloadLink,
-      onError: (err) =>
+      onError: () =>
         Events.dispatchMessage({
           message: errorMessage,
         }),
