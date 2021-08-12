@@ -60,7 +60,6 @@ export default async (req, res) => {
         public: slate.isPublic,
         objects: reformattedObjects,
         ownerId: slate.ownerId,
-        layouts: slate.data.layouts,
       },
     };
   });

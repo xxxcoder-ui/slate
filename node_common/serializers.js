@@ -34,7 +34,6 @@ export const sanitizeSlate = (entity) => {
       name: entity.data?.name,
       body: entity.data?.body,
       preview: entity.data?.preview,
-      layouts: entity.data?.layouts,
       tags: entity.data?.tags,
     },
     fileCount: entity.fileCount,
@@ -110,7 +109,6 @@ export const cleanSlate = (entity) => {
     //   name: entity.data?.name,
     //   body: entity.data?.body,
     //   preview: entity.data?.preview,
-    //   layouts: entity.data?.layouts,
     //   tags: entity.data?.tags,
     // },
   };
