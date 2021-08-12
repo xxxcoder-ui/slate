@@ -1,4 +1,4 @@
-export const NODE_ENV = process.env.NEXT_PUBLIC_NODE_ENV;
+export const NODE_ENV = process.env.NEXT_PUBLIC_NODE_ENV || "development";
 
 //NOTE(amine): feature flags
 export const ACTIVITY_FEATURE_FLAG = NODE_ENV === "development" || NODE_ENV === "staging";
