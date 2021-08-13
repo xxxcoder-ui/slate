@@ -32,6 +32,8 @@ export default async ({ ids, ownerId }) => {
         await DB("slates").where("id", slateId).decrement("fileCount", count);
       }
 
+      const likes = await DB("likes").whereIn("fileId", ids).del();
+
       const activity = await DB("activity").whereIn("fileId", ids).del();
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");
