@@ -1,12 +1,18 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
+import * as Constants from "~/common/constants";
 
 import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
 
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 import LinkPlaceholder from "~/components/core/ObjectPreview/placeholders/Link";
+
+const STYLES_CONTAINER = css`
+  ${Styles.CONTAINER_CENTERED}
+  height: 100%;
+`;
 
 const STYLES_SOURCE_LOGO = css`
   height: 12px;
@@ -15,19 +21,41 @@ const STYLES_SOURCE_LOGO = css`
 `;
 
 const STYLES_PLACEHOLDER_CONTAINER = css`
+  width: 100%;
   height: 100%;
   ${Styles.CONTAINER_CENTERED}
 `;
 
-const STYLES_TAG_CONTAINER = (theme) => css`
-  color: ${theme.semantic.textGrayLight};
-  svg {
+const STYLES_SOURCE = css`
+  transition: color 0.4s;
+  max-width: 80%;
+`;
+
+const STYLES_LINK = (theme) => css`
+  display: block;
+  width: 100%;
+  ${Styles.LINK}
+  :hover small, .link_external_link {
+    color: ${theme.semantic.textGrayDark};
+  }
+
+  .link_external_link {
     opacity: 0;
     transition: opacity 0.3s;
   }
-  :hover svg {
+  :hover .link_external_link {
     opacity: 1;
   }
+`;
+
+const STYLES_SMALL_IMG = css`
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+`;
+
+const STYLES_TAG_CONTAINER = (theme) => css`
+  color: ${theme.semantic.textGray};
   ${Styles.HORIZONTAL_CONTAINER_CENTERED}
 `;
 
@@ -36,9 +64,15 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
     data: { link },
   } = file;
 
+  const previewImgState = useImage({
+    src: link.image,
+    maxWidth: Constants.grids.object.desktop.width,
+  });
+  const faviconImgState = useImage({ src: link.logo });
+
   const tag = (
     <a
-      css={Styles.LINK}
+      css={STYLES_LINK}
       href={file.url}
       target="_blank"
       rel="noreferrer"
@@ -46,7 +80,9 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
       onClick={(e) => e.stopPropagation()}
     >
       <div css={STYLES_TAG_CONTAINER}>
-        {link.logo && (
+        {faviconImgState.error ? (
+          <SVG.Link height={12} width={12} style={{ marginRight: 4 }} />
+        ) : (
           <img
             src={link.logo}
             alt="Link source logo"
@@ -54,23 +90,61 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
             css={STYLES_SOURCE_LOGO}
           />
         )}
-        <P3 as="small" color="textGray" nbrOflines={1}>
+        <P3 css={STYLES_SOURCE} as="small" color="textGray" nbrOflines={1}>
           {link.source}
         </P3>
-        <SVG.ExternalLink height={12} width={12} style={{ marginLeft: 4 }} />
+        <SVG.ExternalLink
+          className="link_external_link"
+          height={12}
+          width={12}
+          style={{ marginLeft: 4 }}
+        />
       </div>
     </a>
   );
 
   return (
     <ObjectPreviewPrimitive file={file} tag={tag} {...props}>
-      {link.image ? (
-        <img src={link.image} alt="Link preview" css={Styles.IMAGE_FILL} />
-      ) : (
-        <div css={STYLES_PLACEHOLDER_CONTAINER}>
-          <LinkPlaceholder ratio={ratio} />
-        </div>
-      )}
+      <div css={STYLES_CONTAINER}>
+        {previewImgState.loaded &&
+          (previewImgState.error ? (
+            <div css={STYLES_PLACEHOLDER_CONTAINER}>
+              <LinkPlaceholder ratio={ratio} />
+            </div>
+          ) : (
+            <img
+              src={link.image}
+              alt="Link preview"
+              css={previewImgState.overflow ? STYLES_SMALL_IMG : Styles.IMAGE_FILL}
+            />
+          ))}
+      </div>
     </ObjectPreviewPrimitive>
   );
 }
+
+const useImage = ({ src, maxWidth }) => {
+  const [imgState, setImgState] = React.useState({
+    loaded: false,
+    error: true,
+    overflow: false,
+  });
+
+  React.useEffect(() => {
+    if (!src) setImgState({ error: true, loaded: true });
+
+    const img = new Image();
+    img.src = src;
+
+    img.onload = () => {
+      if (maxWidth && img.naturalWidth < maxWidth) {
+        setImgState((prev) => ({ ...prev, loaded: true, error: false, overflow: true }));
+      } else {
+        setImgState({ loaded: true, error: false });
+      }
+    };
+    img.onerror = () => setImgState({ loaded: true, error: true });
+  }, []);
+
+  return imgState;
+};

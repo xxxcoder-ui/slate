@@ -11,7 +11,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Preview } from "~/components/core/CollectionPreviewBlock/components";
 import { AspectRatio } from "~/components/system";
 import { P3, H5, P2 } from "~/components/system/components/Typography";
-import { useMounted } from "~/common/hooks";
+import { useMediaQuery, useMounted } from "~/common/hooks";
 
 const STYLES_CONTAINER = (theme) => css`
   position: relative;
@@ -83,8 +83,9 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const hideControls = () => setShowControls(false);
 
   const description = collection?.data?.body;
+  const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
-    disabled: !description,
+    disabled: !description || media.mobile,
   });
 
   const extendedDescriptionRef = React.useRef();
@@ -99,6 +100,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
   const { fileCount } = collection;
+  const title = collection?.data?.name || collection.slatename;
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -119,34 +121,34 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
             </motion.div>
           </Preview>
 
-          <motion.article
-            css={STYLES_DESCRIPTION}
-            onMouseMove={showDescription}
-            onMouseLeave={hideDescription}
-          >
+          <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 nbrOflines={1} style={{ visibility: "hidden" }}>
-                {collection.slatename}
+                {title}
               </H5>
 
-              <div ref={descriptionRef}>
-                <P3
-                  style={{ paddingTop: 3, visibility: "hidden" }}
-                  nbrOflines={1}
-                  color="textGrayDark"
-                >
-                  {description}
-                </P3>
-              </div>
+              {description && (
+                <div ref={descriptionRef}>
+                  <P3
+                    style={{ paddingTop: 3, visibility: "hidden" }}
+                    nbrOflines={1}
+                    color="textGrayDark"
+                  >
+                    {description}
+                  </P3>
+                </div>
+              )}
 
               <motion.div
                 css={STYLES_INNER_DESCRIPTION}
                 initial={false}
                 animate={isDescriptionVisible ? "hovered" : "initial"}
                 variants={animationController.containerVariants}
+                onMouseMove={showDescription}
+                onMouseLeave={hideDescription}
               >
-                <H5 color="textBlack" nbrOflines={1} title={collection.slatename}>
-                  {collection.slatename}
+                <H5 color="textBlack" nbrOflines={1} title={title}>
+                  {title}
                 </H5>
                 {!isDescriptionVisible && (
                   <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
@@ -265,7 +267,6 @@ const useAnimateDescription = ({
         type: "spring",
         stiffness: 170,
         damping: 26,
-        delay: 0.3,
       },
     },
     hovered: {
@@ -281,11 +282,16 @@ const useAnimateDescription = ({
   const descriptionControls = useAnimation();
 
   useMounted(() => {
+    const extendedDescriptionElement = extendedDescriptionRef.current;
+    if (!extendedDescriptionElement) return;
+
     if (isDescriptionVisible) {
+      extendedDescriptionElement.style.opacity = 1;
       descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
       return;
     }
-    descriptionControls.set({ opacity: 0 });
+
+    extendedDescriptionElement.style.opacity = 0;
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };

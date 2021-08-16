@@ -7,7 +7,7 @@ import { AspectRatio } from "~/components/system";
 // import { LikeButton, SaveButton } from "./components";
 // import { useSaveHandler } from "~/common/hooks";
 import { motion, useAnimation } from "framer-motion";
-import { useMounted } from "~/common/hooks";
+import { useMounted, useMediaQuery } from "~/common/hooks";
 
 import ImageObjectPreview from "./ImageObjectPreview";
 
@@ -28,10 +28,6 @@ const STYLES_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   z-index: 1;
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: 8px;
-  }
 `;
 
 const STYLES_INNER_DESCRIPTION = (theme) => css`
@@ -95,8 +91,9 @@ export default function ObjectPreviewPrimitive({
   // const hideControls = () => setShowControls(false);
 
   const description = file?.data?.body;
+  const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
-    disabled: !description,
+    disabled: !description || media.mobile,
   });
 
   const extendedDescriptionRef = React.useRef();
@@ -150,31 +147,31 @@ export default function ObjectPreviewPrimitive({
             {children}
           </div>
 
-          <motion.article
-            css={STYLES_DESCRIPTION}
-            onMouseMove={showDescription}
-            onMouseLeave={hideDescription}
-          >
+          <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
                 {title}
               </H5>
 
-              <div ref={descriptionRef}>
-                <P3
-                  style={{ paddingTop: 3, visibility: "hidden" }}
-                  nbrOflines={1}
-                  color="textGrayDark"
-                >
-                  {description}
-                </P3>
-              </div>
+              {description && (
+                <div ref={descriptionRef}>
+                  <P3
+                    style={{ paddingTop: 3, visibility: "hidden" }}
+                    nbrOflines={1}
+                    color="textGrayDark"
+                  >
+                    {description}
+                  </P3>
+                </div>
+              )}
 
               <motion.div
                 css={STYLES_INNER_DESCRIPTION}
                 initial={false}
                 animate={isDescriptionVisible ? "hovered" : "initial"}
                 variants={animationController.containerVariants}
+                onMouseMove={showDescription}
+                onMouseLeave={hideDescription}
               >
                 <H5 as="h2" nbrOflines={1} color="textBlack" title={title}>
                   {title}
@@ -229,7 +226,7 @@ const useShowDescription = ({ disabled }) => {
     if (disabled) return;
 
     clearTimeout(timeoutId.current);
-    const id = setTimeout(() => setShowDescription(true), 250);
+    const id = setTimeout(() => setShowDescription(true), 200);
     timeoutId.current = id;
   };
   const hideDescription = () => {
@@ -269,7 +266,6 @@ const useAnimateDescription = ({
         type: "spring",
         stiffness: 170,
         damping: 26,
-        delay: 0.3,
       },
     },
     hovered: {
@@ -285,11 +281,16 @@ const useAnimateDescription = ({
   const descriptionControls = useAnimation();
 
   useMounted(() => {
+    const extendedDescriptionElement = extendedDescriptionRef.current;
+    if (!extendedDescriptionElement) return;
+
     if (isDescriptionVisible) {
+      extendedDescriptionElement.style.opacity = 1;
       descriptionControls.start({ opacity: 1, transition: { delay: 0.2 } });
       return;
     }
-    descriptionControls.set({ opacity: 0 });
+
+    extendedDescriptionElement.style.opacity = 0;
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };

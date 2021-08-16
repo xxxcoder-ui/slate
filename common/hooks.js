@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Logging from "~/common/logging";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
+import * as Constants from "~/common/constants";
 
 export const useMounted = (callback, depedencies) => {
   const mountedRef = React.useRef(false);
@@ -365,3 +366,27 @@ export function useMemoCompare(next, compare) {
  */
 export const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+export const useMediaQuery = () => {
+  const isMobileQuery = `(max-width: ${Constants.sizes.mobile}px)`;
+
+  const [isMobile, setMatch] = React.useState(true);
+
+  const handleResize = () => {
+    const isMobile = window.matchMedia(isMobileQuery).matches;
+    setMatch(isMobile);
+  };
+
+  React.useEffect(() => {
+    if (!window) return;
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // NOTE(amine): currently only support mobile breakpoint, we can add more breakpoints as needed.
+  return {
+    mobile: isMobile,
+  };
+};
