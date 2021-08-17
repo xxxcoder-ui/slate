@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Validations from "~/common/validations";
 import * as Typography from "~/components/system/components/Typography";
 import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
@@ -15,6 +14,7 @@ import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 const STYLES_PLACEHOLDER_CONTAINER = css`
   height: 100%;
   width: 100%;
+  min-width: auto;
 `;
 
 const STYLES_PREVIEW = css`
@@ -38,7 +38,25 @@ const STYLES_EMPTY_CONTAINER = css`
   width: 100%;
 `;
 
-export default function Preview({ collection, children, ...props }) {
+const EmptyFallbackDefault = ({ children, ...props }) => {
+  return (
+    <div css={STYLES_EMPTY_CONTAINER} {...props}>
+      {children}
+      <Logo style={{ height: 24, marginBottom: 8, color: Constants.system.grayLight2 }} />
+      <Typography.P2 color="grayLight2">This collection is empty</Typography.P2>
+    </div>
+  );
+};
+// NOTE(amine): type can be either "EMPTY" || "PLACEHOLDER" || "IMAGE"
+export default function Preview({
+  file,
+  type,
+  css,
+  children,
+  EmptyFallback = EmptyFallbackDefault,
+  placeholderRatio = 1,
+  ...props
+}) {
   const [isLoading, setLoading] = React.useState(true);
   const handleOnLoaded = () => setLoading(false);
 
@@ -47,28 +65,19 @@ export default function Preview({ collection, children, ...props }) {
     ref: previewerRef,
   });
 
-  const object = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
-
-  const isCollectionEmpty = collection.objects.length === 0;
-  if (isCollectionEmpty) {
-    return (
-      <div css={STYLES_EMPTY_CONTAINER} {...props}>
-        {children}
-        <Logo style={{ height: 24, marginBottom: 8, color: Constants.system.grayLight2 }} />
-        <Typography.P2 color="grayLight2">This collection is empty</Typography.P2>
-      </div>
-    );
+  if (type === "EMPTY") {
+    return <EmptyFallback {...props}>{children}</EmptyFallback>;
   }
 
-  if (object.isImage) {
-    const { coverImage } = object.data;
-    const blurhash = getFileBlurHash(object);
+  if (type === "IMAGE") {
+    const { coverImage } = file.data;
+    const blurhash = getFileBlurHash(file);
     const previewImage = coverImage
       ? Strings.getURLfromCID(coverImage?.cid)
-      : Strings.getURLfromCID(object.cid);
+      : Strings.getURLfromCID(file.cid);
 
     return (
-      <div ref={previewerRef} css={STYLES_PREVIEW} {...props}>
+      <div ref={previewerRef} css={[STYLES_PREVIEW, css]} {...props}>
         {children}
         {isInView && (
           <>
@@ -91,9 +100,13 @@ export default function Preview({ collection, children, ...props }) {
   }
 
   return (
-    <div css={STYLES_PREVIEW} {...props}>
+    <div css={[STYLES_PREVIEW, css]} {...props}>
       {children}
-      <ObjectPlaceholder ratio={1} containerCss={STYLES_PLACEHOLDER_CONTAINER} file={object} />
+      <ObjectPlaceholder
+        ratio={placeholderRatio}
+        containerCss={STYLES_PLACEHOLDER_CONTAINER}
+        file={file}
+      />
     </div>
   );
 }
@@ -107,17 +120,4 @@ const getFileBlurHash = (file) => {
   if (isBlurhashValid(blurhash)) return blurhash;
 
   return null;
-};
-
-const getObjectToPreview = (objects = []) => {
-  let objectIdx = 0;
-  let isImage = false;
-
-  objects.some((object, i) => {
-    const isPreviewableImage = Validations.isPreviewableImage(object.data.type);
-    if (isPreviewableImage) (objectIdx = i), (isImage = true);
-    return isPreviewableImage;
-  });
-
-  return { ...objects[objectIdx], isImage };
 };
