@@ -41,10 +41,12 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -164,10 +166,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -389,4 +393,20 @@ export const useMediaQuery = () => {
   return {
     mobile: isMobile,
   };
+};
+
+export const useEventListener = (type, handler, dependencies) => {
+  React.useEffect(() => {
+    if (!window) return;
+
+    window.addEventListener(type, handler);
+    return () => window.removeEventListener(type, handler);
+  }, dependencies);
+};
+
+export const useTimeout = (callback, ms, dependencies) => {
+  React.useEffect(() => {
+    const timeoutId = setTimeout(callback, ms);
+    return () => clearTimeout(timeoutId);
+  }, dependencies);
 };
