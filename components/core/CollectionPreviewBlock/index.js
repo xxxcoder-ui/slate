@@ -74,8 +74,15 @@ const STYLES_CONTROLS = css`
     margin-top: 8px !important;
   }
 `;
+
 const STYLES_TEXT_GRAY = (theme) => css`
   color: ${theme.semantic.textGray};
+`;
+
+const LOCK_WRAPPER = (theme) => css`
+  background-color: ${theme.semantic.bgDark};
+  border-radius: 4px;
+  padding: 4px;
 `;
 
 export default function CollectionPreview({ collection, viewer, owner, onAction }) {
@@ -100,9 +107,8 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
-  const { fileCount } = collection;
+  const { fileCount, isPublic } = collection;
   const title = collection?.data?.name || collection.slatename;
-
   const isOwner = viewer.id === collection.ownerId;
 
   return (
@@ -150,9 +156,21 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 onMouseMove={showDescription}
                 onMouseLeave={hideDescription}
               >
-                <H5 color="textBlack" nbrOflines={1} title={title}>
-                  {title}
-                </H5>
+                <div
+                  css={[
+                    Styles.HORIZONTAL_CONTAINER_CENTERED,
+                    css({ justifyContent: "space-between" }),
+                  ]}
+                >
+                  <H5 color="textBlack" nbrOflines={1} title={title}>
+                    {title}
+                  </H5>
+                  {!isPublic && (
+                    <div css={LOCK_WRAPPER} style={{ marginLeft: 8 }}>
+                      <SVG.Lock style={{ display: "block" }} />
+                    </div>
+                  )}
+                </div>
                 {!isDescriptionVisible && (
                   <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
                     {description}

@@ -1987,3 +1987,22 @@ export const Box = (props) => (
     />
   </svg>
 );
+
+export const Lock = (props) => (
+  <svg width={8} height={8} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M6.333 3.667H1.667A.667.667 0 001 4.333v2.334c0 .368.298.666.667.666h4.666A.667.667 0 007 6.667V4.333a.667.667 0 00-.667-.666z"
+      stroke="#C7CACC"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M2.333 3.667V2.333a1.667 1.667 0 013.334 0v1.334"
+      stroke="#C7CACC"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
