@@ -124,6 +124,7 @@ export const ShareModalPrimitive = ({
             onClick={handleModalClick}
           >
             <motion.div layout css={STYLES_PROFILE} style={{ alignItems: "flex-start" }}>
+              {/**TODO(amine): add dynamic preview to support collection and object previews */}
               <Preview
                 file={preview.object}
                 type={preview.type}
