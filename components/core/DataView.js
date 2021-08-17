@@ -544,31 +544,46 @@ export default class DataView extends React.Component {
     this.setState({ checked: {} });
   };
 
-  _handleDelete = (res) => {
+  _handleDeleteFilesFromCollection = (res) => {
     if (!res) {
       this.setState({ modalShow: false });
       return;
     }
 
+    let ids = [];
+    for (let index of Object.keys(this.state.checked)) {
+      ids.push(this.state.items[index].id);
+    }
+
+    const { slates } = this.props.viewer;
+    const slateId = this.props.collection.id;
+    for (let slate of slates) {
+      if (slate.id === slateId) {
+        slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id));
+        slate.fileCount = slate.objects.length;
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
+        break;
+      }
+    }
+
+    let library = this.props.viewer.library.filter((obj) => !ids.includes(obj.id));
+    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { library } });
+
+    UserBehaviors.deleteFiles(ids);
+    this.setState({ checked: {}, modalShow: false });
+    return;
+  };
+
+  _handleDelete = (res) => {
+    if (!res) {
+      this.setState({ modalShow: false });
+      return;
+    }
     const ids = Object.keys(this.state.checked).map((id) => {
       let index = parseInt(id);
       let item = this.props.viewer.library[index];
       return item.id;
     });
-
-    // NOTE(amine): delete files from current collection
-    if (this.props.collection) {
-      const { slates } = this.props.viewer;
-      const slateId = this.props.collection.id;
-      for (let slate of slates) {
-        if (slate.id === slateId) {
-          slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id));
-          slate.fileCount = slate.objects.length;
-          break;
-        }
-      }
-      this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
-    }
 
     let library = this.props.viewer.library.filter((obj) => !ids.includes(obj.id));
     this.props.onAction({ type: "UPDATE_VIEWER", viewer: { library } });
@@ -659,10 +674,10 @@ export default class DataView extends React.Component {
     e.preventDefault();
     let ids = [];
     if (i !== undefined) {
-      ids = [this.state.items[i].id.replace("data-", "")];
+      ids = [this.state.items[i].id];
     } else {
       for (let index of Object.keys(this.state.checked)) {
-        ids.push(this.state.items[index].id.replace("data-", ""));
+        ids.push(this.state.items[index].id);
       }
       this.setState({ checked: {} });
     }
@@ -671,7 +686,7 @@ export default class DataView extends React.Component {
     let slateId = this.props.collection.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
-        slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id.replace("data-", "")));
+        slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id));
         slate.fileCount = slate.objects.length;
         this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
         break;
@@ -797,7 +812,9 @@ export default class DataView extends React.Component {
               <ConfirmationModal
                 type={"DELETE"}
                 withValidation={false}
-                callback={this._handleDelete}
+                callback={
+                  this.props.collection ? this._handleDeleteFilesFromCollection : this._handleDelete
+                }
                 header={`Are you sure you want to delete the selected files?`}
                 subHeader={`These files will be deleted from all connected collections and your file library. You can’t undo this action.`}
               />
