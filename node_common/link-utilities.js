@@ -74,27 +74,27 @@ export const testIframe = async (url) => {
   }
 };
 
-export const uploadScreenshot = async (file, user) => {
-  const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
-  const data = {
-    url: file.data.coverImage.data.url,
-    updateType: "COVER_IMAGE",
-    targetId: file.id,
-  };
-  try {
-    const request = await fetch(`${Environment.}/api/data/url`, {
-      method: "POST",
-      credentials: "omit",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ data }),
-    });
-    return true;
-  } catch (e) {
-    Logging.error(e);
-    return false;
-  }
-};
+// export const uploadScreenshot = async (file, user) => {
+//   const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
+//   const data = {
+//     url: file.data.coverImage.data.url,
+//     updateType: "COVER_IMAGE",
+//     targetId: file.id,
+//   };
+//   try {
+//     const request = await fetch(`${Environment.}/api/data/url`, {
+//       method: "POST",
+//       credentials: "omit",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json",
+//         Authorization: token,
+//       },
+//       body: JSON.stringify({ data }),
+//     });
+//     return true;
+//   } catch (e) {
+//     Logging.error(e);
+//     return false;
+//   }
+// };

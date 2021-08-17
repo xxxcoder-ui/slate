@@ -78,15 +78,15 @@ export default async (req, res) => {
         author: data.author || "",
         source: data.publisher || "",
         body: data.description || "",
-        coverImage: data.screenshot
-          ? {
-              data: {
-                type: "image/png",
-                size: data.screenshot.size,
-                url: data.screenshot.url,
-              },
-            }
-          : null,
+        // coverImage: data.screenshot
+        //   ? {
+        //       data: {
+        //         type: "image/png",
+        //         size: data.screenshot.size,
+        //         url: data.screenshot.url,
+        //       },
+        //     }
+        //   : null,
         link: {
           name: data.title || "",
           author: data.author || "",
@@ -127,11 +127,9 @@ export default async (req, res) => {
     }
   }
 
-  for (let file of createdFiles) {
-    LinkUtilities.uploadScreenshot(file, user);
-  }
-
-  let added = createdFiles?.length || 0;
+  // for (let file of createdFiles) {
+  //   LinkUtilities.uploadScreenshot(file, user);
+  // }
 
   let filesToAddToSlate = createdFiles.concat(duplicateFiles); //NOTE(martina): files that are already owned by the user are included in case they aren't yet in that specific slate
   if (slate && filesToAddToSlate.length) {

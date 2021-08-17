@@ -1,30 +1,29 @@
 import * as Window from "~/common/window";
 import * as Strings from "~/common/strings";
 import * as Logging from "~/common/logging";
+import * as Environment from "~/common/environment";
 
 let pingTimeout = null;
 let client = null;
 
-let savedResource = null;
 let savedViewer = null;
 let savedOnUpdate = null;
 
-export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => {} }) => {
-  savedResource = resource;
+export const init = ({ viewer, onUpdate, onNewActiveUser = () => {} }) => {
   savedViewer = viewer;
   savedOnUpdate = onUpdate;
   if (!process.browser) {
     return null;
   }
 
-  Logging.log(`${resource}: init`);
+  Logging.log(`${Environment.URI_FIJI}: init`);
 
   if (client) {
     Error.log("ERROR: Already has websocket client");
     return client;
   }
 
-  client = new WebSocket(resource);
+  client = new WebSocket(Environment.URI_FIJI);
 
   client.addEventListener("open", (e) => {
     if (!client) {
@@ -40,7 +39,7 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       return null;
     }
 
-    Logging.log(`${resource}: ping`);
+    Logging.log(`${Environment.URI_FIJI}: ping`);
     clearTimeout(pingTimeout);
 
     pingTimeout = setTimeout(() => {
@@ -91,14 +90,14 @@ export const init = ({ resource = "", viewer, onUpdate, onNewActiveUser = () => 
       setTimeout(() => {
         client = null;
         Logging.log("Auto reconnecting dropped websocket");
-        init({ resource, viewer, onUpdate });
+        init({ viewer, onUpdate });
       }, 1000);
     }
     if (!client) {
       return null;
     }
 
-    Logging.log(`${resource}: closed`);
+    Logging.log(`${Environment.URI_FIJI}: closed`);
     clearTimeout(pingTimeout);
   });
 
@@ -138,12 +137,12 @@ export const checkWebsocket = async () => {
   if (client) {
     return;
   }
-  if (!savedResource || !savedViewer || !savedOnUpdate) {
+  if (!savedViewer || !savedOnUpdate) {
     Logging.log("No saved resources from previous, so not connecting a websocket");
     return;
   }
   Logging.log("Reconnecting dropped websocket");
-  init({ resource: savedResource, viewer: savedViewer, onUpdate: savedOnUpdate });
+  init({ viewer: savedViewer, onUpdate: savedOnUpdate });
   await Window.delay(2000);
   return;
 };
