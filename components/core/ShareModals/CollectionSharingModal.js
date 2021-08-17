@@ -46,12 +46,13 @@ export const CollectionSharingModal = () => {
   useEventListener("collection-sharing-modal", handleModalVisibility, []);
 
   const handleTwitterSharing = () =>
-    // TODO(amine): change twitter copy
-    window.open(`https://twitter.com/intent/tweet?text=${title}:%0D&url=${link}`, "_blank");
+    window.open(
+      `https://twitter.com/intent/tweet?text=${title} by ${user.username} on Slate%0D&url=${link}`,
+      "_blank"
+    );
 
   const handleEmailSharing = () => {
-    //TODO(amine): change email copy
-    window.open(`mailto: ?subject=Check out this collection&body=${link}`, "_b");
+    window.open(`mailto: ?subject=${title} by ${user.username} on Slate&body=${link}`, "_b");
   };
 
   const handleLinkCopy = () => (Utilities.copyToClipboard(link), changeView("LINK_COPIED"));
