@@ -48,6 +48,7 @@ const STYLES_SPACE_BETWEEN = css`
 `;
 
 const STYLES_PROFILE_IMAGE = (theme) => css`
+  display: block;
   background-color: ${theme.semantic.bgLight};
   height: 16px;
   width: 16px;
@@ -101,6 +102,8 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
 
   const { fileCount } = collection;
   const title = collection?.data?.name || collection.slatename;
+
+  const isOwner = viewer.id === collection.ownerId;
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -171,7 +174,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 )}
               </motion.div>
             </div>
-            <Metrics owner={owner} fileCount={fileCount} onAction={onAction} />
+            <Metrics owner={owner} isOwner={isOwner} fileCount={fileCount} onAction={onAction} />
           </motion.article>
         </div>
       </AspectRatio>
@@ -179,42 +182,45 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   );
 }
 
-function Metrics({ fileCount, owner, onAction }) {
+function Metrics({ fileCount, owner, isOwner, onAction }) {
   return (
     <div css={STYLES_METRICS}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_GRAY]}>
-        <SVG.Box />
+        <SVG.Box height={16} width={16} />
         <P3 style={{ marginLeft: 4 }} color="textGray">
           {fileCount}
         </P3>
       </div>
-      {owner && (
-        <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
-          <Link
-            href={`/$/user/${owner.id}`}
-            onAction={onAction}
-            aria-label={`Visit ${owner.username}'s profile`}
-            title={`Visit ${owner.username}'s profile`}
-          >
-            <img
-              css={STYLES_PROFILE_IMAGE}
-              src={owner?.data?.photo}
-              alt={`${owner.username} profile`}
-              onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
-            />
-          </Link>
-          <Link
-            href={`/$/user/${owner.id}`}
-            onAction={onAction}
-            aria-label={`Visit ${owner.username}'s profile`}
-            title={`Visit ${owner.username}'s profile`}
-          >
-            <P3 style={{ marginLeft: 8 }} color="textGray">
-              {owner.username}
-            </P3>
-          </Link>
-        </div>
-      )}
+
+      <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
+        {!isOwner && (
+          <>
+            <Link
+              href={`/$/user/${owner.id}`}
+              onAction={onAction}
+              aria-label={`Visit ${owner.username}'s profile`}
+              title={`Visit ${owner.username}'s profile`}
+            >
+              <img
+                css={STYLES_PROFILE_IMAGE}
+                src={owner?.data?.photo}
+                alt={`${owner.username} profile`}
+                onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+              />
+            </Link>
+            <Link
+              href={`/$/user/${owner.id}`}
+              onAction={onAction}
+              aria-label={`Visit ${owner.username}'s profile`}
+              title={`Visit ${owner.username}'s profile`}
+            >
+              <P3 style={{ marginLeft: 8 }} color="textGray">
+                {owner.username}
+              </P3>
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 }
