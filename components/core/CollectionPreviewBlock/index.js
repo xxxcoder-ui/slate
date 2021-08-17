@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
+import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
 import { FollowButton, ShareButton } from "~/components/core/CollectionPreviewBlock/components";
@@ -113,11 +114,18 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const title = collection?.data?.name || collection.slatename;
   const isOwner = viewer.id === collection.ownerId;
 
+  const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
+
   return (
     <div css={STYLES_CONTAINER}>
       <AspectRatio ratio={248 / 382}>
         <div css={Styles.VERTICAL_CONTAINER}>
-          <Preview collection={collection} onMouseEnter={showControls} onMouseLeave={hideControls}>
+          <Preview
+            file={preview.object}
+            type={preview.type}
+            onMouseEnter={showControls}
+            onMouseLeave={hideControls}
+          >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: areControlsVisible ? 1 : 0 }}
@@ -129,7 +137,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 followCount={followCount}
                 disabled={collection.ownerId === viewer?.id}
               />
-              <ShareButton user={owner} collection={collection} />
+              <ShareButton user={owner} preview={preview} collection={collection} />
             </motion.div>
           </Preview>
 
@@ -322,4 +330,19 @@ const useAnimateDescription = ({
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };
+};
+
+const getObjectToPreview = (objects = []) => {
+  if (objects.length === 0) return { type: "EMPTY" };
+
+  let objectIdx = 0;
+  let isImage = false;
+
+  objects.some((object, i) => {
+    const isPreviewableImage = Validations.isPreviewableImage(object.data.type);
+    if (isPreviewableImage) (objectIdx = i), (isImage = true);
+    return isPreviewableImage;
+  });
+
+  return { object: objects[objectIdx], type: isImage ? "IMAGE" : "PLACEHOLDER" };
 };
