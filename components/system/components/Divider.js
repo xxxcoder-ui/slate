@@ -14,7 +14,7 @@ export const Divider = ({
         height,
         width,
         minHeight: height,
-        backgroundColor: theme.system?.[color] || color,
+        backgroundColor: theme.system?.[color] || theme.semantic?.[color] || color,
       })}
       {...props}
     />
