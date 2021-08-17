@@ -2006,3 +2006,66 @@ export const Lock = (props) => (
     />
   </svg>
 );
+
+export const Share = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M12 5.333a2 2 0 100-4 2 2 0 000 4zM4 10a2 2 0 100-4 2 2 0 000 4zM12 14.667a2 2 0 100-4 2 2 0 000 4zM5.727 9.007l4.553 2.653M10.273 4.34L5.727 6.993"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Mail = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M2.667 2.667h10.666c.734 0 1.334.6 1.334 1.333v8c0 .733-.6 1.333-1.334 1.333H2.667c-.734 0-1.334-.6-1.334-1.333V4c0-.733.6-1.333 1.334-1.333z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M14.667 4L8 8.667 1.333 4"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Twitter = (props) => (
+  <svg width={16} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M15.333 1a7.268 7.268 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 15 14 11.667 14 4c0-.186-.018-.371-.053-.553A5.147 5.147 0 0015.333 1z"
+      fill="#fff"
+      stroke="#fff"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Clipboard = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M10.667 2.667H12A1.333 1.333 0 0113.333 4v9.333A1.333 1.333 0 0112 14.667H4a1.333 1.333 0 01-1.333-1.334V4A1.333 1.333 0 014 2.667h1.333"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M10 1.333H6A.667.667 0 005.333 2v1.333c0 .369.299.667.667.667h4a.667.667 0 00.667-.667V2A.667.667 0 0010 1.333z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
