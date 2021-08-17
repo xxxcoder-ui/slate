@@ -36,6 +36,10 @@ const STYLES_MODAL_WRAPPER = (theme) => css`
       rgba(255, 255, 255, 0.544) 98.51%
     );
   }
+  @media (max-width: ${theme.sizes.mobile}px) {
+    min-width: auto;
+    width: calc(100% - 32px);
+  }
 `;
 
 const STYLES_PROFILE = css`
