@@ -1,13 +1,14 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
+import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 import { H5, P3 } from "~/components/system/components/Typography";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEscapeKey, useLockScroll } from "~/common/hooks";
-
-import ProfilePhoto from "~/components/core/ProfilePhoto";
+import { Preview } from "~/components/core/CollectionPreviewBlock/components";
+import { Symbol } from "~/common/logo";
 
 const STYLES_OVERLAY = (theme) => css`
   position: fixed;
@@ -68,6 +69,23 @@ const STYLES_TEXT_CENTER = css`
   text-align: center;
 `;
 
+const STYLES_PREVIEW = (theme) => css`
+  width: 48px;
+  max-width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: ${theme.semantic.bgLight};
+  ${Styles.CONTAINER_CENTERED}
+`;
+
+const EmptyFallbackPreview = () => {
+  return (
+    <div css={STYLES_PREVIEW}>
+      <Symbol style={{ height: 24, color: Constants.system.grayLight2 }} />
+    </div>
+  );
+};
+
 // NOTE(amine): This modal will be a building block for both Object and Collection sharing modals
 export const ShareModalPrimitive = ({
   isOpen,
@@ -77,7 +95,7 @@ export const ShareModalPrimitive = ({
   includeSocialSharing = true,
   onTwitterSharing,
   onEmailSharing,
-  user,
+  preview,
   children,
 }) => {
   useEscapeKey(closeModal);
@@ -102,7 +120,13 @@ export const ShareModalPrimitive = ({
             onClick={handleModalClick}
           >
             <motion.div layout css={STYLES_PROFILE} style={{ alignItems: "flex-start" }}>
-              <ProfilePhoto user={user} size={48} />
+              <Preview
+                file={preview.object}
+                type={preview.type}
+                EmptyFallback={EmptyFallbackPreview}
+                css={STYLES_PREVIEW}
+                placeholderRatio={2}
+              />
               <div style={{ marginLeft: 12, flexGrow: 1 }}>
                 <H5 color="textBlack" nbrOflines={1}>
                   {title}

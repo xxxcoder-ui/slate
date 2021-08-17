@@ -27,7 +27,7 @@ const STYLES_BUTTON = (theme) => css`
   }
 `;
 
-export default function ShareButton({ user, collection, ...props }) {
+export default function ShareButton({ user, collection, preview, ...props }) {
   const { openModal } = useCollectionSharingModal();
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -35,6 +35,7 @@ export default function ShareButton({ user, collection, ...props }) {
     openModal({
       user,
       collection,
+      preview,
     });
   };
 

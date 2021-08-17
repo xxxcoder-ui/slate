@@ -35,7 +35,7 @@ const formatDataSafely = ({ collection, user }) => {
 
 export const CollectionSharingModal = () => {
   const [state, handlers] = useModalState();
-  const { open, user, collection, view } = state;
+  const { open, user, collection, view, preview } = state;
   const { closeModal, changeView, handleModalVisibility } = handlers;
 
   const { id, title, link } = React.useMemo(
@@ -50,10 +50,14 @@ export const CollectionSharingModal = () => {
     window.open(`https://twitter.com/intent/tweet?text=${title}:%0D&url=${link}`, "_blank");
 
   const handleEmailSharing = () => {
-    const email = prompt("Please enter your email");
+    let { email } = user;
+    if (!email) {
+      email = prompt("Please enter your email");
+    }
     if (!email) return;
+
     //TODO(amine): change email copy
-    window.open(`mailto:${email}?subject=Check out this collection&body=${link}`, "_b");
+    window.open(`mailfrom: ?subject=Check out this collection&body=${link}`, "_b");
   };
 
   const handleLinkCopy = () => (Utilities.copyToClipboard(link), changeView("LINK_COPIED"));
@@ -64,7 +68,7 @@ export const CollectionSharingModal = () => {
       isOpen={open}
       closeModal={closeModal}
       title={title}
-      user={user}
+      preview={preview}
       description={`Collection @${user.username}`}
       onEmailSharing={handleEmailSharing}
       includeSocialSharing={!(view === "LINK_COPIED" || view === "ID_COPIED")}
@@ -120,6 +124,7 @@ const useModalState = () => {
     view: "initial",
     user: {},
     data: {},
+    preview: {},
   });
 
   const handlers = React.useMemo(
@@ -132,6 +137,7 @@ const useModalState = () => {
           open: e.detail.open,
           user: e.detail.user,
           collection: e.detail.collection,
+          preview: e.detail.preview,
         })),
     }),
     []
@@ -140,10 +146,10 @@ const useModalState = () => {
 };
 
 export const useCollectionSharingModal = () => {
-  const openModal = ({ user, collection }) =>
+  const openModal = ({ user, collection, preview }) =>
     Events.dispatchCustomEvent({
       name: "collection-sharing-modal",
-      detail: { open: true, user, collection },
+      detail: { open: true, user, collection, preview },
     });
   const closeModal = () =>
     Events.dispatchCustomEvent({
