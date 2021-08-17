@@ -534,26 +534,14 @@ const cleanUsersTable = async () => {
 const cleanSlatesTable = async () => {
   const slates = await DB.select("*").from("slates");
   for (let slate of slates) {
-    const id = slate.id;
-    let layouts = slate.data.layouts;
-    if (layouts && layouts.ver === "2.0" && layouts.layout) {
-      for (let position of layouts.layout) {
-        if (position.id) {
-          position.id = position.id.replace("data-", "");
-        }
-      }
-    } else {
-      layouts = null;
-    }
     let data = {
-      layouts,
       body: slate.data.body,
       name: slate.data.name,
       preview: slate.data.preview,
       tags: slate.data.tags,
     };
-    // Logging.log(layouts?.layout);
-    // Logging.log(data);
+
+    const { id } = slate;
     await DB.from("slates").where("id", id).update({ data });
   }
 };

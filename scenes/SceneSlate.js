@@ -12,8 +12,6 @@ import * as Events from "~/common/custom-events";
 import { Link } from "~/components/core/Link";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
-import { SlateLayout } from "~/components/core/SlateLayout";
-import { SlateLayoutMobile } from "~/components/core/SlateLayoutMobile";
 import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
@@ -24,6 +22,7 @@ import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SquareButtonGray from "~/components/core/SquareButtonGray";
 import EmptyState from "~/components/core/EmptyState";
+import DataView from "~/components/core/DataView";
 
 const STYLES_LOADER = css`
   display: flex;
@@ -322,17 +321,6 @@ class SlatePage extends React.Component {
     });
   };
 
-  _handleSaveLayout = async (layouts, autoSave) => {
-    const response = await Actions.updateSlateLayout({
-      id: this.props.data.id,
-      layouts,
-    });
-
-    if (!autoSave) {
-      Events.hasError(response);
-    }
-  };
-
   _handleSavePreview = async (preview) => {
     if (!this.props.viewer) {
       return;
@@ -409,7 +397,6 @@ class SlatePage extends React.Component {
     const { user, data } = this.props.data;
     const { body = "", preview } = data;
     let objects = this.props.data.objects;
-    let layouts = this.props.data.data.layouts;
     const isPublic = this.props.data.isPublic;
     const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;
     const tags = data.tags;
@@ -503,35 +490,20 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            {this.props.isMobile ? (
-              <SlateLayoutMobile
-                isOwner={isOwner}
+            <div style={{ marginTop: 40 }}>
+              <DataView
+                key="scene-files-folder"
+                type="collection"
+                collection={this.props.data}
+                onAction={this.props.onAction}
+                viewer={this.props.viewer}
                 items={objects}
-                fileNames={layouts && layouts.ver === "2.0" ? layouts.fileNames : false}
-                onSelect={this._handleSelect}
+                view={"grid"}
+                resources={this.props.resources}
+                isOwner={isOwner}
+                page={this.props.page}
               />
-            ) : (
-              <div style={{ marginTop: isOwner ? 24 : 48 }}>
-                <SlateLayout
-                  page={this.props.page}
-                  external={this.props.external}
-                  key={this.props.data.id}
-                  data={this.props.data}
-                  viewer={this.props.viewer}
-                  slateId={this.props.data.id}
-                  layout={layouts && layouts.ver === "2.0" ? layouts.layout || [] : null}
-                  onSaveLayout={this._handleSaveLayout}
-                  isOwner={isOwner}
-                  fileNames={layouts && layouts.ver === "2.0" ? layouts.fileNames : false}
-                  preview={preview}
-                  onSavePreview={this._handleSavePreview}
-                  items={objects}
-                  onSelect={this._handleSelect}
-                  defaultLayout={layouts && layouts.ver === "2.0" ? layouts.defaultLayout : true}
-                  onAction={this.props.onAction}
-                />
-              </div>
-            )}
+            </div>
           </>
         ) : isOwner ? (
           <div>

@@ -108,12 +108,6 @@ export const error = {
   SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND: "We are having trouble locating that collection",
   SERVER_REMOVE_FROM_SLATE_FAILED: "We are having trouble removing from that collection right now",
 
-  //Update slate layout
-  SERVER_UPDATE_SLATE_LAYOUT_MUST_PROVIDE_DATA: "No layout was provided to update",
-  SERVER_UPDATE_SLATE_LAYOUT_NOT_FOUND: "We are having trouble locating that collection",
-  SERVER_UPDATE_SLATE_LAYOUT:
-    "We are unable to update that collection's layout right now. Please try again later",
-
   //Update slate
   SERVER_UPDATE_SLATE_MUST_PROVIDE_DATA:
     "We are unable to update that collection because no data was provided",

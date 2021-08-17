@@ -11,8 +11,6 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { ButtonSecondary } from "~/components/system/components/Buttons";
 import { css } from "@emotion/react";
 import { ViewAllButton } from "~/components/core/ViewAll";
-import { SlateLayout } from "~/components/core/SlateLayout";
-import { SlateLayoutMobile } from "~/components/core/SlateLayoutMobile";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 
@@ -21,6 +19,7 @@ import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
 import CTATransition from "~/components/core/CTATransition";
+import DataView from "~/components/core/DataView";
 
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
@@ -199,13 +198,6 @@ export default class SlatePage extends React.Component {
     });
   };
 
-  _handleSave = async (layouts) => {
-    await Actions.updateSlateLayout({
-      id: this.props.slate.id,
-      layouts,
-    });
-  };
-
   _handleDownloadFiles = () => {
     const slateName = this.props.slate.data.name;
     const slateFiles = this.props.slate.data.objects;
@@ -221,7 +213,7 @@ export default class SlatePage extends React.Component {
     let headerURL = `https://slate.host/${this.props.creator.username}`;
 
     let { objects, isPublic } = this.props.slate;
-    let { layouts, body, preview } = this.props.slate.data;
+    let { body, preview } = this.props.slate.data;
     let image;
     if (Strings.isEmpty(this.props.cid)) {
       image = preview;
@@ -326,30 +318,21 @@ export default class SlatePage extends React.Component {
               isOwner={false}
               external
             />
-            {this.props.isMobile ? (
-              <SlateLayoutMobile
-                isOwner={false}
-                items={objects}
-                fileNames={layouts && layouts.ver === "2.0" ? layouts.fileNames : false}
-                onSelect={this._handleSelect}
-                external
-              />
-            ) : (
-              <SlateLayout
-                external
-                slateId={this.props.slate.id}
-                key={this.props.slate.id}
-                layout={layouts && layouts.ver === "2.0" ? layouts.layout : null}
-                onSaveLayout={this._handleSave}
-                isOwner={false}
-                fileNames={layouts && layouts.ver === "2.0" ? layouts.fileNames : false}
-                items={objects}
-                onSelect={this._handleSelect}
-                defaultLayout={layouts && layouts.ver === "2.0" ? layouts.defaultLayout : true}
-                creator={this.props.creator}
-                slate={this.props.slate}
-              />
-            )}
+            {
+              <div style={{ marginTop: 40 }}>
+                <DataView
+                  key="scene-collection"
+                  type="collection"
+                  collection={this.props.slate}
+                  onAction={this.props.onAction}
+                  viewer={this.props.viewer}
+                  items={objects}
+                  view={"grid"}
+                  isOwner={false}
+                  page={this.props.page}
+                />
+              </div>
+            }
           </div>
         </div>
         <GlobalModal />

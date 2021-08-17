@@ -340,14 +340,6 @@ export const updateSlate = async (data) => {
   });
 };
 
-export const updateSlateLayout = async (data) => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/slates/update-layout`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 export const deleteSlate = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/slates/delete`, {

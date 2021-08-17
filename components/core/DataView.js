@@ -287,6 +287,96 @@ class Tags extends React.Component {
   }
 }
 
+function Footer({
+  type = "myslate",
+  close,
+  isOwner,
+  totalSelectedFiles,
+  addToCollection,
+  downloadFiles,
+  deleteFiles,
+  //NOTE(amine): Myslate actions
+  editTags,
+  //NOTE(amine): Collection actions
+  removeFromCollection,
+  saveCopy,
+}) {
+  const totalFiles = `${totalSelectedFiles} ${Strings.pluralize(
+    "file",
+    totalSelectedFiles
+  )} selected`;
+
+  const isCollectionType = type === "collection";
+  return (
+    <React.Fragment>
+      <div css={STYLES_ACTION_BAR_CONTAINER}>
+        <div css={STYLES_ACTION_BAR}>
+          <div css={STYLES_LEFT}>
+            <span css={STYLES_FILES_SELECTED}>{totalFiles}</span>
+          </div>
+          <div css={STYLES_RIGHT}>
+            <ButtonPrimary
+              transparent
+              style={{ color: Constants.system.white }}
+              onClick={addToCollection}
+            >
+              Add to collection
+            </ButtonPrimary>
+            {isOwner && !isCollectionType && (
+              <ButtonPrimary
+                transparent
+                style={{ color: Constants.system.white }}
+                onClick={editTags}
+              >
+                Edit tags
+              </ButtonPrimary>
+            )}
+            {!isOwner && isCollectionType && (
+              <ButtonPrimary
+                transparent
+                onClick={saveCopy}
+                style={{ color: Constants.system.white }}
+              >
+                Save
+              </ButtonPrimary>
+            )}
+            {isOwner && (
+              <ButtonWarning
+                transparent
+                style={{ marginLeft: 8, color: Constants.system.white }}
+                onClick={downloadFiles}
+              >
+                Download
+              </ButtonWarning>
+            )}
+            {isOwner && isCollectionType && (
+              <ButtonWarning
+                transparent
+                style={{ marginLeft: 8, color: Constants.system.white }}
+                onClick={removeFromCollection}
+              >
+                Remove
+              </ButtonWarning>
+            )}
+            {isOwner && (
+              <ButtonWarning
+                transparent
+                style={{ marginLeft: 8, color: Constants.system.white }}
+                onClick={deleteFiles}
+              >
+                Delete
+              </ButtonWarning>
+            )}
+            <div css={STYLES_ICON_BOX} onClick={close}>
+              <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
 export default class DataView extends React.Component {
   _mounted = false;
 
@@ -295,8 +385,8 @@ export default class DataView extends React.Component {
     checked: {},
     viewLimit: 40,
     scrollDebounce: false,
-    imageSize: 100,
     modalShow: false,
+    items: this.props.items,
   };
 
   isShiftDown = false;
@@ -305,8 +395,6 @@ export default class DataView extends React.Component {
   gridWrapperEl = React.createRef();
 
   async componentDidMount() {
-    this.calculateWidth();
-    this.debounceInstance = Window.debounce(this.calculateWidth, 200);
     if (!this._mounted) {
       this._mounted = true;
       window.addEventListener("scroll", this._handleCheckScroll);
@@ -331,17 +419,6 @@ export default class DataView extends React.Component {
       this.gridWrapperEl.current.removeEventListener("selectstart", this._handleSelectStart);
     }
   }
-
-  calculateWidth = () => {
-    let windowWidth = window.innerWidth;
-    let imageSize;
-    if (windowWidth < Constants.sizes.mobile) {
-      imageSize = (windowWidth - 2 * 24 - 20) / 2;
-    } else {
-      imageSize = (windowWidth - 2 * 56 - 4 * 20) / 5;
-    }
-    this.setState({ imageSize });
-  };
 
   _handleScroll = (e) => {
     const windowHeight =
@@ -467,21 +544,30 @@ export default class DataView extends React.Component {
     this.setState({ checked: {} });
   };
 
-  _handleDelete = (res, id) => {
+  _handleDelete = (res) => {
     if (!res) {
       this.setState({ modalShow: false });
       return;
     }
 
-    let ids;
-    if (id) {
-      ids = [id];
-    } else {
-      ids = Object.keys(this.state.checked).map((id) => {
-        let index = parseInt(id);
-        let item = this.props.viewer.library[index];
-        return item.id;
-      });
+    const ids = Object.keys(this.state.checked).map((id) => {
+      let index = parseInt(id);
+      let item = this.props.viewer.library[index];
+      return item.id;
+    });
+
+    // NOTE(amine): delete files from current collection
+    if (this.props.collection) {
+      const { slates } = this.props.viewer;
+      const slateId = this.props.collection.id;
+      for (let slate of slates) {
+        if (slate.id === slateId) {
+          slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id));
+          slate.fileCount = slate.objects.length;
+          break;
+        }
+      }
+      this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
     }
 
     let library = this.props.viewer.library.filter((obj) => !ids.includes(obj.id));
@@ -563,6 +649,57 @@ export default class DataView extends React.Component {
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
+  _handleCloseFooter = () => {
+    this.setState({ checked: {} });
+    this.lastSelectedItemIndex = null;
+  };
+
+  _handleRemoveFromCollection = (e, i) => {
+    e.stopPropagation();
+    e.preventDefault();
+    let ids = [];
+    if (i !== undefined) {
+      ids = [this.state.items[i].id.replace("data-", "")];
+    } else {
+      for (let index of Object.keys(this.state.checked)) {
+        ids.push(this.state.items[index].id.replace("data-", ""));
+      }
+      this.setState({ checked: {} });
+    }
+
+    let { slates } = this.props.viewer;
+    let slateId = this.props.collection.id;
+    for (let slate of slates) {
+      if (slate.id === slateId) {
+        slate.objects = slate.objects.filter((obj) => !ids.includes(obj.id.replace("data-", "")));
+        slate.fileCount = slate.objects.length;
+        this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
+        break;
+      }
+    }
+
+    UserBehaviors.removeFromSlate({ slate: this.props.collection, ids });
+  };
+
+  _handleSaveCopy = async (e, i) => {
+    if (!this.props.viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    e.stopPropagation();
+    e.preventDefault();
+    let items = [];
+    if (i !== undefined) {
+      items = [this.state.items[i]];
+    } else {
+      this.setState({ checked: {} });
+      for (let i of Object.keys(this.state.checked)) {
+        items.push(this.state.items[i]);
+      }
+    }
+    UserBehaviors.saveCopy({ files: items });
+  };
+
   getCommonTagFromSelectedItems = () => {
     const { items } = this.props;
     const { checked } = this.state;
@@ -626,82 +763,46 @@ export default class DataView extends React.Component {
     //     </span>
     //   </div>
     // );
-
+    const handleEditTags = () => {
+      this.props.onAction({
+        type: "SIDEBAR",
+        value: "SIDEBAR_EDIT_TAGS",
+        data: {
+          numChecked,
+          commonTags: this.getCommonTagFromSelectedItems(),
+          objects: this.props.items,
+          checked: this.state.checked,
+        },
+      });
+    };
     const footer = (
       <React.Fragment>
         {numChecked ? (
-          <div css={STYLES_ACTION_BAR_CONTAINER}>
-            <div css={STYLES_ACTION_BAR}>
-              <div css={STYLES_LEFT}>
-                <span css={STYLES_FILES_SELECTED}>
-                  {numChecked} file{numChecked > 1 ? "s" : ""} selected
-                </span>
-              </div>
-              <div css={STYLES_RIGHT}>
-                <ButtonPrimary
-                  transparent
-                  style={{ color: Constants.system.white }}
-                  onClick={this._handleAddToSlate}
-                >
-                  Add to collection
-                </ButtonPrimary>
-                {this.props.isOwner && (
-                  <ButtonPrimary
-                    transparent
-                    style={{ color: Constants.system.white }}
-                    onClick={() => {
-                      this.props.onAction({
-                        type: "SIDEBAR",
-                        value: "SIDEBAR_EDIT_TAGS",
-                        data: {
-                          numChecked,
-                          commonTags: this.getCommonTagFromSelectedItems(),
-                          objects: this.props.items,
-                          checked: this.state.checked,
-                        },
-                      });
-                    }}
-                  >
-                    Edit tags
-                  </ButtonPrimary>
-                )}
-                <ButtonWarning
-                  transparent
-                  style={{ marginLeft: 8, color: Constants.system.white }}
-                  onClick={() => this._handleDownloadFiles()}
-                >
-                  Download
-                </ButtonWarning>
-                {this.props.isOwner && (
-                  <ButtonWarning
-                    transparent
-                    style={{ marginLeft: 8, color: Constants.system.white }}
-                    onClick={() => this.setState({ modalShow: true })}
-                  >
-                    Delete
-                  </ButtonWarning>
-                )}
-                {this.state.modalShow && (
-                  <ConfirmationModal
-                    type={"DELETE"}
-                    withValidation={false}
-                    callback={this._handleDelete}
-                    header={`Are you sure you want to delete the selected files?`}
-                    subHeader={`These files will be deleted from all connected collections and your file library. You can’t undo this action.`}
-                  />
-                )}
-                <div
-                  css={STYLES_ICON_BOX}
-                  onClick={() => {
-                    this.setState({ checked: {} });
-                    this.lastSelectedItemIndex = null;
-                  }}
-                >
-                  <SVG.Dismiss height="20px" style={{ color: Constants.system.grayLight2 }} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <>
+            <Footer
+              type={this.props.type}
+              totalSelectedFiles={numChecked}
+              isOwner={this.props.isOwner}
+              addToCollection={this._handleAddToSlate}
+              downloadFiles={this._handleDownloadFiles}
+              deleteFiles={() => this.setState({ modalShow: true })}
+              close={this._handleCloseFooter}
+              //NOTE(amine): Myslate actions
+              editTags={handleEditTags}
+              //NOTE(amine): Collection actions
+              removeFromCollection={this._handleRemoveFromCollection}
+              saveCopy={this._handleSaveCopy}
+            />
+            {this.state.modalShow && (
+              <ConfirmationModal
+                type={"DELETE"}
+                withValidation={false}
+                callback={this._handleDelete}
+                header={`Are you sure you want to delete the selected files?`}
+                subHeader={`These files will be deleted from all connected collections and your file library. You can’t undo this action.`}
+              />
+            )}
+          </>
         ) : null}
       </React.Fragment>
     );
@@ -734,7 +835,6 @@ export default class DataView extends React.Component {
                         <ObjectPreview
                           viewer={this.props.viewer}
                           file={each}
-                          owner={this.props.user}
                           onAction={this.props.onAction}
                           isSelected={i in this.state.checked}
                         />

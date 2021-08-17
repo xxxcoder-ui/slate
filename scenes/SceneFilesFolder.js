@@ -468,7 +468,6 @@ export default class SceneFilesFolder extends React.Component {
               key="scene-files-folder"
               onAction={this.props.onAction}
               viewer={this.props.viewer}
-              user={this.props.viewer}
               items={files}
               view={tab}
               isOwner={true}
