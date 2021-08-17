@@ -164,3 +164,5 @@ export function mapResponsiveProp(prop, mapper) {
 
   return null;
 }
+
+export const copyToClipboard = (text) => navigator.clipboard.writeText(text);
