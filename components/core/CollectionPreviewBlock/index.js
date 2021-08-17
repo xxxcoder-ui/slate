@@ -4,7 +4,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
-import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
+import { FollowButton, ShareButton } from "~/components/core/CollectionPreviewBlock/components";
 import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
 import { Link } from "~/components/core/Link";
 import { motion, useAnimation } from "framer-motion";
@@ -70,6 +70,8 @@ const STYLES_CONTROLS = css`
   z-index: 1;
   right: 16px;
   top: 16px;
+  ${Styles.VERTICAL_CONTAINER};
+  align-items: flex-end;
   & > * + * {
     margin-top: 8px !important;
   }
@@ -127,6 +129,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 followCount={followCount}
                 disabled={collection.ownerId === viewer?.id}
               />
+              <ShareButton user={owner} collection={collection} />
             </motion.div>
           </Preview>
 
