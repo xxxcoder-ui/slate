@@ -2,9 +2,10 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
+import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
-import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
+import { FollowButton, ShareButton } from "~/components/core/CollectionPreviewBlock/components";
 import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
 import { Link } from "~/components/core/Link";
 import { motion, useAnimation } from "framer-motion";
@@ -48,6 +49,7 @@ const STYLES_SPACE_BETWEEN = css`
 `;
 
 const STYLES_PROFILE_IMAGE = (theme) => css`
+  display: block;
   background-color: ${theme.semantic.bgLight};
   height: 16px;
   width: 16px;
@@ -69,12 +71,22 @@ const STYLES_CONTROLS = css`
   z-index: 1;
   right: 16px;
   top: 16px;
+  ${Styles.VERTICAL_CONTAINER};
+  align-items: flex-end;
   & > * + * {
     margin-top: 8px !important;
   }
 `;
+
 const STYLES_TEXT_GRAY = (theme) => css`
   color: ${theme.semantic.textGray};
+`;
+
+const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
+  background-color: ${theme.semantic.bgDark};
+  border-radius: 4px;
+  padding: 4px;
+  color: ${theme.semantic.textGrayLight};
 `;
 
 export default function CollectionPreview({ collection, viewer, owner, onAction }) {
@@ -99,14 +111,22 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
-  const { fileCount } = collection;
+  const { fileCount, isPublic } = collection;
   const title = collection?.data?.name || collection.slatename;
+  const isOwner = viewer.id === collection.ownerId;
+
+  const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
 
   return (
     <div css={STYLES_CONTAINER}>
       <AspectRatio ratio={248 / 382}>
         <div css={Styles.VERTICAL_CONTAINER}>
-          <Preview collection={collection} onMouseEnter={showControls} onMouseLeave={hideControls}>
+          <Preview
+            file={preview.object}
+            type={preview.type}
+            onMouseEnter={showControls}
+            onMouseLeave={hideControls}
+          >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: areControlsVisible ? 1 : 0 }}
@@ -118,6 +138,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 followCount={followCount}
                 disabled={collection.ownerId === viewer?.id}
               />
+              <ShareButton user={owner} preview={preview} collection={collection} />
             </motion.div>
           </Preview>
 
@@ -147,9 +168,21 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 onMouseMove={showDescription}
                 onMouseLeave={hideDescription}
               >
-                <H5 color="textBlack" nbrOflines={1} title={title}>
-                  {title}
-                </H5>
+                <div
+                  css={[
+                    Styles.HORIZONTAL_CONTAINER_CENTERED,
+                    css({ justifyContent: "space-between" }),
+                  ]}
+                >
+                  <H5 color="textBlack" nbrOflines={1} title={title}>
+                    {title}
+                  </H5>
+                  {!isPublic && (
+                    <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 8 }}>
+                      <SVG.SecurityLock height={8} style={{ display: "block" }} />
+                    </div>
+                  )}
+                </div>
                 {!isDescriptionVisible && (
                   <P3 style={{ paddingTop: 3 }} nbrOflines={1} color="textGrayDark">
                     {description}
@@ -171,7 +204,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 )}
               </motion.div>
             </div>
-            <Metrics owner={owner} fileCount={fileCount} onAction={onAction} />
+            <Metrics owner={owner} isOwner={isOwner} fileCount={fileCount} onAction={onAction} />
           </motion.article>
         </div>
       </AspectRatio>
@@ -179,42 +212,45 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   );
 }
 
-function Metrics({ fileCount, owner, onAction }) {
+function Metrics({ fileCount, owner, isOwner, onAction }) {
   return (
     <div css={STYLES_METRICS}>
       <div css={[Styles.CONTAINER_CENTERED, STYLES_TEXT_GRAY]}>
-        <SVG.Box />
+        <SVG.Box height={16} width={16} />
         <P3 style={{ marginLeft: 4 }} color="textGray">
           {fileCount}
         </P3>
       </div>
-      {owner && (
-        <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
-          <Link
-            href={`/$/user/${owner.id}`}
-            onAction={onAction}
-            aria-label={`Visit ${owner.username}'s profile`}
-            title={`Visit ${owner.username}'s profile`}
-          >
-            <img
-              css={STYLES_PROFILE_IMAGE}
-              src={owner?.data?.photo}
-              alt={`${owner.username} profile`}
-              onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
-            />
-          </Link>
-          <Link
-            href={`/$/user/${owner.id}`}
-            onAction={onAction}
-            aria-label={`Visit ${owner.username}'s profile`}
-            title={`Visit ${owner.username}'s profile`}
-          >
-            <P3 style={{ marginLeft: 8 }} color="textGray">
-              {owner.username}
-            </P3>
-          </Link>
-        </div>
-      )}
+
+      <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
+        {!isOwner && (
+          <>
+            <Link
+              href={`/$/user/${owner.id}`}
+              onAction={onAction}
+              aria-label={`Visit ${owner.username}'s profile`}
+              title={`Visit ${owner.username}'s profile`}
+            >
+              <img
+                css={STYLES_PROFILE_IMAGE}
+                src={owner?.data?.photo}
+                alt={`${owner.username} profile`}
+                onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+              />
+            </Link>
+            <Link
+              href={`/$/user/${owner.id}`}
+              onAction={onAction}
+              aria-label={`Visit ${owner.username}'s profile`}
+              title={`Visit ${owner.username}'s profile`}
+            >
+              <P3 style={{ marginLeft: 8 }} color="textGray">
+                {owner.username}
+              </P3>
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -295,4 +331,19 @@ const useAnimateDescription = ({
   }, [isDescriptionVisible]);
 
   return { containerVariants, descriptionControls };
+};
+
+const getObjectToPreview = (objects = []) => {
+  if (objects.length === 0) return { type: "EMPTY" };
+
+  let objectIdx = 0;
+  let isImage = false;
+
+  objects.some((object, i) => {
+    const isPreviewableImage = Validations.isPreviewableImage(object.data.type);
+    if (isPreviewableImage) (objectIdx = i), (isImage = true);
+    return isPreviewableImage;
+  });
+
+  return { object: objects[objectIdx], type: isImage ? "IMAGE" : "PLACEHOLDER" };
 };
