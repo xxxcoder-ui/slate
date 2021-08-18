@@ -51,3 +51,6 @@ export const SENDGRID_WEBHOOK_KEY = process.env.SENDGRID_WEBHOOK_KEY;
 
 //NOTE(martina): iFramely
 export const IFRAMELY_API_KEY = process.env.IFRAMELY_API_KEY;
+
+//NOTE(martina): Microlink
+export const MICROLINK_API_KEY = process.env.MICROLINK_API_KEY;

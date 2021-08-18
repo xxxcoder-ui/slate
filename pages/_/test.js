@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as System from "~/dist";
+import * as System from "~/components/system";
 
 import { css } from "@emotion/react";
 

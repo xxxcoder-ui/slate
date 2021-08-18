@@ -67,13 +67,10 @@ export default function ProfileInfo({ owner, viewer, time, action, onAction }) {
         />
         <div css={STYLES_MOBILE_ALIGN}>
           <span>
-            <H4 color="textBlack" css={[STYLES_TEXT_BLACK, Styles.HEADING_04]}>
+            <H4 color="textBlack" css={[STYLES_TEXT_BLACK, Styles.H4]}>
               {username}
             </H4>
-            <H4
-              color="textBlack"
-              css={[STYLES_TEXT_BLACK, Styles.HEADING_04, Styles.MOBILE_HIDDEN]}
-            >
+            <H4 color="textBlack" css={[STYLES_TEXT_BLACK, Styles.H4, Styles.MOBILE_HIDDEN]}>
               &nbsp;•&nbsp;
             </H4>
             <P2 color="textGrayDark" style={{ display: "inline" }}>
