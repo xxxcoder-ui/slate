@@ -8,6 +8,7 @@ import * as Strings from "~/common/strings";
 import * as Utilities from "~/common/utilities";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
+import * as Styles from "~/common/styles";
 
 import { Link } from "~/components/core/Link";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
@@ -56,6 +57,13 @@ const STYLES_MOBILE_ONLY = css`
   @media (min-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
+`;
+
+const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
+  background-color: ${theme.semantic.bgDark};
+  border-radius: 4px;
+  padding: 8px;
+  color: ${theme.semantic.textGrayLight};
 `;
 
 export default class SceneSlate extends React.Component {
@@ -450,23 +458,16 @@ class SlatePage extends React.Component {
                   </span>{" "}
                 </Link>
                 / {data.name}
-                {isOwner && !isPublic && (
-                  <SVG.SecurityLock
-                    height="24px"
-                    style={{ marginLeft: 16, color: Constants.system.grayLight2 }}
-                  />
-                )}
               </span>
             ) : (
-              <span>
-                {data.name}
+              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <span>{data.name}</span>
                 {isOwner && !isPublic && (
-                  <SVG.SecurityLock
-                    height="24px"
-                    style={{ marginLeft: 16, color: Constants.system.grayLight2 }}
-                  />
+                  <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 16 }}>
+                    <SVG.SecurityLock height="16px" style={{ display: "block" }} />
+                  </div>
                 )}
-              </span>
+              </div>
             )
           }
           actions={<span css={STYLES_MOBILE_HIDDEN}>{actions}</span>}

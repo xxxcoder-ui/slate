@@ -82,10 +82,11 @@ const STYLES_TEXT_GRAY = (theme) => css`
   color: ${theme.semantic.textGray};
 `;
 
-const LOCK_WRAPPER = (theme) => css`
+const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
   background-color: ${theme.semantic.bgDark};
   border-radius: 4px;
   padding: 4px;
+  color: ${theme.semantic.textGrayLight};
 `;
 
 export default function CollectionPreview({ collection, viewer, owner, onAction }) {
@@ -177,8 +178,8 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                     {title}
                   </H5>
                   {!isPublic && (
-                    <div css={LOCK_WRAPPER} style={{ marginLeft: 8 }}>
-                      <SVG.Lock style={{ display: "block" }} />
+                    <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 8 }}>
+                      <SVG.SecurityLock height={8} style={{ display: "block" }} />
                     </div>
                   )}
                 </div>
