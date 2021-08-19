@@ -148,15 +148,15 @@ export const getById = async ({ id }) => {
 
   // user.library = await Data.getFilesByUserId({ id, sanitize: true });
 
-  const slates = await Data.getSlatesByUserId({
-    ownerId: id,
-    sanitize: true,
-    includeFiles: true,
-  });
-  const keys = await Data.getAPIKeysByUserId({ userId: id });
-  const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
-  const following = await Data.getFollowingByUserId({ ownerId: id });
-  const followers = await Data.getFollowersByUserId({ userId: id });
+  const [slates, keys, subscriptions, following, followers, { bucketRoot }] = await Promise.all([
+    Data.getSlatesByUserId({ ownerId: id, sanitize: true, includeFiles: true }),
+    Data.getAPIKeysByUserId({ userId: id }),
+    Data.getSubscriptionsByUserId({ ownerId: id }),
+    Data.getFollowingByUserId({ ownerId: id }),
+    Data.getFollowersByUserId({ userId: id }),
+    Utilities.getBucketAPIFromUserToken({ user }),
+  ]);
+
   const libraryCids =
     user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
 
@@ -200,10 +200,6 @@ export const getById = async ({ id }) => {
   }
 
   const tags = Utilities.getUserTags({ library: user.library, slates });
-
-  const { bucketRoot } = await Utilities.getBucketAPIFromUserToken({
-    user,
-  });
 
   let viewer = {
     id: user.id,
