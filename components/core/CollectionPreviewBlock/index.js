@@ -145,7 +145,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
           <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 nbrOflines={1} style={{ visibility: "hidden" }}>
-                {title}
+                {title?.slice(0, 5)}
               </H5>
 
               {description && (
@@ -155,7 +155,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                     nbrOflines={1}
                     color="textGrayDark"
                   >
-                    {description}
+                    {description?.slice(0, 5)}
                   </P3>
                 </div>
               )}
