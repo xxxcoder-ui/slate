@@ -148,14 +148,16 @@ export const getById = async ({ id }) => {
 
   // user.library = await Data.getFilesByUserId({ id, sanitize: true });
 
-  const [slates, keys, subscriptions, following, followers, { bucketRoot }] = await Promise.all([
-    Data.getSlatesByUserId({ ownerId: id, sanitize: true, includeFiles: true }),
-    Data.getAPIKeysByUserId({ userId: id }),
-    Data.getSubscriptionsByUserId({ ownerId: id }),
-    Data.getFollowingByUserId({ ownerId: id }),
-    Data.getFollowersByUserId({ userId: id }),
-    Utilities.getBucketAPIFromUserToken({ user }),
-  ]);
+  const [slates, keys, subscriptions, following, followers, { bucketRoot }] = (
+    await Promise.allSettled([
+      Data.getSlatesByUserId({ ownerId: id, sanitize: true, includeFiles: true }),
+      Data.getAPIKeysByUserId({ userId: id }),
+      Data.getSubscriptionsByUserId({ ownerId: id }),
+      Data.getFollowingByUserId({ ownerId: id }),
+      Data.getFollowersByUserId({ userId: id }),
+      Utilities.getBucketAPIFromUserToken({ user }),
+    ])
+  ).map((item) => item.value);
 
   const libraryCids =
     user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
