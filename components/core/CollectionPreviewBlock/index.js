@@ -19,7 +19,7 @@ const STYLES_CONTAINER = (theme) => css`
   display: flex;
   flex-direction: column;
   background-color: ${theme.semantic.bgLight};
-  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
+  box-shadow: 0 0 0 1px ${theme.system.grayLight4}, ${theme.shadow.lightSmall};
   border-radius: 16px;
   width: 100%;
   overflow: hidden;
@@ -41,7 +41,7 @@ const STYLES_INNER_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   padding: 9px 16px 0px;
-  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
+  box-shadow: 0 -0.5px 1px ${theme.system.grayLight4};
 `;
 
 const STYLES_SPACE_BETWEEN = css`

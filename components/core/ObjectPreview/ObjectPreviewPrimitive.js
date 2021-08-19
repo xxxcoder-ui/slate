@@ -15,7 +15,7 @@ const STYLES_WRAPPER = (theme) => css`
   position: relative;
   background-color: ${theme.semantic.bgLight};
   transition: box-shadow 0.2s;
-  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.card};
+  box-shadow: 0 0 0 1px ${theme.system.grayLight4}, ${theme.shadow.card};
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -37,7 +37,7 @@ const STYLES_INNER_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   padding: 9px 16px 0px;
-  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
+  box-shadow: 0 -0.5px 1px ${theme.system.grayLight4};
 `;
 
 const STYLES_TAG = css`
