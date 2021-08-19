@@ -37,7 +37,7 @@ const STYLES_INNER_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   padding: 9px 16px 0px;
-  box-shadow: 0 -0.5px 1px ${theme.system.grayLight4};
+  border-top: 1px solid ${theme.system.grayLight4};
 `;
 
 const STYLES_TAG = css`
