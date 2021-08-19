@@ -19,6 +19,7 @@ const TEXT = css`
   box-sizing: border-box;
   overflow-wrap: break-word;
   text-align: left;
+  font-weight: normal;
 
   a {
     ${LINK}
@@ -26,9 +27,8 @@ const TEXT = css`
 `;
 
 export const H1 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1.953rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.021px;
 
@@ -36,9 +36,8 @@ export const H1 = css`
 `;
 
 export const H2 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1.563rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.019px;
 
@@ -46,7 +45,7 @@ export const H2 = css`
 `;
 
 export const H3 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1.25rem;
   line-height: 1.5;
   letter-spacing: -0.017px;
@@ -55,7 +54,7 @@ export const H3 = css`
 `;
 
 export const H4 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 1rem;
   line-height: 1.5;
   letter-spacing: -0.011px;
@@ -64,7 +63,7 @@ export const H4 = css`
 `;
 
 export const H5 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 0.875rem;
   line-height: 1.5;
   letter-spacing: -0.006px;
@@ -75,14 +74,12 @@ export const H5 = css`
 export const P1 = css`
   font-family: ${Constants.font.text};
   font-size: 1rem;
-  font-weight: regular;
   line-height: 1.5;
   letter-spacing: -0.011px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-family: ${Constants.font.text};
     font-size: 0.875rem;
-    font-weight: regular;
     line-height: 1.5;
     letter-spacing: -0.006px;
   }
@@ -93,14 +90,12 @@ export const P1 = css`
 export const P2 = css`
   font-family: ${Constants.font.text};
   font-size: 0.875rem;
-  font-weight: regular;
   line-height: 1.5;
   letter-spacing: -0.006px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-family: ${Constants.font.text};
     font-size: 0.75rem;
-    font-weight: normal;
     line-height: 1.3;
     letter-spacing: 0px;
   }
@@ -111,7 +106,6 @@ export const P2 = css`
 export const P3 = css`
   font-family: ${Constants.font.text};
   font-size: 0.75rem;
-  font-weight: normal;
   line-height: 1.334;
   letter-spacing: 0px;
 
@@ -121,7 +115,6 @@ export const P3 = css`
 export const C1 = css`
   font-family: ${Constants.font.code};
   font-size: 0.75rem;
-  font-weight: normal;
   line-height: 1.3;
 
   ${TEXT}
@@ -130,7 +123,6 @@ export const C1 = css`
 export const C2 = css`
   font-family: ${Constants.font.code};
   font-size: 0.875rem;
-  font-weight: normal;
   line-height: 1.5;
 
   ${TEXT}
@@ -139,16 +131,14 @@ export const C2 = css`
 export const C3 = css`
   font-family: ${Constants.font.code};
   font-size: 0.875rem;
-  font-weight: normal;
   line-height: 1.5;
 
   ${TEXT}
 `;
 
 export const B1 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 0.875rem;
-  font-weight: medium;
   line-height: 1;
   letter-spacing: -0.006px;
 
