@@ -19,10 +19,10 @@
   },
   "scripts": {
     "dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 node . --unhandled-rejections=strict --max-old-space-size=8192",
-    "start": "NODE_ENV=production node . --unhandled-rejections=strict --max-old-space-size=8192",
+    "start": "node . --unhandled-rejections=strict --max-old-space-size=8192",
     "lint": "eslint . --ext .js",
     "lint:fix": "npm run lint -- --fix",
-    "build": "NODE_ENV=production next build",
+    "build": "next build",
     "build-system": "rollup -c",
     "scripts": "NODE_TLS_REJECT_UNAUTHORIZED=0 node --max-old-space-size=8192 ./scripts",
     "www-setup-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts setup-database",
