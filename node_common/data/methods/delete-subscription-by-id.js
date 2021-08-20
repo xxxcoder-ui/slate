@@ -1,3 +1,5 @@
+import * as Data from "~/node_common/data";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ id, ownerId, userId, slateId }) => {
@@ -19,9 +21,7 @@ export default async ({ id, ownerId, userId, slateId }) => {
           .where({ type: "SUBSCRIBE_SLATE", ownerId, slateId })
           .del();
 
-        let summaryQuery = await DB.from("slates")
-          .where({ id: slateId })
-          .decrement("subscriberCount", 1);
+        await Data.recalcSlateSubscribers({ slateId });
       }
 
       return 1 === data;

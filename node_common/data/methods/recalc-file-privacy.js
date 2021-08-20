@@ -30,7 +30,7 @@ export default async ({ fileId }) => {
         return rows.first();
       }
 
-      return;
+      return true;
     },
     errorFn: async (e) => {
       return {

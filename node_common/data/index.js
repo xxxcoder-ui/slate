@@ -45,6 +45,8 @@ import updateSlateById from "~/node_common/data/methods/update-slate-by-id";
 import updateSlatePrivacy from "~/node_common/data/methods/update-slate-privacy";
 import deleteSlatesByUserId from "~/node_common/data/methods/delete-slates-by-user-id";
 import deleteSlateById from "~/node_common/data/methods/delete-slate-by-id";
+import recalcSlateSubscribers from "~/node_common/data/methods/recalc-slate-subscribers";
+import recalcSlateFilecount from "~/node_common/data/methods/recalc-slate-filecount";
 
 // NOTE(jim):
 // API postgres queries
@@ -129,6 +131,8 @@ export {
   updateSlatePrivacy,
   deleteSlatesByUserId,
   deleteSlateById,
+  recalcSlateFilecount,
+  recalcSlateSubscribers,
   // NOTE(jim): API key operations
   createAPIKey,
   deleteAPIKeyById,
