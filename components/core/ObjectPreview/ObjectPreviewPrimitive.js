@@ -15,7 +15,7 @@ const STYLES_WRAPPER = (theme) => css`
   position: relative;
   background-color: ${theme.semantic.bgLight};
   transition: box-shadow 0.2s;
-  box-shadow: 0 0 0 0.5px ${theme.system.grayLight4}, ${theme.shadow.card};
+  box-shadow: 0 0 0 1px ${theme.system.grayLight4}, ${theme.shadow.card};
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -37,7 +37,7 @@ const STYLES_INNER_DESCRIPTION = (theme) => css`
   width: 100%;
   background-color: ${theme.semantic.bgLight};
   padding: 9px 16px 0px;
-  box-shadow: 0 -0.5px 0.5px ${theme.system.grayLight4};
+  border-top: 1px solid ${theme.system.grayLight4};
 `;
 
 const STYLES_TAG = css`
@@ -150,7 +150,7 @@ export default function ObjectPreviewPrimitive({
           <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
               <H5 as="h2" nbrOflines={1} style={{ visibility: "hidden" }}>
-                {title}
+                {title?.slice(0, 5)}
               </H5>
 
               {description && (
@@ -160,7 +160,7 @@ export default function ObjectPreviewPrimitive({
                     nbrOflines={1}
                     color="textGrayDark"
                   >
-                    {description}
+                    {description?.slice(0, 5)}
                   </P3>
                 </div>
               )}
