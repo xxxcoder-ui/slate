@@ -1,32 +1,30 @@
 const path = require("path");
 const dirPath = path.join(__dirname);
 
-if (process.env.NODE_ENV !== "production") {
-  require("@babel/register")({
-    presets: [
-      [require.resolve("@babel/preset-env")],
-      [
-        require.resolve("next/babel"),
-        {
-          "preset-env": {},
-          "transform-runtime": {},
-          "styled-jsx": {},
-          "class-properties": {},
-        },
-      ],
+require("@babel/register")({
+  presets: [
+    [require.resolve("@babel/preset-env")],
+    [
+      require.resolve("next/babel"),
+      {
+        "preset-env": {},
+        "transform-runtime": {},
+        "styled-jsx": {},
+        "class-properties": {},
+      },
     ],
-    plugins: [
-      [
-        require.resolve("babel-plugin-module-resolver"),
-        {
-          alias: {
-            "~": dirPath,
-          },
+  ],
+  plugins: [
+    [
+      require.resolve("babel-plugin-module-resolver"),
+      {
+        alias: {
+          "~": dirPath,
         },
-      ],
+      },
     ],
-    ignore: ["node_modules", ".next"],
-  });
-}
+  ],
+  ignore: ["node_modules", ".next"],
+});
 
 module.exports = require("./server.js");
