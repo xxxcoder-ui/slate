@@ -32,6 +32,7 @@
   },
   "repository": "filecoin-project/slate",
   "dependencies": {
+    "@babel/register": "^7.15.3",
     "@emotion/babel-preset-css-prop": "11.2.0",
     "@emotion/react": "11.1.5",
     "@glif/filecoin-number": "^1.1.0-beta.17",
@@ -91,7 +92,6 @@
     "@babel/eslint-parser": "^7.13.8",
     "@babel/plugin-proposal-optional-chaining": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
-    "@babel/register": "^7.15.3",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
