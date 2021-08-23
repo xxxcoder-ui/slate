@@ -1,4 +1,5 @@
 import * as Arrays from "~/common/arrays";
+import * as Data from "~/node_common/data";
 
 import { runQuery } from "~/node_common/data/utilities";
 
@@ -18,18 +19,8 @@ export default async ({ ids, ownerId }) => {
 
       const slateFiles = await DB("slate_files").whereIn("fileId", ids).del().returning("slateId");
 
-      let deletionCounts = {};
-
       for (let slateId of slateFiles) {
-        if (deletionCounts[slateId]) {
-          deletionCounts[slateId] += 1;
-        } else {
-          deletionCounts[slateId] = 1;
-        }
-      }
-
-      for (let [slateId, count] of Object.entries(deletionCounts)) {
-        await DB("slates").where("id", slateId).decrement("fileCount", count);
+        await Data.recalcSlateFilecount({ slateId });
       }
 
       const likes = await DB("likes").whereIn("fileId", ids).del();
@@ -38,7 +29,7 @@ export default async ({ ids, ownerId }) => {
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");
 
-      return files.length === ids.length;
+      return files;
     },
     errorFn: async (e) => {
       return {

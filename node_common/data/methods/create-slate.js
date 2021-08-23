@@ -1,3 +1,5 @@
+import * as Data from "~/node_common/data";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ ownerId, slatename, isPublic, data = {} }) => {
@@ -23,9 +25,7 @@ export default async ({ ownerId, slatename, isPublic, data = {} }) => {
             type: "CREATE_SLATE",
           }).into("activity");
 
-          const summaryQuery = await DB.from("users")
-            .where("id", ownerId)
-            .increment("slateCount", 1);
+          await Data.recalcUserSlatecount({ userId: ownerId });
         } else {
           const activityQuery = await DB.insert({
             ownerId,

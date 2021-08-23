@@ -1,3 +1,5 @@
+import * as Data from "~/node_common/data";
+
 import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ id }) => {
@@ -14,19 +16,19 @@ export default async ({ id }) => {
         .del()
         .returning("slateId");
 
-      const subscriberSummaryQuery = await DB.from("slates")
-        .whereIn("id", deletedSubscriptions)
-        .decrement("subscriberCount", 1);
+      for (let slateId of deletedSubscriptions) {
+        await Data.recalcSlateSubscribercount({ slateId });
+      }
 
       const deletedFollowing = await DB.from("subscriptions")
         .where({ ownerId: id })
         .whereNotNull("userId")
         .del()
         .returning("userId");
-
-      const followingSummaryQuery = await DB.from("users")
-        .whereIn("id", deletedFollowing)
-        .decrement("followerCount", 1);
+      console.log({ deletedFollowing }); //double confirm this
+      for (let userId of deletedFollowing) {
+        await Data.recalcUserFollowercount({ userId });
+      }
 
       const activity = await DB.from("activity")
         .where({ ownerId: id })
@@ -35,9 +37,11 @@ export default async ({ id }) => {
 
       const usage = await DB.from("usage").where("userId", id).del();
 
-      const data = await DB.from("users").where({ id }).del();
+      const data = await DB.from("users").where({ id }).del().returning("*");
 
-      return 1 === data;
+      let user = data ? data.pop() : data;
+
+      return user;
     },
     errorFn: async (e) => {
       return {

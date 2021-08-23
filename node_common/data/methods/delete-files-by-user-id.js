@@ -34,9 +34,9 @@ export default async ({ ownerId }) => {
 
       const activity = await DB("activity").whereIn("fileId", fileIds).del();
 
-      const files = await DB("files").whereIn("id", fileIds).del();
+      const files = await DB("files").whereIn("id", fileIds).del().returning("*");
 
-      return true;
+      return files;
     },
     errorFn: async (e) => {
       return {

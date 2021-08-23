@@ -27,10 +27,10 @@ export default async ({ fileId }) => {
       ]);
       let rows = updatedFile.rows;
       if (rows?.length) {
-        return rows.first();
+        return rows.pop();
       }
 
-      return;
+      return true;
     },
     errorFn: async (e) => {
       return {
