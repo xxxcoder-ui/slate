@@ -9,7 +9,8 @@ export default async ({ slateId, ids }) => {
       const slateFiles = await DB("slate_files")
         .where("slateId", slateId)
         .whereIn("fileId", ids)
-        .del();
+        .del()
+        .returning("*");
 
       const activityQuery = await DB("activity")
         .where({ slateId, type: "CREATE_SLATE_OBJECT" })
@@ -18,7 +19,7 @@ export default async ({ slateId, ids }) => {
 
       await Data.recalcSlateFilecount({ slateId });
 
-      return true;
+      return slateFiles;
     },
     errorFn: async (e) => {
       return {

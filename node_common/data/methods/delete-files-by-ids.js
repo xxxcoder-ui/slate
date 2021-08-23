@@ -29,7 +29,7 @@ export default async ({ ids, ownerId }) => {
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");
 
-      return files.length === ids.length;
+      return files;
     },
     errorFn: async (e) => {
       return {

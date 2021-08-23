@@ -7,6 +7,8 @@ import getUserByUsername from "~/node_common/data/methods/get-user-by-username";
 import getUserById from "~/node_common/data/methods/get-user-by-id";
 import getUserByEmail from "~/node_common/data/methods/get-user-by-email";
 import getUserByTwitterId from "~/node_common/data/methods/get-user-by-twitter-id";
+import recalcUserSlatecount from "~/node_common/data/methods/recalc-user-slatecount";
+import recalcUserFollowercount from "~/node_common/data/methods/recalc-user-followercount";
 
 // NOTE(amine)
 // TwitterTokens postgres queries
@@ -45,7 +47,7 @@ import updateSlateById from "~/node_common/data/methods/update-slate-by-id";
 import updateSlatePrivacy from "~/node_common/data/methods/update-slate-privacy";
 import deleteSlatesByUserId from "~/node_common/data/methods/delete-slates-by-user-id";
 import deleteSlateById from "~/node_common/data/methods/delete-slate-by-id";
-import recalcSlateSubscribers from "~/node_common/data/methods/recalc-slate-subscribers";
+import recalcSlateSubscribercount from "~/node_common/data/methods/recalc-slate-subscribercount";
 import recalcSlateFilecount from "~/node_common/data/methods/recalc-slate-filecount";
 
 // NOTE(jim):
@@ -105,6 +107,8 @@ export {
   getUserById,
   getUserByEmail,
   getUserByTwitterId,
+  recalcUserSlatecount,
+  recalcUserFollowercount,
   //NOTE(martina): File operations
   createFile,
   getFileByCid,
@@ -132,7 +136,7 @@ export {
   deleteSlatesByUserId,
   deleteSlateById,
   recalcSlateFilecount,
-  recalcSlateSubscribers,
+  recalcSlateSubscribercount,
   // NOTE(jim): API key operations
   createAPIKey,
   deleteAPIKeyById,
