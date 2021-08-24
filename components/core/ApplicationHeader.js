@@ -15,7 +15,7 @@ import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
 import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
-import { useForm, useMediaQuery } from "~/common/hooks";
+import { useField, useMediaQuery } from "~/common/hooks";
 import { Input } from "~/components/system";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -131,25 +131,30 @@ export default function ApplicationHeader({ viewer, onAction }) {
     }
   };
 
-  const handleUpload = React.useCallback(() => {
-    onAction({ type: "SIDEBAR", value: "SIDEBAR_ADD_FILE_TO_BUCKET" });
-  }, [onAction]);
-
-  const handleCreateSearch = () => {
+  const handleCreateSearch = (searchQuery) => {
     setState((prev) => ({ ...prev, showDropdown: false }));
     Events.dispatchCustomEvent({
       name: "show-search",
-      detail: {},
+      detail: {
+        initialValue: searchQuery,
+      },
     });
   };
 
   const {
-    values: { search: searchQuery },
     getFieldProps,
-  } = useForm({
-    initialValues: { search: "" },
+    value: searchQuery,
+    setFieldValue,
+  } = useField({
+    initialValue: "",
     onSubmit: handleCreateSearch,
   });
+
+  const handleUpload = React.useCallback(() => {
+    onAction({ type: "SIDEBAR", value: "SIDEBAR_ADD_FILE_TO_BUCKET" });
+  }, [onAction]);
+
+  const handleDismissSearch = () => setFieldValue("");
 
   const { mobile } = useMediaQuery();
   const isSignedOut = !viewer;
@@ -183,7 +188,8 @@ export default function ApplicationHeader({ viewer, onAction }) {
             placeholder={`Search ${!viewer ? "slate.host" : ""}`}
             inputCss={STYLES_SEARCH_COMPONENT}
             onSubmit={handleCreateSearch}
-            {...getFieldProps("search")}
+            name="search"
+            {...getFieldProps()}
           />
         </div>
         <div css={STYLES_RIGHT}>
@@ -192,6 +198,7 @@ export default function ApplicationHeader({ viewer, onAction }) {
             isSignedOut={isSignedOut}
             onAction={onAction}
             onUpload={handleUpload}
+            onDismissSearch={handleDismissSearch}
           />
         </div>
       </div>
