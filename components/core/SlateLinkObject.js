@@ -54,7 +54,10 @@ export default class SlateLinkObject extends React.Component {
           <iframe
             src={url}
             css={STYLES_IFRAME}
-            style={{ display: this.state.loaded ? "block" : "none" }}
+            style={{
+              display: this.state.loaded ? "block" : "none",
+              background: Constants.system.white,
+            }}
             onLoad={() => this.setState({ loaded: true })}
           />
           <LinkLoading
