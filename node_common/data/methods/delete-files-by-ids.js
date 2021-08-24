@@ -23,8 +23,6 @@ export default async ({ ids, ownerId }) => {
         await Data.recalcSlateFilecount({ slateId });
       }
 
-      const likes = await DB("likes").whereIn("fileId", ids).del();
-
       const activity = await DB("activity").whereIn("fileId", ids).del();
 
       const files = await DB("files").whereIn("id", ids).del().returning("*");

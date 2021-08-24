@@ -17,7 +17,7 @@ Logging.log(`RUNNING:  files-migration.js`);
 
 const makeFilesPublic = async () => {
   await DB.from("files").update({ isPublic: false });
-  console.log("finished setting files to private");
+
   let publicFiles = await DB.from("files")
     .whereIn("id", function () {
       this.select("slate_files.fileId")
@@ -31,10 +31,10 @@ const makeFilesPublic = async () => {
 const getSlateSubscriberAndFileCount = async () => {
   const slates = await DB.select("*").from("slates");
   for (let slate of slates) {
-    const subscriberCountFields = ["id", "subscriptions", "slateId", slateId];
+    const subscriberCountFields = ["id", "subscriptions", "slateId", slate.id];
     const subscriberCount = `(SELECT COUNT(??) FROM ?? WHERE ?? = ?)`;
 
-    const fileCountFields = ["id", "slate_files", "slateId", slateId];
+    const fileCountFields = ["id", "slate_files", "slateId", slate.id];
     const fileCount = `(SELECT COUNT(??) FROM ?? WHERE ?? = ?)`;
 
     const updateFields = [
@@ -44,7 +44,7 @@ const getSlateSubscriberAndFileCount = async () => {
       "subscriberCount",
       ...subscriberCountFields,
       "id",
-      slateId,
+      slate.id,
     ];
     const update = await DB.raw(
       `UPDATE ?? SET ?? = ${fileCount}, ?? = ${subscriberCount} WHERE ?? = ? RETURNING *`,
@@ -56,10 +56,10 @@ const getSlateSubscriberAndFileCount = async () => {
 const getUserFollowerAndSlateCount = async () => {
   const users = await DB.select("*").from("users");
   for (let user of users) {
-    const followerCountFields = ["id", "subscriptions", "userId", userId];
+    const followerCountFields = ["id", "subscriptions", "userId", user.id];
     const followerCount = `(SELECT COUNT(??) FROM ?? WHERE ?? = ?)`;
 
-    const slateCountFields = ["id", "slates", "ownerId", userId, "isPublic", true];
+    const slateCountFields = ["id", "slates", "ownerId", user.id, "isPublic", true];
     const slateCount = `(SELECT COUNT(??) FROM ?? WHERE ?? = ? AND ?? = ?)`;
 
     const updateFields = [
@@ -69,7 +69,7 @@ const getUserFollowerAndSlateCount = async () => {
       "followerCount",
       ...followerCountFields,
       "id",
-      userId,
+      user.id,
     ];
     const update = await DB.raw(
       `UPDATE ?? SET ?? = ${slateCount}, ?? = ${followerCount} WHERE ?? = ? RETURNING *`,
@@ -78,10 +78,23 @@ const getUserFollowerAndSlateCount = async () => {
   }
 };
 
+const removeUnusedColumns = async () => {
+  await DB.schema.table("users", function (table) {
+    table.dropColumn("fileCount");
+  });
+
+  await DB.schema.table("files", function (table) {
+    table.dropColumn("likeCount");
+  });
+
+  await DB.schema.dropTable("likes");
+};
+
 const runScript = async () => {
-  await makeFilesPublic();
+  // await makeFilesPublic();
   // await getSlateSubscriberAndFileCount();
   // await getUserFollowerAndSlateCount();
+  await removeUnusedColumns();
 
   Logging.log("Finished running. Hit CTRL + C to quit");
 };
