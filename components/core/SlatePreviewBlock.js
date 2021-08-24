@@ -157,16 +157,6 @@ const STYLES_COPY_INPUT = css`
   opacity: 0;
 `;
 
-const STYLES_TAG = css`
-  margin-right: 16px;
-  padding: 4px 8px;
-  border-radius: 2px;
-  border: 1px solid ${Constants.system.black};
-  color: ${Constants.system.black};
-  font-family: ${Constants.font.semiBold};
-  font-size: 0.9rem;
-`;
-
 const STYLES_BODY = css`
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};

@@ -35,18 +35,7 @@ export default class SidebarCreateSlate extends React.Component {
     name: "",
     isPublic: true,
     body: "",
-    tags: [],
-    suggestions: this.props.viewer?.tags || [],
     loading: false,
-  };
-
-  componentDidMount = () => {
-    this.updateSuggestions();
-  };
-
-  updateSuggestions = () => {
-    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleSubmit = async () => {
@@ -62,7 +51,6 @@ export default class SidebarCreateSlate extends React.Component {
       name: this.state.name,
       isPublic: this.state.isPublic,
       body: this.state.body,
-      tags: this.state.tags,
     });
     console.log(response);
 
@@ -105,11 +93,7 @@ export default class SidebarCreateSlate extends React.Component {
   };
 
   _handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      if (e.target.name === "tags") {
-        this.updateSuggestions();
-      }
-    });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   render() {
@@ -129,14 +113,14 @@ export default class SidebarCreateSlate extends React.Component {
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Name</System.P1>
-          <System.P1
+          {/* <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
             Give your collection a name so you and others can find it on Slate and on the web.
-          </System.P1>
+          </System.P1> */}
 
           <System.Input
             autoFocus
@@ -162,14 +146,14 @@ export default class SidebarCreateSlate extends React.Component {
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Description</System.P1>
-          <System.P1
+          {/* <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
             Give your collection a description, add links, and connect it to other collections.
-          </System.P1>
+          </System.P1> */}
 
           <System.Textarea
             style={{ marginTop: 12 }}
@@ -178,26 +162,6 @@ export default class SidebarCreateSlate extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
-          />
-        </div>
-
-        <div css={STYLES_GROUPING}>
-          <System.P1 css={STYLES_HEADER}>Tags</System.P1>
-          <System.P1
-            css={STYLES_TEXT}
-            style={{
-              marginTop: 12,
-            }}
-          >
-            Add tags to a collection to categorize it.
-          </System.P1>
-          <System.Tag
-            name="tags"
-            placeholder={`Edit tags for ${this.state.name ? this.state.name : "this collection"}`}
-            tags={this.state.tags}
-            suggestions={this.state.suggestions}
-            style={{ marginTop: 12 }}
-            onChange={this._handleChange}
           />
         </div>
 

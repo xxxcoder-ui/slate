@@ -47,18 +47,6 @@ const STYLES_HEADER = css`
   }
 `;
 
-const STYLES_ACCESS = css`
-  box-sizing: border-box;
-  font-family: ${Constants.font.text};
-  font-size: ${Constants.typescale.lvl1};
-  color: ${Constants.system.black};
-  margin: 12px 0;
-  line-height: 1.5;
-  display: block;
-  width: 100%;
-  max-width: 800px;
-`;
-
 const STYLES_DESCRIPTION = css`
   box-sizing: border-box;
   font-family: ${Constants.font.text};
@@ -77,40 +65,6 @@ const STYLES_DESCRIPTION = css`
   }
 `;
 
-const STYLES_TAGS_WRAPPER = css`
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  max-width: 800px;
-`;
-
-const STYLES_LIST = css`
-  display: inline-flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-`;
-
-const STYLES_TAG = css`
-  list-style-type: none;
-  border-radius: 4px;
-  background: ${Constants.semantic.bgLight};
-  color: ${Constants.system.black};
-  font-family: ${Constants.font.text};
-  padding: 2px 8px;
-  margin: 8px 8px 0 0;
-
-  span {
-    line-height: 1.5;
-    font-size: 14px;
-  }
-
-  &:hover {
-    background: ${Constants.system.grayLight4};
-  }
-`;
-
 export const ScenePageHeader = (props) => {
   return (
     <header css={STYLES_ROOT} style={props.style}>
@@ -119,17 +73,6 @@ export const ScenePageHeader = (props) => {
         <div css={STYLES_DESCRIPTION}>
           <ProcessedText text={props.children} />
         </div>
-        {props.tags && (
-          <div css={STYLES_TAGS_WRAPPER}>
-            <ul css={STYLES_LIST}>
-              {props.tags.map((tag, i) => (
-                <li key={tag} css={STYLES_TAG}>
-                  <span>{tag}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
       {props.actions ? <div css={STYLES_RIGHT}>{props.actions}</div> : null}
     </header>

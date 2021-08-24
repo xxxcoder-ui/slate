@@ -201,7 +201,7 @@ export const getById = async ({ id }) => {
     }
   }
 
-  const tags = Utilities.getUserTags({ library: user.library, slates });
+  const tags = Utilities.getUserTags({ library: user.library });
 
   let viewer = {
     id: user.id,

@@ -31,7 +31,6 @@ export default async (req, res) => {
     data: {
       name: req.body.data.name,
       body: req.body.data.body,
-      tags: req.body.data.tags,
     },
   });
 
