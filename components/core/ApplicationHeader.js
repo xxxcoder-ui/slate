@@ -39,8 +39,13 @@ const STYLES_DISMISS_BUTTON = (theme) => css`
   color: ${theme.semantic.textGray};
 `;
 
-const STYLES_APPLICATION_HEADER_CONTAINER = (theme) => css`
+const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
+  position: absolute;
   width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
   background-color: ${theme.system.white};
   box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
 
@@ -151,7 +156,7 @@ export default function ApplicationHeader({ viewer, onAction }) {
   const isSearching = searchQuery.length !== 0;
 
   return (
-    <header css={STYLES_APPLICATION_HEADER_CONTAINER}>
+    <header style={{ position: "relative" }}>
       <div css={STYLES_APPLICATION_HEADER}>
         <div css={STYLES_LEFT}>
           <Show
@@ -200,6 +205,9 @@ export default function ApplicationHeader({ viewer, onAction }) {
         />
         <div css={STYLES_BACKGROUND} />
       </Show>
+      {/** NOTE(amine): a fix for a backdrop-filter bug where the filter doesn't take any effects.
+       *   It happens when we have two elements using backdrop-filter with a parent-child relationship */}
+      <div css={STYLES_APPLICATION_HEADER_BACKGROUND} />
     </header>
   );
 }
