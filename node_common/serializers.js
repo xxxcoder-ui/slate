@@ -34,7 +34,6 @@ export const sanitizeSlate = (entity) => {
       name: entity.data?.name,
       body: entity.data?.body,
       preview: entity.data?.preview,
-      tags: entity.data?.tags,
     },
     fileCount: entity.fileCount,
     subscriberCount: entity.subscriberCount,
@@ -109,7 +108,6 @@ export const cleanSlate = (entity) => {
     //   name: entity.data?.name,
     //   body: entity.data?.body,
     //   preview: entity.data?.preview,
-    //   tags: entity.data?.tags,
     // },
   };
 };

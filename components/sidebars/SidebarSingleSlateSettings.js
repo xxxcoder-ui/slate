@@ -51,18 +51,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
     isPublic: this.props.data.isPublic,
     body: this.props.data.data.body,
     name: this.props.data.data.name,
-    tags: this.props.data.data?.tags || [],
-    suggestions: this.props.viewer?.tags || [],
     modalShow: false,
-  };
-
-  componentDidMount = () => {
-    this.updateSuggestions();
-  };
-
-  updateSuggestions = () => {
-    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
   };
 
   _handleSubmit = async () => {
@@ -72,12 +61,10 @@ export default class SidebarSingleSlateSettings extends React.Component {
         slate.data.name = this.state.name;
         slate.isPublic = this.state.isPublic;
         slate.data.body = this.state.body;
-        slate.data.tags = this.state.tags;
 
-        let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
         this.props.onAction({
           type: "UPDATE_VIEWER",
-          viewer: { slates, tags: Array.from(newSuggestions) },
+          viewer: { slates },
         });
 
         break;
@@ -91,7 +78,6 @@ export default class SidebarSingleSlateSettings extends React.Component {
       data: {
         name: this.state.name,
         body: this.state.body,
-        tags: this.state.tags,
       },
     });
 
@@ -105,11 +91,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
   };
 
   _handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      if (e.target.name === "tags") {
-        this.updateSuggestions();
-      }
-    });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   _handleDelete = async (res) => {
@@ -172,14 +154,14 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Name</System.P1>
-          <System.P1
+          {/* <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
             Give your collection a name so you and others can find it on Slate and on the web.
-          </System.P1>
+          </System.P1> */}
 
           <System.Input
             placeholder="Collection name..."
@@ -204,14 +186,14 @@ export default class SidebarSingleSlateSettings extends React.Component {
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Description</System.P1>
-          <System.P1
+          {/* <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
             Give your collection a description, add links, and connect it to other collections.
-          </System.P1>
+          </System.P1> */}
 
           <System.Textarea
             style={{ marginTop: 12 }}
@@ -223,26 +205,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
           />
         </div>
 
-        <div css={STYLES_GROUPING}>
-          <System.P1 css={STYLES_HEADER}>Tags</System.P1>
-          <System.P1
-            css={STYLES_TEXT}
-            style={{
-              marginTop: 12,
-            }}
-          >
-            Add tags to a collection to categorize it.
-          </System.P1>
-          <System.Tag
-            name="tags"
-            tags={this.state.tags}
-            suggestions={this.state.suggestions}
-            style={{ marginTop: 12 }}
-            onChange={this._handleChange}
-          />
-        </div>
-
-        <div css={STYLES_GROUPING}>
+        {/* <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Cover image</System.P1>
 
           <System.P1
@@ -256,9 +219,9 @@ export default class SidebarSingleSlateSettings extends React.Component {
           </System.P1>
 
           <div css={STYLES_IMAGE_BOX} style={{ marginTop: 24 }}>
-            <img src={preview} alt="" style={{ maxWidth: "368px", maxHeight: "368px" }} />
+            <img src={preview} alt="" style={{ maxWidth: "240px", maxHeight: "240px" }} />
           </div>
-        </div>
+        </div> */}
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER} style={{ marginBottom: 12 }}>

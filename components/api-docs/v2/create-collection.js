@@ -15,7 +15,6 @@ const EXAMPLE_CODE_JS = (key, slateId) => {
         name: "My Dog Fido",
         isPublic: true,
         body: "This is an album of my dog, Fido, a golden retriever",
-        tags: ["dogs", "retrievers", "golden retriever"]
       },
     }),
   });`;
@@ -34,7 +33,6 @@ postJson = {
         name: "My Dog Fido",
         isPublic: true,
         body: "This is an album of my dog, Fido, a golden retriever",
-        tags: ["dogs", "retrievers", "golden retriever"]
     }
   }
 

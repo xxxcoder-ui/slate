@@ -407,7 +407,6 @@ class SlatePage extends React.Component {
     let objects = this.props.data.objects;
     const isPublic = this.props.data.isPublic;
     const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;
-    const tags = data.tags;
 
     let actions = isOwner ? (
       <span>
@@ -471,7 +470,6 @@ class SlatePage extends React.Component {
             )
           }
           actions={<span css={STYLES_MOBILE_HIDDEN}>{actions}</span>}
-          tags={tags}
         >
           {body}
         </ScenePageHeader>
