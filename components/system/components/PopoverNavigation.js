@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
+import { P2 } from "~/components/system/components/Typography";
 
 const STYLES_POPOVER = css`
   z-index: ${Constants.zindex.tooltip};
@@ -19,8 +19,8 @@ const STYLES_POPOVER = css`
   border: 1px solid ${Constants.semantic.borderGrayLight};
 `;
 
-const STYLES_POPOVER_SECTION = css`
-  border-bottom: 1px solid ${Constants.semantic.borderGrayLight};
+const STYLES_POPOVER_SECTION = (theme) => css`
+  border-bottom: 1px solid ${theme.semantic.borderGrayLight};
   padding-bottom: 6px;
   margin-bottom: 6px;
 
@@ -44,33 +44,42 @@ const STYLES_POPOVER_ITEM = css`
   }
 `;
 
-export class PopoverNavigation extends React.Component {
-  render() {
-    return (
-      <div
-        css={STYLES_POPOVER}
-        style={this.props.style}
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-        }}
-      >
-        {this.props.topSection ? this.props.topSection : null}
-        {this.props.navigation.map((section, i) => (
-          <div css={STYLES_POPOVER_SECTION}>
-            {section.map((each, j) => (
-              <div
-                key={`${i}-${j}`}
-                css={STYLES_POPOVER_ITEM}
-                style={this.props.itemStyle}
-                onClick={each.onClick}
-              >
-                <div css={Styles.H5 || this.props.css}>{each.text}</div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  }
+export function PopoverNavigation({
+  containerCss,
+  sectionCss,
+  sectionItemCss,
+  css,
+  topSection = null,
+  navigation,
+  itemStyle,
+  ...props
+}) {
+  return (
+    <div
+      css={[STYLES_POPOVER, containerCss]}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      {...props}
+    >
+      {topSection}
+      {navigation.map((section, i) => (
+        <div css={[STYLES_POPOVER_SECTION, sectionCss]} key={i}>
+          {section.map((each, j) => (
+            <div
+              key={`${i}-${j}`}
+              css={[STYLES_POPOVER_ITEM, sectionItemCss]}
+              style={itemStyle}
+              onClick={each.onClick}
+            >
+              <P2 color="textBlack" css={css}>
+                {each.text}
+              </P2>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 }
