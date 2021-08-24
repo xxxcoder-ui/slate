@@ -64,7 +64,7 @@ function UploadedAvatar({ avatarCss, ...props }) {
   );
 }
 
-export default function ProfilePhoto({ size, ...props }) {
+export default function ProfilePhoto({ size, style, ...props }) {
   // NOTE(amine): will calculate only when the size prop changes
   const memoizedSizeProp = useMemoCompare(size, isEqual);
   const STYLES_SIZE = React.useMemo(() => {
@@ -78,9 +78,9 @@ export default function ProfilePhoto({ size, ...props }) {
   return (
     <>
       {props.user.data.photo ? (
-        <UploadedAvatar url={props.user.data.photo} avatarCss={STYLES_SIZE} />
+        <UploadedAvatar url={props.user.data.photo} style={style} avatarCss={STYLES_SIZE} />
       ) : (
-        <BoringAvatar userId={props.user.id} avatarCss={STYLES_SIZE} />
+        <BoringAvatar userId={props.user.id} style={style} avatarCss={STYLES_SIZE} />
       )}
     </>
   );
