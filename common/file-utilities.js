@@ -50,6 +50,7 @@ const getCookie = (name) => {
 };
 
 export const uploadLink = async ({ url, slate }) => {
+  Events.dispatchMessage({ message: "Uploading link...", status: "INFO" });
   let createResponse = await Actions.createLink({ url, slate });
   if (Events.hasError(createResponse)) {
     return;
