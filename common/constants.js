@@ -105,6 +105,7 @@ export const semantic = {
   bgBlurBlack: "rgba(0, 5, 10, 0.5)",
   bgBlurBlackOP: "rgba(0, 5, 10, 0.85)",
   bgBlurBlackTRN: "rgba(0, 5, 10, 0.3)",
+  bgBlurDark: "rgba(28, 29, 30, 0.7)",
   bgBlurDark6: "rgba(28, 29, 30, 0.5)",
   bgBlurDark6OP: "rgba(28, 29, 30, 0.85)",
   bgBlurDark6TRN: "rgba(28, 29, 30, 0.3)",
@@ -113,6 +114,7 @@ export const semantic = {
   borderGrayLight: system.grayLight5,
   borderDark: system.grayDark6,
   borderGrayDark: system.grayDark5,
+  borderGrayLight4: system.grayLight4,
 
   bgBlue: system.blueLight6,
   bgGreen: system.greenLight6,
