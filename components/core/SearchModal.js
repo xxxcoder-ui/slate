@@ -477,8 +477,8 @@ export class SearchModal extends React.Component {
     this._handleHide();
   };
 
-  _handleShow = async () => {
-    this.setState({ modal: true });
+  _handleShow = async (e) => {
+    this.setState({ modal: true, inputValue: e.detail.initialValue });
     await this.fillLocalDirectory();
     this.setState({ loading: false });
     if (!this.initialized) {
