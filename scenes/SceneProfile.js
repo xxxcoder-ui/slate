@@ -134,12 +134,6 @@ export default class SceneProfile extends React.Component {
   //   // }
   // };
 
-  getFilteredViewer = () => {
-    let viewer = this.props.viewer;
-    const res = Utilities.getPublicAndPrivateFiles({ viewer });
-    return { ...viewer, library: res.publicFiles };
-  };
-
   render() {
     let user = this.props.data;
     if (!user) {
