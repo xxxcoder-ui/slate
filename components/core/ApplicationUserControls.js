@@ -162,22 +162,28 @@ export class ApplicationUserControlsPopup extends React.Component {
     const { stats } = this.props.viewer;
 
     const topSection = (
-      <div style={{ marginBottom: 16 }} css={Styles.VERTICAL_CONTAINER_CENTERED}>
-        <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "12px" }} size={48} />
-        <H4 color="textBlack" style={{ marginTop: 10 }}>
-          {username}
-        </H4>
-        <div style={{ marginTop: 6 }} css={Styles.HORIZONTAL_CONTAINER}>
-          <P3 color="textBlack" style={{ marginRight: 8 }}>
-            {objectsLength} {Strings.pluralize("Object", objectsLength)}
-          </P3>
-          <P3 color="textBlack" style={{ marginLeft: 8 }}>
-            {Strings.bytesToSize(stats.bytes, 0)} of {Strings.bytesToSize(stats.maximumBytes, 0)}{" "}
-            Stored
-          </P3>
+      <Link href="/_/data" onAction={this._handleAction}>
+        <div style={{ marginBottom: 16 }} css={Styles.VERTICAL_CONTAINER_CENTERED}>
+          <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "12px" }} size={48} />
+          <H4 color="textBlack" style={{ marginTop: 10 }}>
+            {username}
+          </H4>
+          <div style={{ marginTop: 6 }} css={Styles.HORIZONTAL_CONTAINER}>
+            <P3 color="textBlack" style={{ marginRight: 8 }}>
+              {objectsLength} {Strings.pluralize("Object", objectsLength)}
+            </P3>
+            <P3 color="textBlack" style={{ marginLeft: 8 }}>
+              {Strings.bytesToSize(stats.bytes, 0)} of {Strings.bytesToSize(stats.maximumBytes, 0)}{" "}
+              Stored
+            </P3>
+          </div>
+          <DataMeter
+            bytes={stats.bytes}
+            maximumBytes={stats.maximumBytes}
+            style={{ marginTop: 8 }}
+          />
         </div>
-        <DataMeter bytes={stats.bytes} maximumBytes={stats.maximumBytes} style={{ marginTop: 8 }} />
-      </div>
+      </Link>
     );
 
     const ExtensionButton = (
