@@ -41,6 +41,7 @@ const STYLES_POPOVER_CONTANIER = (theme) => css`
 
 const STYLES_POPOVER_SECTION = (theme) => css`
   border-top: 1px solid ${theme.semantic.borderGrayLight4};
+  border-bottom: none;
   padding: 0;
   margin: 0;
   padding-top: 8px;
