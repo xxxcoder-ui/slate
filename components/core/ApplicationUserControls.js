@@ -3,8 +3,9 @@ import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Strings from "~/common/strings";
+import * as Environment from "~/common/environment";
 
-import { PopoverNavigation } from "~/components/system";
+import { ButtonPrimaryFull, PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
@@ -63,15 +64,19 @@ const STYLES_POPOVER_SECTION = (theme) => css`
 
 const STYLES_POPOVER_SECTION_ITEM = (theme) => css`
   position: relative;
+  padding: 0px;
   width: calc(100% + 16px);
   left: -8px;
+  a {
+    display: block;
+  }
+`;
+
+const STYLES_SECTION_ITEM_HOVER = (theme) => css`
   padding: 1px 8px 3px;
   border-radius: 8px;
   &:hover {
     background-color: ${theme.system.grayLight4};
-  }
-  a {
-    display: block;
   }
 `;
 
@@ -106,6 +111,37 @@ const DataMeter = ({ bytes = 1000, maximumBytes = 4000, ...props }) => {
 };
 
 export class ApplicationUserControlsPopup extends React.Component {
+  state = {
+    isExtensionDownloaded: false,
+  };
+
+  componentDidMount() {
+    if (document) {
+      const isExtensionDownloaded = this._checkIfExtensionIsDownloaded();
+      this.setState({ isExtensionDownloaded });
+    }
+  }
+
+  _checkIfExtensionIsDownloaded = () => {
+    const extensionElement = document.getElementById("chrome_extension");
+    if (!extensionElement) return false;
+    return extensionElement.className.includes("isDownloaded");
+  };
+
+  _handleExtensionDownloadLink = () => {
+    const testUserAgent = (regex) => regex.test(window.navigator.userAgent);
+
+    const isFirefox = testUserAgent(/firefox/i);
+    const firefoxLink = Environment.EXTENSION_FIREFOX;
+    if (isFirefox && firefoxLink) return window.open(firefoxLink, "_blank");
+
+    const isSafari = testUserAgent(/safari/i);
+    const safariLink = Environment.EXTENSION_SAFARI;
+    if (isSafari && safariLink) return window.open(safariLink, "_blank");
+
+    window.open(Environment.EXTENSION_CHROME, "_blank");
+  };
+
   _handleAction = (props) => {
     this.props.onTogglePopup();
     this.props.onAction(props);
@@ -144,60 +180,90 @@ export class ApplicationUserControlsPopup extends React.Component {
       </div>
     );
 
+    const ExtensionButton = (
+      <div css={Styles.MOBILE_HIDDEN}>
+        <ButtonPrimaryFull
+          style={{
+            padding: "0px 12px",
+            marginTop: "4px",
+            marginBottom: "28px",
+            minHeight: "30px",
+            fontFamily: Constants.font.text,
+          }}
+          onClick={this._handleExtensionDownloadLink}
+        >
+          Install Slate browser extension
+        </ButtonPrimaryFull>
+      </div>
+    );
+
     const navigation = [
       [
         {
           text: (
-            <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
-              Profile
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
+                Profile
+              </Link>
+            </div>
           ),
         },
         {
           text: (
-            <Link href={"/_/directory"} onAction={this._handleAction}>
-              Directory
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={"/_/directory"} onAction={this._handleAction}>
+                Directory
+              </Link>
+            </div>
           ),
         },
       ],
       [
         {
           text: (
-            <Link href={"/_/filecoin"} onAction={this._handleAction}>
-              Filecoin
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={"/_/filecoin"} onAction={this._handleAction}>
+                Filecoin
+              </Link>
+            </div>
           ),
         },
         {
           text: (
-            <Link href={"/_/storage-deal"} onAction={this._handleAction}>
-              Storage deal
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={"/_/storage-deal"} onAction={this._handleAction}>
+                Storage deal
+              </Link>
+            </div>
           ),
         },
         {
           text: (
-            <Link href={"/_/api"} onAction={this._handleAction}>
-              API
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={"/_/api"} onAction={this._handleAction}>
+                API
+              </Link>
+            </div>
           ),
         },
       ],
       [
         {
           text: (
-            <Link href={"/_/settings"} onAction={this._handleAction}>
-              Settings
-            </Link>
+            <div css={STYLES_SECTION_ITEM_HOVER}>
+              <Link href={"/_/settings"} onAction={this._handleAction}>
+                Settings
+              </Link>
+            </div>
           ),
         },
         {
-          text: "Sign out",
+          text: <div css={STYLES_SECTION_ITEM_HOVER}> Sign out</div>,
           onClick: (e) => {
             this._handleSignOut(e);
           },
         },
+        ...(!this.state.isExtensionDownloaded ? [{ text: ExtensionButton }] : []),
       ],
     ];
 
