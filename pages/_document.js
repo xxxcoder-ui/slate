@@ -13,7 +13,7 @@ class MyDocument extends Document {
         <body>
           {/** NOTE(amine): used to communicate with the extension via classNames.
            *   e.g. if the extension is installed on the user's browser, it will add 'isDownloaded' to className*/}
-          <div id="chrome_extension" />
+          <div id="browser_extension" />
           <Main />
           <NextScript />
         </body>

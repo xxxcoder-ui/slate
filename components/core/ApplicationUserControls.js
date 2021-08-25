@@ -123,7 +123,7 @@ export class ApplicationUserControlsPopup extends React.Component {
   }
 
   _checkIfExtensionIsDownloaded = () => {
-    const extensionElement = document.getElementById("chrome_extension");
+    const extensionElement = document.getElementById("browser_extension");
     if (!extensionElement) return false;
     return extensionElement.className.includes("isDownloaded");
   };
