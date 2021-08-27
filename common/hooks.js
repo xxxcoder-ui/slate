@@ -173,15 +173,16 @@ export const useField = ({
         if (event) event(e);
       });
 
-  /** ---------- NOTE(amine): Input Handlers ---------- */
-  const handleFieldChange = (e) =>
+  const setFieldValue = (value) =>
     setState((prev) => ({
       ...prev,
-      value: e.target.value,
+      value,
       error: undefined,
       touched: false,
     }));
 
+  /** ---------- NOTE(amine): Input Handlers ---------- */
+  const handleFieldChange = (e) => setFieldValue(e.target.value);
   const handleOnBlur = () => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let error = {};
@@ -204,10 +205,10 @@ export const useField = ({
     if (!onSubmit) return;
     setState((prev) => ({ ...prev, isSubmitting: true }));
     onSubmit(state.value)
-      .then(() => {
+      ?.then(() => {
         setState((prev) => ({ ...prev, isSubmitting: false }));
       })
-      .catch(() => {
+      ?.catch(() => {
         setState((prev) => ({ ...prev, isSubmitting: false }));
       });
   };
@@ -223,7 +224,7 @@ export const useField = ({
     onSubmit: handleFormOnSubmit,
   });
 
-  return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
+  return { getFieldProps, value: state.value, setFieldValue, isSubmitting: state.isSubmitting };
 };
 
 export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {

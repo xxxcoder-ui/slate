@@ -31,27 +31,6 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
   }
 };
 
-export const getPublicAndPrivateFiles = ({ viewer }) => {
-  let publicFileIds = [];
-  for (let slate of viewer.slates) {
-    if (slate.isPublic) {
-      publicFileIds.push(...slate.objects.map((obj) => obj.id));
-    }
-  }
-
-  let publicFiles = [];
-  let privateFiles = [];
-  let library = viewer.library || [];
-  for (let file of library) {
-    if (file.isPublic || publicFileIds.includes(file.id)) {
-      publicFiles.push(file);
-    } else {
-      privateFiles.push(file);
-    }
-  }
-  return { publicFiles, privateFiles };
-};
-
 export const generateNumberByStep = ({ min, max, step = 1 }) => {
   var numbers = [];
   for (var n = min; n <= max; n += step) {

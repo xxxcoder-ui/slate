@@ -34,14 +34,7 @@ function BoringAvatar({ avatarCss, ...props }) {
   let avatarUrl = `https://source.boringavatars.com/marble/${props.size}/${props.userId}?square&colors=${colors}`;
   return (
     <Dismissible captureResize={false} captureScroll={true}>
-      <img
-        src={avatarUrl}
-        css={[avatarCss, STYLES_AVATAR]}
-        style={{
-          cursor: "pointer",
-        }}
-        alt="profile preview"
-      />
+      <img src={avatarUrl} css={[avatarCss, STYLES_AVATAR]} alt="profile preview" />
     </Dismissible>
   );
 }
@@ -55,7 +48,6 @@ function UploadedAvatar({ avatarCss, ...props }) {
       style={{
         ...props.style,
         backgroundImage: `url('${props.url}')`,
-        cursor: "pointer",
       }}
     >
       {props.visible ? props.popover : null}
@@ -64,7 +56,7 @@ function UploadedAvatar({ avatarCss, ...props }) {
   );
 }
 
-export default function ProfilePhoto({ size, ...props }) {
+export default function ProfilePhoto({ size, style, ...props }) {
   // NOTE(amine): will calculate only when the size prop changes
   const memoizedSizeProp = useMemoCompare(size, isEqual);
   const STYLES_SIZE = React.useMemo(() => {
@@ -78,9 +70,9 @@ export default function ProfilePhoto({ size, ...props }) {
   return (
     <>
       {props.user.data.photo ? (
-        <UploadedAvatar url={props.user.data.photo} avatarCss={STYLES_SIZE} />
+        <UploadedAvatar url={props.user.data.photo} style={style} avatarCss={STYLES_SIZE} />
       ) : (
-        <BoringAvatar userId={props.user.id} avatarCss={STYLES_SIZE} />
+        <BoringAvatar userId={props.user.id} style={style} avatarCss={STYLES_SIZE} />
       )}
     </>
   );

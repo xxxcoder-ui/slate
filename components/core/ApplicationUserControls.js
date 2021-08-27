@@ -2,45 +2,23 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Styles from "~/common/styles";
 import * as UserBehaviors from "~/common/user-behaviors";
+import * as Strings from "~/common/strings";
+import * as Environment from "~/common/environment";
 
-import { PopoverNavigation } from "~/components/system";
+import { ButtonPrimaryFull, PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
 import { Link } from "~/components/core/Link";
-import ProfilePhoto from "~/components/core/ProfilePhoto";
-
 import { Boundary } from "~/components/system/components/fragments/Boundary";
-import { useIntercom } from "react-use-intercom";
+import { H4, P3 } from "~/components/system/components/Typography";
+
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 const STYLES_HEADER = css`
   position: relative;
-  margin-left: 16px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 0px;
     width: auto;
-  }
-`;
-
-const STYLES_PROFILE = css`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 10%;
-  width: 204px;
-
-  color: ${Constants.system.black};
-  background-color: ${Constants.system.white};
-  font-size: 12px;
-  text-decoration: none;
-  border-radius: 4px;
-  min-height: 48px;
-  cursor: pointer;
-  border: 1px solid rgba(229, 229, 229, 0.5);
-  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.03);
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: none;
   }
 `;
 
@@ -49,85 +27,121 @@ const STYLES_PROFILE_MOBILE = css`
   align-items: center;
 `;
 
-const STYLES_PROFILE_IMAGE = css`
-  background-color: ${Constants.semantic.bgLight};
-  background-size: cover;
-  background-position: 50% 50%;
-  flex-shrink: 0;
-  height: 24px;
-  width: 24px;
-  border-radius: 8px;
-  cursor: pointer;
+const STYLES_POPOVER_CONTANIER = (theme) => css`
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid ${theme.semantic.borderGrayLight4};
+  box-shadow: ${theme.shadow.lightLarge};
 
-  ${"" /* @media (max-width: ${Constants.sizes.mobile}px) {
-    height: 24px;
-    width: 24px;
-  } */}
-`;
-
-const STYLES_PROFILE_USERNAME = css`
-  min-width: 10%;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 12px;
-  user-select: none;
-  font-family: ${Constants.font.medium};
-  font-size: ${Constants.typescale.lvl1};
-`;
-
-const STYLES_ITEM_BOX_MOBILE = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  background-color: ${Constants.system.white};
-  cursor: pointer;
-  border-radius: 4px;
-  border-left: 2px solid ${Constants.semantic.bgLight};
-`;
-
-const STYLES_ITEM_BOX = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 8px;
-  padding-right: 9px;
-  transition: 200ms ease all;
-  border-left: 2px solid ${Constants.semantic.bgLight};
-
-  :hover {
-    color: ${Constants.system.blue};
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    background-color: ${theme.semantic.bgBlurWhite};
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
   }
 `;
 
-// const OpenIntercom = ({ user, onTogglePopup }) => {
-//   const { show, update } = useIntercom();
+const STYLES_POPOVER_SECTION = (theme) => css`
+  border-top: 1px solid ${theme.semantic.borderGrayLight4};
+  border-bottom: none;
+  padding: 0;
+  margin: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
-//   return (
-//     <span
-//       style={{ cursor: "pointer", display: "block" }}
-//       onClick={() => {
-//         onTogglePopup();
-//         update({
-//           name: user.data.name,
-//           email: user.email,
-//           customAttributes: {
-//             slate_userid: user.id,
-//             username: user.username,
-//           },
-//         });
-//         show();
-//       }}
-//     >
-//       Help
-//     </span>
-//   );
-// };
+  p {
+    display: block;
+    width: 100%;
+  }
+
+  :last-child {
+    padding-bottom: 0px;
+  }
+
+  * + * {
+    margin-top: 4px;
+  }
+`;
+
+const STYLES_POPOVER_SECTION_ITEM = (theme) => css`
+  position: relative;
+  padding: 0px;
+  width: calc(100% + 16px);
+  left: -8px;
+  a {
+    display: block;
+  }
+`;
+
+const STYLES_SECTION_ITEM_HOVER = (theme) => css`
+  padding: 1px 8px 3px;
+  border-radius: 8px;
+  &:hover {
+    background-color: ${theme.system.grayLight4};
+  }
+`;
+
+const STYLES_DATAMETER_WRAPPER = (theme) => css`
+  width: 100%;
+  min-width: 240px;
+  height: 8px;
+  background-color: ${theme.semantic.bgBlurWhiteTRN};
+  border: 1px solid ${theme.semantic.borderGrayLight4};
+  border-radius: 2px;
+  overflow: hidden;
+`;
+
+const STYLES_DATAMETER = (theme) => css`
+  height: 100%;
+  background-color: ${theme.system.blue};
+  border-radius: 2px;
+`;
+
+const DataMeter = ({ bytes = 1000, maximumBytes = 4000, ...props }) => {
+  const percentage = bytes / maximumBytes;
+  return (
+    <div css={STYLES_DATAMETER_WRAPPER} {...props}>
+      <div
+        style={{
+          width: `calc(${percentage} * 100%)`,
+        }}
+        css={STYLES_DATAMETER}
+      />
+    </div>
+  );
+};
 
 export class ApplicationUserControlsPopup extends React.Component {
+  state = {
+    isExtensionDownloaded: false,
+  };
+
+  componentDidMount() {
+    if (document) {
+      const isExtensionDownloaded = this._checkIfExtensionIsDownloaded();
+      this.setState({ isExtensionDownloaded });
+    }
+  }
+
+  _checkIfExtensionIsDownloaded = () => {
+    const extensionElement = document.getElementById("browser_extension");
+    if (!extensionElement) return false;
+    return extensionElement.className.includes("isDownloaded");
+  };
+
+  _handleExtensionDownloadLink = () => {
+    const testUserAgent = (regex) => regex.test(window.navigator.userAgent);
+
+    const isFirefox = testUserAgent(/firefox/i);
+    const firefoxLink = Environment.EXTENSION_FIREFOX;
+    if (isFirefox && firefoxLink) return window.open(firefoxLink, "_blank");
+
+    const isSafari = testUserAgent(/safari/i);
+    const safariLink = Environment.EXTENSION_SAFARI;
+    if (isSafari && safariLink) return window.open(safariLink, "_blank");
+
+    window.open(Environment.EXTENSION_CHROME, "_blank");
+  };
+
   _handleAction = (props) => {
     this.props.onTogglePopup();
     this.props.onAction(props);
@@ -141,153 +155,176 @@ export class ApplicationUserControlsPopup extends React.Component {
   };
 
   render() {
-    if (this.props.popup === "profile") {
-      const topSection = (
-        <div css={Styles.HORIZONTAL_CONTAINER} style={{ marginBottom: 14 }}>
-          <div style={{ marginRight: "16px", cursor: "default" }}>
-            <ProfilePhoto user={this.props.viewer} size={46} />
-          </div>
+    if (this.props.popup !== "profile") return null;
 
-          <div
-            css={Styles.VERTICAL_CONTAINER}
-            style={{
-              height: 46,
-              justifyContent: "space-between",
-            }}
-          >
-            <div css={Styles.H4}>
-              {this.props.viewer.data.name || `@${this.props.viewer.username}`}
-            </div>
-            <div css={Styles.HORIZONTAL_CONTAINER}>
-              <span css={Styles.P3} style={{ marginRight: 8 }}>{`${
-                this.props.viewer.library.length
-              } File${this.props.viewer.library.length === 1 ? "" : "s"}`}</span>
-              <span css={Styles.P3}>{`${this.props.viewer.slates.length} Collection${
-                this.props.viewer.slates.length === 1 ? "" : "s"
-              }`}</span>
-            </div>
+    const username = this.props.viewer.data.name || `@${this.props.viewer.username}`;
+    const objectsLength = this.props.viewer.library.length;
+    const { stats } = this.props.viewer;
+
+    const topSection = (
+      <Link href="/_/data" onAction={this._handleAction}>
+        <div style={{ marginBottom: 16 }} css={Styles.VERTICAL_CONTAINER_CENTERED}>
+          <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "12px" }} size={48} />
+          <H4 color="textBlack" style={{ marginTop: 10 }}>
+            {username}
+          </H4>
+          <div style={{ marginTop: 6 }} css={Styles.HORIZONTAL_CONTAINER}>
+            <P3 color="textBlack" style={{ marginRight: 8 }}>
+              {objectsLength} {Strings.pluralize("Object", objectsLength)}
+            </P3>
+            <P3 color="textBlack" style={{ marginLeft: 8 }}>
+              {Strings.bytesToSize(stats.bytes, 0)} of {Strings.bytesToSize(stats.maximumBytes, 0)}{" "}
+              Stored
+            </P3>
           </div>
+          <DataMeter
+            bytes={stats.bytes}
+            maximumBytes={stats.maximumBytes}
+            style={{ marginTop: 8 }}
+          />
         </div>
-      );
+      </Link>
+    );
 
-      const navigation = [
-        [
-          {
-            text: (
+    const ExtensionButton = (
+      <div css={Styles.MOBILE_HIDDEN}>
+        <ButtonPrimaryFull
+          style={{
+            padding: "0px 12px",
+            marginTop: "4px",
+            marginBottom: "28px",
+            minHeight: "30px",
+            fontFamily: Constants.font.text,
+          }}
+          onClick={this._handleExtensionDownloadLink}
+        >
+          Install Slate browser extension
+        </ButtonPrimaryFull>
+      </div>
+    );
+
+    const navigation = [
+      [
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
                 Profile
               </Link>
-            ),
-          },
-          {
-            text: (
+            </div>
+          ),
+        },
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/directory"} onAction={this._handleAction}>
                 Directory
               </Link>
-            ),
-          },
-        ],
-        [
-          {
-            text: (
+            </div>
+          ),
+        },
+      ],
+      [
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/filecoin"} onAction={this._handleAction}>
                 Filecoin
               </Link>
-            ),
-          },
-          {
-            text: (
+            </div>
+          ),
+        },
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/storage-deal"} onAction={this._handleAction}>
                 Storage deal
               </Link>
-            ),
-          },
-          {
-            text: (
+            </div>
+          ),
+        },
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/api"} onAction={this._handleAction}>
                 API
               </Link>
-            ),
-          },
-        ],
-        [
-          {
-            text: (
+            </div>
+          ),
+        },
+      ],
+      [
+        {
+          text: (
+            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/settings"} onAction={this._handleAction}>
                 Settings
               </Link>
-            ),
+            </div>
+          ),
+        },
+        {
+          text: <div css={STYLES_SECTION_ITEM_HOVER}> Sign out</div>,
+          onClick: (e) => {
+            this._handleSignOut(e);
           },
-        ],
-        [
-          // {
-          //   text: (
-          //     <OpenIntercom
-          //       style={{ display: "block" }}
-          //       user={this.props.viewer}
-          //       onTogglePopup={this.props.onTogglePopup}
-          //     />
-          //   ),
-          // },
-          {
-            text: "Sign out",
-            onClick: (e) => {
-              this._handleSignOut(e);
-            },
-          },
-        ],
-      ];
+        },
+        ...(!this.state.isExtensionDownloaded ? [{ text: ExtensionButton }] : []),
+      ],
+    ];
 
-      return (
-        <>
-          <div css={Styles.MOBILE_ONLY}>
-            <Boundary
-              captureResize={true}
-              captureScroll={false}
-              enabled={this.props.popup === "profile"}
-              onOutsideRectEvent={() => this.props.onTogglePopup()}
-            >
-              <PopoverNavigation
-                style={{
-                  width: "max-content",
-                  position: "relative",
-                  border: "none",
-                  boxShadow: "none",
-                  width: "100vw",
-                  background: "none",
-                  pointerEvents: "auto",
-                }}
-                css={Styles.H4}
-                itemStyle={{ fontSize: Constants.typescale.lvl0 }}
-                topSection={topSection}
-                navigation={navigation}
-              />
-            </Boundary>
-          </div>
-          <div css={Styles.MOBILE_HIDDEN}>
-            <Boundary
-              captureResize={true}
-              captureScroll={false}
-              enabled={this.props.popup === "profile"}
-              onOutsideRectEvent={() => this.props.onTogglePopup()}
-            >
-              <PopoverNavigation
-                style={{
-                  top: 36,
-                  right: 0,
-                  width: "max-content",
-                }}
-                css={Styles.H4}
-                itemStyle={{ fontSize: Constants.typescale.lvl0 }}
-                topSection={topSection}
-                navigation={navigation}
-              />
-            </Boundary>
-          </div>
-        </>
-      );
-    }
-    return null;
+    return (
+      <>
+        <div css={Styles.MOBILE_ONLY}>
+          <Boundary
+            captureResize={true}
+            captureScroll={false}
+            enabled={this.props.popup === "profile"}
+            onOutsideRectEvent={() => this.props.onTogglePopup()}
+          >
+            <PopoverNavigation
+              style={{
+                position: "relative",
+                border: "none",
+                boxShadow: "none",
+                background: "none",
+                pointerEvents: "auto",
+              }}
+              containerCss={STYLES_POPOVER_CONTANIER}
+              sectionCss={STYLES_POPOVER_SECTION}
+              sectionItemCss={STYLES_POPOVER_SECTION_ITEM}
+              css={Styles.H4}
+              itemStyle={{ fontSize: Constants.typescale.lvl0 }}
+              topSection={topSection}
+              navigation={navigation}
+            />
+          </Boundary>
+        </div>
+        <div css={Styles.MOBILE_HIDDEN}>
+          <Boundary
+            captureResize={true}
+            captureScroll={false}
+            enabled={this.props.popup === "profile"}
+            onOutsideRectEvent={() => this.props.onTogglePopup()}
+          >
+            <PopoverNavigation
+              style={{
+                top: 34,
+                left: "-12px",
+                width: "max-content",
+              }}
+              containerCss={STYLES_POPOVER_CONTANIER}
+              sectionCss={STYLES_POPOVER_SECTION}
+              sectionItemCss={STYLES_POPOVER_SECTION_ITEM}
+              css={Styles.H4}
+              itemStyle={{ fontSize: Constants.typescale.lvl0 }}
+              topSection={topSection}
+              navigation={navigation}
+            />
+          </Boundary>
+        </div>
+      </>
+    );
   }
 }
 
@@ -296,14 +333,14 @@ export class ApplicationUserControls extends React.Component {
     let tooltip = <ApplicationUserControlsPopup {...this.props} />;
     return (
       <div css={STYLES_HEADER}>
-        <div
-          css={STYLES_PROFILE_MOBILE}
+        <button
+          css={[Styles.BUTTON_RESET, STYLES_PROFILE_MOBILE]}
           onClick={() => this.props.onTogglePopup("profile")}
           style={{ position: "relative", cursor: "pointer" }}
         >
-          <ProfilePhoto user={this.props.viewer} size={24} />
-          {this.props.popup === "profile" ? tooltip : null}
-        </div>
+          <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "8px" }} size={24} />
+        </button>
+        {this.props.popup === "profile" ? tooltip : null}
       </div>
     );
   }

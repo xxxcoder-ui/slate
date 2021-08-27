@@ -31,7 +31,6 @@ const STYLES_NO_VISIBLE_SCROLL = css`
 const STYLES_HEADER = css`
   z-index: ${Constants.zindex.header};
   height: ${Constants.sizes.header}px;
-  pointer-events: none;
   width: 100vw;
   position: fixed;
   right: 0;
@@ -45,12 +44,10 @@ const STYLES_CONTENT = css`
   min-width: 10%;
   min-height: 100vh;
   position: relative;
-  margin-top: ${Constants.sizes.topOffset}px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding-left: 0px;
     padding: 0 0 88px 0;
-    margin-top: calc(${Constants.sizes.topOffset}px + 36px);
   }
 `;
 
@@ -266,12 +263,15 @@ export default class ApplicationLayout extends React.Component {
         <div css={STYLES_CONTENT}>
           <GlobalTooltip />
           {this.props.header && (
-            <div
-              css={STYLES_HEADER}
-              style={{ top: this.props.isMobile ? this.state.headerTop : null }}
-            >
-              {this.props.header}
-            </div>
+            <>
+              <div style={{ visibility: "hidden" }}>{this.props.header}</div>
+              <div
+                css={STYLES_HEADER}
+                style={{ top: this.props.isMobile ? this.state.headerTop : null }}
+              >
+                {this.props.header}
+              </div>
+            </>
           )}
           <Alert
             noWarning={
