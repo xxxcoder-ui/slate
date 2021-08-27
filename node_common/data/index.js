@@ -95,10 +95,12 @@ import pruneVerifications from "~/node_common/data/methods/prune-verifications";
 // NOTE(jim):
 // one-offs
 import createOrphan from "~/node_common/data/methods/create-orphan";
+import getAllSendgridContacts from "~/node_common/data/methods/get-all-sendgrid-contacts";
 
 export {
   // NOTE(jim): One-offs
   createOrphan,
+  getAllSendgridContacts,
   // NOTE(jim): User operations
   createUser,
   updateUserById,
