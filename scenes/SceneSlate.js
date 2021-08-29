@@ -218,13 +218,13 @@ export default class SceneSlate extends React.Component {
       }
       if (file) {
         title = `${file.name || file.filename}`;
-        description = file.data.body
-          ? file.data.body
+        description = file.body
+          ? file.body
           : `View ${title}, a file in the collection ${name} on Slate`;
         image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
       } else {
-        if (slate.data.body) {
-          description = `${name}. ${slate.data.body}`;
+        if (slate.body) {
+          description = `${name}. ${slate.body}`;
         } else {
           description = `View the collection ${name} on Slate`;
         }
@@ -402,8 +402,7 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, data } = this.props.data;
-    const { body = "", preview } = data;
+    const { user, data, body } = this.props.data;
     let objects = this.props.data.objects;
     const isPublic = this.props.data.isPublic;
     const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;

@@ -89,7 +89,7 @@ export default function ObjectPreviewPrimitive({
   // const showControls = () => setShowControls(true);
   // const hideControls = () => setShowControls(false);
 
-  const description = file?.data?.body;
+  const description = file?.body;
   const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
     disabled: !description || media.mobile,

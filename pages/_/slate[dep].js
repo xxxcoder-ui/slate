@@ -212,8 +212,8 @@ export default class SlatePage extends React.Component {
     let url = `https://slate.host/${this.props.creator.username}/${this.props.slate.slatename}`;
     let headerURL = `https://slate.host/${this.props.creator.username}`;
 
-    let { objects, isPublic } = this.props.slate;
-    let { body, preview } = this.props.slate.data;
+    let { objects, isPublic, body } = this.props.slate;
+    let { preview } = this.props.slate.data;
     let image;
     if (Strings.isEmpty(this.props.cid)) {
       image = preview;

@@ -46,7 +46,7 @@ export default class SceneEditAccount extends React.Component {
     username: this.props.viewer.username,
     password: "",
     confirm: "",
-    body: this.props.viewer.data.body,
+    body: this.props.viewer.body,
     photo: this.props.viewer.data.photo,
     name: this.props.viewer.name,
     deleting: false,

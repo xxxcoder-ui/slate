@@ -266,7 +266,7 @@ runScript();
 /*
 Users
 [
-    'data.name', -> 'name'
+    'data.name', -> 'name' MIGRATED
     'data.body', -> 'body'
     'data.photo', -> 'photo'
     'data.status', -> 'hidePrivacyAlert'
@@ -281,14 +281,14 @@ Users
 
 Slates
 [ 
-    'data.body', -> 'name'
-    'data.name', -> 'body'
+    'data.name', -> 'name' MIGRATED
+    'data.body', -> 'body'
 ]
 
 
 Files
 [
-    'data.name', -> 'name'
+    'data.name', -> 'name' MIGRATED
     'data.size', -> 'size'
     'data.type', -> 'type'
     'data.blurhash', -> 'blurhash'

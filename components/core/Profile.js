@@ -325,9 +325,9 @@ export default class Profile extends React.Component {
                   )}
                 </div>
               )}
-              {user.data.body ? (
+              {user.body ? (
                 <div css={STYLES_DESCRIPTION}>
-                  <ProcessedText text={user.data.body} />
+                  <ProcessedText text={user.body} />
                 </div>
               ) : null}
               <div css={STYLES_STATS}>

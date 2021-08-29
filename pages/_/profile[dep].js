@@ -63,7 +63,7 @@ export default class ProfilePage extends React.Component {
         : `@${this.props.creator.username} on Slate`
       : "404";
     const url = `https://slate.host/${title}`;
-    const description = this.props.creator.data.body;
+    const description = this.props.creator.body;
     const image = this.props.creator.data.photo;
     if (Strings.isEmpty(image)) {
       image = DEFAULT_IMAGE;

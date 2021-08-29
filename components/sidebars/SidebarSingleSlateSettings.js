@@ -49,7 +49,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
   state = {
     slatename: this.props.data.slatename,
     isPublic: this.props.data.isPublic,
-    body: this.props.data.data.body,
+    body: this.props.data.body,
     name: this.props.data.name,
     modalShow: false,
   };
@@ -60,7 +60,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
       if (slate.id === this.props.data.id) {
         slate.name = this.state.name;
         slate.isPublic = this.state.isPublic;
-        slate.data.body = this.state.body;
+        slate.body = this.state.body;
 
         this.props.onAction({
           type: "UPDATE_VIEWER",

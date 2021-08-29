@@ -282,7 +282,7 @@ export const FileTypeDefaultPreview = (props) => {
 class CarouselSidebar extends React.Component {
   state = {
     name: this.props.file.name || this.props.file.filename || "",
-    body: this.props.file.data.body || "",
+    body: this.props.file.body || "",
     source: this.props.file.data.source || "",
     author: this.props.file.data.author || "",
     tags: this.props.file.data.tags || [],
@@ -366,13 +366,10 @@ class CarouselSidebar extends React.Component {
     this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: this.state.suggestions } });
     const response = await Actions.updateFile({
       id: this.props.file.id,
-      data: {
-        name: this.state.name,
-        body: this.state.body,
-        source: this.state.source,
-        author: this.state.author,
-        tags: this.state.tags,
-      },
+      name: this.state.name,
+      body: this.state.body,
+      source: this.state.source,
+      author: this.state.author,
     });
     Events.hasError(response);
     this.setState({ showSavedMessage: true });
@@ -602,7 +599,7 @@ class CarouselSidebar extends React.Component {
       );
     } else {
       const hasName = !Strings.isEmpty(file.name || file.filename);
-      const hasBody = !Strings.isEmpty(file.data.body);
+      const hasBody = !Strings.isEmpty(file.body);
       const hasSource = !Strings.isEmpty(file.data.source);
       const hasAuthor = !Strings.isEmpty(file.data.author);
 
@@ -635,7 +632,7 @@ class CarouselSidebar extends React.Component {
         elements.push(
           <div key="sidebar-media-info-body" css={STYLES_SIDEBAR_SECTION}>
             <div css={STYLES_BODY}>
-              <ProcessedText dark text={file.data.body} />
+              <ProcessedText dark text={file.body} />
             </div>
           </div>
         );

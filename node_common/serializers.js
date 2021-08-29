@@ -12,9 +12,9 @@ export const sanitizeUser = (entity) => {
     slates: entity.slates, //NOTE(martina): this is not in the database. It is added after
     library: entity.library, //NOTE(martina): this is not in the database. It is added after
     name: entity.name,
+    body: entity.body,
     data: {
       photo: entity.data?.photo,
-      body: entity.data?.body,
     },
     followerCount: entity.followerCount,
     slateCount: entity.slateCount,
@@ -31,8 +31,8 @@ export const sanitizeSlate = (entity) => {
     objects: entity.objects,
     owner: entity.owner,
     user: entity.user, //NOTE(martina): this is not in the database. It is added after
+    body: entity.body,
     data: {
-      body: entity.data?.body,
       preview: entity.data?.preview,
     },
     fileCount: entity.fileCount,
@@ -49,10 +49,10 @@ export const sanitizeFile = (entity) => {
     filename: entity.filename,
     name: entity.name,
     createdAt: entity.createdAt,
+    body: entity.body,
     data: {
       type: entity.data?.type,
       size: entity.data?.size,
-      body: entity.data?.body,
       source: entity.data?.source,
       author: entity.data?.author,
       blurhash: entity.data?.blurhash,
@@ -84,9 +84,9 @@ export const cleanUser = (entity) => {
     twitterId: entity.twitterId,
     authVersion: entity.authVersion,
     data: entity.data,
+    body: entity.body,
     // data: {
     //   photo: entity.data?.photo,
-    //   body: entity.data?.body,
     //   tokens: entity.data?.tokens,
     //   settings: entity.data?.settings,
     //   onboarding: entity.data?.onboarding,
@@ -105,8 +105,8 @@ export const cleanSlate = (entity) => {
     isPublic: entity.isPublic,
     ownerId: entity.ownerId,
     data: entity.data,
+    body: entity.body,
     // data: {
-    //   body: entity.data?.body,
     //   preview: entity.data?.preview,
     // },
   };
@@ -124,10 +124,10 @@ export const cleanFile = (entity) => {
     data: entity.data,
     isLink: entity.isLink,
     url: entity.url,
+    body: entity.body,
     // data: {
     //   type: entity.data?.type,
     //   size: entity.data?.size,
-    //   body: entity.data?.body,
     //   source: entity.data?.source,
     //   author: entity.data?.author,
     //   blurhash: entity.data?.blurhash,
@@ -163,6 +163,7 @@ export const slateProperties = [
   "slates.id",
   "slates.slatename",
   "slates.name",
+  "slates.body",
   "slates.data",
   "slates.ownerId",
   "slates.isPublic",
@@ -174,6 +175,7 @@ export const userProperties = [
   "users.id",
   "users.username",
   "users.name",
+  "users.body",
   "users.data",
   "users.slateCount",
   "users.followerCount",
@@ -186,6 +188,7 @@ export const fileProperties = [
   "files.isPublic",
   "files.filename",
   "files.name",
+  "files.body",
   "files.data",
   "files.createdAt",
   "files.downloadCount",

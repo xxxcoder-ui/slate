@@ -158,12 +158,12 @@ export default class SceneProfile extends React.Component {
     }
     if (file) {
       title = `${file.name || file.filename}`;
-      description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
+      description = file.body ? file.body : `View ${title}, a file from ${name} on Slate`;
       image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
     } else {
       image = user.data.photo;
-      if (user.data.body) {
-        description = `${name}. ${user.data.body}`;
+      if (user.body) {
+        description = `${name}. ${user.body}`;
       } else {
         description = `View collections and content from ${name} on Slate`;
       }

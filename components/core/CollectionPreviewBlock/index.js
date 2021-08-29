@@ -94,7 +94,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const showControls = () => setShowControls(true);
   const hideControls = () => setShowControls(false);
 
-  const description = collection?.data?.body;
+  const description = collection?.body;
   const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
     disabled: !description || media.mobile,

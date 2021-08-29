@@ -66,9 +66,9 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
       <Typography.P2
         color="gray"
         nbrOflines={1}
-        style={{ marginTop: 8, textIndent: 8, opacity: profile?.data?.body ? 1 : 0 }}
+        style={{ marginTop: 8, textIndent: 8, opacity: profile?.body ? 1 : 0 }}
       >
-        {profile?.data?.body || "No Description"}
+        {profile?.body || "No Description"}
       </Typography.P2>
 
       {!isOwner &&

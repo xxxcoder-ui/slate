@@ -333,9 +333,7 @@ export class SlatePreviewBlock extends React.Component {
               </div>
             )}
           </div>
-          <div css={STYLES_BODY}>
-            {this.props.slate.data.body ? this.props.slate.data.body : null}
-          </div>
+          <div css={STYLES_BODY}>{this.props.slate.body}</div>
           {objects.length === 0 ? (
             <div
               css={STYLES_PLACEHOLDER}
@@ -372,9 +370,9 @@ export class SlatePreviewBlock extends React.Component {
               </div>
             )}
           </div>
-          {this.props.slate.data.body ? (
+          {this.props.slate.body ? (
             <div css={STYLES_BODY} style={{ marginBottom: 16 }}>
-              {this.props.slate.data.body}
+              {this.props.slate.body}
             </div>
           ) : (
             <div style={{ height: 8 }} />
