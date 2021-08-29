@@ -29,7 +29,7 @@ export default class SidebarHelp extends React.Component {
   state = {
     name: this.props.viewer?.name || "",
     email: "",
-    twitter: "",
+    twitter: this.props.viewer.twitterUsername || "",
     message: "",
   };
 

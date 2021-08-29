@@ -82,6 +82,8 @@ export const cleanUser = (entity) => {
     password: entity.password,
     email: entity.email,
     twitterId: entity.twitterId,
+    twitterUsername: entity.twitterUsername,
+    twitterVerified: entity.twitterVerified,
     authVersion: entity.authVersion,
     data: entity.data,
     body: entity.body,

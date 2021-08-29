@@ -274,9 +274,9 @@ Users
     'data.settings.settings_deals_auto_approve', -> 'settingsDealsAutoApprove' MIGRATED
     'data.settings.allow_automatic_data_storage', -> 'allowAutomaticDataStorage' MIGRATED
     'data.settings.allow_encrypted_data_storage', -> 'allowEncryptedDataStorage' MIGRATED
-    'data.onboarding', -> 'onboarding'
-    'data.twitter.username', -> 'twitterUsername'
-    'data.twitter.verified', -> 'twitterVerified'
+    'data.onboarding', -> 'onboarding' MIGRATED
+    'data.twitter.username', -> 'twitterUsername' MIGRATED
+    'data.twitter.verified', -> 'twitterVerified' MIGRATED
 ]
 
 Slates
