@@ -267,8 +267,8 @@ runScript();
 Users
 [
     'data.name', -> 'name' MIGRATED
-    'data.body', -> 'body'
-    'data.photo', -> 'photo'
+    'data.body', -> 'body' MIGRATED
+    'data.photo', -> 'photo' MIGRATED
     'data.status', -> 'hidePrivacyAlert'
     'data.tokens', -> 'apiToken'
     'data.settings.settings_deals_auto_approve', -> 'settingsDealsAutoApprove'
@@ -282,7 +282,7 @@ Users
 Slates
 [ 
     'data.name', -> 'name' MIGRATED
-    'data.body', -> 'body'
+    'data.body', -> 'body' MIGRATED
 ]
 
 
@@ -293,7 +293,7 @@ Files
     'data.type', -> 'type'
     'data.blurhash', -> 'blurhash'
     'data.source', -> 'source'
-    'data.body', -> 'body'
+    'data.body', -> 'body' MIGRATED
     'data.author', -> 'author'
     'data.coverImage', -> 'coverImage'
     'data.unity', -> 'data.unity'

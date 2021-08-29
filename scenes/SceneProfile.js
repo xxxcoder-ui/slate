@@ -161,7 +161,7 @@ export default class SceneProfile extends React.Component {
       description = file.body ? file.body : `View ${title}, a file from ${name} on Slate`;
       image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
     } else {
-      image = user.data.photo;
+      image = user.photo;
       if (user.body) {
         description = `${name}. ${user.body}`;
       } else {

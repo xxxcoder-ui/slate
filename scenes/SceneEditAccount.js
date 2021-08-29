@@ -47,7 +47,7 @@ export default class SceneEditAccount extends React.Component {
     password: "",
     confirm: "",
     body: this.props.viewer.body,
-    photo: this.props.viewer.data.photo,
+    photo: this.props.viewer.photo,
     name: this.props.viewer.name,
     deleting: false,
     allow_filecoin_directory_listing: this.props.viewer.data.settings

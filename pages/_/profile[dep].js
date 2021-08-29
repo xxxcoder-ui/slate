@@ -64,7 +64,7 @@ export default class ProfilePage extends React.Component {
       : "404";
     const url = `https://slate.host/${title}`;
     const description = this.props.creator.body;
-    const image = this.props.creator.data.photo;
+    const image = this.props.creator.photo;
     if (Strings.isEmpty(image)) {
       image = DEFAULT_IMAGE;
     }
