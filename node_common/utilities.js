@@ -115,7 +115,7 @@ export const parseAuthHeader = (value) => {
 };
 
 export const getFilecoinAPIFromUserToken = async ({ user }) => {
-  const token = user.data.tokens.api;
+  const token = user.textileToken;
   const identity = await PrivateKey.fromString(token);
   const filecoin = await Filecoin.withKeyInfo(TEXTILE_KEY_INFO);
   await filecoin.getToken(identity);
@@ -160,7 +160,7 @@ export const addExistingCIDToData = async ({ buckets, key, path, cid }) => {
 
 // NOTE(jim): Requires @textile/hub
 export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = false }) => {
-  const token = user.data.tokens.api;
+  const token = user.textileToken;
   const name = Strings.isEmpty(bucketName) ? BUCKET_NAME : bucketName;
   const identity = await PrivateKey.fromString(token);
   let buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);

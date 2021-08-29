@@ -67,7 +67,7 @@ export default async (req, res) => {
   // TODO(jim):
   // Single Key Textile Auth.
   const identity = await PrivateKey.fromRandom();
-  const api = identity.toString();
+  const textileToken = identity.toString();
 
   const newUsername = username.toLowerCase();
   const newEmail = email.toLowerCase();
@@ -75,7 +75,7 @@ export default async (req, res) => {
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
       username: newUsername,
-      data: { tokens: { api } },
+      textileToken,
     },
   });
 
@@ -89,6 +89,7 @@ export default async (req, res) => {
     username: newUsername,
     email: newEmail,
     twitterId: twitterUser.id_str,
+    textileToken,
     data: {
       body: "",
       settings: {
@@ -97,7 +98,6 @@ export default async (req, res) => {
         allow_automatic_data_storage: true,
         allow_encrypted_data_storage: true,
       },
-      tokens: { api },
       twitter: {
         username: twitterUser.screen_name,
         verified: twitterUser.verified,

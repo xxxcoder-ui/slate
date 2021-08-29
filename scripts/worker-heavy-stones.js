@@ -95,7 +95,7 @@ const run = async () => {
     await delay(500);
 
     try {
-      const token = user.data.tokens.api;
+      const token = user.textileToken;
       const identity = await PrivateKey.fromString(token);
       buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
       await buckets.getToken(identity);

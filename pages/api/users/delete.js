@@ -46,7 +46,7 @@ export default async (req, res) => {
 
   // NOTE(jim): remove orphan
   await Data.createOrphan({
-    data: { token: user.data.tokens.api },
+    data: { token: user.textileToken },
   });
 
   // NOTE(jim): finally delete user by id (irreversible)

@@ -57,7 +57,7 @@ export default async (req, res) => {
   // TODO(jim):
   // Single Key Textile Auth.
   const identity = await PrivateKey.fromRandom();
-  const api = identity.toString();
+  const textileToken = identity.toString();
 
   // TODO(jim):
   // Don't do this once you refactor.
@@ -67,7 +67,7 @@ export default async (req, res) => {
   const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
     user: {
       username: newUsername,
-      data: { tokens: { api } },
+      textileToken,
     },
   });
 
@@ -82,6 +82,7 @@ export default async (req, res) => {
     salt,
     username: newUsername,
     email: newEmail,
+    textileToken,
     data: {
       body: "",
       settings: {
@@ -90,7 +91,6 @@ export default async (req, res) => {
         allow_automatic_data_storage: true,
         allow_encrypted_data_storage: true,
       },
-      tokens: { api },
     },
   });
 
