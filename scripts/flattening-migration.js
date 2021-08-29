@@ -269,7 +269,7 @@ Users
     'data.name', -> 'name' MIGRATED
     'data.body', -> 'body' MIGRATED
     'data.photo', -> 'photo' MIGRATED
-    'data.status', -> 'hidePrivacyAlert'
+    'data.status', -> 'hidePrivacyAlert' MIGRATED
     'data.tokens', -> 'apiToken'
     'data.settings.settings_deals_auto_approve', -> 'settingsDealsAutoApprove'
     'data.settings.allow_automatic_data_storage', -> 'allowAutomaticDataStorage'
