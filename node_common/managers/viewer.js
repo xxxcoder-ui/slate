@@ -209,14 +209,11 @@ export const getById = async ({ id }) => {
     email: user.email || null,
     data: user.data,
     library: user.library,
+    settingsDealsAutoApprove: user.settingsDealsAutoApprove,
+    allowAutomaticDataStorage: user.allowAutomaticDataStorage,
+    allowEncryptedDataStorage: user.allowEncryptedDataStorage,
     // onboarding: user.data.onboarding || {},
     // status: user.data.status || {},
-    // settings: {
-    //   allow_automatic_data_storage: user.data.allow_automatic_data_storage || null,
-    //   allow_encrypted_data_storage: user.data.allow_encrypted_data_storage || null,
-    //   allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing || null,
-    //   settings_deals_auto_approve: user.data.settings_deals_auto_approve || null,
-    // },
     stats: {
       bytes,
       maximumBytes: Constants.TEXTILE_ACCOUNT_BYTE_LIMIT,

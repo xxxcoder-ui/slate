@@ -83,15 +83,6 @@ export default async (req, res) => {
     username: newUsername,
     email: newEmail,
     textileToken,
-    data: {
-      body: "",
-      settings: {
-        settings_deals_auto_approve: false,
-        allow_filecoin_directory_listing: false,
-        allow_automatic_data_storage: true,
-        allow_encrypted_data_storage: true,
-      },
-    },
   });
 
   if (!user) {

@@ -30,10 +30,8 @@ export default class SceneArchive extends React.Component {
     deals: [],
     dealsLoaded: false,
     networkViewer: null,
-    allow_filecoin_directory_listing: this.props.viewer.data.settings
-      ?.allow_filecoin_directory_listing,
-    allow_automatic_data_storage: this.props.viewer.data.settings?.allow_automatic_data_storage,
-    allow_encrypted_data_storage: this.props.viewer.data.settings?.allow_encrypted_data_storage,
+    allowAutomaticDataStorage: this.props.viewer.allowAutomaticDataStorage,
+    allowEncryptedDataStorage: this.props.viewer.allowEncryptedDataStorage,
   };
 
   async componentDidMount() {
@@ -75,13 +73,8 @@ export default class SceneArchive extends React.Component {
     this.setState({ changingFilecoin: true });
 
     await Actions.updateViewer({
-      data: {
-        settings: {
-          allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
-          allow_automatic_data_storage: this.state.allow_automatic_data_storage,
-          allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
-        },
-      },
+      allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
+      allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
     });
 
     this.setState({ changingFilecoin: false });
@@ -146,17 +139,8 @@ export default class SceneArchive extends React.Component {
 
                   <System.CheckBox
                     style={{ marginTop: 24 }}
-                    name="allow_filecoin_directory_listing"
-                    value={this.state.allow_filecoin_directory_listing}
-                    onChange={this._handleCheckboxChange}
-                  >
-                    Show your successful deals on a directory page where others can retrieve them.
-                  </System.CheckBox>
-
-                  <System.CheckBox
-                    style={{ marginTop: 24 }}
-                    name="allow_automatic_data_storage"
-                    value={this.state.allow_automatic_data_storage}
+                    name="allowAutomaticDataStorage"
+                    value={this.state.allowAutomaticDataStorage}
                     onChange={this._handleCheckboxChange}
                   >
                     Allow Slate to make archive storage deals on your behalf to the Filecoin
@@ -165,8 +149,8 @@ export default class SceneArchive extends React.Component {
 
                   <System.CheckBox
                     style={{ marginTop: 24 }}
-                    name="allow_encrypted_data_storage"
-                    value={this.state.allow_encrypted_data_storage}
+                    name="allowEncryptedDataStorage"
+                    value={this.state.allowEncryptedDataStorage}
                     onChange={this._handleCheckboxChange}
                   >
                     Force encryption on archive storage deals (only you can see retrieved data from

@@ -91,13 +91,6 @@ export default async (req, res) => {
     twitterId: twitterUser.id_str,
     textileToken,
     data: {
-      body: "",
-      settings: {
-        settings_deals_auto_approve: false,
-        allow_filecoin_directory_listing: false,
-        allow_automatic_data_storage: true,
-        allow_encrypted_data_storage: true,
-      },
       twitter: {
         username: twitterUser.screen_name,
         verified: twitterUser.verified,

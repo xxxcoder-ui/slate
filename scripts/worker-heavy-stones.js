@@ -71,12 +71,12 @@ const run = async () => {
   for (let i = 0; i < response.length; i++) {
     const user = response[i];
 
-    if (user.data.settings?.allow_automatic_data_storage) {
+    if (user.allowAutomaticDataStorage) {
       storageUsers.unshift(user);
       dealUsers = dealUsers + 1;
     }
 
-    if (user.data.settings?.allow_encrypted_data_storage) {
+    if (user.allowEncryptedDataStorage) {
       encryptedUsers = encryptedUsers + 1;
     }
 
@@ -88,7 +88,7 @@ const run = async () => {
     const printData = {
       username: storageUsers[i].username,
       slateURL: `https://slate.host/${storageUsers[i].username}`,
-      isForcingEncryption: user.data.settings?.allow_encrypted_data_storage,
+      isForcingEncryption: user.allowEncryptedDataStorage,
     };
     let buckets;
 
@@ -188,7 +188,7 @@ const run = async () => {
           time: o.time,
           pending: o.pending,
           createdAt: Strings.toDateSinceEpoch(o.time),
-          userEncryptsDeals: !!user.data.settings?.allow_encrypted_data_storage,
+          userEncryptsDeals: !!user.allowEncryptedDataStorage,
           miner: minerMap[o.dealInfo.miner] ? minerMap[o.dealInfo.miner] : { id: o.dealInfo.miner },
           phase: "MARCH",
           user: {
@@ -344,7 +344,7 @@ const run = async () => {
         userBuckets.length < BUCKET_LIMIT
       ) {
         key = null;
-        encrypt = !!user.data.settings?.allow_encrypted_data_storage;
+        encrypt = !!user.allowEncryptedDataStorage;
 
         // NOTE(jim): Create a new bucket
         const newBucketName = encrypt ? `encrypted-data-${uuid()}` : `open-data-${uuid()}`;
