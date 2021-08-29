@@ -281,7 +281,7 @@ export const FileTypeDefaultPreview = (props) => {
 
 class CarouselSidebar extends React.Component {
   state = {
-    name: this.props.file.data.name || this.props.file.filename || "",
+    name: this.props.file.name || this.props.file.filename || "",
     body: this.props.file.data.body || "",
     source: this.props.file.data.source || "",
     author: this.props.file.data.author || "",
@@ -601,7 +601,7 @@ class CarouselSidebar extends React.Component {
         </div>
       );
     } else {
-      const hasName = !Strings.isEmpty(file.data.name || file.filename);
+      const hasName = !Strings.isEmpty(file.name || file.filename);
       const hasBody = !Strings.isEmpty(file.data.body);
       const hasSource = !Strings.isEmpty(file.data.source);
       const hasAuthor = !Strings.isEmpty(file.data.author);
@@ -610,7 +610,7 @@ class CarouselSidebar extends React.Component {
         elements.push(
           <div key="sidebar-media-info-name" css={STYLES_SIDEBAR_SECTION}>
             <div css={STYLES_HEADING}>
-              <ProcessedText dark text={file.data.name || file.filename} />
+              <ProcessedText dark text={file.name || file.filename} />
             </div>
           </div>
         );

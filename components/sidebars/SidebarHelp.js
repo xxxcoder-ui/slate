@@ -25,9 +25,9 @@ const STYLES_TEXT = css`
   font-size: ${Constants.typescale.lvl0};
 `;
 
-export default class SidebarCreateSlate extends React.Component {
+export default class SidebarHelp extends React.Component {
   state = {
-    name: this.props.viewer?.data?.name ? this.props.viewer.data.name : "",
+    name: this.props.viewer?.name || "",
     email: "",
     twitter: "",
     message: "",

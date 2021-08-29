@@ -127,6 +127,7 @@ export const uploadFiles = async ({ context, files, slate, keys, numFailed = 0 }
   context._handleRegisterLoadingFinished({ keys });
 };
 
+//NOTE(migration): check that upload works still and file.name
 export const upload = async ({ file, context, bucketName }) => {
   const currentFileKey = fileKey(file);
   let formData = new FormData();

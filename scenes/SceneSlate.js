@@ -212,12 +212,12 @@ export default class SceneSlate extends React.Component {
       );
     } else {
       let title, description, file, image;
-      let name = slate.data.name;
+      let name = slate.name;
       if (this.props.page.params?.cid) {
         file = slate.objects.find((file) => file.cid === this.props.page.params.cid);
       }
       if (file) {
-        title = `${file.data.name || file.filename}`;
+        title = `${file.name || file.filename}`;
         description = file.data.body
           ? file.data.body
           : `View ${title}, a file in the collection ${name} on Slate`;
@@ -393,7 +393,7 @@ class SlatePage extends React.Component {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    const slateName = this.props.data.data.name;
+    const slateName = this.props.data.slatename;
     const slateFiles = this.props.data.objects;
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,

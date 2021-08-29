@@ -58,8 +58,8 @@ export default class ProfilePage extends React.Component {
 
   render() {
     const title = this.props.creator
-      ? this.props.creator.data.name
-        ? `${this.props.creator.data.name} on Slate`
+      ? this.props.creator.name
+        ? `${this.props.creator.name} on Slate`
         : `@${this.props.creator.username} on Slate`
       : "404";
     const url = `https://slate.host/${title}`;

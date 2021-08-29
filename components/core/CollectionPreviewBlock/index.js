@@ -112,7 +112,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
   const { fileCount, isPublic } = collection;
-  const title = collection?.data?.name || collection.slatename;
+  const title = collection.name || collection.slatename;
   const isOwner = viewer?.id === collection.ownerId;
 
   const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);

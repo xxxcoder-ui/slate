@@ -167,7 +167,7 @@ export default class SlateMediaObject extends React.Component {
     if (Validations.isFontFile(file.filename)) {
       return (
         <FontFrame
-          name={file.data.name || file.filename}
+          name={file.name || file.filename}
           cid={file.cid}
           fallback={element}
           onClick={(e) => {

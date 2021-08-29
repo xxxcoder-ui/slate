@@ -658,7 +658,7 @@ export default class DataView extends React.Component {
 
   _handleDragToDesktop = (e, object) => {
     const url = Strings.getURLfromCID(object.cid);
-    const title = object.filename || object.data.name;
+    const title = object.filename || object.name;
     const type = object.data.type;
     console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
@@ -986,7 +986,7 @@ export default class DataView extends React.Component {
                   <div css={STYLES_ICON_BOX_HOVER} style={{ paddingLeft: 0, paddingRight: 18 }}>
                     <FileTypeIcon file={each} height="24px" />
                   </div>
-                  <div css={STYLES_LINK}>{each.data.name || each.filename}</div>
+                  <div css={STYLES_LINK}>{each.name || each.filename}</div>
                 </div>
               </Link>
             </FilePreviewBubble>

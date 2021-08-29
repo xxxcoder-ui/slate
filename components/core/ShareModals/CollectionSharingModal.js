@@ -28,7 +28,7 @@ const formatDataSafely = ({ collection, user }) => {
   const rootUrl = window?.location?.origin;
   return {
     id: collection.id,
-    title: collection?.data?.name || collection?.slatename,
+    title: collection?.name || collection?.slatename,
     link: `${rootUrl}/${user.username}/${collection.slatename}`,
   };
 };
@@ -38,10 +38,10 @@ export const CollectionSharingModal = () => {
   const { open, user, collection, view, preview } = state;
   const { closeModal, changeView, handleModalVisibility } = handlers;
 
-  const { id, title, link } = React.useMemo(
-    () => formatDataSafely({ collection, user }),
-    [user, collection]
-  );
+  const { id, title, link } = React.useMemo(() => formatDataSafely({ collection, user }), [
+    user,
+    collection,
+  ]);
 
   useEventListener("collection-sharing-modal", handleModalVisibility, []);
 

@@ -11,8 +11,8 @@ export const sanitizeUser = (entity) => {
     username: entity.username,
     slates: entity.slates, //NOTE(martina): this is not in the database. It is added after
     library: entity.library, //NOTE(martina): this is not in the database. It is added after
+    name: entity.name,
     data: {
-      name: entity.data?.name,
       photo: entity.data?.photo,
       body: entity.data?.body,
     },
@@ -25,13 +25,13 @@ export const sanitizeSlate = (entity) => {
   return {
     id: entity.id,
     slatename: entity.slatename,
+    name: entity.name,
     ownerId: entity.ownerId,
     isPublic: entity.isPublic,
     objects: entity.objects,
     owner: entity.owner,
     user: entity.user, //NOTE(martina): this is not in the database. It is added after
     data: {
-      name: entity.data?.name,
       body: entity.data?.body,
       preview: entity.data?.preview,
     },
@@ -47,10 +47,10 @@ export const sanitizeFile = (entity) => {
     ownerId: entity.ownerId,
     isPublic: entity.isPublic,
     filename: entity.filename,
+    name: entity.name,
     createdAt: entity.createdAt,
     data: {
       type: entity.data?.type,
-      name: entity.data?.name,
       size: entity.data?.size,
       body: entity.data?.body,
       source: entity.data?.source,
@@ -75,6 +75,7 @@ export const cleanUser = (entity) => {
   return {
     id: entity.id,
     username: entity.username,
+    name: entity.name,
     createdAt: entity.createdAt,
     lastActive: entity.lastActive,
     salt: entity.salt,
@@ -84,7 +85,6 @@ export const cleanUser = (entity) => {
     authVersion: entity.authVersion,
     data: entity.data,
     // data: {
-    //   name: entity.data?.name,
     //   photo: entity.data?.photo,
     //   body: entity.data?.body,
     //   tokens: entity.data?.tokens,
@@ -101,11 +101,11 @@ export const cleanSlate = (entity) => {
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
     slatename: entity.slatename,
+    name: entity.name,
     isPublic: entity.isPublic,
     ownerId: entity.ownerId,
     data: entity.data,
     // data: {
-    //   name: entity.data?.name,
     //   body: entity.data?.body,
     //   preview: entity.data?.preview,
     // },
@@ -120,12 +120,12 @@ export const cleanFile = (entity) => {
     ownerId: entity.ownerId,
     isPublic: entity.isPublic,
     filename: entity.filename,
+    name: entity.name,
     data: entity.data,
     isLink: entity.isLink,
     url: entity.url,
     // data: {
     //   type: entity.data?.type,
-    //   name: entity.data?.name,
     //   size: entity.data?.size,
     //   body: entity.data?.body,
     //   source: entity.data?.source,
@@ -162,6 +162,7 @@ export const getUpdatedUser = (oldUser, updates) => {
 export const slateProperties = [
   "slates.id",
   "slates.slatename",
+  "slates.name",
   "slates.data",
   "slates.ownerId",
   "slates.isPublic",
@@ -172,6 +173,7 @@ export const slateProperties = [
 export const userProperties = [
   "users.id",
   "users.username",
+  "users.name",
   "users.data",
   "users.slateCount",
   "users.followerCount",
@@ -183,6 +185,7 @@ export const fileProperties = [
   "files.cid",
   "files.isPublic",
   "files.filename",
+  "files.name",
   "files.data",
   "files.createdAt",
   "files.downloadCount",

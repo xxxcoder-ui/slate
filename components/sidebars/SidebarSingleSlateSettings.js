@@ -50,7 +50,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
     slatename: this.props.data.slatename,
     isPublic: this.props.data.isPublic,
     body: this.props.data.data.body,
-    name: this.props.data.data.name,
+    name: this.props.data.name,
     modalShow: false,
   };
 
@@ -58,7 +58,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
     let slates = this.props.viewer.slates;
     for (let slate of slates) {
       if (slate.id === this.props.data.id) {
-        slate.data.name = this.state.name;
+        slate.name = this.state.name;
         slate.isPublic = this.state.isPublic;
         slate.data.body = this.state.body;
 

@@ -151,13 +151,13 @@ export default class SceneProfile extends React.Component {
         </WebsitePrototypeWrapper>
       );
     }
-    let name = user.data.name || `@${user.username}`;
+    let name = user.name || `@${user.username}`;
     let description, title, file, image;
     if (this.props.page.params?.cid) {
       file = user.library.find((file) => file.cid === this.props.page.params.cid);
     }
     if (file) {
-      title = `${file.data.name || file.filename}`;
+      title = `${file.name || file.filename}`;
       description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
       image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
     } else {
@@ -167,8 +167,8 @@ export default class SceneProfile extends React.Component {
       } else {
         description = `View collections and content from ${name} on Slate`;
       }
-      if (user.data.name) {
-        title = `${user.data.name} (@${user.username}) • Slate`;
+      if (user.name) {
+        title = `${user.name} (@${user.username}) • Slate`;
       } else {
         title = `${user.username} • Slate`;
       }

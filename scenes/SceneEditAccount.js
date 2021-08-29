@@ -48,7 +48,7 @@ export default class SceneEditAccount extends React.Component {
     confirm: "",
     body: this.props.viewer.data.body,
     photo: this.props.viewer.data.photo,
-    name: this.props.viewer.data.name,
+    name: this.props.viewer.name,
     deleting: false,
     allow_filecoin_directory_listing: this.props.viewer.data.settings
       ?.allow_filecoin_directory_listing,
@@ -108,17 +108,17 @@ export default class SceneEditAccount extends React.Component {
       return;
     }
 
-    let data = { ...this.props.viewer.data, body: this.state.body, name: this.state.name };
-    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { username: this.state.username, data } });
+    this.props.onAction({
+      type: "UPDATE_VIEWER",
+      viewer: { username: this.state.username, name: this.state.name, body: this.state.body },
+    });
     this.setState({ savingNameBio: true });
 
     let response = await Actions.updateViewer({
       username: this.state.username,
-      data: {
-        photo: this.state.photo,
-        body: this.state.body,
-        name: this.state.name,
-      },
+      photo: this.state.photo,
+      body: this.state.body,
+      name: this.state.name,
     });
 
     Events.hasError(response);

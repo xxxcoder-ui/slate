@@ -306,7 +306,7 @@ export class SlatePreviewBlock extends React.Component {
         <span css={STYLES_MOBILE_HIDDEN}>
           <div css={STYLES_TITLE_LINE}>
             <div css={STYLES_TITLE} style={{ width: "85%" }}>
-              {this.props.slate.data.name}
+              {this.props.slate.name}
               {this.props.isOwner && !this.props.slate.isPublic && (
                 <span style={{ marginLeft: 8 }}>
                   <SVG.SecurityLock height="20px" />
@@ -365,7 +365,7 @@ export class SlatePreviewBlock extends React.Component {
         </span>
         <span css={STYLES_MOBILE_ONLY}>
           <div css={STYLES_TITLE_LINE}>
-            <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
+            <div css={STYLES_TITLE}>{this.props.slate.name}</div>
             {this.props.isOwner && !this.props.slate.isPublic && (
               <div style={{ color: Constants.system.grayLight2, margin: `2px 0 0 0` }}>
                 <SVG.SecurityLock height="20px" />

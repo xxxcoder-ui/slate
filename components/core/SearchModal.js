@@ -88,9 +88,9 @@ const UserEntry = ({ user }) => {
           <ProfilePhoto user={user} size={48} />
         </div>
         <div css={STYLES_TEXT_ROWS}>
-          {user.data.name ? (
+          {user.name ? (
             <React.Fragment>
-              <div css={STYLES_TITLE}>{user.data.name}</div>
+              <div css={STYLES_TITLE}>{user.name}</div>
               <div css={STYLES_SUBTITLE}>@{user.username}</div>
             </React.Fragment>
           ) : (
@@ -120,7 +120,7 @@ const UserPreview = ({ user }) => {
         <ProfilePhoto user={user} size={182} />
       </div>
 
-      {user.data.name ? <div css={STYLES_PREVIEW_TEXT}>{user.data.name}</div> : null}
+      {user.name ? <div css={STYLES_PREVIEW_TEXT}>{user.name}</div> : null}
       <div css={STYLES_PREVIEW_TEXT}>@{user.username}</div>
       {user.data.slates ? (
         <div css={STYLES_PREVIEW_TEXT}>
@@ -176,8 +176,8 @@ const SlateEntry = ({ slate, user }) => {
           <SVG.Slate height="24px" />
         </div>
         <div css={STYLES_TEXT_ROWS}>
-          <div css={STYLES_TITLE}>{slate.data.name || slate.slatename}</div>
-          {user ? <div css={STYLES_SUBTITLE}>{user.data.name || `@${user.username}`}</div> : null}
+          <div css={STYLES_TITLE}>{slate.name || slate.slatename}</div>
+          {user ? <div css={STYLES_SUBTITLE}>{user.name || `@${user.username}`}</div> : null}
         </div>
       </div>
     </div>
@@ -236,7 +236,7 @@ const SlatePreview = ({ slate, user }) => {
         )}
       </div>
       {user ? (
-        <div css={STYLES_PREVIEW_TEXT}>Created by: {user.data.name || `@${user.username}`}</div>
+        <div css={STYLES_PREVIEW_TEXT}>Created by: {user.name || `@${user.username}`}</div>
       ) : null}
       {slate.objects && (
         <div css={STYLES_PREVIEW_TEXT}>
@@ -255,7 +255,7 @@ const FileEntry = ({ file }) => {
           <FileTypeIcon file={file} height="24px" />
         </div>
         <div css={STYLES_TEXT_ROWS}>
-          <div css={STYLES_TITLE}>{file.data.name || file.filename}</div>
+          <div css={STYLES_TITLE}>{file.name || file.filename}</div>
           <div css={STYLES_SUBTITLE} style={{ textTransform: "uppercase" }}>
             {Strings.getFileExtension(file.filename)}
           </div>
@@ -271,11 +271,9 @@ const FilePreview = ({ file, slate, user, viewerId }) => {
       <div css={STYLES_PREVIEW_IMAGE}>
         <SlateMediaObjectPreview file={file} previewPanel />
       </div>
-      {user ? (
-        <div css={STYLES_PREVIEW_TEXT}>Owner: {user.data.name || `@${user.username}`}</div>
-      ) : null}
+      {user ? <div css={STYLES_PREVIEW_TEXT}>Owner: {user.name || `@${user.username}`}</div> : null}
       {slate ? (
-        <div css={STYLES_PREVIEW_TEXT}>Collection: {slate.data.name || slate.slatename}</div>
+        <div css={STYLES_PREVIEW_TEXT}>Collection: {slate.name || slate.slatename}</div>
       ) : user?.id === viewerId ? (
         <div css={STYLES_PREVIEW_TEXT}>In your files</div>
       ) : null}
