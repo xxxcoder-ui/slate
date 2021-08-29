@@ -399,7 +399,7 @@ export default class ApplicationPage extends React.Component {
 
     let unseenAnnouncements = [];
     for (let feature of announcements) {
-      if (!viewer.data.onboarding || !Object.keys(viewer.data.onboarding).includes(feature)) {
+      if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
         unseenAnnouncements.push(feature);
       }
     }

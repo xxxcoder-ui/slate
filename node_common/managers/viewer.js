@@ -212,7 +212,7 @@ export const getById = async ({ id }) => {
     settingsDealsAutoApprove: user.settingsDealsAutoApprove,
     allowAutomaticDataStorage: user.allowAutomaticDataStorage,
     allowEncryptedDataStorage: user.allowEncryptedDataStorage,
-    // onboarding: user.data.onboarding || {},
+    onboarding: user.onboarding || {},
     // status: user.data.status || {},
     stats: {
       bytes,

@@ -85,11 +85,11 @@ export const cleanUser = (entity) => {
     authVersion: entity.authVersion,
     data: entity.data,
     body: entity.body,
+    onboarding: entity.onboarding,
     // data: {
     //   photo: entity.data?.photo,
     //   tokens: entity.data?.tokens,
     //   settings: entity.data?.settings,
-    //   onboarding: entity.data?.onboarding,
     //   status: entity.data?.status,
     // },
   };

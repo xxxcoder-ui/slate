@@ -13,7 +13,7 @@ export default async (req, res) => {
 
   let updateResponse;
   if (req.body.data?.onboarding) {
-    let onboarding = user.data.onboarding;
+    let onboarding = user.onboarding;
     if (!onboarding) {
       onboarding = {};
     }
@@ -23,7 +23,7 @@ export default async (req, res) => {
 
     updateResponse = await Data.updateUserById({
       id: user.id,
-      data: { onboarding },
+      onboarding,
     });
 
     if (!updateResponse || updateResponse.error) {
