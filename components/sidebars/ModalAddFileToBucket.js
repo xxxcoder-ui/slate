@@ -245,7 +245,7 @@ export default class ModalAddFileToBucket extends React.Component {
       );
     } else {
       return (
-        <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ width: "100%" }}>
+        <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ width: "100%", maxWidth: 680 }}>
           <input
             css={STYLES_FILE_HIDDEN}
             multiple
@@ -253,22 +253,29 @@ export default class ModalAddFileToBucket extends React.Component {
             id="file"
             onChange={this._handleUpload}
           />
-          <System.Input
-            placeholder="Paste a link to save"
-            value={this.state.url}
-            style={{
-              height: 48,
-              backgroundColor: Constants.semantic.bgLight,
-              boxShadow: this.state.urlError ? `0 0 0 1px ${Constants.system.red} inset` : "none",
-            }}
-            containerStyle={{ maxWidth: 600 }}
-            name="url"
-            type="url"
-            onChange={this._handleChange}
-            onSubmit={this._handleUploadLink}
-            autoFocus
-            icon={SVG.RightArrow}
-          />
+          <div css={Styles.HORIZONTAL_CONTAINER} style={{ width: "100%" }}>
+            <System.Input
+              placeholder="Paste a link to save"
+              value={this.state.url}
+              style={{
+                height: 40,
+                backgroundColor: Constants.semantic.bgLight,
+                boxShadow: this.state.urlError ? `0 0 0 1px ${Constants.system.red} inset` : "none",
+              }}
+              containerStyle={{ maxWidth: 600 }}
+              name="url"
+              type="url"
+              onChange={this._handleChange}
+              onSubmit={this._handleUploadLink}
+              autoFocus
+            />
+            <System.ButtonPrimary
+              onClick={this._handleUploadLink}
+              style={{ height: 40, marginLeft: 8 }}
+            >
+              Save
+            </System.ButtonPrimary>
+          </div>
           <System.Divider width="64px" style={{ margin: "40px 0px" }} />
 
           <System.H4
