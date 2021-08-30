@@ -284,7 +284,7 @@ class CarouselSidebar extends React.Component {
     name: this.props.file.name || this.props.file.filename || "",
     body: this.props.file.body || "",
     source: this.props.file.source || "",
-    author: this.props.file.data.author || "",
+    author: this.props.file.author || "",
     tags: this.props.file.data.tags || [],
     suggestions: this.props.viewer?.tags || [],
     selected: {},
@@ -602,7 +602,7 @@ class CarouselSidebar extends React.Component {
       const hasName = !Strings.isEmpty(file.name || file.filename);
       const hasBody = !Strings.isEmpty(file.body);
       const hasSource = !Strings.isEmpty(file.source);
-      const hasAuthor = !Strings.isEmpty(file.data.author);
+      const hasAuthor = !Strings.isEmpty(file.author);
 
       if (hasName) {
         elements.push(
@@ -659,7 +659,7 @@ class CarouselSidebar extends React.Component {
               Author:
             </div>
             <p css={STYLES_BODY} style={{ color: Constants.system.grayLight2 }}>
-              <ProcessedText dark text={file.data.author} />
+              <ProcessedText dark text={file.author} />
             </p>
           </div>
         );

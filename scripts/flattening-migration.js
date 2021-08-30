@@ -294,7 +294,7 @@ Files
     'data.blurhash', -> 'blurhash' MIGRATED
     'data.source', -> 'source' MIGRATED
     'data.body', -> 'body' MIGRATED
-    'data.author', -> 'author'
+    'data.author', -> 'author' MIGRATED
     'data.coverImage', -> 'coverImage'
     'data.unity', -> 'data.unity'
     'data.link.name', -> 'linkName'
