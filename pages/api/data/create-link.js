@@ -73,7 +73,6 @@ export default async (req, res) => {
       url: file.url,
       data: {
         type: "link",
-        size: 0,
         name: data.title || "",
         author: data.author || "",
         source: data.publisher || "",

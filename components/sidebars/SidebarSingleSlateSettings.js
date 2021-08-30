@@ -122,23 +122,23 @@ export default class SidebarSingleSlateSettings extends React.Component {
   render() {
     const slug = Strings.createSlug(this.state.name);
     const url = `/${this.props.viewer.username}/${slug}`;
-    let preview = this.props.data.data.preview;
-    if (!preview) {
-      for (let object of this.props.data.objects) {
-        if (
-          object.data.type &&
-          Validations.isPreviewableImage(object.data.type) &&
-          object.data.size &&
-          object.data.size < Constants.linkPreviewSizeLimit
-        ) {
-          preview = Strings.getURLfromCID(object.cid);
-          break;
-        }
-      }
-    }
-    if (!preview) {
-      preview = DEFAULT_IMAGE;
-    }
+    // let preview = this.props.data.data.preview;
+    // if (!preview) {
+    //   for (let object of this.props.data.objects) {
+    //     if (
+    //       object.type &&
+    //       Validations.isPreviewableImage(object.type) &&
+    //       object.size &&
+    //       object.size < Constants.linkPreviewSizeLimit
+    //     ) {
+    //       preview = Strings.getURLfromCID(object.cid);
+    //       break;
+    //     }
+    //   }
+    // }
+    // if (!preview) {
+    //   preview = DEFAULT_IMAGE;
+    // }
 
     return (
       <React.Fragment>

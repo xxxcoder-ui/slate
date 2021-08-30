@@ -289,7 +289,7 @@ Slates
 Files
 [
     'data.name', -> 'name' MIGRATED
-    'data.size', -> 'size'
+    'data.size', -> 'size' MIGRATED
     'data.type', -> 'type'
     'data.blurhash', -> 'blurhash'
     'data.source', -> 'source'

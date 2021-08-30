@@ -175,7 +175,7 @@ export const getById = async ({ id }) => {
     }
 
     cids[each.cid] = true;
-    let size = each.data.size;
+    let size = each.size;
     if (typeof size === "number") {
       bytes += size;
       if (each.data.type && each.data.type.startsWith("image/")) {
@@ -194,7 +194,7 @@ export const getById = async ({ id }) => {
     let coverImage = each.data.coverImage;
     if (coverImage && !cids[coverImage.cid]) {
       cids[coverImage.cid] = true;
-      size = coverImage.data.size;
+      size = coverImage.size;
       if (typeof size === "number") {
         imageBytes += size;
       }

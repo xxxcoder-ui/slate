@@ -236,8 +236,8 @@ export default class SceneSlate extends React.Component {
             if (
               objects[i].data.type &&
               Validations.isPreviewableImage(objects[i].data.type) &&
-              objects[i].data.size &&
-              objects[i].data.size < Constants.linkPreviewSizeLimit
+              objects[i].size &&
+              objects[i].size < Constants.linkPreviewSizeLimit
             ) {
               image = Strings.getURLfromCID(objects[i].cid);
               break;

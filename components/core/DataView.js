@@ -993,7 +993,7 @@ export default class DataView extends React.Component {
           </Selectable>
         ),
         tags: <>{each.data.tags?.length ? <Tags tags={each.data.tags} /> : null}</>,
-        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.data.size)}</div>,
+        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
         more: this.props.isOwner ? (
           <div
             css={STYLES_ICON_BOX_HOVER}

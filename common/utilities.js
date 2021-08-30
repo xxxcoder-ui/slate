@@ -12,7 +12,7 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
   if (!file) return;
   const coverImage = file.data?.coverImage;
   if (coverImage) {
-    if (sizeLimit && coverImage.data.size && coverImage.data.size > sizeLimit) {
+    if (sizeLimit && coverImage.size && coverImage.size > sizeLimit) {
       return;
     }
     if (coverImage?.data.url) {
@@ -24,7 +24,7 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
   }
 
   if (Validations.isPreviewableImage(file.data.type)) {
-    if (sizeLimit && file.data.size > sizeLimit) {
+    if (sizeLimit && file.size > sizeLimit) {
       return;
     }
     return Strings.getURLfromCID(file.cid);
