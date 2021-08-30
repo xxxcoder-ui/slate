@@ -295,7 +295,7 @@ Files
     'data.source', -> 'source' MIGRATED
     'data.body', -> 'body' MIGRATED
     'data.author', -> 'author' MIGRATED
-    'data.coverImage', -> 'coverImage'
+    'data.coverImage', -> 'coverImage' MIGRATED
     'data.unity', -> 'data.unity'
     'data.link.name', -> 'linkName'
     'data.link.body', -> 'linkBody'

@@ -76,9 +76,7 @@ export default function ImageObjectPreview({
 
   const shouldShowPlaceholder = isLoading && blurhash;
 
-  const imageUrl = coverImage
-    ? coverImage?.data?.url || Strings.getURLfromCID(coverImage?.cid)
-    : url;
+  const imageUrl = coverImage ? coverImage?.url || Strings.getURLfromCID(coverImage?.cid) : url;
 
   return (
     <ObjectPreviewPrimitive file={file} tag={tag || imgTag} isImage {...props}>

@@ -194,7 +194,7 @@ export const getById = async ({ id }) => {
       }
     }
 
-    let coverImage = each.data.coverImage;
+    let coverImage = each.coverImage;
     if (coverImage && !cids[coverImage.cid]) {
       cids[coverImage.cid] = true;
       size = coverImage.size;

@@ -108,7 +108,7 @@ export default function ObjectPreviewPrimitive({
 
   const title = file.name || file.filename;
 
-  if (file?.data?.coverImage && !isImage && !isLink) {
+  if (file?.coverImage && !isImage && !isLink) {
     return (
       <ImageObjectPreview
         file={file}

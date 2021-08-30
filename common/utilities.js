@@ -10,15 +10,15 @@ import * as Constants from "~/common/constants";
 
 export const getImageUrlIfExists = (file, sizeLimit = null) => {
   if (!file) return;
-  const coverImage = file.data?.coverImage;
+  const coverImage = file.coverImage;
   if (coverImage) {
     if (sizeLimit && coverImage.size && coverImage.size > sizeLimit) {
       return;
     }
-    if (coverImage?.data.url) {
-      return coverImage.data.url;
+    if (coverImage.url) {
+      return coverImage.url;
     }
-    if (coverImage?.cid) {
+    if (coverImage.cid) {
       return Strings.getURLfromCID(coverImage.cid);
     }
   }

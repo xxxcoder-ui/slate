@@ -391,7 +391,7 @@ class CarouselSidebar extends React.Component {
     if (this.props.external || !this.props.isOwner || !this.props.viewer) return;
     e.persist();
     this.setState({ isUploading: true });
-    let previousCoverId = this.props.file.data.coverImage?.id;
+    let previousCoverId = this.props.file.coverImage?.id;
     if (!e || !e.target) {
       this.setState({ isUploading: false });
       return;
@@ -408,9 +408,7 @@ class CarouselSidebar extends React.Component {
 
     let updateReponse = await Actions.updateFile({
       id: this.props.file.id,
-      data: {
-        coverImage,
-      },
+      coverImage,
     });
 
     if (previousCoverId) {
@@ -516,10 +514,8 @@ class CarouselSidebar extends React.Component {
   };
 
   render() {
-    const isPublic = this.props.file.isPublic;
     const file = this.props.file;
-    const { size, type } = file;
-    const { coverImage } = file.data;
+    const { type, coverImage } = file;
     const editingAllowed = this.props.isOwner && !this.props.isRepost && !this.props.external;
 
     const isUnityGame = Validations.isUnityType(type);
