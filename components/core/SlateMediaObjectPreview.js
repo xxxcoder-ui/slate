@@ -106,16 +106,16 @@ export default class SlateMediaObjectPreview extends React.Component {
   render() {
     const file = this.props.file;
     const type = this.props.file.type;
-    const coverImage = this.props.file.data?.coverImage;
+    const coverImage = this.props.file?.coverImage;
 
     let url = Utilities.getImageUrlIfExists(file);
 
     if (url) {
       const blurhash =
-        file.data.blurhash && isBlurhashValid(file.data?.blurhash).result
-          ? file.data?.blurhash
-          : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash).result
-          ? coverImage?.data.blurhash
+        file.blurhash && isBlurhashValid(file.blurhash).result
+          ? file.blurhash
+          : coverImage?.blurhash && isBlurhashValid(coverImage?.blurhash).result
+          ? coverImage?.blurhash
           : null;
       if (this.state.error) {
         return (

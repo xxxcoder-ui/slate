@@ -259,7 +259,7 @@ export const upload = async ({ file, context, bucketName }) => {
     try {
       let blurhash = await encodeImageToBlurhash(url);
       if (isBlurhashValid(blurhash).result) {
-        item.data.blurhash = blurhash;
+        item.blurhash = blurhash;
       }
     } catch (e) {
       Logging.error(e);

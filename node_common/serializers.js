@@ -52,10 +52,10 @@ export const sanitizeFile = (entity) => {
     body: entity.body,
     size: entity.size,
     type: entity.type,
+    blurhash: entity.blurhash,
     data: {
       source: entity.data?.source,
       author: entity.data?.author,
-      blurhash: entity.data?.blurhash,
       coverImage: entity.data?.coverImage,
       tags: entity.data?.tags, //NOTE(martina): newly added
       unity: entity.data?.unity, //NOTE(martina): newly added
@@ -129,10 +129,10 @@ export const cleanFile = (entity) => {
     body: entity.body,
     size: entity.size,
     type: entity.type,
+    blurhash: entity.blurhash,
     // data: {
     //   source: entity.data?.source,
     //   author: entity.data?.author,
-    //   blurhash: entity.data?.blurhash,
     //   coverImage: entity.data?.coverImage,
     //   downloads: entity.data?.downloads,
     //   tags: entity.data?.tags,

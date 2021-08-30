@@ -116,7 +116,7 @@ const getFileBlurHash = (file) => {
   const coverImageBlurHash = coverImage?.data?.blurhash;
   if (coverImage && isBlurhashValid(coverImageBlurHash).result) return coverImageBlurHash;
 
-  const blurhash = file?.data?.blurhash;
+  const blurhash = file?.blurhash;
   if (isBlurhashValid(blurhash).result) return blurhash;
 
   return null;
