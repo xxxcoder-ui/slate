@@ -340,7 +340,7 @@ const getObjectToPreview = (objects = []) => {
   let isImage = false;
 
   objects.some((object, i) => {
-    const isPreviewableImage = Validations.isPreviewableImage(object.data.type);
+    const isPreviewableImage = Validations.isPreviewableImage(object.type);
     if (isPreviewableImage) (objectIdx = i), (isImage = true);
     return isPreviewableImage;
   });

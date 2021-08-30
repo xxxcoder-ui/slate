@@ -178,16 +178,19 @@ export const getById = async ({ id }) => {
     let size = each.size;
     if (typeof size === "number") {
       bytes += size;
-      if (each.data.type && each.data.type.startsWith("image/")) {
-        imageBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("video/")) {
-        videoBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("audio/")) {
-        audioBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("application/epub")) {
-        epubBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
-        pdfBytes += size;
+      let type = each.type;
+      if (type) {
+        if (type.startsWith("image/")) {
+          imageBytes += size;
+        } else if (type.startsWith("video/")) {
+          videoBytes += size;
+        } else if (type.startsWith("audio/")) {
+          audioBytes += size;
+        } else if (type.startsWith("application/epub")) {
+          epubBytes += size;
+        } else if (type.startsWith("application/pdf")) {
+          pdfBytes += size;
+        }
       }
     }
 

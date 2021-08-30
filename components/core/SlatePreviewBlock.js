@@ -257,7 +257,7 @@ export class SlatePreviewBlock extends React.Component {
     if (!objects) {
       objects = [];
       for (let file of slate.objects) {
-        if (Validations.isPreviewableImage(file.data.type)) {
+        if (Validations.isPreviewableImage(file.type)) {
           objects.push(file);
         }
         if (objects.length >= 4) break;

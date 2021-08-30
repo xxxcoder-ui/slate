@@ -518,8 +518,8 @@ class CarouselSidebar extends React.Component {
   render() {
     const isPublic = this.props.file.isPublic;
     const file = this.props.file;
-    const { size } = file;
-    const { coverImage, type } = file.data;
+    const { size, type } = file;
+    const { coverImage } = file.data;
     const editingAllowed = this.props.isOwner && !this.props.isRepost && !this.props.external;
 
     const isUnityGame = Validations.isUnityType(type);

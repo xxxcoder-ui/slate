@@ -220,8 +220,8 @@ export default class SlatePage extends React.Component {
       if (Strings.isEmpty(image)) {
         for (let i = 0; i < objects.length; i++) {
           if (
-            objects[i].data.type &&
-            Validations.isPreviewableImage(objects[i].data.type) &&
+            objects[i].type &&
+            Validations.isPreviewableImage(objects[i].type) &&
             objects[i].size &&
             objects[i].size < Constants.linkPreviewSizeLimit
           ) {
@@ -239,7 +239,7 @@ export default class SlatePage extends React.Component {
       if (object) {
         title = object.data.name || object.filename;
         body = !Strings.isEmpty(object.data.body) ? Strings.elide(object.data.body) : "";
-        image = object.data.type.includes("image/") ? (
+        image = object.type.includes("image/") ? (
           Strings.getURLfromCID(object.cid)
         ) : (
           <FileTypeDefaultPreview type={object.data.type} />

@@ -42,7 +42,7 @@ export default function ViewMoreContent({ items, children, ...props }) {
           <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
             {items?.slice(0, 3).map((file) => {
               const isImageFile =
-                Validations.isPreviewableImage(file?.data?.type) || file?.data?.coverImage;
+                Validations.isPreviewableImage(file?.type) || file?.data?.coverImage;
               return (
                 <div
                   key={file.id}

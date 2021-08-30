@@ -234,8 +234,8 @@ export default class SceneSlate extends React.Component {
         if (!image && objects) {
           for (let i = 0; i < objects.length; i++) {
             if (
-              objects[i].data.type &&
-              Validations.isPreviewableImage(objects[i].data.type) &&
+              objects[i].type &&
+              Validations.isPreviewableImage(objects[i].type) &&
               objects[i].size &&
               objects[i].size < Constants.linkPreviewSizeLimit
             ) {

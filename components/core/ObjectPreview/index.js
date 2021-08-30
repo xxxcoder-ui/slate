@@ -24,7 +24,7 @@ import LinkObjectPreview from "~/components/core/ObjectPreview/LinkObjectPreview
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const ObjectPreview = ({ file, ...props }) => {
-  const { type, link } = file.data;
+  const { type, link } = file;
 
   const url = Strings.getURLfromCID(file.cid);
 

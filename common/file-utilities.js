@@ -254,7 +254,7 @@ export const upload = async ({ file, context, bucketName }) => {
   }
 
   let item = res.data.data;
-  if (item.data.type.startsWith("image/")) {
+  if (item.type.startsWith("image/")) {
     let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);

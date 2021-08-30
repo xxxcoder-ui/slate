@@ -63,7 +63,7 @@ export default function ImageObjectPreview({
     ref: previewerRef,
   });
 
-  const { type, coverImage } = file.data;
+  const { type, coverImage } = file;
   const imgTag = type.split("/")[1];
 
   const blurhash = React.useMemo(() => {

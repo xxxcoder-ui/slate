@@ -659,7 +659,7 @@ export default class DataView extends React.Component {
   _handleDragToDesktop = (e, object) => {
     const url = Strings.getURLfromCID(object.cid);
     const title = object.filename || object.name;
-    const type = object.data.type;
+    const type = object.type;
     console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
@@ -976,7 +976,7 @@ export default class DataView extends React.Component {
             }}
             onDragEnd={this._enableDragAndDropUploadEvent}
           >
-            <FilePreviewBubble cid={cid} type={each.data.type}>
+            <FilePreviewBubble cid={cid} type={each.type}>
               <Link
                 redirect
                 params={{ ...this.props.page.params, cid: each.cid }}

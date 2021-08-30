@@ -71,8 +71,8 @@ export default async (req, res) => {
       cid: file.cid,
       isLink: true,
       url: file.url,
+      type: "link",
       data: {
-        type: "link",
         name: data.title || "",
         author: data.author || "",
         source: data.publisher || "",

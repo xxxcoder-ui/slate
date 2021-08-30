@@ -88,7 +88,7 @@ export default class SlateMediaObjectPreview extends React.Component {
   };
 
   setImage = () => {
-    let type = this.props.file.data?.type;
+    let type = this.props.file.type;
     let coverImage = this.props.file.data?.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
@@ -105,7 +105,7 @@ export default class SlateMediaObjectPreview extends React.Component {
 
   render() {
     const file = this.props.file;
-    const type = this.props.file.data?.type;
+    const type = this.props.file.type;
     const coverImage = this.props.file.data?.coverImage;
 
     let url = Utilities.getImageUrlIfExists(file);

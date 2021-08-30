@@ -23,7 +23,7 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
     }
   }
 
-  if (Validations.isPreviewableImage(file.data.type)) {
+  if (Validations.isPreviewableImage(file.type)) {
     if (sizeLimit && file.size > sizeLimit) {
       return;
     }
