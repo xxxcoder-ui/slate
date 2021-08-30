@@ -292,7 +292,7 @@ Files
     'data.size', -> 'size' MIGRATED
     'data.type', -> 'type' MIGRATED
     'data.blurhash', -> 'blurhash' MIGRATED
-    'data.source', -> 'source'
+    'data.source', -> 'source' MIGRATED
     'data.body', -> 'body' MIGRATED
     'data.author', -> 'author'
     'data.coverImage', -> 'coverImage'

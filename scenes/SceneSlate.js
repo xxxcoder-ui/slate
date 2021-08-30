@@ -497,7 +497,6 @@ class SlatePage extends React.Component {
                 viewer={this.props.viewer}
                 items={objects}
                 view={"grid"}
-                resources={this.props.resources}
                 isOwner={isOwner}
                 page={this.props.page}
               />

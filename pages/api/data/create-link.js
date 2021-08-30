@@ -72,11 +72,11 @@ export default async (req, res) => {
       isLink: true,
       url: file.url,
       type: "link",
+      source: data.publisher,
+      name: data.title,
+      body: data.description,
       data: {
-        name: data.title || "",
         author: data.author || "",
-        source: data.publisher || "",
-        body: data.description || "",
         // coverImage: data.screenshot
         //   ? {
         //       data: {
