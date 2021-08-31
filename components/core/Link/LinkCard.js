@@ -1,3 +1,4 @@
+import * as React from "react";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
@@ -5,7 +6,7 @@ import * as SVG from "~/common/svg";
 
 import LinkTag from "~/components/core/Link/LinkTag";
 
-import { LoaderSpinner } from "~/components/system/components/Loaders";
+import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
 
 const STYLES_CARD = css`
@@ -22,6 +23,11 @@ const STYLES_CARD = css`
     width: 90vw;
     height: 50vh;
   }
+`;
+
+const STYLES_TAG_CONTAINER = (theme) => css`
+  color: ${theme.semantic.textGray};
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED}
 `;
 
 const STYLES_FREEFORM_CARD = css`
@@ -69,12 +75,75 @@ const STYLES_BODY = css`
   max-width: 600px;
 `;
 
+const STYLES_LINK = (theme) => css`
+  display: block;
+  width: 100%;
+  ${Styles.LINK}
+  :hover small, .link_external_link {
+    color: ${theme.semantic.textGrayDark};
+  }
+
+  .link_external_link {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  :hover .link_external_link {
+    opacity: 1;
+  }
+`;
+
+const STYLES_SOURCE = css`
+  transition: color 0.4s;
+  max-width: 80%;
+`;
+
+const STYLES_SOURCE_LOGO = css`
+  height: 12px;
+  width: 12px;
+  border-radius: 4px;
+`;
+
 export default function LinkCard({ file, isNFTLink }) {
   const url = file.url;
   const link = file.data.link;
   const { image, name, body } = link;
 
   if (isNFTLink) {
+    const faviconImgState = useImage({ src: link.logo });
+
+    const tag = (
+      <a
+        css={STYLES_LINK}
+        href={file.url}
+        target="_blank"
+        rel="noreferrer"
+        style={{ position: "relative", zIndex: 2 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div css={STYLES_TAG_CONTAINER}>
+          {faviconImgState.error ? (
+            <SVG.Link height={12} width={12} style={{ marginRight: 4 }} />
+          ) : (
+            <img
+              src={link.logo}
+              alt="Link source logo"
+              style={{ marginRight: 4 }}
+              css={STYLES_SOURCE_LOGO}
+            />
+          )}
+          <P3 css={STYLES_SOURCE} as="small" color="textGray" nbrOflines={1}>
+            {link.source}
+          </P3>
+          <SVG.ExternalLink
+            className="link_external_link"
+            height={12}
+            width={12}
+            style={{ marginLeft: 4 }}
+          />
+        </div>
+      </a>
+    );
+
     return (
       <a
         css={Styles.LINK}
@@ -87,7 +156,8 @@ export default function LinkCard({ file, isNFTLink }) {
           <div css={STYLES_IMAGE_CONTAINER}>
             <img src={image} css={Styles.IMAGE_FILL} style={{ maxHeight: "calc(100vh - 200px)" }} />
           </div>
-          <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>
+          <div css={[STYLES_TEXT_BOX]}>{tag}</div>
+          {/* <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>
             <div css={STYLES_NAME}>
               <System.H3>{name}</System.H3>
             </div>
@@ -95,7 +165,7 @@ export default function LinkCard({ file, isNFTLink }) {
               <System.P1>{body}</System.P1>
             </div>
             <LinkTag url={url} fillWidth={false} style={{ color: Constants.semantic.textGray }} />
-          </div>
+          </div> */}
         </div>
       </a>
     );
@@ -143,3 +213,29 @@ export default function LinkCard({ file, isNFTLink }) {
     </div> */
   }
 }
+
+const useImage = ({ src, maxWidth }) => {
+  const [imgState, setImgState] = React.useState({
+    loaded: false,
+    error: true,
+    overflow: false,
+  });
+
+  React.useEffect(() => {
+    if (!src) setImgState({ error: true, loaded: true });
+
+    const img = new Image();
+    img.src = src;
+
+    img.onload = () => {
+      if (maxWidth && img.naturalWidth < maxWidth) {
+        setImgState((prev) => ({ ...prev, loaded: true, error: false, overflow: true }));
+      } else {
+        setImgState({ loaded: true, error: false });
+      }
+    };
+    img.onerror = () => setImgState({ loaded: true, error: true });
+  }, []);
+
+  return imgState;
+};
