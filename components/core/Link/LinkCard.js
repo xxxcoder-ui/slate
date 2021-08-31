@@ -9,11 +9,6 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 
 const STYLES_CARD = css`
-  margin: 24px;
-  ${"" /* height: 100%;
-  width: 100%;
-  max-height: 448px;
-  max-width: 600px; */}
   height: 448px;
   width: 600px;
   max-height: 100%;
@@ -27,6 +22,15 @@ const STYLES_CARD = css`
     width: 90vw;
     height: 50vh;
   }
+`;
+
+const STYLES_FREEFORM_CARD = css`
+  max-height: 90%;
+  max-width: 90%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: ${Constants.shadow.large};
+  background-color: ${Constants.semantic.bgGrayLight};
 `;
 
 const STYLES_IMAGE_CONTAINER = css`
@@ -62,15 +66,49 @@ const STYLES_BODY = css`
   -webkit-box-orient: vertical;
   margin-bottom: 8px;
   color: ${Constants.semantic.textGrayDark};
+  max-width: 600px;
 `;
 
-export default function LinkCard({ file }) {
+export default function LinkCard({ file, isNFTLink }) {
   const url = file.url;
   const link = file.data.link;
   const { image, name, body } = link;
 
+  if (isNFTLink) {
+    return (
+      <a
+        css={Styles.LINK}
+        href={url}
+        target="_blank"
+        onClick={(e) => e.stopPropagation()}
+        style={{ margin: 24 }}
+      >
+        <div css={[Styles.VERTICAL_CONTAINER, STYLES_FREEFORM_CARD]}>
+          <div css={STYLES_IMAGE_CONTAINER}>
+            <img src={image} css={Styles.IMAGE_FILL} style={{ maxHeight: "calc(100vh - 200px)" }} />
+          </div>
+          <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>
+            <div css={STYLES_NAME}>
+              <System.H3>{name}</System.H3>
+            </div>
+            <div css={STYLES_BODY}>
+              <System.P1>{body}</System.P1>
+            </div>
+            <LinkTag url={url} fillWidth={false} style={{ color: Constants.semantic.textGray }} />
+          </div>
+        </div>
+      </a>
+    );
+  }
+
   return (
-    <a css={Styles.LINK} href={url} target="_blank" onClick={(e) => e.stopPropagation()}>
+    <a
+      css={Styles.LINK}
+      href={url}
+      target="_blank"
+      onClick={(e) => e.stopPropagation()}
+      style={{ margin: 24 }}
+    >
       <div css={[Styles.VERTICAL_CONTAINER, STYLES_CARD]}>
         <div css={STYLES_IMAGE_CONTAINER}>
           <img src={image} css={Styles.IMAGE_FILL} />
