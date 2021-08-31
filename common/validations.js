@@ -1,4 +1,5 @@
 import * as Strings from "~/common/strings";
+import * as Constants from "~/common/constants";
 
 import JSZip from "jszip";
 
@@ -279,4 +280,11 @@ export const isUnityFile = async (file) => {
   } catch (e) {
     return false;
   }
+};
+
+export const isNFTLink = (file) => {
+  let domain = file?.data?.link?.domain;
+  if (!domain) return false;
+  domain = domain.toLowerCase();
+  return Constants.NFTDomains.includes(domain);
 };

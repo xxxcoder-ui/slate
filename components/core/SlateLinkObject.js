@@ -34,6 +34,8 @@ export default class SlateLinkObject extends React.Component {
     const url = this.props.file.url;
     const link = this.props.file.data.link;
     const { html, iFrameAllowed } = link;
+    const isNFTLink = Validations.isNFTLink(this.props.file);
+
     if (html) {
       return (
         <div
@@ -43,7 +45,7 @@ export default class SlateLinkObject extends React.Component {
           }}
         />
       );
-    } else if (iFrameAllowed && !isMobile) {
+    } else if (iFrameAllowed && !isMobile && !isNFTLink) {
       return (
         <div
           style={{ position: "relative", display: "block", width: "100%", height: "100%" }}
@@ -67,7 +69,7 @@ export default class SlateLinkObject extends React.Component {
         </div>
       );
     } else {
-      return <LinkCard file={this.props.file} />;
+      return <LinkCard file={this.props.file} isNFTLink={isNFTLink} />;
     }
   }
 }

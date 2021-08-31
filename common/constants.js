@@ -182,6 +182,8 @@ export const gateways = {
 
 export const hostname = "https://slate.host";
 
+export const NFTDomains = ["foundation.app", "zora.co", "opensea.io"];
+
 // more important filetypes to consider:
 // midi
 // txt, rtf, docx
