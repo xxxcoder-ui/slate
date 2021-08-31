@@ -50,7 +50,6 @@ const STYLES_TAG = css`
 const STYLES_PREVIEW = css`
   overflow: hidden;
   position: relative;
-  bottom: 0.5px;
   flex-grow: 1;
 `;
 
