@@ -69,7 +69,7 @@ export default class SlateLinkObject extends React.Component {
         </div>
       );
     } else {
-      return <LinkCard file={this.props.file} />;
+      return <LinkCard file={this.props.file} isNFTLink={isNFTLink} />;
     }
   }
 }
