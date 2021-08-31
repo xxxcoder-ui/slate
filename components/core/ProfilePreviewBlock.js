@@ -43,7 +43,7 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
     <div css={STYLES_CONTAINER}>
       <img
         css={STYLES_PROFILE_PREVIEW}
-        src={profile.data.photo}
+        src={profile.photo}
         alt={`${profile.username}`}
         onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
       />

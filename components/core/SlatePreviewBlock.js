@@ -247,8 +247,8 @@ export class SlatePreviewBlock extends React.Component {
   render() {
     const slate = this.props.slate;
     let objects;
-    if (slate.data.preview) {
-      const cid = Strings.urlToCid(slate.data.preview);
+    if (slate.preview) {
+      const cid = Strings.urlToCid(slate.preview);
       let preview = slate.objects.find((each) => each.cid === cid);
       if (preview) {
         objects = [preview];

@@ -32,9 +32,7 @@ export const sanitizeSlate = (entity) => {
     owner: entity.owner,
     user: entity.user, //NOTE(martina): this is not in the database. It is added after
     body: entity.body,
-    data: {
-      preview: entity.data?.preview,
-    },
+    preview: entity.preview,
     fileCount: entity.fileCount,
     subscriberCount: entity.subscriberCount,
   };
@@ -108,9 +106,7 @@ export const cleanSlate = (entity) => {
     ownerId: entity.ownerId,
     data: entity.data,
     body: entity.body,
-    // data: {
-    //   preview: entity.data?.preview,
-    // },
+    preview: entity.preview,
   };
 };
 

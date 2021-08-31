@@ -122,7 +122,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
   render() {
     const slug = Strings.createSlug(this.state.name);
     const url = `/${this.props.viewer.username}/${slug}`;
-    // let preview = this.props.data.data.preview;
+    // let preview = this.props.data.preview;
     // if (!preview) {
     //   for (let object of this.props.data.objects) {
     //     if (

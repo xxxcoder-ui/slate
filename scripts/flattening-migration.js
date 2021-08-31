@@ -131,6 +131,7 @@ const addSlateColumns = async () => {
   await DB.schema.table("slates", function (table) {
     table.string("body").nullable();
     table.string("name").nullable();
+    table.string("preview").nullable();
   });
 };
 
@@ -191,6 +192,7 @@ const migrateSlateTable = async () => {
     let newSlate = {
       name: data.name,
       body: data.body,
+      preview: data.preview,
     };
     const response = await DB.from("slates").where("id", slate.id).update(newSlate);
   }
@@ -247,9 +249,9 @@ const deleteUserData = async () => {
 };
 
 const runScript = async () => {
-  //   await printUsersTable();
-  //   await printSlatesTable();
-  //   await printFilesTable();
+  await printUsersTable();
+  await printSlatesTable();
+  await printFilesTable();
 
   //   await addUserColumns();
   //   await addSlateColumns();
@@ -283,8 +285,8 @@ Slates
 [ 
     'data.name', -> 'name' MIGRATED
     'data.body', -> 'body' MIGRATED
+    'data.preview', -> 'preview' MIGRATED
 ]
-
 
 Files
 [
@@ -296,7 +298,7 @@ Files
     'data.body', -> 'body' MIGRATED
     'data.author', -> 'author' MIGRATED
     'data.coverImage', -> 'coverImage' MIGRATED
-    'data.unity', -> 'data.unity'
+    'data.unity', -> 'data.unity' MIGRATED
     'data.link.name', -> 'linkName'
     'data.link.body', -> 'linkBody'
     'data.link.author', -> 'linkAuthor'
