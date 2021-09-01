@@ -38,7 +38,7 @@ const run = async () => {
     count = count + 1;
 
     let userBytes = 0;
-    user.data.library.forEach((each) => {
+    user.library.forEach((each) => {
       userBytes = each.size + userBytes;
       bytes = each.size + bytes;
     });

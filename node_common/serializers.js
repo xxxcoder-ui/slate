@@ -157,17 +157,21 @@ export const cleanFile = (entity) => {
 
 export const getUpdatedSlate = (oldSlate, updates) => {
   let updatedSlate = cleanSlate(updates);
-  return { ...oldSlate, ...updatedSlate, data: { ...oldSlate.data, ...updatedSlate.data } };
+  return { ...oldSlate, ...updatedSlate };
 };
 
 export const getUpdatedFile = (oldFile, updates) => {
   let updatedFile = cleanFile(updates);
-  return { ...oldFile, ...updatedFile, data: { ...oldFile.data, ...updatedFile.data } };
+  let mergedFile = { ...oldFile, ...updatedFile };
+  if (updatedFile.data) {
+    let data = { ...oldFile.data, ...updatedFile.data };
+    mergedFile.data = data;
+  }
 };
 
 export const getUpdatedUser = (oldUser, updates) => {
   let updatedUser = cleanUser(updates);
-  return { ...oldUser, ...updatedUser, data: { ...oldUser.data, ...updatedUser.data } };
+  return { ...oldUser, ...updatedUser };
 };
 
 //NOTE(martina): list of the properties of the tables that should be returned by db queries
@@ -176,7 +180,6 @@ export const slateProperties = [
   "slates.slatename",
   "slates.name",
   "slates.body",
-  "slates.data",
   "slates.ownerId",
   "slates.isPublic",
   "slates.subscriberCount",
@@ -188,7 +191,6 @@ export const userProperties = [
   "users.username",
   "users.name",
   "users.body",
-  "users.data",
   "users.slateCount",
   "users.followerCount",
 ];

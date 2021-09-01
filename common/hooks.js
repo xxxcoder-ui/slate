@@ -41,12 +41,10 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers =
-    (events = []) =>
-    (e) =>
-      events.forEach((event) => {
-        if (event) event(e);
-      });
+  const _mergeEventHandlers = (events = []) => (e) =>
+    events.forEach((event) => {
+      if (event) event(e);
+    });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -166,12 +164,10 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers =
-    (events = []) =>
-    (e) =>
-      events.forEach((event) => {
-        if (event) event(e);
-      });
+  const _mergeEventHandlers = (events = []) => (e) =>
+    events.forEach((event) => {
+      if (event) event(e);
+    });
 
   const setFieldValue = (value) =>
     setState((prev) => ({
@@ -338,7 +334,6 @@ export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
           : viewer.following.concat([
               {
                 id: user.id,
-                data: user.data,
                 followerCount: user.followerCount + 1,
                 slateCount: user.slateCount,
                 username: user.username,

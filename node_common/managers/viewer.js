@@ -68,7 +68,6 @@ export const hydratePartial = async (
       ...update,
       username: user.username,
       email: user.email,
-      data: user.data,
       library: user.library,
     };
   } else if (library) {
@@ -207,16 +206,7 @@ export const getById = async ({ id }) => {
   // const tags = Utilities.getUserTags({ library: user.library });
 
   let viewer = {
-    id: user.id,
-    username: user.username,
-    email: user.email || null,
-    data: user.data,
-    library: user.library,
-    settingsDealsAutoApprove: user.settingsDealsAutoApprove,
-    allowAutomaticDataStorage: user.allowAutomaticDataStorage,
-    allowEncryptedDataStorage: user.allowEncryptedDataStorage,
-    onboarding: user.onboarding || {},
-    // status: user.data.status || {},
+    ...user,
     stats: {
       bytes,
       maximumBytes: Constants.TEXTILE_ACCOUNT_BYTE_LIMIT,

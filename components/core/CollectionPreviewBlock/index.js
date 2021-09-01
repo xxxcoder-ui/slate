@@ -233,7 +233,7 @@ function Metrics({ fileCount, owner, isOwner, onAction }) {
             >
               <img
                 css={STYLES_PROFILE_IMAGE}
-                src={owner?.data?.photo}
+                src={owner.photo}
                 alt={`${owner.username} profile`}
                 onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
               />

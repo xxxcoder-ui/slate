@@ -244,7 +244,7 @@ const deleteUserData = async () => {
     table.dropColumn("data");
   });
   await DB.schema.table("files", function (table) {
-    table.dropColumn("data");
+    table.dropColumn("oldData");
   });
 };
 

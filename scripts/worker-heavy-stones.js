@@ -194,8 +194,8 @@ const run = async () => {
           user: {
             id: user.id,
             username: user.username,
-            photo: user.data.photo,
-            name: user.data.name,
+            photo: user.photo,
+            name: user.name,
           },
         });
       });

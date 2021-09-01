@@ -74,10 +74,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     const response = await Actions.updateSlate({
       id: this.props.data.id,
       isPublic: this.state.isPublic,
-      data: {
-        name: this.state.name,
-        body: this.state.body,
-      },
+      name: this.state.name,
+      body: this.state.body,
     });
 
     if (Events.hasError(response)) {

@@ -229,7 +229,7 @@ export default class SceneSlate extends React.Component {
           description = `View the collection ${name} on Slate`;
         }
         title = `${name} • Slate`;
-        image = slate.data.preview;
+        image = slate.preview;
         const objects = slate.objects;
         if (!image && objects) {
           for (let i = 0; i < objects.length; i++) {
@@ -339,7 +339,7 @@ class SlatePage extends React.Component {
     let slateId = this.props.data.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
-        slate.data.preview = preview;
+        slate.preview = preview;
         break;
       }
     }
@@ -402,10 +402,8 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, data, body } = this.props.data;
-    let objects = this.props.data.objects;
-    const isPublic = this.props.data.isPublic;
-    const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;
+    const { user, objects, body, isPublic, ownerId } = this.props.data;
+    const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     let actions = isOwner ? (
       <span>
