@@ -147,6 +147,7 @@ export class Table extends React.Component {
                     backgroundColor: this.props.noColor ? null : ac[c.key].color,
                     flexShrink,
                   }}
+                  contentstyle={c.contentstyle}
                   tooltip={c.tooltip}
                 >
                   {text}
