@@ -285,8 +285,8 @@ class CarouselSidebar extends React.Component {
     body: this.props.file.body || "",
     source: this.props.file.source || "",
     author: this.props.file.author || "",
-    tags: this.props.file.data.tags || [],
-    suggestions: this.props.viewer?.tags || [],
+    // tags: this.props.file.data.tags || [],
+    // suggestions: this.props.viewer?.tags || [],
     selected: {},
     isUploading: false,
     isDownloading: false,
@@ -304,16 +304,16 @@ class CarouselSidebar extends React.Component {
     }
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    if (!isEqual(prevState.tags, this.state.tags)) {
-      this.updateSuggestions();
-    }
-  };
+  // componentDidUpdate = (prevProps, prevState) => {
+  //   if (!isEqual(prevState.tags, this.state.tags)) {
+  //     this.updateSuggestions();
+  //   }
+  // };
 
-  updateSuggestions = () => {
-    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
-  };
+  // updateSuggestions = () => {
+  //   let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+  //   this.setState({ suggestions: Array.from(newSuggestions) });
+  // };
 
   calculateSelected = () => {
     if (!this.props.viewer) {
@@ -348,12 +348,12 @@ class CarouselSidebar extends React.Component {
       {
         [e.target.name]: e.target.value,
         showSavedMessage: false,
-      },
-      () => {
-        if (e.target.name === "Tags") {
-          this.updateSuggestions();
-        }
       }
+      // () => {
+      //   if (e.target.name === "Tags") {
+      //     this.updateSuggestions();
+      //   }
+      // }
     );
   };
 
@@ -363,7 +363,7 @@ class CarouselSidebar extends React.Component {
 
   _handleSave = async () => {
     if (this.props.external || !this.props.isOwner) return;
-    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: this.state.suggestions } });
+    // this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: this.state.suggestions } });
     const response = await Actions.updateFile({
       id: this.props.file.id,
       name: this.state.name,
@@ -581,7 +581,7 @@ class CarouselSidebar extends React.Component {
             style={{ ...STYLES_INPUT, marginBottom: 12 }}
             textStyle={{ color: Constants.system.white }}
           />
-          <div css={STYLES_OPTIONS_SECTION}>
+          {/* <div css={STYLES_OPTIONS_SECTION}>
             <Tag
               type="dark"
               tags={this.state.tags}
@@ -591,7 +591,7 @@ class CarouselSidebar extends React.Component {
               // dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
             />
-          </div>
+          </div> */}
         </div>
       );
     } else {

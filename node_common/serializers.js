@@ -63,8 +63,8 @@ export const sanitizeFile = (entity) => {
     linkFavicon: entity.linkFavicon,
     linkHtml: entity.linkHtml,
     linkIFrameAllowed: entity.linkIFrameAllowed,
+    tags: entity.tags,
     data: {
-      tags: entity.data?.tags, //NOTE(martina): newly added
       unity: entity.data?.unity, //NOTE(martina): newly added
     },
     downloadCount: entity.downloadCount,
@@ -147,7 +147,6 @@ export const cleanFile = (entity) => {
     linkHtml: entity.linkHtml,
     linkIFrameAllowed: entity.linkIFrameAllowed,
     // data: {
-    //   tags: entity.data?.tags,
     //   unity: entity.data?.unity,
     // },
   };

@@ -204,7 +204,7 @@ export const getById = async ({ id }) => {
     }
   }
 
-  const tags = Utilities.getUserTags({ library: user.library });
+  // const tags = Utilities.getUserTags({ library: user.library });
 
   let viewer = {
     id: user.id,
@@ -226,7 +226,7 @@ export const getById = async ({ id }) => {
       epubBytes,
       pdfBytes,
     },
-    tags,
+    // tags,
     userBucketCID: bucketRoot?.path || null,
     keys,
     slates,

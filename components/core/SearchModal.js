@@ -1069,9 +1069,7 @@ export class SearchModal extends React.Component {
                               ? "Collections:"
                               : this.state.typeFilter === "USER"
                               ? "Users:"
-                              : this.state.typeFilter === "FILE"
-                              ? "Files:"
-                              : "Tags:"}
+                              : "Files:"}
                           </div>
                         ) : null}
                       </div>
@@ -1087,9 +1085,7 @@ export class SearchModal extends React.Component {
                             ? "collections..."
                             : this.state.typeFilter === "USER"
                             ? "users..."
-                            : this.state.typeFilter === "FILE"
-                            ? "files..."
-                            : "tags..."
+                            : "files..."
                         }`}
                         onChange={this._handleChange}
                         ref={(c) => {
