@@ -109,6 +109,7 @@ export default class ApplicationPage extends React.Component {
     online: null,
     isMobile: this.props.isMobile,
     activeUsers: null,
+    fileLoading: {},
     loading: false,
   };
 
@@ -566,6 +567,7 @@ export default class ApplicationPage extends React.Component {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}
+          fileLoading={this.state.fileLoading}
           navigation={NavigationData.navigation}
           page={page}
           onAction={this._handleAction}
