@@ -71,9 +71,7 @@ export default class SceneEditAccount extends React.Component {
     const cid = file.cid;
     const url = Strings.getURLfromCID(cid);
     let updateResponse = await Actions.updateViewer({
-      data: {
-        photo: Strings.getURLfromCID(cid),
-      },
+      photo: Strings.getURLfromCID(cid),
     });
 
     Events.hasError(updateResponse);

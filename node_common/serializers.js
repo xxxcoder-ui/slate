@@ -13,9 +13,7 @@ export const sanitizeUser = (entity) => {
     library: entity.library, //NOTE(martina): this is not in the database. It is added after
     name: entity.name,
     body: entity.body,
-    data: {
-      photo: entity.data?.photo,
-    },
+    photo: entity.photo,
     followerCount: entity.followerCount,
     slateCount: entity.slateCount,
   };
@@ -94,9 +92,9 @@ export const cleanUser = (entity) => {
     data: entity.data,
     body: entity.body,
     onboarding: entity.onboarding,
+    photo: entity.photo,
+    apiToken: entity.apiToken,
     // data: {
-    //   photo: entity.data?.photo,
-    //   tokens: entity.data?.tokens,
     //   settings: entity.data?.settings,
     //   status: entity.data?.status,
     // },
