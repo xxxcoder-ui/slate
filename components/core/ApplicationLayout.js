@@ -8,8 +8,6 @@ import { GlobalTooltip } from "~/components/system/components/fragments/GlobalTo
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { Alert } from "~/components/core/Alert";
 
-const MODAL_MARGIN = 56;
-
 const STYLES_NO_VISIBLE_SCROLL = css`
   overflow-y: scroll;
   scrollbar-width: none;
@@ -90,23 +88,19 @@ const STYLES_MODAL = css`
   height: calc(100vh - ${Constants.sizes.header}px);
   position: fixed;
   left: 0;
-  padding: ${MODAL_MARGIN}px;
+  padding: 24px 24px 32px;
 
-  background-color: ${Constants.semantic.bgBlurLight6};
+  background-color: ${Constants.semantic.bgBlurWhiteOP};
 
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-    -webkit-backdrop-filter: blur(25px);
-    backdrop-filter: blur(25px);
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
   }
 `;
 
 const STYLES_MODAL_ELEMENTS = css`
-  border-radius: 8px;
-  background-color: ${Constants.system.white};
   width: 100%;
-  height: calc(100vh - ${Constants.sizes.header}px - ${MODAL_MARGIN * 2}px);
-  padding: 30px;
-  position: relative;
+  height: 100%;
 `;
 
 const STYLES_SIDEBAR_HEADER = css`
@@ -203,6 +197,7 @@ export default class ApplicationLayout extends React.Component {
               captureScroll={false}
               enabled
               onOutsideRectEvent={this._handleDismiss}
+              style={{ height: "100%" }}
             >
               <div
                 css={STYLES_MODAL_ELEMENTS}
@@ -210,22 +205,12 @@ export default class ApplicationLayout extends React.Component {
                   this._sidebar = c;
                 }}
               >
-                <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 30 }}>
+                <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 24 }}>
                   <div css={STYLES_DISMISS} onClick={this._handleDismiss}>
                     <SVG.Dismiss height="24px" />
                   </div>
                 </div>
-                <div
-                  css={STYLES_SIDEBAR_CONTENT}
-                  style={{
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {this.props.sidebar}
-                </div>
+                {this.props.sidebar}
               </div>
             </Boundary>
           </div>

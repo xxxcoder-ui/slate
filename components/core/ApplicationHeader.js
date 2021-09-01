@@ -3,6 +3,8 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
+import * as System from "~/components/system";
+import * as FileUtilities from "~/common/file-utilities";
 
 import {
   ApplicationUserControls,
@@ -18,6 +20,8 @@ import { Show } from "~/components/utility/Show";
 import { useField, useMediaQuery } from "~/common/hooks";
 import { Input } from "~/components/system";
 import { AnimatePresence, motion } from "framer-motion";
+
+import DataMeter from "~/components/core/DataMeter";
 
 const STYLES_SEARCH_COMPONENT = (theme) => css`
   background-color: transparent;
@@ -49,9 +53,9 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   background-color: ${theme.system.white};
   box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
 
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-    -webkit-backdrop-filter: blur(25px);
-    backdrop-filter: blur(25px);
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
     background-color: rgba(255, 255, 255, 0.7);
   }
 `;
@@ -116,7 +120,7 @@ const STYLES_UPLOAD_BUTTON = css`
   pointer-events: auto;
 `;
 
-export default function ApplicationHeader({ viewer, onAction }) {
+export default function ApplicationHeader({ viewer, fileLoading, onAction }) {
   const [state, setState] = React.useState({
     showDropdown: false,
     popup: null,
@@ -194,6 +198,7 @@ export default function ApplicationHeader({ viewer, onAction }) {
         </div>
         <div css={STYLES_RIGHT}>
           <Actions
+            fileLoading={fileLoading}
             isSearching={isSearching}
             isSignedOut={isSignedOut}
             onAction={onAction}
@@ -219,7 +224,18 @@ export default function ApplicationHeader({ viewer, onAction }) {
   );
 }
 
-const Actions = ({ isSignedOut, isSearching, onAction, onUpload, onDismissSearch }) => {
+const Actions = ({
+  isSignedOut,
+  isSearching,
+  onAction,
+  onUpload,
+  fileLoading,
+  onDismissSearch,
+}) => {
+  const { bytesLoaded, bytesTotal } = FileUtilities.getUploadProgress(fileLoading);
+  const uploadProgress = Math.round((bytesLoaded / bytesTotal) * 100);
+  const isUploading = !!Object.keys(fileLoading).length;
+
   const authActions = React.useMemo(
     () => (
       <>
@@ -251,7 +267,7 @@ const Actions = ({ isSignedOut, isSearching, onAction, onUpload, onDismissSearch
 
   const uploadAction = React.useMemo(
     () => (
-      <button css={STYLES_UPLOAD_BUTTON} onClick={onUpload}>
+      <button css={STYLES_UPLOAD_BUTTON} aria-label="Upload" onClick={onUpload}>
         <SVG.Plus height="16px" />
       </button>
     ),
@@ -262,13 +278,37 @@ const Actions = ({ isSignedOut, isSearching, onAction, onUpload, onDismissSearch
     <AnimatePresence>
       <Switch
         fallback={
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ y: 10, opacity: 0 }}
-          >
-            {uploadAction}
-          </motion.div>
+          <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+            {isUploading && (
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ y: 10, opacity: 0 }}
+                css={Styles.BUTTON_RESET}
+                style={{ marginRight: 14 }}
+                aria-label="Upload"
+                onClick={onUpload}
+              >
+                <System.P3 color="textBlack">{uploadProgress}%</System.P3>
+                <DataMeter
+                  bytes={bytesLoaded}
+                  maximumBytes={bytesTotal}
+                  style={{
+                    width: 28,
+                    marginTop: 4,
+                    backgroundColor: Constants.semantic.bgGrayLight,
+                  }}
+                />
+              </motion.button>
+            )}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ y: 10, opacity: 0 }}
+            >
+              {uploadAction}
+            </motion.div>
+          </div>
         }
       >
         <Match when={isSignedOut}>{authActions}</Match>
