@@ -24,13 +24,13 @@ import LinkObjectPreview from "~/components/core/ObjectPreview/LinkObjectPreview
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const ObjectPreview = ({ file, ...props }) => {
-  const { type, link } = file;
+  const { type, isLink } = file;
 
   const url = Strings.getURLfromCID(file.cid);
 
   const PLACEHOLDER_RATIO = 1.3;
 
-  if (link) {
+  if (isLink) {
     return <LinkObjectPreview file={file} ratio={PLACEHOLDER_RATIO} {...props} />;
   }
 

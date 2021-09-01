@@ -299,15 +299,15 @@ Files
     'data.author', -> 'author' MIGRATED
     'data.coverImage', -> 'coverImage' MIGRATED
     'data.unity', -> 'data.unity' MIGRATED
-    'data.link.name', -> 'linkName'
-    'data.link.body', -> 'linkBody'
-    'data.link.author', -> 'linkAuthor'
-    'data.link.source', -> 'linkSource'
-    'data.link.domain', -> 'linkDomain'
-    'data.link.image', -> 'linkImage'
-    'data.link.logo', -> 'linkFavicon'
-    'data.link.html', -> 'linkHtml'
-    'data.link.iFrameAllowed', -> 'linkIFrameAllowed'
+    'data.link.name', -> 'linkName' MIGRATED
+    'data.link.body', -> 'linkBody' MIGRATED
+    'data.link.author', -> 'linkAuthor' MIGRATED
+    'data.link.source', -> 'linkSource' MIGRATED
+    'data.link.domain', -> 'linkDomain' MIGRATED
+    'data.link.image', -> 'linkImage' MIGRATED
+    'data.link.logo', -> 'linkFavicon' MIGRATED
+    'data.link.html', -> 'linkHtml' MIGRATED
+    'data.link.iFrameAllowed', -> 'linkIFrameAllowed' MIGRATED
     ADD 'tags'
 ]
 */

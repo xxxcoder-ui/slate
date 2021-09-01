@@ -54,10 +54,18 @@ export const sanitizeFile = (entity) => {
     source: entity.source,
     author: entity.author,
     coverImage: entity.coverImage,
+    linkName: entity.linkName,
+    linkBody: entity.linkBody,
+    linkSource: entity.linkSource,
+    linkAuthor: entity.linkAuthor,
+    linkDomain: entity.linkDomain,
+    linkImage: entity.linkImage,
+    linkFavicon: entity.linkFavicon,
+    linkHtml: entity.linkHtml,
+    linkIFrameAllowed: entity.linkIFrameAllowed,
     data: {
       tags: entity.data?.tags, //NOTE(martina): newly added
       unity: entity.data?.unity, //NOTE(martina): newly added
-      link: entity.data?.link, //NOTE(martina): newly added
     },
     downloadCount: entity.downloadCount,
     saveCount: entity.saveCount,
@@ -129,11 +137,18 @@ export const cleanFile = (entity) => {
     source: entity.source,
     author: entity.author,
     coverImage: entity.coverImage,
+    linkName: entity.linkName,
+    linkBody: entity.linkBody,
+    linkSource: entity.linkSource,
+    linkAuthor: entity.linkAuthor,
+    linkDomain: entity.linkDomain,
+    linkImage: entity.linkImage,
+    linkFavicon: entity.linkFavicon,
+    linkHtml: entity.linkHtml,
+    linkIFrameAllowed: entity.linkIFrameAllowed,
     // data: {
-    //   downloads: entity.data?.downloads,
     //   tags: entity.data?.tags,
     //   unity: entity.data?.unity,
-    //   link: entity.data?.link,
     // },
   };
 };

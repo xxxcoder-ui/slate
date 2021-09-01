@@ -10,7 +10,6 @@ import * as UserBehaviors from "~/common/user-behaviors";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
-import { Link } from "~/components/core/Link";
 
 const STYLES_TEXT = css`
   color: ${Constants.semantic.textGray};
