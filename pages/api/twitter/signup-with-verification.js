@@ -107,13 +107,9 @@ export default async (req, res) => {
     username: newUsername,
     email: newEmail,
     twitterId: twitterUser.id_str,
+    twitterUsername: twitterUser.screen_name,
+    twitterVerified: twitterUser.verified,
     textileToken,
-    data: {
-      twitter: {
-        username: twitterUser.screen_name,
-        verified: twitterUser.verified,
-      },
-    },
   });
 
   if (!user) {

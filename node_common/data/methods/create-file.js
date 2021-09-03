@@ -15,12 +15,10 @@ export default async ({ owner, files, saveCopy = false }) => {
     return file;
   });
 
-  const cleanedFiles = inputFiles.map((file) => Serializers.cleanFile(file));
-
   return await runQuery({
     label: "CREATE_FILE",
     queryFn: async (DB) => {
-      let query = await DB.insert(cleanedFiles).into("files").returning("*");
+      let query = await DB.insert(inputFiles).into("files").returning("*");
 
       let activityItems = [];
       if (query) {

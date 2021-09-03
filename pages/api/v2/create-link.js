@@ -71,33 +71,20 @@ export default async (req, res) => {
       cid: file.cid,
       isLink: true,
       url: file.url,
-      data: {
-        type: "link",
-        name: data.title || "",
-        author: data.author || "",
-        source: data.publisher || "",
-        body: data.description || "",
-        // coverImage: data.screenshot
-        //   ? {
-        //       data: {
-        //         type: "image/png",
-        //         size: data.screenshot.size,
-        //         url: data.screenshot.url,
-        //       },
-        //     }
-        //   : null,
-        link: {
-          name: data.title || "",
-          author: data.author || "",
-          source: data.publisher || "",
-          body: data.description || "",
-          image: data.image?.url,
-          logo: data.logo?.url,
-          domain,
-          html,
-          iFrameAllowed,
-        },
-      },
+      type: "link",
+      name: data.title,
+      body: data.description,
+      source: data.publisher,
+      author: data.author,
+      linkName: data.title,
+      linkBody: data.description,
+      linkSource: data.publisher,
+      linkAuthor: data.author,
+      linkImage: data.image?.url,
+      linkFavicon: data.logo?.url,
+      linkDomain: domain,
+      linkHtml: html,
+      linkIFrameAllowed: iFrameAllowed,
     };
 
     files.push(newFile);

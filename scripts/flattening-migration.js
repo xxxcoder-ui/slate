@@ -149,15 +149,15 @@ const addFileColumns = async () => {
     table.string("author").nullable();
     table.jsonb("coverImage").nullable();
     table.jsonb("data").nullable(); //where you'll move unity stuff
-    table.string("name").nullable();
-    table.string("body").nullable();
-    table.string("author").nullable();
-    table.string("source").nullable();
-    table.string("domain").nullable();
-    table.string("image").nullable();
-    table.string("logo").nullable();
-    table.string("html").nullable();
-    table.string("iFrameAllowed").nullable();
+    table.string("linkName").nullable();
+    table.string("linkBody").nullable();
+    table.string("linkAuthor").nullable();
+    table.string("linkSource").nullable();
+    table.string("linkDomain").nullable();
+    table.string("linkImage").nullable();
+    table.string("linkFavicon").nullable();
+    table.string("linkHtml").nullable();
+    table.string("linkIFrameAllowed").nullable();
     table.jsonb("tags").nullable();
   });
 };

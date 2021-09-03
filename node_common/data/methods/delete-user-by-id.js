@@ -25,7 +25,7 @@ export default async ({ id }) => {
         .whereNotNull("userId")
         .del()
         .returning("userId");
-      console.log({ deletedFollowing }); //double confirm this
+
       for (let userId of deletedFollowing) {
         await Data.recalcUserFollowercount({ userId });
       }

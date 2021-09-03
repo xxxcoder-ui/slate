@@ -2,15 +2,16 @@ import * as Data from "~/node_common/data";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId, slatename, isPublic, data = {} }) => {
+export default async ({ ownerId, slatename, name, body, isPublic }) => {
   return await runQuery({
     label: "CREATE_SLATE",
     queryFn: async (DB) => {
       const query = await DB.insert({
         ownerId,
         slatename,
+        name,
+        body,
         isPublic,
-        data,
       })
         .into("slates")
         .returning("*");
