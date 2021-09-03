@@ -113,7 +113,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
 
   const { fileCount, isPublic } = collection;
   const title = collection?.data?.name || collection.slatename;
-  const isOwner = viewer.id === collection.ownerId;
+  const isOwner = viewer?.id === collection.ownerId;
 
   const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
 
