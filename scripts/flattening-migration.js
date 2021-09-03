@@ -231,10 +231,11 @@ const migrateFileTable = async () => {
     if (coverImage) {
       console.log({ coverImage });
       let newCoverImage = {
+        size: coverImage.data?.size,
+        type: coverImage.data?.type,
+        blurhash: coverImage.data?.blurhash,
+        url: coverImage.data?.url,
         ...coverImage,
-        size: coverImage.data.size,
-        type: coverImage.data.type,
-        blurhash: coverImage.data.blurhash,
         data: null,
       };
       console.log({ newCoverImage });
