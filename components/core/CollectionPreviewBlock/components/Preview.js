@@ -114,10 +114,10 @@ export default function Preview({
 const getFileBlurHash = (file) => {
   const coverImage = file?.data?.coverImage;
   const coverImageBlurHash = coverImage?.data?.blurhash;
-  if (coverImage && isBlurhashValid(coverImageBlurHash)) return coverImageBlurHash;
+  if (coverImage && isBlurhashValid(coverImageBlurHash).result) return coverImageBlurHash;
 
   const blurhash = file?.data?.blurhash;
-  if (isBlurhashValid(blurhash)) return blurhash;
+  if (isBlurhashValid(blurhash).result) return blurhash;
 
   return null;
 };

@@ -67,9 +67,9 @@ export default function ImageObjectPreview({
   const imgTag = type.split("/")[1];
 
   const blurhash = React.useMemo(() => {
-    return file.data.blurhash && isBlurhashValid(file.data.blurhash)
+    return file.data.blurhash && isBlurhashValid(file.data.blurhash).result
       ? file.data.blurhash
-      : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash)
+      : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash).result
       ? coverImage?.data.blurhash
       : null;
   }, [file]);
