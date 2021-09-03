@@ -8,7 +8,7 @@ import * as Logging from "~/common/logging";
 import * as Environment from "~/common/environment";
 import * as Window from "~/common/window";
 
-import { encode } from "blurhash";
+import { encode, isBlurhashValid } from "blurhash";
 import { v4 as uuid } from "uuid";
 
 const STAGING_DEAL_BUCKET = "stage-deal";
@@ -257,7 +257,9 @@ export const upload = async ({ file, context, bucketName }) => {
     let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);
-      item.data.blurhash = blurhash;
+      if (isBlurhashValid(blurhash).result) {
+        item.data.blurhash = blurhash;
+      }
     } catch (e) {
       Logging.error(e);
     }
