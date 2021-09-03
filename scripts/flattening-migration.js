@@ -202,6 +202,11 @@ const migrateFileTable = async () => {
   const files = await DB.select("id", "oldData").from("files");
   for (let file of files) {
     let data = file.oldData;
+    if (!data) {
+      console.log(`no data for file with id ${file.id}`);
+      continue;
+    }
+
     let newFile = {
       name: data.name,
       body: data.body,
@@ -210,7 +215,6 @@ const migrateFileTable = async () => {
       blurhash: data.blurhash,
       source: data.source,
       author: data.author,
-      coverImage: data.coverImage,
       data: data.unity ? { unity: data.unity } : null,
       linkName: data.link?.name,
       linkBody: data.link?.body,
@@ -222,6 +226,19 @@ const migrateFileTable = async () => {
       linkHtml: data.link?.html,
       linkIFrameAllowed: data.link?.iFrameAllowed,
     };
+
+    let coverImage = data.coverImage;
+    if (coverImage) {
+      console.log({ coverImage });
+      let newCoverImage = {
+        ...coverImage,
+        size: coverImage.data.size,
+        type: coverImage.data.type,
+        blurhash: coverImage.data.blurhash,
+        data: null,
+      };
+      console.log({ newCoverImage });
+    }
 
     let tags = await DB.select("slates.id", "slates.slatename")
       .from("slates")
