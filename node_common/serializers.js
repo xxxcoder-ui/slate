@@ -1,110 +1,81 @@
-//NOTE(martina): when you add any new variable to the user, file, or slate objects, add it in these structures
-//add it to sanitize___ if it should be sent to the front end
-//add it to clean____ if it should be saved to the database
+//NOTE(martina): add a variable to sanitizeUser if it should be sent to the front end. Otherwise, it will be filtered out
 
-//NOTE(martina): these functions are to remove sensitive information before sending the data to the front end
-//only variables listed here will be sent to the front end
-
-export const sanitizeUser = (entity) => {
+export const sanitizeUser = (user) => {
   return {
-    id: entity.id,
-    username: entity.username,
-    slates: entity.slates, //NOTE(martina): this is not in the database. It is added after
-    library: entity.library, //NOTE(martina): this is not in the database. It is added after
-    name: entity.name,
-    body: entity.body,
-    photo: entity.photo,
-    followerCount: entity.followerCount,
-    slateCount: entity.slateCount,
+    id: user.id,
+    createdAt: user.createdAt,
+    lastActive: user.lastActive,
+    username: user.username,
+    slates: user.slates, //NOTE(martina): this is not in the database. It is added after
+    library: user.library, //NOTE(martina): this is not in the database. It is added after
+    name: user.name,
+    body: user.body,
+    photo: user.photo,
+    followerCount: user.followerCount,
+    slateCount: user.slateCount,
+    twitterUsername: user.twitterUsername,
+    twitterVerified: user.twitterVerified,
   };
 };
 
-export const sanitizeSlate = (entity) => {
-  return {
-    id: entity.id,
-    slatename: entity.slatename,
-    name: entity.name,
-    ownerId: entity.ownerId,
-    isPublic: entity.isPublic,
-    objects: entity.objects,
-    owner: entity.owner,
-    user: entity.user, //NOTE(martina): this is not in the database. It is added after
-    body: entity.body,
-    preview: entity.preview,
-    fileCount: entity.fileCount,
-    subscriberCount: entity.subscriberCount,
-  };
-};
-
-export const sanitizeFile = (entity) => {
-  return {
-    id: entity.id,
-    cid: entity.cid,
-    ownerId: entity.ownerId,
-    isPublic: entity.isPublic,
-    filename: entity.filename,
-    name: entity.name,
-    createdAt: entity.createdAt,
-    body: entity.body,
-    size: entity.size,
-    type: entity.type,
-    blurhash: entity.blurhash,
-    source: entity.source,
-    author: entity.author,
-    coverImage: entity.coverImage,
-    linkName: entity.linkName,
-    linkBody: entity.linkBody,
-    linkSource: entity.linkSource,
-    linkAuthor: entity.linkAuthor,
-    linkDomain: entity.linkDomain,
-    linkImage: entity.linkImage,
-    linkFavicon: entity.linkFavicon,
-    linkHtml: entity.linkHtml,
-    linkIFrameAllowed: entity.linkIFrameAllowed,
-    tags: entity.tags,
-    data: {
-      unity: entity.data?.unity, //NOTE(martina): newly added
-    },
-    downloadCount: entity.downloadCount,
-    saveCount: entity.saveCount,
-    isLink: entity.isLink,
-    url: entity.url,
-  };
-};
-
-//NOTE(martina): list of the properties of the tables that should be returned by db queries
+//NOTE(martina): list of the properties of the tables that should be returned by db queries. Convenience so we don't have to write these out each time and update in multiple places
 export const slateProperties = [
   "slates.id",
-  "slates.slatename",
-  "slates.name",
-  "slates.body",
   "slates.ownerId",
+  "slates.createdAt",
+  "slates.updatedAt",
+  "slates.slatename",
+  "slates.body",
+  "slates.name",
+  "slates.preview",
   "slates.isPublic",
   "slates.subscriberCount",
   "slates.fileCount",
 ];
 
+//NOTE(martina): the user properties list filters out sensitive information
 export const userProperties = [
   "users.id",
+  "users.createdAt",
+  "users.lastActive",
   "users.username",
   "users.name",
   "users.body",
+  "users.photo",
   "users.slateCount",
   "users.followerCount",
+  "users.twitterUsername",
+  "users.twitterVerified",
 ];
 
 export const fileProperties = [
   "files.id",
   "files.ownerId",
+  "files.createdAt",
   "files.cid",
   "files.isPublic",
   "files.filename",
   "files.name",
   "files.body",
+  "files.size",
+  "files.type",
+  "files.blurhash",
   "files.data",
-  "files.createdAt",
+  "files.source",
+  "files.author",
+  "files.coverImage",
   "files.downloadCount",
   "files.saveCount",
   "files.isLink",
   "files.url",
+  "files.linkName",
+  "files.linkBody",
+  "files.linkAuthor",
+  "files.linkSource",
+  "files.linkDomain",
+  "files.linkImage",
+  "files.linkFavicon",
+  "files.linkHtml",
+  "files.linkIFrameAllowed",
+  "files.tags",
 ];

@@ -20,7 +20,6 @@ export default async (req, res) => {
 
   let slates = await Data.getSlatesByUserId({
     ownerId: user.id,
-    sanitize: true,
     includeFiles: true,
     publicOnly: !req.body.data?.private,
   });

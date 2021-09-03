@@ -66,10 +66,10 @@ export const updateSlate = async (slate, action) => {
   let data;
   if (Array.isArray(slate)) {
     data = slate.map((item) => {
-      return { ...Serializers.sanitizeSlate(item), type: "SLATE" };
+      return { ...item, type: "SLATE" };
     });
   } else {
-    data = { ...Serializers.sanitizeSlate(slate), type: "SLATE" };
+    data = { ...slate, type: "SLATE" };
   }
 
   websocketSend("UPDATE", {
@@ -86,10 +86,10 @@ export const updateFile = async (file, action) => {
   let data;
   if (Array.isArray(file)) {
     data = file.map((item) => {
-      return { ...Serializers.sanitizeFile(item), type: "FILE" };
+      return { ...item, type: "FILE" };
     });
   } else {
-    data = { ...Serializers.sanitizeFile(file), type: "FILE" };
+    data = { ...file, type: "FILE" };
   }
 
   websocketSend("UPDATE", {

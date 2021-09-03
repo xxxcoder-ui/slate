@@ -157,7 +157,7 @@ const addFileColumns = async () => {
     table.string("linkImage").nullable();
     table.string("linkFavicon").nullable();
     table.string("linkHtml").nullable();
-    table.string("linkIFrameAllowed").nullable();
+    table.boolean("linkIFrameAllowed").nullable().defaultTo(false);
     table.jsonb("tags").nullable();
   });
 };

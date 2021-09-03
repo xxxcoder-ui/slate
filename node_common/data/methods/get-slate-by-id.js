@@ -3,7 +3,7 @@ import * as Constants from "~/node_common/constants";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ id, sanitize = false, includeFiles = false }) => {
+export default async ({ id, includeFiles = false }) => {
   return await runQuery({
     label: "GET_SLATE_BY_ID",
     queryFn: async (DB) => {
@@ -36,10 +36,6 @@ export default async ({ id, sanitize = false, includeFiles = false }) => {
 
       if (!query || query.error) {
         return null;
-      }
-
-      if (sanitize) {
-        query = Serializers.sanitizeSlate(query);
       }
 
       return JSON.parse(JSON.stringify(query));

@@ -44,7 +44,6 @@ export default async (req, res) => {
     ownerId: user.id,
     includeFiles: true,
     publicOnly: true,
-    sanitize: true,
   });
 
   if (slates && !slates.error) {

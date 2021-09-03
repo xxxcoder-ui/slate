@@ -7,7 +7,7 @@ export const getRandomSlateElementURL = async ({ id, fallback = "" }) => {
     return fallback;
   }
 
-  const query = await Data.getSlateById({ id, includeFiles: true, sanitize: true });
+  const query = await Data.getSlateById({ id, includeFiles: true });
 
   if (!query || query.error) {
     return fallback;

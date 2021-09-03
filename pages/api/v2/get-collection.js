@@ -16,7 +16,7 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "NO_ID_PROVIDED", error: true });
   }
 
-  slate = await Data.getSlateById({ id: slateId, includeFiles: true, sanitize: true });
+  slate = await Data.getSlateById({ id: slateId, includeFiles: true });
 
   if (!slate) {
     return res.status(404).send({

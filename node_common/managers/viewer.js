@@ -71,7 +71,7 @@ export const hydratePartial = async (
       library: user.library,
     };
   } else if (library) {
-    library = await Data.getFilesByUserId({ id, sanitize: true, publicOnly: false });
+    library = await Data.getFilesByUserId({ id, publicOnly: false });
     update.library = library;
   }
 
@@ -145,11 +145,11 @@ export const getById = async ({ id }) => {
 
   Data.createUsageStat({ id }); //NOTE(martina): to record the person's usage of Slate for analytics
 
-  // user.library = await Data.getFilesByUserId({ id, sanitize: true });
+  // user.library = await Data.getFilesByUserId({ id });
 
   const [slates, keys, subscriptions, following, followers, { bucketRoot }] = (
     await Promise.allSettled([
-      Data.getSlatesByUserId({ ownerId: id, sanitize: true, includeFiles: true }),
+      Data.getSlatesByUserId({ ownerId: id, includeFiles: true }),
       Data.getAPIKeysByUserId({ userId: id }),
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),

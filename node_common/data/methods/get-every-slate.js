@@ -4,7 +4,7 @@ import * as Constants from "~/node_common/constants";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ sanitize = false, includeFiles = false, publicOnly = false } = {}) => {
+export default async ({ includeFiles = false, publicOnly = false } = {}) => {
   return await runQuery({
     label: "GET_EVERY_SLATE",
     queryFn: async (DB) => {
@@ -45,10 +45,6 @@ export default async ({ sanitize = false, includeFiles = false, publicOnly = fal
 
       if (!slates || slates.error) {
         return [];
-      }
-
-      if (sanitize) {
-        slates = slates.map((slate) => Serializers.sanitizeSlate(slate));
       }
 
       return JSON.parse(JSON.stringify(slates));

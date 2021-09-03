@@ -44,12 +44,7 @@ export default async ({ ownerId }) => {
         return [];
       }
 
-      let serialized = [];
-      for (let slate of query) {
-        serialized.push(Serializers.sanitizeSlate(slate));
-      }
-
-      return JSON.parse(JSON.stringify(serialized));
+      return JSON.parse(JSON.stringify(query));
     },
     errorFn: async () => {
       Logging.error({

@@ -4,7 +4,7 @@ import * as Logging from "~/common/logging";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId, sanitize = false, includeFiles = false, publicOnly = false }) => {
+export default async ({ ownerId, includeFiles = false, publicOnly = false }) => {
   return await runQuery({
     label: "GET_SLATES_BY_USER_ID",
     queryFn: async (DB) => {
@@ -60,14 +60,6 @@ export default async ({ ownerId, sanitize = false, includeFiles = false, publicO
 
       if (!query || query.error) {
         return [];
-      }
-
-      let serialized = [];
-      if (sanitize) {
-        for (let slate of query) {
-          serialized.push(Serializers.sanitizeSlate(slate));
-        }
-        return JSON.parse(JSON.stringify(serialized));
       }
 
       return JSON.parse(JSON.stringify(query));
