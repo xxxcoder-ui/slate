@@ -84,8 +84,8 @@ export default async (req, res) => {
   let cids = Arrays.mapToCids(files);
   let coverImageCids = [];
   for (let obj of objects) {
-    if (obj.data.coverImage?.cid) {
-      coverImageCids.push(obj.data.coverImage.cid);
+    if (obj.coverImage?.cid) {
+      coverImageCids.push(obj.coverImage.cid);
     }
   }
 

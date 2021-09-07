@@ -39,9 +39,6 @@ export default async (req, res) => {
     });
   }
 
-  // keys = await Data.getAPIKeysByUserId({ userId: user.id });
-  // ViewerManager.hydratePartialKeys(keys, user.id);
-
   ViewerManager.hydratePartial(id, { keys: true });
 
   return res.status(200).send({ decorator: "SERVER_GENERATE_API_KEY", key });

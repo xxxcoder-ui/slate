@@ -60,11 +60,11 @@ export default async (req, res) => {
 
     const filename = Strings.createSlug(data.title);
 
-    const domain = LinkUtilities.getDomainFromURL(url);
+    const linkDomain = LinkUtilities.getDomainFromURL(url);
 
-    const html = await LinkUtilities.fetchEmbed(url);
+    const linkHtml = await LinkUtilities.fetchEmbed(url);
 
-    const iFrameAllowed = await LinkUtilities.testIframe(url);
+    const linkIFrameAllowed = await LinkUtilities.testIframe(url);
 
     const newFile = {
       filename,
@@ -82,9 +82,9 @@ export default async (req, res) => {
       linkAuthor: data.author,
       linkImage: data.image?.url,
       linkFavicon: data.logo?.url,
-      linkDomain: domain,
-      linkHtml: html,
-      linkIFrameAllowed: iFrameAllowed,
+      linkDomain,
+      linkHtml,
+      linkIFrameAllowed,
     };
 
     files.push(newFile);

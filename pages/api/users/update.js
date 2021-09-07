@@ -115,8 +115,8 @@ export default async (req, res) => {
   if (unsafeResponse && !unsafeResponse.error) {
     if (
       user.username !== unsafeResponse.username ||
-      user.data.name !== unsafeResponse.data.name ||
-      user.data.photo !== unsafeResponse.data.photo
+      user.name !== unsafeResponse.name ||
+      user.photo !== unsafeResponse.photo
     ) {
       SearchManager.updateUser(unsafeResponse, "EDIT");
     }
