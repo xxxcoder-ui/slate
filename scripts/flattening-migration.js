@@ -118,7 +118,6 @@ const addUserColumns = async () => {
     table.string("name").nullable();
     table.string("twitterUsername").nullable();
     table.boolean("twitterVerified").notNullable().defaultTo(false);
-    table.boolean("hidePrivacyAlert").notNullable().defaultTo(false);
     table.string("textileToken").nullable();
     table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
     table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
@@ -172,12 +171,11 @@ const migrateUserTable = async () => {
       name: data.name,
       body: data.body,
       photo: data.photo,
-      hidePrivacyAlert: data.status?.hidePrivacyAlert,
       textileToken: data.tokens?.api,
       settingsDealsAutoApprove: data.settings?.settings_deals_auto_approve,
       allowAutomaticDataStorage: data.settings?.allow_automatic_data_storage,
       allowEncryptedDataStorage: data.settings?.allow_encrypted_data_storage,
-      onboarding: data.onboarding,
+      onboarding: { ...data.onboarding, hidePrivacyAlert: data.status?.hidePrivacyAlert },
       twitterUsername: data.twitter?.username,
       twitterVerified: data.twitter?.verified,
     };
@@ -289,7 +287,7 @@ Users
     'data.name', -> 'name' MIGRATED
     'data.body', -> 'body' MIGRATED
     'data.photo', -> 'photo' MIGRATED
-    'data.status', -> 'hidePrivacyAlert' MIGRATED
+    'data.status', -> 'onboarding.hidePrivacyAlert' MIGRATED
     'data.tokens.api', -> 'textileToken' MIGRATED
     'data.settings.settings_deals_auto_approve', -> 'settingsDealsAutoApprove' MIGRATED
     'data.settings.allow_automatic_data_storage', -> 'allowAutomaticDataStorage' MIGRATED

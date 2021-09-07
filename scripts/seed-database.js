@@ -39,7 +39,6 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.string("twitterId").unique().nullable();
   table.string("twitterUsername").nullable();
   table.boolean("twitterVerified").notNullable().defaultTo(false);
-  table.boolean("hidePrivacyAlert").notNullable().defaultTo(false);
   table.string("textileToken").nullable();
   table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
   table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
