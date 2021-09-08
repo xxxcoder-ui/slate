@@ -277,6 +277,10 @@ export const addToSlate = async ({ slate, files, user, saveCopy = false }) => {
 
   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
 
+  if (slate.isPublic) {
+    addToPublicCollectionUpdatePrivacy({ filteredFiles });
+  }
+
   return { added: response.length };
 };
 
