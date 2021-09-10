@@ -118,6 +118,7 @@ export const error = {
   SERVER_UPDATE_SLATE_NAME_TAKEN:
     "You already have a collection with that name. Collection names must be unique",
   SERVER_UPDATE_SLATE_FAILED: "We are having trouble updating that collection right now",
+  SERVER_UPDATE_SLATE_MAX_BODY_LENGTH: "Descriptions can be a maximum of 2000 characters",
 
   //Create user
   SERVER_CREATE_USER_NOT_ALLOWED: "You can only create users while on slate.host",
@@ -194,6 +195,7 @@ export const error = {
   SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG:
     "We're having trouble updating your settings right now",
   SERVER_USER_UPDATE_INVALID_PASSWORD: "Please choose a valid password",
+  SERVER_USER_UPDATE_MAX_BODY_LENGTH: "Descriptions can be a maximum of 2000 characters",
 
   //Zip files
   GET_ZIP_FILES_PATHS_BUCKET_CHECK_FAILED: "We're having trouble locating those files right now",

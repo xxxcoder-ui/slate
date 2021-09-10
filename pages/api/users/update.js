@@ -110,6 +110,10 @@ export default async (req, res) => {
     updates.password = hash;
   }
 
+  if (updates.body && updates.body.length > 2000) {
+    return res.status(400).send({ decorator: "SERVER_USER_UPDATE_MAX_BODY_LENGTH", error: true });
+  }
+
   let unsafeResponse = await Data.updateUserById({ id, ...updates });
 
   if (unsafeResponse && !unsafeResponse.error) {

@@ -30,6 +30,10 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_UPDATE_SLATE_NOT_FOUND", error: true });
   }
 
+  if (updates.body && updates.body.length > 2000) {
+    return res.status(400).send({ decorator: "SERVER_UPDATE_SLATE_MAX_BODY_LENGTH", error: true });
+  }
+
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
     let privacyResponse = await Data.updateSlatePrivacy({
       ownerId: id,

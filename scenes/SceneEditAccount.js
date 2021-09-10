@@ -218,6 +218,7 @@ export default class SceneEditAccount extends React.Component {
 
               <div css={STYLES_HEADER}>Bio</div>
               <System.Textarea
+                maxlength="2000"
                 name="body"
                 value={this.state.body}
                 placeholder="A bit about yourself..."

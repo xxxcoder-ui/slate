@@ -113,7 +113,7 @@ const printFilesTable = async () => {
 
 const addUserColumns = async () => {
   await DB.schema.table("users", function (table) {
-    table.string("body").nullable();
+    table.string("body", 2000).nullable();
     table.string("photo").nullable();
     table.string("name").nullable();
     table.string("twitterUsername").nullable();
@@ -128,7 +128,7 @@ const addUserColumns = async () => {
 
 const addSlateColumns = async () => {
   await DB.schema.table("slates", function (table) {
-    table.string("body").nullable();
+    table.string("body", 2000).nullable();
     table.string("name").nullable();
     table.string("preview").nullable();
   });
@@ -144,29 +144,49 @@ const addFileColumns = async () => {
     table.string("type").notNullable().defaultTo("link");
     table.string("blurhash").nullable();
     table.string("source").nullable();
-    table.string("body").nullable();
+    table.string("body", 2000).nullable();
     table.string("author").nullable();
     table.jsonb("coverImage").nullable();
     table.jsonb("data").nullable(); //where you'll move unity stuff
     table.string("linkName").nullable();
-    table.string("linkBody").nullable();
+    table.string("linkBody", 2000).nullable();
     table.string("linkAuthor").nullable();
     table.string("linkSource").nullable();
     table.string("linkDomain").nullable();
     table.string("linkImage").nullable();
     table.string("linkFavicon").nullable();
-    table.string("linkHtml").nullable();
+    table.text("linkHtml").nullable();
     table.boolean("linkIFrameAllowed").nullable().defaultTo(false);
     table.jsonb("tags").nullable();
   });
 };
 
+const editColumns = async () => {
+  await DB.schema.alterTable("files", function (table) {
+    table.text("linkHtml").nullable().alter();
+  });
+};
+
 /* Migrate over to new columns (and denormalize tags) */
+
+const defaultPhotos = [
+  "https://slate.host/static/a1.jpg",
+  "https://slate.textile.io/ipfs/bafkreigjofaa2wvmcoi5vbe3h32cbqh35d35wdhodfxwgmfky3gcur6s5i",
+  "https://slate.textile.io/ipfs/bafkreiaycwt6m3jabhetfqnsb63z2lx65vzepp5ejk2b56vxypwxiet6c4",
+  "https://slate.textile.io/ipfs/bafkreifvdvygknj66bfqdximxmxobqelwhd3xejiq3vfplhzkopcfdetrq",
+  "https://slate.textile.io/ipfs/bafkreihm3srxvhfppm2dvldw224v4m3prcc3b6pwe3rtuxpsu6wwjpgzpa",
+  "https://slate.textile.io/ipfs/bafkreiardkkfxj3ip373ee2tf6ffivjqclq7ionemt6pw55e6hv7ws5pvu",
+  "https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i",
+  "https://slate.textile.io/ipfs/bafkreibf3hoiyuk2ywjyoy24ywaaclo4k5rz53flesvr5h4qjlyzxamozm",
+];
+
+const defaultBody = ["A user of Slate.", "", "A slate."];
 
 const migrateUserTable = async () => {
   const users = await DB.select("id", "data").from("users");
   for (let user of users) {
     let data = user.data;
+
     let newUser = {
       name: data.name,
       body: data.body,
@@ -175,16 +195,32 @@ const migrateUserTable = async () => {
       settingsDealsAutoApprove: data.settings?.settings_deals_auto_approve,
       allowAutomaticDataStorage: data.settings?.allow_automatic_data_storage,
       allowEncryptedDataStorage: data.settings?.allow_encrypted_data_storage,
-      onboarding: { ...data.onboarding, hidePrivacyAlert: data.status?.hidePrivacyAlert },
+      onboarding:
+        data.onboarding || data.status?.hidePrivacyAlert
+          ? { ...data.onboarding, hidePrivacyAlert: data.status?.hidePrivacyAlert }
+          : null,
       twitterUsername: data.twitter?.username,
       twitterVerified: data.twitter?.verified,
     };
-    const response = await DB.from("users").where("id", user.id).update(newUser);
+
+    if (defaultPhotos.includes(data.photo)) {
+      // console.log(`replaced default photo ${data.photo} with null`);
+      newUser.photo = null;
+    }
+    if (defaultBody.includes(data.body)) {
+      // console.log(`replaced default body with null`);
+      newUser.body = null;
+    }
+    // console.log({ data });
+    console.log({ id: user.id, newUser });
+    const response = await DB.from("users").where("id", user.id).update(newUser).returning("*");
+    // console.log({ response });
   }
 };
 
 const migrateSlateTable = async () => {
   const slates = await DB.select("id", "data").from("slates");
+
   for (let slate of slates) {
     let data = slate.data;
     let newSlate = {
@@ -192,6 +228,14 @@ const migrateSlateTable = async () => {
       body: data.body,
       preview: data.preview,
     };
+
+    if (defaultBody.includes(data.body)) {
+      // console.log(`replaced default body with null`);
+      newSlate.body = null;
+    }
+
+    // console.log({ data });
+    // console.log({ newSlate });
     const response = await DB.from("slates").where("id", slate.id).update(newSlate);
   }
 };
@@ -213,7 +257,6 @@ const migrateFileTable = async () => {
       blurhash: data.blurhash,
       source: data.source,
       author: data.author,
-      data: data.unity ? { unity: data.unity } : null,
       linkName: data.link?.name,
       linkBody: data.link?.body,
       linkAuthor: data.link?.author,
@@ -225,34 +268,42 @@ const migrateFileTable = async () => {
       linkIFrameAllowed: data.link?.iFrameAllowed,
     };
 
+    if (data.unity) {
+      newFile.data = { unity: data.unity };
+    }
+    // if (newFile.data) {
+    //   console.log({ unity: newFile.data.unity });
+    // }
+
     let coverImage = data.coverImage;
     if (coverImage) {
-      console.log({ coverImage });
+      // console.log({ coverImage });
       let newCoverImage = {
-        size: coverImage.data?.size,
-        type: coverImage.data?.type,
-        blurhash: coverImage.data?.blurhash,
-        url: coverImage.data?.url,
+        ...coverImage.data,
         ...coverImage,
-        data: null,
       };
-      console.log({ newCoverImage });
+      delete newCoverImage.data;
+      newFile.coverImage = newCoverImage;
+      // console.log({ newCoverImage });
     }
 
-    let tags = await DB.select("slates.id", "slates.slatename")
+    let tags = await DB.select("slates.id", "slates.slatename", "slates.name")
       .from("slates")
       .join("slate_files", "slate_files.slateId", "=", "slates.id")
       .where("slate_files.fileId", file.id);
+
     if (tags?.length) {
-      newFile.tags = tags;
+      newFile.tags = JSON.stringify(tags);
     }
+
+    console.log({ newFile });
     const response = await DB.from("files").where("id", file.id).update(newFile);
   }
 };
 
-/* Delete the old (and convert newData to data) */
+/* Delete the old data */
 
-const deleteUserData = async () => {
+const deleteOldData = async () => {
   await DB.schema.table("users", function (table) {
     table.dropColumn("data");
   });
@@ -265,18 +316,22 @@ const deleteUserData = async () => {
 };
 
 const runScript = async () => {
-  await printUsersTable();
-  await printSlatesTable();
-  await printFilesTable();
+  // await printUsersTable();
+  // await printSlatesTable();
+  // await printFilesTable();
 
-  //   await addUserColumns();
-  //   await addSlateColumns();
-  //   await addFileColumns();
+  // await addUserColumns();
+  // await addSlateColumns();
+  // await addFileColumns();
 
-  //   await migrateUserTable();
-  //   await migrateSlateTable();
-  //   await migrateFileTable();
-  console.log("SCRIPT FINISHED");
+  // await editColumns();
+
+  // await migrateUserTable();
+  // await migrateSlateTable();
+  await migrateFileTable();
+
+  // await deleteOldData();
+  console.log("SCRIPT FINISHED. HIT CTRL + C TO END");
 };
 
 runScript();
