@@ -219,8 +219,18 @@ export default class Profile extends React.Component {
     index: -1,
   };
 
+  componentDidMount = () => {
+    if (this.props.page.params?.tab === "subscribed") {
+      this.fetchSocial();
+    }
+  };
+
   componentDidUpdate = (prevProps) => {
-    if (!this.state.fetched && this.props.page.params !== prevProps.page.params) {
+    if (
+      !this.state.fetched &&
+      this.props.page.params !== prevProps.page.params &&
+      this.props.page.params?.tab === "subscribed"
+    ) {
       this.fetchSocial();
     }
   };

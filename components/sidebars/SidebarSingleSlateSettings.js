@@ -169,7 +169,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             onSubmit={this._handleSubmit}
             descriptionStyle={{ fontSize: "20px !important" }}
             labelStyle={{ fontSize: "20px" }}
-            maxlength="255"
+            maxLength="255"
           />
           <System.P1
             style={{
@@ -200,7 +200,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
-            maxlength="2000"
+            maxLength="2000"
           />
         </div>
 

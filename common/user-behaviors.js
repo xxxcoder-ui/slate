@@ -31,7 +31,8 @@ export const authenticate = async (state) => {
   }
 
   let response = await Actions.signIn(state);
-  if (!response || response.error) {
+
+  if (Events.hasError(response)) {
     return response;
   }
 

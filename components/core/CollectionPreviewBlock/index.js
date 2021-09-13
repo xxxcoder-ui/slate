@@ -14,6 +14,8 @@ import { AspectRatio } from "~/components/system";
 import { P3, H5, P2 } from "~/components/system/components/Typography";
 import { useMediaQuery, useMounted } from "~/common/hooks";
 
+import ProfilePhoto from "~/components/core/ProfilePhoto";
+
 const STYLES_CONTAINER = (theme) => css`
   position: relative;
   display: flex;
@@ -136,7 +138,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 onClick={follow}
                 isFollowed={isFollowed}
                 followCount={followCount}
-                disabled={collection.ownerId === viewer?.id}
+                disabled={viewer && collection.ownerId === viewer.id}
               />
               <ShareButton user={owner} preview={preview} collection={collection} />
             </motion.div>
@@ -231,12 +233,7 @@ function Metrics({ fileCount, owner, isOwner, onAction }) {
               aria-label={`Visit ${owner.username}'s profile`}
               title={`Visit ${owner.username}'s profile`}
             >
-              <img
-                css={STYLES_PROFILE_IMAGE}
-                src={owner.photo}
-                alt={`${owner.username} profile`}
-                onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
-              />
+              <ProfilePhoto user={owner} style={{ borderRadius: "4px" }} size={16} />
             </Link>
             <Link
               href={`/$/user/${owner.id}`}

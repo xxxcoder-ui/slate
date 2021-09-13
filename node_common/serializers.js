@@ -1,3 +1,31 @@
+// //NOTE(martina): clean the object before adding it to the database
+// export const cleanUser = (user) => {
+//   return {
+//     id: user.id,
+//     createdAt: user.createdAt,
+//     lastActive: user.lastActive,
+//     username: user.username,
+//     password: user.password,
+//     salt: user.salt,
+//     email: user.email,
+//     followerCount: user.followerCount,
+//     slateCount: user.slateCount,
+//     twitterId: user.twitterId,
+//     authVersion: user.authVersion,
+//     revertedVersion: user.revertedVersion,
+//     body: user.body,
+//     photo: user.photo,
+//     name: user.name,
+//     twitterUsername: user.twitterUsername,
+//     twitterVerified: user.twitterVerified,
+//     textileToken: user.textileToken,
+//     settingsDealAutoApprove: user.settingsDealAutoApprove,
+//     allowAutomaticDataStorage: user.allowAutomaticDataStorage,
+//     allowEncryptedDataStorage: user.allowEncryptedDataStorage,
+//     onboarding: user.onboarding,
+//   };
+// };
+
 //NOTE(martina): add a variable to sanitizeUser if it should be sent to the front end. Otherwise, it will be filtered out
 
 export const sanitizeUser = (user) => {
@@ -18,23 +46,8 @@ export const sanitizeUser = (user) => {
   };
 };
 
-//NOTE(martina): list of the properties of the tables that should be returned by db queries. Convenience so we don't have to write these out each time and update in multiple places
-export const slateProperties = [
-  "slates.id",
-  "slates.ownerId",
-  "slates.createdAt",
-  "slates.updatedAt",
-  "slates.slatename",
-  "slates.body",
-  "slates.name",
-  "slates.preview",
-  "slates.isPublic",
-  "slates.subscriberCount",
-  "slates.fileCount",
-];
-
-//NOTE(martina): the user properties list filters out sensitive information
-export const userProperties = [
+//NOTE(martina): the user public properties list filters out sensitive information
+export const userPublicProperties = [
   "users.id",
   "users.createdAt",
   "users.lastActive",
@@ -48,34 +61,5 @@ export const userProperties = [
   "users.twitterVerified",
 ];
 
-export const fileProperties = [
-  "files.id",
-  "files.ownerId",
-  "files.createdAt",
-  "files.cid",
-  "files.isPublic",
-  "files.filename",
-  "files.name",
-  "files.body",
-  "files.size",
-  "files.type",
-  "files.blurhash",
-  "files.data",
-  "files.source",
-  "files.author",
-  "files.coverImage",
-  "files.downloadCount",
-  "files.saveCount",
-  "files.isLink",
-  "files.url",
-  "files.linkName",
-  "files.linkBody",
-  "files.linkAuthor",
-  "files.linkSource",
-  "files.linkDomain",
-  "files.linkImage",
-  "files.linkFavicon",
-  "files.linkHtml",
-  "files.linkIFrameAllowed",
-  "files.tags",
-];
+//NOTE(martina): the user preview properties list contains the minimal info needed to preview the owner of a file or slate
+export const userPreviewProperties = ["users.id", "users.name", "users.username", "users.photo"];

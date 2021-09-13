@@ -552,7 +552,7 @@ class CarouselSidebar extends React.Component {
               ...STYLES_INPUT,
             }}
             textStyle={{ color: Constants.system.white }}
-            maxlength="255"
+            maxLength="255"
           />
 
           <Textarea
@@ -561,7 +561,7 @@ class CarouselSidebar extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             style={STYLES_INPUT}
-            maxlength="2000"
+            maxLength="2000"
           />
           <Input
             full
@@ -572,7 +572,7 @@ class CarouselSidebar extends React.Component {
             id={`sidebar-label-source`}
             style={STYLES_INPUT}
             textStyle={{ color: Constants.system.white }}
-            maxlength="255"
+            maxLength="255"
           />
           <Input
             full
@@ -583,7 +583,7 @@ class CarouselSidebar extends React.Component {
             id={`sidebar-label-author`}
             style={{ ...STYLES_INPUT, marginBottom: 12 }}
             textStyle={{ color: Constants.system.white }}
-            maxlength="255"
+            maxLength="255"
           />
           {/* <div css={STYLES_OPTIONS_SECTION}>
             <Tag

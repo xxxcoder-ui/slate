@@ -304,7 +304,7 @@ export const ButtonWarning = (props) => {
         css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
       >
-        <LoaderSpinner style={{ height: 16, width: 16 }} />
+        <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
     );
   }

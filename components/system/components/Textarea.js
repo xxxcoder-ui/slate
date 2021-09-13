@@ -54,7 +54,7 @@ export class Textarea extends React.Component {
         name={this.props.name}
         value={this.props.value}
         readOnly={this.props.readOnly}
-        maxlength={this.props.maxlength}
+        maxLength={this.props.maxLength}
       />
     );
   }

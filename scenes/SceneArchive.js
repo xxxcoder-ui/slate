@@ -73,8 +73,10 @@ export default class SceneArchive extends React.Component {
     this.setState({ changingFilecoin: true });
 
     await Actions.updateViewer({
-      allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
-      allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
+      user: {
+        allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
+        allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
+      },
     });
 
     this.setState({ changingFilecoin: false });

@@ -16,42 +16,77 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, user } = userInfo;
 
-  let updates = req.body.data;
+  let updates = req.body.data.user;
 
-  if (updates.username && updates.username !== user.username) {
-    if (!Validations.username(req.body.data.username)) {
-      return res.status(400).send({
-        decorator: "SERVER_USER_UPDATE_INVALID_USERNAME",
-        error: true,
+  if (updates) {
+    if (updates.username && updates.username !== user.username) {
+      if (!Validations.username(updates.username)) {
+        return res.status(400).send({
+          decorator: "SERVER_USER_UPDATE_INVALID_USERNAME",
+          error: true,
+        });
+      }
+
+      const existing = await Data.getUserByUsername({
+        username: updates.username.toLowerCase(),
       });
+
+      if (existing && existing.id !== id) {
+        return res
+          .status(500)
+          .send({ decorator: "SERVER_USER_UPDATE_USERNAME_IS_TAKEN", error: true });
+      }
     }
 
-    const existing = await Data.getUserByUsername({
-      username: req.body.data.username.toLowerCase(),
-    });
+    if (updates.email && updates.email !== user.email) {
+      if (!Validations.email(updates.email)) {
+        return res.status(400).send({
+          decorator: "SERVER_USER_UPDATE_INVALID_EMAIL",
+          error: true,
+        });
+      }
 
-    if (existing && existing.id !== id) {
-      return res
-        .status(500)
-        .send({ decorator: "SERVER_USER_UPDATE_USERNAME_IS_TAKEN", error: true });
-    }
-  }
-
-  if (updates.email && updates.email !== user.email) {
-    if (!Validations.email(req.body.data.email)) {
-      return res.status(400).send({
-        decorator: "SERVER_USER_UPDATE_INVALID_EMAIL",
-        error: true,
+      const existing = await Data.getUserByEmail({
+        email: updates.email.toLowerCase(),
       });
+
+      if (existing && existing.id !== id) {
+        return res.status(500).send({ decorator: "SERVER_USER_UPDATE_EMAIL", error: true });
+      }
     }
 
-    const existing = await Data.getUserByEmail({
-      email: req.body.data.email.toLowerCase(),
-    });
+    if (req.body.data.type === "CHANGE_PASSWORD" && updates.password) {
+      if (!Validations.password(updates.password)) {
+        return res
+          .status(500)
+          .send({ decorator: "SERVER_USER_UPDATE_INVALID_PASSWORD", error: true });
+      }
 
-    if (existing && existing.id !== id) {
-      return res.status(500).send({ decorator: "SERVER_USER_UPDATE_EMAIL", error: true });
+      const rounds = Number(Environment.LOCAL_PASSWORD_ROUNDS);
+      const salt = await BCrypt.genSalt(rounds);
+      const hash = await Utilities.encryptPassword(updates.password, salt);
+
+      updates.salt = salt;
+      updates.password = hash;
     }
+
+    if (updates.body && updates.body.length > 2000) {
+      return res.status(400).send({ decorator: "SERVER_USER_UPDATE_MAX_BODY_LENGTH", error: true });
+    }
+
+    let unsafeResponse = await Data.updateUserById({ id, ...updates });
+
+    if (unsafeResponse && !unsafeResponse.error) {
+      if (
+        user.username !== unsafeResponse.username ||
+        user.name !== unsafeResponse.name ||
+        user.photo !== unsafeResponse.photo
+      ) {
+        SearchManager.updateUser(unsafeResponse, "EDIT");
+      }
+    }
+
+    ViewerManager.hydratePartial(id, { viewer: true });
   }
 
   if (req.body.data.type === "SAVE_DEFAULT_ARCHIVE_CONFIG") {
@@ -94,39 +129,6 @@ export default async (req, res) => {
         .send({ decorator: "SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG", error: true });
     }
   }
-
-  if (req.body.data.type === "CHANGE_PASSWORD" && req.body.data.password) {
-    if (!Validations.password(req.body.data.password)) {
-      return res
-        .status(500)
-        .send({ decorator: "SERVER_USER_UPDATE_INVALID_PASSWORD", error: true });
-    }
-
-    const rounds = Number(Environment.LOCAL_PASSWORD_ROUNDS);
-    const salt = await BCrypt.genSalt(rounds);
-    const hash = await Utilities.encryptPassword(req.body.data.password, salt);
-
-    updates.salt = salt;
-    updates.password = hash;
-  }
-
-  if (updates.body && updates.body.length > 2000) {
-    return res.status(400).send({ decorator: "SERVER_USER_UPDATE_MAX_BODY_LENGTH", error: true });
-  }
-
-  let unsafeResponse = await Data.updateUserById({ id, ...updates });
-
-  if (unsafeResponse && !unsafeResponse.error) {
-    if (
-      user.username !== unsafeResponse.username ||
-      user.name !== unsafeResponse.name ||
-      user.photo !== unsafeResponse.photo
-    ) {
-      SearchManager.updateUser(unsafeResponse, "EDIT");
-    }
-  }
-
-  ViewerManager.hydratePartial(id, { viewer: true });
 
   return res.status(200).send({ decorator: "SERVER_USER_UPDATE" });
 };

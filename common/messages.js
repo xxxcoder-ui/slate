@@ -210,11 +210,13 @@ export const error = {
   SERVER_FILECOIN_NETWORK_ERROR: "We're having trouble fetching your storage information right now",
 
   //Sign in
+  SIGN_UP_RATE_LIMITED: "Too many signup attempts. Please try again in 10 minutes",
+  SIGN_IN_RATE_LIMITED: "Too many login attempts. Please try again in 10 minutes",
   SERVER_SIGN_IN_NOT_ALLOWED: "You can only sign in to an account while on slate.host",
   SERVER_SIGN_IN_NO_USERNAME: "Please provide a username to sign in",
   SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
   SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
-  SERVER_SIGN_IN_WRONG_CREDENTIALS: "You have entered an invalid username or password",
+  SERVER_SIGN_IN_WRONG_CREDENTIALS: "The username and password do not match",
 
   //Subscribe
   SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",

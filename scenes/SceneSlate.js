@@ -402,7 +402,7 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, objects, body, isPublic, ownerId } = this.props.data;
+    const { user, name, objects, body, isPublic, ownerId } = this.props.data;
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     let actions = isOwner ? (
@@ -453,11 +453,11 @@ class SlatePage extends React.Component {
                     {user.username}
                   </span>{" "}
                 </Link>
-                / {data.name}
+                / {name}
               </span>
             ) : (
               <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                <span>{data.name}</span>
+                <span>{name}</span>
                 {isOwner && !isPublic && (
                   <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 16 }}>
                     <SVG.SecurityLock height="16px" style={{ display: "block" }} />

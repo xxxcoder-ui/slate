@@ -269,7 +269,7 @@ export class Input extends React.Component {
               disabled={this.props.disabled}
               readOnly={this.props.readOnly}
               required={this.props.required}
-              maxlength={this.props.maxlength}
+              maxLength={this.props.maxLength}
               style={{
                 width: this.props.copyable || this.props.icon ? "calc(100% - 32px)" : "100%",
                 ...this.props.textStyle,

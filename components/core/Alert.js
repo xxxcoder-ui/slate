@@ -134,7 +134,7 @@ export class Alert extends React.Component {
   _handleDismissPrivacyAlert = (e) => {
     Actions.updateStatus({ onboarding: ["hidePrivacyAlert"] });
     this.props.onAction({
-      type: "UDPATE_VIEWER",
+      type: "UPDATE_VIEWER",
       viewer: {
         onboarding: { ...this.props.viewer.onboarding, hidePrivacyAlert: true },
       },

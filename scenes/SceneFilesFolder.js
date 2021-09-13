@@ -57,7 +57,10 @@ export default class SceneFilesFolder extends React.Component {
           ) : (
             <EmptyState>
               <FileTypeGroup />
-              <div style={{ marginTop: 24 }}>Drag and drop files into Slate to upload</div>
+              <div style={{ marginTop: 24 }}>
+                Drag and drop files into Slate to upload, or press the plus button to save a file or
+                link
+              </div>
             </EmptyState>
           )}
         </ScenePage>

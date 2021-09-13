@@ -71,7 +71,9 @@ export default class SceneEditAccount extends React.Component {
     const cid = file.cid;
     const url = Strings.getURLfromCID(cid);
     let updateResponse = await Actions.updateViewer({
-      photo: Strings.getURLfromCID(cid),
+      user: {
+        photo: Strings.getURLfromCID(cid),
+      },
     });
 
     Events.hasError(updateResponse);
@@ -82,8 +84,10 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingFilecoin: true });
 
     let response = await Actions.updateViewer({
-      allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
-      allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
+      user: {
+        allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
+        allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
+      },
     });
 
     Events.hasError(response);
@@ -106,10 +110,12 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ savingNameBio: true });
 
     let response = await Actions.updateViewer({
-      username: this.state.username,
-      photo: this.state.photo,
-      body: this.state.body,
-      name: this.state.name,
+      user: {
+        username: this.state.username,
+        photo: this.state.photo,
+        body: this.state.body,
+        name: this.state.name,
+      },
     });
 
     Events.hasError(response);
@@ -121,13 +127,10 @@ export default class SceneEditAccount extends React.Component {
   };
 
   _handleChangePassword = async (e) => {
-    if (this.state.password !== this.state.confirm) {
-      Events.dispatchMessage({ message: "Passwords did not match" });
-      return;
-    }
-
     if (!Validations.password(this.state.password)) {
-      Events.dispatchMessage({ message: "Password length must be more than 8 characters" });
+      Events.dispatchMessage({
+        message: "Password does not meet requirements",
+      });
       return;
     }
 
@@ -135,7 +138,7 @@ export default class SceneEditAccount extends React.Component {
 
     let response = await Actions.updateViewer({
       type: "CHANGE_PASSWORD",
-      password: this.state.password,
+      user: { password: this.state.password },
     });
 
     if (Events.hasError(response)) {
@@ -218,7 +221,7 @@ export default class SceneEditAccount extends React.Component {
 
               <div css={STYLES_HEADER}>Bio</div>
               <System.Textarea
-                maxlength="2000"
+                maxLength="2000"
                 name="body"
                 value={this.state.body}
                 placeholder="A bit about yourself..."
@@ -281,7 +284,10 @@ export default class SceneEditAccount extends React.Component {
           {tab === "security" ? (
             <div>
               <div css={STYLES_HEADER}>Change password</div>
-              <div>Passwords must be a minimum of eight characters.</div>
+              <div>
+                Passwords should be at least 8 characters long, contain a mix of upper and lowercase
+                letters, and have at least 1 number and 1 symbol
+              </div>
 
               <System.Input
                 containerStyle={{ marginTop: 24 }}
@@ -364,7 +370,7 @@ export default class SceneEditAccount extends React.Component {
               header={`Are you sure you want to delete your account @${this.state.username}?`}
               subHeader={`You will lose all your files and collections. You can’t undo this action.`}
               inputHeader={`Please type your username to confirm`}
-              inputPlaceholder={`username`}
+              inputPlaceholder={`Username`}
             />
           )}
         </ScenePage>

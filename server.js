@@ -27,7 +27,7 @@ const app = next({
 
 const createLimiter = limit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5,
+  max: 10,
   message: {
     decorator: "SIGN_UP_RATE_LIMITED",
     error: true,
@@ -37,7 +37,7 @@ const createLimiter = limit({
 
 const loginLimiter = limit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5,
+  max: 10,
   message: {
     decorator: "SIGN_IN_RATE_LIMITED",
     error: true,
