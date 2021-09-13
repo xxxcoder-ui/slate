@@ -24,14 +24,16 @@ export default async (req, res) => {
       .send({ decorator: "SERVER_CREATE_SLATE_EXISTING_SLATE_NAME", error: true });
   }
 
+  if (req.body.data.body && req.body.data.body.length > 2000) {
+    return res.status(400).send({ decorator: "SERVER_CREATE_SLATE_MAX_BODY_LENGTH", error: true });
+  }
+
   const slate = await Data.createSlate({
     ownerId: id,
     slatename: Strings.createSlug(req.body.data.name),
     isPublic: req.body.data.isPublic,
-    data: {
-      name: req.body.data.name,
-      body: req.body.data.body,
-    },
+    name: req.body.data.name,
+    body: req.body.data.body,
   });
 
   if (!slate || slate.error) {

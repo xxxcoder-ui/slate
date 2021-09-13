@@ -3,7 +3,7 @@ import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 
 export function FileTypeIcon({ file, ...props }) {
-  const type = file.data.type;
+  const type = file.type;
   const isLink = file.isLink;
 
   if (isLink) {

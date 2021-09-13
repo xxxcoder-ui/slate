@@ -68,11 +68,10 @@ export const hydratePartial = async (
       ...update,
       username: user.username,
       email: user.email,
-      data: user.data,
       library: user.library,
     };
   } else if (library) {
-    library = await Data.getFilesByUserId({ id, sanitize: true, publicOnly: false });
+    library = await Data.getFilesByUserId({ id, publicOnly: false });
     update.library = library;
   }
 
@@ -146,11 +145,11 @@ export const getById = async ({ id }) => {
 
   Data.createUsageStat({ id }); //NOTE(martina): to record the person's usage of Slate for analytics
 
-  // user.library = await Data.getFilesByUserId({ id, sanitize: true });
+  // user.library = await Data.getFilesByUserId({ id });
 
   const [slates, keys, subscriptions, following, followers, { bucketRoot }] = (
     await Promise.allSettled([
-      Data.getSlatesByUserId({ ownerId: id, sanitize: true, includeFiles: true }),
+      Data.getSlatesByUserId({ ownerId: id, includeFiles: true }),
       Data.getAPIKeysByUserId({ userId: id }),
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),
@@ -175,48 +174,39 @@ export const getById = async ({ id }) => {
     }
 
     cids[each.cid] = true;
-    let size = each.data.size;
+    let size = each.size;
     if (typeof size === "number") {
       bytes += size;
-      if (each.data.type && each.data.type.startsWith("image/")) {
-        imageBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("video/")) {
-        videoBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("audio/")) {
-        audioBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("application/epub")) {
-        epubBytes += size;
-      } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
-        pdfBytes += size;
+      let type = each.type;
+      if (type) {
+        if (type.startsWith("image/")) {
+          imageBytes += size;
+        } else if (type.startsWith("video/")) {
+          videoBytes += size;
+        } else if (type.startsWith("audio/")) {
+          audioBytes += size;
+        } else if (type.startsWith("application/epub")) {
+          epubBytes += size;
+        } else if (type.startsWith("application/pdf")) {
+          pdfBytes += size;
+        }
       }
     }
 
-    let coverImage = each.data.coverImage;
+    let coverImage = each.coverImage;
     if (coverImage && !cids[coverImage.cid]) {
       cids[coverImage.cid] = true;
-      size = coverImage.data.size;
+      size = coverImage.size;
       if (typeof size === "number") {
         imageBytes += size;
       }
     }
   }
 
-  const tags = Utilities.getUserTags({ library: user.library });
+  // const tags = Utilities.getUserTags({ library: user.library });
 
   let viewer = {
-    id: user.id,
-    username: user.username,
-    email: user.email || null,
-    data: user.data,
-    library: user.library,
-    // onboarding: user.data.onboarding || {},
-    // status: user.data.status || {},
-    // settings: {
-    //   allow_automatic_data_storage: user.data.allow_automatic_data_storage || null,
-    //   allow_encrypted_data_storage: user.data.allow_encrypted_data_storage || null,
-    //   allow_filecoin_directory_listing: user.data.allow_filecoin_directory_listing || null,
-    //   settings_deals_auto_approve: user.data.settings_deals_auto_approve || null,
-    // },
+    ...user,
     stats: {
       bytes,
       maximumBytes: Constants.TEXTILE_ACCOUNT_BYTE_LIMIT,
@@ -226,7 +216,7 @@ export const getById = async ({ id }) => {
       epubBytes,
       pdfBytes,
     },
-    tags,
+    // tags,
     userBucketCID: bucketRoot?.path || null,
     keys,
     slates,

@@ -219,8 +219,18 @@ export default class Profile extends React.Component {
     index: -1,
   };
 
+  componentDidMount = () => {
+    if (this.props.page.params?.tab === "subscribed") {
+      this.fetchSocial();
+    }
+  };
+
   componentDidUpdate = (prevProps) => {
-    if (!this.state.fetched && this.props.page.params !== prevProps.page.params) {
+    if (
+      !this.state.fetched &&
+      this.props.page.params !== prevProps.page.params &&
+      this.props.page.params?.tab === "subscribed"
+    ) {
       this.fetchSocial();
     }
   };
@@ -325,9 +335,9 @@ export default class Profile extends React.Component {
                   )}
                 </div>
               )}
-              {user.data.body ? (
+              {user.body ? (
                 <div css={STYLES_DESCRIPTION}>
-                  <ProcessedText text={user.data.body} />
+                  <ProcessedText text={user.body} />
                 </div>
               ) : null}
               <div css={STYLES_STATS}>

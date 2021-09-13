@@ -147,7 +147,7 @@ export default class SidebarAddFileToBucket extends React.Component {
 
             <System.P1>
               Click below or drop a file anywhere on the page to upload a file
-              {this.props.data?.slatename || this.props.data?.data.name ? (
+              {this.props.data?.slatename || this.props.data?.name ? (
                 <span>
                   {" "}
                   to <strong>{Strings.getPresentationSlateName(this.props.data)}</strong>

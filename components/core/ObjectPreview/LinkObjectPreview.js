@@ -60,15 +60,13 @@ const STYLES_TAG_CONTAINER = (theme) => css`
 `;
 
 export default function LinkObjectPreview({ file, ratio, ...props }) {
-  const {
-    data: { link },
-  } = file;
+  const { linkImage, linkFavicon, linkSource } = file;
 
   const previewImgState = useImage({
-    src: link.image,
+    src: linkImage,
     maxWidth: Constants.grids.object.desktop.width,
   });
-  const faviconImgState = useImage({ src: link.logo });
+  const faviconImgState = useImage({ src: linkFavicon });
 
   const tag = (
     <a
@@ -84,14 +82,14 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
           <SVG.Link height={12} width={12} style={{ marginRight: 4 }} />
         ) : (
           <img
-            src={link.logo}
+            src={linkFavicon}
             alt="Link source logo"
             style={{ marginRight: 4 }}
             css={STYLES_SOURCE_LOGO}
           />
         )}
         <P3 css={STYLES_SOURCE} as="small" color="textGray" nbrOflines={1}>
-          {link.source}
+          {linkSource}
         </P3>
         <SVG.ExternalLink
           className="link_external_link"
@@ -113,7 +111,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
             </div>
           ) : (
             <img
-              src={link.image}
+              src={linkImage}
               alt="Link preview"
               css={previewImgState.overflow ? STYLES_SMALL_IMG : Styles.IMAGE_FILL}
             />

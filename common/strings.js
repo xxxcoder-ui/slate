@@ -20,16 +20,16 @@ export const getKey = (text) => {
 };
 
 export const getPresentationSlateName = (slate) => {
-  if (!isEmpty(slate.data.name)) {
-    return slate.data.name;
+  if (!isEmpty(slate.name)) {
+    return slate.name;
   }
 
   return slate.slatename;
 };
 
 export const getPresentationName = (user) => {
-  if (!isEmpty(user.data.name)) {
-    return user.data.name;
+  if (!isEmpty(user.name)) {
+    return user.name;
   }
 
   return user.username;

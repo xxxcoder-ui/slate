@@ -91,13 +91,8 @@ export default async (req, res) => {
     await Data.updateUserById({
       id: userByEmail.id,
       twitterId: twitterUser.id_str,
-      data: {
-        ...userByEmail.data,
-        twitter: {
-          username: twitterUser.screen_name,
-          verified: twitterUser.verified,
-        },
-      },
+      twitterUsername: twitterUser.screen_name,
+      twitterVerified: twitterUser.verified,
     });
     const token = JWT.sign(
       { id: userByEmail.id, username: userByEmail.username },

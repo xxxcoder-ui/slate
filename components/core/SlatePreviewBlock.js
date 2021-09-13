@@ -247,8 +247,8 @@ export class SlatePreviewBlock extends React.Component {
   render() {
     const slate = this.props.slate;
     let objects;
-    if (slate.data.preview) {
-      const cid = Strings.urlToCid(slate.data.preview);
+    if (slate.preview) {
+      const cid = Strings.urlToCid(slate.preview);
       let preview = slate.objects.find((each) => each.cid === cid);
       if (preview) {
         objects = [preview];
@@ -257,7 +257,7 @@ export class SlatePreviewBlock extends React.Component {
     if (!objects) {
       objects = [];
       for (let file of slate.objects) {
-        if (Validations.isPreviewableImage(file.data.type)) {
+        if (Validations.isPreviewableImage(file.type)) {
           objects.push(file);
         }
         if (objects.length >= 4) break;
@@ -306,7 +306,7 @@ export class SlatePreviewBlock extends React.Component {
         <span css={STYLES_MOBILE_HIDDEN}>
           <div css={STYLES_TITLE_LINE}>
             <div css={STYLES_TITLE} style={{ width: "85%" }}>
-              {this.props.slate.data.name}
+              {this.props.slate.name}
               {this.props.isOwner && !this.props.slate.isPublic && (
                 <span style={{ marginLeft: 8 }}>
                   <SVG.SecurityLock height="20px" />
@@ -333,9 +333,7 @@ export class SlatePreviewBlock extends React.Component {
               </div>
             )}
           </div>
-          <div css={STYLES_BODY}>
-            {this.props.slate.data.body ? this.props.slate.data.body : null}
-          </div>
+          <div css={STYLES_BODY}>{this.props.slate.body}</div>
           {objects.length === 0 ? (
             <div
               css={STYLES_PLACEHOLDER}
@@ -365,16 +363,16 @@ export class SlatePreviewBlock extends React.Component {
         </span>
         <span css={STYLES_MOBILE_ONLY}>
           <div css={STYLES_TITLE_LINE}>
-            <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
+            <div css={STYLES_TITLE}>{this.props.slate.name}</div>
             {this.props.isOwner && !this.props.slate.isPublic && (
               <div style={{ color: Constants.system.grayLight2, margin: `2px 0 0 0` }}>
                 <SVG.SecurityLock height="20px" />
               </div>
             )}
           </div>
-          {this.props.slate.data.body ? (
+          {this.props.slate.body ? (
             <div css={STYLES_BODY} style={{ marginBottom: 16 }}>
-              {this.props.slate.data.body}
+              {this.props.slate.body}
             </div>
           ) : (
             <div style={{ height: 8 }} />

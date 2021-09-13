@@ -44,8 +44,7 @@ const STYLES_MOBILE_ALIGN = (theme) => css`
 
 export default function ProfileInfo({ owner, viewer, time, action, onAction }) {
   const { isFollowing, handleFollow } = useFollowProfileHandler({ viewer, user: owner, onAction });
-  const { username, data = {} } = owner;
-  const { photo } = data;
+  const { username, photo } = owner;
 
   const formattedDate = Utilities.getTimeDifferenceFromNow(time);
   const mobileFormattedDate = Utilities.getTimeDifferenceFromNow(time, {

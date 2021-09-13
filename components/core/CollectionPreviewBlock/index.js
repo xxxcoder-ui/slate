@@ -14,6 +14,8 @@ import { AspectRatio } from "~/components/system";
 import { P3, H5, P2 } from "~/components/system/components/Typography";
 import { useMediaQuery, useMounted } from "~/common/hooks";
 
+import ProfilePhoto from "~/components/core/ProfilePhoto";
+
 const STYLES_CONTAINER = (theme) => css`
   position: relative;
   display: flex;
@@ -94,7 +96,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const showControls = () => setShowControls(true);
   const hideControls = () => setShowControls(false);
 
-  const description = collection?.data?.body;
+  const description = collection?.body;
   const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
     disabled: !description || media.mobile,
@@ -112,7 +114,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
 
   const { fileCount, isPublic } = collection;
-  const title = collection?.data?.name || collection.slatename;
+  const title = collection.name || collection.slatename;
   const isOwner = viewer?.id === collection.ownerId;
 
   const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
@@ -136,7 +138,7 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
                 onClick={follow}
                 isFollowed={isFollowed}
                 followCount={followCount}
-                disabled={collection.ownerId === viewer?.id}
+                disabled={viewer && collection.ownerId === viewer.id}
               />
               <ShareButton user={owner} preview={preview} collection={collection} />
             </motion.div>
@@ -231,12 +233,7 @@ function Metrics({ fileCount, owner, isOwner, onAction }) {
               aria-label={`Visit ${owner.username}'s profile`}
               title={`Visit ${owner.username}'s profile`}
             >
-              <img
-                css={STYLES_PROFILE_IMAGE}
-                src={owner?.data?.photo}
-                alt={`${owner.username} profile`}
-                onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
-              />
+              <ProfilePhoto user={owner} style={{ borderRadius: "4px" }} size={16} />
             </Link>
             <Link
               href={`/$/user/${owner.id}`}
@@ -340,7 +337,7 @@ const getObjectToPreview = (objects = []) => {
   let isImage = false;
 
   objects.some((object, i) => {
-    const isPreviewableImage = Validations.isPreviewableImage(object.data.type);
+    const isPreviewableImage = Validations.isPreviewableImage(object.type);
     if (isPreviewableImage) (objectIdx = i), (isImage = true);
     return isPreviewableImage;
   });

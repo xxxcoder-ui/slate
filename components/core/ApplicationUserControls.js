@@ -157,7 +157,7 @@ export class ApplicationUserControlsPopup extends React.Component {
   render() {
     if (this.props.popup !== "profile") return null;
 
-    const username = this.props.viewer.data.name || `@${this.props.viewer.username}`;
+    const username = this.props.viewer.name || `@${this.props.viewer.username}`;
     const objectsLength = this.props.viewer.library.length;
     const { stats } = this.props.viewer;
 

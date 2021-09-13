@@ -88,8 +88,8 @@ export default class SlateMediaObjectPreview extends React.Component {
   };
 
   setImage = () => {
-    let type = this.props.file.data?.type;
-    let coverImage = this.props.file.data?.coverImage;
+    let type = this.props.file.type;
+    let coverImage = this.props.file.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
       url = Strings.getURLfromCID(this.props.file.cid);
@@ -105,17 +105,16 @@ export default class SlateMediaObjectPreview extends React.Component {
 
   render() {
     const file = this.props.file;
-    const type = this.props.file.data?.type;
-    const coverImage = this.props.file.data?.coverImage;
+    const coverImage = this.props.file?.coverImage;
 
     let url = Utilities.getImageUrlIfExists(file);
 
     if (url) {
       const blurhash =
-        file.data.blurhash && isBlurhashValid(file.data?.blurhash).result
-          ? file.data?.blurhash
-          : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash).result
-          ? coverImage?.data.blurhash
+        file.blurhash && isBlurhashValid(file.blurhash).result
+          ? file.blurhash
+          : coverImage?.blurhash && isBlurhashValid(coverImage?.blurhash).result
+          ? coverImage?.blurhash
           : null;
       if (this.state.error) {
         return (
@@ -182,7 +181,7 @@ export default class SlateMediaObjectPreview extends React.Component {
       );
     }
 
-    let name = (file.data?.name || file.filename || "").substring(0, this.charCap);
+    let name = (file.name || file.filename || "").substring(0, this.charCap);
     let extension = Strings.getFileExtension(file.filename);
     if (extension && extension.length) {
       extension = extension.toUpperCase();

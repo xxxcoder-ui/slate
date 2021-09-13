@@ -40,9 +40,9 @@ const STYLES_TAG = (theme) => css`
 `;
 
 const PlaceholderPrimitive = ({ file, ratio }) => {
-  const { type, link } = file.data;
+  const { type, isLink } = file;
 
-  if (link) {
+  if (isLink) {
     return <LinkPlaceholder ratio={ratio} />;
   }
   if (type.startsWith("video/")) {
@@ -77,7 +77,7 @@ const PlaceholderPrimitive = ({ file, ratio }) => {
 };
 
 export default function Placeholder({ file, containerCss, ratio, showTag }) {
-  const { type } = file.data;
+  const { type } = file;
 
   const tag = React.useMemo(() => {
     if (!showTag) return false;

@@ -63,22 +63,20 @@ export default function ImageObjectPreview({
     ref: previewerRef,
   });
 
-  const { type, coverImage } = file.data;
+  const { type, coverImage } = file;
   const imgTag = type.split("/")[1];
 
   const blurhash = React.useMemo(() => {
-    return file.data.blurhash && isBlurhashValid(file.data.blurhash).result
-      ? file.data.blurhash
-      : coverImage?.data.blurhash && isBlurhashValid(coverImage?.data.blurhash).result
-      ? coverImage?.data.blurhash
+    return file.blurhash && isBlurhashValid(file.blurhash).result
+      ? file.blurhash
+      : coverImage?.blurhash && isBlurhashValid(coverImage?.blurhash).result
+      ? coverImage?.blurhash
       : null;
   }, [file]);
 
   const shouldShowPlaceholder = isLoading && blurhash;
 
-  const imageUrl = coverImage
-    ? coverImage?.data?.url || Strings.getURLfromCID(coverImage?.cid)
-    : url;
+  const imageUrl = coverImage ? coverImage?.url || Strings.getURLfromCID(coverImage?.cid) : url;
 
   return (
     <ObjectPreviewPrimitive file={file} tag={tag || imgTag} isImage {...props}>

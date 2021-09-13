@@ -278,7 +278,7 @@ export default class ApplicationLayout extends React.Component {
               this.props.page?.id === "NAV_SIGN_IN"
                 ? true
                 : this.props.viewer
-                ? this.props.viewer.data.status?.hidePrivacyAlert
+                ? this.props.viewer.onboarding.hidePrivacyAlert
                 : false
             }
             fileLoading={this.props.fileLoading}

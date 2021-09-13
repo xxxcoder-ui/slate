@@ -11,17 +11,20 @@ export default async (req, res) => {
   const { id, user } = userInfo;
 
   // NOTE(jim): remove their public slates and files from the search cache.
-  let slates = await Data.getSlatesByUserId({ ownerId: user.id, publicOnly: true });
+  let slates = await Data.getSlatesByUserId({ ownerId: id, publicOnly: true });
   SearchManager.updateSlate(slates, "REMOVE");
 
-  let files = await Data.getFilesByUserId({ id: user.id, publicOnly: true });
+  let files = await Data.getFilesByUserId({ id, publicOnly: true });
   SearchManager.updateFile(files, "REMOVE");
 
+  //NOTE(migration): may be able to just condense these two parts since they return it from delete anyways
   // NOTE(jim): delete all of their public and private slates.
-  await Data.deleteSlatesByUserId({ ownerId: user.id });
+  slates = await Data.deleteSlatesByUserId({ ownerId: id });
+  console.log({ slates });
 
   // NOTE(martina): delete all of their public and private files.
-  await Data.deleteFilesByUserId({ ownerId: user.id });
+  files = await Data.deleteFilesByUserId({ ownerId: id });
+  console.log({ files });
 
   const defaultData = await Utilities.getBucketAPIFromUserToken({ user });
 
@@ -46,7 +49,7 @@ export default async (req, res) => {
 
   // NOTE(jim): remove orphan
   await Data.createOrphan({
-    data: { token: user.data.tokens.api },
+    data: { token: user.textileToken },
   });
 
   // NOTE(jim): finally delete user by id (irreversible)

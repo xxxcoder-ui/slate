@@ -10,7 +10,6 @@ import * as UserBehaviors from "~/common/user-behaviors";
 
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
-import { Link } from "~/components/core/Link";
 
 const STYLES_TEXT = css`
   color: ${Constants.semantic.textGray};
@@ -113,14 +112,14 @@ export default class SidebarCreateSlate extends React.Component {
 
         <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Name</System.P1>
-          {/* <System.P1
+          <System.P1
             css={STYLES_TEXT}
             style={{
               marginTop: 12,
             }}
           >
-            Give your collection a name so you and others can find it on Slate and on the web.
-          </System.P1> */}
+            Note: Changing the collection name will break any old links to the collection.
+          </System.P1>
 
           <System.Input
             autoFocus
@@ -132,6 +131,7 @@ export default class SidebarCreateSlate extends React.Component {
             onSubmit={this._handleSubmit}
             descriptionStyle={{ fontSize: "20px !important" }}
             labelStyle={{ fontSize: "20px" }}
+            maxLength="255"
           />
           <System.P1
             style={{
@@ -162,6 +162,7 @@ export default class SidebarCreateSlate extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
+            maxLength="2000"
           />
         </div>
 

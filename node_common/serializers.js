@@ -1,192 +1,65 @@
-//NOTE(martina): when you add any new variable to the user, file, or slate objects, add it in these structures
-//add it to sanitize___ if it should be sent to the front end
-//add it to clean____ if it should be saved to the database
+// //NOTE(martina): clean the object before adding it to the database
+// export const cleanUser = (user) => {
+//   return {
+//     id: user.id,
+//     createdAt: user.createdAt,
+//     lastActive: user.lastActive,
+//     username: user.username,
+//     password: user.password,
+//     salt: user.salt,
+//     email: user.email,
+//     followerCount: user.followerCount,
+//     slateCount: user.slateCount,
+//     twitterId: user.twitterId,
+//     authVersion: user.authVersion,
+//     revertedVersion: user.revertedVersion,
+//     body: user.body,
+//     photo: user.photo,
+//     name: user.name,
+//     twitterUsername: user.twitterUsername,
+//     twitterVerified: user.twitterVerified,
+//     textileToken: user.textileToken,
+//     settingsDealAutoApprove: user.settingsDealAutoApprove,
+//     allowAutomaticDataStorage: user.allowAutomaticDataStorage,
+//     allowEncryptedDataStorage: user.allowEncryptedDataStorage,
+//     onboarding: user.onboarding,
+//   };
+// };
 
-//NOTE(martina): these functions are to remove sensitive information before sending the data to the front end
-//only variables listed here will be sent to the front end
+//NOTE(martina): add a variable to sanitizeUser if it should be sent to the front end. Otherwise, it will be filtered out
 
-export const sanitizeUser = (entity) => {
+export const sanitizeUser = (user) => {
   return {
-    id: entity.id,
-    username: entity.username,
-    slates: entity.slates, //NOTE(martina): this is not in the database. It is added after
-    library: entity.library, //NOTE(martina): this is not in the database. It is added after
-    data: {
-      name: entity.data?.name,
-      photo: entity.data?.photo,
-      body: entity.data?.body,
-    },
-    followerCount: entity.followerCount,
-    slateCount: entity.slateCount,
+    id: user.id,
+    createdAt: user.createdAt,
+    lastActive: user.lastActive,
+    username: user.username,
+    slates: user.slates, //NOTE(martina): this is not in the database. It is added after
+    library: user.library, //NOTE(martina): this is not in the database. It is added after
+    name: user.name,
+    body: user.body,
+    photo: user.photo,
+    followerCount: user.followerCount,
+    slateCount: user.slateCount,
+    twitterUsername: user.twitterUsername,
+    twitterVerified: user.twitterVerified,
   };
 };
 
-export const sanitizeSlate = (entity) => {
-  return {
-    id: entity.id,
-    slatename: entity.slatename,
-    ownerId: entity.ownerId,
-    isPublic: entity.isPublic,
-    objects: entity.objects,
-    owner: entity.owner,
-    user: entity.user, //NOTE(martina): this is not in the database. It is added after
-    data: {
-      name: entity.data?.name,
-      body: entity.data?.body,
-      preview: entity.data?.preview,
-    },
-    fileCount: entity.fileCount,
-    subscriberCount: entity.subscriberCount,
-  };
-};
-
-export const sanitizeFile = (entity) => {
-  return {
-    id: entity.id,
-    cid: entity.cid,
-    ownerId: entity.ownerId,
-    isPublic: entity.isPublic,
-    filename: entity.filename,
-    createdAt: entity.createdAt,
-    data: {
-      type: entity.data?.type,
-      name: entity.data?.name,
-      size: entity.data?.size,
-      body: entity.data?.body,
-      source: entity.data?.source,
-      author: entity.data?.author,
-      blurhash: entity.data?.blurhash,
-      coverImage: entity.data?.coverImage,
-      tags: entity.data?.tags, //NOTE(martina): newly added
-      unity: entity.data?.unity, //NOTE(martina): newly added
-      link: entity.data?.link, //NOTE(martina): newly added
-    },
-    downloadCount: entity.downloadCount,
-    saveCount: entity.saveCount,
-    isLink: entity.isLink,
-    url: entity.url,
-  };
-};
-
-//NOTE(martina): these functions are to remove extraneous information before updating the database entry.
-//Only variables included here will be added to the database
-
-export const cleanUser = (entity) => {
-  return {
-    id: entity.id,
-    username: entity.username,
-    createdAt: entity.createdAt,
-    lastActive: entity.lastActive,
-    salt: entity.salt,
-    password: entity.password,
-    email: entity.email,
-    twitterId: entity.twitterId,
-    authVersion: entity.authVersion,
-    data: entity.data,
-    // data: {
-    //   name: entity.data?.name,
-    //   photo: entity.data?.photo,
-    //   body: entity.data?.body,
-    //   tokens: entity.data?.tokens,
-    //   settings: entity.data?.settings,
-    //   onboarding: entity.data?.onboarding,
-    //   status: entity.data?.status,
-    // },
-  };
-};
-
-export const cleanSlate = (entity) => {
-  return {
-    id: entity.id,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
-    slatename: entity.slatename,
-    isPublic: entity.isPublic,
-    ownerId: entity.ownerId,
-    data: entity.data,
-    // data: {
-    //   name: entity.data?.name,
-    //   body: entity.data?.body,
-    //   preview: entity.data?.preview,
-    // },
-  };
-};
-
-export const cleanFile = (entity) => {
-  return {
-    id: entity.id,
-    cid: entity.cid,
-    createdAt: entity.createdAt,
-    ownerId: entity.ownerId,
-    isPublic: entity.isPublic,
-    filename: entity.filename,
-    data: entity.data,
-    isLink: entity.isLink,
-    url: entity.url,
-    // data: {
-    //   type: entity.data?.type,
-    //   name: entity.data?.name,
-    //   size: entity.data?.size,
-    //   body: entity.data?.body,
-    //   source: entity.data?.source,
-    //   author: entity.data?.author,
-    //   blurhash: entity.data?.blurhash,
-    //   coverImage: entity.data?.coverImage,
-    //   downloads: entity.data?.downloads,
-    //   tags: entity.data?.tags,
-    //   unity: entity.data?.unity,
-    //   link: entity.data?.link,
-    // },
-  };
-};
-
-//NOTE(martina): these functions are used to get the updated object that is obtained by merging the old and new objects
-// and using the above cleaning functions to strip out things that should not be in the database or should not be mutated
-
-export const getUpdatedSlate = (oldSlate, updates) => {
-  let updatedSlate = cleanSlate(updates);
-  return { ...oldSlate, ...updatedSlate, data: { ...oldSlate.data, ...updatedSlate.data } };
-};
-
-export const getUpdatedFile = (oldFile, updates) => {
-  let updatedFile = cleanFile(updates);
-  return { ...oldFile, ...updatedFile, data: { ...oldFile.data, ...updatedFile.data } };
-};
-
-export const getUpdatedUser = (oldUser, updates) => {
-  let updatedUser = cleanUser(updates);
-  return { ...oldUser, ...updatedUser, data: { ...oldUser.data, ...updatedUser.data } };
-};
-
-//NOTE(martina): list of the properties of the tables that should be returned by db queries
-export const slateProperties = [
-  "slates.id",
-  "slates.slatename",
-  "slates.data",
-  "slates.ownerId",
-  "slates.isPublic",
-  "slates.subscriberCount",
-  "slates.fileCount",
-];
-
-export const userProperties = [
+//NOTE(martina): the user public properties list filters out sensitive information
+export const userPublicProperties = [
   "users.id",
+  "users.createdAt",
+  "users.lastActive",
   "users.username",
-  "users.data",
+  "users.name",
+  "users.body",
+  "users.photo",
   "users.slateCount",
   "users.followerCount",
+  "users.twitterUsername",
+  "users.twitterVerified",
 ];
 
-export const fileProperties = [
-  "files.id",
-  "files.ownerId",
-  "files.cid",
-  "files.isPublic",
-  "files.filename",
-  "files.data",
-  "files.createdAt",
-  "files.downloadCount",
-  "files.saveCount",
-  "files.isLink",
-  "files.url",
-];
+//NOTE(martina): the user preview properties list contains the minimal info needed to preview the owner of a file or slate
+export const userPreviewProperties = ["users.id", "users.name", "users.username", "users.photo"];

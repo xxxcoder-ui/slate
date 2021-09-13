@@ -108,7 +108,7 @@ export default async (req, res) => {
 
   // NOTE(jim): Either encrypt the bucket or don't encrypt the bucket.
   let encryptThisDeal = false;
-  if (bucketName !== STAGING_DEAL_BUCKET && user.data.settings?.allow_encrypted_data_storage) {
+  if (bucketName !== STAGING_DEAL_BUCKET && user.allowEncryptedDataStorage) {
     encryptThisDeal = true;
   }
 
@@ -118,7 +118,7 @@ export default async (req, res) => {
 
   let key = bucketRoot.key;
   let encryptedBucketName = null;
-  if (user.data.settings?.allow_encrypted_data_storage || req.body.data.forceEncryption) {
+  if (user.allowEncryptedDataStorage || req.body.data.forceEncryption) {
     encryptedBucketName = req.body.data.forceEncryption
       ? `encrypted-deal-${uuid()}`
       : `encrypted-data-${uuid()}`;

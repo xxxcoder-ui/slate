@@ -79,7 +79,7 @@ export default class SlateMediaObject extends React.Component {
   componentDidMount() {
     const file = this.props.file;
     if (this.props.isMobile) {
-      if (file.data.type && file.data.type.startsWith("application/pdf")) {
+      if (file.type && file.type.startsWith("application/pdf")) {
         const url = Strings.getURLfromCID(file.cid);
         this.openLink(url);
       }
@@ -88,7 +88,7 @@ export default class SlateMediaObject extends React.Component {
 
   render() {
     const { file, isMobile } = this.props;
-    const type = file.data.type || "";
+    const type = file.type || "";
 
     if (file.isLink) {
       return <SlateLinkObject {...this.props} />;
@@ -167,7 +167,7 @@ export default class SlateMediaObject extends React.Component {
     if (Validations.isFontFile(file.filename)) {
       return (
         <FontFrame
-          name={file.data.name || file.filename}
+          name={file.name || file.filename}
           cid={file.cid}
           fallback={element}
           onClick={(e) => {

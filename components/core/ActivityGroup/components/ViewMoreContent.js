@@ -29,7 +29,7 @@ const STYLES_SHOW_MORE_PREVIEWS = (theme) => css`
 `;
 
 const getImageCover = (item) => {
-  const coverImage = item?.data?.coverImage;
+  const coverImage = item?.coverImage;
   const imageUrl = Strings.getURLfromCID(coverImage ? coverImage?.cid : item.cid);
   return imageUrl;
 };
@@ -41,8 +41,7 @@ export default function ViewMoreContent({ items, children, ...props }) {
         {items && (
           <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
             {items?.slice(0, 3).map((file) => {
-              const isImageFile =
-                Validations.isPreviewableImage(file?.data?.type) || file?.data?.coverImage;
+              const isImageFile = Validations.isPreviewableImage(file?.type) || file?.coverImage;
               return (
                 <div
                   key={file.id}

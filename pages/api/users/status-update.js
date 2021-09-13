@@ -13,7 +13,7 @@ export default async (req, res) => {
 
   let updateResponse;
   if (req.body.data?.onboarding) {
-    let onboarding = user.data.onboarding;
+    let onboarding = user.onboarding;
     if (!onboarding) {
       onboarding = {};
     }
@@ -23,31 +23,11 @@ export default async (req, res) => {
 
     updateResponse = await Data.updateUserById({
       id: user.id,
-      data: { onboarding },
+      onboarding,
     });
 
     if (!updateResponse || updateResponse.error) {
       return res.status(500).send({
-        decorator: "SERVER_STATUS_UPDATE_FAILED",
-        error: true,
-      });
-    }
-  } else if (req.body.data?.status) {
-    let status = user.data.status;
-    if (!status) {
-      status = {};
-    }
-    for (let [key, value] of Object.entries(req.body.data.status)) {
-      status[key] = value;
-    }
-
-    updateResponse = await Data.updateUserById({
-      id: user.id,
-      data: { status },
-    });
-
-    if (!updateResponse || updateResponse.error) {
-      return res.status(404).send({
         decorator: "SERVER_STATUS_UPDATE_FAILED",
         error: true,
       });

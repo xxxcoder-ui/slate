@@ -125,7 +125,7 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
           {isOnline ? <div css={STYLES_STATUS_INDICATOR} /> : null}
         </div>
         <span css={STYLES_NAME}>
-          {user.data.name || `@${user.username}`}
+          {user.name || `@${user.username}`}
           {message ? <span css={STYLES_MESSAGE}>{message}</span> : null}
         </span>
       </div>

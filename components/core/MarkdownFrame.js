@@ -20,7 +20,7 @@ const STYLES_ASSET = (theme) => css`
 
 const STYLES_BODY = css`
   width: 100%;
-  // 687px to ensure we have maximum 70ch per line
+  /* 687px to ensure we have maximum 70ch per line */
   max-width: 687px;
   margin: 0 auto;
   & > *:first-child {

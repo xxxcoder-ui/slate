@@ -70,7 +70,7 @@ export default function Preview({
   }
 
   if (type === "IMAGE") {
-    const { coverImage } = file.data;
+    const { coverImage } = file;
     const blurhash = getFileBlurHash(file);
     const previewImage = coverImage
       ? Strings.getURLfromCID(coverImage?.cid)
@@ -112,11 +112,11 @@ export default function Preview({
 }
 
 const getFileBlurHash = (file) => {
-  const coverImage = file?.data?.coverImage;
-  const coverImageBlurHash = coverImage?.data?.blurhash;
+  const coverImage = file?.coverImage;
+  const coverImageBlurHash = coverImage?.blurhash;
   if (coverImage && isBlurhashValid(coverImageBlurHash).result) return coverImageBlurHash;
 
-  const blurhash = file?.data?.blurhash;
+  const blurhash = file?.blurhash;
   if (isBlurhashValid(blurhash).result) return blurhash;
 
   return null;

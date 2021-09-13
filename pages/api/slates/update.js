@@ -30,6 +30,10 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_UPDATE_SLATE_NOT_FOUND", error: true });
   }
 
+  if (updates.body && updates.body.length > 2000) {
+    return res.status(400).send({ decorator: "SERVER_UPDATE_SLATE_MAX_BODY_LENGTH", error: true });
+  }
+
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
     let privacyResponse = await Data.updateSlatePrivacy({
       ownerId: id,
@@ -50,8 +54,8 @@ export default async (req, res) => {
     }
   }
 
-  if (updates.data.name && updates.data.name !== slate.data.name) {
-    if (!Validations.slatename(slate.data.name)) {
+  if (updates.name && updates.name !== slate.name) {
+    if (!Validations.slatename(slate.name)) {
       return res.status(400).send({
         decorator: "SERVER_UPDATE_SLATE_INVALID_NAME",
         error: true,
@@ -59,7 +63,7 @@ export default async (req, res) => {
     }
 
     const existingSlate = await Data.getSlateByName({
-      slatename: updates.data.name,
+      slatename: updates.name,
       ownerId: user.id,
     });
 
@@ -69,7 +73,7 @@ export default async (req, res) => {
         error: true,
       });
     } else {
-      updates.slatename = Strings.createSlug(updates.data.name);
+      updates.slatename = Strings.createSlug(updates.name);
     }
   }
 

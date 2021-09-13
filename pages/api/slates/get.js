@@ -7,7 +7,6 @@ export default async (req, res) => {
   const response = await Data.getSlateById({
     id: req.body.data.id,
     includeFiles: true,
-    sanitize: true,
   });
 
   if (!response) {

@@ -104,9 +104,7 @@ const STYLES_SOURCE_LOGO = css`
 `;
 
 export default function LinkCard({ file, isNFTLink }) {
-  const url = file.url;
-  const link = file.data.link;
-  const { image, name, body } = link;
+  const { url, linkImage, linkName, linkBody } = file;
 
   if (isNFTLink) {
     const faviconImgState = useImage({ src: link.logo });
@@ -181,14 +179,14 @@ export default function LinkCard({ file, isNFTLink }) {
     >
       <div css={[Styles.VERTICAL_CONTAINER, STYLES_CARD]}>
         <div css={STYLES_IMAGE_CONTAINER}>
-          <img src={image} css={Styles.IMAGE_FILL} />
+          <img src={linkImage} css={Styles.IMAGE_FILL} />
         </div>
         <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>
           <div css={STYLES_NAME}>
-            <System.H3>{name}</System.H3>
+            <System.H3>{linkName}</System.H3>
           </div>
           <div css={STYLES_BODY}>
-            <System.P1>{body}</System.P1>
+            <System.P1>{linkBody}</System.P1>
           </div>
           <LinkTag url={url} fillWidth={false} style={{ color: Constants.semantic.textGray }} />
         </div>
@@ -201,11 +199,11 @@ export default function LinkCard({ file, isNFTLink }) {
       style={{ backgroundColor: Constants.semantic.bgLight, height: "100%" }}
     >
       <div css={STYLES_IMAGE_CONTAINER}>
-        <img src={image} style={{ width: "100%" }} />
+        <img src={linkImage} style={{ width: "100%" }} />
       </div>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
         <System.H3 style={{ marginBottom: 16, color: Constants.semantic.textBlack }}>
-          {name}
+          {linkName}
         </System.H3>
         <LinkTag fillWidth={false} url={url} style={{ marginBottom: 16 }} />
         <LoaderSpinner style={{ height: 24, width: 24 }} />

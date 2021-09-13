@@ -27,7 +27,7 @@ const app = next({
 
 const createLimiter = limit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5,
+  max: 10,
   message: {
     decorator: "SIGN_UP_RATE_LIMITED",
     error: true,
@@ -37,7 +37,7 @@ const createLimiter = limit({
 
 const loginLimiter = limit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5,
+  max: 10,
   message: {
     decorator: "SIGN_IN_RATE_LIMITED",
     error: true,
@@ -261,7 +261,6 @@ app.prepare().then(async () => {
 
     const slates = await Data.getSlatesByUserId({
       ownerId: user.id,
-      sanitize: true,
       includeFiles: true,
       publicOnly: true,
     });
@@ -308,7 +307,6 @@ app.prepare().then(async () => {
 
   //   const slates = await Data.getSlatesByUserId({
   //     ownerId: user.id,
-  //     sanitize: true,
   //     includeFiles: true,
   //     publicOnly: true,
   //   });
@@ -366,7 +364,6 @@ app.prepare().then(async () => {
       slatename,
       username,
       includeFiles: true,
-      sanitize: true,
     });
 
     if (!slate || slate.error || (!slate.isPublic && slate.ownerId !== id)) {
@@ -416,7 +413,6 @@ app.prepare().then(async () => {
   //     slatename,
   //     username,
   //     includeFiles: true,
-  //     sanitize: true,
   //   });
 
   //   if (!slate) {

@@ -1,5 +1,4 @@
 import "isomorphic-fetch";
-import microlink from "@microlink/mql";
 
 import * as Logging from "~/common/logging";
 import * as Events from "~/common/custom-events";

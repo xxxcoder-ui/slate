@@ -41,7 +41,7 @@ export const upload = ({ user, slate, files: targetFiles }) => {
     let message;
     if (slate) {
       const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
-      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.name}>`;
       message = `*${userURL}* uploaded ${objectURL}${extra} to ${slateURL}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
@@ -88,7 +88,7 @@ export const saveCopy = ({ slate, user, files: targetFiles }) => {
     let message;
     if (slate) {
       const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
-      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+      const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.name}>`;
       message = `*${userURL}* saved ${objectURL}${extra} to ${slateURL}`;
     } else {
       const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
@@ -105,7 +105,7 @@ export const createSlate = ({ user, slate }) => {
   if (!slate.isPublic) return;
   try {
     const userURL = getUserURL(user);
-    const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.data.name}>`;
+    const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.name}>`;
     const message = `*${userURL}* created a collection ${slateURL}`;
 
     Social.sendSlackMessage(message);
@@ -142,7 +142,7 @@ export const subscribeSlate = ({ user, targetSlate }) => {
   if (!targetSlate.isPublic) return;
   try {
     const userURL = getUserURL(user);
-    const targetSlateURL = `<https://slate.host/$/${targetSlate.id}|${targetSlate.data.name}>`;
+    const targetSlateURL = `<https://slate.host/$/${targetSlate.id}|${targetSlate.name}>`;
 
     const message = `*${userURL}* subscribed to ${targetSlateURL}`;
 

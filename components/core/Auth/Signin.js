@@ -182,7 +182,7 @@ export default function Signin({
     );
   }
   return (
-    <SignUpPopover title={`Enter Password for ${emailOrUsername}`}>
+    <SignUpPopover title={`Enter Password for ${emailOrUsername.toLowerCase()}`}>
       <form {...getFormProps()} style={{ marginTop: message ? 24 : 41 }}>
         {message && (
           <div css={STYLES_MESSAGE}>

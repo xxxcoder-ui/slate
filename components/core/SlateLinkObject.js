@@ -31,21 +31,19 @@ export default class SlateLinkObject extends React.Component {
 
   render() {
     const isMobile = this.props.isMobile;
-    const url = this.props.file.url;
-    const link = this.props.file.data.link;
-    const { html, iFrameAllowed } = link;
+    const { url, linkHtml, linkIFrameAllowed } = this.props.file;
     const isNFTLink = Validations.isNFTLink(this.props.file);
 
-    if (html) {
+    if (linkHtml) {
       return (
         <div
           style={{ width: "90%", maxHeight: "90%" }}
           dangerouslySetInnerHTML={{
-            __html: html,
+            __html: linkHtml,
           }}
         />
       );
-    } else if (iFrameAllowed && !isMobile && !isNFTLink) {
+    } else if (linkIFrameAllowed && !isMobile && !isNFTLink) {
       return (
         <div
           style={{ position: "relative", display: "block", width: "100%", height: "100%" }}

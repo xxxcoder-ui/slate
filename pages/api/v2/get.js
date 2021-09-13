@@ -11,7 +11,6 @@ export default async (req, res) => {
 
   let slates = await Data.getSlatesByUserId({
     ownerId: id,
-    sanitize: true,
     includeFiles: true,
   });
 

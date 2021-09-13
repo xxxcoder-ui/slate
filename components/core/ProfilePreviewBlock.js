@@ -43,7 +43,7 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
     <div css={STYLES_CONTAINER}>
       <img
         css={STYLES_PROFILE_PREVIEW}
-        src={profile.data.photo}
+        src={profile.photo}
         alt={`${profile.username}`}
         onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
       />
@@ -66,9 +66,9 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
       <Typography.P2
         color="gray"
         nbrOflines={1}
-        style={{ marginTop: 8, textIndent: 8, opacity: profile?.data?.body ? 1 : 0 }}
+        style={{ marginTop: 8, textIndent: 8, opacity: profile?.body ? 1 : 0 }}
       >
-        {profile?.data?.body || "No Description"}
+        {profile?.body || "No Description"}
       </Typography.P2>
 
       {!isOwner &&

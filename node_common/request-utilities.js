@@ -46,6 +46,7 @@ export const checkAuthorizationExternal = async (req, res) => {
   if (!key) {
     return res.status(403).send({
       decorator: "NO_MATCHING_API_KEY_FOUND",
+      message: "We could not find that API key in our records",
       error: true,
     });
   }
@@ -53,6 +54,7 @@ export const checkAuthorizationExternal = async (req, res) => {
   if (key.error) {
     return res.status(500).send({
       decorator: "ERROR_WHILE_VERIFYING_API_KEY",
+      message: "We ran into an error while verifying that API key. Please try again",
       error: true,
     });
   }
@@ -64,6 +66,7 @@ export const checkAuthorizationExternal = async (req, res) => {
   if (!user) {
     return res.status(404).send({
       decorator: "API_KEY_OWNER_NOT_FOUND",
+      message: "We were unable to find the owner of that API key",
       error: true,
     });
   }
@@ -71,6 +74,8 @@ export const checkAuthorizationExternal = async (req, res) => {
   if (user.error) {
     return res.status(500).send({
       decorator: "ERROR_WHILE_LOCATING_API_KEY_OWNER",
+      message:
+        "We ran into an error while trying to find the owner of that API key. Please try again",
       error: true,
     });
   }

@@ -127,6 +127,7 @@ export const uploadFiles = async ({ context, files, slate, keys, numFailed = 0 }
   context._handleRegisterLoadingFinished({ keys });
 };
 
+//NOTE(migration): check that upload works still and file.name
 export const upload = async ({ file, context, bucketName }) => {
   const currentFileKey = fileKey(file);
   let formData = new FormData();
@@ -253,12 +254,12 @@ export const upload = async ({ file, context, bucketName }) => {
   }
 
   let item = res.data.data;
-  if (item.data.type.startsWith("image/")) {
+  if (item.type.startsWith("image/")) {
     let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);
       if (isBlurhashValid(blurhash).result) {
-        item.data.blurhash = blurhash;
+        item.blurhash = blurhash;
       }
     } catch (e) {
       Logging.error(e);

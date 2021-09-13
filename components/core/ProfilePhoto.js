@@ -69,8 +69,8 @@ export default function ProfilePhoto({ size, style, ...props }) {
 
   return (
     <>
-      {props.user.data.photo ? (
-        <UploadedAvatar url={props.user.data.photo} style={style} avatarCss={STYLES_SIZE} />
+      {props.user.photo ? (
+        <UploadedAvatar url={props.user.photo} style={style} avatarCss={STYLES_SIZE} />
       ) : (
         <BoringAvatar userId={props.user.id} style={style} avatarCss={STYLES_SIZE} />
       )}

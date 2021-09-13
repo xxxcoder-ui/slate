@@ -212,32 +212,32 @@ export default class SceneSlate extends React.Component {
       );
     } else {
       let title, description, file, image;
-      let name = slate.data.name;
+      let name = slate.name;
       if (this.props.page.params?.cid) {
         file = slate.objects.find((file) => file.cid === this.props.page.params.cid);
       }
       if (file) {
-        title = `${file.data.name || file.filename}`;
-        description = file.data.body
-          ? file.data.body
+        title = `${file.name || file.filename}`;
+        description = file.body
+          ? file.body
           : `View ${title}, a file in the collection ${name} on Slate`;
         image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
       } else {
-        if (slate.data.body) {
-          description = `${name}. ${slate.data.body}`;
+        if (slate.body) {
+          description = `${name}. ${slate.body}`;
         } else {
           description = `View the collection ${name} on Slate`;
         }
         title = `${name} • Slate`;
-        image = slate.data.preview;
+        image = slate.preview;
         const objects = slate.objects;
         if (!image && objects) {
           for (let i = 0; i < objects.length; i++) {
             if (
-              objects[i].data.type &&
-              Validations.isPreviewableImage(objects[i].data.type) &&
-              objects[i].data.size &&
-              objects[i].data.size < Constants.linkPreviewSizeLimit
+              objects[i].type &&
+              Validations.isPreviewableImage(objects[i].type) &&
+              objects[i].size &&
+              objects[i].size < Constants.linkPreviewSizeLimit
             ) {
               image = Strings.getURLfromCID(objects[i].cid);
               break;
@@ -339,7 +339,7 @@ class SlatePage extends React.Component {
     let slateId = this.props.data.id;
     for (let slate of slates) {
       if (slate.id === slateId) {
-        slate.data.preview = preview;
+        slate.preview = preview;
         break;
       }
     }
@@ -393,7 +393,7 @@ class SlatePage extends React.Component {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    const slateName = this.props.data.data.name;
+    const slateName = this.props.data.slatename;
     const slateFiles = this.props.data.objects;
     UserBehaviors.compressAndDownloadFiles({
       files: slateFiles,
@@ -402,11 +402,8 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, data } = this.props.data;
-    const { body = "", preview } = data;
-    let objects = this.props.data.objects;
-    const isPublic = this.props.data.isPublic;
-    const isOwner = this.props.viewer ? this.props.data.ownerId === this.props.viewer.id : false;
+    const { user, name, objects, body, isPublic, ownerId } = this.props.data;
+    const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     let actions = isOwner ? (
       <span>
@@ -456,11 +453,11 @@ class SlatePage extends React.Component {
                     {user.username}
                   </span>{" "}
                 </Link>
-                / {data.name}
+                / {name}
               </span>
             ) : (
               <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                <span>{data.name}</span>
+                <span>{name}</span>
                 {isOwner && !isPublic && (
                   <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 16 }}>
                     <SVG.SecurityLock height="16px" style={{ display: "block" }} />
@@ -498,7 +495,6 @@ class SlatePage extends React.Component {
                 viewer={this.props.viewer}
                 items={objects}
                 view={"grid"}
-                resources={this.props.resources}
                 isOwner={isOwner}
                 page={this.props.page}
               />

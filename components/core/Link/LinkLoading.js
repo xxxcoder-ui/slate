@@ -17,22 +17,20 @@ const STYLES_IMAGE_CONTAINER = css`
 `;
 
 export default function LinkLoading({ file }) {
-  const url = file.url;
-  const { link } = file.data;
-  const { image, name } = link;
+  const { url, linkImage, linkName } = file;
   return (
     <div
       css={Styles.VERTICAL_CONTAINER_CENTERED}
       style={{ backgroundColor: Constants.semantic.bgLight, height: "100%" }}
     >
       <div css={STYLES_IMAGE_CONTAINER}>
-        <img src={image} css={Styles.IMAGE_FILL} />
+        <img src={linkImage} css={Styles.IMAGE_FILL} />
       </div>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
         <System.H3
           style={{ marginBottom: 16, color: Constants.semantic.textBlack, textAlign: "center" }}
         >
-          {name}
+          {linkName}
         </System.H3>
         <span style={{ marginBottom: 16 }}>
           <LinkTag

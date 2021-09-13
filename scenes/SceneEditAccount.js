@@ -46,14 +46,12 @@ export default class SceneEditAccount extends React.Component {
     username: this.props.viewer.username,
     password: "",
     confirm: "",
-    body: this.props.viewer.data.body,
-    photo: this.props.viewer.data.photo,
-    name: this.props.viewer.data.name,
+    body: this.props.viewer.body,
+    photo: this.props.viewer.photo,
+    name: this.props.viewer.name,
     deleting: false,
-    allow_filecoin_directory_listing: this.props.viewer.data.settings
-      ?.allow_filecoin_directory_listing,
-    allow_automatic_data_storage: this.props.viewer.data.settings?.allow_automatic_data_storage,
-    allow_encrypted_data_storage: this.props.viewer.data.settings?.allow_encrypted_data_storage,
+    allowAutomaticDataStorage: this.props.viewer.allowAutomaticDataStorage,
+    allowEncryptedDataStorage: this.props.viewer.allowEncryptedDataStorage,
     changingPassword: false,
     changingAvatar: false,
     savingNameBio: false,
@@ -73,7 +71,7 @@ export default class SceneEditAccount extends React.Component {
     const cid = file.cid;
     const url = Strings.getURLfromCID(cid);
     let updateResponse = await Actions.updateViewer({
-      data: {
+      user: {
         photo: Strings.getURLfromCID(cid),
       },
     });
@@ -86,12 +84,9 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingFilecoin: true });
 
     let response = await Actions.updateViewer({
-      data: {
-        settings: {
-          allow_filecoin_directory_listing: this.state.allow_filecoin_directory_listing,
-          allow_automatic_data_storage: this.state.allow_automatic_data_storage,
-          allow_encrypted_data_storage: this.state.allow_encrypted_data_storage,
-        },
+      user: {
+        allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
+        allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
       },
     });
 
@@ -108,13 +103,15 @@ export default class SceneEditAccount extends React.Component {
       return;
     }
 
-    let data = { ...this.props.viewer.data, body: this.state.body, name: this.state.name };
-    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { username: this.state.username, data } });
+    this.props.onAction({
+      type: "UPDATE_VIEWER",
+      viewer: { username: this.state.username, name: this.state.name, body: this.state.body },
+    });
     this.setState({ savingNameBio: true });
 
     let response = await Actions.updateViewer({
-      username: this.state.username,
-      data: {
+      user: {
+        username: this.state.username,
         photo: this.state.photo,
         body: this.state.body,
         name: this.state.name,
@@ -130,13 +127,10 @@ export default class SceneEditAccount extends React.Component {
   };
 
   _handleChangePassword = async (e) => {
-    if (this.state.password !== this.state.confirm) {
-      Events.dispatchMessage({ message: "Passwords did not match" });
-      return;
-    }
-
     if (!Validations.password(this.state.password)) {
-      Events.dispatchMessage({ message: "Password length must be more than 8 characters" });
+      Events.dispatchMessage({
+        message: "Password does not meet requirements",
+      });
       return;
     }
 
@@ -144,7 +138,7 @@ export default class SceneEditAccount extends React.Component {
 
     let response = await Actions.updateViewer({
       type: "CHANGE_PASSWORD",
-      password: this.state.password,
+      user: { password: this.state.password },
     });
 
     if (Events.hasError(response)) {
@@ -227,6 +221,7 @@ export default class SceneEditAccount extends React.Component {
 
               <div css={STYLES_HEADER}>Bio</div>
               <System.Textarea
+                maxLength="2000"
                 name="body"
                 value={this.state.body}
                 placeholder="A bit about yourself..."
@@ -256,18 +251,9 @@ export default class SceneEditAccount extends React.Component {
               </div>
 
               <System.CheckBox
-                style={{ marginTop: 48 }}
-                name="allow_filecoin_directory_listing"
-                value={this.state.allow_filecoin_directory_listing}
-                onChange={this._handleChange}
-              >
-                Show your successful deals on a directory page where others can retrieve them.
-              </System.CheckBox>
-
-              <System.CheckBox
                 style={{ marginTop: 24 }}
-                name="allow_automatic_data_storage"
-                value={this.state.allow_automatic_data_storage}
+                name="allowAutomaticDataStorage"
+                value={this.state.allowAutomaticDataStorage}
                 onChange={this._handleChange}
               >
                 Allow Slate to make archive storage deals on your behalf to the Filecoin Network.
@@ -276,8 +262,8 @@ export default class SceneEditAccount extends React.Component {
 
               <System.CheckBox
                 style={{ marginTop: 24 }}
-                name="allow_encrypted_data_storage"
-                value={this.state.allow_encrypted_data_storage}
+                name="allowEncryptedDataStorage"
+                value={this.state.allowEncryptedDataStorage}
                 onChange={this._handleChange}
               >
                 Force encryption on archive storage deals (only you can see retrieved data from the
@@ -298,7 +284,10 @@ export default class SceneEditAccount extends React.Component {
           {tab === "security" ? (
             <div>
               <div css={STYLES_HEADER}>Change password</div>
-              <div>Passwords must be a minimum of eight characters.</div>
+              <div>
+                Passwords should be at least 8 characters long, contain a mix of upper and lowercase
+                letters, and have at least 1 number and 1 symbol
+              </div>
 
               <System.Input
                 containerStyle={{ marginTop: 24 }}
@@ -381,7 +370,7 @@ export default class SceneEditAccount extends React.Component {
               header={`Are you sure you want to delete your account @${this.state.username}?`}
               subHeader={`You will lose all your files and collections. You can’t undo this action.`}
               inputHeader={`Please type your username to confirm`}
-              inputPlaceholder={`username`}
+              inputPlaceholder={`Username`}
             />
           )}
         </ScenePage>

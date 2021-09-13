@@ -60,45 +60,31 @@ export default async (req, res) => {
 
     const filename = Strings.createSlug(data.title);
 
-    const domain = LinkUtilities.getDomainFromURL(url);
+    const linkDomain = LinkUtilities.getDomainFromURL(url);
 
-    const html = await LinkUtilities.fetchEmbed(url);
+    const linkHtml = await LinkUtilities.fetchEmbed(url);
 
-    const iFrameAllowed = await LinkUtilities.testIframe(url);
+    const linkIFrameAllowed = await LinkUtilities.testIframe(url);
 
     const newFile = {
       filename,
       cid: file.cid,
       isLink: true,
       url: file.url,
-      data: {
-        type: "link",
-        size: 0,
-        name: data.title || "",
-        author: data.author || "",
-        source: data.publisher || "",
-        body: data.description || "",
-        // coverImage: data.screenshot
-        //   ? {
-        //       data: {
-        //         type: "image/png",
-        //         size: data.screenshot.size,
-        //         url: data.screenshot.url,
-        //       },
-        //     }
-        //   : null,
-        link: {
-          name: data.title || "",
-          author: data.author || "",
-          source: data.publisher || "",
-          body: data.description || "",
-          image: data.image?.url,
-          logo: data.logo?.url,
-          domain,
-          html,
-          iFrameAllowed,
-        },
-      },
+      type: "link",
+      name: data.title,
+      body: data.description,
+      source: data.publisher,
+      author: data.author,
+      linkName: data.title,
+      linkBody: data.description,
+      linkSource: data.publisher,
+      linkAuthor: data.author,
+      linkImage: data.image?.url,
+      linkFavicon: data.logo?.url,
+      linkDomain,
+      linkHtml,
+      linkIFrameAllowed,
     };
 
     files.push(newFile);

@@ -31,7 +31,8 @@ export const authenticate = async (state) => {
   }
 
   let response = await Actions.signIn(state);
-  if (!response || response.error) {
+
+  if (Events.hasError(response)) {
     return response;
   }
 
@@ -211,7 +212,7 @@ export const saveCopy = async ({ files, slate }) => {
 export const download = async (file) => {
   Actions.createDownloadActivity({ file });
   if (file.isLink) return;
-  if (Validations.isUnityType(file.data.type)) {
+  if (Validations.isUnityType(file.type)) {
     return await downloadZip(file);
   }
   let uri = Strings.getURLfromCID(file.cid);
@@ -281,7 +282,7 @@ export const compressAndDownloadFiles = async ({ files, name = "slate.zip" }) =>
     let downloadFiles = [];
     for (const file of files) {
       if (file.isLink) continue;
-      if (Validations.isUnityType(file.data.type)) {
+      if (Validations.isUnityType(file.type)) {
         const { data } = await Actions.getZipFilePaths(file);
         const unityFiles = data.filesPaths.map((item) => ({
           url: item.replace(`/${file.id}/`, `${Strings.getURLfromCID(file.cid)}/`),

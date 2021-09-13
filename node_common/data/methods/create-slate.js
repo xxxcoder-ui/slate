@@ -2,25 +2,18 @@ import * as Data from "~/node_common/data";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId, slatename, isPublic, data = {} }) => {
+export default async (slate) => {
   return await runQuery({
     label: "CREATE_SLATE",
     queryFn: async (DB) => {
-      const query = await DB.insert({
-        ownerId,
-        slatename,
-        isPublic,
-        data,
-      })
-        .into("slates")
-        .returning("*");
+      const query = await DB.insert(slate).into("slates").returning("*");
 
       const index = query ? query.pop() : null;
 
       if (index) {
-        if (isPublic) {
+        if (slate.isPublic) {
           const activityQuery = await DB.insert({
-            ownerId,
+            ownerId: slate.ownerId,
             slateId: index.id,
             type: "CREATE_SLATE",
           }).into("activity");
@@ -28,7 +21,7 @@ export default async ({ ownerId, slatename, isPublic, data = {} }) => {
           await Data.recalcUserSlatecount({ userId: ownerId });
         } else {
           const activityQuery = await DB.insert({
-            ownerId,
+            ownerId: slate.ownerId,
             slateId: index.id,
             type: "CREATE_SLATE",
             ignore: true,

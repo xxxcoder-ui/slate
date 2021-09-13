@@ -118,6 +118,7 @@ export const error = {
   SERVER_UPDATE_SLATE_NAME_TAKEN:
     "You already have a collection with that name. Collection names must be unique",
   SERVER_UPDATE_SLATE_FAILED: "We are having trouble updating that collection right now",
+  SERVER_UPDATE_SLATE_MAX_BODY_LENGTH: "Descriptions can be a maximum of 2000 characters",
 
   //Create user
   SERVER_CREATE_USER_NOT_ALLOWED: "You can only create users while on slate.host",
@@ -194,6 +195,7 @@ export const error = {
   SERVER_USER_UPDATE_DEFAULT_ARCHIVE_CONFIG:
     "We're having trouble updating your settings right now",
   SERVER_USER_UPDATE_INVALID_PASSWORD: "Please choose a valid password",
+  SERVER_USER_UPDATE_MAX_BODY_LENGTH: "Descriptions can be a maximum of 2000 characters",
 
   //Zip files
   GET_ZIP_FILES_PATHS_BUCKET_CHECK_FAILED: "We're having trouble locating those files right now",
@@ -208,11 +210,13 @@ export const error = {
   SERVER_FILECOIN_NETWORK_ERROR: "We're having trouble fetching your storage information right now",
 
   //Sign in
+  SIGN_UP_RATE_LIMITED: "Too many signup attempts. Please try again in 10 minutes",
+  SIGN_IN_RATE_LIMITED: "Too many login attempts. Please try again in 10 minutes",
   SERVER_SIGN_IN_NOT_ALLOWED: "You can only sign in to an account while on slate.host",
   SERVER_SIGN_IN_NO_USERNAME: "Please provide a username to sign in",
   SERVER_SIGN_IN_NO_PASSWORD: "Please provide a password to sign in",
   SERVER_SIGN_IN_USER_NOT_FOUND: "We were unable to locate that account with those credentials",
-  SERVER_SIGN_IN_WRONG_CREDENTIALS: "You have entered an invalid username or password",
+  SERVER_SIGN_IN_WRONG_CREDENTIALS: "The username and password do not match",
 
   //Subscribe
   SERVER_SUBSCRIBE_MUST_PROVIDE_SLATE_OR_USER: "No collection or user to follow specified",

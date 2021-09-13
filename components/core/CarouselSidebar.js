@@ -281,12 +281,12 @@ export const FileTypeDefaultPreview = (props) => {
 
 class CarouselSidebar extends React.Component {
   state = {
-    name: this.props.file.data.name || this.props.file.filename || "",
-    body: this.props.file.data.body || "",
-    source: this.props.file.data.source || "",
-    author: this.props.file.data.author || "",
-    tags: this.props.file.data.tags || [],
-    suggestions: this.props.viewer?.tags || [],
+    name: this.props.file.name || this.props.file.filename || "",
+    body: this.props.file.body || "",
+    source: this.props.file.source || "",
+    author: this.props.file.author || "",
+    // tags: this.props.file.data.tags || [],
+    // suggestions: this.props.viewer?.tags || [],
     selected: {},
     isUploading: false,
     isDownloading: false,
@@ -304,16 +304,16 @@ class CarouselSidebar extends React.Component {
     }
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    if (!isEqual(prevState.tags, this.state.tags)) {
-      this.updateSuggestions();
-    }
-  };
+  // componentDidUpdate = (prevProps, prevState) => {
+  //   if (!isEqual(prevState.tags, this.state.tags)) {
+  //     this.updateSuggestions();
+  //   }
+  // };
 
-  updateSuggestions = () => {
-    let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
-    this.setState({ suggestions: Array.from(newSuggestions) });
-  };
+  // updateSuggestions = () => {
+  //   let newSuggestions = new Set([...this.state.suggestions, ...this.state.tags]);
+  //   this.setState({ suggestions: Array.from(newSuggestions) });
+  // };
 
   calculateSelected = () => {
     if (!this.props.viewer) {
@@ -348,12 +348,12 @@ class CarouselSidebar extends React.Component {
       {
         [e.target.name]: e.target.value,
         showSavedMessage: false,
-      },
-      () => {
-        if (e.target.name === "Tags") {
-          this.updateSuggestions();
-        }
       }
+      // () => {
+      //   if (e.target.name === "Tags") {
+      //     this.updateSuggestions();
+      //   }
+      // }
     );
   };
 
@@ -363,16 +363,13 @@ class CarouselSidebar extends React.Component {
 
   _handleSave = async () => {
     if (this.props.external || !this.props.isOwner) return;
-    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: this.state.suggestions } });
+    // this.props.onAction({ type: "UPDATE_VIEWER", viewer: { tags: this.state.suggestions } });
     const response = await Actions.updateFile({
       id: this.props.file.id,
-      data: {
-        name: this.state.name,
-        body: this.state.body,
-        source: this.state.source,
-        author: this.state.author,
-        tags: this.state.tags,
-      },
+      name: this.state.name,
+      body: this.state.body,
+      source: this.state.source,
+      author: this.state.author,
     });
     Events.hasError(response);
     this.setState({ showSavedMessage: true });
@@ -394,7 +391,7 @@ class CarouselSidebar extends React.Component {
     if (this.props.external || !this.props.isOwner || !this.props.viewer) return;
     e.persist();
     this.setState({ isUploading: true });
-    let previousCoverId = this.props.file.data.coverImage?.id;
+    let previousCoverId = this.props.file.coverImage?.id;
     if (!e || !e.target) {
       this.setState({ isUploading: false });
       return;
@@ -411,9 +408,7 @@ class CarouselSidebar extends React.Component {
 
     let updateReponse = await Actions.updateFile({
       id: this.props.file.id,
-      data: {
-        coverImage,
-      },
+      coverImage,
     });
 
     if (previousCoverId) {
@@ -519,9 +514,8 @@ class CarouselSidebar extends React.Component {
   };
 
   render() {
-    const isPublic = this.props.file.isPublic;
     const file = this.props.file;
-    const { coverImage, type, size } = file.data;
+    const { type, coverImage } = file;
     const editingAllowed = this.props.isOwner && !this.props.isRepost && !this.props.external;
 
     const isUnityGame = Validations.isUnityType(type);
@@ -558,6 +552,7 @@ class CarouselSidebar extends React.Component {
               ...STYLES_INPUT,
             }}
             textStyle={{ color: Constants.system.white }}
+            maxLength="255"
           />
 
           <Textarea
@@ -566,6 +561,7 @@ class CarouselSidebar extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             style={STYLES_INPUT}
+            maxLength="2000"
           />
           <Input
             full
@@ -576,6 +572,7 @@ class CarouselSidebar extends React.Component {
             id={`sidebar-label-source`}
             style={STYLES_INPUT}
             textStyle={{ color: Constants.system.white }}
+            maxLength="255"
           />
           <Input
             full
@@ -586,8 +583,9 @@ class CarouselSidebar extends React.Component {
             id={`sidebar-label-author`}
             style={{ ...STYLES_INPUT, marginBottom: 12 }}
             textStyle={{ color: Constants.system.white }}
+            maxLength="255"
           />
-          <div css={STYLES_OPTIONS_SECTION}>
+          {/* <div css={STYLES_OPTIONS_SECTION}>
             <Tag
               type="dark"
               tags={this.state.tags}
@@ -597,20 +595,20 @@ class CarouselSidebar extends React.Component {
               // dropdownStyles={{ top: "50px" }}
               onChange={this._handleChange}
             />
-          </div>
+          </div> */}
         </div>
       );
     } else {
-      const hasName = !Strings.isEmpty(file.data.name || file.filename);
-      const hasBody = !Strings.isEmpty(file.data.body);
-      const hasSource = !Strings.isEmpty(file.data.source);
-      const hasAuthor = !Strings.isEmpty(file.data.author);
+      const hasName = !Strings.isEmpty(file.name || file.filename);
+      const hasBody = !Strings.isEmpty(file.body);
+      const hasSource = !Strings.isEmpty(file.source);
+      const hasAuthor = !Strings.isEmpty(file.author);
 
       if (hasName) {
         elements.push(
           <div key="sidebar-media-info-name" css={STYLES_SIDEBAR_SECTION}>
             <div css={STYLES_HEADING}>
-              <ProcessedText dark text={file.data.name || file.filename} />
+              <ProcessedText dark text={file.name || file.filename} />
             </div>
           </div>
         );
@@ -635,7 +633,7 @@ class CarouselSidebar extends React.Component {
         elements.push(
           <div key="sidebar-media-info-body" css={STYLES_SIDEBAR_SECTION}>
             <div css={STYLES_BODY}>
-              <ProcessedText dark text={file.data.body} />
+              <ProcessedText dark text={file.body} />
             </div>
           </div>
         );
@@ -648,7 +646,7 @@ class CarouselSidebar extends React.Component {
               Source:
             </div>
             <p css={STYLES_BODY} style={{ color: Constants.system.grayLight2 }}>
-              <ProcessedText dark text={file.data.source} />
+              <ProcessedText dark text={file.source} />
             </p>
           </div>
         );
@@ -661,7 +659,7 @@ class CarouselSidebar extends React.Component {
               Author:
             </div>
             <p css={STYLES_BODY} style={{ color: Constants.system.grayLight2 }}>
-              <ProcessedText dark text={file.data.author} />
+              <ProcessedText dark text={file.author} />
             </p>
           </div>
         );

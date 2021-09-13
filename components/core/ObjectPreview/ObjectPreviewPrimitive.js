@@ -89,7 +89,7 @@ export default function ObjectPreviewPrimitive({
   // const showControls = () => setShowControls(true);
   // const hideControls = () => setShowControls(false);
 
-  const description = file?.data?.body;
+  const description = file?.body;
   const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
     disabled: !description || media.mobile,
@@ -106,9 +106,9 @@ export default function ObjectPreviewPrimitive({
 
   const { isLink } = file;
 
-  const title = file.data.name || file.filename;
+  const title = file.name || file.filename;
 
-  if (file?.data?.coverImage && !isImage && !isLink) {
+  if (file?.coverImage && !isImage && !isLink) {
     return (
       <ImageObjectPreview
         file={file}

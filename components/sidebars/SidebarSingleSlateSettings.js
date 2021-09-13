@@ -11,7 +11,6 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import { RadioGroup } from "~/components/system/components/RadioGroup";
 import { css } from "@emotion/react";
 import { ConfirmationModal } from "~/components/core/ConfirmationModal";
-import { Link } from "~/components/core/Link";
 
 const DEFAULT_IMAGE =
   "https://slate.textile.io/ipfs/bafkreiaow45dlq5xaydaeqocdxvffudibrzh2c6qandpqkb6t3ahbvh6re";
@@ -49,8 +48,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
   state = {
     slatename: this.props.data.slatename,
     isPublic: this.props.data.isPublic,
-    body: this.props.data.data.body,
-    name: this.props.data.data.name,
+    body: this.props.data.body,
+    name: this.props.data.name,
     modalShow: false,
   };
 
@@ -58,9 +57,9 @@ export default class SidebarSingleSlateSettings extends React.Component {
     let slates = this.props.viewer.slates;
     for (let slate of slates) {
       if (slate.id === this.props.data.id) {
-        slate.data.name = this.state.name;
+        slate.name = this.state.name;
         slate.isPublic = this.state.isPublic;
-        slate.data.body = this.state.body;
+        slate.body = this.state.body;
 
         this.props.onAction({
           type: "UPDATE_VIEWER",
@@ -75,10 +74,8 @@ export default class SidebarSingleSlateSettings extends React.Component {
     const response = await Actions.updateSlate({
       id: this.props.data.id,
       isPublic: this.state.isPublic,
-      data: {
-        name: this.state.name,
-        body: this.state.body,
-      },
+      name: this.state.name,
+      body: this.state.body,
     });
 
     if (Events.hasError(response)) {
@@ -122,23 +119,23 @@ export default class SidebarSingleSlateSettings extends React.Component {
   render() {
     const slug = Strings.createSlug(this.state.name);
     const url = `/${this.props.viewer.username}/${slug}`;
-    let preview = this.props.data.data.preview;
-    if (!preview) {
-      for (let object of this.props.data.objects) {
-        if (
-          object.data.type &&
-          Validations.isPreviewableImage(object.data.type) &&
-          object.data.size &&
-          object.data.size < Constants.linkPreviewSizeLimit
-        ) {
-          preview = Strings.getURLfromCID(object.cid);
-          break;
-        }
-      }
-    }
-    if (!preview) {
-      preview = DEFAULT_IMAGE;
-    }
+    // let preview = this.props.data.preview;
+    // if (!preview) {
+    //   for (let object of this.props.data.objects) {
+    //     if (
+    //       object.type &&
+    //       Validations.isPreviewableImage(object.type) &&
+    //       object.size &&
+    //       object.size < Constants.linkPreviewSizeLimit
+    //     ) {
+    //       preview = Strings.getURLfromCID(object.cid);
+    //       break;
+    //     }
+    //   }
+    // }
+    // if (!preview) {
+    //   preview = DEFAULT_IMAGE;
+    // }
 
     return (
       <React.Fragment>
@@ -172,6 +169,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             onSubmit={this._handleSubmit}
             descriptionStyle={{ fontSize: "20px !important" }}
             labelStyle={{ fontSize: "20px" }}
+            maxLength="255"
           />
           <System.P1
             style={{
@@ -202,6 +200,7 @@ export default class SidebarSingleSlateSettings extends React.Component {
             value={this.state.body}
             onChange={this._handleChange}
             onSubmit={this._handleSubmit}
+            maxLength="2000"
           />
         </div>
 

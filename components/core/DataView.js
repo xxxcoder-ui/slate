@@ -223,69 +223,69 @@ const STYLES_TAG = css`
   }
 `;
 
-class Tags extends React.Component {
-  state = {
-    isTruncated: false,
-    truncateIndex: 0,
-  };
+// class Tags extends React.Component {
+//   state = {
+//     isTruncated: false,
+//     truncateIndex: 0,
+//   };
 
-  listWrapper = React.createRef();
-  listEl = React.createRef();
+//   listWrapper = React.createRef();
+//   listEl = React.createRef();
 
-  componentDidMount() {
-    this._handleTruncate();
-  }
+//   componentDidMount() {
+//     this._handleTruncate();
+//   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!isEqual(prevProps.tags, this.props.tags)) {
-      this._handleTruncate();
-    }
-  }
+//   componentDidUpdate(prevProps, prevState) {
+//     if (!isEqual(prevProps.tags, this.props.tags)) {
+//       this._handleTruncate();
+//     }
+//   }
 
-  _handleTruncate = () => {
-    const listWrapper = this.listWrapper.current?.getBoundingClientRect();
-    const tagNodes = this.listEl.current?.querySelectorAll("li");
-    const tagElems = Array.from(tagNodes);
+//   _handleTruncate = () => {
+//     const listWrapper = this.listWrapper.current?.getBoundingClientRect();
+//     const tagNodes = this.listEl.current?.querySelectorAll("li");
+//     const tagElems = Array.from(tagNodes);
 
-    let total = 0;
-    const truncateIndex = tagElems.findIndex((tagElem) => {
-      const { width } = tagElem?.getBoundingClientRect();
-      total += width;
+//     let total = 0;
+//     const truncateIndex = tagElems.findIndex((tagElem) => {
+//       const { width } = tagElem?.getBoundingClientRect();
+//       total += width;
 
-      if (total >= listWrapper.width - 50) {
-        return true;
-      }
-    });
+//       if (total >= listWrapper.width - 50) {
+//         return true;
+//       }
+//     });
 
-    if (truncateIndex > 0) {
-      this.setState({ isTruncated: true, truncateIndex });
-      return;
-    }
+//     if (truncateIndex > 0) {
+//       this.setState({ isTruncated: true, truncateIndex });
+//       return;
+//     }
 
-    this.setState({ isTruncated: false, truncateIndex: tagElems.length });
-  };
+//     this.setState({ isTruncated: false, truncateIndex: tagElems.length });
+//   };
 
-  render() {
-    const { tags } = this.props;
+//   render() {
+//     const { tags } = this.props;
 
-    return (
-      <div css={STYLES_TAGS_WRAPPER}>
-        <div ref={this.listWrapper} style={{ width: 340 }}>
-          <ul css={STYLES_LIST} ref={this.listEl}>
-            {(this.state.isTruncated ? tags.slice(0, this.state.truncateIndex) : tags).map(
-              (tag) => (
-                <li key={tag} css={STYLES_TAG}>
-                  <span>{tag}</span>
-                </li>
-              )
-            )}
-          </ul>
-          {this.state.isTruncated && <span>...</span>}
-        </div>
-      </div>
-    );
-  }
-}
+//     return (
+//       <div css={STYLES_TAGS_WRAPPER}>
+//         <div ref={this.listWrapper} style={{ width: 340 }}>
+//           <ul css={STYLES_LIST} ref={this.listEl}>
+//             {(this.state.isTruncated ? tags.slice(0, this.state.truncateIndex) : tags).map(
+//               (tag) => (
+//                 <li key={tag} css={STYLES_TAG}>
+//                   <span>{tag}</span>
+//                 </li>
+//               )
+//             )}
+//           </ul>
+//           {this.state.isTruncated && <span>...</span>}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 function Footer({
   type = "myslate",
@@ -296,7 +296,7 @@ function Footer({
   downloadFiles,
   deleteFiles,
   //NOTE(amine): Myslate actions
-  editTags,
+  // editTags,
   //NOTE(amine): Collection actions
   removeFromCollection,
   saveCopy,
@@ -322,7 +322,7 @@ function Footer({
             >
               Add to collection
             </ButtonPrimary>
-            {isOwner && !isCollectionType && (
+            {/* {isOwner && !isCollectionType && (
               <ButtonPrimary
                 transparent
                 style={{ color: Constants.system.white }}
@@ -330,7 +330,7 @@ function Footer({
               >
                 Edit tags
               </ButtonPrimary>
-            )}
+            )} */}
             {!isOwner && isCollectionType && (
               <ButtonPrimary
                 transparent
@@ -658,8 +658,8 @@ export default class DataView extends React.Component {
 
   _handleDragToDesktop = (e, object) => {
     const url = Strings.getURLfromCID(object.cid);
-    const title = object.filename || object.data.name;
-    const type = object.data.type;
+    const title = object.filename || object.name;
+    const type = object.type;
     console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
@@ -715,33 +715,34 @@ export default class DataView extends React.Component {
     UserBehaviors.saveCopy({ files: items });
   };
 
-  getCommonTagFromSelectedItems = () => {
-    const { items } = this.props;
-    const { checked } = this.state;
+  // getCommonTagFromSelectedItems = () => {
+  //   const { items } = this.props;
+  //   const { checked } = this.state;
 
-    if (!Object.keys(checked).length) {
-      return;
-    }
+  //   if (!Object.keys(checked).length) {
+  //     return;
+  //   }
 
-    let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
-      items[index].data.tags ? items[index].data.tags : []
-    );
+  //   let allTagsFromSelectedItems = Object.keys(checked).map((index) =>
+  //     items[index].data.tags ? items[index].data.tags : []
+  //   );
 
-    let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
-    if (sortedItems.length === 0) {
-      return [];
-    }
+  //   let sortedItems = allTagsFromSelectedItems.sort((a, b) => a.length - b.length);
+  //   if (sortedItems.length === 0) {
+  //     return [];
+  //   }
 
-    let commonTags = sortedItems.shift().reduce((acc, cur) => {
-      if (acc.indexOf(cur) === -1 && sortedItems.every((item) => item.indexOf(cur) !== -1)) {
-        acc.push(cur);
-      }
+  //   let commonTags = sortedItems.shift().reduce((acc, cur) => {
+  //     if (acc.indexOf(cur) === -1 && sortedItems.every((item) => item.indexOf(cur) !== -1)) {
+  //       acc.push(cur);
+  //     }
 
-      return acc;
-    }, []);
+  //     return acc;
+  //   }, []);
 
-    return commonTags;
-  };
+  //   return commonTags;
+  // };
+
   render() {
     let numChecked = Object.keys(this.state.checked).length || 0;
     // const header = (
@@ -778,18 +779,20 @@ export default class DataView extends React.Component {
     //     </span>
     //   </div>
     // );
-    const handleEditTags = () => {
-      this.props.onAction({
-        type: "SIDEBAR",
-        value: "SIDEBAR_EDIT_TAGS",
-        data: {
-          numChecked,
-          commonTags: this.getCommonTagFromSelectedItems(),
-          objects: this.props.items,
-          checked: this.state.checked,
-        },
-      });
-    };
+
+    // const handleEditTags = () => {
+    //   this.props.onAction({
+    //     type: "SIDEBAR",
+    //     value: "SIDEBAR_EDIT_TAGS",
+    //     data: {
+    //       numChecked,
+    //       commonTags: this.getCommonTagFromSelectedItems(),
+    //       objects: this.props.items,
+    //       checked: this.state.checked,
+    //     },
+    //   });
+    // };
+
     const footer = (
       <React.Fragment>
         {numChecked ? (
@@ -803,7 +806,7 @@ export default class DataView extends React.Component {
               deleteFiles={() => this.setState({ modalShow: true })}
               close={this._handleCloseFooter}
               //NOTE(amine): Myslate actions
-              editTags={handleEditTags}
+              // editTags={handleEditTags}
               //NOTE(amine): Collection actions
               removeFromCollection={this._handleRemoveFromCollection}
               saveCopy={this._handleSaveCopy}
@@ -928,11 +931,11 @@ export default class DataView extends React.Component {
         name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Name</div>,
         width: "100%",
       },
-      {
-        key: "tags",
-        name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Tags</div>,
-        width: "360px",
-      },
+      // {
+      //   key: "tags",
+      //   name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Tags</div>,
+      //   width: "360px",
+      // },
       {
         key: "size",
         name: <div style={{ fontSize: "0.9rem", padding: "18px 0" }}>Size</div>,
@@ -976,7 +979,7 @@ export default class DataView extends React.Component {
             }}
             onDragEnd={this._enableDragAndDropUploadEvent}
           >
-            <FilePreviewBubble cid={cid} type={each.data.type}>
+            <FilePreviewBubble cid={cid} type={each.type}>
               <Link
                 redirect
                 params={{ ...this.props.page.params, cid: each.cid }}
@@ -986,14 +989,14 @@ export default class DataView extends React.Component {
                   <div css={STYLES_ICON_BOX_HOVER} style={{ paddingLeft: 0, paddingRight: 18 }}>
                     <FileTypeIcon file={each} height="24px" />
                   </div>
-                  <div css={STYLES_LINK}>{each.data.name || each.filename}</div>
+                  <div css={STYLES_LINK}>{each.name || each.filename}</div>
                 </div>
               </Link>
             </FilePreviewBubble>
           </Selectable>
         ),
-        tags: <>{each.data.tags?.length ? <Tags tags={each.data.tags} /> : null}</>,
-        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.data.size)}</div>,
+        // tags: <>{each.data.tags?.length ? <Tags tags={each.data.tags} /> : null}</>,
+        size: <div css={STYLES_VALUE}>{Strings.bytesToSize(each.size)}</div>,
         more: this.props.isOwner ? (
           <div
             css={STYLES_ICON_BOX_HOVER}

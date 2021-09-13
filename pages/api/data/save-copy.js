@@ -57,8 +57,8 @@ export default async (req, res) => {
 
   filteredFiles = filteredFiles
     .filter((file) => foundCids.includes(file.cid)) //NOTE(martina): make sure the file being copied exists
-    .map(({ createdAt, downloadCount, saveCount, ...keepAttrs }) => {
-      //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
+    .map(({ createdAt, ownerId, isPublic, downloadCount, saveCount, tags, ...keepAttrs }) => {
+      //NOTE(martina): remove the old file's ownerId, createdAt, counts, tags, and privacy so new fields can be used
       return { ...keepAttrs, isPublic: slate?.isPublic || false };
     });
 
@@ -70,7 +70,7 @@ export default async (req, res) => {
       continue;
     }
 
-    const { id, ...rest } = file;
+    const { id, ...rest } = file; //NOTE(martina): remove the old file's id
     let response = await Utilities.addExistingCIDToData({
       buckets,
       key: bucketKey,
@@ -122,25 +122,3 @@ export default async (req, res) => {
     data: { added, skipped: files.length - added },
   });
 };
-
-// const addToSlate = async ({ slate, files, user }) => {
-//   let { filteredFiles } = await ArrayUtilities.removeDuplicateSlateFiles({
-//     files,
-//     slate,
-//   });
-
-//   if (!filteredFiles.length) {
-//     return { added: 0 };
-//   }
-
-//   let response = await Data.createSlateFiles({ owner: user, slate, files: filteredFiles });
-//   if (!response || response.error) {
-//     return { decorator: "SERVER_SAVE_COPY_ADD_TO_SLATE_FAILED", added: 0 };
-//   }
-
-//   Monitor.saveCopy({ user, slate, files: filteredFiles });
-
-//   await Data.updateSlateById({ id: slate.id, updatedAt: new Date() });
-
-//   return { added: response.length };
-// };
