@@ -104,15 +104,15 @@ const STYLES_SOURCE_LOGO = css`
 `;
 
 export default function LinkCard({ file, isNFTLink }) {
-  const { url, linkImage, linkName, linkBody } = file;
+  const { url, linkImage, linkName, linkBody, linkFavicon, linkSource } = file;
 
   if (isNFTLink) {
-    const faviconImgState = useImage({ src: link.logo });
+    const faviconImgState = useImage({ src: linkFavicon });
 
     const tag = (
       <a
         css={STYLES_LINK}
-        href={file.url}
+        href={url}
         target="_blank"
         rel="noreferrer"
         style={{ position: "relative", zIndex: 2 }}
@@ -123,14 +123,14 @@ export default function LinkCard({ file, isNFTLink }) {
             <SVG.Link height={12} width={12} style={{ marginRight: 4 }} />
           ) : (
             <img
-              src={link.logo}
+              src={linkFavicon}
               alt="Link source logo"
               style={{ marginRight: 4 }}
               css={STYLES_SOURCE_LOGO}
             />
           )}
           <P3 css={STYLES_SOURCE} as="small" color="textGray" nbrOflines={1}>
-            {link.source}
+            {linkSource}
           </P3>
           <SVG.ExternalLink
             className="link_external_link"
@@ -152,7 +152,11 @@ export default function LinkCard({ file, isNFTLink }) {
       >
         <div css={[Styles.VERTICAL_CONTAINER, STYLES_FREEFORM_CARD]}>
           <div css={STYLES_IMAGE_CONTAINER}>
-            <img src={image} css={Styles.IMAGE_FILL} style={{ maxHeight: "calc(100vh - 200px)" }} />
+            <img
+              src={linkImage}
+              css={Styles.IMAGE_FILL}
+              style={{ maxHeight: "calc(100vh - 200px)" }}
+            />
           </div>
           <div css={[STYLES_TEXT_BOX]}>{tag}</div>
           {/* <div css={[Styles.VERTICAL_CONTAINER, STYLES_TEXT_BOX]}>

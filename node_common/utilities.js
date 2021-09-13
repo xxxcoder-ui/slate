@@ -81,6 +81,16 @@ export const getIdFromCookie = (req) => {
   return id;
 };
 
+export const decodeCookieToken = (token) => {
+  try {
+    const decoded = JWT.verify(token, Environment.JWT_SECRET);
+    return decoded.id;
+  } catch (e) {
+    Logging.error(SHOVEL, e.message);
+    return null;
+  }
+};
+
 export const encryptWithSecret = async (text, secret) => {
   const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, secret, ENCRYPTION_IV);
   const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);

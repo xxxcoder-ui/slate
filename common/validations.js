@@ -283,7 +283,7 @@ export const isUnityFile = async (file) => {
 };
 
 export const isNFTLink = (file) => {
-  let domain = file?.data?.link?.domain;
+  let domain = file?.linkDomain;
   if (!domain) return false;
   domain = domain.toLowerCase();
   return Constants.NFTDomains.includes(domain);
