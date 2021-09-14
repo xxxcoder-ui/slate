@@ -58,6 +58,19 @@ export const checkTextile = async () => {
   return false;
 };
 
+export const getIdFromCookieValue = (token) => {
+  if (!Strings.isEmpty(token)) {
+    try {
+      const decoded = JWT.verify(token, Environment.JWT_SECRET);
+      id = decoded.id;
+    } catch (e) {
+      Logging.error(e.message);
+    }
+  }
+
+  return id;
+};
+
 export const getIdFromCookie = (req) => {
   let id = null;
   if (Strings.isEmpty(req.headers.cookie)) {
@@ -69,16 +82,7 @@ export const getIdFromCookie = (req) => {
     "$1"
   );
 
-  if (!Strings.isEmpty(token)) {
-    try {
-      const decoded = JWT.verify(token, Environment.JWT_SECRET);
-      id = decoded.id;
-    } catch (e) {
-      Logging.error(e.message);
-    }
-  }
-
-  return id;
+  return getIdFromCookieValue(token);
 };
 
 export const encryptWithSecret = async (text, secret) => {

@@ -20,6 +20,7 @@ import updateTwitterToken from "~/node_common/data/methods/update-twitter-token"
 // File postgres queries
 import createFile from "~/node_common/data/methods/create-file";
 import getFileByCid from "~/node_common/data/methods/get-file-by-cid";
+import getFileByUrl from "~/node_common/data/methods/get-file-by-url";
 import getFilesByCids from "~/node_common/data/methods/get-files-by-cids";
 import getFileById from "~/node_common/data/methods/get-file-by-id";
 import getFilesByIds from "~/node_common/data/methods/get-files-by-ids";
@@ -112,6 +113,7 @@ export {
   //NOTE(martina): File operations
   createFile,
   getFileByCid,
+  getFileByUrl,
   getFilesByCids,
   getFileById,
   getFilesByIds,
