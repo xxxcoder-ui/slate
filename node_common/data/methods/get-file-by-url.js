@@ -2,7 +2,7 @@ import * as Serializers from "~/node_common/serializers";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async ({ ownerId, url, sanitize = false }) => {
+export default async ({ ownerId, url }) => {
   return await runQuery({
     label: "GET_FILE_BY_URL",
     queryFn: async (DB) => {
@@ -10,10 +10,6 @@ export default async ({ ownerId, url, sanitize = false }) => {
 
       if (!query || query.error) {
         return null;
-      }
-
-      if (sanitize) {
-        query = Serializers.sanitizeFile(query);
       }
 
       return JSON.parse(JSON.stringify(query));
