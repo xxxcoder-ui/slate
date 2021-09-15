@@ -1,12 +1,10 @@
 import * as Actions from "~/common/actions";
-import * as Store from "~/common/store";
 import * as Credentials from "~/common/credentials";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Logging from "~/common/logging";
 import * as Environment from "~/common/environment";
-import * as Window from "~/common/window";
 
 import { encode, isBlurhashValid } from "blurhash";
 import { v4 as uuid } from "uuid";
@@ -67,69 +65,7 @@ export const uploadLink = async ({ url, slate }) => {
   }
 };
 
-export const uploadFiles = async ({ context, files, slate, keys, numFailed = 0 }) => {
-  if (!files || !files.length) {
-    context._handleRegisterLoadingFinished({ keys });
-    return;
-  }
-
-  const resolvedFiles = [];
-  for (let i = 0; i < files.length; i++) {
-    const currentFileKey = fileKey(files[i]);
-    if (Store.checkCancelled(currentFileKey)) {
-      continue;
-    }
-
-    // NOTE(jim): With so many failures, probably good to wait a few seconds.
-    await Window.delay(3000);
-
-    // NOTE(jim): Sends XHR request.
-    let response;
-    try {
-      response = await upload({
-        file: files[i],
-        context,
-      });
-    } catch (e) {
-      Logging.error(e);
-    }
-
-    if (!response || response.error) {
-      continue;
-    }
-    resolvedFiles.push(response);
-  }
-
-  if (!resolvedFiles.length) {
-    context._handleRegisterLoadingFinished({ keys });
-    return;
-  }
-  //NOTE(martina): this commented out portion is only for if parallel uploading
-  // let responses = await Promise.allSettled(resolvedFiles);
-  // let succeeded = responses
-  //   .filter((res) => {
-  //     return res.status === "fulfilled" && res.value && !res.value.error;
-  //   })
-  //   .map((res) => res.value);
-
-  let createResponse = await Actions.createFile({ files: resolvedFiles, slate });
-
-  if (Events.hasError(createResponse)) {
-    context._handleRegisterLoadingFinished({ keys });
-    return;
-  }
-
-  const { added, skipped } = createResponse.data;
-
-  let message = Strings.formatAsUploadMessage(added, skipped + numFailed, slate);
-  Events.dispatchMessage({ message, status: !added ? null : "INFO" });
-
-  context._handleRegisterLoadingFinished({ keys });
-};
-
-//NOTE(migration): check that upload works still and file.name
-export const upload = async ({ file, context, bucketName }) => {
-  const currentFileKey = fileKey(file);
+export const upload = async ({ file, onProgress, bucketName, uploadAbort }) => {
   let formData = new FormData();
   const HEIC2ANY = require("heic2any");
 
@@ -155,17 +91,11 @@ export const upload = async ({ file, context, bucketName }) => {
     formData.append("data", file);
   }
 
-  if (Store.checkCancelled(currentFileKey)) {
-    return;
-  }
-
   const _privateUploadMethod = (path, file) =>
     new Promise((resolve) => {
       const XHR = new XMLHttpRequest();
 
-      window.addEventListener(`cancel-${currentFileKey}`, () => {
-        XHR.abort();
-      });
+      if (uploadAbort) uploadAbort.abort = XHR.abort.bind(XHR);
 
       XHR.open("post", path, true);
       XHR.setRequestHeader("authorization", getCookie(Credentials.session.key));
@@ -178,28 +108,16 @@ export const upload = async ({ file, context, bucketName }) => {
       XHR.upload.addEventListener(
         "progress",
         (event) => {
-          if (!context) {
-            return;
-          }
-
           if (event.lengthComputable) {
             Logging.log("FILE UPLOAD PROGRESS", event);
-            context.setState({
-              fileLoading: {
-                ...context.state.fileLoading,
-                [currentFileKey]: {
-                  name: file.name,
-                  loaded: event.loaded,
-                  total: event.total,
-                },
-              },
-            });
+            if (onProgress) onProgress(event);
           }
         },
         false
       );
-
-      window.removeEventListener(`cancel-${currentFileKey}`, () => XHR.abort());
+      XHR.addEventListener("abort", () => {
+        resolve({ aborted: true });
+      });
 
       XHR.onloadend = (event) => {
         Logging.log("FILE UPLOAD END", event);
@@ -236,21 +154,8 @@ export const upload = async ({ file, context, bucketName }) => {
     res = await _privateUploadMethod(`${generalRoute}${file.name}`, file);
   }
 
-  if (!res?.data || res.error) {
-    if (context) {
-      await context.setState({
-        fileLoading: {
-          ...context.state.fileLoading,
-          [`${file.lastModified}-${file.name}`]: {
-            name: file.name,
-            failed: true,
-          },
-        },
-      });
-    }
-    Events.dispatchMessage({ message: "Some of your files could not be uploaded" });
-
-    return !res ? { decorator: "NO_RESPONSE_FROM_SERVER", error: true } : res;
+  if (!res || res.error || res.aborted) {
+    return res;
   }
 
   let item = res.data.data;
@@ -271,19 +176,13 @@ export const upload = async ({ file, context, bucketName }) => {
 
 export const formatPastedImages = ({ clipboardItems }) => {
   let files = [];
-  let fileLoading = {};
   for (let i = 0; i < clipboardItems.length; i++) {
     // Note(Amine): skip content if it's not an image
     if (clipboardItems[i].type.indexOf("image") === -1) continue;
     const file = clipboardItems[i].getAsFile();
     files.push(file);
-    fileLoading[`${file.lastModified}-${file.name}`] = {
-      name: file.name,
-      loaded: 0,
-      total: file.size,
-    };
   }
-  return { fileLoading, toUpload: files };
+  return { files };
 };
 
 export const formatDroppedFiles = async ({ dataTransfer }) => {
@@ -294,7 +193,6 @@ export const formatDroppedFiles = async ({ dataTransfer }) => {
   }
 
   const files = [];
-  let fileLoading = {};
   if (dataTransfer.items && dataTransfer.items.length) {
     for (var i = 0; i < dataTransfer.items.length; i++) {
       const data = dataTransfer.items[i];
@@ -320,43 +218,21 @@ export const formatDroppedFiles = async ({ dataTransfer }) => {
       }
 
       files.push(file);
-      fileLoading[`${file.lastModified}-${file.name}`] = {
-        name: file.name,
-        loaded: 0,
-        total: file.size,
-      };
     }
   }
 
-  if (!files.length) {
-    Events.dispatchMessage({ message: "File type not supported. Please try a different file" });
-  }
-
-  return { fileLoading, files, numFailed: dataTransfer.items.length - files.length };
+  return { files };
 };
 
 export const formatUploadedFiles = ({ files }) => {
   let toUpload = [];
-  let fileLoading = {};
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
-
     if (!file) {
       continue;
     }
-
     toUpload.push(file);
-    fileLoading[fileKey(file)] = {
-      name: file.name,
-      loaded: 0,
-      total: file.size,
-    };
   }
 
-  if (!toUpload.length) {
-    Events.dispatchMessage({ message: "We could not find any files to upload." });
-    return false;
-  }
-
-  return { toUpload, fileLoading, numFailed: files.length - toUpload.length };
+  return { files: toUpload };
 };
