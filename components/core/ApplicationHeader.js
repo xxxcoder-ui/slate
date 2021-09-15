@@ -3,8 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
-import * as System from "~/components/system";
-import * as FileUtilities from "~/common/file-utilities";
+import * as Upload from "~/components/core/Upload";
 
 import {
   ApplicationUserControls,
@@ -20,8 +19,6 @@ import { Show } from "~/components/utility/Show";
 import { useField, useMediaQuery } from "~/common/hooks";
 import { Input } from "~/components/system";
 import { AnimatePresence, motion } from "framer-motion";
-
-import DataMeter from "~/components/core/DataMeter";
 
 const STYLES_SEARCH_COMPONENT = (theme) => css`
   background-color: transparent;
@@ -111,7 +108,6 @@ const STYLES_BACKGROUND = css`
 
 const STYLES_UPLOAD_BUTTON = css`
   ${Styles.CONTAINER_CENTERED};
-  ${Styles.BUTTON_RESET};
   background-color: ${Constants.semantic.bgGrayLight};
   border-radius: 8px;
   width: 24px;
@@ -120,7 +116,7 @@ const STYLES_UPLOAD_BUTTON = css`
   pointer-events: auto;
 `;
 
-export default function ApplicationHeader({ viewer, fileLoading, onAction }) {
+export default function ApplicationHeader({ viewer, page, data, onAction }) {
   const [state, setState] = React.useState({
     showDropdown: false,
     popup: null,
@@ -153,10 +149,6 @@ export default function ApplicationHeader({ viewer, fileLoading, onAction }) {
     initialValue: "",
     onSubmit: handleCreateSearch,
   });
-
-  const handleUpload = React.useCallback(() => {
-    onAction({ type: "SIDEBAR", value: "SIDEBAR_ADD_FILE_TO_BUCKET" });
-  }, [onAction]);
 
   const handleDismissSearch = () => setFieldValue("");
 
@@ -196,16 +188,28 @@ export default function ApplicationHeader({ viewer, fileLoading, onAction }) {
             {...getFieldProps()}
           />
         </div>
-        <div css={STYLES_RIGHT}>
-          <Actions
-            fileLoading={fileLoading}
-            isSearching={isSearching}
-            isSignedOut={isSignedOut}
-            onAction={onAction}
-            onUpload={handleUpload}
-            onDismissSearch={handleDismissSearch}
-          />
-        </div>
+        <Upload.Provider page={page} data={data} viewer={viewer}>
+          <Upload.Root onAction={onAction} viewer={viewer}>
+            <div css={STYLES_RIGHT}>
+              <Actions
+                uploadAction={
+                  <Upload.Trigger
+                    enableMetrics
+                    viewer={viewer}
+                    aria-label="Upload"
+                    css={STYLES_UPLOAD_BUTTON}
+                  >
+                    <SVG.Plus height="16px" />
+                  </Upload.Trigger>
+                }
+                isSearching={isSearching}
+                isSignedOut={isSignedOut}
+                onAction={onAction}
+                onDismissSearch={handleDismissSearch}
+              />
+            </div>
+          </Upload.Root>
+        </Upload.Provider>
       </div>
       <Show when={mobile && state.popup === "profile"}>
         <ApplicationUserControlsPopup
@@ -224,18 +228,7 @@ export default function ApplicationHeader({ viewer, fileLoading, onAction }) {
   );
 }
 
-const Actions = ({
-  isSignedOut,
-  isSearching,
-  onAction,
-  onUpload,
-  fileLoading,
-  onDismissSearch,
-}) => {
-  const { bytesLoaded, bytesTotal } = FileUtilities.getUploadProgress(fileLoading);
-  const uploadProgress = Math.round((bytesLoaded / bytesTotal) * 100);
-  const isUploading = !!Object.keys(fileLoading).length;
-
+const Actions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismissSearch }) => {
   const authActions = React.useMemo(
     () => (
       <>
@@ -265,53 +258,18 @@ const Actions = ({
     [onAction]
   );
 
-  const uploadAction = React.useMemo(
-    () => (
-      <button css={STYLES_UPLOAD_BUTTON} aria-label="Upload" onClick={onUpload}>
-        <SVG.Plus height="16px" />
-      </button>
-    ),
-    [onUpload]
-  );
-
   return (
     <AnimatePresence>
-      <Switch
-        fallback={
-          <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-            {isUploading && (
-              <motion.button
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ y: 10, opacity: 0 }}
-                css={Styles.BUTTON_RESET}
-                style={{ marginRight: 14 }}
-                aria-label="Upload"
-                onClick={onUpload}
-              >
-                <System.P3 color="textBlack">{uploadProgress}%</System.P3>
-                <DataMeter
-                  bytes={bytesLoaded}
-                  maximumBytes={bytesTotal}
-                  style={{
-                    width: 28,
-                    marginTop: 4,
-                    backgroundColor: Constants.semantic.bgGrayLight,
-                  }}
-                />
-              </motion.button>
-            )}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ y: 10, opacity: 0 }}
-            >
-              {uploadAction}
-            </motion.div>
-          </div>
-        }
-      >
-        <Match when={isSignedOut}>{authActions}</Match>
+      <Switch fallback={uploadAction}>
+        <Match when={isSignedOut}>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ y: 10, opacity: 0 }}
+          >
+            {authActions}
+          </motion.div>
+        </Match>
         <Match when={isSearching}>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
