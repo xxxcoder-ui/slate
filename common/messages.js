@@ -235,4 +235,27 @@ export const error = {
   SERVER_SUPPORT_NO_USERNAME_PROVIDED: "Please include a username",
   UNITY_ZIP_DOWNLOAD_FAILED:
     "We're having trouble downloading your Unity game file. Please try again later",
+
+  //Shovel
+  NO_API_KEY_PROVIDED:
+    "Please refresh the page to make sure you are signed in before trying to upload",
+  SERVER_FILE_MISSING: "No file to upload was provided",
+  SERVER_UPLOAD_ERROR: "We ran into an issue while uploading that file",
+  UPLOAD_PULL_FILE_FROM_CID_ERROR: "We were not able to find a file at the specified cid",
+  UPLOAD_PULL_FILE_FROM_URL_ERROR: "We were not able to find a file at the specified url",
+  UPLOAD_NO_BUCKETS:
+    "We ran into an error where we could not detect your storage bucket while uploading",
+  UPLOAD_WRITE_TO_DISK_ERROR: "We ran into an error while trying to save that file to disk",
+  UPLOAD_PUSH_PATH_ERROR:
+    "We ran into an error while trying to push that file path to our storage provider",
+  UPLOAD_TEXTILE_RESPONSE_MISSING_DATA:
+    "We didn't receive the file information back from our storage provider, please try uploading again later",
+  UPLOAD_READABLE_STREAM_ERROR:
+    "We ran into an issue while piping the file to our storage provider",
+  UPLOAD_SIZE_TOO_LARGE: "Upload size too large. Please try again with smaller files",
+  UPLOAD_BUCKET_CHECK_FAILED:
+    "We were unable to detect your storage bucket, please try again later",
+  UPLOAD_NOT_ENOUGH_SPACE_REMAINS: "You do not have enough storage remaining to upload that file",
+  UPLOAD_FAILURE: "We were unable to upload some of your files",
+  UPLOAD_VERIFY_FAILURE: "We were unable to verify that some of your files were uploaded",
 };
