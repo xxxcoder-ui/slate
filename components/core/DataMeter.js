@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { motion } from "framer-motion";
@@ -21,13 +22,13 @@ const STYLES_DATAMETER = (theme) => css`
 `;
 
 export default function DataMeter({ bytes = 1000, maximumBytes = 4000, css, ...props }) {
-  const percentage = bytes / maximumBytes;
+  const percentage = Utilities.clamp((bytes / maximumBytes) * 100, 0, 100);
   return (
     <div css={[STYLES_DATAMETER_WRAPPER, css]} {...props}>
       <motion.div
         initial={false}
         css={STYLES_DATAMETER}
-        animate={{ x: `${percentage * 100}%` }}
+        animate={{ x: `${percentage}%` }}
         transition={{ type: "spring", stiffness: 170, damping: 26 }}
       />
     </div>
