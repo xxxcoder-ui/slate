@@ -406,6 +406,7 @@ export const useTimeout = (callback, ms, dependencies) => {
     return () => clearTimeout(timeoutId);
   }, dependencies);
 };
+
 export const useEscapeKey = (callback) => {
   const handleKeyUp = React.useCallback(
     (e) => {
@@ -416,7 +417,7 @@ export const useEscapeKey = (callback) => {
   useEventListener("keyup", handleKeyUp, [handleKeyUp]);
 };
 
-export const useLockScroll = ({ lock = true }) => {
+export const useLockScroll = ({ lock = true } = {}) => {
   React.useEffect(() => {
     if (!lock) return;
     document.body.style.overflow = "hidden";
