@@ -4,6 +4,8 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Constants from "~/common/constants";
 
+import moment from "moment";
+
 //NOTE(martina): this file is for utility functions that do not involve API calls
 //For API related utility functions, see common/user-behaviors.js
 //And for uploading related utility functions, see common/file-utilities.js
@@ -145,3 +147,25 @@ export function mapResponsiveProp(prop, mapper) {
 }
 
 export const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+
+export function formatDateToString(date) {
+  const providedDate = moment(date);
+  const today = moment();
+  const yesterday = moment().subtract(1, "day");
+
+  if (today.isSame(providedDate, "day")) {
+    return "Today at " + providedDate.format("h:mm:ssA");
+  }
+
+  if (yesterday.isSame(providedDate, "day")) {
+    return "Yesterday at " + providedDate.format("h:mm:ssA");
+  }
+
+  return providedDate.format("MMM D, YYYY") + " at " + providedDate.format("h:mm:ssA");
+}
+
+export const clamp = (value, min, max) => {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+};
