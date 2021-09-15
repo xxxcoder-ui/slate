@@ -3,7 +3,7 @@ import * as System from "~/components/system";
 
 import CodeBlock from "~/components/system/CodeBlock";
 
-const EXAMPLE_CODE_JS = (key) => `const url = 'https://uploads.slate.host/api/public';
+const EXAMPLE_CODE_JS = (key) => `const url = 'https://uploads.slate.host/api/v2/public';
 
 let file = e.target.files[0];
 let data = new FormData();
@@ -19,7 +19,7 @@ const response = await fetch(url, {
 
 const EXAMPLE_CODE_PY = (key) => `import requests
 
-url = "https://uploads.slate.host/api/public"
+url = "https://uploads.slate.host/api/v2/public"
 files = {
   "file": open("example-file.txt", "rb")
 }
@@ -32,7 +32,7 @@ r = requests.post(url, headers=headers, files=files)`;
 const SLATE_EXAMPLE_CODE_JS = (
   key,
   slateId
-) => `const url = 'https://uploads.slate.host/api/public/${slateId}'; // collection ID
+) => `const url = 'https://uploads.slate.host/api/v2/public/${slateId}'; // collection ID
 
 let file = e.target.files[0];
 let data = new FormData();
@@ -49,7 +49,7 @@ const json = await response.json();`;
 
 const SLATE_EXAMPLE_CODE_PY = (key, slateId) => `import requests
 
-url = "https://uploads.slate.host/api/public/${slateId}" # collection ID
+url = "https://uploads.slate.host/api/v2/public/${slateId}" # collection ID
 files = {
   "file": open("example-file.txt", "rb")
 }
