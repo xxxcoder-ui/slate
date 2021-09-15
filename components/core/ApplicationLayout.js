@@ -84,11 +84,10 @@ const STYLES_MODAL = css`
   top: ${Constants.sizes.header}px;
   right: 0;
   bottom: 0;
-  width: 100vw;
-  height: calc(100vh - ${Constants.sizes.header}px);
   position: fixed;
   left: 0;
   padding: 24px 24px 32px;
+  height: calc(100vh - ${Constants.sizes.header}px);
 
   background-color: ${Constants.semantic.bgBlurWhiteOP};
 
@@ -188,60 +187,31 @@ export default class ApplicationLayout extends React.Component {
   render() {
     let sidebarElements = null;
     if (this.props.sidebar) {
-      if (this.props.sidebarName === "SIDEBAR_ADD_FILE_TO_BUCKET") {
-        sidebarElements = (
-          <div css={STYLES_MODAL}>
-            <Boundary
-              onMouseDown
-              captureResize={false}
-              captureScroll={false}
-              enabled
-              onOutsideRectEvent={this._handleDismiss}
-              style={{ height: "100%" }}
+      sidebarElements = (
+        <Boundary
+          onMouseDown
+          captureResize={false}
+          captureScroll={false}
+          enabled
+          onOutsideRectEvent={this._handleDismiss}
+        >
+          <div css={STYLES_SIDEBAR}>
+            <div
+              css={STYLES_SIDEBAR_ELEMENTS}
+              ref={(c) => {
+                this._sidebar = c;
+              }}
             >
-              <div
-                css={STYLES_MODAL_ELEMENTS}
-                ref={(c) => {
-                  this._sidebar = c;
-                }}
-              >
-                <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 24 }}>
-                  <div css={STYLES_DISMISS} onClick={this._handleDismiss}>
-                    <SVG.Dismiss height="24px" />
-                  </div>
+              <div css={STYLES_SIDEBAR_HEADER}>
+                <div css={STYLES_BLOCK} onClick={this._handleDismiss}>
+                  <SVG.Dismiss height="24px" />
                 </div>
-                {this.props.sidebar}
               </div>
-            </Boundary>
-          </div>
-        );
-      } else {
-        sidebarElements = (
-          <Boundary
-            onMouseDown
-            captureResize={false}
-            captureScroll={false}
-            enabled
-            onOutsideRectEvent={this._handleDismiss}
-          >
-            <div css={STYLES_SIDEBAR}>
-              <div
-                css={STYLES_SIDEBAR_ELEMENTS}
-                ref={(c) => {
-                  this._sidebar = c;
-                }}
-              >
-                <div css={STYLES_SIDEBAR_HEADER}>
-                  <div css={STYLES_BLOCK} onClick={this._handleDismiss}>
-                    <SVG.Dismiss height="24px" />
-                  </div>
-                </div>
-                <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
-              </div>
+              <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
             </div>
-          </Boundary>
-        );
-      }
+          </div>
+        </Boundary>
+      );
     }
     return (
       <React.Fragment>
@@ -249,13 +219,8 @@ export default class ApplicationLayout extends React.Component {
           <GlobalTooltip />
           {this.props.header && (
             <>
-              <div style={{ visibility: "hidden" }}>{this.props.header}</div>
-              <div
-                css={STYLES_HEADER}
-                style={{ top: this.props.isMobile ? this.state.headerTop : null }}
-              >
-                {this.props.header}
-              </div>
+              <div style={{ height: Constants.sizes.header }} />
+              <div css={STYLES_HEADER}>{this.props.header}</div>
             </>
           )}
           <Alert
@@ -266,7 +231,6 @@ export default class ApplicationLayout extends React.Component {
                 ? this.props.viewer.onboarding.hidePrivacyAlert
                 : false
             }
-            fileLoading={this.props.fileLoading}
             onAction={this.props.onAction}
             id={this.props.isMobile ? "slate-mobile-alert" : null}
             viewer={this.props.viewer}
