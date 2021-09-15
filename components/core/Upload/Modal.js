@@ -34,7 +34,7 @@ const STYLES_SUMMARY_BUTTON = (theme) => css`
   background-color: ${theme.semantic.bgLight};
 `;
 const STYLES_MODAL = css`
-  z-index: ${Constants.zindex.modal};
+  z-index: ${Constants.zindex.uploadModal};
   top: ${Constants.sizes.header}px;
   right: 0;
   bottom: 0;

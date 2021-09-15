@@ -138,6 +138,7 @@ export const zindex = {
   body: 2,
   sidebar: 5,
   alert: 3,
+  uploadModal: 3,
   header: 4,
   modal: 6,
   tooltip: 7,
