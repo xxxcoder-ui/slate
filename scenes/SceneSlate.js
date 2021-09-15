@@ -9,6 +9,7 @@ import * as Utilities from "~/common/utilities";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
+import * as Upload from "~/components/core/Upload";
 
 import { Link } from "~/components/core/Link";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
@@ -21,7 +22,7 @@ import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ProcessedText from "~/components/core/ProcessedText";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
-import SquareButtonGray from "~/components/core/SquareButtonGray";
+import SquareButtonGray, { STYLES_SQUARE_BUTTON_GRAY } from "~/components/core/SquareButtonGray";
 import EmptyState from "~/components/core/EmptyState";
 import DataView from "~/components/core/DataView";
 
@@ -356,18 +357,6 @@ class SlatePage extends React.Component {
   //     detail: { index },
   //   });
 
-  _handleAdd = async () => {
-    if (!this.props.viewer) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-    await this.props.onAction({
-      type: "SIDEBAR",
-      value: "SIDEBAR_ADD_FILE_TO_BUCKET",
-      data: this.props.data,
-    });
-  };
-
   _handleShowSettings = () => {
     return this.props.onAction({
       type: "SIDEBAR",
@@ -406,13 +395,15 @@ class SlatePage extends React.Component {
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     let actions = isOwner ? (
-      <span>
+      <span css={Styles.HORIZONTAL_CONTAINER}>
         <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
           <SVG.Download height="16px" />
         </SquareButtonGray>
-        <SquareButtonGray onClick={this._handleAdd} style={{ marginRight: 16 }}>
-          <SVG.Plus height="16px" />
-        </SquareButtonGray>
+        <Upload.Trigger viewer={this.props.viewer} style={{ marginRight: 16 }}>
+          <SquareButtonGray>
+            <SVG.Plus height="16px" />
+          </SquareButtonGray>
+        </Upload.Trigger>
         <SquareButtonGray onClick={this._handleShowSettings}>
           <SVG.Settings height="16px" />
         </SquareButtonGray>
