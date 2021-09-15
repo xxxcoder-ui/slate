@@ -158,26 +158,17 @@ export default class SceneProfile extends React.Component {
       );
     }
     let name = user.data.name || `@${user.username}`;
-    let description, title, file, image;
-    if (this.props.page.params?.cid) {
-      file = user.library.find((file) => file.cid === this.props.page.params.cid);
-    }
-    if (file) {
-      title = `${file.data.name || file.filename}`;
-      description = file.data.body ? file.data.body : `View ${title}, a file from ${name} on Slate`;
-      image = Utilities.getImageUrlIfExists(file, Constants.linkPreviewSizeLimit);
+    let description, title;
+    const image = user.photo;
+    if (user.body) {
+      description = `${name}. ${user.body}`;
     } else {
-      image = user.data.photo;
-      if (user.data.body) {
-        description = `${name}. ${user.data.body}`;
-      } else {
-        description = `View collections and content from ${name} on Slate`;
-      }
-      if (user.data.name) {
-        title = `${user.data.name} (@${user.username}) • Slate`;
-      } else {
-        title = `${user.username} • Slate`;
-      }
+      description = `View collections and content from ${name} on Slate`;
+    }
+    if (user.name) {
+      title = `${user.name} (@${user.username}) • Slate`;
+    } else {
+      title = `${user.username} • Slate`;
     }
 
     return (

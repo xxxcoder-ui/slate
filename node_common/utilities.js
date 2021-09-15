@@ -62,13 +62,11 @@ export const getIdFromCookieValue = (token) => {
   if (!Strings.isEmpty(token)) {
     try {
       const decoded = JWT.verify(token, Environment.JWT_SECRET);
-      id = decoded.id;
+      return decoded.id;
     } catch (e) {
       Logging.error(e.message);
     }
   }
-
-  return id;
 };
 
 export const getIdFromCookie = (req) => {
