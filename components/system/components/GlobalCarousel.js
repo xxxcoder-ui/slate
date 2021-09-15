@@ -17,8 +17,6 @@ const STYLES_ROOT = css`
   right: 0;
   bottom: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26,9 +24,8 @@ const STYLES_ROOT = css`
   z-index: ${Constants.zindex.modal};
   background-color: rgba(0, 0, 0, 0.8);
 
-  ${
-    "" /* Note(Amine): we're using the blur filter to fix a weird backdrop-filter's bug in chrome */
-  }
+  // Note(Amine): we're using the blur filter to fix a weird backdrop-filter's bug in chrome
+
   filter: blur(0px);
   @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
     -webkit-backdrop-filter: blur(15px);
@@ -37,11 +34,11 @@ const STYLES_ROOT = css`
 
   @keyframes global-carousel-fade-in {
     from {
-      transform: translate(8px);
+      transform: translateX(8px);
       opacity: 0;
     }
     to {
-      transform: trannslateX(0px);
+      transform: translateX(0px);
       opacity: 1;
     }
   }
