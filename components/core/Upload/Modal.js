@@ -377,14 +377,14 @@ const SummaryBox = () => {
 
 const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...props }) => {
   const [globalCarouselState, setGlobalCarouselState] = React.useState({
-    currentCarrousel: -1,
+    currentCarousel: -1,
     currentObjects: viewer.library,
   });
 
   const handleFileClick = (fileIdx) => {
     setGlobalCarouselState((prev) => ({
       ...prev,
-      currentCarrousel: fileIdx - (fileLoading?.length || 0),
+      currentCarousel: fileIdx - (fileLoading?.length || 0),
     }));
   };
 
@@ -526,12 +526,12 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
           carouselType="ACTIVITY"
           viewer={viewer}
           objects={globalCarouselState.currentObjects}
-          index={globalCarouselState.currentCarrousel}
+          index={globalCarouselState.currentCarousel}
           isMobile={props.isMobile}
           onChange={(idx) =>
             setGlobalCarouselState((prev) => ({
               ...prev,
-              currentCarrousel: idx - (fileLoading?.length || 0),
+              currentCarousel: idx - (fileLoading?.length || 0),
             }))
           }
           isOwner={false}
