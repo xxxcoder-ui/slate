@@ -22,7 +22,7 @@ import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ProcessedText from "~/components/core/ProcessedText";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
-import SquareButtonGray, { STYLES_SQUARE_BUTTON_GRAY } from "~/components/core/SquareButtonGray";
+import SquareButtonGray from "~/components/core/SquareButtonGray";
 import EmptyState from "~/components/core/EmptyState";
 import DataView from "~/components/core/DataView";
 

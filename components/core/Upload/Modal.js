@@ -226,7 +226,7 @@ function Controls() {
       <System.H5 color="textGrayDark" as="p" style={{ textAlign: "center" }}>
         Drop or select files to save to Slate
         <br />
-        (we recommend uploading less than 200 files at a time)
+        (we recommend uploading fewer than 200 files at a time)
       </System.H5>
       <System.ButtonTertiary
         type="label"
@@ -297,7 +297,7 @@ function Summary({ viewer }) {
       uploadSummary.push({
         id: file.id,
         name: file.filename,
-        total: file.data.size,
+        total: file.size,
         createdAt: file.createdAt,
         status: "saved",
         libraryId: idx,
@@ -354,8 +354,8 @@ const SummaryBox = () => {
         <System.H5 color="textGrayDark" style={{ marginTop: 12 }}>
           {Strings.bytesToSize(totalBytesUploaded, 0)} of {Strings.bytesToSize(totalBytes, 0)}{" "}
           <Show when={uploadRemainingTime && uploadRemainingTime !== Infinity}>
-            – {Strings.getRemainingTime(uploadRemainingTime)} (Please don’t close the browser tab
-            during this time)
+            – {Strings.getRemainingTime(uploadRemainingTime)} (Please keep this tab open during
+            uploading)
           </Show>
         </System.H5>
         <System.ButtonTertiary
@@ -493,7 +493,7 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
               </TableButton>
             </Match>
             <Match when={row.status === "failed"}>
-              <TableButton onClick={() => retry({ fileKey: row.id })}> Retry</TableButton>
+              <TableButton onClick={() => retry({ fileKey: row.id })}>Retry</TableButton>
             </Match>
           </Switch>
         </div>

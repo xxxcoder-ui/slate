@@ -159,7 +159,7 @@ export const upload = async ({ file, onProgress, bucketName, uploadAbort }) => {
   }
 
   let item = res.data.data;
-  if (item.type.startsWith("image/")) {
+  if (Validations.isPreviewableImage(item.type)) {
     let url = Strings.getURLfromCID(item.cid);
     try {
       let blurhash = await encodeImageToBlurhash(url);
