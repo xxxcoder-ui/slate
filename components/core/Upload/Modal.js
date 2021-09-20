@@ -438,7 +438,7 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
               <System.H5 color="red">Failed</System.H5>
             </Match>
             <Match when={row.status === "duplicate"}>
-              <System.H5 color="green">Already exists</System.H5>
+              <System.H5 color="green">Already saved</System.H5>
             </Match>
           </Switch>
         </div>
