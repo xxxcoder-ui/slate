@@ -84,10 +84,11 @@ const useUpload = () => {
       }));
     };
 
-    const handleSuccess = ({ fileKey }) => {
+    const handleSuccess = ({ fileKey, cid }) => {
       setUploadState((prev) => {
         const newFileLoading = { ...prev.fileLoading };
-        delete newFileLoading[fileKey];
+        newFileLoading[fileKey].status = "success";
+        newFileLoading[fileKey].cid = cid;
         return {
           ...prev,
           fileLoading: newFileLoading,

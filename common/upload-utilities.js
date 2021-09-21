@@ -9,7 +9,7 @@ let UploadStore = {
   queue: [],
   failedFilesCache: {},
   isUploading: false,
-  duplicates: {},
+  uploadedFiles: {},
 };
 
 let UploadAbort = {
@@ -76,11 +76,13 @@ export function createUploadProvider({
         if (!createResponse || createResponse.error) throw new Error(response);
 
         const isDuplicate = createResponse?.data?.skipped > 0;
+        const fileCid = createResponse.data?.cid;
         if (isDuplicate) {
-          UploadStore.duplicates[fileKey] = true;
-          if (onDuplicate) onDuplicate({ fileKey, cid: createResponse.data?.cid });
+          UploadStore.uploadedFiles[fileKey] = true;
+          if (onDuplicate) onDuplicate({ fileKey, cid: fileCid });
         } else {
-          if (onSuccess) onSuccess({ fileKey });
+          UploadStore.uploadedFiles[fileKey] = true;
+          if (onSuccess) onSuccess({ fileKey, cid: fileCid });
         }
       }
     } catch (e) {
@@ -110,9 +112,9 @@ export function createUploadProvider({
       const doesQueueIncludeFile = getUploadQueue().some(
         ({ file }) => getFileKey(files[i]) === getFileKey(file)
       );
-      const isDuplicate = fileKey in UploadStore.duplicates;
-      // NOTE(amine): skip the file if already uploaded or is a duplicate
-      if (doesQueueIncludeFile || isDuplicate) continue;
+      const isUploaded = fileKey in UploadStore.uploadedFiles;
+      // NOTE(amine): skip the file if already uploaded or is in queue
+      if (doesQueueIncludeFile || isUploaded) continue;
 
       // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
       if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });

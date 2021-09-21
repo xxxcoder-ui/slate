@@ -15,9 +15,8 @@ import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { useUploadContext, useUploadRemainingTime } from "~/components/core/Upload/Provider";
 import { Table } from "~/components/system/components/Table";
 import { Match, Switch } from "~/components/utility/Switch";
-import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { motion } from "framer-motion";
-import { ModalPortal } from "~/components/core/ModalPortal";
+import { Link } from "~/components/core/Link";
 
 import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
 import DataMeter from "~/components/core/DataMeter";
@@ -275,36 +274,13 @@ const STYLES_TABLE = (theme) => css`
   border: 1px solid ${theme.semantic.borderGrayLight};
 `;
 
-function Summary({ viewer }) {
+function Summary({ onAction }) {
   const [{ fileLoading, isUploading }, { retry, cancel }] = useUploadContext();
 
-  const { library } = viewer;
-
   const uploadSummary = React.useMemo(() => {
-    const uploadSummary = Object.entries(fileLoading).map(([, file]) => {
-      // NOTE(amine): find the duplicate element in the library
-      if (file.status === "duplicate") {
-        const libraryId = library.findIndex((item) => item.cid === file.cid);
-        return {
-          ...file,
-          libraryId,
-        };
-      }
-      return file;
-    });
-
-    library.forEach((file, idx) => {
-      uploadSummary.push({
-        id: file.id,
-        name: file.filename,
-        total: file.size,
-        createdAt: file.createdAt,
-        status: "saved",
-        libraryId: idx,
-      });
-    });
-    return uploadSummary;
-  }, [fileLoading, library]);
+    const uploadSummary = Object.entries(fileLoading).map(([, file]) => file);
+    return uploadSummary.sort((a, b) => b.createdAt - a.createdAt);
+  }, [fileLoading]);
 
   return (
     <div style={{ height: "100%", width: "100%" }} css={Styles.VERTICAL_CONTAINER}>
@@ -313,18 +289,17 @@ function Summary({ viewer }) {
       </Show>
       <SummaryTable
         style={{ marginTop: 24, marginBottom: 20 }}
-        viewer={viewer}
+        onAction={onAction}
         retry={retry}
         cancel={cancel}
-        fileLoading={fileLoading}
         uploadSummary={uploadSummary}
       />
     </div>
   );
 }
 
-const TableButton = ({ children, ...props }) => (
-  <System.H5 css={Styles.BUTTON_RESET} color="blue" as="button" {...props}>
+const TableButton = ({ children, as = "button", ...props }) => (
+  <System.H5 css={Styles.BUTTON_RESET} color="blue" as={as} {...props}>
     {children}
   </System.H5>
 );
@@ -375,19 +350,7 @@ const SummaryBox = () => {
   );
 };
 
-const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...props }) => {
-  const [globalCarouselState, setGlobalCarouselState] = React.useState({
-    currentCarousel: -1,
-    currentObjects: viewer.library,
-  });
-
-  const handleFileClick = (fileIdx) => {
-    setGlobalCarouselState((prev) => ({
-      ...prev,
-      currentCarousel: fileIdx - (fileLoading?.length || 0),
-    }));
-  };
-
+const SummaryTable = ({ uploadSummary, onAction, retry, cancel, ...props }) => {
   const columns = React.useMemo(() => {
     return [
       {
@@ -445,9 +408,17 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
       ),
       object: (
         <div>
-          <System.H5 nbrOflines={1} title={row.name}>
-            {row.name}
-          </System.H5>
+          {row.cid ? (
+            <Link onAction={onAction} href={`/_/data?cid=${row.cid}`}>
+              <System.H5 nbrOflines={1} title={row.name}>
+                {row.name}
+              </System.H5>
+            </Link>
+          ) : (
+            <System.H5 nbrOflines={1} title={row.name}>
+              {row.name}
+            </System.H5>
+          )}
         </div>
       ),
       date: (
@@ -477,7 +448,9 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
           <Switch
             fallback={
               <div css={Styles.HORIZONTAL_CONTAINER}>
-                <TableButton onClick={() => handleFileClick(row.libraryId)}>Edit</TableButton>
+                <Link onAction={onAction} href={`/_/data?cid=${row.cid}`}>
+                  <TableButton as="p">Edit</TableButton>
+                </Link>
                 <TableButton style={{ marginLeft: 15 }}>Share</TableButton>
               </div>
             }
@@ -521,23 +494,6 @@ const SummaryTable = ({ uploadSummary, viewer, fileLoading, retry, cancel, ...pr
           rows,
         }}
       />
-      <ModalPortal>
-        <GlobalCarousel
-          carouselType="ACTIVITY"
-          viewer={viewer}
-          objects={globalCarouselState.currentObjects}
-          index={globalCarouselState.currentCarousel}
-          isMobile={props.isMobile}
-          onChange={(idx) =>
-            setGlobalCarouselState((prev) => ({
-              ...prev,
-              currentCarousel: idx - (fileLoading?.length || 0),
-            }))
-          }
-          isOwner={false}
-          onAction={() => {}}
-        />
-      </ModalPortal>
     </div>
   );
 };
