@@ -228,7 +228,7 @@ export default class ApplicationLayout extends React.Component {
               this.props.page?.id === "NAV_SIGN_IN"
                 ? true
                 : this.props.viewer
-                ? this.props.viewer.onboarding.hidePrivacyAlert
+                ? this.props.viewer?.onboarding?.hidePrivacyAlert
                 : false
             }
             onAction={this.props.onAction}
