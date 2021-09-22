@@ -44,6 +44,7 @@ const returnJSON = async (route, options) => {
 
     return json;
   } catch (e) {
+    if (e.name === "AbortError") return { aborted: true };
     Logging.error(e);
   }
 };
@@ -223,11 +224,12 @@ export const createFile = async (data) => {
   });
 };
 
-export const createLink = async (data) => {
+export const createLink = async (data, options) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/create-link`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
+    ...options,
   });
 };
 

@@ -12,6 +12,7 @@ import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { H4, P3 } from "~/components/system/components/Typography";
 
 import ProfilePhoto from "~/components/core/ProfilePhoto";
+import DataMeter from "~/components/core/DataMeter";
 
 const STYLES_HEADER = css`
   position: relative;
@@ -79,36 +80,6 @@ const STYLES_SECTION_ITEM_HOVER = (theme) => css`
     background-color: ${theme.system.grayLight4};
   }
 `;
-
-const STYLES_DATAMETER_WRAPPER = (theme) => css`
-  width: 100%;
-  min-width: 240px;
-  height: 8px;
-  background-color: ${theme.semantic.bgBlurWhiteTRN};
-  border: 1px solid ${theme.semantic.borderGrayLight4};
-  border-radius: 2px;
-  overflow: hidden;
-`;
-
-const STYLES_DATAMETER = (theme) => css`
-  height: 100%;
-  background-color: ${theme.system.blue};
-  border-radius: 2px;
-`;
-
-const DataMeter = ({ bytes = 1000, maximumBytes = 4000, ...props }) => {
-  const percentage = bytes / maximumBytes;
-  return (
-    <div css={STYLES_DATAMETER_WRAPPER} {...props}>
-      <div
-        style={{
-          width: `calc(${percentage} * 100%)`,
-        }}
-        css={STYLES_DATAMETER}
-      />
-    </div>
-  );
-};
 
 export class ApplicationUserControlsPopup extends React.Component {
   state = {
@@ -180,7 +151,7 @@ export class ApplicationUserControlsPopup extends React.Component {
           <DataMeter
             bytes={stats.bytes}
             maximumBytes={stats.maximumBytes}
-            style={{ marginTop: 8 }}
+            style={{ minWidth: "240px", marginTop: 8 }}
           />
         </div>
       </Link>

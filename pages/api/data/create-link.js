@@ -46,7 +46,13 @@ export default async (req, res) => {
   });
 
   if (!filteredFiles?.length) {
-    return res.status(400).send({ decorator: "SERVER_CREATE_LINK_DUPLICATE", error: true });
+    return res.status(400).send({
+      decorator: "SERVER_CREATE_LINK_DUPLICATE",
+      data: {
+        links: duplicateFiles.map((file) => file.cid),
+        duplicate: true,
+      },
+    });
   }
 
   files = [];
@@ -143,6 +149,6 @@ export default async (req, res) => {
 
   return res.status(200).send({
     decorator,
-    data: { added, skipped: files.length - added },
+    data: { added, links: filteredFiles.map((file) => file.cid), skipped: files.length - added },
   });
 };

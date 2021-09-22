@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
+import * as Upload from "~/components/core/Upload";
 
 import {
   ApplicationUserControls,
@@ -49,9 +50,9 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   background-color: ${theme.system.white};
   box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
 
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-    -webkit-backdrop-filter: blur(25px);
-    backdrop-filter: blur(25px);
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
     background-color: rgba(255, 255, 255, 0.7);
   }
 `;
@@ -107,7 +108,6 @@ const STYLES_BACKGROUND = css`
 
 const STYLES_UPLOAD_BUTTON = css`
   ${Styles.CONTAINER_CENTERED};
-  ${Styles.BUTTON_RESET};
   background-color: ${Constants.semantic.bgGrayLight};
   border-radius: 8px;
   width: 24px;
@@ -116,7 +116,7 @@ const STYLES_UPLOAD_BUTTON = css`
   pointer-events: auto;
 `;
 
-export default function ApplicationHeader({ viewer, onAction }) {
+export default function ApplicationHeader({ viewer, page, data, onAction }) {
   const [state, setState] = React.useState({
     showDropdown: false,
     popup: null,
@@ -149,10 +149,6 @@ export default function ApplicationHeader({ viewer, onAction }) {
     initialValue: "",
     onSubmit: handleCreateSearch,
   });
-
-  const handleUpload = React.useCallback(() => {
-    onAction({ type: "SIDEBAR", value: "SIDEBAR_ADD_FILE_TO_BUCKET" });
-  }, [onAction]);
 
   const handleDismissSearch = () => setFieldValue("");
 
@@ -192,15 +188,28 @@ export default function ApplicationHeader({ viewer, onAction }) {
             {...getFieldProps()}
           />
         </div>
-        <div css={STYLES_RIGHT}>
-          <Actions
-            isSearching={isSearching}
-            isSignedOut={isSignedOut}
-            onAction={onAction}
-            onUpload={handleUpload}
-            onDismissSearch={handleDismissSearch}
-          />
-        </div>
+        <Upload.Provider page={page} data={data} viewer={viewer}>
+          <Upload.Root onAction={onAction} viewer={viewer}>
+            <div css={STYLES_RIGHT}>
+              <Actions
+                uploadAction={
+                  <Upload.Trigger
+                    enableMetrics
+                    viewer={viewer}
+                    aria-label="Upload"
+                    css={STYLES_UPLOAD_BUTTON}
+                  >
+                    <SVG.Plus height="16px" />
+                  </Upload.Trigger>
+                }
+                isSearching={isSearching}
+                isSignedOut={isSignedOut}
+                onAction={onAction}
+                onDismissSearch={handleDismissSearch}
+              />
+            </div>
+          </Upload.Root>
+        </Upload.Provider>
       </div>
       <Show when={mobile && state.popup === "profile"}>
         <ApplicationUserControlsPopup
@@ -219,7 +228,7 @@ export default function ApplicationHeader({ viewer, onAction }) {
   );
 }
 
-const Actions = ({ isSignedOut, isSearching, onAction, onUpload, onDismissSearch }) => {
+const Actions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismissSearch }) => {
   const authActions = React.useMemo(
     () => (
       <>
@@ -249,29 +258,18 @@ const Actions = ({ isSignedOut, isSearching, onAction, onUpload, onDismissSearch
     [onAction]
   );
 
-  const uploadAction = React.useMemo(
-    () => (
-      <button css={STYLES_UPLOAD_BUTTON} onClick={onUpload}>
-        <SVG.Plus height="16px" />
-      </button>
-    ),
-    [onUpload]
-  );
-
   return (
     <AnimatePresence>
-      <Switch
-        fallback={
+      <Switch fallback={uploadAction}>
+        <Match when={isSignedOut}>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ y: 10, opacity: 0 }}
           >
-            {uploadAction}
+            {authActions}
           </motion.div>
-        }
-      >
-        <Match when={isSignedOut}>{authActions}</Match>
+        </Match>
         <Match when={isSearching}>
           <motion.div
             initial={{ opacity: 0, y: -10 }}

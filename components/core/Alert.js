@@ -154,40 +154,6 @@ export class Alert extends React.Component {
       );
     }
 
-    //NOTE(martina): uploading message
-    if (this.props.fileLoading && Object.keys(this.props.fileLoading).length) {
-      let total = Object.values(this.props.fileLoading).filter((upload) => {
-        return !upload.cancelled;
-      }).length;
-      let uploaded =
-        Object.values(this.props.fileLoading).filter((upload) => {
-          return upload.loaded === upload.total;
-        }).length || 0;
-
-      return (
-        <div
-          css={STYLES_INFO}
-          style={{ cursor: "pointer", ...this.props.style }}
-          onClick={() =>
-            this.props.onAction({
-              type: "SIDEBAR",
-              value: "SIDEBAR_ADD_FILE_TO_BUCKET",
-            })
-          }
-        >
-          <div css={STYLES_MESSAGE_BOX}>
-            <div style={{ height: 16, width: 16, marginRight: 16 }}>
-              <LoaderSpinner style={{ height: 16, width: 16 }} />
-            </div>
-            <span css={STYLES_TEXT}>
-              {uploaded} / {total} file
-              {total === 1 ? "" : "s"} uploading{" "}
-            </span>
-          </div>
-        </div>
-      );
-    }
-
     //NOTE(martina): don't upload sensitive info alert
     if (this.props.viewer && !this.props.noWarning) {
       return (

@@ -6,9 +6,7 @@ import * as Styles from "~/common/styles";
 import * as Credentials from "~/common/credentials";
 import * as Constants from "~/common/constants";
 import * as Validations from "~/common/validations";
-import * as FileUtilities from "~/common/file-utilities";
 import * as Window from "~/common/window";
-import * as Store from "~/common/store";
 import * as Websockets from "~/common/browser-websockets";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
@@ -38,7 +36,6 @@ import SidebarCreateSlate from "~/components/sidebars/SidebarCreateSlate";
 import SidebarCreateWalletAddress from "~/components/sidebars/SidebarCreateWalletAddress";
 import SidebarWalletSendFunds from "~/components/sidebars/SidebarWalletSendFunds";
 import SidebarFileStorageDeal from "~/components/sidebars/SidebarFileStorageDeal";
-import ModalAddFileToBucket from "~/components/sidebars/ModalAddFileToBucket";
 import SidebarAddFileToSlate from "~/components/sidebars/SidebarAddFileToSlate";
 import SidebarDragDropNotice from "~/components/sidebars/SidebarDragDropNotice";
 import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlateSettings";
@@ -68,7 +65,6 @@ const SIDEBARS = {
   SIDEBAR_FILE_STORAGE_DEAL: <SidebarFileStorageDeal />,
   SIDEBAR_WALLET_SEND_FUNDS: <SidebarWalletSendFunds />,
   SIDEBAR_CREATE_WALLET_ADDRESS: <SidebarCreateWalletAddress />,
-  SIDEBAR_ADD_FILE_TO_BUCKET: <ModalAddFileToBucket />,
   SIDEBAR_ADD_FILE_TO_SLATE: <SidebarAddFileToSlate />,
   SIDEBAR_CREATE_SLATE: <SidebarCreateSlate />,
   SIDEBAR_DRAG_DROP_NOTICE: <SidebarDragDropNotice />,
@@ -121,14 +117,9 @@ export default class ApplicationPage extends React.Component {
 
     mounted = true;
 
-    window.addEventListener("dragenter", this._handleDragEnter);
-    window.addEventListener("dragleave", this._handleDragLeave);
-    window.addEventListener("dragover", this._handleDragOver);
-    window.addEventListener("drop", this._handleDrop);
     window.addEventListener("online", this._handleOnlineStatus);
     window.addEventListener("offline", this._handleOnlineStatus);
     window.addEventListener("resize", this._handleWindowResize);
-    window.addEventListener("paste", this._handleUploadFromClipboard);
     window.onpopstate = this._handleBackForward;
 
     if (this.state.viewer) {
@@ -137,14 +128,9 @@ export default class ApplicationPage extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("dragenter", this._handleDragEnter);
-    window.removeEventListener("dragleave", this._handleDragLeave);
-    window.removeEventListener("dragover", this._handleDragOver);
-    window.removeEventListener("drop", this._handleDrop);
     window.removeEventListener("online", this._handleOnlineStatus);
     window.removeEventListener("offline", this._handleOnlineStatus);
     window.removeEventListener("resize", this._handleWindowResize);
-    window.removeEventListener("paste", this._handleUploadFromClipboard);
 
     mounted = false;
 
@@ -153,30 +139,6 @@ export default class ApplicationPage extends React.Component {
       Websockets.deleteClient();
     }
   }
-
-  _handleUploadFromClipboard = (e) => {
-    const clipboardItems = e.clipboardData.items || [];
-    if (!clipboardItems) return;
-
-    const { fileLoading, toUpload } = FileUtilities.formatPastedImages({
-      clipboardItems,
-    });
-
-    this._handleRegisterFileLoading({ fileLoading });
-
-    const page = this.state.page;
-    let slate = null;
-    if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
-      slate = this.state.data;
-    }
-
-    FileUtilities.uploadFiles({
-      files: toUpload,
-      slate,
-      keys: Object.keys(fileLoading),
-      context: this,
-    });
-  };
 
   _handleUpdateViewer = ({ viewer, callback }) => {
     // _handleUpdateViewer = (newViewerState, callback) => {
@@ -290,97 +252,6 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _handleDrop = async (e) => {
-    e.preventDefault();
-    this.setState({ sidebar: null });
-    const { fileLoading, files, numFailed, error } = await FileUtilities.formatDroppedFiles({
-      dataTransfer: e.dataTransfer,
-    });
-
-    if (error) {
-      return null;
-    }
-
-    let page = this.state.page;
-
-    let slate = null;
-    if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer?.id) {
-      slate = this.state.data;
-    }
-
-    this._handleRegisterFileLoading({ fileLoading });
-    FileUtilities.uploadFiles({
-      files,
-      slate,
-      keys: Object.keys(fileLoading),
-      numFailed,
-      context: this,
-    });
-  };
-
-  _handleUploadFiles = async ({ files, slate }) => {
-    const { fileLoading, toUpload, numFailed } = FileUtilities.formatUploadedFiles({ files });
-
-    this._handleRegisterFileLoading({ fileLoading });
-    FileUtilities.uploadFiles({
-      files: toUpload,
-      slate,
-      keys: Object.keys(fileLoading),
-      numFailed,
-      context: this,
-    });
-  };
-
-  _handleRegisterFileLoading = ({ fileLoading }) => {
-    if (this.state.fileLoading) {
-      return this.setState({
-        fileLoading: { ...this.state.fileLoading, ...fileLoading },
-      });
-    }
-    return this.setState({
-      fileLoading,
-    });
-  };
-
-  _handleRegisterFileCancelled = ({ key }) => {
-    let fileLoading = this.state.fileLoading;
-    fileLoading[key].cancelled = true;
-    this.setState({ fileLoading });
-  };
-
-  _handleRegisterLoadingFinished = ({ keys }) => {
-    let fileLoading = this.state.fileLoading;
-    for (let key of keys) {
-      delete fileLoading[key];
-    }
-    this.setState({ fileLoading });
-  };
-
-  _handleDragEnter = (e) => {
-    e.preventDefault();
-    if (this.state.sidebar) {
-      return;
-    }
-
-    // NOTE(jim): Only allow the sidebar to show with file drag and drop.
-    if (e.dataTransfer?.items?.length && e.dataTransfer.items[0].kind !== "file") {
-      return;
-    }
-
-    this._handleAction({
-      type: "SIDEBAR",
-      value: "SIDEBAR_ADD_FILE_TO_BUCKET",
-    });
-  };
-
-  _handleDragLeave = (e) => {
-    e.preventDefault();
-  };
-
-  _handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
   _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
     let response = await authenticate(state);
     if (Events.hasError(response)) {
@@ -462,10 +333,6 @@ export default class ApplicationPage extends React.Component {
         sidebar: options.value,
         sidebarData: options.data,
       });
-    }
-
-    if (options.type === "REGISTER_FILE_CANCELLED") {
-      return this._handleRegisterFileCancelled({ key: options.value });
     }
 
     if (options.type === "NEW_WINDOW") {
@@ -566,8 +433,9 @@ export default class ApplicationPage extends React.Component {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}
-          navigation={NavigationData.navigation}
+          data={this.state.data}
           page={page}
+          navigation={NavigationData.navigation}
           onAction={this._handleAction}
           isMobile={this.state.isMobile}
           isMac={this.props.isMac}
@@ -586,7 +454,6 @@ export default class ApplicationPage extends React.Component {
       onAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticate),
       onTwitterAuthenticate: this._withAuthenticationBehavior(UserBehaviors.authenticateViaTwitter),
       onAction: this._handleAction,
-      onUpload: this._handleUploadFiles,
       isMobile: this.state.isMobile,
       isMac: this.props.isMac,
       activeUsers: this.state.activeUsers,
@@ -602,10 +469,8 @@ export default class ApplicationPage extends React.Component {
         viewer: this.state.viewer,
         data: this.state.data,
         sidebarData: this.state.sidebarData,
-        fileLoading: this.state.fileLoading,
         onSelectedChange: this._handleSelectedChange,
         onCancel: this._handleDismissSidebar,
-        onUpload: this._handleUploadFiles,
         onAction: this._handleAction,
       });
     }
@@ -639,7 +504,6 @@ export default class ApplicationPage extends React.Component {
           header={headerElement}
           sidebar={sidebarElement}
           onDismissSidebar={this._handleDismissSidebar}
-          fileLoading={this.state.fileLoading}
           isMobile={this.state.isMobile}
           isMac={this.props.isMac}
           viewer={this.state.viewer}

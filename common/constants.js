@@ -91,6 +91,7 @@ export const semantic = {
   textGrayDark: system.grayDark3,
   textBlack: system.black,
 
+  bgWhite: system.white,
   bgLight: system.grayLight6,
   bgGrayLight: system.grayLight5,
   bgBlurWhite: "rgba(255, 255, 255, 0.7)",
@@ -137,6 +138,7 @@ export const zindex = {
   body: 2,
   sidebar: 5,
   alert: 3,
+  uploadModal: 3,
   header: 4,
   modal: 6,
   tooltip: 7,
