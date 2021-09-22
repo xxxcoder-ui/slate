@@ -47,22 +47,12 @@ const getCookie = (name) => {
   if (match) return match[2];
 };
 
-export const uploadLink = async ({ url, slate }) => {
-  Events.dispatchMessage({ message: "Uploading link...", status: "INFO" });
-  let createResponse = await Actions.createLink({ url, slate });
-  if (Events.hasError(createResponse)) {
-    return;
-  }
+export const uploadLink = async ({ url, slate, uploadAbort }) => {
+  const abortController = new AbortController();
+  if (uploadAbort) uploadAbort.abort = abortController.abort.bind(abortController);
 
-  const { added, skipped } = createResponse.data;
-  if (added) {
-    Events.dispatchMessage({ message: "Link added", status: "INFO" });
-  } else if (skipped) {
-    Events.dispatchMessage({
-      message: "You've already saved this link",
-    });
-    return;
-  }
+  let createResponse = await Actions.createLink({ url, slate }, { signal: abortController.signal });
+  return createResponse;
 };
 
 export const upload = async ({ file, onProgress, bucketName, uploadAbort }) => {
