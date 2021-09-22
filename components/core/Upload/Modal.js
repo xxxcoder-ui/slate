@@ -108,6 +108,8 @@ export default function UploadModal({ onAction, viewer }) {
     }));
   };
 
+  const showUploadSummary = () => setState((prev) => ({ ...prev, view: "summary" }));
+
   useEscapeKey(hideUploadModal);
 
   useLockScroll();
@@ -135,7 +137,10 @@ export default function UploadModal({ onAction, viewer }) {
             <SVG.List />
             <span style={{ marginLeft: 8 }}>Upload Summary</span>
           </button>
-          <Show when={state.view === "summary"} fallback={<Controls />}>
+          <Show
+            when={state.view === "summary"}
+            fallback={<Controls showUploadSummary={showUploadSummary} />}
+          >
             <Summary onAction={onAction} viewer={viewer} />
           </Show>
         </div>
@@ -158,8 +163,8 @@ const STYLES_FILE_HIDDEN = css`
   left: -1px;
 `;
 
-function Controls() {
-  const [, { upload }] = useUploadContext();
+function Controls({ showUploadSummary }) {
+  const [, { upload, uploadLink }] = useUploadContext();
 
   const [state, setState] = React.useState({
     url: "",
@@ -183,7 +188,8 @@ function Controls() {
       setState((prev) => ({ ...prev, urlError: true }));
       return;
     }
-    FileUtilities.uploadLink({ url: state.url, slate: state.slate });
+    uploadLink({ url: state.url, slate: state.slate });
+    showUploadSummary();
   };
 
   const handleChange = (e) => {

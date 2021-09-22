@@ -5,6 +5,8 @@ import * as Actions from "~/common/actions";
 // NOTE(amine): utilities
 export const getFileKey = ({ lastModified, name }) => `${lastModified}-${name}`;
 
+const getLinkSize = (url) => new TextEncoder().encode(url).length;
+
 let UploadStore = {
   queue: [],
   failedFilesCache: {},
@@ -19,8 +21,8 @@ let UploadAbort = {
 
 // NOTE(amine): queue utilities
 const getUploadQueue = () => UploadStore.queue;
-const pushToUploadQueue = ({ file, slate, bucket }) =>
-  UploadStore.queue.push({ file, slate, bucket });
+const pushToUploadQueue = ({ file, slate, bucketName }) =>
+  UploadStore.queue.push({ file, slate, bucketName });
 const resetUploadQueue = () => (UploadStore.queue = []);
 const removeFromUploadQueue = ({ fileKey }) =>
   (UploadStore.queue = UploadStore.queue.filter(({ file }) => getFileKey(file) !== fileKey));
@@ -62,27 +64,50 @@ export function createUploadProvider({
     registerFileUploading({ fileKey });
 
     try {
-      let response = await FileUtilities.upload({
-        file,
-        bucketName,
-        uploadAbort: UploadAbort,
-        onProgress: (e) => onProgress({ fileKey, loaded: e.loaded }),
-      });
+      if (file.type === "link") {
+        onProgress({ fileKey, loaded: getLinkSize(file.name) });
+        const response = await FileUtilities.uploadLink({
+          url: file.name,
+          slate,
+          uploadAbort: UploadAbort,
+        });
 
-      if (!response.aborted) {
-        if (!response || response.error) throw new Error(response);
-        // TODO(amine): merge createFile and upload endpoints
-        let createResponse = await Actions.createFile({ files: [response], slate });
-        if (!createResponse || createResponse.error) throw new Error(response);
+        if (!response?.aborted) {
+          if (!response || response.error) throw new Error(response);
 
-        const isDuplicate = createResponse?.data?.skipped > 0;
-        const fileCid = createResponse.data?.cid;
-        if (isDuplicate) {
+          const isDuplicate = response.data?.duplicate;
+          const fileCid = response.data?.links[0];
+
           UploadStore.uploadedFiles[fileKey] = true;
-          if (onDuplicate) onDuplicate({ fileKey, cid: fileCid });
-        } else {
+          if (isDuplicate) {
+            if (onDuplicate) onDuplicate({ fileKey, cid: fileCid });
+          } else {
+            if (onSuccess) onSuccess({ fileKey, cid: fileCid });
+          }
+        }
+      } else {
+        const response = await FileUtilities.upload({
+          file,
+          bucketName,
+          uploadAbort: UploadAbort,
+          onProgress: (e) => onProgress({ fileKey, loaded: e.loaded }),
+        });
+
+        if (!response?.aborted) {
+          if (!response || response.error) throw new Error(response);
+          // TODO(amine): merge createFile and upload endpoints
+          let createResponse = await Actions.createFile({ files: [response], slate });
+          if (!createResponse || createResponse.error) throw new Error(response);
+
+          const isDuplicate = createResponse?.data?.skipped > 0;
+          const fileCid = createResponse.data?.cid;
           UploadStore.uploadedFiles[fileKey] = true;
-          if (onSuccess) onSuccess({ fileKey, cid: fileCid });
+
+          if (isDuplicate) {
+            if (onDuplicate) onDuplicate({ fileKey, cid: fileCid });
+          } else {
+            if (onSuccess) onSuccess({ fileKey, cid: fileCid });
+          }
         }
       }
     } catch (e) {
@@ -132,6 +157,10 @@ export function createUploadProvider({
 
   const retry = ({ fileKey }) => {
     const { file, slate, bucketName } = getFileFromCache({ fileKey });
+    if (file.type === "link") {
+      addLinkToUploadQueue({ url: file.name, slate });
+      return;
+    }
     addToUploadQueue({ files: [file], slate, bucketName });
   };
 
@@ -154,8 +183,38 @@ export function createUploadProvider({
     resetUploadQueue();
   };
 
+  const addLinkToUploadQueue = async ({ url, slate }) => {
+    const linkAsFile = {
+      name: url,
+      type: "link",
+      size: getLinkSize(url),
+      lastModified: "",
+    };
+    const fileKey = getFileKey(linkAsFile);
+
+    const doesQueueIncludeFile = getUploadQueue().some(
+      ({ file }) => getFileKey(linkAsFile) === getFileKey(file)
+    );
+    const isUploaded = fileKey in UploadStore.uploadedFiles;
+    // NOTE(amine): skip the file if already uploaded or is in queue
+    if (doesQueueIncludeFile || isUploaded) return;
+
+    // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
+    if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
+
+    if (onAddedToQueue) onAddedToQueue(linkAsFile);
+    pushToUploadQueue({ file: linkAsFile, slate, type: "link" });
+
+    const isQueueEmpty = getUploadQueue().length === 0;
+    if (!UploadStore.isUploading && !isQueueEmpty && onStart) {
+      onStart();
+      scheduleQueueUpload();
+    }
+  };
+
   return {
     upload: addToUploadQueue,
+    uploadLink: addLinkToUploadQueue,
     retry,
     cancel,
     cancelAll,

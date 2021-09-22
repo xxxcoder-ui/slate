@@ -173,6 +173,7 @@ const useUpload = () => {
     uploadState,
     {
       upload: uploadProvider.upload,
+      uploadLink: uploadProvider.uploadLink,
       retry: uploadProvider.retry,
       cancel: uploadProvider.cancel,
       cancelAll: uploadProvider.cancelAll,
