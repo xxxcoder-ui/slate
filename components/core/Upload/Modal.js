@@ -285,7 +285,16 @@ function Summary({ onAction }) {
 
   const uploadSummary = React.useMemo(() => {
     const uploadSummary = Object.entries(fileLoading).map(([, file]) => file);
-    return uploadSummary.sort((a, b) => b.createdAt - a.createdAt);
+
+    const statusOrder = {
+      failed: 1,
+      saving: 2,
+      duplicate: 3,
+      success: 4,
+    };
+    return uploadSummary.sort(
+      (a, b) => statusOrder[a.status] - statusOrder[b.status] || a.createdAt - b.createdAt
+    );
   }, [fileLoading]);
 
   return (
