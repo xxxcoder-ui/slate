@@ -49,6 +49,7 @@ import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import PortalsProvider from "~/components/core/PortalsProvider";
 import CTATransition from "~/components/core/CTATransition";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
@@ -496,31 +497,34 @@ export default class ApplicationPage extends React.Component {
     // }
     return (
       <React.Fragment>
-        <ApplicationLayout
-          sidebarName={this.state.sidebar}
-          page={page}
-          onAction={this._handleAction}
-          header={headerElement}
-          sidebar={sidebarElement}
-          onDismissSidebar={this._handleDismissSidebar}
-          isMobile={this.state.isMobile}
-          isMac={this.props.isMac}
-          viewer={this.state.viewer}
-        >
-          {this.state.loading ? (
-            <div
-              css={Styles.CONTAINER_CENTERED}
-              style={{
-                width: "100vw",
-                height: "100vh",
-              }}
-            >
-              <LoaderSpinner style={{ height: 32, width: 32 }} />
-            </div>
-          ) : (
-            scene
-          )}
-        </ApplicationLayout>
+        <PortalsProvider>
+          <ApplicationLayout
+            sidebarName={this.state.sidebar}
+            page={page}
+            onAction={this._handleAction}
+            header={headerElement}
+            sidebar={sidebarElement}
+            onDismissSidebar={this._handleDismissSidebar}
+            fileLoading={this.state.fileLoading}
+            isMobile={this.state.isMobile}
+            isMac={this.props.isMac}
+            viewer={this.state.viewer}
+          >
+            {this.state.loading ? (
+              <div
+                css={Styles.CONTAINER_CENTERED}
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              >
+                <LoaderSpinner style={{ height: 32, width: 32 }} />
+              </div>
+            ) : (
+              scene
+            )}
+          </ApplicationLayout>
+        </PortalsProvider>
         <GlobalModal />
         <SearchModal
           viewer={this.state.viewer}
