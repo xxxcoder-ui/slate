@@ -72,7 +72,6 @@ const useFilterWorker = ({ filterState, setFilterObjects, library }) => {
 
   useWorker(
     {
-      path: "../workers/filter-files.js",
       onStart: (worker) => {
         worker.postMessage({ objects: library, view, subview, type });
         timeoutRef.current = setTimeout(() => {

@@ -425,7 +425,7 @@ export const useLockScroll = ({ lock = true } = {}) => {
   }, [lock]);
 };
 
-export const useWorker = ({ onStart, onMessage, onError, path } = {}, dependencies = []) => {
+export const useWorker = ({ onStart, onMessage, onError } = {}, dependencies = []) => {
   const workerRef = React.useRef();
 
   const onStartRef = React.useRef();
@@ -438,7 +438,7 @@ export const useWorker = ({ onStart, onMessage, onError, path } = {}, dependenci
   onErrorRef.current = onError;
 
   React.useEffect(() => {
-    const worker = new Worker(new URL(path, import.meta.url));
+    const worker = new Worker(new URL("../workers/filter-files.js", import.meta.url));
     if (!worker) return;
 
     workerRef.current = worker;
