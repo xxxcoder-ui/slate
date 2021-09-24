@@ -152,7 +152,7 @@ export const ShareModalPrimitive = ({
                 <button css={Styles.BUTTON_RESET} onClick={onTwitterSharing}>
                   <span>
                     <div css={[STYLES_SOCIAL_BUTTON, STYLES_TWITTER_BUTTON]}>
-                      <SVG.Twitter style={{ display: "block" }} />
+                      <SVG.TwitterWhiteLogo style={{ display: "block" }} />
                     </div>
                     <P3 style={{ marginTop: 4 }} css={STYLES_TEXT_CENTER}>
                       Twitter
