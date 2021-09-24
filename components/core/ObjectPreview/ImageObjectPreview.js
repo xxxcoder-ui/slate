@@ -48,6 +48,9 @@ const ImagePlaceholder = ({ blurhash }) => (
   </div>
 );
 
+// NOTE(amine): cache
+const cidsLoaded = {};
+
 export default function ImageObjectPreview({
   url,
   file,
@@ -55,9 +58,14 @@ export default function ImageObjectPreview({
   tag,
   ...props
 }) {
+  const isCached = cidsLoaded[file.cid];
+
   const previewerRef = React.useRef();
-  const [isLoading, setLoading] = React.useState(true);
-  const handleOnLoaded = () => setLoading(false);
+  const [isLoading, setLoading] = React.useState(isCached);
+  const handleOnLoaded = () => {
+    cidsLoaded[file.cid] = true;
+    setLoading(false);
+  };
 
   const { isInView } = useInView({
     ref: previewerRef,
