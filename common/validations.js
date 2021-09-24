@@ -265,6 +265,9 @@ export const isMarkdown = (filename = "", type = "") => {
   return filename.toLowerCase().endsWith(".md") || type.startsWith("text/plain");
 };
 
+export const isDocument = (fileName = "", type = "") =>
+  isMarkdown(fileName, type) || isPdfType(type) || isEpubType(type);
+
 export const isUnityFile = async (file) => {
   try {
     const zip = new JSZip();
@@ -288,3 +291,9 @@ export const isNFTLink = (file) => {
   domain = domain.toLowerCase();
   return Constants.NFTDomains.includes(domain);
 };
+const isLinkWithSource = (source) => (file) => file.isLink && file.data.source === source;
+export const isTwitterLink = isLinkWithSource("Twitter");
+export const isYoutubeLink = isLinkWithSource("YouTube");
+export const isTwitchLink = isLinkWithSource("Twitch");
+export const isGithubLink = isLinkWithSource("GitHub");
+export const isInstagramLink = isLinkWithSource("Instagram");
