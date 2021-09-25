@@ -208,6 +208,10 @@ export const getRemainingTime = (seconds) => {
   return `${value} ${unit} remaining`;
 };
 
+export const ipfsToCid = (ipfs) => {
+  return ipfs.replace("/ipfs/", "");
+};
+
 export const urlToCid = (url) => {
   return url
     .replace(`${Constants.gateways.ipfs}/`, "")

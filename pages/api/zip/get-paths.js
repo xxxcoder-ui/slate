@@ -12,9 +12,7 @@ export default async (req, res) => {
     return res.status(403).send({ decorator: "SERVER_USER_NOT_FOUND", error: true });
   }
 
-  let { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
-    user,
-  });
+  let { buckets, bucketKey } = await Utilities.getBucket({ user });
 
   if (!buckets) {
     return res.status(500).send({

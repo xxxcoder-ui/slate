@@ -13,7 +13,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_BUCKET_REMOVE_NO_CID", error: true });
   }
 
-  const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
+  const { buckets, bucketKey } = await Utilities.getBucket({
     user,
     bucketName: req.body.data.bucketName,
   });

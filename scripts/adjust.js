@@ -11,27 +11,18 @@ const db = knex(envConfig);
 
 Logging.log(`RUNNING:  adjust.js`);
 
-const addNewFieldsLinks = db.schema.table("files", function (table) {
-  table.string("url").nullable();
-  table.boolean("isLink").notNullable().defaultTo(false);
+const renameExistingColumn = db.schema.table("users", function (table) {
+  table.renameColumn("textileToken", "textileKey");
 });
 
-const addNewFieldsFiles = db.schema.table("files", function (table) {
-  table.string("type").nullable();
-  table.integer("size").notNullable().defaultTo(0);
-  table.string("name").nullable();
-  table.string("body").nullable();
-  table.jsonb("coverImage").nullable();
-  table.string("author").nullable();
-  table.string("source").nullable();
+const addNewColumns = db.schema.table("users", function (table) {
+  table.string("textileToken").nullable();
+  table.string("textileThreadID").nullable();
+  table.string("textileBucketCID").nullable();
 });
 
-const addNewFieldsUsers = db.schema.table("users", function (table) {
-  table.string("name").nullable();
-  table.string("body").nullable();
-  table.string("photo").nullable();
-  table.string("twitter").nullable();
-  table.boolean("twitterVerified").notNullable().defaultTo(false);
+const editColumnLength = db.schema.table("users", function (table) {
+  table.string("textileToken", 400).nullable().alter();
 });
 
 const addNewFieldsSlates = db.schema.table("slates", function (table) {
@@ -40,7 +31,7 @@ const addNewFieldsSlates = db.schema.table("slates", function (table) {
   table.string("preview").nullable();
 });
 
-Promise.all([addNewFieldsLinks]);
+Promise.all([editColumnLength]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

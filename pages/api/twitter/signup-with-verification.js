@@ -8,8 +8,6 @@ import * as Constants from "~/node_common/constants";
 
 import JWT from "jsonwebtoken";
 
-import { PrivateKey } from "@textile/hub";
-
 export default async (req, res) => {
   const { pin, username } = req.body.data;
 
@@ -83,21 +81,14 @@ export default async (req, res) => {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
 
-  // TODO(jim):
-  // Single Key Textile Auth.
-  const identity = await PrivateKey.fromRandom();
-  const textileToken = identity.toString();
+  const {
+    textileKey,
+    textileToken,
+    textileThreadID,
+    textileBucketCID,
+  } = await Utilities.createBucket({});
 
-  // TODO(jim):
-  // Don't do this once you refactor.
-  const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
-    user: {
-      username: newUsername,
-      textileToken,
-    },
-  });
-
-  if (!buckets) {
+  if (!textileKey || !textileToken || !textileThreadID || !textileBucketCID) {
     return res
       .status(500)
       .send({ decorator: "SERVER_CREATE_USER_BUCKET_INIT_FAILURE", error: true });
@@ -109,7 +100,10 @@ export default async (req, res) => {
     twitterId: twitterUser.id_str,
     twitterUsername: twitterUser.screen_name,
     twitterVerified: twitterUser.verified,
+    textileKey,
     textileToken,
+    textileThreadID,
+    textileBucketCID,
   });
 
   if (!user) {

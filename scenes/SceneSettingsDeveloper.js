@@ -183,10 +183,7 @@ export default class SceneSettingsDeveloper extends React.Component {
       }
     }
 
-    let userBucketCID = this.props.viewer?.userBucketCID;
-    if (userBucketCID) {
-      userBucketCID = userBucketCID.replace("/ipfs/", "");
-    }
+    let textileBucketCID = this.props.viewer?.textileBucketCID;
 
     return (
       <WebsitePrototypeWrapper
@@ -240,7 +237,7 @@ export default class SceneSettingsDeveloper extends React.Component {
             files to Slate. You can have a maximum of 10 keys at any given time.
           </ScenePageHeader>
 
-          {userBucketCID && (
+          {textileBucketCID && (
             <div style={{ marginTop: 34, marginBottom: 24 }}>
               <System.DescriptionGroup
                 style={{ maxWidth: 640 }}
@@ -250,7 +247,7 @@ export default class SceneSettingsDeveloper extends React.Component {
                 }
               />
               <input
-                value={this.state.copying ? "Copied!" : userBucketCID}
+                value={this.state.copying ? "Copied!" : textileBucketCID}
                 css={STYLES_API_KEY}
                 style={{ textOverflow: "ellipsis" }}
                 type="text"

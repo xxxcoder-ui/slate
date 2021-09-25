@@ -1,4 +1,4 @@
-import * as Data from "~/node_common/data";
+import * as Constants from "~/node_common/constants";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 import * as Strings from "~/common/strings";
@@ -8,19 +8,17 @@ import * as RequestUtilities from "~/node_common/request-utilities";
 import { v4 as uuid } from "uuid";
 import { MAX_BUCKET_COUNT, MIN_ARCHIVE_SIZE_BYTES } from "~/node_common/constants";
 
-const STAGING_DEAL_BUCKET = "stage-deal";
-
 export default async (req, res) => {
   const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
   if (!userInfo) return;
   const { id, user } = userInfo;
 
-  let bucketName = null;
+  let bucketName = Constants.bucketNames.deals;
   if (req.body.data && req.body.data.bucketName) {
     bucketName = req.body.data.bucketName;
   }
 
-  const { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+  const { buckets, bucketKey } = await Utilities.getBucket({
     user,
     bucketName,
   });
@@ -37,7 +35,7 @@ export default async (req, res) => {
   let items = null;
   let bucketSizeBytes = 0;
   try {
-    const path = await buckets.listPath(bucketRoot.key, "/");
+    const path = await buckets.listPath(bucketKey, "/");
     items = path.item;
     bucketSizeBytes = path.item.size;
   } catch (e) {
@@ -108,7 +106,7 @@ export default async (req, res) => {
 
   // NOTE(jim): Either encrypt the bucket or don't encrypt the bucket.
   let encryptThisDeal = false;
-  if (bucketName !== STAGING_DEAL_BUCKET && user.allowEncryptedDataStorage) {
+  if (bucketName !== Constants.bucketNames.deals && user.allowEncryptedDataStorage) {
     encryptThisDeal = true;
   }
 
@@ -116,7 +114,7 @@ export default async (req, res) => {
     encryptThisDeal = true;
   }
 
-  let key = bucketRoot.key;
+  let key = bucketKey;
   let encryptedBucketName = null;
   if (user.allowEncryptedDataStorage || req.body.data.forceEncryption) {
     encryptedBucketName = req.body.data.forceEncryption

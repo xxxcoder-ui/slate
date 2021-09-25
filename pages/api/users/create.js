@@ -9,8 +9,6 @@ import * as Monitor from "~/node_common/monitor";
 
 import BCrypt from "bcrypt";
 
-import { PrivateKey } from "@textile/hub";
-
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_NOT_ALLOWED", error: true });
@@ -54,24 +52,17 @@ export default async (req, res) => {
   const salt = await BCrypt.genSalt(rounds);
   const hash = await Utilities.encryptPassword(req.body.data.password, salt);
 
-  // TODO(jim):
-  // Single Key Textile Auth.
-  const identity = await PrivateKey.fromRandom();
-  const textileToken = identity.toString();
-
-  // TODO(jim):
-  // Don't do this once you refactor.
   const newUsername = req.body.data.username.toLowerCase();
   const newEmail = verification.email;
 
-  const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
-    user: {
-      username: newUsername,
-      textileToken,
-    },
-  });
+  const {
+    textileKey,
+    textileToken,
+    textileThreadID,
+    textileBucketCID,
+  } = await Utilities.createBucket({});
 
-  if (!buckets) {
+  if (!textileKey || !textileToken || !textileThreadID || !textileBucketCID) {
     return res
       .status(500)
       .send({ decorator: "SERVER_CREATE_USER_BUCKET_INIT_FAILURE", error: true });
@@ -82,7 +73,10 @@ export default async (req, res) => {
     salt,
     username: newUsername,
     email: newEmail,
+    textileKey,
     textileToken,
+    textileThreadID,
+    textileBucketCID,
   });
 
   if (!user) {

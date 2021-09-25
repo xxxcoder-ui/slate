@@ -12,8 +12,6 @@ import * as Logging from "~/common/logging";
 
 import WebSocket from "ws";
 
-const STAGING_DEAL_BUCKET = "stage-deal";
-
 const websocketSend = async (type, data) => {
   if (Strings.isEmpty(Environment.PUBSUB_SECRET)) {
     return;
@@ -143,18 +141,20 @@ export const getById = async ({ id }) => {
     return null;
   }
 
+  delete user.password;
+  delete user.salt;
+
   Data.createUsageStat({ id }); //NOTE(martina): to record the person's usage of Slate for analytics
 
   // user.library = await Data.getFilesByUserId({ id });
 
-  const [slates, keys, subscriptions, following, followers, { bucketRoot }] = (
+  const [slates, keys, subscriptions, following, followers] = (
     await Promise.allSettled([
       Data.getSlatesByUserId({ ownerId: id, includeFiles: true }),
       Data.getAPIKeysByUserId({ userId: id }),
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),
       Data.getFollowersByUserId({ userId: id }),
-      Utilities.getBucketAPIFromUserToken({ user }),
     ])
   ).map((item) => item.value);
 
@@ -217,7 +217,7 @@ export const getById = async ({ id }) => {
       pdfBytes,
     },
     // tags,
-    userBucketCID: bucketRoot?.path || null,
+    // userBucketCID: bucketRoot?.path || null,
     keys,
     slates,
     subscriptions,
@@ -245,9 +245,7 @@ export const getDealHistory = async ({ id }) => {
   let deals = [];
 
   try {
-    const FilecoinSingleton = await Utilities.getFilecoinAPIFromUserToken({
-      user,
-    });
+    const FilecoinSingleton = await Utilities.getBucket({ user });
     const { filecoin } = FilecoinSingleton;
 
     const records = await filecoin.storageDealRecords({
@@ -312,10 +310,9 @@ export const getTextileById = async ({ id }) => {
   }
 
   // NOTE(jim): This bucket is purely for staging data for other deals.
-  const stagingData = await Utilities.getBucketAPIFromUserToken({
+  const stagingData = await Utilities.getBucket({
     user,
-    bucketName: STAGING_DEAL_BUCKET,
-    encrypted: false,
+    bucketName: Constants.textile.dealsBucket,
   });
 
   const FilecoinSingleton = await Utilities.getFilecoinAPIFromUserToken({
@@ -361,7 +358,7 @@ export const getTextileById = async ({ id }) => {
   }
 
   let items = null;
-  const dealBucket = r.find((bucket) => bucket.name === STAGING_DEAL_BUCKET);
+  const dealBucket = r.find((bucket) => bucket.name === Constants.textile.dealsBucket);
   try {
     const path = await stagingData.buckets.listPath(dealBucket.key, "/");
     items = path.item.items;
@@ -375,11 +372,7 @@ export const getTextileById = async ({ id }) => {
     });
   }
 
-  const b = await Utilities.getBucketAPIFromUserToken({
-    user,
-    bucketName: "data",
-    encrypted: false,
-  });
+  const b = await Utilities.getBucket({ user });
 
   const settings = await b.buckets.defaultArchiveConfig(b.bucketKey);
 

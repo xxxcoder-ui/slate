@@ -35,9 +35,7 @@ const saveCopyReposts = async () => {
     Logging.log(item);
     // continue;
     let user = { data: item.data };
-    let { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
-      user,
-    });
+    let { buckets, bucketKey, bucketRoot } = await Utilities.getBucket({ user });
 
     try {
       let response = await Utilities.addExistingCIDToData({
