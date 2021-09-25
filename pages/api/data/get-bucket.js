@@ -9,9 +9,7 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, user } = userInfo;
 
-  const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
-    user,
-  });
+  const { buckets, bucketKey } = await Utilities.getBucket({ user });
 
   if (!buckets) {
     return res.status(500).send({ decorator: "SERVER_NO_BUCKET_DATA", error: true });

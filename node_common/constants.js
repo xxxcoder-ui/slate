@@ -17,3 +17,9 @@ export const MIN_ARCHIVE_SIZE_BYTES = 104857600;
 
 // NOTE(amine): 15 minutes
 export const TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000;
+
+export const textile = {
+  threadName: "buckets",
+  mainBucket: "data",
+  dealsBucket: "stage-deal",
+};

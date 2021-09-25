@@ -1,3 +1,4 @@
+import * as Constants from "~/node_common/constants";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Arrays from "~/common/arrays";
@@ -6,8 +7,6 @@ import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
-
-const DEFAULT_BUCKET_NAME = "data";
 
 export default async (req, res) => {
   const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
@@ -25,9 +24,7 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_REMOVE_DATA_NO_IDS", error: true });
   }
 
-  const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
-    user,
-  });
+  const { buckets, bucketKey } = await Utilities.getBucket({ user });
 
   if (!buckets) {
     return res.status(500).send({
@@ -58,7 +55,7 @@ export default async (req, res) => {
   let items = [];
   try {
     for (let i = 0; i < r.length; i++) {
-      if (r[i].name === DEFAULT_BUCKET_NAME) {
+      if (r[i].name === Constants.textile.mainBucket) {
         const next = await buckets.listPath(r[i].key, "/");
         const set = next.item.items;
         items = [...set, ...items];

@@ -26,7 +26,7 @@ export default async (req, res) => {
   files = await Data.deleteFilesByUserId({ ownerId: id });
   console.log({ files });
 
-  const defaultData = await Utilities.getBucketAPIFromUserToken({ user });
+  const defaultData = await Utilities.getBucket({ user });
 
   // NOTE(jim): delete every bucket
   try {
@@ -49,7 +49,7 @@ export default async (req, res) => {
 
   // NOTE(jim): remove orphan
   await Data.createOrphan({
-    data: { token: user.textileToken },
+    data: { token: user.textileKey },
   });
 
   // NOTE(jim): finally delete user by id (irreversible)

@@ -20,8 +20,6 @@ import Section from "~/components/core/Section";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 
-const STAGING_DEAL_BUCKET = "stage-deal";
-
 const STYLES_SPINNER_CONTAINER = css`
   width: 100%;
   height: 40vh;
@@ -110,7 +108,7 @@ export default class SceneMakeFilecoinDeal extends React.Component {
       const file = e.target.files[i];
 
       const response = await FileUtilities.upload({
-        bucketName: STAGING_DEAL_BUCKET,
+        bucketName: Constants.textile.dealsBucket,
         file,
       });
     }
@@ -132,7 +130,7 @@ export default class SceneMakeFilecoinDeal extends React.Component {
     this.setState({ archiving: true });
 
     const response = await Actions.archive({
-      bucketName: STAGING_DEAL_BUCKET,
+      bucketName: Constants.textile.dealsBucket,
       forceEncryption: this.state.encryption,
       settings: {
         /**
@@ -213,7 +211,7 @@ export default class SceneMakeFilecoinDeal extends React.Component {
   _handleRemove = async (cid) => {
     this.setState({ loading: true });
 
-    await Actions.removeFromBucket({ bucketName: STAGING_DEAL_BUCKET, cid });
+    await Actions.removeFromBucket({ bucketName: Constants.textile.dealsBucket, cid });
 
     let networkViewer;
     try {

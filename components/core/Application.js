@@ -424,6 +424,7 @@ export default class ApplicationPage extends React.Component {
   };
 
   render() {
+    // console.log(this.state.viewer);
     let page = this.state.page;
     if (!page?.id) {
       page = NavigationData.getById(null, this.state.viewer);
@@ -457,7 +458,6 @@ export default class ApplicationPage extends React.Component {
       isMobile: this.state.isMobile,
       isMac: this.props.isMac,
       activeUsers: this.state.activeUsers,
-      userBucketCID: this.state.userBucketCID,
       external: !!!this.state.viewer,
     });
 

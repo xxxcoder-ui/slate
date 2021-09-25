@@ -5,11 +5,10 @@ import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Logging from "~/common/logging";
 import * as Environment from "~/common/environment";
+import * as Constants from "~/common/constants";
 
 import { encode, isBlurhashValid } from "blurhash";
 import { v4 as uuid } from "uuid";
-
-const STAGING_DEAL_BUCKET = "stage-deal";
 
 export const fileKey = ({ lastModified, name }) => `${lastModified}-${name}`;
 
@@ -138,7 +137,7 @@ export const upload = async ({ file, onProgress, bucketName, uploadAbort }) => {
   let res;
   if (isZipFile && isUnityFile) {
     res = await _privateUploadMethod(`${zipUploadRoute}${file.name}`, file);
-  } else if (bucketName && bucketName === STAGING_DEAL_BUCKET) {
+  } else if (bucketName && bucketName === Constants.textile.dealsBucket) {
     res = await _privateUploadMethod(`${storageDealRoute}${file.name}`, file);
   } else {
     res = await _privateUploadMethod(`${generalRoute}${file.name}`, file);

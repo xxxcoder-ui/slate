@@ -21,15 +21,14 @@ let UploadAbort = {
 
 // NOTE(amine): queue utilities
 const getUploadQueue = () => UploadStore.queue;
-const pushToUploadQueue = ({ file, slate, bucketName }) =>
-  UploadStore.queue.push({ file, slate, bucketName });
+const pushToUploadQueue = ({ file, slate }) => UploadStore.queue.push({ file, slate });
 const resetUploadQueue = () => (UploadStore.queue = []);
 const removeFromUploadQueue = ({ fileKey }) =>
   (UploadStore.queue = UploadStore.queue.filter(({ file }) => getFileKey(file) !== fileKey));
 
 // NOTE(amine): failedFilesCache utilities
-const storeFileInCache = ({ file, slate, bucketName }) =>
-  (UploadStore.failedFilesCache[getFileKey(file)] = { file, slate, bucketName });
+const storeFileInCache = ({ file, slate }) =>
+  (UploadStore.failedFilesCache[getFileKey(file)] = { file, slate });
 const removeFileFromCache = ({ fileKey }) => delete UploadStore.failedFilesCache[fileKey];
 const getFileFromCache = ({ fileKey }) => UploadStore.failedFilesCache[fileKey] || {};
 
@@ -56,7 +55,7 @@ export function createUploadProvider({
     const uploadQueue = getUploadQueue();
     if (UploadStore.isUploading || uploadQueue.length === 0) return;
 
-    const { file, slate, bucketName } = getUploadQueue().shift() || {};
+    const { file, slate } = getUploadQueue().shift() || {};
 
     const fileKey = getFileKey(file);
 
@@ -88,7 +87,6 @@ export function createUploadProvider({
       } else {
         const response = await FileUtilities.upload({
           file,
-          bucketName,
           uploadAbort: UploadAbort,
           onProgress: (e) => onProgress({ fileKey, loaded: e.loaded }),
         });
@@ -111,7 +109,7 @@ export function createUploadProvider({
         }
       }
     } catch (e) {
-      storeFileInCache({ file, slate, bucketName });
+      storeFileInCache({ file, slate });
 
       if (onError) onError({ fileKey });
       Logging.error(e);
@@ -129,7 +127,7 @@ export function createUploadProvider({
     if (onFinish) onFinish();
   };
 
-  const addToUploadQueue = ({ files, slate, bucketName }) => {
+  const addToUploadQueue = ({ files, slate }) => {
     if (!files || !files.length) return;
 
     for (let i = 0; i < files.length; i++) {
@@ -145,7 +143,7 @@ export function createUploadProvider({
       if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
 
       if (onAddedToQueue) onAddedToQueue(files[i]);
-      pushToUploadQueue({ file: files[i], slate, bucketName });
+      pushToUploadQueue({ file: files[i], slate });
     }
 
     const isQueueEmpty = getUploadQueue().length === 0;
@@ -156,12 +154,12 @@ export function createUploadProvider({
   };
 
   const retry = ({ fileKey }) => {
-    const { file, slate, bucketName } = getFileFromCache({ fileKey });
+    const { file, slate } = getFileFromCache({ fileKey });
     if (file.type === "link") {
       addLinkToUploadQueue({ url: file.name, slate });
       return;
     }
-    addToUploadQueue({ files: [file], slate, bucketName });
+    addToUploadQueue({ files: [file], slate });
   };
 
   const cancel = ({ fileKey }) => {

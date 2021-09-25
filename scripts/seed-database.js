@@ -39,7 +39,10 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.string("twitterId").unique().nullable();
   table.string("twitterUsername").nullable();
   table.boolean("twitterVerified").notNullable().defaultTo(false);
-  table.string("textileToken").nullable();
+  table.string("textileKey").nullable();
+  table.string("textileToken", 400).nullable();
+  table.string("textileThreadID").nullable();
+  table.string("textileBucketCID").nullable();
   table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
   table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
   table.boolean("allowEncryptedDataStorage").notNullable().defaultTo(true);
