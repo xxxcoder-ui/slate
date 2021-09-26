@@ -144,6 +144,9 @@ export const getById = async ({ id }) => {
     return null;
   }
 
+  delete user.password;
+  delete user.salt;
+
   Data.createUsageStat({ id }); //NOTE(martina): to record the person's usage of Slate for analytics
 
   // user.library = await Data.getFilesByUserId({ id, sanitize: true });
@@ -155,7 +158,7 @@ export const getById = async ({ id }) => {
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),
       Data.getFollowersByUserId({ userId: id }),
-      Utilities.getBucketAPIFromUserToken({ user }),
+      Utilities.getBucket({ user }),
     ])
   ).map((item) => item.value);
 
@@ -322,7 +325,7 @@ export const getTextileById = async ({ id }) => {
   }
 
   // NOTE(jim): This bucket is purely for staging data for other deals.
-  const stagingData = await Utilities.getBucketAPIFromUserToken({
+  const stagingData = await Utilities.getBucket({
     user,
     bucketName: STAGING_DEAL_BUCKET,
     encrypted: false,
@@ -385,7 +388,7 @@ export const getTextileById = async ({ id }) => {
     });
   }
 
-  const b = await Utilities.getBucketAPIFromUserToken({
+  const b = await Utilities.getBucket({
     user,
     bucketName: "data",
     encrypted: false,

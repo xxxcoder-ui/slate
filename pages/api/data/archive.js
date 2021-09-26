@@ -20,7 +20,7 @@ export default async (req, res) => {
     bucketName = req.body.data.bucketName;
   }
 
-  const { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+  const { buckets, bucketKey, bucketRoot } = await Utilities.getBucket({
     user,
     bucketName,
   });

@@ -201,6 +201,95 @@ export const getBucketAPIFromUserToken = async ({ user, bucketName, encrypted = 
   };
 };
 
+export const createBucket = async ({
+  bucketName = Constants.textile.mainBucket,
+  encrypted = false,
+}) => {
+  try {
+    const identity = await PrivateKey.fromRandom();
+    const textileKey = identity.toString();
+
+    let buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+
+    const textileToken = await buckets.getToken(identity);
+    buckets.context.withToken(textileToken);
+
+    const client = new Client(buckets.context);
+    const newId = ThreadID.fromRandom();
+    await client.newDB(newId, Constants.textile.threadName);
+    const textileThreadID = newId.toString();
+    buckets.context.withThread(textileThreadID);
+
+    const created = await buckets.create(bucketName, { encrypted });
+    let ipfs = created.root.path;
+    const textileBucketCID = Strings.ipfsToCid(ipfs);
+
+    return {
+      textileKey,
+      // textileToken,
+      // textileThreadID,
+      // textileBucketCID,
+      buckets,
+      bucketKey: created.root.key,
+      bucketRoot: created.root,
+      bucketName,
+    };
+  } catch (e) {
+    Logging.error(e?.message);
+  }
+};
+
+//NOTE(martina): only use this for existing users. This grabs their bucket without checking for an existing bucket
+export const getBucket = async ({ user, bucketName = Constants.textile.mainBucket }) => {
+  let updateUser = false;
+  let { textileKey, textileToken, textileThreadID, textileBucketCID } = user;
+  textileKey = user.data?.tokens?.api;
+
+  if (!textileKey) {
+    return await createBucket({ user, bucketName });
+  }
+
+  let buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+
+  if (!textileToken) {
+    const identity = PrivateKey.fromString(textileKey);
+    textileToken = await buckets.getToken(identity);
+    updateUser = true;
+  }
+  buckets.context.withToken(textileToken);
+
+  if (!textileThreadID) {
+    const client = new Client(buckets.context);
+    const res = await client.getThread("buckets");
+    textileThreadID = typeof res.id === "string" ? res.id : ThreadID.fromBytes(res.id).toString();
+    updateUser = true;
+  }
+  buckets.context.withThread(textileThreadID);
+
+  const roots = await buckets.list();
+  const existing = roots.find((bucket) => bucket.name === bucketName);
+
+  if (!existing) {
+    return { buckets: null, bucketKey: null, bucketRoot: null, bucketName };
+  }
+
+  if (!textileBucketCID) {
+    let ipfs = existing.path;
+    textileBucketCID = Strings.ipfsToCid(ipfs);
+    updateUser = true;
+  }
+  // if (updateUser) {
+  //   Data.updateUserById({ id: user.id, textileToken, textileThreadID, textileBucketCID });
+  // }
+
+  return {
+    buckets,
+    bucketKey: existing.key,
+    bucketRoot: existing,
+    bucketName,
+  };
+};
+
 export const getFileName = (s) => {
   let target = s;
   if (target.endsWith("/")) {

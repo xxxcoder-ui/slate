@@ -17,7 +17,7 @@ export default async (req, res) => {
 
   let decorator = "SERVER_SAVE_COPY";
 
-  let { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
+  let { buckets, bucketKey, bucketRoot } = await Utilities.getBucket({
     user,
   });
 

@@ -23,7 +23,7 @@ export default async (req, res) => {
   // NOTE(martina): delete all of their public and private files.
   await Data.deleteFilesByUserId({ ownerId: user.id });
 
-  const defaultData = await Utilities.getBucketAPIFromUserToken({ user });
+  const defaultData = await Utilities.getBucket({ user });
 
   // NOTE(jim): delete every bucket
   try {

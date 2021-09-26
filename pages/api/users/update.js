@@ -57,7 +57,7 @@ export default async (req, res) => {
   if (req.body.data.type === "SAVE_DEFAULT_ARCHIVE_CONFIG") {
     let b;
     try {
-      b = await Utilities.getBucketAPIFromUserToken({
+      b = await Utilities.getBucket({
         user,
         bucketName: "data",
       });
@@ -68,7 +68,7 @@ export default async (req, res) => {
         user,
         message: e.message,
         code: e.code,
-        functionName: `Utilities.getBucketAPIFromUserToken`,
+        functionName: `Utilities.getBucket`,
       });
 
       return res.status(500).send({ decorator: "SERVER_NO_BUCKET_DATA", error: true });

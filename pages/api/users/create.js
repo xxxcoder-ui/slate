@@ -9,8 +9,6 @@ import * as Monitor from "~/node_common/monitor";
 
 import BCrypt from "bcrypt";
 
-import { PrivateKey } from "@textile/hub";
-
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
     return res.status(403).send({ decorator: "SERVER_CREATE_USER_NOT_ALLOWED", error: true });
@@ -55,21 +53,11 @@ export default async (req, res) => {
   const hash = await Utilities.encryptPassword(req.body.data.password, salt);
 
   // TODO(jim):
-  // Single Key Textile Auth.
-  const identity = await PrivateKey.fromRandom();
-  const api = identity.toString();
-
-  // TODO(jim):
   // Don't do this once you refactor.
   const newUsername = req.body.data.username.toLowerCase();
   const newEmail = verification.email;
 
-  const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
-    user: {
-      username: newUsername,
-      data: { tokens: { api } },
-    },
-  });
+  const { buckets, bucketKey, bucketName, textileKey } = await Utilities.createBucket({});
 
   if (!buckets) {
     return res
@@ -90,7 +78,7 @@ export default async (req, res) => {
         allow_automatic_data_storage: true,
         allow_encrypted_data_storage: true,
       },
-      tokens: { api },
+      tokens: { api: textileKey },
     },
   });
 
