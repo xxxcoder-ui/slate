@@ -164,12 +164,6 @@ const addFileColumns = async () => {
   });
 };
 
-const editColumns = async () => {
-  await DB.schema.alterTable("files", function (table) {
-    table.text("linkHtml").nullable().alter();
-  });
-};
-
 /* Migrate over to new columns (and denormalize tags) */
 
 const defaultPhotos = [
@@ -327,11 +321,9 @@ const runScript = async () => {
   // await addSlateColumns();
   // await addFileColumns();
 
-  // await editColumns();
-
   // await migrateUserTable();
   // await migrateSlateTable();
-  await migrateFileTable();
+  // await migrateFileTable();
 
   // await deleteOldData();
   console.log("SCRIPT FINISHED. HIT CTRL + C TO END");
