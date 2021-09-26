@@ -227,17 +227,6 @@ export const createBucket = async ({
     let ipfs = created.root.path;
     const textileBucketCID = Strings.ipfsToCid(ipfs);
 
-    console.log({
-      textileKey,
-      textileToken,
-      textileThreadID,
-      textileBucketCID,
-      buckets,
-      bucketKey: created.root.key,
-      bucketRoot: created.root,
-      bucketName,
-    });
-
     return {
       textileKey,
       textileToken,
@@ -294,13 +283,6 @@ export const getBucket = async ({ user, bucketName = Constants.textile.mainBucke
   if (updateUser) {
     Data.updateUserById({ id: user.id, textileToken, textileThreadID, textileBucketCID });
   }
-
-  console.log({
-    buckets,
-    bucketKey: existing.key,
-    bucketRoot: existing,
-    bucketName,
-  });
 
   return {
     buckets,

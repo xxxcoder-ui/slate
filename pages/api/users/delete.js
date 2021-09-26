@@ -20,11 +20,9 @@ export default async (req, res) => {
   //NOTE(migration): may be able to just condense these two parts since they return it from delete anyways
   // NOTE(jim): delete all of their public and private slates.
   slates = await Data.deleteSlatesByUserId({ ownerId: id });
-  console.log({ slates });
 
   // NOTE(martina): delete all of their public and private files.
   files = await Data.deleteFilesByUserId({ ownerId: id });
-  console.log({ files });
 
   const defaultData = await Utilities.getBucket({ user });
 

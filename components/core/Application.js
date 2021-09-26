@@ -424,7 +424,6 @@ export default class ApplicationPage extends React.Component {
   };
 
   render() {
-    // console.log(this.state.viewer);
     let page = this.state.page;
     if (!page?.id) {
       page = NavigationData.getById(null, this.state.viewer);

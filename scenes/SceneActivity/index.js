@@ -51,7 +51,6 @@ export default function SceneActivity({ page, viewer, external, onAction, ...pro
   });
   const handleFileClick = (fileIdx, groupFiles) =>
     setGlobalCarouselState({ currentCarousel: fileIdx, currentObjects: groupFiles });
-  console.log(globalCarouselState.currentCarousel, globalCarouselState.currentObjects.length);
 
   useIntersection({
     ref: divRef,
