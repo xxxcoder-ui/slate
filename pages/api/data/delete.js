@@ -25,7 +25,7 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SERVER_REMOVE_DATA_NO_IDS", error: true });
   }
 
-  const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
+  const { buckets, bucketKey } = await Utilities.getBucket({
     user,
   });
 

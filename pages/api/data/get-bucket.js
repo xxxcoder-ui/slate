@@ -9,7 +9,7 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, user } = userInfo;
 
-  const { buckets, bucketKey } = await Utilities.getBucketAPIFromUserToken({
+  const { buckets, bucketKey } = await Utilities.getBucket({
     user,
   });
 

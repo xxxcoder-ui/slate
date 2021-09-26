@@ -7,8 +7,6 @@ import * as SlateManager from "~/node_common/managers/slate";
 
 import JWT from "jsonwebtoken";
 
-import { PrivateKey } from "@textile/hub";
-
 const COOKIE_NAME = "oauth_token";
 
 export default async (req, res) => {
@@ -64,20 +62,10 @@ export default async (req, res) => {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
 
-  // TODO(jim):
-  // Single Key Textile Auth.
-  const identity = await PrivateKey.fromRandom();
-  const api = identity.toString();
-
   const newUsername = username.toLowerCase();
   const newEmail = email.toLowerCase();
 
-  const { buckets, bucketKey, bucketName } = await Utilities.getBucketAPIFromUserToken({
-    user: {
-      username: newUsername,
-      data: { tokens: { api } },
-    },
-  });
+  const { buckets, bucketKey, bucketName, textileKey } = await Utilities.createBucket({});
 
   if (!buckets) {
     return res
@@ -97,7 +85,7 @@ export default async (req, res) => {
         allow_automatic_data_storage: true,
         allow_encrypted_data_storage: true,
       },
-      tokens: { api },
+      tokens: { api: textileKey },
       twitter: {
         username: twitterUser.screen_name,
         verified: twitterUser.verified,
