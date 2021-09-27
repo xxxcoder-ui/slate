@@ -15,8 +15,8 @@ import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { useUploadContext, useUploadRemainingTime } from "~/components/core/Upload/Provider";
 import { Table } from "~/components/system/components/Table";
 import { Match, Switch } from "~/components/utility/Switch";
-import { motion } from "framer-motion";
 import { Link } from "~/components/core/Link";
+import { motion } from "framer-motion";
 
 import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
 import DataMeter from "~/components/core/DataMeter";
@@ -25,13 +25,6 @@ import DataMeter from "~/components/core/DataMeter";
  * UploadModal
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_SUMMARY_BUTTON = (theme) => css`
-  ${Styles.BUTTON_RESET};
-  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
-  border-radius: 8px;
-  padding: 6px 8px;
-  background-color: ${theme.semantic.bgLight};
-`;
 const STYLES_MODAL = css`
   z-index: ${Constants.zindex.uploadModal};
   top: ${Constants.sizes.header}px;
@@ -41,6 +34,7 @@ const STYLES_MODAL = css`
   left: 0;
   padding: 24px 24px 32px;
   height: calc(100vh - ${Constants.sizes.header}px);
+  overflow-y: auto;
 
   background-color: ${Constants.semantic.bgBlurWhiteOP};
 
@@ -48,11 +42,6 @@ const STYLES_MODAL = css`
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
   }
-`;
-
-const STYLES_MODAL_ELEMENTS = css`
-  width: 100%;
-  height: 100%;
 `;
 
 const STYLES_SIDEBAR_HEADER = css`
@@ -75,40 +64,17 @@ const STYLES_DISMISS = css`
   }
 `;
 
-const STYLES_MODAL_WRAPPER = css`
-  height: 100%;
-  width: 100%;
-  @keyframes global-carousel-fade-in {
-    from {
-      transform: translate(8px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0px);
-      opacity: 1;
-    }
+const STYLES_MODAL_CONTROLS_MARGINS = (theme) => css`
+  margin-top: 200px;
+  margin-bottom: 200px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    margin-top: 70px;
+    margin-bottom: 70px;
   }
-  animation: global-carousel-fade-in 400ms ease;
 `;
 
 export default function UploadModal({ onAction, viewer }) {
-  const [{ isUploading }, { hideUploadModal }] = useUploadContext();
-
-  const [state, setState] = React.useState({
-    url: "",
-    urlError: false,
-    // NOTE(amine): initial || summary
-    view: isUploading ? "summary" : "initial",
-  });
-
-  const toggleSummaryView = () => {
-    setState((prev) => ({
-      ...prev,
-      view: state.view === "initial" ? "summary" : "initial",
-    }));
-  };
-
-  const showUploadSummary = () => setState((prev) => ({ ...prev, view: "summary" }));
+  const [, { hideUploadModal }] = useUploadContext();
 
   useEscapeKey(hideUploadModal);
 
@@ -116,34 +82,15 @@ export default function UploadModal({ onAction, viewer }) {
 
   return (
     <div css={STYLES_MODAL}>
-      <div css={STYLES_MODAL_ELEMENTS}>
-        <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 24 }}>
-          {/** TODO CLOSE */}
-          <button onClick={hideUploadModal} css={[Styles.BUTTON_RESET, STYLES_DISMISS]}>
-            <SVG.Dismiss height="24px" />
-          </button>
-        </div>
-        <div css={STYLES_MODAL_WRAPPER}>
-          <button
-            css={STYLES_SUMMARY_BUTTON}
-            onClick={toggleSummaryView}
-            style={{
-              backgroundColor:
-                state.view === "summary"
-                  ? Constants.semantic.bgGrayLight
-                  : Constants.semantic.bgLight,
-            }}
-          >
-            <SVG.List />
-            <span style={{ marginLeft: 8 }}>Upload Summary</span>
-          </button>
-          <Show
-            when={state.view === "summary"}
-            fallback={<Controls showUploadSummary={showUploadSummary} />}
-          >
-            <Summary onAction={onAction} viewer={viewer} />
-          </Show>
-        </div>
+      <div css={STYLES_SIDEBAR_HEADER} style={{ position: "absolute", right: 24 }}>
+        {/** TODO CLOSE */}
+        <button onClick={hideUploadModal} css={[Styles.BUTTON_RESET, STYLES_DISMISS]}>
+          <SVG.Dismiss height="24px" />
+        </button>
+      </div>
+      <div>
+        <Controls css={STYLES_MODAL_CONTROLS_MARGINS} />
+        <Summary onAction={onAction} viewer={viewer} />
       </div>
     </div>
   );
@@ -163,7 +110,21 @@ const STYLES_FILE_HIDDEN = css`
   left: -1px;
 `;
 
-function Controls({ showUploadSummary }) {
+const STYLES_MODAL_CONTROLS = css`
+  ${Styles.VERTICAL_CONTAINER_CENTERED};
+`;
+
+const STYLES_LINK_INPUT = (theme) => css`
+  width: 392px;
+  border-radius: 12;
+  background-color: ${theme.semantic.bgWhite};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    width: 100%;
+  }
+`;
+
+function Controls({ css, ...props }) {
   const [, { upload, uploadLink }] = useUploadContext();
 
   const [state, setState] = React.useState({
@@ -189,7 +150,6 @@ function Controls({ showUploadSummary }) {
       return;
     }
     uploadLink({ url: state.url, slate: state.slate });
-    showUploadSummary();
   };
 
   const handleChange = (e) => {
@@ -197,19 +157,14 @@ function Controls({ showUploadSummary }) {
   };
 
   return (
-    <div
-      css={Styles.VERTICAL_CONTAINER_CENTERED}
-      style={{ width: "100%", height: "100%", justifyContent: "center" }}
-    >
+    <div css={[STYLES_MODAL_CONTROLS, css]} {...props}>
       <input css={STYLES_FILE_HIDDEN} multiple type="file" id="file" onChange={handleUpload} />
       <div css={Styles.HORIZONTAL_CONTAINER}>
         <System.Input
           placeholder="Paste a link to save"
           value={state.url}
+          inputCss={STYLES_LINK_INPUT}
           style={{
-            width: 392,
-            backgroundColor: Constants.semantic.bgWhite,
-            borderRadius: 12,
             boxShadow: state.urlError
               ? `0 0 0 1px ${Constants.system.red} inset`
               : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
@@ -253,16 +208,6 @@ function Controls({ showUploadSummary }) {
  * Summary
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_BAR_CONTAINER = (theme) => css`
-  border-radius: 16px;
-  margin-top: 24px;
-  padding: 24px;
-  box-shadow: ${theme.shadow.lightSmall};
-  border: 1px solid ${theme.semantic.borderGrayLight};
-  background-color: ${theme.semantic.bgWhite};
-  ${Styles.HORIZONTAL_CONTAINER};
-`;
-
 const STYLES_PLACEHOLDER = css`
   width: 64px;
   height: 80px;
@@ -275,16 +220,27 @@ const STYLES_PLACEHOLDER = css`
 const STYLES_TABLE = (theme) => css`
   overflow: hidden;
   overflow-y: auto;
-  border-radius: 12px;
   box-shadow: ${theme.shadow.lightSmall};
+`;
+
+const STYLES_SUMMARY_WRAPPER = (theme) => css`
+  ${Styles.VERTICAL_CONTAINER}
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 160px;
   border: 1px solid ${theme.semantic.borderGrayLight};
 `;
 
 function Summary({ onAction }) {
-  const [{ fileLoading, isUploading }, { retry, cancel }] = useUploadContext();
+  const [{ fileLoading }, { retry, cancel }] = useUploadContext();
 
-  const uploadSummary = React.useMemo(() => {
-    const uploadSummary = Object.entries(fileLoading).map(([, file]) => file);
+  const { uploadSummary, totalFilesSummary } = React.useMemo(() => {
+    let totalFilesSummary = { failed: 0, duplicate: 0, saved: 0 };
+    const uploadSummary = Object.entries(fileLoading).map(([, file]) => {
+      if (file.status === "saving") return file;
+      totalFilesSummary[file.status]++;
+      return file;
+    });
 
     const statusOrder = {
       failed: 1,
@@ -292,24 +248,30 @@ function Summary({ onAction }) {
       duplicate: 3,
       success: 4,
     };
-    return uploadSummary.sort(
-      (a, b) => statusOrder[a.status] - statusOrder[b.status] || a.createdAt - b.createdAt
-    );
+    return {
+      totalFilesSummary,
+      uploadSummary: uploadSummary.sort(
+        (a, b) => statusOrder[a.status] - statusOrder[b.status] || a.createdAt - b.createdAt
+      ),
+    };
   }, [fileLoading]);
 
+  if (uploadSummary.length === 0) return null;
+
   return (
-    <div style={{ height: "100%", width: "100%" }} css={Styles.VERTICAL_CONTAINER}>
-      <Show when={isUploading}>
-        <SummaryBox />
-      </Show>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      css={STYLES_SUMMARY_WRAPPER}
+    >
+      <SummaryBox totalFilesSummary={totalFilesSummary} />
       <SummaryTable
-        style={{ marginTop: 24, marginBottom: 20 }}
         onAction={onAction}
         retry={retry}
         cancel={cancel}
         uploadSummary={uploadSummary}
       />
-    </div>
+    </motion.div>
   );
 }
 
@@ -319,9 +281,25 @@ const TableButton = ({ children, as = "button", ...props }) => (
   </System.H5>
 );
 
-const SummaryBox = () => {
+const STYLES_SUMMARY_BOX = (theme) => css`
+  ${Styles.HORIZONTAL_CONTAINER};
+  padding: 24px;
+  background-color: ${theme.semantic.bgWhite};
+  min-height: 165px;
+  box-shadow: ${theme.shadow.lightSmall};
+  border-bottom: 1px solid ${theme.semantic.borderGrayLight};
+`;
+
+const SummaryBox = ({ totalFilesSummary }) => {
   const [
-    { totalBytesUploaded, totalBytes, totalFilesUploaded, totalFiles, uploadStartingTime },
+    {
+      totalBytesUploaded,
+      totalBytes,
+      totalFilesUploaded,
+      totalFiles,
+      uploadStartingTime,
+      isUploading,
+    },
     { cancelAll },
   ] = useUploadContext();
 
@@ -331,37 +309,84 @@ const SummaryBox = () => {
     totalBytesUploaded,
   });
 
+  const title = React.useMemo(() => {
+    if (isUploading)
+      return {
+        copy: `Saving ${totalFiles - totalFilesUploaded} of ${totalFiles} Objects...`,
+        color: "textBlack",
+      };
+
+    if (totalFilesSummary.failed === 0) return { copy: "Upload completed", color: "textBlack" };
+
+    return {
+      copy: `Upload completed, failed to upload ${totalFilesSummary.failed} ${Strings.pluralize(
+        "file",
+        totalFilesSummary.failed
+      )}`,
+      color: "red",
+    };
+  }, [isUploading, totalFiles, totalFilesUploaded, totalFilesSummary]);
+
+  const getTextSummary = (fileStatus, suffix) =>
+    `${totalFilesSummary[fileStatus]} ${Strings.pluralize(
+      "file",
+      totalFilesSummary[fileStatus]
+    )} ${suffix}`;
+
   return (
-    <motion.div initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} css={STYLES_BAR_CONTAINER}>
+    <div css={STYLES_SUMMARY_BOX}>
       <div css={STYLES_PLACEHOLDER}>
         <FilePlaceholder />
       </div>
       <div style={{ marginLeft: 36, width: "100%" }}>
-        <System.H4 color="textBlack">
-          Saving {totalFiles - totalFilesUploaded} of {totalFiles} Objects...
-        </System.H4>
-        <DataMeter bytes={totalBytesUploaded} maximumBytes={totalBytes} style={{ marginTop: 10 }} />
-        <System.H5 color="textGrayDark" style={{ marginTop: 12 }}>
-          {Strings.bytesToSize(totalBytesUploaded, 0)} of {Strings.bytesToSize(totalBytes, 0)}{" "}
-          <Show when={uploadRemainingTime && uploadRemainingTime !== Infinity}>
-            – {Strings.getRemainingTime(uploadRemainingTime)} (Please keep this tab open during
-            uploading)
-          </Show>
-        </System.H5>
-        <System.ButtonTertiary
-          onClick={cancelAll}
-          style={{
-            backgroundColor: Constants.semantic.bgLight,
-            marginTop: 15,
-            padding: "1px 12px 3px",
-            minHeight: "auto",
-            boxShadow: "none",
-          }}
-        >
-          Cancel
-        </System.ButtonTertiary>
+        <System.H4 color={title.color}>{title.copy}</System.H4>
+        {isUploading ? (
+          <>
+            <DataMeter
+              bytes={totalBytesUploaded}
+              maximumBytes={totalBytes}
+              style={{ marginTop: 10 }}
+            />
+            <System.H5 color="textGrayDark" style={{ marginTop: 12 }}>
+              {Strings.bytesToSize(totalBytesUploaded, 0)} of {Strings.bytesToSize(totalBytes, 0)}{" "}
+              <Show when={uploadRemainingTime && uploadRemainingTime !== Infinity}>
+                – {Strings.getRemainingTime(uploadRemainingTime)} (Please keep this tab open during
+                uploading)
+              </Show>
+            </System.H5>
+            <System.ButtonTertiary
+              onClick={cancelAll}
+              style={{
+                backgroundColor: Constants.semantic.bgLight,
+                marginTop: 15,
+                padding: "1px 12px 3px",
+                minHeight: "auto",
+                boxShadow: "none",
+              }}
+            >
+              Cancel
+            </System.ButtonTertiary>
+          </>
+        ) : (
+          <div style={{ marginTop: 8 }}>
+            <System.H5 as="p" color="textGrayDark">
+              <Show when={totalFilesSummary.saved}>
+                {getTextSummary("saved", "saved")}
+                <br />
+              </Show>
+              <Show when={totalFilesSummary.failed}>
+                {getTextSummary("failed", "failed")}
+                <br />
+              </Show>
+
+              <Show when={totalFilesSummary.duplicate}>
+                {getTextSummary("duplicate", "already exists")}
+              </Show>
+            </System.H5>
+          </div>
+        )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
