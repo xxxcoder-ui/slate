@@ -52,10 +52,10 @@ const FILTERING_HANDLERS = {
   [FILTER_VIEWS_IDS.initial]: {
     filters: {
       library: (object) => object,
-      images: (object) => isImageType(object.data.type),
-      videos: (object) => isVideoType(object.data.type),
-      audios: (object) => isAudioType(object.data.type),
-      documents: (object) => isDocument(object.filename, object.data.type),
+      images: (object) => isImageType(object.type),
+      videos: (object) => isVideoType(object.type),
+      audios: (object) => isAudioType(object.type),
+      documents: (object) => isDocument(object.filename, object.type),
     },
   },
   [FILTER_VIEWS_IDS.browser]: {

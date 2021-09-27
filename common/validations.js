@@ -291,7 +291,7 @@ export const isNFTLink = (file) => {
   domain = domain.toLowerCase();
   return Constants.NFTDomains.includes(domain);
 };
-const isLinkWithSource = (source) => (file) => file.isLink && file.data.source === source;
+const isLinkWithSource = (source) => (file) => file.isLink && file.source === source;
 export const isTwitterLink = isLinkWithSource("Twitter");
 export const isYoutubeLink = isLinkWithSource("YouTube");
 export const isTwitchLink = isLinkWithSource("Twitch");
