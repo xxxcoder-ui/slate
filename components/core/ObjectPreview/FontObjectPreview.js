@@ -6,7 +6,7 @@ import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 
-import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
+import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 import { useFont } from "~/components/core/FontFrame/hooks";
 
 const STYLES_TEXT_PREVIEW = (theme) => css`

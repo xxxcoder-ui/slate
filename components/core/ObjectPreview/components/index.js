@@ -1,2 +1,2 @@
-export { default as LikeButton } from "./LikeButton";
-export { default as SaveButton } from "./SaveButton";
+export { default as LikeButton } from "~/components/core/ObjectPreview/components/LikeButton";
+export { default as SaveButton } from "~/components/core/ObjectPreview/components/SaveButton";

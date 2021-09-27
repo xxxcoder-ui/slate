@@ -9,7 +9,7 @@ import { useIsomorphicLayoutEffect } from "~/common/hooks";
 import { css } from "@emotion/react";
 
 import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
-import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
+import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const STYLES_CONTAINER = css`
   position: relative;

@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 
 import DataView from "~/components/core/DataView";
 import EmptyState from "~/components/core/EmptyState";
-import { useFilterContext } from "./Provider";
+import { useFilterContext } from "~/components/core/Filter/Provider";
 
 const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   width: 100%;

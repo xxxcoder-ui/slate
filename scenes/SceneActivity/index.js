@@ -6,7 +6,7 @@ import { css } from "@emotion/react";
 // import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useIntersection } from "common/hooks";
-import { useActivity } from "./hooks";
+import { useActivity } from "~/scenes/SceneActivity/hooks";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 
 import ScenePage from "~/components/core/ScenePage";

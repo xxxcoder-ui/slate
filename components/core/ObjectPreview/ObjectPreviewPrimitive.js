@@ -4,12 +4,11 @@ import * as Styles from "~/common/styles";
 import { css } from "@emotion/react";
 import { H5, P2, P3 } from "~/components/system/components/Typography";
 import { AspectRatio } from "~/components/system";
-// import { LikeButton, SaveButton } from "./components";
-// import { useSaveHandler } from "~/common/hooks";
+
 import { motion, useAnimation } from "framer-motion";
 import { useMounted, useMediaQuery } from "~/common/hooks";
 
-import ImageObjectPreview from "./ImageObjectPreview";
+import ImageObjectPreview from "~/components/core/ObjectPreview/ImageObjectPreview";
 
 const STYLES_WRAPPER = (theme) => css`
   position: relative;

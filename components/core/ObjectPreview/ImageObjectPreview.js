@@ -8,7 +8,7 @@ import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
 
 import { css } from "@emotion/react";
-import ObjectPreviewPrimitive from "./ObjectPreviewPrimitive";
+import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const STYLES_PLACEHOLDER_ABSOLUTE = css`
   position: absolute;

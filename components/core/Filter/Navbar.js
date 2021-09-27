@@ -5,6 +5,10 @@ import { usePortals } from "~/components/core/PortalsProvider";
 import { css } from "@emotion/react";
 import { Divider } from "~/components/system";
 
+/* -------------------------------------------------------------------------------------------------
+ *  Navbar Portal
+ * -----------------------------------------------------------------------------------------------*/
+
 export function NavbarPortal({ children }) {
   const { filterNavbar } = usePortals();
   const [filterNavbarElement] = filterNavbar;
@@ -20,9 +24,9 @@ export function NavbarPortal({ children }) {
     : null;
 }
 
-/**
- * Navbar
- */
+/* -------------------------------------------------------------------------------------------------
+ *  Navbar
+ * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_NAVBAR = (theme) => css`
   display: flex;
