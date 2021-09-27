@@ -39,6 +39,7 @@ export const TEXTILE_SLACK_WEBHOOK_KEY = process.env.TEXTILE_SLACK_WEBHOOK_KEY;
 export const URI_SHOVEL = process.env.NEXT_PUBLIC_URI_SHOVEL;
 export const URI_FIJI = process.env.NEXT_PUBLIC_URI_FIJI;
 export const URI_LENS = process.env.NEXT_PUBLIC_URI_LENS;
+export const URI_ESTUARY = process.env.NEXT_PUBLIC_URI_ESTUARY;
 
 //NOTE(amine): Twitter
 export const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
