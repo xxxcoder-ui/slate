@@ -376,7 +376,7 @@ const SummaryTable = ({ uploadSummary, onAction, retry, cancel, ...props }) => {
       },
       {
         key: "object",
-        name: <System.H5 color="textGrayDark">Objects</System.H5>,
+        name: <System.H5 color="textGrayDark">Object</System.H5>,
         width: "30%",
         contentstyle: { padding: "0px" },
       },
@@ -388,7 +388,7 @@ const SummaryTable = ({ uploadSummary, onAction, retry, cancel, ...props }) => {
       },
       {
         key: "size",
-        name: <System.H5 color="textGrayDark">Sizes</System.H5>,
+        name: <System.H5 color="textGrayDark">Size</System.H5>,
         width: "20%",
         contentstyle: { padding: "0px" },
       },
