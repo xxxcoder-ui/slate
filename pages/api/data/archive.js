@@ -13,7 +13,7 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, user } = userInfo;
 
-  let bucketName = Constants.bucketNames.deals;
+  let bucketName = Constants.textile.dealsBucket;
   if (req.body.data && req.body.data.bucketName) {
     bucketName = req.body.data.bucketName;
   }
@@ -106,7 +106,7 @@ export default async (req, res) => {
 
   // NOTE(jim): Either encrypt the bucket or don't encrypt the bucket.
   let encryptThisDeal = false;
-  if (bucketName !== Constants.bucketNames.deals && user.allowEncryptedDataStorage) {
+  if (bucketName !== Constants.textile.dealsBucket && user.allowEncryptedDataStorage) {
     encryptThisDeal = true;
   }
 

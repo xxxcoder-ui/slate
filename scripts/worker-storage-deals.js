@@ -53,6 +53,11 @@ const recordTextileBucketInfoProduction = async (props) => {
       const roots = await buckets.list();
       const existing = roots.find((bucket) => bucket.name === Constants.textile.mainBucket);
 
+      if (!existing) {
+        console.log(`ERROR ${user.id} missing existing bucket. Listed buckets:`);
+        console.log(roots);
+      }
+
       let ipfs = existing.path;
       const textileBucketCID = Strings.ipfsToCid(ipfs);
 
@@ -72,7 +77,9 @@ const recordTextileBucketInfoProduction = async (props) => {
       console.log(e);
     }
   }
-
+  if (userUpdates.length) {
+    await pushUserUpdates(userUpdates);
+  }
   console.log("SCRIPT FINISHED");
 };
 
@@ -146,6 +153,7 @@ const recordTextileBucketInfo = async (props) => {
       userUpdates.push({ id: user.id, textileToken, textileThreadID, textileBucketCID });
     } catch (e) {
       console.log(e);
+      console.log(user.id);
     }
   }
   let query = userUpdates.map((user) => "(?::uuid, ?, ?, ?)").join(", ");
@@ -177,22 +185,40 @@ const recordTextileBucketInfo = async (props) => {
 };
 
 const run = async (props) => {
-  const successful = [];
-  const users = await DB.select("users.textileBucketCID")
+  let successful = [];
+  let i = 0;
+  const users = await DB.select("id", "textileBucketCID")
     .from("users")
     .whereExists(function () {
       this.select("id")
         .from("files")
-        .where("users.id", "=", "files.ownerId")
+        .whereRaw('users.id = "files"."ownerId"')
         .where("files.isLink", false);
-    });
+    })
+    .limit(1);
   for (let user of users) {
-    let json = addToEstuary(user.cid);
-    if (json) {
-      successful.push({ cid });
+    if (i % 100 === 0) {
+      console.log(i);
+      if (successful.length) {
+        await DB.insert(successful).into("deals");
+        successful = [];
+      }
+    }
+    i += 1;
+    let json = await addToEstuary(user.textileBucketCID);
+    if (json?.pin?.cid && json?.requestid) {
+      successful.push({
+        textileBucketCID: user.textileBucketCID,
+        pinCID: json.pin.cid,
+        requestId: json.requestid,
+      });
+    } else {
+      console.log(`ERROR storage deal for ${user.id}`);
     }
   }
-  let query = await DB.insert(cids).into("deals").returning("*");
+  if (successful.length) {
+    await DB.insert(successful).into("deals");
+  }
 };
 
 const addToEstuary = async (cid) => {
@@ -209,7 +235,6 @@ const addToEstuary = async (cid) => {
       }),
     });
     let json = await res.json();
-    console.log(json);
     return json;
   } catch (e) {
     Logging.error({
@@ -220,7 +245,7 @@ const addToEstuary = async (cid) => {
   console.log("SCRIPT FINISHED");
 };
 
-recordTextileBucketInfoProduction();
+// recordTextileBucketInfoProduction();
 // recordTextileBucketInfo();
-// run();
+run();
 // addToEstuary();

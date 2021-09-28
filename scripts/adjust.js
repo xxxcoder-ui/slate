@@ -18,11 +18,14 @@ const deleteGlobalTable = db.schema.dropTable("global");
 const deleteStatsTable = db.schema.dropTable("stats");
 
 const createDealsTable = db.schema.createTable("deals", function (table) {
-  table.string("cid").primary().unique().notNullable();
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.string("textileBucketCID").notNullable();
+  table.string("pinCID").notNullable();
+  table.string("requestId").notNullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-Promise.all([renameDealsTable]);
+Promise.all([createDealsTable]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

@@ -18,7 +18,10 @@ Logging.log(`RUNNING:  seed-database.js`);
 //replace createdat, updatedat, ownerid, owneruserid
 
 const createDealsTable = db.schema.createTable("deals", function (table) {
-  table.string("cid").primary().unique().notNullable();
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.string("textileBucketCID").notNullable();
+  table.string("pinCID").notNullable();
+  table.string("requestId").notNullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
