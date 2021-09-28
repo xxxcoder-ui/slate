@@ -11,27 +11,18 @@ const db = knex(envConfig);
 
 Logging.log(`RUNNING:  adjust.js`);
 
-const renameExistingColumn = db.schema.table("users", function (table) {
-  table.renameColumn("textileToken", "textileKey");
+const renameDealsTable = db.schema.renameTable("deals", "old_deals");
+
+const deleteGlobalTable = db.schema.dropTable("global");
+
+const deleteStatsTable = db.schema.dropTable("stats");
+
+const createDealsTable = db.schema.createTable("deals", function (table) {
+  table.string("cid").primary().unique().notNullable();
+  table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const addNewColumns = db.schema.table("users", function (table) {
-  table.string("textileToken").nullable();
-  table.string("textileThreadID").nullable();
-  table.string("textileBucketCID").nullable();
-});
-
-const editColumnLength = db.schema.table("users", function (table) {
-  table.string("textileToken", 400).nullable().alter();
-});
-
-const addNewFieldsSlates = db.schema.table("slates", function (table) {
-  table.string("name").nullable();
-  table.string("body").nullable();
-  table.string("preview").nullable();
-});
-
-Promise.all([editColumnLength]);
+Promise.all([renameDealsTable]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

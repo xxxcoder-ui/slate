@@ -18,11 +18,8 @@ Logging.log(`RUNNING:  seed-database.js`);
 //replace createdat, updatedat, ownerid, owneruserid
 
 const createDealsTable = db.schema.createTable("deals", function (table) {
-  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.string("ownerId").nullable();
-  table.jsonb("data").nullable();
+  table.string("cid").primary().unique().notNullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
-  table.timestamp("updatedAt").notNullable().defaultTo(db.raw("now()"));
 });
 
 const createUsersTable = db.schema.createTable("users", function (table) {

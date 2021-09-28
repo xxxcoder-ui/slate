@@ -78,7 +78,7 @@ import getActivity from "~/node_common/data/methods/get-activity";
 import getExplore from "~/node_common/data/methods/get-explore";
 
 // NOTE(jim):
-// Search postgres queries
+// Summary postgres queries
 import getEverySlate from "~/node_common/data/methods/get-every-slate";
 import getEveryUser from "~/node_common/data/methods/get-every-user";
 import getEveryFile from "~/node_common/data/methods/get-every-file";
@@ -98,6 +98,10 @@ import pruneVerifications from "~/node_common/data/methods/prune-verifications";
 import createOrphan from "~/node_common/data/methods/create-orphan";
 import getAllSendgridContacts from "~/node_common/data/methods/get-all-sendgrid-contacts";
 
+// NOTE(martina):
+// Deals
+import createDeal from "~/node_common/data/methods/create-deal";
+
 export {
   // NOTE(jim): One-offs
   createOrphan,
@@ -112,7 +116,7 @@ export {
   getUserByTwitterId,
   recalcUserSlatecount,
   recalcUserFollowercount,
-  //NOTE(martina): File operations
+  // NOTE(martina): File operations
   createFile,
   getFileByCid,
   getFileByUrl,
@@ -161,11 +165,11 @@ export {
   createActivity,
   getActivity,
   getExplore,
-  // NOTE(jim): Search
+  // NOTE(jim): Summary
   getEverySlate,
   getEveryUser,
   getEveryFile,
-  //NOTE(toast): Verification operations
+  // NOTE(toast): Verification operations
   createVerification,
   getVerificationByEmail,
   getVerificationBySid,
@@ -177,4 +181,6 @@ export {
   createTwitterToken,
   getTwitterToken,
   updateTwitterToken,
+  // NOTE(martina): Deals
+  createDeal,
 };

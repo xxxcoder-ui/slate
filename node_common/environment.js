@@ -54,3 +54,6 @@ export const IFRAMELY_API_KEY = process.env.IFRAMELY_API_KEY;
 
 //NOTE(martina): Microlink
 export const MICROLINK_API_KEY = process.env.MICROLINK_API_KEY;
+
+//NOTE(martina): Estuary
+export const ESTUARY_API_KEY = process.env.ESTUARY_API_KEY;

@@ -62,6 +62,10 @@ export class Boundary extends React.PureComponent {
       return;
     }
 
+    if (e.target instanceof SVGElement) {
+      return;
+    }
+
     if (
       this.props.isDataMenuCaptured &&
       typeof e.target.hasAttribute === "function" &&
