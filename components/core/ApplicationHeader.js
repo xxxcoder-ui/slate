@@ -50,7 +50,6 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   z-index: -1;
   background-color: ${theme.system.white};
   box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
-
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
@@ -61,7 +60,6 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
 const STYLES_APPLICATION_HEADER = css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   padding: 14px 24px;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 16px 16px 12px;
     width: 100%;
@@ -94,7 +92,6 @@ const STYLES_BACKGROUND = css`
   height: 100vh;
   background-color: ${Constants.semantic.bgBlurDark};
   pointer-events: auto;
-
   @keyframes fade-in {
     from {
       opacity: 50%;

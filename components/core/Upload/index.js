@@ -2,17 +2,16 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as System from "~/components/system";
 import * as Constants from "~/common/constants";
-import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 
 import { useUploadContext } from "~/components/core/Upload/Provider";
 import { Show } from "~/components/utility/Show";
 import { ModalPortal } from "../ModalPortal";
 import { motion } from "framer-motion";
-import { css } from "@emotion/react";
 import { Provider } from "~/components/core/Upload/Provider";
 
 import UploadModal from "~/components/core/Upload/Modal";
+import Popup from "~/components/core/Upload/Popup";
 import DataMeter from "~/components/core/DataMeter";
 
 /* -------------------------------------------------------------------------------------------------
@@ -87,4 +86,4 @@ const UploadMetrics = () => {
   );
 };
 
-export { Provider, Root, Trigger };
+export { Provider, Root, Popup, Trigger };

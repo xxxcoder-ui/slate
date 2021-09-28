@@ -25,7 +25,7 @@ import DataMeter from "~/components/core/DataMeter";
  * UploadModal
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_MODAL = css`
+const STYLES_MODAL = (theme) => css`
   z-index: ${Constants.zindex.uploadModal};
   top: ${Constants.sizes.header}px;
   right: 0;
@@ -33,14 +33,15 @@ const STYLES_MODAL = css`
   position: fixed;
   left: 0;
   padding: 24px 24px 32px;
-  height: calc(100vh - ${Constants.sizes.header}px);
+  height: calc(100vh - ${theme.sizes.header}px);
   overflow-y: auto;
 
-  background-color: ${Constants.semantic.bgBlurWhiteOP};
+  background-color: ${theme.semantic.bgWhite};
 
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
+    background-color: ${theme.semantic.bgBlurWhiteOP};
   }
 `;
 
