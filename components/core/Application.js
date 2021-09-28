@@ -36,7 +36,6 @@ import SidebarWalletSendFunds from "~/components/sidebars/SidebarWalletSendFunds
 import SidebarAddFileToSlate from "~/components/sidebars/SidebarAddFileToSlate";
 import SidebarDragDropNotice from "~/components/sidebars/SidebarDragDropNotice";
 import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlateSettings";
-import SidebarFilecoinArchive from "~/components/sidebars/SidebarFilecoinArchive";
 import SidebarHelp from "~/components/sidebars/SidebarHelp";
 import SidebarFAQ from "~/components/sidebars/SidebarFAQ";
 import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
@@ -58,7 +57,6 @@ import { Logo } from "~/common/logo";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const SIDEBARS = {
-  SIDEBAR_FILECOIN_ARCHIVE: <SidebarFilecoinArchive />,
   SIDEBAR_WALLET_SEND_FUNDS: <SidebarWalletSendFunds />,
   SIDEBAR_CREATE_WALLET_ADDRESS: <SidebarCreateWalletAddress />,
   SIDEBAR_ADD_FILE_TO_SLATE: <SidebarAddFileToSlate />,
