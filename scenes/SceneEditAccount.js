@@ -50,8 +50,6 @@ export default class SceneEditAccount extends React.Component {
     photo: this.props.viewer.photo,
     name: this.props.viewer.name,
     deleting: false,
-    allowAutomaticDataStorage: this.props.viewer.allowAutomaticDataStorage,
-    allowEncryptedDataStorage: this.props.viewer.allowEncryptedDataStorage,
     changingPassword: false,
     changingAvatar: false,
     savingNameBio: false,
@@ -78,21 +76,6 @@ export default class SceneEditAccount extends React.Component {
 
     Events.hasError(updateResponse);
     this.setState({ changingAvatar: false, photo: url });
-  };
-
-  _handleSaveFilecoin = async (e) => {
-    this.setState({ changingFilecoin: true });
-
-    let response = await Actions.updateViewer({
-      user: {
-        allowAutomaticDataStorage: this.state.allowAutomaticDataStorage,
-        allowEncryptedDataStorage: this.state.allowEncryptedDataStorage,
-      },
-    });
-
-    Events.hasError(response);
-
-    this.setState({ changingFilecoin: false });
   };
 
   _handleSave = async (e) => {
@@ -180,7 +163,6 @@ export default class SceneEditAccount extends React.Component {
           <SecondaryTabGroup
             tabs={[
               { title: "Profile", value: { tab: "profile" } },
-              { title: "Data Storage", value: { tab: "storage" } },
               { title: "Security", value: { tab: "security" } },
               { title: "Account", value: { tab: "account" } },
             ]}
@@ -232,48 +214,6 @@ export default class SceneEditAccount extends React.Component {
                 <System.ButtonPrimary
                   onClick={this._handleSave}
                   loading={this.state.savingNameBio}
-                  style={{ width: "200px" }}
-                >
-                  Save
-                </System.ButtonPrimary>
-              </div>
-            </div>
-          ) : null}
-          {tab === "storage" ? (
-            <div style={{ maxWidth: 800 }}>
-              <div css={STYLES_HEADER}>
-                Allow Slate to make Filecoin archive storage deals on your behalf
-              </div>
-              <div style={{ maxWidth: 800 }}>
-                If this box is checked, then we will make Filecoin archive storage deals on your
-                behalf. By default these storage deals are not encrypted and anyone can retrieve
-                them from the Filecoin Network.
-              </div>
-
-              <System.CheckBox
-                style={{ marginTop: 24 }}
-                name="allowAutomaticDataStorage"
-                value={this.state.allowAutomaticDataStorage}
-                onChange={this._handleChange}
-              >
-                Allow Slate to make archive storage deals on your behalf to the Filecoin Network.
-                You will get a receipt in the Filecoin section.
-              </System.CheckBox>
-
-              <System.CheckBox
-                style={{ marginTop: 24 }}
-                name="allowEncryptedDataStorage"
-                value={this.state.allowEncryptedDataStorage}
-                onChange={this._handleChange}
-              >
-                Force encryption on archive storage deals (only you can see retrieved data from the
-                Filecoin network).
-              </System.CheckBox>
-
-              <div style={{ marginTop: 24 }}>
-                <System.ButtonPrimary
-                  onClick={this._handleSaveFilecoin}
-                  loading={this.state.changingFilecoin}
                   style={{ width: "200px" }}
                 >
                   Save

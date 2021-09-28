@@ -25,7 +25,15 @@ const createDealsTable = db.schema.createTable("deals", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-Promise.all([createDealsTable]);
+const deleteStorageDealSettings = db.schema.table("users", function (table) {
+  table.dropColumns(
+    "settingsDealsAutoApprove",
+    "allowEncryptedDataStorage",
+    "allowAutomaticDataStorage"
+  );
+});
+
+Promise.all([deleteStorageDealSettings]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

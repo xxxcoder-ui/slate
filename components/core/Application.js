@@ -27,15 +27,12 @@ import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
 import SceneDirectory from "~/scenes/SceneDirectory";
 import SceneProfile from "~/scenes/SceneProfile";
-import SceneArchive from "~/scenes/SceneArchive";
-import SceneMakeFilecoinDeal from "~/scenes/SceneMakeFilecoinDeal";
 
 // NOTE(jim):
 // Sidebars each have a decorator and can be shown to with _handleAction
 import SidebarCreateSlate from "~/components/sidebars/SidebarCreateSlate";
 import SidebarCreateWalletAddress from "~/components/sidebars/SidebarCreateWalletAddress";
 import SidebarWalletSendFunds from "~/components/sidebars/SidebarWalletSendFunds";
-import SidebarFileStorageDeal from "~/components/sidebars/SidebarFileStorageDeal";
 import SidebarAddFileToSlate from "~/components/sidebars/SidebarAddFileToSlate";
 import SidebarDragDropNotice from "~/components/sidebars/SidebarDragDropNotice";
 import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlateSettings";
@@ -62,7 +59,6 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const SIDEBARS = {
   SIDEBAR_FILECOIN_ARCHIVE: <SidebarFilecoinArchive />,
-  SIDEBAR_FILE_STORAGE_DEAL: <SidebarFileStorageDeal />,
   SIDEBAR_WALLET_SEND_FUNDS: <SidebarWalletSendFunds />,
   SIDEBAR_CREATE_WALLET_ADDRESS: <SidebarCreateWalletAddress />,
   SIDEBAR_ADD_FILE_TO_SLATE: <SidebarAddFileToSlate />,
@@ -86,8 +82,6 @@ const SCENES = {
   NAV_API: <SceneSettingsDeveloper />,
   NAV_SETTINGS: <SceneEditAccount />,
   NAV_SLATES: <SceneSlates />,
-  NAV_FILECOIN: <SceneArchive />,
-  NAV_STORAGE_DEAL: <SceneMakeFilecoinDeal />,
 };
 
 let mounted;

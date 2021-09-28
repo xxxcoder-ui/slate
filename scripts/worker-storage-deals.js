@@ -195,9 +195,13 @@ const run = async (props) => {
         .whereRaw('users.id = "files"."ownerId"')
         .where("files.isLink", false);
     })
-    .limit(1);
+    .whereNotExists(function () {
+      this.select("id")
+        .from("deals")
+        .whereRaw('"users"."textileBucketCID" = "deals"."textileBucketCID"');
+    });
   for (let user of users) {
-    if (i % 100 === 0) {
+    if (i % 500 === 0) {
       console.log(i);
       if (successful.length) {
         await DB.insert(successful).into("deals");
@@ -219,6 +223,7 @@ const run = async (props) => {
   if (successful.length) {
     await DB.insert(successful).into("deals");
   }
+  console.log("SCRIPT FINISHED");
 };
 
 const addToEstuary = async (cid) => {

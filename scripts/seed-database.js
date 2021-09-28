@@ -43,9 +43,6 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.string("textileToken", 400).nullable();
   table.string("textileThreadID").nullable();
   table.string("textileBucketCID").nullable();
-  table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
-  table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
-  table.boolean("allowEncryptedDataStorage").notNullable().defaultTo(true);
   table.jsonb("onboarding").nullable();
   table.integer("followerCount").notNullable().defaultTo(0);
   table.integer("slateCount").notNullable().defaultTo(0);

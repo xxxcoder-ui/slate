@@ -134,14 +134,6 @@ export const sendTemplateEmail = async (data) => {
   });
 };
 
-export const archive = async (data) => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/data/archive`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 export const removeFromBucket = async (data) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/bucket-remove`, {

@@ -131,9 +131,6 @@ const addUserColumns = async () => {
     // table.string("textileToken", 400).nullable();
     // table.string("textileThreadID").nullable();
     // table.string("textileBucketCID").nullable();
-    table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
-    table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
-    table.boolean("allowEncryptedDataStorage").notNullable().defaultTo(true);
     table.jsonb("onboarding").nullable();
   });
 };
@@ -197,10 +194,7 @@ const migrateUserTable = async () => {
       name: data.name,
       body: data.body,
       photo: data.photo,
-      // textileKey: data.tokens?.api,
-      settingsDealsAutoApprove: data.settings?.settings_deals_auto_approve,
-      allowAutomaticDataStorage: data.settings?.allow_automatic_data_storage,
-      allowEncryptedDataStorage: data.settings?.allow_encrypted_data_storage,
+      textileKey: data.tokens?.api,
       onboarding:
         data.onboarding || data.status?.hidePrivacyAlert
           ? { ...data.onboarding, hidePrivacyAlert: data.status?.hidePrivacyAlert }
@@ -349,9 +343,6 @@ Users
     'data.photo', -> 'photo' MIGRATED
     'data.status', -> 'onboarding.hidePrivacyAlert' MIGRATED
     'data.tokens.api', -> 'textileKey' MIGRATED
-    'data.settings.settings_deals_auto_approve', -> 'settingsDealsAutoApprove' MIGRATED
-    'data.settings.allow_automatic_data_storage', -> 'allowAutomaticDataStorage' MIGRATED
-    'data.settings.allow_encrypted_data_storage', -> 'allowEncryptedDataStorage' MIGRATED
     'data.onboarding', -> 'onboarding' MIGRATED
     'data.twitter.username', -> 'twitterUsername' MIGRATED
     'data.twitter.verified', -> 'twitterVerified' MIGRATED

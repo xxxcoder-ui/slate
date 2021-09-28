@@ -173,18 +173,6 @@ export const navigation = [
   },
   slatePage,
   {
-    id: "NAV_FILECOIN",
-    name: "Filecoin",
-    pageTitle: "Archive on Filecoin",
-    pathname: "/_/filecoin",
-  },
-  {
-    id: "NAV_STORAGE_DEAL",
-    name: "Storage Deal",
-    pageTitle: "Filecoin Storage Deal",
-    pathname: "/_/storage-deal",
-  },
-  {
     id: "NAV_API",
     name: "API",
     pageTitle: "Developer API",

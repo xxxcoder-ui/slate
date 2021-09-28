@@ -22,9 +22,6 @@
 //     textileToken: user.textileToken,
 //     textileThreadID: user.textileThreadID,
 //     textileBucketCID: user.textileThreadID,
-//     settingsDealAutoApprove: user.settingsDealAutoApprove,
-//     allowAutomaticDataStorage: user.allowAutomaticDataStorage,
-//     allowEncryptedDataStorage: user.allowEncryptedDataStorage,
 //     onboarding: user.onboarding,
 //   };
 // };

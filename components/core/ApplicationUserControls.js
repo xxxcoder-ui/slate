@@ -199,24 +199,6 @@ export class ApplicationUserControlsPopup extends React.Component {
         {
           text: (
             <div css={STYLES_SECTION_ITEM_HOVER}>
-              <Link href={"/_/filecoin"} onAction={this._handleAction}>
-                Filecoin
-              </Link>
-            </div>
-          ),
-        },
-        {
-          text: (
-            <div css={STYLES_SECTION_ITEM_HOVER}>
-              <Link href={"/_/storage-deal"} onAction={this._handleAction}>
-                Storage deal
-              </Link>
-            </div>
-          ),
-        },
-        {
-          text: (
-            <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={"/_/api"} onAction={this._handleAction}>
                 API
               </Link>
