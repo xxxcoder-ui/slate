@@ -111,6 +111,15 @@ const printFilesTable = async () => {
 
 /* Add columns (including tags) */
 
+const addUserTextileColumns = async () => [
+  await DB.schema.table("users", function (table) {
+    table.string("textileKey").nullable();
+    table.string("textileToken", 400).nullable();
+    table.string("textileThreadID").nullable();
+    table.string("textileBucketCID").nullable();
+  }),
+];
+
 const addUserColumns = async () => {
   await DB.schema.table("users", function (table) {
     table.string("body", 2000).nullable();
@@ -118,10 +127,10 @@ const addUserColumns = async () => {
     table.string("name").nullable();
     table.string("twitterUsername").nullable();
     table.boolean("twitterVerified").notNullable().defaultTo(false);
-    table.string("textileKey").nullable();
-    table.string("textileToken", 400).nullable();
-    table.string("textileThreadID").nullable();
-    table.string("textileBucketCID").nullable();
+    // table.string("textileKey").nullable();
+    // table.string("textileToken", 400).nullable();
+    // table.string("textileThreadID").nullable();
+    // table.string("textileBucketCID").nullable();
     table.boolean("settingsDealsAutoApprove").notNullable().defaultTo(false);
     table.boolean("allowAutomaticDataStorage").notNullable().defaultTo(true);
     table.boolean("allowEncryptedDataStorage").notNullable().defaultTo(true);
@@ -188,7 +197,7 @@ const migrateUserTable = async () => {
       name: data.name,
       body: data.body,
       photo: data.photo,
-      textileKey: data.tokens?.api,
+      // textileKey: data.tokens?.api,
       settingsDealsAutoApprove: data.settings?.settings_deals_auto_approve,
       allowAutomaticDataStorage: data.settings?.allow_automatic_data_storage,
       allowEncryptedDataStorage: data.settings?.allow_encrypted_data_storage,
@@ -317,6 +326,7 @@ const runScript = async () => {
   // await printSlatesTable();
   // await printFilesTable();
 
+  await addUserTextileColumns();
   // await addUserColumns();
   // await addSlateColumns();
   // await addFileColumns();

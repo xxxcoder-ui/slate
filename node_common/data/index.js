@@ -79,7 +79,6 @@ import getExplore from "~/node_common/data/methods/get-explore";
 
 // NOTE(jim):
 // Summary postgres queries
-import getUnsavedCids from "~/node_common/data/methods/get-unsaved-cids";
 import getEverySlate from "~/node_common/data/methods/get-every-slate";
 import getEveryUser from "~/node_common/data/methods/get-every-user";
 import getEveryFile from "~/node_common/data/methods/get-every-file";
@@ -101,7 +100,6 @@ import getAllSendgridContacts from "~/node_common/data/methods/get-all-sendgrid-
 
 // NOTE(martina):
 // Deals
-import getUnsavedCids from "~/node_common/data/methods/get-unsaved-cids";
 import createDeal from "~/node_common/data/methods/create-deal";
 
 export {
@@ -184,6 +182,5 @@ export {
   getTwitterToken,
   updateTwitterToken,
   // NOTE(martina): Deals
-  getUnsavedCids,
   createDeal,
 };
