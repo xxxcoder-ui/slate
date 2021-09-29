@@ -38,7 +38,7 @@ export default function BackgroundGenerator({ children, isMobile, ...props }) {
   }, [isMobile]);
 
   return (
-    <div style={{ backgroundImage: `url(${background})`, height }} {...props}>
+    <div style={{ backgroundImage: `url(${background})`, minHeight: height }} {...props}>
       {children}
     </div>
   );
