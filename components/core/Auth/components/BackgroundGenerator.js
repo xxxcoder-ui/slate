@@ -12,12 +12,10 @@ const AUTH_BACKGROUNDS = [
   "https://slate.textile.io/ipfs/bafybeigxssjsv3tmdhz4bj6vl2ca5c6rrhdkepw3mifvlllb7orpx5cfou",
 ];
 
-export default function BackgroundGenerator({ children, isMobile, ...props }) {
-  const background = React.useMemo(() => {
-    const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
-    return AUTH_BACKGROUNDS[backgroundIdx];
-  }, []);
+const backgroundIdx = Utilities.getRandomNumberBetween(0, AUTH_BACKGROUNDS.length - 1);
+const backgroundUrl = AUTH_BACKGROUNDS[backgroundIdx];
 
+export default function BackgroundGenerator({ children, isMobile, ...props }) {
   // NOTE(amine): fix for 100vh overflowing in mobile
   //              https://bugs.webkit.org/show_bug.cgi?id=141832
   const [height, setHeight] = React.useState();
@@ -38,7 +36,7 @@ export default function BackgroundGenerator({ children, isMobile, ...props }) {
   }, [isMobile]);
 
   return (
-    <div style={{ backgroundImage: `url(${background})`, minHeight: height }} {...props}>
+    <div style={{ backgroundImage: `url(${backgroundUrl})`, minHeight: height }} {...props}>
       {children}
     </div>
   );
