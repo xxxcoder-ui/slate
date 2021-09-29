@@ -203,6 +203,9 @@ export default class ApplicationLayout extends React.Component {
         </Boundary>
       );
     }
+    const isHeaderInView =
+      this.props.page?.id === "NAV_SIGN_IN" || this.props.viewer?.surveys?.onboarding === false;
+
     return (
       <React.Fragment>
         <div css={STYLES_CONTENT}>
@@ -226,9 +229,9 @@ export default class ApplicationLayout extends React.Component {
             viewer={this.props.viewer}
             style={
               this.props.isMobile
-                ? { top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : this.state.headerTop + 56 }
+                ? { top: isHeaderInView ? 0 : this.state.headerTop + 56 }
                 : {
-                    top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : 56,
+                    top: isHeaderInView ? 0 : 56,
                     paddingRight: this.props.sidebar
                       ? `calc(${Constants.sizes.sidebar}px + 48px`
                       : "auto",
