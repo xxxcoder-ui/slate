@@ -204,10 +204,8 @@ export const addExistingCIDToData = async ({ buckets, key, path, cid }) => {
 // };
 
 //NOTE(martina): only use this upon creating a new user. This creates their bucket without checking for an existing bucket
-export const createBucket = async ({
-  bucketName = Constants.textile.mainBucket,
-  encrypted = false,
-}) => {
+export const createBucket = async ({ bucketName, encrypted = false }) => {
+  bucketName = bucketName || Constants.textile.mainBucket;
   try {
     const identity = await PrivateKey.fromRandom();
     const textileKey = identity.toString();
@@ -243,7 +241,8 @@ export const createBucket = async ({
 };
 
 //NOTE(martina): only use this for existing users. This grabs their bucket without checking for an existing bucket
-export const getBucket = async ({ user, bucketName = Constants.textile.mainBucket }) => {
+export const getBucket = async ({ user, bucketName }) => {
+  bucketName = bucketName || Constants.textile.mainBucket;
   let updateUser = false;
   let { textileKey, textileToken, textileThreadID, textileBucketCID } = user;
 
