@@ -26,16 +26,6 @@ const STYLES_NO_VISIBLE_SCROLL = css`
   }
 `;
 
-const STYLES_HEADER = css`
-  z-index: ${Constants.zindex.header};
-  height: ${Constants.sizes.header}px;
-  width: 100vw;
-  position: fixed;
-  right: 0;
-  top: 0;
-  transition: top 0.25s;
-`;
-
 const STYLES_CONTENT = css`
   background: ${Constants.system.white};
   width: 100%;
@@ -220,7 +210,7 @@ export default class ApplicationLayout extends React.Component {
           {this.props.header && (
             <>
               <div style={{ height: Constants.sizes.header }} />
-              <div css={STYLES_HEADER}>{this.props.header}</div>
+              <div>{this.props.header}</div>
             </>
           )}
           <Alert

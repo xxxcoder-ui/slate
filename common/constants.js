@@ -8,7 +8,8 @@ export const sizes = {
   navigation: 288,
   sidebar: 416,
   // NOTE(amine): header's height + filter navbar's height
-  header: 52 + 40,
+  header: 52,
+  filterNavbar: 40,
   tablet: 960,
   desktop: 1024,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise

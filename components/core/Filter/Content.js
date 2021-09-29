@@ -9,7 +9,8 @@ import { useFilterContext } from "~/components/core/Filter/Provider";
 
 const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   width: 100%;
-  padding: 20px 24px 44px;
+  min-height: 100vh;
+  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
     padding: 31px 16px 44px;
   }

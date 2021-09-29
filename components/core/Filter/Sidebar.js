@@ -59,10 +59,10 @@ export function Sidebar() {
 
 const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   position: sticky;
-  top: ${theme.sizes.header}px;
-  min-height: 100vh;
+  top: ${theme.sizes.header + theme.sizes.filterNavbar}px;
   width: 236px;
-  max-height: calc(100vh - ${theme.sizes.header}px);
+  height: 100vh;
+  max-height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
   padding: 20px 24px;
   background-color: ${theme.semantic.bgLight};
 `;
