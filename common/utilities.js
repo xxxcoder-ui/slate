@@ -154,14 +154,14 @@ export function formatDateToString(date) {
   const yesterday = moment().subtract(1, "day");
 
   if (today.isSame(providedDate, "day")) {
-    return "Today at " + providedDate.format("h:mm:ssA");
+    return "Today at " + providedDate.format("h:mmA");
   }
 
   if (yesterday.isSame(providedDate, "day")) {
-    return "Yesterday at " + providedDate.format("h:mm:ssA");
+    return "Yesterday at " + providedDate.format("h:mmA");
   }
 
-  return providedDate.format("MMM D, YYYY") + " at " + providedDate.format("h:mm:ssA");
+  return providedDate.format("MMM D, YYYY") + " at " + providedDate.format("h:mmA");
 }
 
 export const clamp = (value, min, max) => {
