@@ -1890,10 +1890,10 @@ export const MehCircle = (props) => (
 );
 
 export const Heart = (props) => (
-  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M17.367 4.342a4.584 4.584 0 00-6.484 0L10 5.225l-.883-.883a4.584 4.584 0 00-6.484 6.483l.884.883L10 18.192l6.483-6.484.884-.883a4.584 4.584 0 000-6.483v0z"
-      stroke="#48484A"
+      d="M13.893 3.073a3.667 3.667 0 00-5.186 0L8 3.78l-.707-.707A3.667 3.667 0 102.107 8.26l.706.707L8 14.153l5.187-5.186.706-.707a3.667 3.667 0 000-5.187v0z"
+      stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -2019,7 +2019,8 @@ export const Mail = (props) => (
   </svg>
 );
 
-export const Twitter = (props) => (
+// TODO(amine): update this logo when working on object sharing
+export const TwitterWhiteLogo = (props) => (
   <svg width={16} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M15.333 1a7.268 7.268 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 15 14 11.667 14 4c0-.186-.018-.371-.053-.553A5.147 5.147 0 0015.333 1z"
@@ -2055,6 +2056,186 @@ export const List = (props) => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M5.333 4H14M5.333 8H14M5.333 12H14M2 4h.007M2 8h.007M2 12h.007"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Radio = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M8 9.333a1.333 1.333 0 100-2.666 1.333 1.333 0 000 2.666zM10.827 5.173a4 4 0 010 5.66m-5.654-.006a4 4 0 010-5.66m7.54-1.88a6.667 6.667 0 010 9.426m-9.426 0a6.667 6.667 0 010-9.426"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const FileText = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M9.333 1.333H4a1.333 1.333 0 00-1.333 1.334v10.666A1.333 1.333 0 004 14.667h8a1.333 1.333 0 001.333-1.334v-8l-4-4z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M9.333 1.333v4h4M10.667 8.667H5.333M10.667 11.333H5.333M6.667 6H5.333"
+      stroke="#00050A"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Sidebar = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M12.667 2H3.333C2.597 2 2 2.597 2 3.333v9.334C2 13.403 2.597 14 3.333 14h9.334c.736 0 1.333-.597 1.333-1.333V3.333C14 2.597 13.403 2 12.667 2z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M6 2v12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+export const Clock = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M8 14.667A6.667 6.667 0 108 1.333a6.667 6.667 0 000 13.334z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M8 4v4l2.667 1.333"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Layout = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M12.667 2H3.333C2.597 2 2 2.597 2 3.333v9.334C2 13.403 2.597 14 3.333 14h9.334c.736 0 1.333-.597 1.333-1.333V3.333C14 2.597 13.403 2 12.667 2zM2 6h12M6 14V6"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Twitter = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M15.333 2a7.268 7.268 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 16 14 12.667 14 5c0-.186-.018-.371-.053-.553A5.147 5.147 0 0015.333 2v0z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Bookmark = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M12.667 14L8 10.667 3.333 14V3.333A1.333 1.333 0 014.667 2h6.666a1.333 1.333 0 011.334 1.333V14z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const FilePlus = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M9.333 1.333H4a1.333 1.333 0 00-1.333 1.334v10.666A1.333 1.333 0 004 14.667h8a1.334 1.334 0 001.333-1.334v-8l-4-4z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M9.333 1.333v4h4M8 12V8M6 10h4"
+      stroke="#00050A"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Youtube = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M15.027 4.28a1.853 1.853 0 00-1.294-1.333C12.587 2.667 8 2.667 8 2.667s-4.587 0-5.733.306A1.853 1.853 0 00.973 4.307a19.333 19.333 0 00-.306 3.526c-.008 1.192.095 2.381.306 3.554a1.853 1.853 0 001.294 1.28c1.146.306 5.733.306 5.733.306s4.587 0 5.733-.306a1.853 1.853 0 001.294-1.334 19.33 19.33 0 00.306-3.5 19.33 19.33 0 00-.306-3.553v0z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M6.5 10.013l3.833-2.18L6.5 5.653v4.36z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Github = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M6 12.667c-3.333 1-3.333-1.667-4.667-2m9.334 4v-2.58a2.246 2.246 0 00-.627-1.74c2.093-.234 4.293-1.027 4.293-4.667 0-.93-.358-1.826-1-2.5a3.38 3.38 0 00-.06-2.513s-.786-.234-2.606.986a8.92 8.92 0 00-4.667 0C4.18.433 3.393.667 3.393.667a3.38 3.38 0 00-.06 2.513 3.627 3.627 0 00-1 2.52c0 3.613 2.2 4.407 4.294 4.667A2.246 2.246 0 006 12.087v2.58"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Twitch = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M10.667 7.333V4.667M14 1.333H2V12h3.333v2.667L8 12h3.333L14 9.333v-8zm-6.667 6V4.667v2.666z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Instagram = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M11.333 1.333H4.667a3.333 3.333 0 00-3.334 3.334v6.666a3.333 3.333 0 003.334 3.334h6.666a3.333 3.333 0 003.334-3.334V4.667a3.333 3.333 0 00-3.334-3.334z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M10.667 7.58a2.667 2.667 0 11-5.276.782 2.667 2.667 0 015.276-.782zM11.667 4.333h.006"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"

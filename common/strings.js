@@ -335,4 +335,4 @@ export const createSlug = (text, base = "untitled") => {
   return text;
 };
 
-export const capitalize = (str = "") => str[0].toUpperCase() + str.slice(1);
+export const capitalize = (str = "") => str[0]?.toUpperCase() + str?.slice(1);

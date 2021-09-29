@@ -5,15 +5,15 @@ import * as Typography from "~/components/system/components/Typography";
 
 import { css } from "@emotion/react";
 
-import PdfPlaceholder from "./PDF";
-import AudioPlaceholder from "./Audio";
-import CodePlaceholder from "./Code";
-import EpubPlaceholder from "./EPUB";
-import KeynotePlaceholder from "./Keynote";
-import Object3DPlaceholder from "./3D";
-import FilePlaceholder from "./File";
-import VideoPlaceholder from "./Video";
-import LinkPlaceholder from "./Link";
+import PdfPlaceholder from "~/components/core/ObjectPreview/placeholders/PDF";
+import AudioPlaceholder from "~/components/core/ObjectPreview/placeholders/Audio";
+import CodePlaceholder from "~/components/core/ObjectPreview/placeholders/Code";
+import EpubPlaceholder from "~/components/core/ObjectPreview/placeholders/EPUB";
+import KeynotePlaceholder from "~/components/core/ObjectPreview/placeholders/Keynote";
+import Object3DPlaceholder from "~/components/core/ObjectPreview/placeholders/3D";
+import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
+import VideoPlaceholder from "~/components/core/ObjectPreview/placeholders/Video";
+import LinkPlaceholder from "~/components/core/ObjectPreview/placeholders/Link";
 
 const STYLES_PLACEHOLDER_CONTAINER = (theme) => css`
   position: relative;

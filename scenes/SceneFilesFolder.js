@@ -1,70 +1,69 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import * as Filter from "~/components/core/Filter";
+import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 
 import ScenePage from "~/components/core/ScenePage";
-import DataView from "~/components/core/DataView";
-import EmptyState from "~/components/core/EmptyState";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_SCENE_PAGE = css`
-  padding: 20px 24px 44px;
+  padding: 0px;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 31px 16px 44px;
+    padding: 0px;
   }
 `;
 
-export default class SceneFilesFolder extends React.Component {
-  state = {
-    index: -1,
-  };
+const STYLES_FILTER_TITLE_WRAPPER = css`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
-  render() {
-    let files = this.props.viewer?.library;
-    const tab = this.props.page.params?.tab || "grid";
+export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
+  const [index, setIndex] = React.useState(-1);
 
-    return (
-      <WebsitePrototypeWrapper
-        title={`${this.props.page.pageTitle} • Slate`}
-        url={`${Constants.hostname}${this.props.page.pathname}`}
-      >
-        <ScenePage css={STYLES_SCENE_PAGE}>
-          <GlobalCarousel
-            carouselType="DATA"
-            viewer={this.props.viewer}
-            objects={files}
-            onAction={this.props.onAction}
-            isMobile={this.props.isMobile}
-            params={this.props.page.params}
-            isOwner={true}
-            index={this.state.index}
-            onChange={(index) => this.setState({ index })}
-          />
+  let objects = viewer.library;
+  // const tab = page.params?.tab || "grid";
 
-          {files.length ? (
-            <DataView
-              key="scene-files-folder"
-              onAction={this.props.onAction}
-              viewer={this.props.viewer}
-              items={files}
-              view={tab}
-              isOwner={true}
-              page={this.props.page}
-            />
-          ) : (
-            <EmptyState>
-              <FileTypeGroup />
-              <div style={{ marginTop: 24 }}>
-                Drag and drop files into Slate to upload, or press the plus button to save a file or
-                link
-              </div>
-            </EmptyState>
-          )}
-        </ScenePage>
-      </WebsitePrototypeWrapper>
-    );
-  }
+  return (
+    <WebsitePrototypeWrapper
+      title={`${page.pageTitle} • Slate`}
+      url={`${Constants.hostname}${page.pathname}`}
+    >
+      <ScenePage css={STYLES_SCENE_PAGE}>
+        <GlobalCarousel
+          carouselType="DATA"
+          viewer={viewer}
+          objects={objects}
+          onAction={onAction}
+          isMobile={isMobile}
+          params={page.params}
+          isOwner={true}
+          index={index}
+          onChange={(index) => setIndex(index)}
+        />
+        <Filter.Provider viewer={viewer}>
+          <Filter.NavbarPortal>
+            <div css={Styles.CONTAINER_CENTERED}>
+              <Filter.SidebarTrigger />
+              <Filter.Breadcrumb style={{ marginLeft: 16 }} />
+            </div>
+            <div css={STYLES_FILTER_TITLE_WRAPPER}>
+              <Filter.Title />
+            </div>
+            <Filter.Actions />
+          </Filter.NavbarPortal>
+
+          <div css={Styles.HORIZONTAL_CONTAINER}>
+            <Filter.Sidebar />
+            <Filter.Content onAction={onAction} viewer={viewer} page={page} />
+          </div>
+        </Filter.Provider>
+      </ScenePage>
+    </WebsitePrototypeWrapper>
+  );
 }

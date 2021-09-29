@@ -71,6 +71,15 @@ export const H5 = css`
   ${TEXT}
 `;
 
+export const H6 = css`
+  font-family: ${Constants.font.medium};
+  font-size: 0.75rem;
+  line-height: 1.666;
+  letter-spacing: -0.01px;
+
+  ${TEXT}
+`;
+
 export const P1 = css`
   font-family: ${Constants.font.text};
   font-size: 1rem;

@@ -424,3 +424,30 @@ export const useLockScroll = ({ lock = true } = {}) => {
     return () => (document.body.style.overflow = "visible");
   }, [lock]);
 };
+
+export const useWorker = ({ onStart, onMessage, onError } = {}, dependencies = []) => {
+  const workerRef = React.useRef();
+
+  const onStartRef = React.useRef();
+  onStartRef.current = onStart;
+
+  const onMessageRef = React.useRef();
+  onMessageRef.current = onMessage;
+
+  const onErrorRef = React.useRef();
+  onErrorRef.current = onError;
+
+  React.useEffect(() => {
+    const worker = new Worker(new URL("../workers/filter-files.js", import.meta.url));
+    if (!worker) return;
+
+    workerRef.current = worker;
+    worker.onmessage = onMessageRef.current;
+    worker.onerror = onErrorRef.current;
+
+    onStartRef.current(worker);
+    return () => worker?.terminate();
+  }, dependencies);
+
+  return workerRef.current;
+};
