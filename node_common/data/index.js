@@ -30,6 +30,7 @@ import deleteFilesByUserId from "~/node_common/data/methods/delete-files-by-user
 import updateFileById from "~/node_common/data/methods/update-file-by-id";
 import incrementFileSavecount from "~/node_common/data/methods/increment-file-savecount";
 import recalcFilePrivacy from "~/node_common/data/methods/recalc-file-privacy";
+import updateFileTags from "~/node_common/data/methods/update-file-tags";
 
 //NOTE(martina):
 // Slate file postgres queries
@@ -129,6 +130,7 @@ export {
   updateFileById,
   incrementFileSavecount,
   recalcFilePrivacy,
+  updateFileTags,
   // NOTE(martina): Slate file operations
   createSlateFiles,
   deleteSlateFiles,

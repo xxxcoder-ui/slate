@@ -287,10 +287,19 @@ const migrateFileTable = async () => {
       // console.log({ newCoverImage });
     }
 
-    let tags = await DB.select("slates.id", "slates.slatename", "slates.name")
+    // let tags = await DB.select("slates.id", "slates.slatename", "slates.name")
+    //   .from("slates")
+    //   .join("slate_files", "slate_files.slateId", "=", "slates.id")
+    //   .where("slate_files.fileId", file.id);
+
+    let tags = await DB.select("id", "slatename", "name")
       .from("slates")
-      .join("slate_files", "slate_files.slateId", "=", "slates.id")
-      .where("slate_files.fileId", file.id);
+      .whereExists(function () {
+        this.select("id")
+          .from("slate_files")
+          .whereRaw('"slate_files"."slateId" = "slates"."id"')
+          .where({ "slate_files.fileId": fileId });
+      });
 
     if (tags?.length) {
       newFile.tags = JSON.stringify(tags);

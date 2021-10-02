@@ -45,6 +45,10 @@ export default async ({ owner, slate, files }) => {
         const activityQuery = await DB.insert(activityItems).into("activity");
       }
 
+      for (let file of files) {
+        await Data.updateFileTags({ fileId: file.id });
+      }
+
       await Data.recalcSlateFilecount({ slateId: slate.id });
 
       if (!query) {
