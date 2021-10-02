@@ -8,7 +8,11 @@ export default async ({ id }) => {
     queryFn: async (DB) => {
       const subscriptions = await DB("subscriptions").where({ slateId: id }).del();
 
-      const slateFiles = await DB("slate_files").where({ slateId: id }).del();
+      const slateFiles = await DB("slate_files").where({ slateId: id }).del().returning("*");
+
+      for (let slateFile of slateFiles) {
+        await Data.updateFileTags({ fileId: slateFile.fileId });
+      }
 
       const activity = await DB("activity").where({ slateId: id }).del();
 

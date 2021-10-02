@@ -12,6 +12,10 @@ export default async ({ slateId, ids }) => {
         .del()
         .returning("*");
 
+      for (let id of ids) {
+        await Data.updateFileTags({ fileId: id });
+      }
+
       const activityQuery = await DB("activity")
         .where({ slateId, type: "CREATE_SLATE_OBJECT" })
         .whereIn("fileId", ids)
