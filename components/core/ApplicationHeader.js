@@ -209,7 +209,6 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
                   <Actions
                     uploadAction={
                       <Upload.Trigger
-                        enableMetrics
                         viewer={viewer}
                         aria-label="Upload"
                         css={STYLES_UPLOAD_BUTTON}
