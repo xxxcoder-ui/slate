@@ -31,6 +31,7 @@ const storeFileInCache = ({ file, slate }) =>
   (UploadStore.failedFilesCache[getFileKey(file)] = { file, slate });
 const removeFileFromCache = ({ fileKey }) => delete UploadStore.failedFilesCache[fileKey];
 const getFileFromCache = ({ fileKey }) => UploadStore.failedFilesCache[fileKey] || {};
+const getFailedFilesCache = () => UploadStore.failedFilesCache;
 
 // NOTE(amine): UploadAbort utilities
 const registerFileUploading = ({ fileKey }) => (UploadAbort.currentUploadingFile = fileKey);
@@ -163,6 +164,13 @@ export function createUploadProvider({
     addToUploadQueue({ files: [file], slate });
   };
 
+  const retryAll = () => {
+    const failedFilesCache = getFailedFilesCache();
+    Object.entries(failedFilesCache).forEach(([key]) => {
+      retry({ fileKey: key });
+    });
+  };
+
   const cancel = ({ fileKey }) => {
     if (onCancel) onCancel({ fileKeys: [fileKey] });
 
@@ -212,11 +220,18 @@ export function createUploadProvider({
     }
   };
 
+  const clearUploadCache = () => {
+    UploadStore.failedFilesCache = {};
+    UploadStore.uploadedFiles = {};
+  };
+
   return {
     upload: addToUploadQueue,
     uploadLink: addLinkToUploadQueue,
     retry,
+    retryAll,
     cancel,
     cancelAll,
+    clearUploadCache,
   };
 }
