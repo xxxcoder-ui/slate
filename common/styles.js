@@ -251,6 +251,7 @@ export const BUTTON_RESET = css`
   margin: 0;
   background-color: unset;
   border: none;
+  cursor: pointer;
   ${HOVERABLE}
 `;
 
