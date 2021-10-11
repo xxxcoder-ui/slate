@@ -59,6 +59,7 @@ export const MICROLINK_API_KEY = process.env.MICROLINK_API_KEY;
 export const ESTUARY_API_KEY = process.env.ESTUARY_API_KEY;
 
 //NOTE(martina): Elastic search
-export const ELASTIC_SEARCH_ID = process.env.NEXT_PUBLIC_ELASTIC_SEARCH_ID;
-export const ELASTIC_SEARCH_API_KEY = process.env.NEXT_PUBLIC_ELASTIC_SEARCH_API_KEY;
-export const ELASTIC_SEARCH_INDEX = process.env.NEXT_PUBLIC_ELASTIC_SEARCH_INDEX;
+export const ELASTIC_SEARCH_CLOUD_ID = process.env.ELASTIC_SEARCH_CLOUD_ID;
+export const ELASTIC_SEARCH_API_KEY_ID = process.env.ELASTIC_SEARCH_API_KEY_ID;
+export const ELASTIC_SEARCH_API_KEY = process.env.ELASTIC_SEARCH_API_KEY;
+export const ELASTIC_SEARCH_INDEX = process.env.ELASTIC_SEARCH_INDEX;

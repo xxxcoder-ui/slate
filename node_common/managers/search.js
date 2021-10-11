@@ -1,267 +1,614 @@
 import * as Environment from "~/node_common/environment";
-import * as Utilities from "~/node_common/utilities";
-import * as Data from "~/node_common/data";
-import * as Constants from "~/node_common/constants";
-import * as Serializers from "~/node_common/serializers";
-import * as Strings from "~/common/strings";
-import * as Websocket from "~/node_common/nodejs-websocket";
-import * as Logging from "~/common/logging";
-import * as Window from "~/common/window";
-
-import WebSocket from "ws";
 
 import { Client } from "@elastic/elasticsearch";
 
 const client = new Client({
   cloud: {
-    id: Environment.ELASTIC_SEARCH_ID,
+    id: Environment.ELASTIC_SEARCH_CLOUD_ID,
   },
   auth: {
-    apiKey: Environment.ELASTIC_SEARCH_API_KEY,
+    apiKey: {
+      id: Environment.ELASTIC_SEARCH_API_KEY_ID,
+      api_key: Environment.ELASTIC_SEARCH_API_KEY,
+    },
   },
 });
 
-const createUserIndex = () => {
+const createUserIndex = async () => {
   let properties = {
     mappings: {
       properties: {
         id: {
           type: "keyword",
-          store: true,
+          index: false,
         },
         username: {
-          type: "keyword",
-          store: true,
+          type: "text",
         },
         name: {
           type: "text",
-          store: true,
         },
         body: {
           type: "text",
-          store: true,
         },
         followerCount: {
           type: "integer",
           index: false,
-          store: true,
         },
         slateCount: {
           type: "integer",
           index: false,
-          store: true,
         },
         photo: {
           type: "keyword",
           index: false,
-          store: true,
         },
       },
     },
   };
+  try {
+    let result = await client.indices.create({
+      index: "users",
+      body: properties,
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-const createSlateIndex = () => {
+const createSlateIndex = async () => {
   let properties = {
     mappings: {
       properties: {
         id: {
           type: "keyword",
-          store: true,
+          index: false,
         },
         slatename: {
-          type: "keyword",
-          store: true,
+          type: "text",
         },
         name: {
           type: "text",
-          store: true,
         },
         body: {
           type: "text",
-          store: true,
         },
         preview: {
-          type: "text",
+          type: "keyword",
           index: false,
-          store: true,
         },
         ownerId: {
           type: "keyword",
-          store: true,
         },
         isPublic: {
-          type: "bool",
-          store: true,
+          type: "boolean",
         },
         subscriberCount: {
           type: "integer",
           index: false,
-          store: true,
         },
         fileCount: {
           type: "integer",
           index: false,
-          store: true,
         },
       },
     },
   };
+  try {
+    let result = await client.indices.create({
+      index: "slates",
+      body: properties,
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-const createFileIndex = () => {
+const createFileIndex = async () => {
   let properties = {
     mappings: {
       properties: {
         id: {
           type: "keyword",
-          store: true,
+          index: false,
         },
         cid: {
           type: "keyword",
-          store: true,
+          index: false,
+        },
+        ownerId: {
+          type: "keyword",
         },
         filename: {
-          type: "keyword",
+          type: "text",
           index: false,
-          store: true,
         },
         name: {
           type: "text",
-          store: true,
+        },
+        size: {
+          type: "integer",
+          index: false,
+        },
+        blurhash: {
+          type: "keyword",
+          index: false,
+        },
+        coverImage: {
+          type: "object",
+          enabled: false,
         },
         body: {
           type: "text",
-          store: true,
         },
         author: {
           type: "text",
-          store: true,
         },
         source: {
           type: "text",
-          store: true,
         },
         type: {
           type: "keyword",
           index: false,
-          store: true,
         },
         isPublic: {
-          type: "bool",
-          store: true,
+          type: "boolean",
         },
         downloadCount: {
           type: "integer",
           index: false,
-          store: true,
         },
         saveCount: {
           type: "integer",
           index: false,
-          store: true,
         },
         data: {
           type: "object",
+          enabled: false,
+        },
+        url: {
+          type: "keyword",
           index: false,
-          store: true,
         },
         isLink: {
-          type: "bool",
-          store: true,
+          type: "boolean",
         },
-        fileCategory: {
+        linkName: {
+          type: "text",
+        },
+        linkBody: {
+          type: "text",
+        },
+        linkAuthor: {
+          type: "text",
+        },
+        linkSource: {
+          type: "text",
+        },
+        linkDomain: {
+          type: "text",
+        },
+        linkImage: {
           type: "keyword",
+          index: false,
         },
+        linkFavicon: {
+          type: "keyword",
+          index: false,
+        },
+        linkHtml: {
+          type: "text",
+          index: false,
+        },
+        linkIFrameAllowed: {
+          type: "boolean",
+          index: false,
+        },
+        tags: {
+          type: "object",
+          properties: {
+            id: { type: "keyword" },
+            slatename: { type: "text" },
+            name: { type: "text" },
+          },
+        },
+        // tagIds: {
+        //   type: "keyword",
+        // },
+        // fileCategory: {
+        //   type: "keyword",
+        // },
       },
     },
   };
+  try {
+    let result = await client.indices.create({
+      index: "files",
+      body: properties,
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-// const websocketSend = async (type, data) => {
-//   if (Strings.isEmpty(Environment.PUBSUB_SECRET)) {
-//     return;
-//   }
+const deleteIndex = async (index) => {
+  try {
+    let result = await client.indices.delete({ index });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   let ws = Websocket.get();
-//   if (!ws) {
-//     ws = Websocket.create();
-//     await Window.delay(2000);
-//   }
+const indexUser = async ({ id, username, name, body, photo, followerCount, slateCount }) => {
+  try {
+    const result = await client.index({
+      id,
+      index: "users",
+      body: { id, username, name, body, photo, followerCount, slateCount },
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   const encryptedData = await Utilities.encryptWithSecret(
-//     JSON.stringify(data),
-//     Environment.PUBSUB_SECRET
-//   );
+const indexSlate = async ({
+  id,
+  slatename,
+  name,
+  body,
+  preview,
+  ownerId,
+  isPublic,
+  subscriberCount,
+  fileCount,
+}) => {
+  try {
+    const result = await client.index({
+      id,
+      index: "slates",
+      body: { id, slatename, name, body, preview, ownerId, isPublic, subscriberCount, fileCount },
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   // NOTE(jim): Only allow this to be passed around encrypted.
-//   if (ws && ws.readyState === WebSocket.OPEN) {
-//     ws.send(
-//       JSON.stringify({
-//         type,
-//         iv: encryptedData.iv,
-//         data: encryptedData.hex,
-//       })
-//     );
-//   }
-// };
+const indexFile = async ({
+  id,
+  cid,
+  ownerId,
+  filename,
+  name,
+  size,
+  blurhash,
+  coverImage,
+  body,
+  author,
+  source,
+  type,
+  isPublic,
+  downloadCount,
+  saveCount,
+  data,
+  url,
+  isLink,
+  linkName,
+  linkBody,
+  linkAuthor,
+  linkSource,
+  linkDomain,
+  linkImage,
+  linkFavicon,
+  linkHtml,
+  linkIFrameAllowed,
+  tags,
+}) => {
+  // const tagIds = tags.map((tag) => tag.id);
+  try {
+    const result = await client.index({
+      id,
+      index: "files",
+      body: {
+        id,
+        cid,
+        ownerId,
+        filename,
+        name,
+        size,
+        blurhash,
+        coverImage,
+        body,
+        author,
+        source,
+        type,
+        isPublic,
+        downloadCount,
+        saveCount,
+        data,
+        url,
+        isLink,
+        linkName,
+        linkBody,
+        linkAuthor,
+        linkSource,
+        linkDomain,
+        linkImage,
+        linkFavicon,
+        linkHtml,
+        linkIFrameAllowed,
+        tags,
+        // tagIds,
+      },
+    });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-// export const updateUser = async (user, action) => {
-//   if (!user || !action) return;
+const deleteUser = async ({ id }) => {
+  try {
+    let result = await client.delete({
+      id,
+      index: "users",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   Logging.log(`Search is updating user ...`);
+const deleteSlate = async ({ id }) => {
+  try {
+    let result = await client.delete({
+      id,
+      index: "slates",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   let data;
-//   if (Array.isArray(user)) {
-//     data = user.map((item) => {
-//       return { ...Serializers.sanitizeUser(item), type: "USER" };
-//     });
-//   } else {
-//     data = { ...Serializers.sanitizeUser(user), type: "USER" };
-//   }
+const deleteFile = async ({ id }) => {
+  try {
+    let result = await client.delete({
+      id,
+      index: "files",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   websocketSend("UPDATE", {
-//     id: "LENS",
-//     data: { action, data },
-//   });
-// };
+export const searchAll = async ({ query }) => {
+  await client.msearch({
+    index: ["users", "slates", "files"],
+    body: {},
+  });
+};
 
-// export const updateSlate = async (slate, action) => {
-//   if (!slate || !action) return;
+export const searchUser = async ({ query, filter }) => {
+  try {
+    const result = await client.search({
+      index: "users",
+      body: {
+        query: {
+          bool: {
+            must: {
+              multi_match: {
+                query,
+                fuzziness: "AUTO",
+                type: "best_fields",
+                fields: ["username", "name", "body"],
+                tie_breaker: 0.3,
+              },
+            },
+            filter,
+          },
+        },
+      },
+    });
+    console.log(result);
 
-//   Logging.log(`Search is updating slate ...`);
+    if (result.statusCode === 200) {
+      console.log(result?.body?.hits?.hits);
+      const hits = result?.body?.hits?.hits;
+      return hits.map((hit) => hit._source);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   let data;
-//   if (Array.isArray(slate)) {
-//     data = slate.map((item) => {
-//       return { ...item, type: "SLATE" };
-//     });
-//   } else {
-//     data = { ...slate, type: "SLATE" };
-//   }
+//filter by: ownerId, isPublic
+//ownerId: when you are limiting your scope to just your files, ownerId should be your Id
+//isPublic: when searching globally, isPublic should be set to true for things that are not your ownerId
+export const searchSlate = async ({ query, filter }) => {
+  try {
+    const result = await client.search({
+      index: "slates",
+      body: {
+        query: {
+          bool: {
+            must: {
+              multi_match: {
+                query,
+                fuzziness: "AUTO",
+                type: "best_fields",
+                fields: ["slatename", "name", "body"],
+                tie_breaker: 0.3,
+              },
+            },
+            // filter: [{ term: { ownerId: "xxx", isPublic: true } }],
+          },
+        },
+      },
+    });
+    console.log(result);
 
-//   websocketSend("UPDATE", {
-//     id: "LENS",
-//     data: { action, data },
-//   });
-// };
+    if (result.statusCode === 200) {
+      console.log(result?.body?.hits?.hits);
+      const hits = result?.body?.hits?.hits;
+      return hits.map((hit) => hit._source);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-// export const updateFile = async (file, action) => {
-//   if (!file || !action) return;
+//filter by: ownerId, isPublic, isLink, tags
+//ownerId: when you are limiting your scope to just your files, ownerId should be your Id
+//isPublic: when searching globally, isPublic should be set to true for things that are not your ownerId
+//isLink: when searching only links or only files, set isLink accordingly
+//tags: when searching within a certain slate, set tags accordingly (figure out how to do AND and OR for this type of filtering)
+export const searchFile = async ({ query, filter }) => {
+  // {
+  //   "query": {
+  //     "bool": {
+  //       "must": [
+  //         { "match": { "tags.id": "tag-id-here" }},
+  //         { "match": { "tags.id":  "Smith" }}
+  //       ]
+  //     }
+  //   }
+  // }
+  try {
+    const result = await client.search({
+      index: "files",
+      body: {
+        query: {
+          bool: {
+            must: {
+              multi_match: {
+                query,
+                fuzziness: "AUTO",
+                type: "best_fields",
+                fields: [
+                  "name",
+                  "body",
+                  "author",
+                  "source",
+                  "linkName",
+                  "linkBody",
+                  "linkAuthor",
+                  "linkSource",
+                  "linkDomain",
+                ],
+                tie_breaker: 0.3,
+              },
+            },
+            // filter: [{ term: { "tags.name": "drinks" } }],
+            // filter: [{ term: { "tags.slatename": "martuna" } }],
+            filter: [{ term: { "tags.id": "0824a3cb-e839-4246-8ff4-d919919e1487" } }], //'0824a3cb-e839-4246-8ff4-d919919e1487'
+          },
+        },
+      },
+    });
+    console.log(result);
 
-//   Logging.log(`Search is updating file ...`);
+    if (result.statusCode === 200) {
+      const hits = result?.body?.hits?.hits;
+      console.log(hits);
 
-//   let data;
-//   if (Array.isArray(file)) {
-//     data = file.map((item) => {
-//       return { ...item, type: "FILE" };
-//     });
-//   } else {
-//     data = { ...file, type: "FILE" };
-//   }
+      let files = hits.map((hit) => hit._source);
+      console.log(files);
+      let tags = files.map((file) => file.tags);
+      console.log(tags);
+      return files;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//   websocketSend("UPDATE", {
-//     id: "LENS",
-//     data: { action, data },
-//   });
-// };
+export const search;
+
+async function run() {
+  // deleteIndex("files");
+  //
+  // createUserIndex();
+  // indexUser({
+  //   id: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
+  //   username: "martina",
+  //   name: "Martina Long",
+  //   body:
+  //     "My name is Martina. Working at @slate aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  //   photo:
+  //     "https://slate.textile.io/ipfs/bafybeid7ykqgrsgmqsknpmxs25k6zbt4n5yoq72auboyyhgbmaf647wbku",
+  //   followerCount: 2,
+  //   slateCount: 41,
+  // });
+  // searchUser({ query: "martina" });
+  //
+  // createSlateIndex();
+  // indexSlate({
+  //   id: "0824a3cb-e839-4246-8ff4-d919919e1487",
+  //   slatename: "bird-drinks",
+  //   ownerId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
+  //   isPublic: true,
+  //   subscriberCount: 1,
+  //   fileCount: 14,
+  //   body: "drinks in cool bird cups",
+  //   name: "bird drinks",
+  //   preview: null,
+  // });
+  // searchSlate({ query: "bird" });
+  //
+  // createFileIndex();
+  // indexFile({
+  //   id: "10071abd-95c5-415e-8a12-aa17e7f560cf",
+  //   ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
+  //   cid: "bafybeihr3eepugleul7tyw7niwpralwrnfhpxlnafies7cuufhssnkvsqe",
+  //   isPublic: true,
+  //   filename: "foggy.jpeg",
+  //   downloadCount: 0,
+  //   saveCount: 0,
+  //   url: null,
+  //   isLink: false,
+  //   name: "foggy.jpeg",
+  //   size: 485757,
+  //   type: "image/jpeg",
+  //   blurhash: "UJD,Gx~WIpWVIpR.R+RjSjNHITWBR,oes:s:",
+  //   tags: [
+  //     { id: "d82fbc78-88de-4015-adec-a7ea832fc922", name: "martuna", slatename: "martuna" },
+  //     { id: "0824a3cb-e839-4246-8ff4-d919919e1487", name: "bird drinks", slatename: "bird-drinks" },
+  //   ],
+  // });
+  searchFile({ query: "foggy.jpeg" });
+}
+
+run();
+
+//make it synonym search
+//make searchall work across the different types
+//pagination
+
+//use index = _all or empty string to perform the operation on all indices
+//specify from and size to paginate (from = 0, size = 10 by default)
+
+//make sure that for the non index fields, you aren't able to search by them
+//make sure that for slatename type hyphenated things, you're able to search for them as titles with sapces. treat hyphens like spaces
+
+//should we do filetype filtering and isLink / isNotLink on the front end? If so we don't have to index them here on the backend
+
+//if you index again and leave something out, it'll then remove that. it basically overwrites the existing one
+//what about update? does that ignore things that are left out? what if you try to update something that doesn't exist?
+
+//         { "range": { "publish_date": { "gte": "2015-01-01", "lte": ... }}}
+//make it so it can find foggy.jpeg with just foggy. Either treat periods as spaces, or be able to search incomplete queries (wild card search)
+
+//how to make this work with checking a value INSIDE the tags object? do we need to change the shape of the tags object?
+//add auto suggest
+//how to do boost?
+//sort search results by whether it's your result or another user's
+
+//test out slates and files add and search
+//make sure searching with spaces in a hyphenated slate name works
+//make sure filtering by tag works for files
+//test out delete
+//detail all the filtering types and make convenience functions for them
