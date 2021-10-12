@@ -70,6 +70,7 @@ export function UploadJumper() {
       return;
     }
     uploadLink({ url: state.url, slate: state.slate });
+    setState({ url: "", urlError: false });
   };
 
   const handleChange = (e) => {
