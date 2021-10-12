@@ -3,6 +3,7 @@ import * as Styles from "~/common/styles";
 import * as System from "~/components/system";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
+import * as Strings from "~/common/strings";
 
 import { useUploadContext } from "~/components/core/Upload/Provider";
 import { motion, AnimatePresence } from "framer-motion";
@@ -361,7 +362,11 @@ function Summary({ uploadSummary }) {
               <System.H5 nbrOflines={1} as="p">
                 {file.name}
               </System.H5>
-              <Switch fallback={<System.H5>Saved</System.H5>}>
+              <Switch
+                fallback={
+                  <System.P3 color="textGrayDark">{Strings.bytesToSize(file.total, 0)}</System.P3>
+                }
+              >
                 <Match when={file.status === "saving"}>
                   <DataMeter
                     bytes={file.loaded}
