@@ -44,7 +44,7 @@ const STYLES_FILES_UPLOAD_WRAPPER = css`
   padding-bottom: 35.5px;
 `;
 
-export function UploadJumper() {
+export function UploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { upload, uploadLink, hideUploadJumper }] = useUploadContext();
 
   const [state, setState] = React.useState({
@@ -54,7 +54,7 @@ export function UploadJumper() {
 
   const handleUpload = (e) => {
     const { files } = FileUtilities.formatUploadedFiles({ files: e.target.files });
-    upload({ files, slate: state.slate });
+    upload({ files, slate: data });
   };
 
   const handleUploadLink = () => {
@@ -69,7 +69,7 @@ export function UploadJumper() {
       setState((prev) => ({ ...prev, urlError: true }));
       return;
     }
-    uploadLink({ url: state.url, slate: state.slate });
+    uploadLink({ url: state.url, slate: data });
     setState({ url: "", urlError: false });
   };
 

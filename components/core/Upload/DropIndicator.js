@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
-import * as Strings from "~/common/strings";
 import * as FileUtilities from "~/common/file-utilities";
 
 import { css } from "@emotion/react";
@@ -39,7 +38,7 @@ const STYLES_PLACEHOLDER = css`
   }
 `;
 
-export default function DropIndicator() {
+export default function DropIndicator({ data }) {
   const DEFAULT_DROPPING_STATE = {
     isDroppingFiles: false,
     totalFilesDropped: undefined,
@@ -83,9 +82,9 @@ export default function DropIndicator() {
           <DroppedFilesPlaceholder totalFilesDropped={totalFilesDropped} />
           <div style={{ marginTop: 64 }}>
             <System.H3 as="p" style={{ textAlign: "center" }}>
-              Dropping {totalFilesDropped}{" "}
-              {totalFilesDropped ? Strings.pluralize("file", totalFilesDropped) : "files"} to save
-              to Slate
+              {data?.name
+                ? `Drag and drop files to save them to #${data.name}`
+                : "Drag and drop files to save them to slate"}
             </System.H3>
             <Show when={!totalFilesDropped || totalFilesDropped > 200}>
               <System.H5 as="p" color="textGrayDark">
