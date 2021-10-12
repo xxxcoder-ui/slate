@@ -83,6 +83,7 @@ const useUpload = () => {
             blob: file,
           },
         },
+        isFinished: false,
         totalFiles: prev.totalFiles + 1,
         totalBytes: prev.totalBytes + file.size,
       }));

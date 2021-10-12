@@ -94,6 +94,7 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   const totalFilesSummaryRef = React.useRef();
   totalFilesSummaryRef.current = totalFilesSummary;
   React.useEffect(() => {
+    clearTimeout(timeoutRef.current);
     if (!isFinished) return;
     //NOTE(amine): if all the upload items have been canceled, hide the upload popup
     if (totalFilesSummaryRef.current.total === 0) {
@@ -101,8 +102,16 @@ const useUploadPopup = ({ totalFilesSummary }) => {
       resetUploadState();
       return;
     }
-    clearTimeout(timeoutRef.current);
+
     expandUploadSummary();
+
+    //NOTE(amine): if the upload is successful, automatically close the popup
+    if (totalFilesSummaryRef.current.failed === 0) {
+      timeoutRef.current = setTimeout(() => {
+        hideUploadPopup();
+        resetUploadState();
+      }, 10000);
+    }
   }, [isFinished]);
 
   /**
