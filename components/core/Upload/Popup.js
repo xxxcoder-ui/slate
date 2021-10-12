@@ -22,7 +22,7 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: ${theme.zindex.sidebar};
+  z-index: ${theme.zindex.tooltip};
   @media (max-width: ${theme.sizes.mobile}px) {
     right: 50%;
     transform: translateX(50%);

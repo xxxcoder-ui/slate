@@ -99,6 +99,7 @@ export const semantic = {
   bgBlurWhite: "rgba(255, 255, 255, 0.7)",
   bgBlurWhiteOP: "rgba(255, 255, 255, 0.85)",
   bgBlurWhiteTRN: "rgba(255, 255, 255, 0.3)",
+  bgBlurLightTRN: "rgba(247, 248, 249, 0.3)",
   bgBlurLight6: "rgba(247, 248, 249, 0.7)",
   bgBlurLight6OP: "rgba(247, 248, 249, 0.85)",
   bgBlurLight6TRN: "rgba(247, 248, 249, 0.3)",
@@ -143,8 +144,9 @@ export const zindex = {
   header: 4,
   intercom: 4,
   modal: 6,
-  tooltip: 7,
-  cta: 8,
+  tooltip: 8,
+  jumper: 7,
+  cta: 9,
 };
 
 export const font = {

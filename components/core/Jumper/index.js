@@ -19,7 +19,7 @@ const STYLES_JUMPER_ROOT = (theme) => css`
   left: calc(50% - ${JUMPER_WIDTH / 2}px);
   width: ${JUMPER_WIDTH}px;
   height: ${JUMPER_HEIGHT}px;
-  z-index: ${theme.zindex.modal};
+  z-index: ${theme.zindex.jumper};
   border-radius: 16px;
   border: 1px solid ${theme.semantic.borderGrayLight};
   background-color: ${theme.semantic.bgWhite};
