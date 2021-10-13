@@ -29,7 +29,8 @@
     "www-seed-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts seed-database",
     "www-adjust-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts adjust",
     "www-migrate-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts flattening-migration",
-    "www-storage-deals": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts worker-storage-deals"
+    "www-storage-deals": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts worker-storage-deals",
+    "www-search": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts search"
   },
   "repository": "filecoin-project/slate",
   "dependencies": {
