@@ -36,6 +36,12 @@ export default async (req, res) => {
     });
   }
 
+  if (slate.ownerId !== id) {
+    return res
+      .status(403)
+      .send({ decorator: "SERVER_REMOVE_FROM_SLATE_SLATE_NOT_FOUND", error: true });
+  }
+
   let response = await Data.deleteSlateFiles({ slateId: slate.id, ids: fileIds });
 
   if (!response || response.error) {
