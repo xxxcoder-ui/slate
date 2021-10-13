@@ -76,7 +76,13 @@ export default async (req, res) => {
   }
 
   // NOTE(martina): get the cids of the corresponding coverImages that are to be deleted
-  const objects = await Data.getFilesByIds({ ids });
+  let objects = await Data.getFilesByIds({ ids });
+  objects = objects.filter((file) => file.ownerId === id);
+
+  if (!objects.length) {
+    return res.status(400).send({ decorator: "SERVER_REMOVE_DATA_NOT_ALLOWED", error: true });
+  }
+  ids = objects.map((file) => file.id);
   const files = Arrays.filterFiles(objects);
   let cids = Arrays.mapToCids(files);
   let coverImageCids = [];
@@ -131,6 +137,18 @@ export default async (req, res) => {
     }
   }
 
+  await Data.deleteFilesByIds({ ownerId: id, ids });
+
+  SearchManager.updateFile(files, "REMOVE");
+
+  ViewerManager.hydratePartial(id, { slates: true, library: true });
+
+  res.status(200).send({
+    decorator: "SERVER_REMOVE_DATA",
+    success: true,
+    bucketItems: items,
+  });
+
   if (entities.length) {
     for (let entity of entities) {
       try {
@@ -150,16 +168,4 @@ export default async (req, res) => {
       }
     }
   }
-
-  await Data.deleteFilesByIds({ ownerId: id, ids });
-
-  SearchManager.updateFile(files, "REMOVE");
-
-  ViewerManager.hydratePartial(id, { slates: true, library: true });
-
-  return res.status(200).send({
-    decorator: "SERVER_REMOVE_DATA",
-    success: true,
-    bucketItems: items,
-  });
 };

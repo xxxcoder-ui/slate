@@ -14,6 +14,11 @@ export default async (req, res) => {
   }
 
   let updates = Array.isArray(req.body.data) ? req.body.data : [req.body.data];
+  let currentFiles = await Data.getFilesByIds({ ids: updates.map((file) => file.id) });
+  let idsToRemove = currentFiles.filter((file) => file.ownerId !== id).map((file) => file.id);
+  if (idsToRemove.length) {
+    updates = updates.filter((file) => !idsToRemove.includes(file.id));
+  }
 
   let responses = [];
   for (let update of updates) {
