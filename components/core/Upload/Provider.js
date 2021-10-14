@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as UploadUtilities from "~/common/upload-utilities";
 import * as FileUtilities from "~/common/file-utilities";
+import * as Logging from "~/common/logging";
 
 import { useEventListener } from "~/common/hooks";
 
@@ -14,7 +15,13 @@ export const Provider = ({ children, page, data, viewer }) => {
 
   useUploadOnDrop({ upload: uploadHandlers.upload, page, data, viewer });
 
-  useUploadFromClipboard({ upload: uploadHandlers.upload, page, data, viewer });
+  useUploadFromClipboard({
+    upload: uploadHandlers.upload,
+    uploadLink: uploadHandlers.uploadLink,
+    page,
+    data,
+    viewer,
+  });
 
   useEventListener("open-upload-jumper", showUploadJumper);
 
@@ -222,21 +229,35 @@ const useUploadOnDrop = ({ upload, page, data, viewer }) => {
   useEventListener("drop", handleDrop, []);
 };
 
-const useUploadFromClipboard = ({ upload, page, data, viewer }) => {
+const useUploadFromClipboard = ({ upload, uploadLink, page, data, viewer }) => {
   const handlePaste = (e) => {
-    const clipboardItems = e.clipboardData.items || [];
-    if (!clipboardItems) return;
-
-    const { files } = FileUtilities.formatPastedImages({
-      clipboardItems,
-    });
+    //NOTE(amine): skip when pasting into an input/textarea or an element with contentEditable set to true
+    const eventTargetTag = document?.activeElement.tagName.toLowerCase();
+    const isEventTargetEditable = !!document?.activeElement.getAttribute("contentEditable");
+    if (eventTargetTag === "input" || eventTargetTag === "textarea" || isEventTargetEditable) {
+      return;
+    }
 
     let slate = null;
     if (page?.id === "NAV_SLATE" && data?.ownerId === viewer?.id) {
       slate = data;
     }
+
+    const link = e.clipboardData?.getData("text");
+    try {
+      new URL(link);
+      uploadLink({ url: link, slate });
+    } catch (e) {
+      Logging.error(e);
+    }
+
+    const clipboardItems = e.clipboardData?.items || [];
+    if (!clipboardItems) return;
+    const { files } = FileUtilities.formatPastedImages({
+      clipboardItems,
+    });
     upload({ files, slate });
   };
 
-  useEventListener("paste", handlePaste);
+  useEventListener("paste", handlePaste, []);
 };
