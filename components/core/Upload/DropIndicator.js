@@ -84,7 +84,7 @@ export default function DropIndicator({ data }) {
             <System.H3 as="p" style={{ textAlign: "center" }}>
               {data?.name
                 ? `Drag and drop files to save them to #${data.name}`
-                : "Drag and drop files to save them to slate"}
+                : "Drag and drop files to save them to Slate"}
             </System.H3>
             <Show when={!totalFilesDropped || totalFilesDropped > 200}>
               <System.H5 as="p" color="textGrayDark">
