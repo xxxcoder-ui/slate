@@ -6,11 +6,14 @@ import * as Logging from "~/common/logging";
 import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { useUploadContext } from "~/components/core/Upload/Provider";
+import { AnimatePresence, motion } from "framer-motion";
 
 const STYLES_JUMPER_HEADER = css`
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   padding: 17px 20px 15px;
 `;
 
@@ -59,6 +62,11 @@ const STYLES_FILES_UPLOAD_WRAPPER = css`
   padding-bottom: 55px;
 `;
 
+const STYLES_JUMPER_DISMISS_BUTTON = (theme) => css`
+  ${Styles.BUTTON_RESET};
+  color: ${theme.semantic.textGray};
+`;
+
 export function UploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { upload, uploadLink, hideUploadJumper }] = useUploadContext();
 
@@ -70,6 +78,7 @@ export function UploadJumper({ data }) {
   const handleUpload = (e) => {
     const { files } = FileUtilities.formatUploadedFiles({ files: e.target.files });
     upload({ files, slate: data });
+    hideUploadJumper();
   };
 
   const handleUploadLink = () => {
@@ -84,8 +93,10 @@ export function UploadJumper({ data }) {
       setState((prev) => ({ ...prev, urlError: true }));
       return;
     }
+
     uploadLink({ url: state.url, slate: data });
     setState({ url: "", urlError: false });
+    hideUploadJumper();
   };
 
   const handleChange = (e) => {
@@ -94,10 +105,27 @@ export function UploadJumper({ data }) {
 
   return (
     <>
-      {isUploadJumperVisible && <div css={STYLES_JUMPER_OVERLAY} />}
+      <AnimatePresence>
+        {isUploadJumperVisible && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 10, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            css={STYLES_JUMPER_OVERLAY}
+          />
+        )}
+      </AnimatePresence>
       <Jumper.Root isOpen={isUploadJumperVisible} onClose={hideUploadJumper}>
         <Jumper.Item css={STYLES_JUMPER_HEADER}>
           <System.H5 color="textBlack">Upload</System.H5>
+          <button
+            style={{ marginLeft: "auto" }}
+            css={STYLES_JUMPER_DISMISS_BUTTON}
+            onClick={hideUploadJumper}
+          >
+            <SVG.Dismiss width={20} style={{ display: "block" }} />
+          </button>
         </Jumper.Item>
         <Jumper.Divider />
         <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
