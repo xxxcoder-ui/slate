@@ -127,7 +127,7 @@ const STYLES_ACTION_BAR_CONTAINER = css`
   width: 100vw;
   display: flex;
   justify-content: center;
-  z-index: ${Constants.zindex.header + Constants.zindex.filterNavbar};
+  z-index: ${Constants.zindex.header};
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
   }
