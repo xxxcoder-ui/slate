@@ -80,17 +80,17 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   }, [isStarted]);
 
   /**
-   * NOTE(amine): show the upload summary when a file fails to upload,
+   * NOTE(amine): show the upload summary when a file fails to upload or is added to the queue,
    * then automatically collapse the upload summary after 3 seconds
    */
   const isSummaryExpandedRef = React.useRef();
   isSummaryExpandedRef.current = popupState.isSummaryExpanded;
   React.useEffect(() => {
-    if (isSummaryExpandedRef.current || totalFilesSummary.failed === 0) return;
+    if (isSummaryExpandedRef.current || totalFilesSummary.total === 0) return;
     expandUploadSummary();
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(collapseUploadSummary, 3000);
-  }, [totalFilesSummary.failed]);
+  }, [totalFilesSummary.failed, totalFilesSummary.total]);
 
   // NOTE(amine): show the upload summary when upload finishes
   const totalFilesSummaryRef = React.useRef();
