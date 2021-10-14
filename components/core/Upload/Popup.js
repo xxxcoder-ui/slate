@@ -14,6 +14,7 @@ import { useHover } from "~/common/hooks";
 
 import DataMeter from "~/components/core/DataMeter";
 import BlobObjectPreview from "~/components/core/BlobObjectPreview";
+import { clamp } from "lodash";
 /* -------------------------------------------------------------------------------------------------
  * Popup
  * -----------------------------------------------------------------------------------------------*/
@@ -237,7 +238,7 @@ const STYLES_RESET_BORDER_TOP = css`
 function Header({ totalFilesSummary, popupState, expandUploadSummary, collapseUploadSummary }) {
   const [{ isFinished, totalBytesUploaded, totalBytes }, { retryAll }] = useUploadContext();
 
-  const uploadProgress = Math.floor((totalBytesUploaded / totalBytes) * 100);
+  const uploadProgress = clamp(Math.floor((totalBytesUploaded / totalBytes) * 100), 0, 100);
 
   if (isFinished && totalFilesSummary.failed > 0) {
     return (
