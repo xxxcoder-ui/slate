@@ -85,7 +85,7 @@ const useFilterWorker = ({ filterState, setFilterObjects, library }) => {
         setFilterObjects(e.data);
       },
     },
-    [view, subview, type]
+    [view, subview, library, type]
   );
 
   return workerState;
