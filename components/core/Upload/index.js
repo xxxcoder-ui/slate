@@ -4,7 +4,7 @@ import * as Events from "~/common/custom-events";
 
 import { ModalPortal } from "../ModalPortal";
 import { Provider } from "~/components/core/Upload/Provider";
-import { Popup } from "~/components/core/Upload/popup";
+import { Popup } from "~/components/core/Upload/Popup";
 import { UploadJumper as Jumper } from "~/components/core/Upload/Jumper";
 
 import DropIndicator from "~/components/core/Upload/DropIndicator";
