@@ -72,6 +72,7 @@ const STYLES_INPUT_CONTAINER_FULL = css`
 const STYLES_INPUT = css`
   ${"" /* ${INPUT_STYLES} */}
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: flex-start;
   height: 40px;
@@ -235,7 +236,6 @@ export class Input extends React.Component {
           <div
             css={[STYLES_INPUT, this.props.inputCss]}
             style={{
-              width: "100%",
               position: "relative",
               boxShadow: this.props.validation
                 ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${

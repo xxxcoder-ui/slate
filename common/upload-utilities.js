@@ -31,6 +31,7 @@ const storeFileInCache = ({ file, slate }) =>
   (UploadStore.failedFilesCache[getFileKey(file)] = { file, slate });
 const removeFileFromCache = ({ fileKey }) => delete UploadStore.failedFilesCache[fileKey];
 const getFileFromCache = ({ fileKey }) => UploadStore.failedFilesCache[fileKey] || {};
+const getFailedFilesCache = () => UploadStore.failedFilesCache;
 
 // NOTE(amine): UploadAbort utilities
 const registerFileUploading = ({ fileKey }) => (UploadAbort.currentUploadingFile = fileKey);
@@ -133,11 +134,12 @@ export function createUploadProvider({
     for (let i = 0; i < files.length; i++) {
       const fileKey = getFileKey(files[i]);
       const doesQueueIncludeFile = getUploadQueue().some(
-        ({ file }) => getFileKey(files[i]) === getFileKey(file)
+        ({ file }) => getFileKey(file) === fileKey
       );
       const isUploaded = fileKey in UploadStore.uploadedFiles;
+      const isUploading = UploadAbort.currentUploadingFile === fileKey;
       // NOTE(amine): skip the file if already uploaded or is in queue
-      if (doesQueueIncludeFile || isUploaded) continue;
+      if (doesQueueIncludeFile || isUploaded || isUploading) continue;
 
       // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
       if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
@@ -160,6 +162,13 @@ export function createUploadProvider({
       return;
     }
     addToUploadQueue({ files: [file], slate });
+  };
+
+  const retryAll = () => {
+    const failedFilesCache = getFailedFilesCache();
+    Object.entries(failedFilesCache).forEach(([key]) => {
+      retry({ fileKey: key });
+    });
   };
 
   const cancel = ({ fileKey }) => {
@@ -194,8 +203,9 @@ export function createUploadProvider({
       ({ file }) => getFileKey(linkAsFile) === getFileKey(file)
     );
     const isUploaded = fileKey in UploadStore.uploadedFiles;
+    const isUploading = UploadAbort.currentUploadingFile === fileKey;
     // NOTE(amine): skip the file if already uploaded or is in queue
-    if (doesQueueIncludeFile || isUploaded) return;
+    if (doesQueueIncludeFile || isUploaded || isUploading) return;
 
     // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
     if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
@@ -210,11 +220,18 @@ export function createUploadProvider({
     }
   };
 
+  const clearUploadCache = () => {
+    UploadStore.failedFilesCache = {};
+    UploadStore.uploadedFiles = {};
+  };
+
   return {
     upload: addToUploadQueue,
     uploadLink: addLinkToUploadQueue,
     retry,
+    retryAll,
     cancel,
     cancelAll,
+    clearUploadCache,
   };
 }

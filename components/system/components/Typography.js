@@ -34,7 +34,7 @@ const truncateElements = (nbrOfLines) =>
   nbrOfLines &&
   css`
     overflow: hidden;
-    word-break: break-word;
+    word-break: break-all;
     text-overflow: ellipsis;
     -webkit-line-clamp: ${nbrOfLines};
     display: -webkit-box;

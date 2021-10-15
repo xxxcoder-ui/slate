@@ -41,10 +41,12 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -164,10 +166,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   const setFieldValue = (value) =>
     setState((prev) => ({
@@ -450,4 +454,13 @@ export const useWorker = ({ onStart, onMessage, onError } = {}, dependencies = [
   }, dependencies);
 
   return workerRef.current;
+};
+
+export const useHover = () => {
+  const [isHovered, setHoverState] = React.useState(false);
+
+  const handleOnMouseEnter = () => setHoverState(true);
+  const handleOnMouseLeave = () => setHoverState(false);
+
+  return [isHovered, { handleOnMouseEnter, handleOnMouseLeave }];
 };

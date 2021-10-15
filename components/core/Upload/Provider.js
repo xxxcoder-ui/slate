@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as UploadUtilities from "~/common/upload-utilities";
 import * as FileUtilities from "~/common/file-utilities";
+import * as Logging from "~/common/logging";
 
 import { useEventListener } from "~/common/hooks";
 
@@ -8,58 +9,67 @@ const UploadContext = React.createContext({});
 export const useUploadContext = () => React.useContext(UploadContext);
 
 export const Provider = ({ children, page, data, viewer }) => {
-  const [uploadState, uploadHandlers] = useUpload();
+  const [uploadState, uploadHandlers] = useUpload({});
 
-  const [isUploadModalVisible, { showUploadModal, hideUploadModal }] = useUploadModal();
+  const [isUploadJumperVisible, { showUploadJumper, hideUploadJumper }] = useUploadJumper();
 
   useUploadOnDrop({ upload: uploadHandlers.upload, page, data, viewer });
 
-  useUploadFromClipboard({ upload: uploadHandlers.upload, page, data, viewer });
+  useUploadFromClipboard({
+    upload: uploadHandlers.upload,
+    uploadLink: uploadHandlers.uploadLink,
+    page,
+    data,
+    viewer,
+  });
 
-  useEventListener("upload-modal-open", showUploadModal);
+  useEventListener("open-upload-jumper", showUploadJumper);
 
   const providerValue = React.useMemo(
     () => [
-      { isUploadModalVisible, ...uploadState },
-      { showUploadModal, hideUploadModal, ...uploadHandlers },
+      { ...uploadState, isUploadJumperVisible },
+      {
+        ...uploadHandlers,
+        showUploadJumper,
+        hideUploadJumper,
+      },
     ],
-    [isUploadModalVisible, uploadHandlers, uploadState]
+    [uploadHandlers, uploadState, isUploadJumperVisible]
   );
 
   return <UploadContext.Provider value={providerValue}>{children}</UploadContext.Provider>;
 };
 
-const useUploadModal = () => {
-  const [isUploadModalVisible, setUploadModalState] = React.useState(false);
-  const showUploadModal = () => setUploadModalState(true);
-  const hideUploadModal = () => setUploadModalState(false);
-  return [isUploadModalVisible, { showUploadModal, hideUploadModal }];
+const useUploadJumper = () => {
+  const [isUploadJumperVisible, setUploadJumperState] = React.useState(false);
+  const showUploadJumper = () => setUploadJumperState(true);
+  const hideUploadJumper = () => setUploadJumperState(false);
+  return [isUploadJumperVisible, { showUploadJumper, hideUploadJumper }];
 };
 
 const useUpload = () => {
   const DEFAULT_STATE = {
     fileLoading: {},
     isUploading: false,
-    uploadStartingTime: null,
     totalBytesUploaded: 0,
     totalBytes: 0,
     totalFilesUploaded: 0,
     totalFiles: 0,
-    uploadRemainingTime: 0,
+    isFinished: false,
   };
 
   const [uploadState, setUploadState] = React.useState(DEFAULT_STATE);
 
   const uploadProvider = React.useMemo(() => {
     const handleStartUploading = () => {
-      setUploadState((prev) => ({ ...prev, isUploading: true, uploadStartingTime: new Date() }));
+      setUploadState((prev) => ({ ...prev, isFinished: false, isUploading: true }));
     };
 
     const handleFinishUploading = () => {
       setUploadState((prev) => ({
         ...DEFAULT_STATE,
         fileLoading: prev.fileLoading,
-        uploadStartingTime: null,
+        isFinished: true,
       }));
     };
 
@@ -77,8 +87,10 @@ const useUpload = () => {
             createdAt: Date.now(),
             loaded: 0,
             total: file.size,
+            blob: file,
           },
         },
+        isFinished: false,
         totalFiles: prev.totalFiles + 1,
         totalBytes: prev.totalBytes + file.size,
       }));
@@ -87,7 +99,7 @@ const useUpload = () => {
     const handleSuccess = ({ fileKey, cid }) => {
       setUploadState((prev) => {
         const newFileLoading = { ...prev.fileLoading };
-        newFileLoading[fileKey].status = "success";
+        newFileLoading[fileKey].status = "saved";
         newFileLoading[fileKey].cid = cid;
         return {
           ...prev,
@@ -142,9 +154,11 @@ const useUpload = () => {
         const newFileLoading = { ...prev.fileLoading };
         const newTotalFiles = prev.totalFiles - fileKeys.length;
         let newTotalBytes = prev.totalBytes;
+        let newTotalBytesUploaded = prev.totalBytesUploaded;
 
         fileKeys.forEach((fileKey) => {
           newTotalBytes -= newFileLoading[fileKey].total;
+          newTotalBytesUploaded -= newFileLoading[fileKey].loaded;
           delete newFileLoading[fileKey];
         });
 
@@ -153,6 +167,7 @@ const useUpload = () => {
           fileLoading: newFileLoading,
           totalFiles: newTotalFiles,
           totalBytes: newTotalBytes,
+          totalBytesUploaded: newTotalBytesUploaded,
         };
       });
     };
@@ -169,14 +184,18 @@ const useUpload = () => {
     });
   }, []);
 
+  const resetUploadState = () => (uploadProvider.clearUploadCache(), setUploadState(DEFAULT_STATE));
+
   return [
     uploadState,
     {
       upload: uploadProvider.upload,
       uploadLink: uploadProvider.uploadLink,
       retry: uploadProvider.retry,
+      retryAll: uploadProvider.retryAll,
       cancel: uploadProvider.cancel,
       cancelAll: uploadProvider.cancelAll,
+      resetUploadState,
     },
   ];
 };
@@ -210,55 +229,35 @@ const useUploadOnDrop = ({ upload, page, data, viewer }) => {
   useEventListener("drop", handleDrop, []);
 };
 
-const useUploadFromClipboard = ({ upload, page, data, viewer }) => {
+const useUploadFromClipboard = ({ upload, uploadLink, page, data, viewer }) => {
   const handlePaste = (e) => {
-    const clipboardItems = e.clipboardData.items || [];
-    if (!clipboardItems) return;
-
-    const { files } = FileUtilities.formatPastedImages({
-      clipboardItems,
-    });
+    //NOTE(amine): skip when pasting into an input/textarea or an element with contentEditable set to true
+    const eventTargetTag = document?.activeElement.tagName.toLowerCase();
+    const isEventTargetEditable = !!document?.activeElement.getAttribute("contentEditable");
+    if (eventTargetTag === "input" || eventTargetTag === "textarea" || isEventTargetEditable) {
+      return;
+    }
 
     let slate = null;
     if (page?.id === "NAV_SLATE" && data?.ownerId === viewer?.id) {
       slate = data;
     }
+
+    const link = e.clipboardData?.getData("text");
+    try {
+      new URL(link);
+      uploadLink({ url: link, slate });
+    } catch (e) {
+      Logging.error(e);
+    }
+
+    const clipboardItems = e.clipboardData?.items || [];
+    if (!clipboardItems) return;
+    const { files } = FileUtilities.formatPastedImages({
+      clipboardItems,
+    });
     upload({ files, slate });
   };
 
-  useEventListener("paste", handlePaste);
-};
-
-export const useUploadRemainingTime = ({ uploadStartingTime, totalBytes, totalBytesUploaded }) => {
-  const [remainingTime, setRemainingTime] = React.useState();
-
-  // NOTE(amine): calculate remaining time for current upload queue
-  const SECOND = 1000;
-  // NOTE(amine): hack around stale state in the useEffect callback
-  const uploadStartingTimeRef = React.useRef(null);
-  uploadStartingTimeRef.current = uploadStartingTime;
-
-  const bytesRef = React.useRef({
-    bytesLoaded: totalBytesUploaded,
-    bytesTotal: totalBytes,
-  });
-  bytesRef.current = {
-    bytesLoaded: totalBytesUploaded,
-    bytesTotal: totalBytes,
-  };
-
-  React.useEffect(() => {
-    const intervalId = setInterval(() => {
-      const { bytesLoaded, bytesTotal } = bytesRef.current;
-      const timeElapsed = new Date() - uploadStartingTimeRef.current;
-      // NOTE(amine): upload speed in seconds
-      const uploadSpeed = bytesLoaded / (timeElapsed / SECOND);
-      setRemainingTime(Math.round((bytesTotal - bytesLoaded) / uploadSpeed));
-    }, SECOND);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // NOTE(amine): delay by 1 minute
-  return remainingTime + 60;
+  useEventListener("paste", handlePaste, []);
 };

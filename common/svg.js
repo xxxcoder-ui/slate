@@ -1160,6 +1160,20 @@ export const FilecoinLogo = (props) => (
   </svg>
 );
 
+export const ChevronUp = (props) => {
+  return (
+    <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M12 10L8 6l-4 4"
+        stroke="currentColor"
+        strokeWidth={1.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const ChevronDown = (props) => {
   return (
     <svg
@@ -1866,10 +1880,16 @@ export const RotateCcw = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <path d="M1 4v6h6" stroke="#000" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M1 4v6h6"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
     <path
       d="M3.51 15a9 9 0 102.13-9.36L1 10"
-      stroke="#000"
+      stroke="currentColor"
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -2236,6 +2256,49 @@ export const Instagram = (props) => (
     />
     <path
       d="M10.667 7.58a2.667 2.667 0 11-5.276.782 2.667 2.667 0 015.276-.782zM11.667 4.333h.006"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const CheckCircle = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M14.667 7.387V8a6.666 6.666 0 11-3.954-6.093"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M14.667 2.667L8 9.34l-2-2"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const XCircle = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M8 14.667A6.667 6.667 0 108 1.333a6.667 6.667 0 000 13.334zM10 6l-4 4M6 6l4 4"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const AlertTriangle = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M6.86 2.573L1.213 12a1.333 1.333 0 001.14 2h11.294a1.333 1.333 0 001.14-2L9.14 2.573a1.333 1.333 0 00-2.28 0v0zM8 6v2.667M8 11.333h.007"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"

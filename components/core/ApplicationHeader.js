@@ -50,7 +50,6 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   z-index: -1;
   background-color: ${theme.system.white};
   box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
-
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
@@ -61,7 +60,6 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
 const STYLES_APPLICATION_HEADER = css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   padding: 14px 24px;
-
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 16px 16px 12px;
     width: 100%;
@@ -94,7 +92,6 @@ const STYLES_BACKGROUND = css`
   height: 100vh;
   background-color: ${Constants.semantic.bgBlurDark};
   pointer-events: auto;
-
   @keyframes fade-in {
     from {
       opacity: 50%;
@@ -104,6 +101,22 @@ const STYLES_BACKGROUND = css`
     }
   }
   animation: fade-in 200ms ease-out;
+`;
+
+const STYLES_HEADER = css`
+  z-index: ${Constants.zindex.header};
+  width: 100vw;
+  position: fixed;
+  right: 0;
+  top: 0;
+`;
+
+const STYLES_FILTER_NAVBAR = (theme) => css`
+  z-index: ${theme.zindex.body};
+  width: 100vw;
+  position: fixed;
+  right: 0;
+  top: ${theme.sizes.header};
 `;
 
 const STYLES_UPLOAD_BUTTON = css`
@@ -157,79 +170,82 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
   const isSearching = searchQuery.length !== 0;
 
   return (
-    <div>
-      <header style={{ position: "relative" }}>
-        <div css={STYLES_APPLICATION_HEADER}>
-          <div css={STYLES_LEFT}>
-            <Show
-              when={viewer}
-              fallback={
-                <Link onAction={onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
-                  <DarkSymbol style={{ height: 24, display: "block" }} />
-                </Link>
-              }
-            >
-              <ApplicationUserControls
-                popup={mobile ? false : state.popup}
-                onTogglePopup={_handleTogglePopup}
-                viewer={viewer}
-                onAction={onAction}
-              />
-            </Show>
-          </div>
-          <div css={STYLES_MIDDLE}>
-            {/**TODO: update Search component */}
-            <Input
-              containerStyle={{ height: "100%" }}
-              full
-              placeholder={`Search ${!viewer ? "slate.host" : ""}`}
-              inputCss={STYLES_SEARCH_COMPONENT}
-              onSubmit={handleCreateSearch}
-              name="search"
-              {...getFieldProps()}
-            />
-          </div>
-          <Upload.Provider page={page} data={data} viewer={viewer}>
-            <Upload.Root onAction={onAction} viewer={viewer}>
-              <div css={STYLES_RIGHT}>
-                <Actions
-                  uploadAction={
-                    <Upload.Trigger
-                      enableMetrics
-                      viewer={viewer}
-                      aria-label="Upload"
-                      css={STYLES_UPLOAD_BUTTON}
-                    >
-                      <SVG.Plus height="16px" />
-                    </Upload.Trigger>
-                  }
-                  isSearching={isSearching}
-                  isSignedOut={isSignedOut}
+    <>
+      <div css={STYLES_HEADER}>
+        <header style={{ position: "relative" }}>
+          <div css={STYLES_APPLICATION_HEADER}>
+            <div css={STYLES_LEFT}>
+              <Show
+                when={viewer}
+                fallback={
+                  <Link onAction={onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
+                    <DarkSymbol style={{ height: 24, display: "block" }} />
+                  </Link>
+                }
+              >
+                <ApplicationUserControls
+                  popup={mobile ? false : state.popup}
+                  onTogglePopup={_handleTogglePopup}
+                  viewer={viewer}
                   onAction={onAction}
-                  onDismissSearch={handleDismissSearch}
                 />
-              </div>
-            </Upload.Root>
-          </Upload.Provider>
-        </div>
-        <Show when={mobile && state.popup === "profile"}>
-          <ApplicationUserControlsPopup
-            popup={state.popup}
-            onTogglePopup={_handleTogglePopup}
-            viewer={viewer}
-            onAction={onAction}
-            style={{ pointerEvents: "auto" }}
-          />
-          <div css={STYLES_BACKGROUND} />
+              </Show>
+            </div>
+            <div css={STYLES_MIDDLE}>
+              {/**TODO: update Search component */}
+              <Input
+                containerStyle={{ height: "100%" }}
+                full
+                placeholder={`Search ${!viewer ? "slate.host" : ""}`}
+                inputCss={STYLES_SEARCH_COMPONENT}
+                onSubmit={handleCreateSearch}
+                name="search"
+                {...getFieldProps()}
+              />
+            </div>
+            <Upload.Provider page={page} data={data} viewer={viewer}>
+              <Upload.Root data={data}>
+                <div css={STYLES_RIGHT}>
+                  <Actions
+                    uploadAction={
+                      <Upload.Trigger
+                        viewer={viewer}
+                        aria-label="Upload"
+                        css={STYLES_UPLOAD_BUTTON}
+                      >
+                        <SVG.Plus height="16px" />
+                      </Upload.Trigger>
+                    }
+                    isSearching={isSearching}
+                    isSignedOut={isSignedOut}
+                    onAction={onAction}
+                    onDismissSearch={handleDismissSearch}
+                  />
+                </div>
+              </Upload.Root>
+            </Upload.Provider>
+          </div>
+          <Show when={mobile && state.popup === "profile"}>
+            <ApplicationUserControlsPopup
+              popup={state.popup}
+              onTogglePopup={_handleTogglePopup}
+              viewer={viewer}
+              onAction={onAction}
+              style={{ pointerEvents: "auto" }}
+            />
+            <div css={STYLES_BACKGROUND} />
+          </Show>
+          {/** NOTE(amine): a fix for a backdrop-filter bug where the filter doesn't take any effects.
+           *   It happens when we have two elements using backdrop-filter with a parent-child relationship */}
+          <div css={STYLES_APPLICATION_HEADER_BACKGROUND} />
+        </header>
+      </div>
+      <div css={STYLES_FILTER_NAVBAR}>
+        <Show when={!!viewer}>
+          <Filter.Navbar />
         </Show>
-        {/** NOTE(amine): a fix for a backdrop-filter bug where the filter doesn't take any effects.
-         *   It happens when we have two elements using backdrop-filter with a parent-child relationship */}
-        <div css={STYLES_APPLICATION_HEADER_BACKGROUND} />
-      </header>
-      <Show when={!!viewer}>
-        <Filter.Navbar />
-      </Show>
-    </div>
+      </div>
+    </>
   );
 }
 

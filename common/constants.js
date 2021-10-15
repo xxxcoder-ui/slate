@@ -8,7 +8,8 @@ export const sizes = {
   navigation: 288,
   sidebar: 416,
   // NOTE(amine): header's height + filter navbar's height
-  header: 52 + 40,
+  header: 52,
+  filterNavbar: 40,
   tablet: 960,
   desktop: 1024,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
@@ -98,6 +99,7 @@ export const semantic = {
   bgBlurWhite: "rgba(255, 255, 255, 0.7)",
   bgBlurWhiteOP: "rgba(255, 255, 255, 0.85)",
   bgBlurWhiteTRN: "rgba(255, 255, 255, 0.3)",
+  bgBlurLightTRN: "rgba(247, 248, 249, 0.3)",
   bgBlurLight6: "rgba(247, 248, 249, 0.7)",
   bgBlurLight6OP: "rgba(247, 248, 249, 0.85)",
   bgBlurLight6TRN: "rgba(247, 248, 249, 0.3)",
@@ -139,11 +141,12 @@ export const zindex = {
   body: 2,
   sidebar: 5,
   alert: 3,
-  uploadModal: 3,
   header: 4,
+  intercom: 4,
   modal: 6,
-  tooltip: 7,
-  cta: 8,
+  tooltip: 8,
+  jumper: 7,
+  cta: 9,
 };
 
 export const font = {

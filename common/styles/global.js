@@ -92,6 +92,12 @@ export const injectGlobalStyles = () => css`
   }
 `;
 
+export const injectIntercomStyles = () => css`
+  .intercom-lightweight-app {
+    z-index: ${Constants.zindex.intercom} !important;
+  }
+`;
+
 /* prettier-ignore */
 export const injectCodeBlockStyles = () => css`
   .language-javascript {
