@@ -3,7 +3,7 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import * as SlateManager from "~/node_common/managers/slate";
+import * as SearchManager from "~/node_common/managers/search";
 import * as Constants from "~/node_common/constants";
 
 import JWT from "jsonwebtoken";
@@ -113,6 +113,8 @@ export default async (req, res) => {
   if (user.error) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_FAILED", error: true });
   }
+
+  SearchManager.indexUser(user);
 
   const token = JWT.sign({ id: user.id, username: user.username }, Environment.JWT_SECRET);
   return res.status(200).send({ decorator: "SERVER_SIGN_IN", success: true, token });

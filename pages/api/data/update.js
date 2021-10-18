@@ -33,14 +33,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_EDIT_DATA_FAILED", error: true });
   }
 
-  const publicFiles = await Data.getFilesByIds({
-    ids: responses.map((file) => file.id),
-    publicOnly: true,
-  });
-
-  if (publicFiles.length) {
-    SearchManager.updateFile(publicFiles, "EDIT");
-  }
+  SearchManager.updateFile(responses);
 
   ViewerManager.hydratePartial(id, { library: true, slates: true });
 

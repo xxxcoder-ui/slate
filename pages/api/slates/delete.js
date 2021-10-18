@@ -36,7 +36,7 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(id, { slates: true });
 
-  SearchManager.updateSlate(slate, "REMOVE");
+  SearchManager.deleteSlate(slate);
 
   if (slate.isPublic) {
     Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });

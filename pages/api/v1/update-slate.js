@@ -62,25 +62,9 @@ export default async (req, res) => {
     }
 
     if (!updates.isPublic) {
-      //NOTE(martina): if any of the files in it are now private (because they are no longer in any public slates) remove them from search
-      const files = slate.objects;
-
-      const publicFiles = await Data.getFilesByIds({
-        ids: files.map((file) => file.id),
-        publicOnly: true,
-      });
-      const publicIds = publicFiles.map((file) => file.id);
-
-      let privateFiles = files.filter((file) => !publicIds.includes(file.id));
-
-      if (privateFiles.length) {
-        SearchManager.updateFile(privateFiles, "REMOVE");
-      }
+      Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
     } else {
-      //NOTE(martina): make sure all the now-public files are in search if they weren't already
-      const files = slate.objects;
-
-      SearchManager.updateFile(files, "ADD");
+      Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
     }
   }
 
@@ -117,13 +101,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
   }
 
-  if (slate.isPublic && !updates.isPublic) {
-    SearchManager.updateSlate(updatedSlate, "REMOVE");
-  } else if (!slate.isPublic && updates.isPublic) {
-    SearchManager.updateSlate(updatedSlate, "ADD");
-  } else {
-    SearchManager.updateSlate(updatedSlate, "EDIT");
-  }
+  SearchManager.updateSlate(updatedSlate);
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 

@@ -138,9 +138,8 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  if (slate?.isPublic) {
-    SearchManager.updateFile(createdFiles, "ADD");
-  }
+  SearchManager.indexFile(createdFiles);
+
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
 
   if (!slate) {

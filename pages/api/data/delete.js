@@ -139,7 +139,7 @@ export default async (req, res) => {
 
   await Data.deleteFilesByIds({ ownerId: id, ids });
 
-  SearchManager.updateFile(files, "REMOVE");
+  SearchManager.deleteFile(files);
 
   ViewerManager.hydratePartial(id, { slates: true, library: true });
 

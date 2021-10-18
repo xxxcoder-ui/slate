@@ -387,7 +387,7 @@ export const removeFromPublicCollectionUpdatePrivacy = async ({ files }) => {
     }
   }
   if (madePrivate.length) {
-    SearchManager.updateFile(madePrivate, "REMOVE");
+    SearchManager.updateFile(madePrivate);
   }
   return madePrivate;
 };
@@ -403,7 +403,7 @@ export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
     }
   }
   if (madePublic.length) {
-    SearchManager.updateFile(madePublic, "ADD");
+    SearchManager.updateFile(madePublic);
   }
   return madePublic;
 };

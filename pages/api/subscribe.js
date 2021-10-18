@@ -112,11 +112,21 @@ export default async (req, res) => {
 
   if (targetUser) {
     ViewerManager.hydratePartial(id, { following: true });
+
+    targetUser = await Data.getUserById({
+      id: req.body.data.userId,
+    });
+    SearchManager.updateUser(targetUser);
+
     Monitor.subscribeUser({ user, targetUser });
   }
 
   if (targetSlate) {
     ViewerManager.hydratePartial(id, { subscriptions: true });
+
+    targetSlate = await Data.getSlateById({ id: req.body.data.slateId });
+    SearchManager.updateSlate(targetSlate);
+
     Monitor.subscribeSlate({ user, targetSlate });
   }
 

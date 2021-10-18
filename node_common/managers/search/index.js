@@ -5,7 +5,7 @@ import {
   deleteUserIndex,
   deleteFileIndex,
   deleteSlateIndex,
-} from "~/node_common/managers/search/create";
+} from "~/node_common/managers/search/manage";
 import {
   searchAll,
   searchUser,
@@ -24,7 +24,7 @@ import {
   deleteFile,
 } from "~/node_common/managers/search/update";
 
-export default {
+const SearchManager = {
   createUserIndex,
   createFileIndex,
   createSlateIndex,
@@ -45,3 +45,5 @@ export default {
   searchSlate,
   searchFile,
 };
+
+export default SearchManager;

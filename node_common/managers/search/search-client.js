@@ -14,9 +14,10 @@ const searchClient = new Client({
   },
 });
 
-export default {
-  searchClient,
-  usersIndex: `${Environment.POSTGRES_DATABASE}_users`,
-  slatesIndex: `${Environment.POSTGRES_DATABASE}_slates`,
-  filesIndex: `${Environment.POSTGRES_DATABASE}_files`,
-};
+const usersIndex = `${Environment.POSTGRES_DATABASE}_users`;
+
+const slatesIndex = `${Environment.POSTGRES_DATABASE}_slates`;
+
+const filesIndex = `${Environment.POSTGRES_DATABASE}_files`;
+
+export { searchClient, usersIndex, slatesIndex, filesIndex };

@@ -95,14 +95,12 @@ export default async (req, res) => {
   }
 
   if (slate.isPublic && !updates.isPublic) {
-    SearchManager.updateSlate(updatedSlate, "REMOVE");
     Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
   } else if (!slate.isPublic && updates.isPublic) {
-    SearchManager.updateSlate(updatedSlate, "ADD");
     Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
-  } else {
-    SearchManager.updateSlate(updatedSlate, "EDIT");
   }
+
+  SearchManager.updateSlate(updatedSlate);
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 

@@ -43,7 +43,7 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(id, { slates: true });
 
-  SearchManager.updateSlate(slate, "ADD");
+  SearchManager.indexSlate(slate);
 
   Monitor.createSlate({ user, slate });
 

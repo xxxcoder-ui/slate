@@ -227,7 +227,7 @@ export const createFileIndex = async () => {
 
 export const deleteUserIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: usersIndex });
+    let result = await searchClient.indices.delete({ index: "users" });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -236,7 +236,7 @@ export const deleteUserIndex = async () => {
 
 export const deleteSlateIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: slatesIndex });
+    let result = await searchClient.indices.delete({ index: "slates" });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -245,7 +245,7 @@ export const deleteSlateIndex = async () => {
 
 export const deleteFileIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: filesIndex });
+    let result = await searchClient.indices.delete({ index: "files" });
     console.log(result);
   } catch (e) {
     console.log(e);

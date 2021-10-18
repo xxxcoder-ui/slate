@@ -110,9 +110,10 @@ const indexObject = async (objects, cleanObject, index) => {
     if (Array.isArray(objects)) {
       let body = [];
       for (let object of objects) {
-        body.push({ update: { _index: index, _id: object.id } });
+        body.push({ index: { _index: index, _id: object.id } });
         body.push(cleanObject(object));
       }
+      console.log(body);
       const result = await searchClient.bulk({
         body,
       });

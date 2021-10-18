@@ -80,9 +80,10 @@ export default async (req, res) => {
       if (
         user.username !== unsafeResponse.username ||
         user.name !== unsafeResponse.name ||
-        user.photo !== unsafeResponse.photo
+        user.photo !== unsafeResponse.photo ||
+        user.body !== unsafeResponse.body
       ) {
-        SearchManager.updateUser(unsafeResponse, "EDIT");
+        SearchManager.updateUser(unsafeResponse);
       }
     }
 

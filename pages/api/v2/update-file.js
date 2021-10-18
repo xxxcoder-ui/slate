@@ -39,9 +39,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "UPDATE_FILE_FAILED", error: true });
   }
 
-  if (response.isPublic) {
-    SearchManager.updateFile(response, "EDIT");
-  }
+  SearchManager.updateFile(response);
 
   ViewerManager.hydratePartial(user.id, { library: true, slates: true });
 

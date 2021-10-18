@@ -303,13 +303,6 @@ export const updateStatus = async (data) => {
   });
 };
 
-export const updateSearch = async (data) => {
-  return await returnJSON(`/api/search/update`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 // export const checkCIDStatus = async (data) => {
 //   return await returnJSON(`/api/data/cid-status`, {
 //     ...DEFAULT_OPTIONS,
