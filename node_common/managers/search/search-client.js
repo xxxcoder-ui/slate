@@ -2,7 +2,7 @@ import * as Environment from "~/node_common/environment";
 
 import { Client } from "@elastic/elasticsearch";
 
-export default new Client({
+const searchClient = new Client({
   cloud: {
     id: Environment.ELASTIC_SEARCH_CLOUD_ID,
   },
@@ -13,3 +13,10 @@ export default new Client({
     },
   },
 });
+
+export default {
+  searchClient,
+  usersIndex: `${Environment.POSTGRES_DATABASE}_users`,
+  slatesIndex: `${Environment.POSTGRES_DATABASE}_slates`,
+  filesIndex: `${Environment.POSTGRES_DATABASE}_files`,
+};

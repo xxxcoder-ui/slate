@@ -1,11 +1,14 @@
 import * as Logging from "~/common/logging";
-import SearchManager from "~/node_common/managers/search";
+
+import * as SearchManager from "~/node_common/managers/search";
 
 async function manage() {
   // await SearchManager.createUserIndex();
   // await SearchManager.createSlateIndex();
   // await SearchManager.createFileIndex();
-  // await SearchManager.deleteIndex("files");
+  // await SearchManager.deleteUserIndex();
+  // await SearchManager.deleteSlateIndex();
+  // await SearchManager.deleteFileIndex();
 }
 
 async function update() {
@@ -52,6 +55,14 @@ async function update() {
   //     { id: "0824a3cb-e839-4246-8ff4-d919919e1487", name: "bird drinks", slatename: "bird-drinks" },
   //   ],
   // });
+  //   await SearchManager.updateFile({
+  //     id: "10071abd-95c5-415e-8a12-aa17e7f560cf",
+  //     filename: "sunny.jpeg",
+  //     name: "sunny.jpeg",
+  //   });
+  //   await SearchManager.deleteFile({
+  //     id: "10071abd-95c5-415e-8a12-aa17e7f560cf",
+  //   });
 }
 
 async function search() {
@@ -61,12 +72,12 @@ async function search() {
   //     userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
   //     globalSearch: false,
   //   });
-  //   await SearchManager.searchFile({
-  //     query: "foggy.jpeg",
-  //     userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
-  //     globalSearch: true,
-  //     tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
-  //   });
+  await SearchManager.searchFile({
+    query: "sunny.jpeg",
+    userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
+    globalSearch: true,
+    tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
+  });
 }
 
 Promise.all([manage(), update(), search()]);

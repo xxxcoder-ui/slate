@@ -1,4 +1,9 @@
-import searchClient from "~/node_common/managers/search/search-client";
+import {
+  searchClient,
+  usersIndex,
+  slatesIndex,
+  filesIndex,
+} from "~/node_common/managers/search/search-client";
 
 export const createUserIndex = async () => {
   let properties = {
@@ -34,7 +39,7 @@ export const createUserIndex = async () => {
   };
   try {
     let result = await searchClient.indices.create({
-      index: "users",
+      index: usersIndex,
       body: properties,
     });
     console.log(result);
@@ -83,7 +88,7 @@ export const createSlateIndex = async () => {
   };
   try {
     let result = await searchClient.indices.create({
-      index: "slates",
+      index: slatesIndex,
       body: properties,
     });
     console.log(result);
@@ -211,7 +216,7 @@ export const createFileIndex = async () => {
   };
   try {
     let result = await searchClient.indices.create({
-      index: "files",
+      index: filesIndex,
       body: properties,
     });
     console.log(result);
@@ -220,9 +225,27 @@ export const createFileIndex = async () => {
   }
 };
 
-export const deleteIndex = async (index) => {
+export const deleteUserIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index });
+    let result = await searchClient.indices.delete({ index: usersIndex });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteSlateIndex = async () => {
+  try {
+    let result = await searchClient.indices.delete({ index: slatesIndex });
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteFileIndex = async () => {
+  try {
+    let result = await searchClient.indices.delete({ index: filesIndex });
     console.log(result);
   } catch (e) {
     console.log(e);

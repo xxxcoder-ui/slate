@@ -1,19 +1,25 @@
-import searchClient from "~/node_common/managers/search/search-client";
+import * as Logging from "~/common/logging";
 
-export const indexUser = async ({ id, username, name, body, photo, followerCount, slateCount }) => {
-  try {
-    const result = await searchClient.index({
-      id,
-      index: "users",
-      body: { id, username, name, body, photo, followerCount, slateCount },
-    });
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
+import {
+  searchClient,
+  usersIndex,
+  slatesIndex,
+  filesIndex,
+} from "~/node_common/managers/search/search-client";
+
+const cleanUser = ({ id, username, name, body, photo, followerCount, slateCount }) => {
+  return {
+    id,
+    username,
+    name,
+    body,
+    photo,
+    followerCount,
+    slateCount,
+  };
 };
 
-export const indexSlate = async ({
+const cleanSlate = ({
   id,
   slatename,
   name,
@@ -24,19 +30,20 @@ export const indexSlate = async ({
   subscriberCount,
   fileCount,
 }) => {
-  try {
-    const result = await searchClient.index({
-      id,
-      index: "slates",
-      body: { id, slatename, name, body, preview, ownerId, isPublic, subscriberCount, fileCount },
-    });
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
+  return {
+    id,
+    slatename,
+    name,
+    body,
+    preview,
+    ownerId,
+    isPublic,
+    subscriberCount,
+    fileCount,
+  };
 };
 
-export const indexFile = async ({
+const cleanFile = ({
   id,
   cid,
   ownerId,
@@ -66,78 +73,147 @@ export const indexFile = async ({
   linkIFrameAllowed,
   tags,
 }) => {
-  // const tagIds = tags.map((tag) => tag.id);
+  return {
+    id,
+    cid,
+    ownerId,
+    filename,
+    name,
+    size,
+    blurhash,
+    coverImage,
+    body,
+    author,
+    source,
+    type,
+    isPublic,
+    downloadCount,
+    saveCount,
+    data,
+    url,
+    isLink,
+    linkName,
+    linkBody,
+    linkAuthor,
+    linkSource,
+    linkDomain,
+    linkImage,
+    linkFavicon,
+    linkHtml,
+    linkIFrameAllowed,
+    tags,
+  };
+};
+
+const indexObject = async (objects, cleanObject, index) => {
   try {
-    const result = await searchClient.index({
-      id,
-      index: "files",
-      body: {
-        id,
-        cid,
-        ownerId,
-        filename,
-        name,
-        size,
-        blurhash,
-        coverImage,
+    if (Array.isArray(objects)) {
+      let body = [];
+      for (let object of objects) {
+        body.push({ update: { _index: index, _id: object.id } });
+        body.push(cleanObject(object));
+      }
+      const result = await searchClient.bulk({
         body,
-        author,
-        source,
-        type,
-        isPublic,
-        downloadCount,
-        saveCount,
-        data,
-        url,
-        isLink,
-        linkName,
-        linkBody,
-        linkAuthor,
-        linkSource,
-        linkDomain,
-        linkImage,
-        linkFavicon,
-        linkHtml,
-        linkIFrameAllowed,
-        tags,
-        // tagIds,
-      },
-    });
-    console.log(result);
+      });
+      console.log(result);
+    } else {
+      let object = objects;
+      const result = await searchClient.index({
+        id: object.id,
+        index: index,
+        body: cleanObject(object),
+      });
+      console.log(result);
+    }
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
-export const deleteUser = async ({ id }) => {
+export const indexUser = async (users) => {
+  indexObject(users, cleanUser, usersIndex);
+};
+
+export const indexSlate = async (slates) => {
+  indexObject(slates, cleanSlate, slatesIndex);
+};
+
+export const indexFile = async (files) => {
+  indexObject(files, cleanFile, filesIndex);
+};
+
+const updateObject = async (objects, cleanObject, index) => {
   try {
-    let result = await searchClient.delete({
-      id,
-      index: "users",
-    });
+    if (Array.isArray(objects)) {
+      let body = [];
+      for (let object of objects) {
+        body.push({ update: { _index: index, _id: object.id } });
+        body.push({ doc: cleanObject(object) });
+      }
+      const result = await searchClient.bulk({
+        body,
+      });
+      console.log(result);
+    } else {
+      let object = objects;
+      const result = await searchClient.update({
+        id: object.id,
+        index,
+        body: {
+          doc: cleanObject(object),
+        },
+      });
+      console.log(result);
+    }
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
-export const deleteSlate = async ({ id }) => {
+export const updateUser = async (users) => {
+  updateObject(users, cleanUser, usersIndex);
+};
+
+export const updateSlate = async (slates) => {
+  updateObject(slates, cleanSlate, slatesIndex);
+};
+
+export const updateFile = async (files) => {
+  updateObject(files, cleanFile, filesIndex);
+};
+
+const deleteObject = async (objects, index) => {
   try {
-    let result = await searchClient.delete({
-      id,
-      index: "slates",
-    });
+    if (Array.isArray(objects)) {
+      let body = [];
+      for (let object of objects) {
+        body.push({ delete: { _index: index, _id: object.id } });
+      }
+      const result = await searchClient.bulk({
+        body,
+      });
+      console.log(result);
+    } else {
+      let object = objects;
+      let result = await searchClient.delete({
+        id: object.id,
+        index,
+      });
+    }
   } catch (e) {
-    console.log(e);
+    Logging.error(e);
   }
 };
 
-export const deleteFile = async ({ id }) => {
-  try {
-    let result = await searchClient.delete({
-      id,
-      index: "files",
-    });
-  } catch (e) {
-    console.log(e);
-  }
+export const deleteUser = async (users) => {
+  deleteObject(users, usersIndex);
+};
+
+export const deleteSlate = async (slates) => {
+  deleteObject(slates, slatesIndex);
+};
+
+export const deleteFile = async (files) => {
+  deleteObject(files, filesIndex);
 };

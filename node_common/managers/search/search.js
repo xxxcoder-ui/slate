@@ -1,8 +1,13 @@
-import searchClient from "~/node_common/managers/search/search-client";
+import {
+  searchClient,
+  usersIndex,
+  slatesIndex,
+  filesIndex,
+} from "~/node_common/managers/search/search-client";
 
 export const searchAll = async ({ query }) => {
   await searchClient.msearch({
-    index: ["users", "slates", "files"],
+    index: [usersIndex, slatesIndex, filesIndex],
     body: {},
   });
 };
@@ -22,7 +27,7 @@ export const searchUser = async ({ query }) => {
     ];
 
     const result = await searchClient.search({
-      index: "users",
+      index: usersIndex,
       body: {
         query: {
           bool: {
@@ -69,7 +74,7 @@ export const searchSlate = async ({ query, userId, globalSearch = false }) => {
     must.push(ownerQuery);
 
     const result = await searchClient.search({
-      index: "slates",
+      index: slatesIndex,
       body: {
         query: {
           bool: {
@@ -139,7 +144,7 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
     must.push(ownerQuery);
 
     const result = await searchClient.search({
-      index: "files",
+      index: filesIndex,
       body: {
         query: {
           bool: {
