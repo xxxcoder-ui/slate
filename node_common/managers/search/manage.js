@@ -280,3 +280,5 @@ export const deleteFileIndex = async () => {
 //make sure filtering by tag works for files
 //test out delete
 //detail all the filtering types and make convenience functions for them
+
+//sort by ownerId match first?

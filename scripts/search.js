@@ -1,4 +1,5 @@
 import * as Logging from "~/common/logging";
+import * as Data from "~/node_common/data";
 
 import SearchManager from "~/node_common/managers/search";
 
@@ -9,6 +10,21 @@ async function manage() {
   //   await SearchManager.deleteUserIndex();
   //   await SearchManager.deleteSlateIndex();
   //   await SearchManager.deleteFileIndex();
+}
+
+async function ingestUsers() {
+  const response = await Data.getEveryUser();
+  await SearchManager.indexUser(response);
+}
+
+async function ingestSlates() {
+  const response = await Data.getEverySlate();
+  await SearchManager.indexSlate(response);
+}
+
+async function ingestFiles() {
+  const response = await Data.getEveryFile();
+  await SearchManager.indexFile(response);
 }
 
 async function update() {
@@ -122,21 +138,39 @@ async function update() {
 }
 
 async function search() {
-  // await SearchManager.searchUser({ query: "martina" });
+  //   await SearchManager.searchUser({ query: "image" });
   //   await SearchManager.searchSlate({
-  //     query: "bird",
+  //     query: "slate",
   //     userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
-  //     globalSearch: false,
+  //     globalSearch: true,
   //   });
   //   await SearchManager.searchFile({
-  //     query: "pig",
+  //     query: "file",
   //     userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
   //     globalSearch: true,
-  //     tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
+  //       tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
   //   });
+  //   await SearchManager.searchAll({ query: "slate", userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7" });
 }
 
-Promise.all([manage(), update(), search()]);
+async function setUpIndex() {
+  await SearchManager.createUserIndex();
+  await SearchManager.createSlateIndex();
+  await SearchManager.createFileIndex();
+  await ingestUsers();
+  await ingestSlates();
+  await ingestFiles();
+}
+
+async function resetIndex() {
+  await SearchManager.deleteUserIndex();
+  await SearchManager.deleteSlateIndex();
+  await SearchManager.deleteFileIndex();
+  await setUpIndex();
+}
+
+setUpIndex();
+// Promise.all([manage(), update(), search()]);
 
 Logging.log(`FINISHED: search.js`);
 Logging.log(`          CTRL + C to return to terminal.`);

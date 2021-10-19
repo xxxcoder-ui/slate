@@ -5,11 +5,114 @@ import {
   filesIndex,
 } from "~/node_common/managers/search/search-client";
 
-export const searchAll = async ({ query }) => {
-  await searchClient.msearch({
-    index: [usersIndex, slatesIndex, filesIndex],
-    body: {},
-  });
+export const searchAll = async ({ query, userId, grouped = false }) => {
+  const usersMust = {
+    multi_match: {
+      query,
+      fuzziness: "AUTO",
+      type: "best_fields",
+      fields: ["username^2", "name^2", "body"],
+      tie_breaker: 0.3,
+    },
+  };
+
+  const slatesMust = [
+    {
+      multi_match: {
+        query,
+        fuzziness: "AUTO",
+        type: "best_fields",
+        fields: ["slatename^2", "name", "body"],
+        tie_breaker: 0.3,
+      },
+    },
+    {
+      bool: {
+        should: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+      },
+    },
+  ];
+
+  const filesMust = [
+    {
+      multi_match: {
+        query,
+        fuzziness: "AUTO",
+        type: "best_fields",
+        fields: [
+          "name^2",
+          "body",
+          "author",
+          "source",
+          "linkName^2",
+          "linkBody",
+          "linkAuthor",
+          "linkSource",
+          "linkDomain",
+        ],
+        tie_breaker: 0.3,
+      },
+    },
+    {
+      bool: {
+        should: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+      },
+    },
+  ];
+
+  try {
+    let result = await searchClient.msearch({
+      body: [
+        { index: usersIndex },
+        {
+          query: {
+            bool: {
+              must: usersMust,
+            },
+          },
+        },
+        { index: slatesIndex },
+        {
+          query: {
+            bool: {
+              must: slatesMust,
+            },
+          },
+        },
+        { index: filesIndex },
+        {
+          query: {
+            bool: {
+              must: filesMust,
+            },
+          },
+        },
+      ],
+    });
+    let responses = result?.body?.responses;
+    let returned = responses.map((res) => res.hits.hits);
+
+    if (grouped) {
+      let cleaned = {};
+      let keys = ["users", "slates", "files"];
+      for (let i = 0; i < 3; i++) {
+        const group = returned[i];
+        cleaned[keys[i]] = group.map((result) => result._source);
+      }
+      console.log(cleaned);
+      return cleaned;
+    } else {
+      let cleaned = [];
+      for (let group of returned) {
+        cleaned.push(...group);
+      }
+      cleaned.sort((a, b) => b._score - a._score).map((result) => result._source);
+      console.log(cleaned);
+      return cleaned;
+    }
+  } catch (e) {
+    Logging.error(e);
+  }
 };
 
 export const searchUser = async ({ query }) => {
