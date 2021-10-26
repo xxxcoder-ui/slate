@@ -45,17 +45,7 @@ const STYLES_TEXTAREA = css`
 
 export class Textarea extends React.Component {
   render() {
-    return (
-      <TextareaAutoSize
-        css={STYLES_TEXTAREA}
-        style={this.props.style}
-        onChange={this.props.onChange}
-        placeholder={this.props.placeholder}
-        name={this.props.name}
-        value={this.props.value}
-        readOnly={this.props.readOnly}
-        maxLength={this.props.maxLength}
-      />
-    );
+    const { css, ...props } = this.props;
+    return <TextareaAutoSize css={[STYLES_TEXTAREA, css]} {...props} />;
   }
 }
