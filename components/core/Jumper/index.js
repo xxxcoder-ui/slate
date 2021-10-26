@@ -1,10 +1,16 @@
 import * as React from "react";
 import * as System from "~/components/system";
+import * as Styles from "~/common/styles";
+import * as SVG from "~/common/svg";
+import * as Constants from "~/common/constants";
 
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { css } from "@emotion/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEscapeKey } from "~/common/hooks";
+import { Show } from "~/components/utility/Show";
+
+import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
 
 /* -------------------------------------------------------------------------------------------------
  *  Root
@@ -30,27 +36,39 @@ const STYLES_JUMPER_ROOT = (theme) => css`
   }
 `;
 
-function Root({ children, isOpen, onClose, ...props }) {
+function Root({ children, onClose, ...props }) {
   useEscapeKey(onClose);
   return (
-    <AnimatePresence>
-      {isOpen ? (
-        <ModalPortal>
-          <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
-            <motion.div
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 10, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              css={STYLES_JUMPER_ROOT}
-              {...props}
-            >
-              {children}
-            </motion.div>
-          </System.Boundary>
-        </ModalPortal>
-      ) : null}
-    </AnimatePresence>
+    <ModalPortal>
+      <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 10, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          css={STYLES_JUMPER_ROOT}
+          {...props}
+        >
+          {children}
+        </motion.div>
+      </System.Boundary>
+    </ModalPortal>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------------
+ *  Header
+ * -----------------------------------------------------------------------------------------------*/
+
+const STYLES_JUMPER_HEADER = css`
+  padding: 17px 20px 15px;
+`;
+
+function Header({ children, css, ...props }) {
+  return (
+    <div css={[STYLES_JUMPER_HEADER, css]} {...props}>
+      {children}
+    </div>
   );
 }
 
@@ -58,8 +76,16 @@ function Root({ children, isOpen, onClose, ...props }) {
  *  Item
  * -----------------------------------------------------------------------------------------------*/
 
+const STYLES_JUMPER_ITEM = css`
+  padding: 13px 20px 12px;
+`;
+
 function Item({ children, ...props }) {
-  return <div {...props}>{children}</div>;
+  return (
+    <div css={[STYLES_JUMPER_ITEM, css]} {...props}>
+      {children}
+    </div>
+  );
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -73,4 +99,45 @@ function Divider({ children, ...props }) {
   );
 }
 
-export { Root, Item, Divider };
+/* -------------------------------------------------------------------------------------------------
+ *  ObjectPreview
+ * -----------------------------------------------------------------------------------------------*/
+
+function ObjectPreview({ file }) {
+  return (
+    <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+      <div
+        css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+        style={{ color: Constants.system.green, width: "100%" }}
+      >
+        <SVG.CheckCircle />
+        <div style={{ marginLeft: 12, marginRight: 12 }}>
+          <AnimateSharedLayout>
+            <motion.div layoutId={`${file.id}-title`} key={`${file.id}-title`}>
+              <System.H5
+                nbrOflines={1}
+                as="h1"
+                style={{ wordBreak: "break-all" }}
+                color="textBlack"
+              >
+                {file?.name || file?.filename}
+              </System.H5>
+            </motion.div>
+          </AnimateSharedLayout>
+          <Show when={file?.source}>
+            <System.P3 nbrOflines={1} color="textBlack" style={{ marginTop: 3 }}>
+              {file?.source}
+            </System.P3>
+          </Show>
+        </div>
+        <ObjectBoxPreview
+          file={file}
+          placeholderRatio={2}
+          style={{ width: 28, height: 39, marginLeft: "auto" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export { Root, Header, Item, Divider, ObjectPreview };
