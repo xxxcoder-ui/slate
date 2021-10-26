@@ -222,6 +222,8 @@ export const isPreviewableImage = (type = "") => {
   return type.startsWith("image/");
 };
 
+export const isGif = (type) => isPreviewableImage && type.startsWith("image/gif");
+
 export const isImageType = (type = "") => {
   return type.startsWith("image/");
 };
