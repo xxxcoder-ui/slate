@@ -23,7 +23,7 @@ export const Provider = ({ children, page, data, viewer }) => {
     viewer,
   });
 
-  useEventListener("open-upload-jumper", showUploadJumper);
+  useEventListener({ type: "open-upload-jumper", handler: showUploadModal });
 
   const providerValue = React.useMemo(
     () => [
@@ -223,10 +223,10 @@ const useUploadOnDrop = ({ upload, page, data, viewer }) => {
     upload({ files, slate });
   };
 
-  useEventListener("dragenter", handleDragEnter, []);
-  useEventListener("dragleave", handleDragLeave, []);
-  useEventListener("dragover", handleDragOver, []);
-  useEventListener("drop", handleDrop, []);
+  useEventListener({ type: "dragenter", handler: handleDragEnter }, []);
+  useEventListener({ type: "dragleave", handler: handleDragLeave }, []);
+  useEventListener({ type: "dragover", handler: handleDragOver }, []);
+  useEventListener({ type: "drop", handler: handleDrop }, []);
 };
 
 const useUploadFromClipboard = ({ upload, uploadLink, page, data, viewer }) => {
@@ -259,5 +259,5 @@ const useUploadFromClipboard = ({ upload, uploadLink, page, data, viewer }) => {
     upload({ files, slate });
   };
 
-  useEventListener("paste", handlePaste, []);
+  useEventListener({ type: "paste", handler: handlePaste }, []);
 };

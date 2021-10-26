@@ -4,6 +4,9 @@ import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as Constants from "~/common/constants";
 
+import { v4 as uuid } from "uuid";
+import { last } from "lodash";
+
 export const useMounted = (callback, depedencies) => {
   const mountedRef = React.useRef(false);
   useIsomorphicLayoutEffect(() => {
@@ -395,12 +398,15 @@ export const useMediaQuery = () => {
   };
 };
 
-export const useEventListener = (type, handler, dependencies) => {
+export const useEventListener = ({ type, handler, ref }, dependencies) => {
   React.useEffect(() => {
-    if (!window) return;
+    let element = window;
+    if (ref) element = ref.current;
 
-    window.addEventListener(type, handler);
-    return () => window.removeEventListener(type, handler);
+    if (!element) return;
+
+    element.addEventListener(type, handler);
+    return () => element.removeEventListener(type, handler);
   }, dependencies);
 };
 
@@ -411,17 +417,28 @@ export const useTimeout = (callback, ms, dependencies) => {
   }, dependencies);
 };
 
+let layers = [];
+const removeLayer = (id) => (layers = layers.filter((layer) => layer !== id));
+const isDeepestLayer = (id) => last(layers) === id;
+
 export const useEscapeKey = (callback) => {
+  const layerIdRef = React.useRef();
+  React.useEffect(() => {
+    layerIdRef.current = uuid();
+    layers.push(layerIdRef.current);
+    return () => removeLayer(layerIdRef.current);
+  }, []);
+
   const handleKeyUp = React.useCallback(
     (e) => {
-      if (e.key === "Escape") callback();
+      if (e.key === "Escape" && isDeepestLayer(layerIdRef.current)) callback?.(e);
     },
     [callback]
   );
-  useEventListener("keyup", handleKeyUp, [handleKeyUp]);
+  useEventListener({ type: "keyup", handler: handleKeyUp }, [handleKeyUp]);
 };
 
-export const useLockScroll = ({ lock = true } = {}) => {
+export const useLockScroll = ({ lock = true } = { lock: true }) => {
   React.useEffect(() => {
     if (!lock) return;
     document.body.style.overflow = "hidden";
@@ -463,4 +480,52 @@ export const useHover = () => {
   const handleOnMouseLeave = () => setHoverState(false);
 
   return [isHovered, { handleOnMouseEnter, handleOnMouseLeave }];
+};
+
+export const useImage = ({ src, maxWidth }) => {
+  const [imgState, setImgState] = React.useState({
+    loaded: false,
+    error: true,
+    overflow: false,
+  });
+
+  React.useEffect(() => {
+    if (!src) setImgState({ error: true, loaded: true });
+
+    const img = new Image();
+    img.src = src;
+
+    img.onload = () => {
+      if (maxWidth && img.naturalWidth < maxWidth) {
+        setImgState((prev) => ({ ...prev, loaded: true, error: false, overflow: true }));
+      } else {
+        setImgState({ loaded: true, error: false });
+      }
+    };
+    img.onerror = () => setImgState({ loaded: true, error: true });
+  }, []);
+
+  return imgState;
+};
+
+export const useDetectTextOverflow = ({ ref }, dependencies) => {
+  const [isTextOverflowing, setTextOverflow] = React.useState(false);
+
+  //SOURCE(amine): https://stackoverflow.com/a/60073230
+  const isEllipsisActive = (el) => {
+    const styles = getComputedStyle(el);
+    const widthEl = parseFloat(styles.width);
+    const ctx = document.createElement("canvas").getContext("2d");
+    ctx.font = `${styles.fontSize} ${styles.fontFamily}`;
+    const text = ctx.measureText(el.innerText);
+    return text.width > widthEl;
+  };
+
+  useIsomorphicLayoutEffect(() => {
+    if (!ref.current) return;
+
+    setTextOverflow(isEllipsisActive(ref.current));
+  }, dependencies);
+
+  return isTextOverflowing;
 };
