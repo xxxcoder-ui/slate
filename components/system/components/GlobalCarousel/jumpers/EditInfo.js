@@ -63,11 +63,11 @@ function UpdateFileForm({ file, isMobile, onClose }) {
   });
 
   //NOTE(amine): scroll to the bottom of the form every time the description's textarea resizes
-  React.useLayoutEffect(() => {
+  const scrollToFormBottom = () => {
     const form = formRef.current;
     if (!form) return;
     form.scrollTop = form.scrollHeight - form.clientHeight;
-  }, [values.description]);
+  };
 
   const JumperItem = isMobile ? MobileJumper.Content : Jumper.Item;
 
@@ -105,7 +105,7 @@ function UpdateFileForm({ file, isMobile, onClose }) {
               css={STYLES_EDIT_INFO_INPUT}
               style={{ marginTop: 6 }}
               maxLength="2000"
-              {...getFieldProps("description")}
+              {...getFieldProps("description", { onChange: scrollToFormBottom })}
             />
           </div>
         </JumperItem>
