@@ -37,7 +37,7 @@ export const getViewportSize = () => {
 };
 
 // NOTE(martina): Works in most cases, except some where the type of the file is jumbled (not an issue specific to this function)
-export const saveAs = (uri, filename) => {
+export const saveAs = (uri, filename, rootRef) =>
   fetch(uri, {
     headers: new Headers({
       Origin: location.origin,
@@ -46,17 +46,16 @@ export const saveAs = (uri, filename) => {
   })
     .then((response) => response.blob())
     .then((blob) => {
+      const element = rootRef?.current || document.body;
       let blobUrl = window.URL.createObjectURL(blob);
       var link = document.createElement("a");
-      document.body.appendChild(link);
+      element.appendChild(link);
       link.download = filename;
       link.href = blobUrl;
       link.click();
-      document.body.removeChild(link);
+      element.removeChild(link);
     })
     .catch((e) => console.error(e));
-};
-
 export const getQueryParameterByName = (name) => {
   let url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
