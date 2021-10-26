@@ -51,7 +51,6 @@ import CTATransition from "~/components/core/CTATransition";
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
 import { SearchModal } from "~/components/core/SearchModal";
-import { CollectionSharingModal } from "~/components/core/ShareModals/CollectionSharingModal";
 import { Alert } from "~/components/core/Alert";
 import { announcements } from "~/components/core/OnboardingModal";
 import { Logo } from "~/common/logo";
@@ -519,7 +518,6 @@ export default class ApplicationPage extends React.Component {
           onAction={this._handleAction}
           isMobile={this.props.isMobile}
         />
-        <CollectionSharingModal />
         <CTATransition onAction={this._handleAction} />
         {/* {!this.state.loaded ? (
             <div

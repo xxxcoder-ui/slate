@@ -3,7 +3,6 @@ import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
-import { useCollectionSharingModal } from "~/components/core/ShareModals/CollectionSharingModal";
 
 const STYLES_BUTTON = (theme) => css`
   ${Styles.BUTTON_RESET};
@@ -28,15 +27,14 @@ const STYLES_BUTTON = (theme) => css`
 `;
 
 export default function ShareButton({ user, collection, preview, ...props }) {
-  const { openModal } = useCollectionSharingModal();
   const handleOnClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    openModal({
-      user,
-      collection,
-      preview,
-    });
+    // openModal({
+    //   user,
+    //   collection,
+    //   preview,
+    // });
   };
 
   return (
