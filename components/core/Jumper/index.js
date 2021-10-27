@@ -6,7 +6,7 @@ import * as Constants from "~/common/constants";
 
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { css } from "@emotion/react";
-import { motion } from "framer-motion";
+import { AnimateSharedLayout, motion } from "framer-motion";
 import { useEscapeKey } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 
@@ -20,14 +20,16 @@ const JUMPER_WIDTH = 640;
 const JUMPER_HEIGHT = 400;
 
 const STYLES_JUMPER_ROOT = (theme) => css`
+  ${Styles.VERTICAL_CONTAINER};
   position: fixed;
   top: calc(50% - ${JUMPER_HEIGHT / 2}px);
   left: calc(50% - ${JUMPER_WIDTH / 2}px);
   width: ${JUMPER_WIDTH}px;
-  height: ${JUMPER_HEIGHT}px;
+  min-height: ${JUMPER_HEIGHT}px;
   z-index: ${theme.zindex.jumper};
   border-radius: 16px;
   border: 1px solid ${theme.semantic.borderGrayLight};
+  overflow: hidden;
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
@@ -105,36 +107,29 @@ function Divider({ children, ...props }) {
 
 function ObjectPreview({ file }) {
   return (
-    <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-      <div
-        css={Styles.HORIZONTAL_CONTAINER_CENTERED}
-        style={{ color: Constants.system.green, width: "100%" }}
-      >
+    <div
+      css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+      style={{ color: Constants.system.green, width: "100%" }}
+    >
+      <div>
         <SVG.CheckCircle />
-        <div style={{ marginLeft: 12, marginRight: 12 }}>
-          <AnimateSharedLayout>
-            <motion.div layoutId={`${file.id}-title`} key={`${file.id}-title`}>
-              <System.H5
-                nbrOflines={1}
-                as="h1"
-                style={{ wordBreak: "break-all" }}
-                color="textBlack"
-              >
-                {file?.name || file?.filename}
-              </System.H5>
-            </motion.div>
-          </AnimateSharedLayout>
-          <Show when={file?.source}>
-            <System.P3 nbrOflines={1} color="textBlack" style={{ marginTop: 3 }}>
-              {file?.source}
-            </System.P3>
-          </Show>
-        </div>
-        <ObjectBoxPreview
-          file={file}
-          placeholderRatio={2}
-          style={{ width: 28, height: 39, marginLeft: "auto" }}
-        />
+      </div>
+      <div style={{ marginLeft: 12, marginRight: 12 }}>
+        <AnimateSharedLayout>
+          <motion.div layoutId={`${file.id}-title`} key={`${file.id}-title`}>
+            <System.H5 nbrOflines={1} as="h1" style={{ wordBreak: "break-all" }} color="textBlack">
+              {file?.name || file?.filename}
+            </System.H5>
+          </motion.div>
+        </AnimateSharedLayout>
+        <Show when={file?.source}>
+          <System.P3 nbrOflines={1} color="textBlack" style={{ marginTop: 3 }}>
+            {file?.source}
+          </System.P3>
+        </Show>
+      </div>
+      <div style={{ marginLeft: "auto" }}>
+        <ObjectBoxPreview file={file} placeholderRatio={2} style={{ width: 28, height: 39 }} />
       </div>
     </div>
   );
