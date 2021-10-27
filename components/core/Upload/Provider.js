@@ -23,8 +23,6 @@ export const Provider = ({ children, page, data, viewer }) => {
     viewer,
   });
 
-  useEventListener({ type: "open-upload-jumper", handler: showUploadModal });
-
   const providerValue = React.useMemo(
     () => [
       { ...uploadState, isUploadJumperVisible },
