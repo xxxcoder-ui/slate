@@ -77,15 +77,6 @@ export default function FontFrame({ cid, fallback, ...props }) {
 
   return (
     <div css={GET_STYLES_CONTAINER} style={{ fontFamily: fontName }} {...props}>
-      <div css={STYLES_MOBILE_HIDDEN}>
-        <FixedControls
-          onDarkMode={setDarkMode}
-          onLightMode={setLightMode}
-          onToggleSettings={toggleSettings}
-          isDarkMode={currentState.context.darkmode}
-          isSettingsVisible={currentState.context.showSettings}
-        />
-      </div>
       <div style={{ position: "relative", flexGrow: 1, overflowY: "auto" }}>
         {isFontLoading && <FontLoader />}
         <FontView
@@ -98,6 +89,16 @@ export default function FontFrame({ cid, fallback, ...props }) {
           customView={currentState.customView}
           settings={currentState.context.settings}
           updateCustomView={updateCustomView}
+        />
+      </div>
+      <div css={STYLES_MOBILE_HIDDEN}>
+        <FixedControls
+          style={{ marginBottom: 12 }}
+          onDarkMode={setDarkMode}
+          onLightMode={setLightMode}
+          onToggleSettings={toggleSettings}
+          isDarkMode={currentState.context.darkmode}
+          isSettingsVisible={currentState.context.showSettings}
         />
       </div>
       <div css={STYLES_MOBILE_HIDDEN}>
