@@ -66,8 +66,8 @@ export default function DropIndicator({ data }) {
     setDroppingState({ totalFilesDropped: files.length || undefined, isDroppingFiles: true });
   };
 
-  useEventListener("dragenter", handleDragEnter, []);
-  useEventListener("dragover", handleDragOver, []);
+  useEventListener({ type: "dragenter", handler: handleDragEnter }, []);
+  useEventListener({ type: "dragover", handler: handleDragOver }, []);
 
   return (
     <AnimatePresence>
