@@ -329,8 +329,7 @@ export const createSlug = (text, base = "untitled") => {
     .replace(/&/g, "-and-") // Replace & with 'and'
     .replace(/[^a-zA-Z0-9_\u3400-\u9FBF\s-]/g, "") // Remove all non-word chars
     .replace(/\--+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
+    .replace(/^-+/, ""); // Trim - from start of text
 
   return text;
 };
