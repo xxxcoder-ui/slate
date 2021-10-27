@@ -7,7 +7,7 @@ import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers"
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
-import { motion } from "framer-motion";
+import { motion, AnimateSharedLayout } from "framer-motion";
 import {
   useDetectTextOverflow,
   useEscapeKey,
@@ -215,29 +215,52 @@ function CarouselHeader({
           </div>
         </div>
         <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
-          <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-            <Show when={isOwner}>
-              <button onClick={showEditInfo} css={STYLES_ACTION_BUTTON}>
-                <SVG.Edit style={{ pointerEvents: "none" }} />
-              </button>
-            </Show>
-            <Show when={isOwner}>
-              <button
-                onClick={showEditChannels}
+          <AnimateSharedLayout>
+            <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+              <Show when={isOwner}>
+                <motion.button
+                  layoutId="jumper-desktop-edit"
+                  onClick={showEditInfo}
+                  css={STYLES_ACTION_BUTTON}
+                >
+                  <SVG.Edit style={{ pointerEvents: "none" }} />
+                </motion.button>
+              </Show>
+
+              <Show when={isOwner}>
+                <motion.button
+                  layoutId="jumper-desktop-channels"
+                  onClick={showEditChannels}
+                  style={{ marginLeft: 4 }}
+                  css={STYLES_ACTION_BUTTON}
+                >
+                  <SVG.Hash style={{ pointerEvents: "none" }} />
+                </motion.button>
+              </Show>
+
+              <Show when={file.isPublic}>
+                <motion.button
+                  layoutId="jumper-desktop-share"
+                  onClick={showShareFile}
+                  style={{ marginLeft: 4 }}
+                  css={STYLES_ACTION_BUTTON}
+                >
+                  <SVG.Share style={{ pointerEvents: "none" }} />
+                </motion.button>
+              </Show>
+
+              <motion.button
+                layoutId="jumper-desktop-info"
+                onClick={showMoreInfo}
                 style={{ marginLeft: 4 }}
                 css={STYLES_ACTION_BUTTON}
               >
-                <SVG.Hash style={{ pointerEvents: "none" }} />
-              </button>
-            </Show>
-            <button onClick={showShareFile} style={{ marginLeft: 4 }} css={STYLES_ACTION_BUTTON}>
-              <SVG.Share style={{ pointerEvents: "none" }} />
-            </button>
-            <button onClick={showMoreInfo} style={{ marginLeft: 4 }} css={STYLES_ACTION_BUTTON}>
-              <SVG.InfoCircle style={{ pointerEvents: "none" }} />
-            </button>
-            {file.isLink ? <VisitLinkButton file={file} /> : null}
-          </div>
+                <SVG.InfoCircle style={{ pointerEvents: "none" }} />
+              </motion.button>
+
+              {file.isLink ? <VisitLinkButton file={file} /> : null}
+            </div>
+          </AnimateSharedLayout>
           <div style={{ marginLeft: 80 }}>
             <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
               <SVG.Dismiss />
@@ -355,25 +378,48 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
           onClose={hideMoreInfo}
         />
       </ModalPortal>
-      <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
-        <Show when={isOwner}>
-          <button css={STYLES_ACTION_BUTTON} onClick={showEditInfo}>
-            <SVG.Edit />
-          </button>
-        </Show>
-        <Show when={isOwner}>
-          <button style={{ marginLeft: 4 }} css={STYLES_ACTION_BUTTON} onClick={showEditChannels}>
-            <SVG.Hash />
-          </button>
-        </Show>
-        <button style={{ marginLeft: 4 }} css={STYLES_ACTION_BUTTON} onClick={showShareFile}>
-          <SVG.Share />
-        </button>
-        <button style={{ marginLeft: 4 }} css={STYLES_ACTION_BUTTON} onClick={showMoreInfo}>
-          <SVG.InfoCircle />
-        </button>
-        {file.isLink ? <VisitLinkButton file={file} /> : null}
-      </nav>
+      <AnimateSharedLayout>
+        <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
+          <Show when={isOwner}>
+            <motion.button
+              layoutId="jumper-mobile-edit"
+              css={STYLES_ACTION_BUTTON}
+              onClick={showEditInfo}
+            >
+              <SVG.Edit />
+            </motion.button>
+          </Show>
+          <Show when={isOwner}>
+            <motion.button
+              layoutId="jumper-mobile-channels"
+              style={{ marginLeft: 4 }}
+              css={STYLES_ACTION_BUTTON}
+              onClick={showEditChannels}
+            >
+              <SVG.Hash />
+            </motion.button>
+          </Show>
+          <Show when={file.isPublic}>
+            <motion.button
+              layoutId="jumper-mobile-share"
+              style={{ marginLeft: 4 }}
+              css={STYLES_ACTION_BUTTON}
+              onClick={showShareFile}
+            >
+              <SVG.Share />
+            </motion.button>
+          </Show>
+          <motion.button
+            layoutId="jumper-mobile-info"
+            style={{ marginLeft: 4 }}
+            css={STYLES_ACTION_BUTTON}
+            onClick={showMoreInfo}
+          >
+            <SVG.InfoCircle />
+          </motion.button>
+          {file.isLink ? <VisitLinkButton file={file} /> : null}
+        </nav>
+      </AnimateSharedLayout>
     </>
   );
 }
