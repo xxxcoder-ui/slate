@@ -32,13 +32,12 @@ const Root = ({ children, data }) => {
  * -----------------------------------------------------------------------------------------------*/
 
 const Trigger = ({ viewer, css, children, ...props }) => {
-  const [, { showUploadJumper }] = useUploadContext();
   const showUploadModal = () => {
     if (!viewer) {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
-    showUploadJumper();
+    Events.dispatchCustomEvent({ name: "open-upload-jumper" });
   };
 
   return (
