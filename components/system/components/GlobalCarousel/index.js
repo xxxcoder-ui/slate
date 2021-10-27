@@ -431,9 +431,10 @@ const STYLES_CONTROLS_WRAPPER = css`
   ${Styles.CONTAINER_CENTERED};
   position: absolute;
   width: 122px;
-  height: 100%;
+  height: 80%;
   z-index: 1;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   padding-left: 24px;
   padding-right: 24px;
 `;
