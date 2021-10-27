@@ -170,6 +170,7 @@ function CarouselHeader({
         <Jumpers.Share
           file={file}
           data={data}
+          viewer={viewer}
           isOpen={isShareFileVisible}
           onClose={hideShareFile}
         />
@@ -367,6 +368,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
           file={file}
           isOpen={isShareFileVisible}
           data={data}
+          viewer={viewer}
           onClose={hideShareFile}
         />
         <Jumpers.MoreInfoMobile

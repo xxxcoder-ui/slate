@@ -6,6 +6,7 @@ import * as SVG from "~/common/svg";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
 import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 
@@ -21,11 +22,29 @@ const STYLES_SHARING_BUTTON = (theme) => css`
   }
 `;
 
-function FileSharingButtons({ file, data }) {
-  const username = data?.user?.username;
-  const fileName = file?.name || file?.filename;
+const getSlateURLFromViewer = ({ viewer, file }) => {
+  const username = viewer?.username;
   const rootUrl = window?.location?.origin;
-  const fileLink = `${rootUrl}/${username}/web?cid=${file.cid}`;
+  const collection = viewer.slates.find(
+    (item) => item.isPublic && item.objects.some((object) => object.id === file.id)
+  );
+
+  return `${rootUrl}/${username}/${collection.slatename}?cid=${file.cid}`;
+};
+
+const getSlateURLFromData = ({ data, file }) => {
+  const username = data?.user?.username;
+  const rootUrl = window?.location?.origin;
+
+  return `${rootUrl}/${username}/${data.slatename}?cid=${file.cid}`;
+};
+
+function FileSharingButtons({ file, data, viewer }) {
+  const fileName = file?.name || file?.filename;
+  const username = data?.user?.username || viewer?.username;
+  const fileLink = data
+    ? getSlateURLFromData({ data, file })
+    : getSlateURLFromViewer({ viewer, file });
   const [copyState, setCopyState] = React.useState({ isCidCopied: false, isLinkCopied: false });
 
   const handleTwitterSharing = () =>
@@ -38,8 +57,9 @@ function FileSharingButtons({ file, data }) {
     window.open(`mailto: ?subject=${fileName} by ${username} on Slate&body=${fileLink}`, "_b");
   };
 
+  const cidLink = Strings.getURLfromCID(file.cid);
   const handleLinkCopy = () => (
-    Utilities.copyToClipboard(fileLink), setCopyState({ isLinkCopied: true })
+    Utilities.copyToClipboard(cidLink), setCopyState({ isLinkCopied: true })
   );
   const handleCidCopy = () => (
     Utilities.copyToClipboard(file.cid), setCopyState({ isCidCopied: true })
@@ -86,7 +106,7 @@ const STYLES_SHARE_FILE_FOOTER = (theme) => css`
 
 const PROTO_SCHOOL_CID = "https://proto.school/anatomy-of-a-cid/01";
 
-export function Share({ file, data, isOpen, onClose }) {
+export function Share({ file, data, viewer, isOpen, onClose }) {
   return isOpen ? (
     <Jumper.Root onClose={onClose}>
       <Jumper.Header>Share</Jumper.Header>
@@ -96,7 +116,7 @@ export function Share({ file, data, isOpen, onClose }) {
       </Jumper.Item>
       <Jumper.Divider />
       <Jumper.Item style={{ padding: 12 }}>
-        <FileSharingButtons file={file} data={data} />
+        <FileSharingButtons file={file} data={data} viewer={viewer} />
       </Jumper.Item>
       <Jumper.Item css={STYLES_SHARE_FILE_FOOTER}>
         <a
@@ -114,7 +134,7 @@ export function Share({ file, data, isOpen, onClose }) {
   ) : null;
 }
 
-export function ShareMobile({ file, data, isOpen, onClose }) {
+export function ShareMobile({ file, data, viewer, isOpen, onClose }) {
   return isOpen ? (
     <MobileJumper.Root>
       <MobileJumper.Header>
@@ -128,7 +148,7 @@ export function ShareMobile({ file, data, isOpen, onClose }) {
       </div>
       <System.Divider height={1} color="borderGrayLight" />
       <MobileJumper.Content>
-        <FileSharingButtons file={file} data={data} />
+        <FileSharingButtons file={file} data={data} viewer={viewer} />
       </MobileJumper.Content>
       <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
         <button
