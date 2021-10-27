@@ -7,6 +7,7 @@ import * as Actions from "~/common/actions";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
 import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as Strings from "~/common/strings";
 
 import { Show } from "~/components/utility/Show";
 import { css } from "@emotion/react";
@@ -185,7 +186,7 @@ function Channels({
       <AnimateSharedLayout>
         <div css={STYLES_CHANNEL_BUTTONS_WRAPPER}>
           {channels.map((channel) => (
-            <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.slatename}>
+            <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.id}>
               <ChannelButton
                 isSelected={channel.doesContainFile}
                 onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
@@ -215,10 +216,11 @@ function Channels({
 /* -----------------------------------------------------------------------------------------------*/
 
 const useChannelHandlers = ({ viewer, file, onAction }) => {
-  const handleAddFileToChannel = async (slate, isSelected) => {
+  const handleAddFileToChannel = async (slate, isSelected, updateViewer = true) => {
     const prevSlates = [...viewer.slates];
-    const resetViewerSlates = () =>
-      onAction({ type: "UPDATE_VIEWER", viewer: { slates: prevSlates } });
+    const resetViewerSlates = () => {
+      if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: prevSlates } });
+    };
 
     if (isSelected) {
       const newSlates = viewer.slates.map((item) => {
@@ -227,7 +229,7 @@ const useChannelHandlers = ({ viewer, file, onAction }) => {
         }
         return item;
       });
-      onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
+      if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
 
       const response = await UserBehaviors.removeFromSlate({ slate, ids: [file.id] });
       if (!response) resetViewerSlates();
@@ -238,13 +240,13 @@ const useChannelHandlers = ({ viewer, file, onAction }) => {
       if (slate.id === item.id) return { ...item, objects: [...item.objects, file] };
       return item;
     });
-    onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
+    if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
 
     const response = await UserBehaviors.saveCopy({ slate, files: [file], showAlerts: false });
     if (!response) resetViewerSlates();
   };
 
-  const handleCreateSlate = (isPublic) => async (name) => {
+  const handleCreateChannel = (isPublic) => async (name) => {
     //TODO(amine): find better solution to show the channel optimistically
     onAction({
       type: "UPDATE_VIEWER",
@@ -256,11 +258,12 @@ const useChannelHandlers = ({ viewer, file, onAction }) => {
     const response = await Actions.createSlate({
       name: name,
       isPublic,
+      hydrateViewer: false,
     });
 
-    await handleAddFileToChannel(response?.slate);
+    await handleAddFileToChannel(response?.slate, false, false);
   };
-  return { handleCreateSlate, handleAddFileToChannel };
+  return { handleCreateChannel, handleAddFileToChannel };
 };
 
 const useGetPrivateAndPublicChannels = ({ slates, file }) =>
@@ -307,7 +310,10 @@ const useChannelsSearch = ({ privateChannels, publicChannels }) => {
     return { results, canCreatePrivateChannel, canCreatePublicChannel };
   }, [query, privateChannels, publicChannels]);
 
-  const handleQueryChange = (e) => setQuery(e.target.value);
+  const handleQueryChange = (e) => {
+    const nextValue = e.target.value;
+    setQuery(Strings.createSlug(nextValue, ""));
+  };
   const clearQuery = () => setQuery("");
 
   return [
@@ -335,7 +341,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
     publicChannels: publicChannels,
   });
 
-  const { handleAddFileToChannel, handleCreateSlate } = useChannelHandlers({
+  const { handleAddFileToChannel, handleCreateChannel } = useChannelHandlers({
     viewer,
     file,
     onAction,
@@ -346,7 +352,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
   const showEmptyState = !isSearching && viewer.slates.length === 0;
 
   return isOpen ? (
-    <Jumper.Root onClose={onClose}>
+    <Jumper.Root onClose={() => (onClose(), clearQuery())}>
       <Jumper.Header
         css={STYLES_EDIT_CHANNELS_HEADER}
         style={{ paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}
@@ -378,7 +384,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
             channels={isSearching ? searchResults.privateChannels : privateChannels}
             searchQuery={searchQuery}
             onAddFileToChannel={handleAddFileToChannel}
-            onCreateChannel={handleCreateSlate(false)}
+            onCreateChannel={handleCreateChannel(false)}
             file={file}
             viewer={viewer}
             onAction={onAction}
@@ -392,7 +398,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
               isCreatingChannel={isSearching && canCreatePublicChannel}
               channels={isSearching ? searchResults.publicChannels : publicChannels}
               onAddFileToChannel={handleAddFileToChannel}
-              onCreateChannel={handleCreateSlate(true)}
+              onCreateChannel={handleCreateChannel(true)}
             />
           </div>
         </Jumper.Item>
@@ -415,7 +421,7 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
     publicChannels: publicChannels,
   });
 
-  const { handleAddFileToChannel, handleCreateSlate } = useChannelHandlers({
+  const { handleAddFileToChannel, handleCreateChannel } = useChannelHandlers({
     viewer,
     file,
     onAction,
@@ -451,7 +457,7 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
           channels={isSearching ? searchResults.privateChannels : privateChannels}
           searchQuery={searchQuery}
           onAddFileToChannel={handleAddFileToChannel}
-          onCreateChannel={handleCreateSlate(false)}
+          onCreateChannel={handleCreateChannel(false)}
         />
         <div style={{ marginTop: 20 }}>
           <Channels
@@ -462,7 +468,7 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
             isCreatingChannel={isSearching && canCreatePublicChannel}
             channels={isSearching ? searchResults.publicChannels : publicChannels}
             onAddFileToChannel={handleAddFileToChannel}
-            onCreateChannel={handleCreateSlate(true)}
+            onCreateChannel={handleCreateChannel(true)}
           />
         </div>
       </MobileJumper.Content>
@@ -471,7 +477,7 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
           type="button"
           css={Styles.BUTTON_RESET}
           style={{ width: 32, height: 32 }}
-          onClick={onClose}
+          onClick={() => (onClose(), clearQuery())}
         >
           <SVG.Hash width={16} height={16} style={{ color: Constants.system.blue }} />
         </button>
