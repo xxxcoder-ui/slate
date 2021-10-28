@@ -46,9 +46,9 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   position: sticky;
   top: ${theme.sizes.header + theme.sizes.filterNavbar}px;
   width: 236px;
-  height: 100vh;
   max-height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
-  padding: 20px;
+  overflow-y: auto;
+  padding: 20px 24px;
   background-color: ${theme.semantic.bgLight};
 
   @media (max-width: ${theme.sizes.mobile}px) {
