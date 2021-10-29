@@ -7,7 +7,7 @@ import {
   deleteSlateIndex,
 } from "~/node_common/managers/search/manage";
 import {
-  searchAll,
+  searchMultiple,
   searchUser,
   searchSlate,
   searchFile,
@@ -40,7 +40,7 @@ const SearchManager = {
   deleteUser,
   deleteSlate,
   deleteFile,
-  searchAll,
+  searchMultiple,
   searchUser,
   searchSlate,
   searchFile,

@@ -5,97 +5,128 @@ import {
   filesIndex,
 } from "~/node_common/managers/search/search-client";
 
-export const searchAll = async ({ query, userId, grouped = false }) => {
-  const usersMust = {
-    multi_match: {
-      query,
-      fuzziness: "AUTO",
-      type: "best_fields",
-      fields: ["username^2", "name^2", "body"],
-      tie_breaker: 0.3,
+//NOTE(martina): types specifies which object types to search through. Leaving it null or empty will search ALL object types
+//               E.g. ["USER", "SLATE", "FILE"]
+//NOTE(martina): grouped = true will separate results by object type rather than mixing them togther.
+//               E.g. { users: [user1, user2, ...], slates: [slate1, slate2, ...], files: [file1, file2, ...]}
+export const searchMultiple = async ({
+  query,
+  userId,
+  grouped = false,
+  types,
+  globalSearch = false,
+}) => {
+  let body = [];
+  let keys = [];
+
+  let ownerQuery = {
+    bool: {
+      should: [{ term: { ownerId: userId } }],
     },
   };
+  if (globalSearch) {
+    ownerQuery.bool.should.push({ term: { isPublic: true } });
+  }
 
-  const slatesMust = [
-    {
+  if (!types?.length || types.includes("USER")) {
+    keys.push("users");
+
+    const usersMust = {
       multi_match: {
         query,
         fuzziness: "AUTO",
         type: "best_fields",
-        fields: ["slatename^2", "name", "body"],
+        fields: ["username^2", "name^2", "body"],
         tie_breaker: 0.3,
       },
-    },
-    {
-      bool: {
-        should: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
-      },
-    },
-  ];
+    };
 
-  const filesMust = [
-    {
-      multi_match: {
-        query,
-        fuzziness: "AUTO",
-        type: "best_fields",
-        fields: [
-          "name^2",
-          "body",
-          "author",
-          "source",
-          "linkName^2",
-          "linkBody",
-          "linkAuthor",
-          "linkSource",
-          "linkDomain",
-        ],
-        tie_breaker: 0.3,
+    body.push({ index: usersIndex });
+    body.push({
+      query: {
+        bool: {
+          must: usersMust,
+        },
       },
-    },
-    {
-      bool: {
-        should: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+    });
+  }
+
+  if (!types?.length || types.includes("SLATE")) {
+    keys.push("slates");
+
+    const slatesMust = [
+      {
+        multi_match: {
+          query,
+          fuzziness: "AUTO",
+          type: "best_fields",
+          fields: ["slatename^2", "name", "body"],
+          tie_breaker: 0.3,
+        },
       },
-    },
-  ];
+      ownerQuery,
+    ];
+
+    body.push({ index: slatesIndex });
+    body.push({
+      query: {
+        bool: {
+          must: slatesMust,
+        },
+      },
+    });
+  }
+
+  if (!types?.length || types.includes("FILE")) {
+    keys.push("files");
+
+    const filesMust = [
+      {
+        multi_match: {
+          query,
+          fuzziness: "AUTO",
+          type: "best_fields",
+          fields: [
+            "name^2",
+            "body",
+            "author",
+            "source",
+            "linkName^2",
+            "linkBody",
+            "linkAuthor",
+            "linkSource",
+            "linkDomain",
+          ],
+          tie_breaker: 0.3,
+        },
+      },
+      ownerQuery,
+    ];
+
+    body.push({ index: filesIndex });
+    body.push({
+      query: {
+        bool: {
+          must: filesMust,
+        },
+      },
+    });
+  }
+
+  if (!body.length) return [];
 
   try {
     let result = await searchClient.msearch({
-      body: [
-        { index: usersIndex },
-        {
-          query: {
-            bool: {
-              must: usersMust,
-            },
-          },
-        },
-        { index: slatesIndex },
-        {
-          query: {
-            bool: {
-              must: slatesMust,
-            },
-          },
-        },
-        { index: filesIndex },
-        {
-          query: {
-            bool: {
-              must: filesMust,
-            },
-          },
-        },
-      ],
+      body,
     });
+    if (result.statusCode !== 200) return;
     let responses = result?.body?.responses;
+    if (!responses) return;
     let returned = responses.map((res) => res.hits.hits);
 
     if (grouped) {
       let cleaned = {};
-      let keys = ["users", "slates", "files"];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < returned.length; i++) {
         const group = returned[i];
         cleaned[keys[i]] = group.map((result) => result._source);
       }
@@ -140,13 +171,12 @@ export const searchUser = async ({ query }) => {
       },
     });
 
-    if (result.statusCode === 200) {
-      const hits = result?.body?.hits?.hits;
+    if (result.statusCode !== 200) return;
+    const hits = result?.body?.hits?.hits;
 
-      let users = hits.map((hit) => hit._source);
-      console.log(users);
-      return users;
-    }
+    let users = hits.map((hit) => hit._source);
+    console.log(users);
+    return users;
   } catch (e) {
     console.log(e);
   }
@@ -187,13 +217,12 @@ export const searchSlate = async ({ query, userId, globalSearch = false }) => {
       },
     });
 
-    if (result.statusCode === 200) {
-      const hits = result?.body?.hits?.hits;
+    if (result.statusCode !== 200) return;
+    const hits = result?.body?.hits?.hits;
 
-      let slates = hits.map((hit) => hit._source);
-      console.log(slates);
-      return slates;
-    }
+    let slates = hits.map((hit) => hit._source);
+    console.log(slates);
+    return slates;
   } catch (e) {
     console.log(e);
   }
@@ -304,13 +333,12 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
     //   },
     // });
 
-    if (result.statusCode === 200) {
-      const hits = result?.body?.hits?.hits;
+    if (result.statusCode !== 200) return;
+    const hits = result?.body?.hits?.hits;
 
-      let files = hits.map((hit) => hit._source);
-      console.log(files);
-      return files;
-    }
+    let files = hits.map((hit) => hit._source);
+    console.log(files);
+    return files;
   } catch (e) {
     console.log(e);
   }
