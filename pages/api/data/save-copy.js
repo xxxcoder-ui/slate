@@ -1,7 +1,7 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 import * as RequestUtilities from "~/node_common/request-utilities";
@@ -105,10 +105,13 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
+  SearchManager.createFile(createdFiles);
+
+  //NOTE(martina): leaving createdFiles out of the privacy recalculation since those should already have the correct privacy
   if (slate?.isPublic) {
-    Utilities.addToPublicCollectionUpdatePrivacy({ files: filesToAddToSlate });
-    SearchManager.updateFile(createdFiles, "ADD");
+    Utilities.addToPublicCollectionUpdatePrivacy({ files: duplicateFiles });
   }
+
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
 
   if (!slate) {

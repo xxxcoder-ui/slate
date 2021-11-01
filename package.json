@@ -29,11 +29,13 @@
     "www-seed-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts seed-database",
     "www-adjust-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts adjust",
     "www-migrate-database": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts flattening-migration",
-    "www-storage-deals": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts worker-storage-deals"
+    "www-storage-deals": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts worker-storage-deals",
+    "www-search": "NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts search"
   },
   "repository": "filecoin-project/slate",
   "dependencies": {
     "@babel/register": "^7.12.13",
+    "@elastic/elasticsearch": "^7.15.0",
     "@emotion/babel-preset-css-prop": "11.2.0",
     "@emotion/react": "11.1.5",
     "@glif/filecoin-number": "^1.1.0-beta.17",

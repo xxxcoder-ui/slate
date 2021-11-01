@@ -3,7 +3,7 @@ import * as Data from "~/node_common/data";
 import * as LinkUtilities from "~/node_common/link-utilities";
 import * as Strings from "~/common/strings";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 import * as RequestUtilities from "~/node_common/request-utilities";
@@ -130,9 +130,8 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  if (slate?.isPublic) {
-    SearchManager.updateFile(createdFiles, "ADD");
-  }
+  SearchManager.indexFile(createdFiles);
+
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
 
   if (!slate) {

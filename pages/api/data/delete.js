@@ -5,7 +5,7 @@ import * as Arrays from "~/common/arrays";
 import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
@@ -139,7 +139,7 @@ export default async (req, res) => {
 
   await Data.deleteFilesByIds({ ownerId: id, ids });
 
-  SearchManager.updateFile(files, "REMOVE");
+  SearchManager.deleteFile(files);
 
   ViewerManager.hydratePartial(id, { slates: true, library: true });
 

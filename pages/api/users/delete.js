@@ -2,7 +2,7 @@ import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
@@ -12,10 +12,10 @@ export default async (req, res) => {
 
   // NOTE(jim): remove their public slates and files from the search cache.
   let slates = await Data.getSlatesByUserId({ ownerId: id, publicOnly: true });
-  SearchManager.updateSlate(slates, "REMOVE");
+  SearchManager.deleteSlate(slates);
 
   let files = await Data.getFilesByUserId({ id, publicOnly: true });
-  SearchManager.updateFile(files, "REMOVE");
+  SearchManager.deleteFile(files);
 
   //NOTE(migration): may be able to just condense these two parts since they return it from delete anyways
   // NOTE(jim): delete all of their public and private slates.
@@ -43,7 +43,7 @@ export default async (req, res) => {
     });
   }
 
-  SearchManager.updateUser(user, "REMOVE");
+  SearchManager.deleteUser(user);
 
   // NOTE(jim): remove orphan
   await Data.createOrphan({

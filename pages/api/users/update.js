@@ -5,7 +5,7 @@ import * as Serializers from "~/node_common/serializers";
 import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as Logging from "~/common/logging";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
@@ -80,9 +80,10 @@ export default async (req, res) => {
       if (
         user.username !== unsafeResponse.username ||
         user.name !== unsafeResponse.name ||
-        user.photo !== unsafeResponse.photo
+        user.photo !== unsafeResponse.photo ||
+        user.body !== unsafeResponse.body
       ) {
-        SearchManager.updateUser(unsafeResponse, "EDIT");
+        SearchManager.updateUser(unsafeResponse);
       }
     }
 

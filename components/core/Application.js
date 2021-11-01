@@ -285,10 +285,6 @@ export default class ApplicationPage extends React.Component {
       });
     }
 
-    if (newAccount) {
-      Actions.updateSearch("create-user");
-    }
-
     // let redirected = this._handleURLRedirect();
     // if (!redirected) {
     //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });

@@ -107,8 +107,6 @@ export const signOut = async ({ viewer }) => {
 
 // NOTE(jim): Permanently deletes you, forever.
 export const deleteMe = async ({ viewer }) => {
-  await Actions.updateSearch("delete-user");
-
   let response = await Actions.deleteViewer();
 
   if (Events.hasError(response)) {

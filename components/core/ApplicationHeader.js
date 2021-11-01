@@ -5,6 +5,7 @@ import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
 import * as Upload from "~/components/core/Upload";
 import * as Filter from "~/components/core/Filter";
+import * as Actions from "~/common/actions";
 
 import {
   ApplicationUserControls,
@@ -18,17 +19,17 @@ import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Bu
 import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
 import { useField, useMediaQuery } from "~/common/hooks";
-import { Input } from "~/components/system";
+import { Input } from "~/components/system/components/Input";
 import { AnimatePresence, motion } from "framer-motion";
 
 const STYLES_SEARCH_COMPONENT = (theme) => css`
   background-color: transparent;
-  border-radius: 8px;
   box-shadow: none;
   height: 100%;
   input {
     height: 100%;
-    padding: 0px;
+    padding: 0px 4px;
+    border-radius: 0px;
   }
   &::placeholder {
     color: ${theme.semantic.textGray};
@@ -134,6 +135,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
     showDropdown: false,
     popup: null,
     isRefreshing: false,
+    query: "",
   });
 
   const _handleTogglePopup = (value) => {
@@ -144,23 +146,30 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
     }
   };
 
-  const handleCreateSearch = (searchQuery) => {
-    setState((prev) => ({ ...prev, showDropdown: false }));
-    Events.dispatchCustomEvent({
-      name: "show-search",
-      detail: {
-        initialValue: searchQuery,
-      },
-    });
+  const _handleInputChange = (e) => {
+    setState((prev) => ({ ...prev, query: e.target.value }));
   };
 
-  const {
-    getFieldProps,
-    value: searchQuery,
-    setFieldValue,
-  } = useField({
+  //TODO(amine): plug in the right values
+  //for more context, look at node_common/managers/search/search.js
+  //types: leaving it null searches everything. Doing ["SLATE"] searches just slates, doing ["USER", "FILE"] searches users and files.
+  //globalSearch: whether you are just searching the user's files/slates or global files/slates. This option doesn't exist for searching users since there is no notion of public or private users
+  //tagIds: only applies when searching files. the ids of the tags (aka collections) you are searching within. aka if you only want to search for files in a given slate, provide that slate's id. If no tag ids are provided, it searches all files
+  //grouped: whether to group the results by type (slate, user, file) when searching multiple types. Doesn't apply when searching only one type e.g. types: ["SLATE"]
+  const handleSearch = async () => {
+    const response = await Actions.search({
+      types: null,
+      query: state.query,
+      globalSearch: true,
+      tagIds: null,
+      grouped: true,
+    });
+    console.log(response);
+  };
+
+  const { getFieldProps, value: searchQuery, setFieldValue } = useField({
     initialValue: "",
-    onSubmit: handleCreateSearch,
+    onSubmit: handleSearch,
   });
 
   const handleDismissSearch = () => setFieldValue("");
@@ -198,15 +207,17 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
                 full
                 placeholder={`Search ${!viewer ? "slate.host" : ""}`}
                 inputCss={STYLES_SEARCH_COMPONENT}
-                onSubmit={handleCreateSearch}
+                onSubmit={handleSearch}
                 name="search"
                 {...getFieldProps()}
+                onChange={_handleInputChange}
+                value={state.query}
               />
             </div>
             <Upload.Provider page={page} data={data} viewer={viewer}>
               <Upload.Root data={data}>
                 <div css={STYLES_RIGHT}>
-                  <Actions
+                  <UserActions
                     uploadAction={
                       <Upload.Trigger
                         viewer={viewer}
@@ -249,7 +260,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
   );
 }
 
-const Actions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismissSearch }) => {
+const UserActions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismissSearch }) => {
   const authActions = React.useMemo(
     () => (
       <>

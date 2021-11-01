@@ -3,7 +3,7 @@ import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
@@ -95,16 +95,12 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(id, { slates: true });
 
-  if (slate.isPublic && !updates.isPublic) {
-    SearchManager.updateSlate(response, "REMOVE");
+  SearchManager.updateSlate(response);
 
+  if (slate.isPublic && !updates.isPublic) {
     Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
   } else if (!slate.isPublic && updates.isPublic) {
-    SearchManager.updateSlate(response, "ADD");
-
     Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
-  } else {
-    SearchManager.updateSlate(response, "EDIT");
   }
 
   return res.status(200).send({ decorator: "SERVER_UPDATE_SLATE", slate: response });
