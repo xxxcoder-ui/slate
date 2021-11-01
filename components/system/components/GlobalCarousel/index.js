@@ -88,7 +88,12 @@ function CarouselHeader({
   current,
   total,
   onAction,
+
   onClose,
+  enableNextSlide,
+  enablePreviousSlide,
+  onNextSlide,
+  onPreviousSlide,
   ...props
 }) {
   const [isHeaderVisible, setHeaderVisibility] = React.useState(true);
@@ -176,10 +181,22 @@ function CarouselHeader({
         />
       </ModalPortal>
 
+      <CarouselControls
+        enableNextSlide={enableNextSlide}
+        enablePreviousSlide={enablePreviousSlide}
+        onNextSlide={onNextSlide}
+        onPreviousSlide={onPreviousSlide}
+        showControls={isHeaderVisible || isJumperOpen}
+        onClose={onClose}
+        onMouseEnter={showHeader}
+        onMouseLeave={hideHeader}
+      />
+
       <motion.nav
         css={STYLES_HEADER_WRAPPER}
         initial={{ opacity: 0 }}
         animate={{ opacity: isHeaderVisible || isJumperOpen ? 1 : 0 }}
+        transition={{ ease: "easeInOut", duration: 0.25 }}
         onMouseEnter={showHeader}
         onMouseLeave={hideHeader}
         {...props}
@@ -492,7 +509,10 @@ function CarouselControls({
   enablePreviousSlide,
   onNextSlide,
   onPreviousSlide,
+  showControls,
   onClose,
+
+  ...props
 }) {
   useCarouselKeyCommands({
     handleNext: onNextSlide,
@@ -500,38 +520,19 @@ function CarouselControls({
     handleClose: onClose,
   });
 
-  const [areControlsVisible, setControlsVisibility] = React.useState(true);
-  const timeoutRef = React.useRef();
-
-  const showControls = () => {
-    clearTimeout(timeoutRef.current);
-    setControlsVisibility(true);
-  };
-
-  const hideControls = () => {
-    timeoutRef.current = setTimeout(() => {
-      setControlsVisibility(false);
-    }, 500);
-  };
-
-  React.useEffect(() => {
-    timeoutRef.current = setTimeout(hideControls, 3000);
-    return () => clearTimeout(timeoutRef.current);
-  }, []);
-
   return (
     <>
       <div
-        onMouseEnter={showControls}
-        onMouseLeave={hideControls}
         css={STYLES_CONTROLS_WRAPPER}
         style={{ left: 0, justifyContent: "flex-start" }}
+        {...props}
       >
         {enablePreviousSlide ? (
           <motion.button
             onClick={onPreviousSlide}
             initial={{ opacity: 0 }}
-            animate={{ opacity: areControlsVisible ? 1 : 0 }}
+            animate={{ opacity: showControls ? 1 : 0 }}
+            transition={{ ease: "easeInOut", duration: 0.25 }}
             css={STYLES_CONTROLS_BUTTON}
           >
             <SVG.ChevronLeft width={16} />
@@ -539,16 +540,15 @@ function CarouselControls({
         ) : null}
       </div>
       <div
-        onMouseEnter={showControls}
-        onMouseLeave={hideControls}
         css={STYLES_CONTROLS_WRAPPER}
         style={{ right: 0, justifyContent: "flex-end" }}
+        {...props}
       >
         {enableNextSlide ? (
           <motion.button
             onClick={onNextSlide}
             initial={{ opacity: 0 }}
-            animate={{ opacity: areControlsVisible ? 1 : 0 }}
+            animate={{ opacity: showControls ? 1 : 0 }}
             css={STYLES_CONTROLS_BUTTON}
           >
             <SVG.ChevronRight width={16} />
@@ -783,16 +783,6 @@ export function GlobalCarousel({
 
   return (
     <div css={STYLES_ROOT}>
-      {!isMobile ? (
-        <CarouselControls
-          enableNextSlide={index < objects.length - 1}
-          enablePreviousSlide={index > 0}
-          onNextSlide={handleNext}
-          onPreviousSlide={handlePrevious}
-          onClose={handleClose}
-        />
-      ) : null}
-
       {isMobile ? (
         <CarouselHeaderMobile
           current={index + 1}
@@ -811,6 +801,10 @@ export function GlobalCarousel({
           current={index + 1}
           total={objects.length}
           onAction={onAction}
+          enableNextSlide={index < objects.length - 1}
+          enablePreviousSlide={index > 0}
+          onNextSlide={handleNext}
+          onPreviousSlide={handlePrevious}
           onClose={handleClose}
         />
       )}
