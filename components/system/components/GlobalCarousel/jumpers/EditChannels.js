@@ -9,6 +9,7 @@ import * as Constants from "~/common/constants";
 import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+import * as Events from "~/common/custom-events";
 
 import { Show } from "~/components/utility/Show";
 import { css } from "@emotion/react";
@@ -73,7 +74,8 @@ function ChannelKeyboardShortcut({ searchResults, searchQuery, onAddFileToChanne
     },
   });
 
-  if (isFileAdded) return null;
+  // NOTE(amine): don't show the 'select channel ⏎' hint when the channel is created optimistically
+  if (isFileAdded || !selectedChannel.ownerId) return null;
 
   return (
     <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
@@ -168,7 +170,6 @@ function Channels({
   isPublic,
 
   searchQuery,
-  isSearching,
 
   channels,
   isCreatingChannel,
@@ -176,7 +177,7 @@ function Channels({
   onAddFileToChannel,
   onCreateChannel,
 }) {
-  const showChannel = !isSearching && channels.length === 0;
+  const showChannel = !isCreatingChannel && channels.length === 0;
 
   return !showChannel ? (
     <div>
@@ -209,7 +210,7 @@ function Channels({
             <motion.div initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }}>
               <ChannelButton
                 css={Styles.HORIZONTAL_CONTAINER_CENTERED}
-                onClick={() => onCreateChannel(searchQuery)}
+                onClick={(e) => (e.stopPropagation(), onCreateChannel(searchQuery))}
                 title={searchQuery}
               >
                 <SVG.Plus width={16} height={16} style={{ pointerEvents: "none" }} />
@@ -225,45 +226,40 @@ function Channels({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const useChannelHandlers = ({ viewer, file, onAction }) => {
-  const handleAddFileToChannel = async (slate, isSelected, updateViewer = true) => {
-    const prevSlates = [...viewer.slates];
-    const resetViewerSlates = () => {
-      if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: prevSlates } });
-    };
+const useChannels = ({ viewer, file }) => {
+  const [channels, setChannels] = React.useState(viewer.slates);
+
+  const handleAddFileToChannel = async (slate, isSelected) => {
+    const prevSlates = [...channels];
+    const resetViewerSlates = () => setChannels(prevSlates);
 
     if (isSelected) {
-      const newSlates = viewer.slates.map((item) => {
+      const newChannels = channels.map((item) => {
         if (slate.id === item.id) {
           return { ...item, objects: item.objects.filter((object) => object.id !== file.id) };
         }
         return item;
       });
-      if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
+      setChannels(newChannels);
 
       const response = await UserBehaviors.removeFromSlate({ slate, ids: [file.id] });
       if (!response) resetViewerSlates();
       return;
     }
 
-    const newSlates = viewer.slates.map((item) => {
+    const newChannels = channels.map((item) => {
       if (slate.id === item.id) return { ...item, objects: [...item.objects, file] };
       return item;
     });
-    if (updateViewer) onAction({ type: "UPDATE_VIEWER", viewer: { slates: newSlates } });
+    setChannels(newChannels);
 
     const response = await UserBehaviors.saveCopy({ slate, files: [file], showAlerts: false });
     if (!response) resetViewerSlates();
   };
 
   const handleCreateChannel = (isPublic) => async (name) => {
-    //TODO(amine): find better solution to show the channel optimistically
-    onAction({
-      type: "UPDATE_VIEWER",
-      viewer: {
-        slates: [...viewer.slates, { id: uuid(), slatename: name, isPublic, objects: [file] }],
-      },
-    });
+    const generatedId = uuid();
+    setChannels([...channels, { id: generatedId, slatename: name, isPublic, objects: [file] }]);
 
     const response = await Actions.createSlate({
       name: name,
@@ -271,9 +267,26 @@ const useChannelHandlers = ({ viewer, file, onAction }) => {
       hydrateViewer: false,
     });
 
-    await handleAddFileToChannel(response?.slate, false, false);
+    if (Events.hasError(response)) {
+      setChannels(channels.filter((channel) => channel.id !== generatedId));
+      return;
+    }
+
+    // NOTE(amine): replace generated id with response
+    const prevChannels = channels.filter((channel) => channel.id !== generatedId);
+    setChannels([...prevChannels, { ...response.slate, objects: [file] }]);
+
+    const saveResponse = await UserBehaviors.saveCopy({
+      slate: response.slate,
+      files: [file],
+      showAlerts: false,
+    });
+
+    if (Events.hasError(saveResponse)) {
+      setChannels([prevChannels, ...response.slate]);
+    }
   };
-  return { handleCreateChannel, handleAddFileToChannel };
+  return [channels, { handleCreateChannel, handleAddFileToChannel }];
 };
 
 const useGetPrivateAndPublicChannels = ({ slates, file }) =>
@@ -300,24 +313,23 @@ const useGetPrivateAndPublicChannels = ({ slates, file }) =>
 const useChannelsSearch = ({ privateChannels, publicChannels }) => {
   const [query, setQuery] = React.useState("");
 
-  const { results, canCreatePrivateChannel, canCreatePublicChannel } = React.useMemo(() => {
-    let canCreatePrivateChannel = true;
-    let canCreatePublicChannel = true;
+  const { results, channelAlreadyExists } = React.useMemo(() => {
+    let channelAlreadyExists = false;
 
     const results = { privateChannels: [], publicChannels: [] };
     const searchRegex = new RegExp(query, "gi");
 
     results.privateChannels = privateChannels.filter((channel) => {
-      if (channel.slatename === query) canCreatePrivateChannel = false;
+      if (channel.slatename === query) channelAlreadyExists = true;
       return searchRegex.test(channel.slatename);
     });
 
     results.publicChannels = publicChannels.filter((channel) => {
-      if (channel.slatename === query) canCreatePublicChannel = false;
+      if (channel.slatename === query) channelAlreadyExists = true;
       return searchRegex.test(channel.slatename);
     });
 
-    return { results, canCreatePrivateChannel, canCreatePublicChannel };
+    return { results, channelAlreadyExists };
   }, [query, privateChannels, publicChannels]);
 
   const handleQueryChange = (e) => {
@@ -330,7 +342,7 @@ const useChannelsSearch = ({ privateChannels, publicChannels }) => {
   const clearQuery = () => setQuery("");
 
   return [
-    { searchQuery: query, searchResults: results, canCreatePrivateChannel, canCreatePublicChannel },
+    { searchQuery: query, searchResults: results, channelAlreadyExists },
     { handleQueryChange, clearQuery },
   ];
 };
@@ -340,29 +352,26 @@ const STYLES_EDIT_CHANNELS_HEADER = (theme) => css`
   color: ${theme.semantic.textGray};
 `;
 
-export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
-  const { privateChannels, publicChannels } = useGetPrivateAndPublicChannels({
-    slates: viewer.slates,
-    file,
-  });
-
-  const [
-    { searchQuery, searchResults, canCreatePrivateChannel, canCreatePublicChannel },
-    { handleQueryChange, clearQuery },
-  ] = useChannelsSearch({
-    privateChannels: privateChannels,
-    publicChannels: publicChannels,
-  });
-
-  const { handleAddFileToChannel, handleCreateChannel } = useChannelHandlers({
+export function EditChannels({ file, viewer, isOpen, onClose }) {
+  const [channels, { handleAddFileToChannel, handleCreateChannel }] = useChannels({
     viewer,
     file,
-    onAction,
   });
+
+  const { privateChannels, publicChannels } = useGetPrivateAndPublicChannels({
+    slates: channels,
+    file,
+  });
+
+  const [{ searchQuery, searchResults, channelAlreadyExists }, { handleQueryChange, clearQuery }] =
+    useChannelsSearch({
+      privateChannels: privateChannels,
+      publicChannels: publicChannels,
+    });
 
   const isSearching = searchQuery.length > 0;
 
-  const showEmptyState = !isSearching && viewer.slates.length === 0;
+  const showEmptyState = !isSearching && channels.length === 0;
 
   return isOpen ? (
     <Jumper.Root onClose={() => (onClose(), clearQuery())}>
@@ -392,23 +401,20 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
         <Jumper.Item style={{ overflowY: "auto", flex: "1 0 0" }}>
           <Channels
             header="Private"
-            isSearching={isSearching}
-            isCreatingChannel={isSearching && canCreatePrivateChannel}
+            isCreatingChannel={isSearching && !channelAlreadyExists}
             channels={isSearching ? searchResults.privateChannels : privateChannels}
             searchQuery={searchQuery}
             onAddFileToChannel={handleAddFileToChannel}
             onCreateChannel={handleCreateChannel(false)}
             file={file}
             viewer={viewer}
-            onAction={onAction}
           />
           <div style={{ marginTop: 20 }}>
             <Channels
               header="Public"
               isPublic
-              isSearching={isSearching}
               searchQuery={searchQuery}
-              isCreatingChannel={isSearching && canCreatePublicChannel}
+              isCreatingChannel={isSearching && !channelAlreadyExists}
               channels={isSearching ? searchResults.publicChannels : publicChannels}
               onAddFileToChannel={handleAddFileToChannel}
               onCreateChannel={handleCreateChannel(true)}
@@ -420,25 +426,22 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
   ) : null;
 }
 
-export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) {
-  const { privateChannels, publicChannels } = useGetPrivateAndPublicChannels({
-    slates: viewer.slates,
-    file,
-  });
-
-  const [
-    { searchQuery, searchResults, canCreatePrivateChannel, canCreatePublicChannel },
-    { handleQueryChange, clearQuery },
-  ] = useChannelsSearch({
-    privateChannels: privateChannels,
-    publicChannels: publicChannels,
-  });
-
-  const { handleAddFileToChannel, handleCreateChannel } = useChannelHandlers({
+export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
+  const [channels, { handleAddFileToChannel, handleCreateChannel }] = useChannels({
     viewer,
     file,
-    onAction,
   });
+
+  const { privateChannels, publicChannels } = useGetPrivateAndPublicChannels({
+    slates: channels,
+    file,
+  });
+
+  const [{ searchQuery, searchResults, channelAlreadyExists }, { handleQueryChange, clearQuery }] =
+    useChannelsSearch({
+      privateChannels: privateChannels,
+      publicChannels: publicChannels,
+    });
 
   const isSearching = searchQuery.length > 0;
 
@@ -465,8 +468,7 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
       <MobileJumper.Content>
         <Channels
           header="Private"
-          isSearching={isSearching}
-          isCreatingChannel={isSearching && canCreatePrivateChannel}
+          isCreatingChannel={isSearching && !channelAlreadyExists}
           channels={isSearching ? searchResults.privateChannels : privateChannels}
           searchQuery={searchQuery}
           onAddFileToChannel={handleAddFileToChannel}
@@ -476,9 +478,8 @@ export function EditChannelsMobile({ file, viewer, onAction, isOpen, onClose }) 
           <Channels
             header="Public"
             isPublic
-            isSearching={isSearching}
             searchQuery={searchQuery}
-            isCreatingChannel={isSearching && canCreatePublicChannel}
+            isCreatingChannel={isSearching && !channelAlreadyExists}
             channels={isSearching ? searchResults.publicChannels : publicChannels}
             onAddFileToChannel={handleAddFileToChannel}
             onCreateChannel={handleCreateChannel(true)}

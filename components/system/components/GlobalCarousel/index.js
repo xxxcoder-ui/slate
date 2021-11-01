@@ -154,7 +154,6 @@ function CarouselHeader({
           <Jumpers.EditChannels
             viewer={viewer}
             file={file}
-            onAction={onAction}
             isOpen={isEditChannelsVisible}
             onClose={hideEditChannels}
           />
@@ -376,7 +375,6 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
           <Jumpers.EditChannelsMobile
             viewer={viewer}
             file={file}
-            onAction={onAction}
             isOpen={isEditChannelsVisible}
             onClose={hideEditChannels}
           />
