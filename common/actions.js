@@ -99,7 +99,6 @@ export const sendFilecoin = async (data) => {
 // };
 
 export const search = async (data) => {
-  console.log("in actions.search");
   return await returnJSON(`/api/search/search`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),

@@ -217,7 +217,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
             <Upload.Provider page={page} data={data} viewer={viewer}>
               <Upload.Root data={data}>
                 <div css={STYLES_RIGHT}>
-                  <Actions
+                  <UserActions
                     uploadAction={
                       <Upload.Trigger
                         viewer={viewer}
