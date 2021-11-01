@@ -8,6 +8,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
 import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
 
 import { Show } from "~/components/utility/Show";
 import { css } from "@emotion/react";
@@ -33,10 +34,12 @@ const STYLES_CHANNEL_BUTTON_SELECTED = (theme) => css`
 function ChannelButton({ children, isSelected, css, ...props }) {
   return (
     <button
-      css={[STYLES_CHANNEL_BUTTON, isSelected && STYLES_CHANNEL_BUTTON_SELECTED, css]}
       {...props}
+      css={[STYLES_CHANNEL_BUTTON, isSelected && STYLES_CHANNEL_BUTTON_SELECTED, css]}
     >
-      {children}
+      <System.P2 nbrOflines={1} as="span">
+        {children}
+      </System.P2>
     </button>
   );
 }
@@ -74,8 +77,12 @@ function ChannelKeyboardShortcut({ searchResults, searchQuery, onAddFileToChanne
 
   return (
     <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-      <System.P3 color="textGray">
-        Select {selectedChannel.isPublic ? "public" : "private"} tag "{selectedChannel.slatename}"
+      <System.P3 color="textGray" style={{ display: "inline-flex" }}>
+        Select {selectedChannel.isPublic ? "public" : "private"} tag "
+        <System.P3 nbrOflines={1} as="span" style={{ maxWidth: 100 }}>
+          {selectedChannel.slatename}
+        </System.P3>
+        "
       </System.P3>
       <System.P3 css={STYLES_RETURN_KEY} style={{ marginLeft: 4 }}>
         ⏎
@@ -190,6 +197,8 @@ function Channels({
               <ChannelButton
                 isSelected={channel.doesContainFile}
                 onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
+                title={channel.slatename}
+                style={{ maxWidth: "48ch" }}
               >
                 {channel.slatename}
               </ChannelButton>
@@ -201,6 +210,7 @@ function Channels({
               <ChannelButton
                 css={Styles.HORIZONTAL_CONTAINER_CENTERED}
                 onClick={() => onCreateChannel(searchQuery)}
+                title={searchQuery}
               >
                 <SVG.Plus width={16} height={16} style={{ pointerEvents: "none" }} />
                 <span style={{ marginLeft: 4 }}>{searchQuery}</span>
@@ -312,7 +322,10 @@ const useChannelsSearch = ({ privateChannels, publicChannels }) => {
 
   const handleQueryChange = (e) => {
     const nextValue = e.target.value;
-    setQuery(Strings.createSlug(nextValue, ""));
+    //NOTE(amine): allow input's value to be empty but keep other validations
+    if (Strings.isEmpty(nextValue) || Validations.slatename(nextValue)) {
+      setQuery(Strings.createSlug(nextValue, ""));
+    }
   };
   const clearQuery = () => setQuery("");
 
@@ -376,7 +389,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, onAction }) {
           <ChannelsEmpty />
         </Jumper.Item>
       ) : (
-        <Jumper.Item>
+        <Jumper.Item style={{ overflowY: "auto", flex: "1 0 0" }}>
           <Channels
             header="Private"
             isSearching={isSearching}
