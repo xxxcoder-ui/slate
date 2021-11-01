@@ -45,18 +45,16 @@ const STYLES_EDIT_INFO_FORM = css`
 function UpdateFileForm({ file, isMobile, onClose }) {
   const formRef = React.useRef();
 
-  const { getFieldProps, getFormProps, isSubmitting, values } = useForm({
+  const { getFieldProps, getFormProps, isSubmitting } = useForm({
     initialValues: {
       title: file?.name || "",
-      source: file?.source || "",
       description: file?.body || "",
     },
-    onSubmit: async ({ title, source, description }) => {
+    onSubmit: async ({ title, description }) => {
       const response = await Actions.updateFile({
         id: file.id,
         name: title,
         body: description,
-        source,
       });
       Events.hasError(response);
     },
@@ -84,17 +82,6 @@ function UpdateFileForm({ file, isMobile, onClose }) {
               inputCss={STYLES_EDIT_INFO_INPUT}
               style={{ marginTop: 6 }}
               {...getFieldProps("title")}
-            />
-          </div>
-          <div>
-            <System.H6 as="label" color="textGray">
-              Source
-            </System.H6>
-            <Field
-              full
-              inputCss={STYLES_EDIT_INFO_INPUT}
-              style={{ marginTop: 6 }}
-              {...getFieldProps("source")}
             />
           </div>
           <div>
