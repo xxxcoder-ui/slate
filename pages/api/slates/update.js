@@ -3,7 +3,7 @@ import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {

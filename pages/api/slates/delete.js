@@ -2,7 +2,7 @@ import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {

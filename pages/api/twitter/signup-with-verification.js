@@ -3,7 +3,7 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as Constants from "~/node_common/constants";
 
 import JWT from "jsonwebtoken";

@@ -1,6 +1,6 @@
 import * as Strings from "~/common/strings";
 import * as Data from "~/node_common/data";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as RequestUtilities from "~/node_common/request-utilities";
 

@@ -5,7 +5,7 @@ import * as Serializers from "~/node_common/serializers";
 import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as Logging from "~/common/logging";
 import * as RequestUtilities from "~/node_common/request-utilities";
 

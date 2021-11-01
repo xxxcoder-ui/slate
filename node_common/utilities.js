@@ -7,7 +7,7 @@ import * as Logging from "~/common/logging";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 import * as Arrays from "~/common/arrays";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 
 import crypto from "crypto";
 import JWT from "jsonwebtoken";

@@ -1,5 +1,5 @@
 import * as RequestUtilities from "~/node_common/request-utilities";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 
 //NOTE(martina): props
 //               globalSearch: Whether we are searching all public stuff plus the user's own stuff (true) or just the user's stuff (false)
@@ -18,7 +18,9 @@ export default async (req, res) => {
 
   const searchProps = { ...req.body.data, userId: id };
 
-  if (!Array.isArray(searchProps.types)) {
+  if (!searchProps.types) {
+    searchProps.types = [];
+  } else if (!Array.isArray(searchProps.types)) {
     searchProps.types = [searchProps.types];
   }
 

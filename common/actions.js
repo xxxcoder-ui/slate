@@ -98,6 +98,14 @@ export const sendFilecoin = async (data) => {
 //   }
 // };
 
+export const search = async (data) => {
+  console.log("in actions.search");
+  return await returnJSON(`/api/search/search`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const checkUsername = async (data) => {
   return await returnJSON(`/api/users/check-username`, {
     ...DEFAULT_OPTIONS,
@@ -196,17 +204,17 @@ export const createSubscription = async (data) => {
   });
 };
 
-export const search = async (data) => {
-  await Websockets.checkWebsocket();
-  if (Strings.isEmpty(data.query)) {
-    return { decorator: "NO_SERVER_TRIP", data: { results: [] } };
-  }
+// export const search = async (data) => {
+//   await Websockets.checkWebsocket();
+//   if (Strings.isEmpty(data.query)) {
+//     return { decorator: "NO_SERVER_TRIP", data: { results: [] } };
+//   }
 
-  return await returnJSON(`${Environment.URI_LENS}/search`, {
-    ...CORS_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
+//   return await returnJSON(`${Environment.URI_LENS}/search`, {
+//     ...CORS_OPTIONS,
+//     body: JSON.stringify({ data }),
+//   });
+// };
 
 export const createFile = async (data) => {
   await Websockets.checkWebsocket();

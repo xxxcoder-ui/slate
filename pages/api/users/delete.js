@@ -2,7 +2,7 @@ import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
-import * as SearchManager from "~/node_common/managers/search";
+import SearchManager from "~/node_common/managers/search";
 import * as RequestUtilities from "~/node_common/request-utilities";
 
 export default async (req, res) => {
