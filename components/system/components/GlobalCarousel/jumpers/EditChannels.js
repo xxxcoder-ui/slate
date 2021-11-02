@@ -348,7 +348,6 @@ const useChannelsSearch = ({ privateChannels, publicChannels }) => {
 };
 
 const STYLES_EDIT_CHANNELS_HEADER = (theme) => css`
-  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   color: ${theme.semantic.textGray};
 `;
 
@@ -373,57 +372,61 @@ export function EditChannels({ file, viewer, isOpen, onClose }) {
 
   const showEmptyState = !isSearching && channels.length === 0;
 
-  return isOpen ? (
-    <Jumper.Root onClose={() => (onClose(), clearQuery())}>
-      <Jumper.Header
-        css={STYLES_EDIT_CHANNELS_HEADER}
-        style={{ paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}
-      >
-        <SVG.Hash width={16} />
-        <ChannelInput
-          value={searchQuery}
-          onChange={handleQueryChange}
-          searchResults={searchResults}
-          autoFocus={viewer?.slates?.length === 0}
-          onAddFileToChannel={handleAddFileToChannel}
-        />
-      </Jumper.Header>
-      <Jumper.Divider />
-      <Jumper.Item>
-        <Jumper.ObjectPreview file={file} />
-      </Jumper.Item>
-      <Jumper.Divider />
-      {showEmptyState ? (
-        <Jumper.Item style={{ flexGrow: 1 }} css={Styles.CONTAINER_CENTERED}>
-          <ChannelsEmpty />
-        </Jumper.Item>
-      ) : (
-        <Jumper.Item style={{ overflowY: "auto", flex: "1 0 0" }}>
-          <Channels
-            header="Private"
-            isCreatingChannel={isSearching && !channelAlreadyExists}
-            channels={isSearching ? searchResults.privateChannels : privateChannels}
-            searchQuery={searchQuery}
-            onAddFileToChannel={handleAddFileToChannel}
-            onCreateChannel={handleCreateChannel(false)}
-            file={file}
-            viewer={viewer}
-          />
-          <div style={{ marginTop: 20 }}>
-            <Channels
-              header="Public"
-              isPublic
-              searchQuery={searchQuery}
-              isCreatingChannel={isSearching && !channelAlreadyExists}
-              channels={isSearching ? searchResults.publicChannels : publicChannels}
+  return (
+    <Jumper.AnimatePresence>
+      {isOpen ? (
+        <Jumper.Root onClose={() => (onClose(), clearQuery())}>
+          <Jumper.Header
+            css={[STYLES_EDIT_CHANNELS_HEADER, Styles.CONTAINER_CENTERED]}
+            style={{ paddingTop: 0, paddingBottom: 0 }}
+          >
+            <SVG.Hash width={16} />
+            <ChannelInput
+              value={searchQuery}
+              onChange={handleQueryChange}
+              searchResults={searchResults}
+              autoFocus={viewer?.slates?.length === 0}
               onAddFileToChannel={handleAddFileToChannel}
-              onCreateChannel={handleCreateChannel(true)}
             />
-          </div>
-        </Jumper.Item>
-      )}
-    </Jumper.Root>
-  ) : null;
+          </Jumper.Header>
+          <Jumper.Divider />
+          <Jumper.Item>
+            <Jumper.ObjectPreview file={file} />
+          </Jumper.Item>
+          <Jumper.Divider />
+          {showEmptyState ? (
+            <Jumper.Item style={{ flexGrow: 1 }} css={Styles.CONTAINER_CENTERED}>
+              <ChannelsEmpty />
+            </Jumper.Item>
+          ) : (
+            <Jumper.Item style={{ overflowY: "auto", flex: "1 0 0" }}>
+              <Channels
+                header="Private"
+                isCreatingChannel={isSearching && !channelAlreadyExists}
+                channels={isSearching ? searchResults.privateChannels : privateChannels}
+                searchQuery={searchQuery}
+                onAddFileToChannel={handleAddFileToChannel}
+                onCreateChannel={handleCreateChannel(false)}
+                file={file}
+                viewer={viewer}
+              />
+              <div style={{ marginTop: 20 }}>
+                <Channels
+                  header="Public"
+                  isPublic
+                  searchQuery={searchQuery}
+                  isCreatingChannel={isSearching && !channelAlreadyExists}
+                  channels={isSearching ? searchResults.publicChannels : publicChannels}
+                  onAddFileToChannel={handleAddFileToChannel}
+                  onCreateChannel={handleCreateChannel(true)}
+                />
+              </div>
+            </Jumper.Item>
+          )}
+        </Jumper.Root>
+      ) : null}
+    </Jumper.AnimatePresence>
+  );
 }
 
 export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {

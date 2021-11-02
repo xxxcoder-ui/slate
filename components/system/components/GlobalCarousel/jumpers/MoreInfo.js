@@ -375,32 +375,36 @@ const STYLES_DOWNLOAD_SECTION = (theme) => css`
 export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
   const isFileOwner = !external && isOwner && viewer;
 
-  return isOpen ? (
-    <Jumper.Root onClose={onClose}>
-      <Jumper.Header>More info</Jumper.Header>
-      <Jumper.Divider />
-      <Jumper.Item
-        css={Styles.HORIZONTAL_CONTAINER}
-        style={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}
-      >
-        <CoverImageUpload file={file} viewer={viewer} isFileOwner={isFileOwner} />
-        <System.Divider
-          style={{ marginLeft: 20, marginRight: 20 }}
-          color="borderGrayLight"
-          width={1}
-          height="unset"
-        />
-        <FileMetadata file={file} style={{ width: "100%", marginTop: 14 }} />
-      </Jumper.Item>
-      <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
-        <DownloadButton
-          file={file}
-          viewer={viewer}
-          style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
-        />
-      </Jumper.Item>
-    </Jumper.Root>
-  ) : null;
+  return (
+    <Jumper.AnimatePresence>
+      {isOpen ? (
+        <Jumper.Root onClose={onClose}>
+          <Jumper.Header>More info</Jumper.Header>
+          <Jumper.Divider />
+          <Jumper.Item
+            css={Styles.HORIZONTAL_CONTAINER}
+            style={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}
+          >
+            <CoverImageUpload file={file} viewer={viewer} isFileOwner={isFileOwner} />
+            <System.Divider
+              style={{ marginLeft: 20, marginRight: 20 }}
+              color="borderGrayLight"
+              width={1}
+              height="unset"
+            />
+            <FileMetadata file={file} style={{ width: "100%", marginTop: 14 }} />
+          </Jumper.Item>
+          <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
+            <DownloadButton
+              file={file}
+              viewer={viewer}
+              style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
+            />
+          </Jumper.Item>
+        </Jumper.Root>
+      ) : null}
+    </Jumper.AnimatePresence>
+  );
 }
 
 export function MoreInfoMobile({ external, viewer, isOwner, file, isOpen, onClose }) {

@@ -153,17 +153,21 @@ function UpdateFileForm({ file, isMobile, onClose }) {
 /* -----------------------------------------------------------------------------------------------*/
 
 export function EditInfo({ file, isOpen, onClose }) {
-  return isOpen ? (
-    <Jumper.Root onClose={onClose}>
-      <Jumper.Header>Edit info</Jumper.Header>
-      <Jumper.Divider />
-      <Jumper.Item>
-        <Jumper.ObjectPreview file={file} />
-      </Jumper.Item>
-      <Jumper.Divider />
-      <UpdateFileForm key={file.id} file={file} isMobile={false} onClose={onClose} />
-    </Jumper.Root>
-  ) : null;
+  return (
+    <Jumper.AnimatePresence>
+      {isOpen ? (
+        <Jumper.Root onClose={onClose}>
+          <Jumper.Header>Edit info</Jumper.Header>
+          <Jumper.Divider />
+          <Jumper.Item>
+            <Jumper.ObjectPreview file={file} />
+          </Jumper.Item>
+          <Jumper.Divider />
+          <UpdateFileForm key={file.id} file={file} isMobile={false} onClose={onClose} />
+        </Jumper.Root>
+      ) : null}
+    </Jumper.AnimatePresence>
+  );
 }
 
 export function EditInfoMobile({ file, isOpen, onClose }) {

@@ -87,7 +87,6 @@ function CarouselHeader({
   file,
   current,
   total,
-  onAction,
 
   onClose,
   enableNextSlide,
@@ -96,25 +95,6 @@ function CarouselHeader({
   onPreviousSlide,
   ...props
 }) {
-  const [isHeaderVisible, setHeaderVisibility] = React.useState(true);
-  const timeoutRef = React.useRef();
-
-  const showHeader = () => {
-    clearTimeout(timeoutRef.current);
-    setHeaderVisibility(true);
-  };
-
-  const hideHeader = () => {
-    timeoutRef.current = setTimeout(() => {
-      setHeaderVisibility(false);
-    }, 500);
-  };
-
-  React.useEffect(() => {
-    timeoutRef.current = setTimeout(hideHeader, 3000);
-    return () => clearTimeout(timeoutRef.current);
-  }, []);
-
   // NOTE(amine): Detect if the text is overflowing to show the MORE button
   const elementRef = React.useRef();
   const isBodyOverflowing = useDetectTextOverflow({ ref: elementRef }, [file]);
@@ -143,6 +123,33 @@ function CarouselHeader({
     isEditInfoVisible ||
     isShareFileVisible ||
     isEditChannelsVisible;
+
+  const [isHeaderVisible, setHeaderVisibility] = React.useState(true);
+  const timeoutRef = React.useRef();
+
+  const showHeader = () => {
+    clearTimeout(timeoutRef.current);
+    setHeaderVisibility(true);
+  };
+
+  const hideHeader = (ms = 1000) => {
+    timeoutRef.current = setTimeout(() => {
+      if (isJumperOpen) return;
+      setHeaderVisibility(false);
+    }, ms);
+  };
+
+  React.useEffect(() => {
+    hideHeader(3000);
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (isJumperOpen) {
+      return;
+    }
+    hideHeader();
+  }, [isJumperOpen]);
 
   return (
     <>
@@ -185,19 +192,21 @@ function CarouselHeader({
         enablePreviousSlide={enablePreviousSlide}
         onNextSlide={onNextSlide}
         onPreviousSlide={onPreviousSlide}
-        showControls={isHeaderVisible || isJumperOpen}
+        showControls={isHeaderVisible}
         onClose={onClose}
         onMouseEnter={showHeader}
-        onMouseLeave={hideHeader}
+        onMouseOver={showHeader}
+        onMouseLeave={() => hideHeader()}
       />
 
       <motion.nav
         css={STYLES_HEADER_WRAPPER}
         initial={{ opacity: 0 }}
-        animate={{ opacity: isHeaderVisible || isJumperOpen ? 1 : 0 }}
+        animate={{ opacity: isHeaderVisible ? 1 : 0 }}
         transition={{ ease: "easeInOut", duration: 0.25 }}
         onMouseEnter={showHeader}
-        onMouseLeave={hideHeader}
+        onMouseOver={showHeader}
+        onMouseLeave={() => hideHeader()}
         {...props}
       >
         <div>

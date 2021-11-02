@@ -6,7 +6,11 @@ import * as Constants from "~/common/constants";
 
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { css } from "@emotion/react";
-import { AnimateSharedLayout, motion } from "framer-motion";
+import {
+  AnimateSharedLayout,
+  AnimatePresence as FramerAnimatePresence,
+  motion,
+} from "framer-motion";
 import { useEscapeKey } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 
@@ -38,22 +42,55 @@ const STYLES_JUMPER_ROOT = (theme) => css`
   }
 `;
 
+const STYLES_JUMPER_OVERLAY = (theme) => css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: ${theme.zindex.jumper};
+
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
+    background-color: ${theme.semantic.bgBlurLightTRN};
+  }
+`;
+
+const JumperContext = React.createContext({});
+const useJumperContext = () => React.useContext(JumperContext);
+
+function AnimatePresence({ children, ...props }) {
+  return <FramerAnimatePresence {...props}>{children}</FramerAnimatePresence>;
+}
+
 function Root({ children, onClose, ...props }) {
   useEscapeKey(onClose);
   return (
     <ModalPortal>
-      <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
+      <div>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 10, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
-          css={STYLES_JUMPER_ROOT}
-          {...props}
-        >
-          {children}
-        </motion.div>
-      </System.Boundary>
+          css={STYLES_JUMPER_OVERLAY}
+        />
+        <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
+          <JumperContext.Provider value={{ onClose }}>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 10, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              css={STYLES_JUMPER_ROOT}
+              {...props}
+            >
+              {children}
+            </motion.div>
+          </JumperContext.Provider>
+        </System.Boundary>
+      </div>
     </ModalPortal>
   );
 }
@@ -63,13 +100,25 @@ function Root({ children, onClose, ...props }) {
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_JUMPER_HEADER = css`
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  justify-content: space-between;
   padding: 17px 20px 15px;
 `;
 
-function Header({ children, css, ...props }) {
+function Header({ children, style, ...props }) {
+  const { onClose } = useJumperContext();
   return (
-    <div css={[STYLES_JUMPER_HEADER, css]} {...props}>
-      {children}
+    <div css={STYLES_JUMPER_HEADER} style={style}>
+      <div style={{ width: "100%" }} {...props}>
+        {children}
+      </div>
+      <button
+        css={Styles.BUTTON_RESET}
+        style={{ width: 24, height: 24, marginLeft: 12 }}
+        onClick={onClose}
+      >
+        <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
+      </button>
     </div>
   );
 }
@@ -135,4 +184,4 @@ function ObjectPreview({ file }) {
   );
 }
 
-export { Root, Header, Item, Divider, ObjectPreview };
+export { AnimatePresence, Root, Header, Item, Divider, ObjectPreview };

@@ -12,11 +12,6 @@ import { css } from "@emotion/react";
 import { useUploadContext } from "~/components/core/Upload/Provider";
 import { AnimatePresence, motion } from "framer-motion";
 
-const STYLES_JUMPER_HEADER = css`
-  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
-  padding: 17px 20px 15px;
-`;
-
 const STYLES_LINK_INPUT = (theme) => css`
   width: 392px;
   border-radius: 12;
@@ -62,11 +57,6 @@ const STYLES_FILES_UPLOAD_WRAPPER = css`
   padding-bottom: 55px;
 `;
 
-const STYLES_JUMPER_DISMISS_BUTTON = (theme) => css`
-  ${Styles.BUTTON_RESET};
-  color: ${theme.semantic.textGray};
-`;
-
 export function UploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { upload, uploadLink, hideUploadJumper }] = useUploadContext();
 
@@ -104,75 +94,65 @@ export function UploadJumper({ data }) {
   };
 
   return (
-    <>
-      <AnimatePresence>
-        {isUploadJumperVisible && (
-          <motion.div
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            css={STYLES_JUMPER_OVERLAY}
-          />
-        )}
-      </AnimatePresence>
-      <Jumper.Root isOpen={isUploadJumperVisible} onClose={hideUploadJumper}>
-        <Jumper.Item css={STYLES_JUMPER_HEADER}>
-          <System.H5 color="textBlack">Upload</System.H5>
-          <button
-            style={{ marginLeft: "auto" }}
-            css={STYLES_JUMPER_DISMISS_BUTTON}
-            onClick={hideUploadJumper}
-          >
-            <SVG.Dismiss width={20} style={{ display: "block" }} />
-          </button>
-        </Jumper.Item>
-        <Jumper.Divider />
-        <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
-          <div css={Styles.HORIZONTAL_CONTAINER}>
-            <System.Input
-              placeholder="Paste a link to save"
-              value={state.url}
-              inputCss={STYLES_LINK_INPUT}
-              style={{
-                boxShadow: state.urlError
-                  ? `0 0 0 1px ${Constants.system.red} inset`
-                  : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
-              }}
-              containerStyle={{ maxWidth: 600 }}
-              name="url"
-              type="url"
-              onChange={handleChange}
-              onSubmit={handleUploadLink}
-              autoFocus
+    <Jumper.AnimatePresence>
+      {isUploadJumperVisible ? (
+        <Jumper.Root onClose={hideUploadJumper}>
+          <Jumper.Header>
+            <System.H5 color="textBlack">Upload</System.H5>
+          </Jumper.Header>
+          <Jumper.Divider />
+          <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
+            <div css={Styles.HORIZONTAL_CONTAINER}>
+              <System.Input
+                placeholder="Paste a link to save"
+                value={state.url}
+                inputCss={STYLES_LINK_INPUT}
+                style={{
+                  boxShadow: state.urlError
+                    ? `0 0 0 1px ${Constants.system.red} inset`
+                    : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
+                }}
+                containerStyle={{ maxWidth: 600 }}
+                name="url"
+                type="url"
+                onChange={handleChange}
+                onSubmit={handleUploadLink}
+                autoFocus
+              />
+              <System.ButtonPrimary style={{ marginLeft: 8, width: 96 }} onClick={handleUploadLink}>
+                Save
+              </System.ButtonPrimary>
+            </div>
+          </Jumper.Item>
+          <Jumper.Divider />
+          <Jumper.Item css={STYLES_FILES_UPLOAD_WRAPPER}>
+            <input
+              css={STYLES_FILE_HIDDEN}
+              multiple
+              type="file"
+              id="file"
+              onChange={handleUpload}
             />
-            <System.ButtonPrimary style={{ marginLeft: 8, width: 96 }} onClick={handleUploadLink}>
-              Save
-            </System.ButtonPrimary>
-          </div>
-        </Jumper.Item>
-        <Jumper.Divider />
-        <Jumper.Item css={STYLES_FILES_UPLOAD_WRAPPER}>
-          <input css={STYLES_FILE_HIDDEN} multiple type="file" id="file" onChange={handleUpload} />
-          <System.H5 color="textGrayDark" as="p" style={{ textAlign: "center" }}>
-            Drop or select files to save to Slate
-            <br />
-            <System.P3 color="textGrayDark" as="span">
-              (we recommend uploading fewer than 200 files at a time)
-            </System.P3>
-          </System.H5>
-          <System.ButtonTertiary
-            type="label"
-            htmlFor="file"
-            style={{
-              marginTop: 23,
-              maxWidth: 122,
-            }}
-          >
-            Select files
-          </System.ButtonTertiary>
-        </Jumper.Item>
-      </Jumper.Root>
-    </>
+            <System.H5 color="textGrayDark" as="p" style={{ textAlign: "center" }}>
+              Drop or select files to save to Slate
+              <br />
+              <System.P3 color="textGrayDark" as="span">
+                (we recommend uploading fewer than 200 files at a time)
+              </System.P3>
+            </System.H5>
+            <System.ButtonTertiary
+              type="label"
+              htmlFor="file"
+              style={{
+                marginTop: 23,
+                maxWidth: 122,
+              }}
+            >
+              Select files
+            </System.ButtonTertiary>
+          </Jumper.Item>
+        </Jumper.Root>
+      ) : null}
+    </Jumper.AnimatePresence>
   );
 }

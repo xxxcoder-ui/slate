@@ -6,7 +6,6 @@ import { ModalPortal } from "../ModalPortal";
 import { Provider } from "~/components/core/Upload/Provider";
 import { Popup } from "~/components/core/Upload/Popup";
 import { UploadJumper as Jumper } from "~/components/core/Upload/Jumper";
-import { useUploadContext } from "~/components/core/Upload/Provider";
 
 import DropIndicator from "~/components/core/Upload/DropIndicator";
 
@@ -14,11 +13,10 @@ import DropIndicator from "~/components/core/Upload/DropIndicator";
  * Root
  * -----------------------------------------------------------------------------------------------*/
 const Root = ({ children, data }) => {
-  const [{ isUploadJumperVisible }] = useUploadContext();
   return (
     <>
       {children}
-      {isUploadJumperVisible && <Jumper data={data} />}
+      <Jumper data={data} />
       <ModalPortal>
         <Popup />
         <DropIndicator data={data} />

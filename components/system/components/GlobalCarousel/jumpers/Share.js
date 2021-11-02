@@ -107,31 +107,35 @@ const STYLES_SHARE_FILE_FOOTER = (theme) => css`
 const PROTO_SCHOOL_CID = "https://proto.school/anatomy-of-a-cid/01";
 
 export function Share({ file, data, viewer, isOpen, onClose }) {
-  return isOpen ? (
-    <Jumper.Root onClose={onClose}>
-      <Jumper.Header>Share</Jumper.Header>
-      <Jumper.Divider />
-      <Jumper.Item>
-        <Jumper.ObjectPreview file={file} />
-      </Jumper.Item>
-      <Jumper.Divider />
-      <Jumper.Item style={{ padding: 12 }}>
-        <FileSharingButtons file={file} data={data} viewer={viewer} />
-      </Jumper.Item>
-      <Jumper.Item css={STYLES_SHARE_FILE_FOOTER}>
-        <a
-          css={[Styles.LINK, Styles.HORIZONTAL_CONTAINER_CENTERED]}
-          style={{ marginLeft: "auto", color: Constants.semantic.textGrayDark }}
-          href={PROTO_SCHOOL_CID}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SVG.InfoCircle width={16} />
-          <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
-        </a>
-      </Jumper.Item>
-    </Jumper.Root>
-  ) : null;
+  return (
+    <Jumper.AnimatePresence>
+      {isOpen ? (
+        <Jumper.Root onClose={onClose}>
+          <Jumper.Header>Share</Jumper.Header>
+          <Jumper.Divider />
+          <Jumper.Item>
+            <Jumper.ObjectPreview file={file} />
+          </Jumper.Item>
+          <Jumper.Divider />
+          <Jumper.Item style={{ padding: 12 }}>
+            <FileSharingButtons file={file} data={data} viewer={viewer} />
+          </Jumper.Item>
+          <Jumper.Item css={STYLES_SHARE_FILE_FOOTER}>
+            <a
+              css={[Styles.LINK, Styles.HORIZONTAL_CONTAINER_CENTERED]}
+              style={{ marginLeft: "auto", color: Constants.semantic.textGrayDark }}
+              href={PROTO_SCHOOL_CID}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SVG.InfoCircle width={16} />
+              <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
+            </a>
+          </Jumper.Item>
+        </Jumper.Root>
+      ) : null}
+    </Jumper.AnimatePresence>
+  );
 }
 
 export function ShareMobile({ file, data, viewer, isOpen, onClose }) {
