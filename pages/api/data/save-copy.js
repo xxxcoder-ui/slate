@@ -105,12 +105,13 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  SearchManager.createFile(createdFiles);
-
   //NOTE(martina): leaving createdFiles out of the privacy recalculation since those should already have the correct privacy
   if (slate?.isPublic) {
-    Utilities.addToPublicCollectionUpdatePrivacy({ files: duplicateFiles });
+    await Utilities.addToPublicCollectionUpdatePrivacy({ files: duplicateFiles });
   }
+
+  let updatedFiles = await Data.getFilesByIds({ ids: filesToAddToSlate.map((file) => file.id) });
+  SearchManager.indexFile(updatedFiles); //NOTE(martina): using createFile instead of updateFile b/c createFile also works for existing files (it just overwrites)
 
   ViewerManager.hydratePartial(id, { library: true, slates: slate ? true : false });
 

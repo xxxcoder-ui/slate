@@ -139,18 +139,21 @@ async function update() {
 
 async function search() {
   //   await SearchManager.searchUser({ query: "image" });
-  //   await SearchManager.searchSlate({
-  //     query: "slate",
-  //     userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
-  //     globalSearch: true,
-  //   });
-  //   await SearchManager.searchFile({
-  //     query: "file",
-  //     userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
-  //     globalSearch: true,
-  //       tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
-  //   });
+  // await SearchManager.searchSlate({
+  //   query: "my slate",
+  //   userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
+  //   globalSearch: true,
+  // });
+  await SearchManager.searchFile({
+    query: "grilled cheese",
+    userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
+    globalSearch: true,
+    tagIds: [],
+    // tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
+  });
   //   await SearchManager.searchAll({ query: "slate", userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7" });
+
+  // await SearchManager.getFile({ id: "2892b652-5034-4e0f-b3b2-0352e0d64e17" });
 }
 
 async function setUpIndex() {
@@ -169,8 +172,8 @@ async function resetIndex() {
   await setUpIndex();
 }
 
-setUpIndex();
-// Promise.all([manage(), update(), search()]);
+// setUpIndex();
+Promise.all([manage(), update(), search()]);
 
 Logging.log(`FINISHED: search.js`);
 Logging.log(`          CTRL + C to return to terminal.`);

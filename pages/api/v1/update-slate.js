@@ -61,11 +61,16 @@ export default async (req, res) => {
       return res.status(500).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
     }
 
+    let updatedFiles;
     if (!updates.isPublic) {
-      Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
+      updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+        files: slate.objects,
+      });
     } else {
-      Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
+      updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
     }
+
+    SearchManager.updateFile(updatedFiles);
   }
 
   if (updates.data.name && updates.data.name !== slate.data.name) {

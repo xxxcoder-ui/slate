@@ -94,11 +94,15 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "UPDATE_COLLECTION_FAILED", error: true });
   }
 
+  let updatedFiles;
   if (slate.isPublic && !updates.isPublic) {
-    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
+    updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+      files: slate.objects,
+    });
   } else if (!slate.isPublic && updates.isPublic) {
-    Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
+    updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
   }
+  SearchManager.updateFile(updatedFiles);
 
   SearchManager.updateSlate(updatedSlate);
 

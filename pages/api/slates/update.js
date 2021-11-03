@@ -97,11 +97,16 @@ export default async (req, res) => {
 
   SearchManager.updateSlate(response);
 
+  let updatedFiles;
   if (slate.isPublic && !updates.isPublic) {
-    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
+    updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+      files: slate.objects,
+    });
   } else if (!slate.isPublic && updates.isPublic) {
-    Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
+    updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
   }
+
+  SearchManager.updateFile(updatedFiles);
 
   return res.status(200).send({ decorator: "SERVER_UPDATE_SLATE", slate: response });
 };
