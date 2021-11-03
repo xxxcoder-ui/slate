@@ -32,7 +32,7 @@ const STYLES_JUMPER_ROOT = (theme) => css`
   min-height: ${JUMPER_HEIGHT}px;
   z-index: ${theme.zindex.jumper};
   border-radius: 16px;
-  border: 1px solid ${theme.semantic.borderGrayLight};
+  border: 1px solid ${theme.semantic.borderGrayLight4};
   overflow: hidden;
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
