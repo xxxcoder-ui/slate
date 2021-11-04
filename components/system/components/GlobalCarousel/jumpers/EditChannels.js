@@ -213,7 +213,16 @@ function Channels({
                 onClick={(e) => (e.stopPropagation(), onCreateChannel(searchQuery))}
                 title={searchQuery}
               >
-                <SVG.Plus width={16} height={16} style={{ pointerEvents: "none" }} />
+                <SVG.Plus
+                  width={16}
+                  height={16}
+                  style={{
+                    position: "relative",
+                    top: -1,
+                    verticalAlign: "middle",
+                    pointerEvents: "none",
+                  }}
+                />
                 <span style={{ marginLeft: 4 }}>{searchQuery}</span>
               </ChannelButton>
             </motion.div>
