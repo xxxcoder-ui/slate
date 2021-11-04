@@ -6,10 +6,49 @@ import * as Logging from "~/common/logging";
 import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { useUploadContext } from "~/components/core/Upload/Provider";
 import { useUploadStore } from "~/components/core/Upload/store";
+import { useUploadOnboardingContext } from "~/components/core/Onboarding/Upload";
+
+import DownloadExtensionButton from "~/components/core/Extension/DownloadExtensionButton";
+
+const STYLES_EXTENSION_BAR = (theme) => css`
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  justify-content: space-between;
+
+  background-color: ${theme.semantic.bgWhite};
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
+    background-color: ${theme.semantic.bgBlurLight};
+  }
+`;
+
+function ExtensionBar() {
+  const [isVisible, setVisibility] = React.useState(true);
+  const hideExtensionBar = () => setVisibility(false);
+
+  if (!isVisible) return null;
+
+  return (
+    <Jumper.Item css={STYLES_EXTENSION_BAR}>
+      <System.P2 color="textBlack">Save from anywhere on the Web</System.P2>
+      <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+        <DownloadExtensionButton style={{ minHeight: 24 }} />
+        <button
+          css={Styles.BUTTON_RESET}
+          style={{ marginLeft: 16, color: Constants.semantic.textGray }}
+          onClick={hideExtensionBar}
+        >
+          <SVG.Dismiss width={16} style={{ display: "block" }} />
+        </button>
+      </div>
+    </Jumper.Item>
+  );
+}
 
 const STYLES_LINK_INPUT = (theme) => css`
   background-color: ${theme.semantic.bgWhite};
@@ -48,6 +87,7 @@ export function UploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
 
   const { upload, uploadLink } = useUploadStore((store) => store.handlers);
+  const onboardingContext = useUploadOnboardingContext();
 
   const [state, setState] = React.useState({
     url: "",
@@ -57,6 +97,7 @@ export function UploadJumper({ data }) {
   const handleUpload = (e) => {
     const { files } = FileUtilities.formatUploadedFiles({ files: e.target.files });
     upload({ files, slate: data });
+    onboardingContext.goToNextStep();
     hideUploadJumper();
   };
 
@@ -75,6 +116,7 @@ export function UploadJumper({ data }) {
 
     uploadLink({ url: state.url, slate: data });
     setState({ url: "", urlError: false });
+    onboardingContext.goToNextStep();
     hideUploadJumper();
   };
 
@@ -82,13 +124,19 @@ export function UploadJumper({ data }) {
     setState((prev) => ({ ...prev, [e.target.name]: e.target.value, urlError: false }));
   };
 
+  const isOnboarding = onboardingContext.currentStep === onboardingContext.steps.jumperWalkthrough;
+
   return (
     <Jumper.AnimatePresence>
       {isUploadJumperVisible ? (
-        <Jumper.Root onClose={hideUploadJumper}>
+        <Jumper.Root
+          withOverlay={!isOnboarding}
+          onClose={() => (onboardingContext.goToNextStep(), hideUploadJumper())}
+        >
           <Jumper.Header>
             <System.H5 color="textBlack">Upload</System.H5>
           </Jumper.Header>
+          {isOnboarding && <ExtensionBar />}
           <Jumper.Divider />
           <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
             <div css={Styles.HORIZONTAL_CONTAINER}>

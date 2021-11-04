@@ -19,6 +19,7 @@ import { Show } from "~/components/utility/Show";
 import { useMediaQuery } from "~/common/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchStore } from "~/components/core/Search/store";
+import { UploadOnboarding } from "~/components/core/Onboarding/Upload";
 
 const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   position: absolute;
@@ -95,6 +96,7 @@ const STYLES_HEADER = (theme) => css`
 `;
 
 const STYLES_UPLOAD_BUTTON = css`
+  position: relative;
   ${Styles.CONTAINER_CENTERED};
   background-color: ${Constants.semantic.bgGrayLight};
   border-radius: 8px;
@@ -155,22 +157,28 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
             {/**TODO: update Search component */}
             <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
           </div>
-          <Upload.Provider page={page} data={data} viewer={viewer}>
-            <Upload.Root data={data}>
-              <div css={STYLES_RIGHT}>
-                <UserActions
-                  uploadAction={
-                    <Upload.Trigger viewer={viewer} aria-label="Upload" css={STYLES_UPLOAD_BUTTON}>
-                      <SVG.Plus height="16px" />
-                    </Upload.Trigger>
-                  }
-                  isSearching={isSearching}
-                  isSignedOut={isSignedOut}
-                  onAction={onAction}
-                />
-              </div>
-            </Upload.Root>
-          </Upload.Provider>
+          <UploadOnboarding viewer={viewer}>
+            <Upload.Provider page={page} data={data} viewer={viewer}>
+              <Upload.Root data={data}>
+                <div css={STYLES_RIGHT}>
+                  <UserActions
+                    uploadAction={
+                      <Upload.Trigger
+                        viewer={viewer}
+                        aria-label="Upload"
+                        css={STYLES_UPLOAD_BUTTON}
+                      >
+                        <SVG.Plus height="16px" />
+                      </Upload.Trigger>
+                    }
+                    isSearching={isSearching}
+                    isSignedOut={isSignedOut}
+                    onAction={onAction}
+                  />
+                </div>
+              </Upload.Root>
+            </Upload.Provider>
+          </UploadOnboarding>
         </div>
         <Show when={mobile && state.popup === "profile"}>
           <ApplicationUserControlsPopup
