@@ -11,6 +11,7 @@ import MarkdownFrame from "~/components/core/MarkdownFrame";
 import SlateLinkObject from "~/components/core/SlateLinkObject";
 
 import { css } from "@emotion/react";
+import { Show } from "~/components/utility/Show";
 
 const STYLES_FAILURE = css`
   color: ${Constants.system.white};
@@ -20,8 +21,6 @@ const STYLES_FAILURE = css`
   font-size: 24px;
   margin: 0;
   padding: 24px 36px;
-  height: 100px;
-  border-radius: 4px;
   width: 100%;
   min-height: 10%;
   height: 100%;
@@ -39,7 +38,8 @@ const STYLES_OBJECT = css`
   user-select: none;
 `;
 
-const STYLES_ASSET = css`
+const STYLES_ASSET = (theme) => css`
+  position: relative;
   user-select: none;
   width: 100%;
   margin: 0;
@@ -50,6 +50,11 @@ const STYLES_ASSET = css`
   align-items: center;
   justify-content: center;
   position: relative;
+  @supports ((-webkit-backdrop-filter: blur(500px)) or (backdrop-filter: blur(500px))) {
+    background-color: ${theme.semantic.bgBlurWhiteTRN};
+    -webkit-backdrop-filter: blur(500px);
+    backdrop-filter: blur(500px);
+  }
 `;
 
 const STYLES_IMAGE = css`
@@ -57,6 +62,21 @@ const STYLES_IMAGE = css`
   display: block;
   max-width: 100%;
   max-height: 100%;
+`;
+
+const STYLES_IMAGE_WRAPPER = css`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+const STYLES_IMAGE_BLUR = css`
+  top: 0;
+  left: 0;
+  position: absolute;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
 `;
 
 const STYLES_IFRAME = (theme) => css`
@@ -103,7 +123,7 @@ export default class SlateMediaObject extends React.Component {
       return (
         <>
           {isMobile ? (
-            <a href={url} target="_blank" style={{ textDecoration: "none" }}>
+            <a href={url} target="_blank" style={{ textDecoration: "none", height: "100%" }}>
               <div css={STYLES_FAILURE}>Tap to open PDF in new tab</div>
             </a>
           ) : (
@@ -183,14 +203,19 @@ export default class SlateMediaObject extends React.Component {
 
     if (Validations.isPreviewableImage(type)) {
       return (
-        <div css={STYLES_ASSET}>
-          <img
-            css={STYLES_IMAGE}
-            src={url}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          />
+        <div css={STYLES_IMAGE_WRAPPER}>
+          <Show when={!Validations.isGif(type)}>
+            <div style={{ backgroundImage: `url(${url})` }} css={STYLES_IMAGE_BLUR} />
+          </Show>
+          <div css={STYLES_ASSET}>
+            <img
+              css={STYLES_IMAGE}
+              src={url}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            />
+          </div>
         </div>
       );
     }

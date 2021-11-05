@@ -180,16 +180,16 @@ export const H4 = ({ as = "h4", nbrOflines, children, color, ...props }) => {
   );
 };
 
-export const H5 = ({ as = "h5", nbrOflines, children, color, ...props }) => {
+export const H5 = React.forwardRef(({ as = "h5", nbrOflines, children, color, ...props }, ref) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
   const COLOR_STYLES = useColorProp(color);
 
   return jsx(
     as,
-    { ...props, css: [Styles.H5, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    { ...props, css: [Styles.H5, TRUNCATE_STYLE, COLOR_STYLES, props?.css], ref },
     children
   );
-};
+});
 
 export const H6 = ({ as = "h6", nbrOflines, children, color, ...props }) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
@@ -224,15 +224,15 @@ export const P2 = ({ as = "p", nbrOflines, children, color, ...props }) => {
   );
 };
 
-export const P3 = ({ as = "p", nbrOflines, children, color, ...props }) => {
+export const P3 = React.forwardRef(({ as = "p", nbrOflines, children, color, ...props }, ref) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
   const COLOR_STYLES = useColorProp(color);
   return jsx(
     as,
-    { ...props, css: [Styles.P3, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    { ...props, css: [Styles.P3, TRUNCATE_STYLE, COLOR_STYLES, props?.css], ref },
     children
   );
-};
+});
 
 export const C1 = ({ as = "p", nbrOflines, children, color, ...props }) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);

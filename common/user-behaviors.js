@@ -197,24 +197,24 @@ export const removeFromSlate = async ({ slate, ids }) => {
 // };
 
 //NOTE(martina): save copy includes add to slate now. If it's already in the user's files but not in that slate, it'll skip the adding to files and just add to slate
-export const saveCopy = async ({ files, slate }) => {
+export const saveCopy = async ({ files, slate, showAlerts = true }) => {
   let response = await Actions.saveCopy({ files, slate });
   if (Events.hasError(response)) {
     return false;
   }
   let message = Strings.formatAsUploadMessage(response.data.added, response.data.skipped, slate);
-  Events.dispatchMessage({ message, status: !response.data.added ? null : "INFO" });
+  if (showAlerts) Events.dispatchMessage({ message, status: !response.data.added ? null : "INFO" });
   return response;
 };
 
-export const download = async (file) => {
+export const download = async (file, rootRef) => {
   Actions.createDownloadActivity({ file });
   if (file.isLink) return;
   if (Validations.isUnityType(file.type)) {
     return await downloadZip(file);
   }
   let uri = Strings.getURLfromCID(file.cid);
-  Window.saveAs(uri, file.filename);
+  await Window.saveAs(uri, file.filename, rootRef);
   return { data: true };
 };
 

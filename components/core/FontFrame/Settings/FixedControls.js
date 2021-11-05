@@ -53,34 +53,43 @@ const CONTROLS_DARKMODE_WRAPPER = (theme) => css`
   }
 `;
 
-const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) => css`
-  padding: 8px 12px;
-  margin: 0;
-  border-radius: 4px;
-  background: none;
-  border: 1px solid
-    ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
-  cursor: pointer;
-  ${isActive &&
+const CONTROLS_SETTINGS_BUTTON = (isActive) => (theme) =>
   css`
-    background-color: ${theme.fontPreviewDarkMode
-      ? theme.system.grayDark4
-      : theme.system.grayLight5};
-  `};
-  path {
-    ${isActive
-      ? css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
-        `
-      : css`
-          stroke: ${theme.fontPreviewDarkMode ? theme.system.grayLight2 : theme.semantic.textGray};
-        `}
-  }
-`;
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 4px;
+    background: none;
+    border: 1px solid
+      ${theme.fontPreviewDarkMode ? theme.semantic.textGrayDark : theme.system.grayLight5};
+    cursor: pointer;
+    ${isActive &&
+    css`
+      background-color: ${theme.fontPreviewDarkMode
+        ? theme.system.grayDark4
+        : theme.system.grayLight5};
+    `};
+    path {
+      ${isActive
+        ? css`
+            stroke: ${theme.fontPreviewDarkMode ? theme.system.white : theme.system.black};
+          `
+        : css`
+            stroke: ${theme.fontPreviewDarkMode
+              ? theme.system.grayLight2
+              : theme.semantic.textGray};
+          `}
+    }
+  `;
 
-export const FixedControls = ({ onDarkMode, onLightMode, onToggleSettings, isSettingsVisible }) => {
+export const FixedControls = ({
+  onDarkMode,
+  onLightMode,
+  onToggleSettings,
+  isSettingsVisible,
+  ...props
+}) => {
   return (
-    <div css={CONTROLS_STYLES_WRAPPER}>
+    <div css={CONTROLS_STYLES_WRAPPER} {...props}>
       <div>
         <button css={CONTROLS_SETTINGS_BUTTON(isSettingsVisible)} onClick={onToggleSettings}>
           <SVG.Sliders height={16} width={16} />

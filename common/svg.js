@@ -31,8 +31,7 @@ export const Link = (props) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      height={props.height}
-      style={props.style}
+      {...props}
     >
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
@@ -119,6 +118,8 @@ export const Undo = (props) => {
 export const Edit = (props) => {
   return (
     <svg
+      height={16}
+      width={16}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -126,8 +127,7 @@ export const Edit = (props) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      height={props.height}
-      style={props.style}
+      {...props}
     >
       <path d="M17 3C17.2626 2.73735 17.5744 2.52901 17.9176 2.38687C18.2608 2.24473 18.6286 2.17157 19 2.17157C19.3714 2.17157 19.7392 2.24473 20.0824 2.38687C20.4256 2.52901 20.7374 2.73735 21 3C21.2626 3.26264 21.471 3.57444 21.6131 3.9176C21.7553 4.26077 21.8284 4.62856 21.8284 5C21.8284 5.37143 21.7553 5.73923 21.6131 6.08239C21.471 6.42555 21.2626 6.73735 21 7L7.5 20.5L2 22L3.5 16.5L17 3Z" />
     </svg>
@@ -979,6 +979,8 @@ export const EyeOff = (props) => (
 
 export const Dismiss = (props) => (
   <svg
+    height={16}
+    width={16}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
@@ -987,7 +989,6 @@ export const Dismiss = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     // tabIndex="0"
-    height={props.height}
     style={props.style}
     {...props}
   >
@@ -1063,6 +1064,8 @@ export const Information = (props) => (
 
 export const InfoCircle = (props) => (
   <svg
+    height={16}
+    width={16}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
@@ -1658,6 +1661,8 @@ export const ArrowDownLeft = (props) => (
 
 export const Hash = (props) => (
   <svg
+    height={16}
+    width={16}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 16 16"
     fill="none"
@@ -2264,17 +2269,24 @@ export const Instagram = (props) => (
   </svg>
 );
 
-export const CheckCircle = (props) => (
+export const UploadCloud = (props) => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M14.667 7.387V8a6.666 6.666 0 11-3.954-6.093"
+      d="M10.667 10.667L8 8l-2.667 2.667M8 8v6"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M14.667 2.667L8 9.34l-2-2"
+      d="M13.593 12.26A3.333 3.333 0 0012 6h-.84A5.333 5.333 0 102 10.867"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M10.667 10.667L8 8l-2.667 2.667"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"
@@ -2295,10 +2307,41 @@ export const XCircle = (props) => (
   </svg>
 );
 
+export const CheckCircle = (props) => (
+  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M14.667 7.887V8.5a6.666 6.666 0 11-3.954-6.093"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M14.667 3.167L8 9.84l-2-2"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const AlertTriangle = (props) => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M6.86 2.573L1.213 12a1.333 1.333 0 001.14 2h11.294a1.333 1.333 0 001.14-2L9.14 2.573a1.333 1.333 0 00-2.28 0v0zM8 6v2.667M8 11.333h.007"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Hexagon = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M14 10.666V5.333a1.333 1.333 0 00-.667-1.153L8.667 1.513a1.333 1.333 0 00-1.334 0L2.667 4.18A1.333 1.333 0 002 5.333v5.333a1.333 1.333 0 00.667 1.154l4.666 2.666a1.333 1.333 0 001.334 0l4.666-2.666A1.333 1.333 0 0014 10.666z"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"

@@ -18,7 +18,7 @@ export default async (slate) => {
             type: "CREATE_SLATE",
           }).into("activity");
 
-          await Data.recalcUserSlatecount({ userId: ownerId });
+          await Data.recalcUserSlatecount({ userId: slate.ownerId });
         } else {
           const activityQuery = await DB.insert({
             ownerId: slate.ownerId,

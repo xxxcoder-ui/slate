@@ -40,7 +40,8 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_SLATE_FAILED", error: true });
   }
 
-  ViewerManager.hydratePartial(id, { slates: true });
+  const { hydrateViewer = true } = req.body.data;
+  if (hydrateViewer) ViewerManager.hydratePartial(id, { slates: true });
 
   SearchManager.indexSlate(slate);
 

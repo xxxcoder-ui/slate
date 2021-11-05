@@ -5,6 +5,7 @@ import * as Constants from "~/common/constants";
 
 import { P3 } from "~/components/system/components/Typography";
 import { css } from "@emotion/react";
+import { useImage } from "~/common/hooks";
 
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 import LinkPlaceholder from "~/components/core/ObjectPreview/placeholders/Link";
@@ -120,29 +121,3 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
     </ObjectPreviewPrimitive>
   );
 }
-
-const useImage = ({ src, maxWidth }) => {
-  const [imgState, setImgState] = React.useState({
-    loaded: false,
-    error: true,
-    overflow: false,
-  });
-
-  React.useEffect(() => {
-    if (!src) setImgState({ error: true, loaded: true });
-
-    const img = new Image();
-    img.src = src;
-
-    img.onload = () => {
-      if (maxWidth && img.naturalWidth < maxWidth) {
-        setImgState((prev) => ({ ...prev, loaded: true, error: false, overflow: true }));
-      } else {
-        setImgState({ loaded: true, error: false });
-      }
-    };
-    img.onerror = () => setImgState({ loaded: true, error: true });
-  }, []);
-
-  return imgState;
-};

@@ -169,41 +169,49 @@ export function Popup() {
     { hideUploadPopup, expandUploadSummary, collapseUploadSummary, cancelAutoCollapseOnMouseEnter },
   ] = useUploadPopup({ totalFilesSummary });
 
-  if (!popupState.isVisible) return null;
-
   return (
-    <div
-      css={STYLES_POPUP_WRAPPER}
-      onMouseEnter={handleOnMouseEnter}
-      onMouseLeave={handleOnMouseLeave}
-    >
-      <div css={[STYLES_POPUP_CONTENT]}>
-        <AnimatePresence>
-          {popupState.isSummaryExpanded ? (
-            <motion.div
-              initial={{ y: 400 }}
-              animate={{ y: 0 }}
-              exit={{ y: 400 }}
-              transition={{ type: "spring", stiffness: 170, damping: 26 }}
-              onMouseEnter={cancelAutoCollapseOnMouseEnter}
+    <AnimatePresence>
+      {popupState.isVisible ? (
+        <motion.div
+          css={STYLES_POPUP_WRAPPER}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          onMouseEnter={handleOnMouseEnter}
+          onMouseLeave={handleOnMouseLeave}
+        >
+          <div css={[STYLES_POPUP_CONTENT]}>
+            <AnimatePresence>
+              {popupState.isSummaryExpanded ? (
+                <motion.div
+                  initial={{ y: 400 }}
+                  animate={{ y: 0 }}
+                  exit={{ y: 400 }}
+                  transition={{ type: "spring", stiffness: 170, damping: 26 }}
+                  onMouseEnter={cancelAutoCollapseOnMouseEnter}
+                >
+                  <Summary uploadSummary={uploadSummary} />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+            <Header
+              totalFilesSummary={totalFilesSummary}
+              popupState={popupState}
+              expandUploadSummary={expandUploadSummary}
+              collapseUploadSummary={collapseUploadSummary}
+            />
+          </div>
+          <Show when={isHovered && isFinished}>
+            <button
+              css={STYLES_DISMISS_BUTTON}
+              onClick={() => (hideUploadPopup(), resetUploadState())}
             >
-              <Summary uploadSummary={uploadSummary} />
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-        <Header
-          totalFilesSummary={totalFilesSummary}
-          popupState={popupState}
-          expandUploadSummary={expandUploadSummary}
-          collapseUploadSummary={collapseUploadSummary}
-        />
-      </div>
-      <Show when={isHovered && isFinished}>
-        <button css={STYLES_DISMISS_BUTTON} onClick={() => (hideUploadPopup(), resetUploadState())}>
-          <SVG.Dismiss width={16} />
-        </button>
-      </Show>
-    </div>
+              <SVG.Dismiss width={16} />
+            </button>
+          </Show>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   );
 }
 

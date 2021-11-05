@@ -16,9 +16,12 @@ const STYLES_ASSET = (theme) => css`
   will-change: transform;
   color: ${theme.darkmode ? theme.system.grayLight6 : theme.system.black};
   background-color: ${theme.darkmode ? theme.system.black : theme.system.grayLight6};
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 64px 16px;
+  }
 `;
 
-const STYLES_BODY = css`
+const STYLES_BODY = (theme) => css`
   width: 100%;
   /* 687px to ensure we have maximum 70ch per line */
   max-width: 687px;
@@ -60,6 +63,25 @@ const STYLES_BODY = css`
   h4 + * {
     margin-top: 0px;
   }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    p,
+    ul,
+    ol,
+    code,
+    pre,
+    div {
+      margin-top: 16px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin-top: 28px;
+      margin-bottom: 16px;
+    }
+  }
 `;
 
 const STYLES_IMG = css`
@@ -89,6 +111,9 @@ const STYLES_DIVIDER = (theme) => css`
   margin-bottom: 58px;
   background-color: ${theme.system.grayLight2};
   transition: height 0.3s;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    top: -64px;
+  }
 `;
 
 const STYLE_PROGRESS = (theme) => css`

@@ -16,8 +16,8 @@ const Root = ({ children, data }) => {
   return (
     <>
       {children}
+      <Jumper data={data} />
       <ModalPortal>
-        <Jumper data={data} />
         <Popup />
         <DropIndicator data={data} />
       </ModalPortal>

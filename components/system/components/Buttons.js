@@ -59,6 +59,7 @@ export const ButtonPrimary = (props) => {
       <button
         css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        type={props.type}
       >
         <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
@@ -85,6 +86,7 @@ export const ButtonPrimary = (props) => {
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
         onClick={props.onClick}
         children={props.children}
+        type={props.type}
       />
     );
   }
@@ -95,6 +97,7 @@ export const ButtonPrimary = (props) => {
       style={{ width: props.full ? "100%" : "auto", ...props.style }}
       onClick={props.onClick}
       children={props.children}
+      type={props.type}
     />
   );
 };
@@ -133,6 +136,7 @@ export const ButtonSecondary = (props) => {
       <button
         css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        type={props.type}
       >
         <LoaderSpinner style={{ height: 16, width: 16 }} />
       </button>
@@ -157,6 +161,7 @@ export const ButtonSecondary = (props) => {
       css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
       onClick={props.onClick}
       children={props.children}
+      type={props.type}
       style={{ width: props.full ? "100%" : "auto", ...props.style }}
     />
   );
@@ -172,6 +177,7 @@ const STYLES_BUTTON_TERTIARY = css`
   color: ${Constants.system.black};
   background-color: ${Constants.system.white};
   box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset;
+  text-decoration: none;
 
   :hover {
     background-color: #fcfcfc;
@@ -187,41 +193,57 @@ const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
   ${STYLES_BUTTON}
   cursor: pointer;
   background-color: transparent;
+  text-decoration: none;
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonTertiary = (props) => {
-  if (props.loading) {
+export const ButtonTertiary = ({ loading, type, transparent, full, style, children, ...props }) => {
+  if (loading) {
     return (
       <button
-        css={props.transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={type}
+        {...props}
       >
         <LoaderSpinner style={{ height: 16, width: 16 }} />
       </button>
     );
   }
 
-  if (props.type === "label") {
+  if (type === "label") {
     return (
       <label
-        css={props.transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-        onClick={props.onClick}
-        children={props.children}
-        type={props.label}
-        htmlFor={props.htmlFor}
-      />
+        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        {...props}
+      >
+        {children}
+      </label>
+    );
+  }
+
+  if (type === "link") {
+    return (
+      <a
+        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        {...props}
+      >
+        {children}
+      </a>
     );
   }
 
   return (
     <button
-      css={props.transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
-      onClick={props.onClick}
-      children={props.children}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-    />
+      css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+      style={{ width: full ? "100%" : "auto", ...style }}
+      type={type}
+      {...props}
+    >
+      {children}
+    </button>
   );
 };
 
@@ -303,6 +325,7 @@ export const ButtonWarning = (props) => {
       <button
         css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        type={props.type}
       >
         <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
@@ -327,6 +350,7 @@ export const ButtonWarning = (props) => {
       <button
         css={STYLES_BUTTON_WARNING_DISABLED}
         style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        type={props.type}
         onClick={props.onClick}
         children={props.children}
       />
@@ -337,6 +361,7 @@ export const ButtonWarning = (props) => {
     <button
       css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
       style={{ width: props.full ? "100%" : "auto", ...props.style }}
+      type={props.type}
       onClick={props.onClick}
       children={props.children}
     />
