@@ -106,6 +106,9 @@ const cleanFile = ({
 };
 
 const indexObject = async (objects, cleanObject, index) => {
+  console.log("index object");
+  console.log(objects);
+  console.log(index);
   try {
     if (Array.isArray(objects)) {
       let body = [];
@@ -145,6 +148,9 @@ export const indexFile = async (files) => {
 };
 
 const updateObject = async (objects, cleanObject, index) => {
+  console.log("update object");
+  console.log(objects);
+  console.log(index);
   try {
     if (Array.isArray(objects)) {
       let body = [];
@@ -185,6 +191,9 @@ export const updateFile = async (files) => {
 };
 
 const deleteObject = async (objects, index) => {
+  console.log("delete object");
+  console.log(objects);
+  console.log(index);
   try {
     if (Array.isArray(objects)) {
       let body = [];

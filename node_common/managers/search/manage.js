@@ -98,7 +98,65 @@ export const createSlateIndex = async () => {
 };
 
 export const createFileIndex = async () => {
+  // let props = {
+  //   settings: {
+  //     number_of_shards: 1,
+  //     number_of_replicas: 0,
+  //     index: {
+  //       analysis: {
+  //         char_filter: {
+  //           my_pattern: {
+  //             type: "pattern_replace",
+  //             pattern: "a",
+  //             replacement: "u",
+  //           },
+  //         },
+  //         analyser: {
+  //           my_analyser: {
+  //             type: "custom",
+  //             tokenizer: "whitespace",
+  //             char_filter: ["my_pattern"],
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  //   mappings: {
+  //     my_type: {
+  //       _source: {
+  //         enabled: true,
+  //       },
+  //     },
+  //   },
+  //   properties: {
+  //     test: {
+  //       type: "string",
+  //       store: true,
+  //       index: "analysed",
+  //       analyser: "my_analyser",
+  //       index_options: "positions",
+  //     },
+  //   },
+  // };
+
   let properties = {
+    settings: {
+      analysis: {
+        char_filter: {
+          clean_punctuation_char_filter: {
+            type: "pattern_replace",
+            pattern: "[._-]+",
+            replacement: " ",
+          },
+        },
+        analyzer: {
+          clean_punctuation_analyzer: {
+            tokenizer: "whitespace",
+            char_filter: ["clean_punctuation_char_filter"],
+          },
+        },
+      },
+    },
     mappings: {
       properties: {
         id: {
@@ -114,10 +172,11 @@ export const createFileIndex = async () => {
         },
         filename: {
           type: "text",
-          index: false,
+          analyzer: "clean_punctuation_analyzer",
         },
         name: {
           type: "text",
+          analyzer: "clean_punctuation_analyzer",
         },
         size: {
           type: "integer",
@@ -227,7 +286,7 @@ export const createFileIndex = async () => {
 
 export const deleteUserIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "users" });
+    let result = await searchClient.indices.delete({ index: usersIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -236,7 +295,7 @@ export const deleteUserIndex = async () => {
 
 export const deleteSlateIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "slates" });
+    let result = await searchClient.indices.delete({ index: slatesIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -245,40 +304,9 @@ export const deleteSlateIndex = async () => {
 
 export const deleteFileIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "files" });
+    let result = await searchClient.indices.delete({ index: filesIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
   }
 };
-
-//make it synonym search
-//make searchall work across the different types
-//pagination
-
-//use index = _all or empty string to perform the operation on all indices
-//specify from and size to paginate (from = 0, size = 10 by default)
-
-//make sure that for the non index fields, you aren't able to search by them
-//make sure that for slatename type hyphenated things, you're able to search for them as titles with sapces. treat hyphens like spaces
-
-//should we do filetype filtering and isLink / isNotLink on the front end? If so we don't have to index them here on the backend
-
-//if you index again and leave something out, it'll then remove that. it basically overwrites the existing one
-//what about update? does that ignore things that are left out? what if you try to update something that doesn't exist?
-
-//         { "range": { "publish_date": { "gte": "2015-01-01", "lte": ... }}}
-//make it so it can find foggy.jpeg with just foggy. Either treat periods as spaces, or be able to search incomplete queries (wild card search). maybe using tokenizer?
-
-//how to make this work with checking a value INSIDE the tags object? do we need to change the shape of the tags object?
-//add auto suggest
-//did boost work?
-//sort search results by whether it's your result or another user's
-
-//test out slates and files add and search
-//make sure searching with spaces in a hyphenated slate name works
-//make sure filtering by tag works for files
-//test out delete
-//detail all the filtering types and make convenience functions for them
-
-//sort by ownerId match first?

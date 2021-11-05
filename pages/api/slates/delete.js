@@ -39,7 +39,10 @@ export default async (req, res) => {
   SearchManager.deleteSlate(slate);
 
   if (slate.isPublic) {
-    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
+    let updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+      files: slate.objects,
+    });
+    SearchManager.updateFile(updatedFiles);
   }
 
   return res.status(200).send({ decorator: "SERVER_DELETE_SLATE", error: false });

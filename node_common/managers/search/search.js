@@ -87,6 +87,7 @@ export const searchMultiple = async ({
           fuzziness: "AUTO",
           type: "best_fields",
           fields: [
+            "filename^2",
             "name^2",
             "body",
             "author",
@@ -233,11 +234,11 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
     const must = [
       {
         multi_match: {
-          //or maybe do combined_fields
           query,
           fuzziness: "AUTO",
           type: "best_fields",
           fields: [
+            "filename^2",
             "name^2",
             "body",
             "author",
@@ -342,4 +343,22 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
   } catch (e) {
     console.log(e);
   }
+};
+
+export const getUser = async ({ id }) => {
+  const { body } = await searchClient.get({ index: usersIndex, id });
+  console.log(body);
+  return body;
+};
+
+export const getSlate = async ({ id }) => {
+  const { body } = await searchClient.get({ index: slatesIndex, id });
+  console.log(body);
+  return body;
+};
+
+export const getFile = async ({ id }) => {
+  const { body } = await searchClient.get({ index: filesIndex, id });
+  console.log(body);
+  return body;
 };

@@ -52,7 +52,10 @@ export default async (req, res) => {
   }
 
   if (slate.isPublic) {
-    Utilities.removeFromPublicCollectionUpdatePrivacy({ files: slate.objects });
+    let updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+      files: slate.objects,
+    });
+    SearchManager.updateFile(updatedFiles);
   }
 
   ViewerManager.hydratePartial(id, { slates: true });

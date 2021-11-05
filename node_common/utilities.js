@@ -386,9 +386,6 @@ export const removeFromPublicCollectionUpdatePrivacy = async ({ files }) => {
       madePrivate.push(updatedFile);
     }
   }
-  if (madePrivate.length) {
-    SearchManager.updateFile(madePrivate);
-  }
   return madePrivate;
 };
 
@@ -401,9 +398,6 @@ export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
     if (!file.isPublic && updatedFile.isPublic) {
       madePublic.push(updatedFile);
     }
-  }
-  if (madePublic.length) {
-    SearchManager.updateFile(madePublic);
   }
   return madePublic;
 };

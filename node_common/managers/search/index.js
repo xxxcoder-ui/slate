@@ -11,6 +11,9 @@ import {
   searchUser,
   searchSlate,
   searchFile,
+  getUser,
+  getSlate,
+  getFile,
 } from "~/node_common/managers/search/search";
 import {
   indexUser,
@@ -44,6 +47,9 @@ const SearchManager = {
   searchUser,
   searchSlate,
   searchFile,
+  getUser,
+  getSlate,
+  getFile,
 };
 
 export default SearchManager;
