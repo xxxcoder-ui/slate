@@ -87,6 +87,7 @@ export const searchMultiple = async ({
           fuzziness: "AUTO",
           type: "best_fields",
           fields: [
+            "filename^2",
             "name^2",
             "body",
             "author",
@@ -237,6 +238,7 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
           fuzziness: "AUTO",
           type: "best_fields",
           fields: [
+            "filename^2",
             "name^2",
             "body",
             "author",

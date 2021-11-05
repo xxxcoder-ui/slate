@@ -98,48 +98,65 @@ export const createSlateIndex = async () => {
 };
 
 export const createFileIndex = async () => {
-  let props = {
-    settings: {
-      number_of_shards: 1,
-      number_of_replicas: 0,
-      index: {
-        analysis: {
-          char_filter: {
-            my_pattern: {
-              type: "pattern_replace",
-              pattern: "a",
-              replacement: "u",
-            },
-          },
-          analyser: {
-            my_analyser: {
-              type: "custom",
-              tokenizer: "whitespace",
-              char_filter: ["my_pattern"],
-            },
-          },
-        },
-      },
-    },
-    mappings: {
-      my_type: {
-        _source: {
-          enabled: true,
-        },
-      },
-    },
-    properties: {
-      test: {
-        type: "string",
-        store: true,
-        index: "analysed",
-        analyser: "my_analyser",
-        index_options: "positions",
-      },
-    },
-  };
+  // let props = {
+  //   settings: {
+  //     number_of_shards: 1,
+  //     number_of_replicas: 0,
+  //     index: {
+  //       analysis: {
+  //         char_filter: {
+  //           my_pattern: {
+  //             type: "pattern_replace",
+  //             pattern: "a",
+  //             replacement: "u",
+  //           },
+  //         },
+  //         analyser: {
+  //           my_analyser: {
+  //             type: "custom",
+  //             tokenizer: "whitespace",
+  //             char_filter: ["my_pattern"],
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  //   mappings: {
+  //     my_type: {
+  //       _source: {
+  //         enabled: true,
+  //       },
+  //     },
+  //   },
+  //   properties: {
+  //     test: {
+  //       type: "string",
+  //       store: true,
+  //       index: "analysed",
+  //       analyser: "my_analyser",
+  //       index_options: "positions",
+  //     },
+  //   },
+  // };
 
   let properties = {
+    settings: {
+      analysis: {
+        char_filter: {
+          clean_punctuation_char_filter: {
+            type: "pattern_replace",
+            pattern: "[._-]+",
+            replacement: " ",
+          },
+        },
+        analyzer: {
+          clean_punctuation_analyzer: {
+            tokenizer: "whitespace",
+            char_filter: ["clean_punctuation_char_filter"],
+          },
+        },
+      },
+    },
     mappings: {
       properties: {
         id: {
@@ -155,10 +172,11 @@ export const createFileIndex = async () => {
         },
         filename: {
           type: "text",
-          index: false,
+          analyzer: "clean_punctuation_analyzer",
         },
         name: {
           type: "text",
+          analyzer: "clean_punctuation_analyzer",
         },
         size: {
           type: "integer",
@@ -268,7 +286,7 @@ export const createFileIndex = async () => {
 
 export const deleteUserIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "users" });
+    let result = await searchClient.indices.delete({ index: usersIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -277,7 +295,7 @@ export const deleteUserIndex = async () => {
 
 export const deleteSlateIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "slates" });
+    let result = await searchClient.indices.delete({ index: slatesIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
@@ -286,7 +304,7 @@ export const deleteSlateIndex = async () => {
 
 export const deleteFileIndex = async () => {
   try {
-    let result = await searchClient.indices.delete({ index: "files" });
+    let result = await searchClient.indices.delete({ index: filesIndex });
     console.log(result);
   } catch (e) {
     console.log(e);
