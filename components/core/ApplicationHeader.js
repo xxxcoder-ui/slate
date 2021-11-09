@@ -152,6 +152,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
 
   //TODO(amine): plug in the right values
   //for more context, look at node_common/managers/search/search.js
+  //userId: (optional) the id of the user whose stuff we are searching through. If specified, globalSearch is disregarded since the search will be limited to that user's public items. Does not apply when searching for type USER
   //types: leaving it null searches everything. Doing ["SLATE"] searches just slates, doing ["USER", "FILE"] searches users and files.
   //globalSearch: whether you are just searching the user's files/slates or global files/slates. This option doesn't exist for searching users since there is no notion of public or private users
   //tagIds: only applies when searching files. the ids of the tags (aka collections) you are searching within. aka if you only want to search for files in a given slate, provide that slate's id. If no tag ids are provided, it searches all files

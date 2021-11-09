@@ -141,21 +141,32 @@ async function update() {
 }
 
 async function search() {
-  //   await SearchManager.searchUser({ query: "image" });
-  // await SearchManager.searchSlate({
+  let result = null;
+  // result = await SearchManager.searchUser({ query: "image" });
+  // result = await SearchManager.searchSlate({
   //   query: "my slate",
+  //   ownerId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
   //   userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
   //   globalSearch: true,
   // });
-  // await SearchManager.searchFile({
-  //   query: "chocolate",
-  //   userId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258",
+  // result = await SearchManager.searchFile({
+  //   query: "slate",
+  //   ownerId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
+  //   // userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
   //   globalSearch: true,
   //   tagIds: [],
   //   // tagIds: ["d82fbc78-88de-4015-adec-a7ea832fc922", "0824a3cb-e839-4246-8ff4-d919919e1487"],
   // });
-  //   await SearchManager.searchAll({ query: "slate", userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7" });
-  // await SearchManager.getFile({ id: "2892b652-5034-4e0f-b3b2-0352e0d64e17" });
+  // result = await SearchManager.searchMultiple({
+  //   query: "slate",
+  //   ownerId: "02b5f36f-2ce3-46f3-8b95-9bd996658e22",
+  //   userId: "5172dd8b-6b11-40d3-8c9f-b4cbaa0eb8e7",
+  //   grouped: true,
+  //   types: ["SLATE", "FILE"],
+  // });
+
+  // result = await SearchManager.getFile({ id: "2892b652-5034-4e0f-b3b2-0352e0d64e17" });
+  console.log(result);
 }
 
 async function setUpIndex() {
