@@ -884,6 +884,8 @@ export function GlobalCarousel({
           onPreviousSlide={handlePrevious}
           onNextSlide={handleNext}
           onClose={handleClose}
+          enableNextSlide={index < objects.length - 1}
+          enablePreviousSlide={index > 0}
         />
       ) : (
         <CarouselHeader
