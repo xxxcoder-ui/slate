@@ -5,6 +5,7 @@ import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers";
 import * as Utilities from "~/common/utilities";
+import * as Validations from "~/common/validations";
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
@@ -694,6 +695,11 @@ export function CarouselContent({
 
   useLockScroll();
 
+  const { linkHtml, linkIFrameAllowed } = file;
+  const isNFTLink = Validations.isNFTLink(file);
+  // NOTE(amine): hide the title and description when using LinkCard as SlateMediaObject
+  const hideDescription = file.isLink && (!linkHtml || !linkIFrameAllowed || isNFTLink);
+
   return (
     <>
       <Alert
@@ -715,29 +721,26 @@ export function CarouselContent({
           <SlateMediaObject file={file} isMobile={isMobile} />
         </div>
 
-        <div css={Styles.MOBILE_ONLY} style={{ padding: "13px 16px 44px", width: "100%" }}>
-          <System.H5 color="textBlack" as="h1">
-            {file?.name || file?.filename}
-          </System.H5>
-          <Show when={file?.body}>
-            <System.P2 color="textBlack" style={{ marginTop: 4 }}>
-              {file?.body}
-            </System.P2>
-          </Show>
-          <Show when={file.isLink}>
-            <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-              <LinkIcon file={file} width={12} height={12} />
-              <System.P2
-                as="a"
-                nbrOflines={1}
-                href={file.url}
-                style={{ marginLeft: 5, textDecoration: "none", color: Constants.system.blue }}
-              >
-                {file.url}
+        {!hideDescription && (
+          <div css={Styles.MOBILE_ONLY} style={{ padding: "13px 16px 44px", width: "100%" }}>
+            <System.H5 color="textBlack" as="h1">
+              {file?.name || file?.filename}
+            </System.H5>
+            <Show when={file?.body}>
+              <System.P2 color="textBlack" style={{ marginTop: 4 }}>
+                {file?.body}
               </System.P2>
-            </div>
-          </Show>
-        </div>
+            </Show>
+            <Show when={file.isLink}>
+              <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <LinkIcon file={file} width={12} height={12} />
+                <System.P2 as="a" nbrOflines={1} href={file.url} style={{ marginLeft: 5 }}>
+                  {file.url}
+                </System.P2>
+              </div>
+            </Show>
+          </div>
+        )}
       </div>
     </>
   );
