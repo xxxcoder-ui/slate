@@ -17,6 +17,7 @@ import {
 } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 import { ModalPortal } from "~/components/core/ModalPortal";
+import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
@@ -810,7 +811,6 @@ const STYLES_ROOT = (theme) => css`
   right: 0;
   bottom: 0;
   top: 0;
-  height: 100vh;
   color: ${Constants.system.white};
   z-index: ${Constants.zindex.modal};
   background-color: rgba(0, 0, 0, 0.8);
@@ -871,7 +871,7 @@ export function GlobalCarousel({
   });
 
   return (
-    <div css={STYLES_ROOT}>
+    <FullHeightLayout css={STYLES_ROOT}>
       {isMobile ? (
         <CarouselHeaderMobile
           isStandalone={isStandalone}
@@ -921,6 +921,6 @@ export function GlobalCarousel({
           isOwner={isOwner}
         />
       ) : null}
-    </div>
+    </FullHeightLayout>
   );
 }
