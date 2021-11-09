@@ -21,8 +21,6 @@ const STYLES_POPOVER = css`
 
 const STYLES_POPOVER_SECTION = (theme) => css`
   border-bottom: 1px solid ${theme.semantic.borderGrayLight};
-  padding-bottom: 6px;
-  margin-bottom: 6px;
 
   :last-child {
     border-bottom: none;
@@ -33,7 +31,6 @@ const STYLES_POPOVER_SECTION = (theme) => css`
 
 const STYLES_POPOVER_ITEM = css`
   box-sizing: border-box;
-  padding: 6px 0px;
   display: flex;
   align-items: center;
   transition: 200ms ease all;

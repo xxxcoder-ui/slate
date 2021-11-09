@@ -394,13 +394,15 @@ export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
             />
             <FileMetadata file={file} style={{ width: "100%", marginTop: 14 }} />
           </Jumper.Item>
-          <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
-            <DownloadButton
-              file={file}
-              viewer={viewer}
-              style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
-            />
-          </Jumper.Item>
+          {!!file.isLink ? null : (
+            <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
+              <DownloadButton
+                file={file}
+                viewer={viewer}
+                style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
+              />
+            </Jumper.Item>
+          )}
         </Jumper.Root>
       ) : null}
     </Jumper.AnimatePresence>

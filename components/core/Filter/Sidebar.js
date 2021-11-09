@@ -63,8 +63,12 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   width: 236px;
   height: 100vh;
   max-height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
-  padding: 20px 24px;
+  padding: 20px;
   background-color: ${theme.semantic.bgLight};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 12px;
+  }
 `;
 
 /* -------------------------------------------------------------------------------------------------
