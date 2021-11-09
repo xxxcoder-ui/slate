@@ -5,12 +5,15 @@ import {
   filesIndex,
 } from "~/node_common/managers/search/search-client";
 
+import * as Logging from "~/common/logging";
+
 //NOTE(martina): types specifies which object types to search through. Leaving it null or empty will search ALL object types
 //               E.g. ["USER", "SLATE", "FILE"]
 //NOTE(martina): grouped = true will separate results by object type rather than mixing them togther.
 //               E.g. { users: [user1, user2, ...], slates: [slate1, slate2, ...], files: [file1, file2, ...]}
 export const searchMultiple = async ({
   query,
+  ownerId,
   userId,
   grouped = false,
   types,
@@ -19,13 +22,22 @@ export const searchMultiple = async ({
   let body = [];
   let keys = [];
 
-  let ownerQuery = {
-    bool: {
-      should: [{ term: { ownerId: userId } }],
-    },
-  };
-  if (globalSearch) {
-    ownerQuery.bool.should.push({ term: { isPublic: true } });
+  let ownerQuery;
+  if (userId) {
+    ownerQuery = {
+      bool: {
+        must: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+      },
+    };
+  } else {
+    ownerQuery = {
+      bool: {
+        should: [{ term: { ownerId } }],
+      },
+    };
+    if (globalSearch) {
+      ownerQuery.bool.should.push({ term: { isPublic: true } });
+    }
   }
 
   if (!types?.length || types.includes("USER")) {
@@ -131,7 +143,6 @@ export const searchMultiple = async ({
         const group = returned[i];
         cleaned[keys[i]] = group.map((result) => result._source);
       }
-      console.log(cleaned);
       return cleaned;
     } else {
       let cleaned = [];
@@ -139,7 +150,6 @@ export const searchMultiple = async ({
         cleaned.push(...group);
       }
       cleaned.sort((a, b) => b._score - a._score).map((result) => result._source);
-      console.log(cleaned);
       return cleaned;
     }
   } catch (e) {
@@ -176,14 +186,13 @@ export const searchUser = async ({ query }) => {
     const hits = result?.body?.hits?.hits;
 
     let users = hits.map((hit) => hit._source);
-    console.log(users);
     return users;
   } catch (e) {
     console.log(e);
   }
 };
 
-export const searchSlate = async ({ query, userId, globalSearch = false }) => {
+export const searchSlate = async ({ query, ownerId, userId, globalSearch = false }) => {
   try {
     const must = [
       {
@@ -197,13 +206,22 @@ export const searchSlate = async ({ query, userId, globalSearch = false }) => {
       },
     ];
 
-    let ownerQuery = {
-      bool: {
-        should: [{ term: { ownerId: userId } }],
-      },
-    };
-    if (globalSearch) {
-      ownerQuery.bool.should.push({ term: { isPublic: true } });
+    let ownerQuery;
+    if (userId) {
+      ownerQuery = {
+        bool: {
+          must: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+        },
+      };
+    } else {
+      ownerQuery = {
+        bool: {
+          should: [{ term: { ownerId } }],
+        },
+      };
+      if (globalSearch) {
+        ownerQuery.bool.should.push({ term: { isPublic: true } });
+      }
     }
     must.push(ownerQuery);
 
@@ -222,14 +240,13 @@ export const searchSlate = async ({ query, userId, globalSearch = false }) => {
     const hits = result?.body?.hits?.hits;
 
     let slates = hits.map((hit) => hit._source);
-    console.log(slates);
     return slates;
   } catch (e) {
     console.log(e);
   }
 };
 
-export const searchFile = async ({ query, userId, globalSearch = false, tagIds = [] }) => {
+export const searchFile = async ({ query, ownerId, userId, globalSearch = false, tagIds = [] }) => {
   try {
     const must = [
       {
@@ -266,13 +283,22 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
       must.push(tagQuery);
     }
 
-    let ownerQuery = {
-      bool: {
-        should: [{ term: { ownerId: userId } }],
-      },
-    };
-    if (globalSearch) {
-      ownerQuery.bool.should.push({ term: { isPublic: true } });
+    let ownerQuery;
+    if (userId) {
+      ownerQuery = {
+        bool: {
+          must: [{ term: { ownerId: userId } }, { term: { isPublic: true } }],
+        },
+      };
+    } else {
+      ownerQuery = {
+        bool: {
+          should: [{ term: { ownerId } }],
+        },
+      };
+      if (globalSearch) {
+        ownerQuery.bool.should.push({ term: { isPublic: true } });
+      }
     }
     must.push(ownerQuery);
 
@@ -338,7 +364,6 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
     const hits = result?.body?.hits?.hits;
 
     let files = hits.map((hit) => hit._source);
-    console.log(files);
     return files;
   } catch (e) {
     console.log(e);
@@ -347,18 +372,15 @@ export const searchFile = async ({ query, userId, globalSearch = false, tagIds =
 
 export const getUser = async ({ id }) => {
   const { body } = await searchClient.get({ index: usersIndex, id });
-  console.log(body);
   return body;
 };
 
 export const getSlate = async ({ id }) => {
   const { body } = await searchClient.get({ index: slatesIndex, id });
-  console.log(body);
   return body;
 };
 
 export const getFile = async ({ id }) => {
   const { body } = await searchClient.get({ index: filesIndex, id });
-  console.log(body);
   return body;
 };

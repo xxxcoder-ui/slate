@@ -2,6 +2,7 @@ import * as RequestUtilities from "~/node_common/request-utilities";
 import SearchManager from "~/node_common/managers/search";
 
 //NOTE(martina): props
+//               userId: (optional) the id of the user whose stuff we are searching through. If specified, globalSearch is disregarded since the search will be limited to that user's public items. Does not apply when searching for type USER
 //               globalSearch: Whether we are searching all public stuff plus the user's own stuff (true) or just the user's stuff (false)
 //               query: The search query
 //               types: Which object types to search for. Can be a string or array of strings. Leaving it null or empty will search ALL object types. Potential values are: "USER", "SLATE", "FILE"
@@ -16,7 +17,7 @@ export default async (req, res) => {
     res.status(400).send({ decorator: "SERVER_SEARCH_DATA_NOT_INCLUDED", error: true });
   }
 
-  const searchProps = { ...req.body.data, userId: id };
+  const searchProps = { ...req.body.data, ownerId: id };
 
   if (!searchProps.types) {
     searchProps.types = [];
