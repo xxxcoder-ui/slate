@@ -280,7 +280,7 @@ const ReferralForm = ({ onSubmit }) => {
             {...getFieldProps("other")}
           />
           <ButtonPrimary type="submit" loading={isSubmitting} style={{ marginTop: 24 }}>
-            Next
+            Submit
           </ButtonPrimary>
           <P3 style={{ marginTop: 12 }} color="textBlack">
             3/3
