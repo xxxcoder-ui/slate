@@ -21,7 +21,6 @@ import APIDocsUploadToSlateV1 from "~/components/api-docs/v1/upload.js";
 
 import APIDocsGetV2 from "~/components/api-docs/v2/get";
 import APIDocsGetSlateV2 from "~/components/api-docs/v2/get-slate.js";
-import APIDocsGetUserV2 from "~/components/api-docs/v2/get-user.js";
 import APIDocsUpdateSlateV2 from "~/components/api-docs/v2/update-slate.js";
 import APIDocsUpdateFileV2 from "~/components/api-docs/v2/update-file.js";
 import APIDocsUploadToSlateV2 from "~/components/api-docs/v2/upload.js";
@@ -29,6 +28,17 @@ import APIDocsCreateLinkV2 from "~/components/api-docs/v2/create-link.js";
 import APIDocsCreateCollectionV2 from "~/components/api-docs/v2/create-collection.js";
 import APIDocsUploadByCidV2 from "~/components/api-docs/v2/upload-by-cid.js";
 import APIDocsUploadByUrlV2 from "~/components/api-docs/v2/upload-by-url.js";
+
+import APIDocsGetV3 from "~/components/api-docs/v3/get";
+import APIDocsGetSlateV3 from "~/components/api-docs/v3/get-slate.js";
+import APIDocsUpdateSlateV3 from "~/components/api-docs/v3/update-slate.js";
+import APIDocsUpdateFileV3 from "~/components/api-docs/v3/update-file.js";
+import APIDocsUploadToSlateV3 from "~/components/api-docs/v3/upload.js";
+import APIDocsCreateLinkV3 from "~/components/api-docs/v3/create-link.js";
+import APIDocsCreateCollectionV3 from "~/components/api-docs/v3/create-collection.js";
+import APIDocsUploadByCidV3 from "~/components/api-docs/v3/upload-by-cid.js";
+import APIDocsUploadByUrlV3 from "~/components/api-docs/v3/upload-by-url.js";
+
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
 const STYLES_API_KEY = css`
@@ -165,7 +175,7 @@ export default class SceneSettingsDeveloper extends React.Component {
   };
 
   render() {
-    const tab = this.props.page.params?.tab || "v2";
+    const tab = this.props.page.params?.tab || "v3";
     let APIKey = "YOUR-API-KEY-HERE";
     let lang = this.state.language;
     if (this.props.viewer.keys) {
@@ -306,12 +316,13 @@ export default class SceneSettingsDeveloper extends React.Component {
           <APIDocsUploadToSlate language={lang} APIKey={APIKey} slateId={slateId} />
         */}
           <ScenePageHeader title="Developer Documentation" style={{ marginTop: 96 }}>
-            Slate is currently on v2.0 of the API. While prior versions are still supported, we
+            Slate is currently on v3.0 of the API. While prior versions are still supported, we
             recommend using the most up to date version.
           </ScenePageHeader>
 
           <SecondaryTabGroup
             tabs={[
+              { title: "Version 3.0", value: { tab: "v3" } },
               { title: "Version 2.0", value: { tab: "v2" } },
               { title: "Version 1.0", value: { tab: "v1" } },
             ]}
@@ -319,7 +330,75 @@ export default class SceneSettingsDeveloper extends React.Component {
             onAction={this.props.onAction}
           />
 
-          {tab === "v2" ? (
+          {tab === "v3" ? (
+            <>
+              <System.H2 css={STYLES_SECTION_HEADER}>Get</System.H2>
+              <APIDocsGetV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsGetSlateV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <System.H2 css={STYLES_SECTION_HEADER}>Update</System.H2>
+              <APIDocsUpdateSlateV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUpdateFileV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <System.H2 css={STYLES_SECTION_HEADER}>Create</System.H2>
+              <APIDocsCreateCollectionV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadToSlateV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadByCidV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsUploadByUrlV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+              <APIDocsCreateLinkV3
+                cssValue={STYLES_EXAMPLE}
+                language={lang}
+                APIKey={APIKey}
+                slateId={slateId}
+                onLanguageChange={this._handleChangeLanguage}
+              />
+            </>
+          ) : tab === "v2" ? (
             <>
               <System.H2 css={STYLES_SECTION_HEADER}>Get</System.H2>
               <APIDocsGetV2
@@ -333,13 +412,6 @@ export default class SceneSettingsDeveloper extends React.Component {
                 language={lang}
                 APIKey={APIKey}
                 slateId={slateId}
-                onLanguageChange={this._handleChangeLanguage}
-              />
-              <APIDocsGetUserV2
-                cssValue={STYLES_EXAMPLE}
-                language={lang}
-                APIKey={APIKey}
-                userId={userId}
                 onLanguageChange={this._handleChangeLanguage}
               />
               <System.H2 css={STYLES_SECTION_HEADER}>Update</System.H2>
