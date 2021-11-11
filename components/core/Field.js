@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 
 const STYLES_SMALL_TEXT = (theme) => css`
   font-size: ${theme.typescale.lvlN1};
-  line-height: 15.6px;
+  line-height: 16px;
 `;
 
 const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
@@ -19,7 +19,7 @@ const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
     backdrop-filter: blur(75px);
   }
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 12px;
 `;
 
 const STYLES_PASSWORD_VALIDATION = (theme) =>
@@ -45,7 +45,7 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
 const STYLES_INPUT = (theme) => css`
   background-color: rgba(242, 242, 247, 0.7);
   box-shadow: ${theme.shadow.lightLarge};
-  border-radius: 8px;
+  border-radius: 12px;
   &::placeholder {
     color: ${theme.semantic.textGrayDark};
   }

@@ -28,8 +28,8 @@ const TEXT = css`
 
 export const H1 = css`
   font-family: ${Constants.font.medium};
-  font-size: 1.953rem;
-  line-height: 1.5;
+  font-size: 32px;
+  line-height: 48px;
   letter-spacing: -0.021px;
 
   ${TEXT}
@@ -37,8 +37,8 @@ export const H1 = css`
 
 export const H2 = css`
   font-family: ${Constants.font.medium};
-  font-size: 1.563rem;
-  line-height: 1.5;
+  font-size: 24px;
+  line-height: 36px;
   letter-spacing: -0.019px;
 
   ${TEXT}
@@ -46,8 +46,8 @@ export const H2 = css`
 
 export const H3 = css`
   font-family: ${Constants.font.medium};
-  font-size: 1.25rem;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 28px;
   letter-spacing: -0.017px;
 
   ${TEXT}
@@ -55,8 +55,8 @@ export const H3 = css`
 
 export const H4 = css`
   font-family: ${Constants.font.medium};
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 24px;
   letter-spacing: -0.011px;
 
   ${TEXT}
@@ -64,8 +64,8 @@ export const H4 = css`
 
 export const H5 = css`
   font-family: ${Constants.font.medium};
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 20px;
   letter-spacing: -0.006px;
 
   ${TEXT}
@@ -73,8 +73,8 @@ export const H5 = css`
 
 export const H6 = css`
   font-family: ${Constants.font.medium};
-  font-size: 0.75rem;
-  line-height: 1.666;
+  font-size: 12px;
+  line-height: 20px;
   letter-spacing: -0.01px;
 
   ${TEXT}
@@ -82,14 +82,14 @@ export const H6 = css`
 
 export const P1 = css`
   font-family: ${Constants.font.text};
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 24px;
   letter-spacing: -0.011px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-family: ${Constants.font.text};
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 20px;
     letter-spacing: -0.006px;
   }
 
@@ -98,24 +98,17 @@ export const P1 = css`
 
 export const P2 = css`
   font-family: ${Constants.font.text};
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 20px;
   letter-spacing: -0.006px;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    font-family: ${Constants.font.text};
-    font-size: 0.75rem;
-    line-height: 1.3;
-    letter-spacing: 0px;
-  }
 
   ${TEXT}
 `;
 
 export const P3 = css`
   font-family: ${Constants.font.text};
-  font-size: 0.75rem;
-  line-height: 1.334;
+  font-size: 12px;
+  line-height: 16px;
   letter-spacing: 0px;
 
   ${TEXT}
@@ -123,24 +116,29 @@ export const P3 = css`
 
 export const C1 = css`
   font-family: ${Constants.font.code};
-  font-size: 0.75rem;
-  line-height: 1.3;
+  font-size: 16px;
+  line-height: 24px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
 
   ${TEXT}
 `;
 
 export const C2 = css`
   font-family: ${Constants.font.code};
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 20px;
 
   ${TEXT}
 `;
 
 export const C3 = css`
   font-family: ${Constants.font.code};
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 16px;
 
   ${TEXT}
 `;
@@ -194,7 +192,7 @@ export const ICON_CONTAINER = css`
   color: ${Constants.system.black};
 
   :hover {
-    color: ${Constants.system.blue};
+    color: ${Constants.semantic.textGrayDark};
   }
 `;
 
@@ -202,7 +200,7 @@ export const HOVERABLE = css`
   cursor: pointer;
 
   :hover {
-    color: ${Constants.system.blue};
+    color: ${Constants.semantic.textGrayDark};
   }
 `;
 

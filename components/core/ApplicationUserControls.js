@@ -163,9 +163,7 @@ export class ApplicationUserControlsPopup extends React.Component {
         <ButtonPrimaryFull
           style={{
             padding: "5px 24px 7px",
-            margin: "8px 0 0 0",
-            fontFamily: Constants.font.text,
-            fontSize: 14,
+            marginTop: "8px",
           }}
           onClick={this._handleExtensionDownloadLink}
         >

@@ -75,8 +75,7 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
 
 const STYLES_ACTION_BUTTON = css`
   ${Styles.BUTTON_RESET};
-  height: 32px;
-  width: 32px;
+  padding: 8px;
 `;
 
 function CarouselHeader({
@@ -105,17 +104,25 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
-    useCarouselJumperControls();
+  const [
+    isEditChannelsVisible,
+    { showControl: showEditChannels, hideControl: hideEditChannels },
+  ] = useCarouselJumperControls();
 
   const isJumperOpen =
     isFileDescriptionVisible ||
@@ -234,6 +241,7 @@ function CarouselHeader({
                 color="blue"
                 as="button"
                 onClick={showFileDescription}
+                style={{ marginTop: 1 }}
               >
                 MORE
               </System.H6>
@@ -321,6 +329,7 @@ const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
   padding: 8px 16px;
   border-top: 1px solid ${theme.semantic.borderGrayLight};
   color: ${theme.semantic.textGrayDark};
+  min-height: 48px;
 
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
@@ -363,17 +372,25 @@ function CarouselHeaderMobile({ current, total, onClose, onNextSlide, onPrevious
 }
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
-    useCarouselJumperControls();
+  const [
+    isEditChannelsVisible,
+    { showControl: showEditChannels, hideControl: hideEditChannels },
+  ] = useCarouselJumperControls();
   return (
     <>
       <ModalPortal>
@@ -590,6 +607,7 @@ const STYLES_PREVIEW_WRAPPER = (theme) => css`
   position: relative;
   width: 100%;
   height: 100%;
+  background-color: ${Constants.semantic.bgGrayLight4};
 
   @media (max-width: ${theme.sizes.mobile}px) {
     min-height: 75vh;
@@ -649,7 +667,12 @@ export function CarouselContent({
           <Show when={file.isLink}>
             <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
               <LinkIcon file={file} width={12} height={12} />
-              <System.P2 as="a" nbrOflines={1} href={file.url} style={{ marginLeft: 5 }}>
+              <System.P2
+                as="a"
+                nbrOflines={1}
+                href={file.url}
+                style={{ marginLeft: 5, textDecoration: "none", color: Constants.system.blue }}
+              >
                 {file.url}
               </System.P2>
             </div>

@@ -40,6 +40,14 @@ const STYLES_JUMPER_ROOT = (theme) => css`
     backdrop-filter: blur(75px);
     background-color: ${theme.semantic.bgBlurWhiteOP};
   }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    width: 100%;
+    border-radius: 0;
+    min-height: 100vh;
+    top: 0;
+    left: 0;
+  }
 `;
 
 const STYLES_JUMPER_OVERLAY = (theme) => css`

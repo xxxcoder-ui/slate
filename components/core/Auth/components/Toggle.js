@@ -7,13 +7,13 @@ const STYLES_WRAPPER = (theme) => css`
   width: fit-content;
   display: flex;
   background-color: ${theme.semantic.bgGrayLight};
-  border-radius: 8px;
+  border-radius: 12px;
 `;
 
 const STYLES_BUTTON = (theme) => css`
   border-style: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 9px 24px 11px;
+  border-radius: 12px;
   font-family: ${theme.font.medium};
   font-size: ${theme.typescale.lvl0};
   color: ${theme.semantic.textGray};
@@ -61,7 +61,7 @@ export default function Toggle({ options = [], onChange, toggleValue = "signin",
                   zIndex: 1,
                   left: 0,
                   width: "100%",
-                  borderRadius: "8px",
+                  borderRadius: "12px",
                   height: "100%",
                 }}
                 css={STYLES_ACTIVE}

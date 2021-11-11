@@ -14,9 +14,9 @@ const STYLES_CARD = css`
   width: 600px;
   max-height: 100%;
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: ${Constants.shadow.large};
+  box-shadow: ${Constants.shadow.lightLarge};
   background-color: ${Constants.semantic.bgGrayLight};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
