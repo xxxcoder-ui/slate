@@ -93,7 +93,7 @@ const STYLES_CHECKBOX_INPUT = css`
   ${Styles.HOVERABLE};
 `;
 
-function SceneSurvey() {
+function SceneSurvey({ onAction }) {
   const [step, setStep] = React.useState(1);
   const surveyResults = React.useRef({});
 
@@ -132,7 +132,7 @@ function SceneSurvey() {
         if (Events.hasError(response)) {
           return;
         }
-        window.location.replace("/_/data");
+        onAction({ type: "NAVIGATE", href: `/_/data` });
       }}
     />
   );
