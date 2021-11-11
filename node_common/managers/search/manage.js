@@ -193,12 +193,6 @@ export const createFileIndex = async () => {
         body: {
           type: "text",
         },
-        author: {
-          type: "text",
-        },
-        source: {
-          type: "text",
-        },
         type: {
           type: "keyword",
           index: false,

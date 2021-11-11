@@ -33,7 +33,11 @@ const deleteStorageDealSettings = db.schema.table("users", function (table) {
   );
 });
 
-Promise.all([deleteStorageDealSettings]);
+const deleteSourceAndAuthor = db.schema.table("files", function (table) {
+  table.dropColumns("source", "author");
+});
+
+Promise.all([deleteSourceAndAuthor]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

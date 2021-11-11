@@ -19,8 +19,6 @@ export default async (req, res) => {
     data: {
       name: req.body.data.data?.name,
       body: req.body.data.data?.body,
-      source: req.body.data.data?.source,
-      author: req.body.data.data?.author,
     },
   };
 

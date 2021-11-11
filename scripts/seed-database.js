@@ -82,9 +82,7 @@ const createFilesTable = db.schema.createTable("files", function (table) {
   table.integer("size").notNullable().defaultTo(0);
   table.string("type").notNullable().defaultTo("link");
   table.string("blurhash").nullable();
-  table.string("source").nullable();
   table.string("body", 2000).nullable();
-  table.string("author").nullable();
   table.jsonb("coverImage").nullable();
   table.jsonb("data").nullable();
   table.string("linkName").nullable();

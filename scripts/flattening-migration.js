@@ -152,9 +152,7 @@ const addFileColumns = async () => {
     table.integer("size").notNullable().defaultTo(0);
     table.string("type").notNullable().defaultTo("link");
     table.string("blurhash").nullable();
-    table.string("source").nullable();
     table.string("body", 2000).nullable();
-    table.string("author").nullable();
     table.jsonb("coverImage").nullable();
     table.jsonb("data").nullable(); //where you'll move unity stuff
     table.string("linkName").nullable();
@@ -255,8 +253,6 @@ const migrateFileTable = async () => {
       size: data.size,
       type: data.type,
       blurhash: data.blurhash,
-      source: data.source,
-      author: data.author,
       linkName: data.link?.name,
       linkBody: data.link?.body,
       linkAuthor: data.link?.author,
@@ -370,9 +366,7 @@ Files
     'data.size', -> 'size' MIGRATED
     'data.type', -> 'type' MIGRATED
     'data.blurhash', -> 'blurhash' MIGRATED
-    'data.source', -> 'source' MIGRATED
     'data.body', -> 'body' MIGRATED
-    'data.author', -> 'author' MIGRATED
     'data.coverImage', -> 'coverImage' MIGRATED
     'data.unity', -> 'data.unity' MIGRATED
     'data.link.name', -> 'linkName' MIGRATED
