@@ -74,8 +74,6 @@ export default async (req, res) => {
       type: "link",
       name: data.title,
       body: data.description,
-      source: data.publisher,
-      author: data.author,
       linkName: data.title,
       linkBody: data.description,
       linkSource: data.publisher,

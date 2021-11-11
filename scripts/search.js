@@ -185,8 +185,9 @@ async function resetIndex() {
   await setUpIndex();
 }
 
-// setUpIndex();
-Promise.all([manage(), update(), search()]);
+// await setUpIndex();
+await resetIndex();
+// await Promise.all([manage(), update(), search()]);
 
 Logging.log(`FINISHED: search.js`);
 Logging.log(`          CTRL + C to return to terminal.`);
