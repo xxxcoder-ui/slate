@@ -154,7 +154,7 @@ export default function Initial({
               autoFocus
               label="Email address or username"
               placeholder="Email/username"
-              icon={SVG.RightArrow}
+              icon={ArrowButton}
               name="email/username"
               type="text"
               full
