@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as System from "~/components/system";
-import * as Jumper from "~/components/core/Jumper";
+import * as Jumper from "~/components/system/components/fragments/Jumper";
 import * as SVG from "~/common/svg";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/core/MobileJumper";
 import * as Events from "~/common/custom-events";
 import * as UserBehaviors from "~/common/user-behaviors";
+import * as MobileJumper from "~/components/system/components/fragments/MobileJumper";
 
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
