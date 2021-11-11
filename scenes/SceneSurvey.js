@@ -128,7 +128,7 @@ function SceneSurvey() {
           .map((item) => REFERRAL_OPTIONS[item] || item)
           .join(",");
         // call endpoint
-        const response = await Actions.createSurvey(surveyResults.current);
+        const response = await Actions.createOnboarding(surveyResults.current);
         if (Events.hasError(response)) {
           return;
         }

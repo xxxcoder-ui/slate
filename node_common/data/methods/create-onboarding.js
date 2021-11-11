@@ -2,7 +2,7 @@ import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ userId, prevTools, usecases, referrals }) => {
   return await runQuery({
-    label: "CREATE_SURVEY",
+    label: "CREATE_ONBOARDING",
     queryFn: async (DB) => {
       let query = await DB.insert({
         userId,
@@ -10,7 +10,7 @@ export default async ({ userId, prevTools, usecases, referrals }) => {
         usecases,
         referrals,
       })
-        .into("surveys")
+        .into("onboarding")
         .returning("*");
 
       if (!query) {
@@ -24,7 +24,7 @@ export default async ({ userId, prevTools, usecases, referrals }) => {
     errorFn: async () => {
       return {
         error: true,
-        decorator: "CREATE_SURVEY",
+        decorator: "CREATE_ONBOARDING",
       };
     },
   });

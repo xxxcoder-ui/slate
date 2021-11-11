@@ -42,7 +42,7 @@ const websocketSend = async (type, data) => {
 
 export const hydratePartial = async (
   id,
-  { viewer, slates, keys, library, subscriptions, following, followers, surveys }
+  { viewer, slates, keys, library, subscriptions, following, followers, onboarding }
 ) => {
   if (!id) return;
 
@@ -101,8 +101,13 @@ export const hydratePartial = async (
     const followers = await Data.getFollowersByUserId({ userId: id });
     update.followers = followers;
   }
-  if (surveys) {
-    update.surveys = { onboarding: true };
+  if (onboarding) {
+    const onboarding = await Data.getOnboardingByUserId({ userId: id });
+    update.onboarding = {
+      upload: onboarding?.upload,
+      tags: onboarding?.tags,
+      survey: !!onboarding?.userId,
+    };
   }
 
   websocketSend("UPDATE", update);
@@ -151,20 +156,24 @@ export const getById = async ({ id }) => {
 
   // user.library = await Data.getFilesByUserId({ id });
 
-  const [slates, keys, subscriptions, following, followers, surveyResponse] = (
+  const [slates, keys, subscriptions, following, followers, onboardingResponse] = (
     await Promise.allSettled([
       Data.getSlatesByUserId({ ownerId: id, includeFiles: true }),
       Data.getAPIKeysByUserId({ userId: id }),
       Data.getSubscriptionsByUserId({ ownerId: id }),
       Data.getFollowingByUserId({ ownerId: id }),
       Data.getFollowersByUserId({ userId: id }),
-      Data.getSurveyByUserId({ userId: id }),
+      Data.getOnboardingByUserId({ userId: id }),
     ])
   ).map((item) => item.value);
 
   const libraryCids =
     user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
-  const onboardingSurvey = !(!surveyResponse || surveyResponse.error);
+  const onboarding = {
+    upload: onboardingResponse?.upload,
+    tags: onboardingResponse?.tags,
+    survey: !!onboardingResponse?.userId,
+  };
 
   let cids = {};
   let bytes = 0;
@@ -229,9 +238,7 @@ export const getById = async ({ id }) => {
     following,
     followers,
     libraryCids,
-    surveys: {
-      onboarding: onboardingSurvey,
-    },
+    onboarding,
   };
 
   return viewer;

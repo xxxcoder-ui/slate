@@ -95,9 +95,9 @@ import getVerificationBySid from "~/node_common/data/methods/get-verification-by
 import pruneVerifications from "~/node_common/data/methods/prune-verifications";
 
 // NOTE(amine):
-// Surveys postgres queries
-import createSurvey from "~/node_common/data/methods/create-survey";
-import getSurveyByUserId from "~/node_common/data/methods/get-survey-by-user-id";
+// Onboarding postgres queries
+import createOnboarding from "~/node_common/data/methods/create-onboarding";
+import getOnboardingByUserId from "~/node_common/data/methods/get-onboarding-by-user-id";
 
 // NOTE(jim):
 // one-offs
@@ -190,7 +190,7 @@ export {
   updateTwitterToken,
   // NOTE(martina): Deals
   createDeal,
-  // NOTE(amine): Surveys
-  createSurvey,
-  getSurveyByUserId,
+  // NOTE(amine): Onboarding
+  createOnboarding,
+  getOnboardingByUserId,
 };

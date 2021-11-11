@@ -204,7 +204,7 @@ export default class ApplicationLayout extends React.Component {
       );
     }
     const isHeaderInView =
-      this.props.page?.id === "NAV_SIGN_IN" || this.props.viewer?.surveys?.onboarding === false;
+      this.props.page?.id === "NAV_SIGN_IN" || this.props.viewer?.onboarding?.survey === false;
 
     return (
       <React.Fragment>
