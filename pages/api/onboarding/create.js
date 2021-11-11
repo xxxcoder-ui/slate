@@ -6,12 +6,14 @@ import * as Environment from "~/node_common/environment";
 
 export default async (req, res) => {
   if (!Strings.isEmpty(Environment.ALLOWED_HOST) && req.headers.host !== Environment.ALLOWED_HOST) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_SURVEY_NOT_ALLOWED", error: true });
+    return res.status(403).send({ decorator: "SERVER_CREATE_ONBOARDING_NOT_ALLOWED", error: true });
   }
 
   const { tools, referrals, useCases } = req?.body?.data;
   if (!tools || !referrals || !useCases) {
-    return res.status(403).send({ decorator: "SERVER_CREATE_SURVEY_INVALID_DATA", error: true });
+    return res
+      .status(403)
+      .send({ decorator: "SERVER_CREATE_ONBOARDING_INVALID_DATA", error: true });
   }
 
   const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
@@ -20,22 +22,22 @@ export default async (req, res) => {
   }
   const { id } = userInfo;
 
-  const survey = Data.createSurvey({
+  const onboarding = Data.createOnboarding({
     userId: id,
     prevTools: tools,
     usecases: useCases,
     referrals,
   });
 
-  if (!survey) {
-    return res.status(404).send({ decorator: "SERVER_CREATE_SURVEY_FAILED", error: true });
+  if (!onboarding) {
+    return res.status(404).send({ decorator: "SERVER_CREATE_ONBOARDING_FAILED", error: true });
   }
 
-  if (survey.error) {
-    return res.status(500).send({ decorator: "SERVER_CREATE_SURVEY_FAILED", error: true });
+  if (onboarding.error) {
+    return res.status(500).send({ decorator: "SERVER_CREATE_ONBOARDING_FAILED", error: true });
   }
 
-  await ViewerManager.hydratePartial(id, { surveys: true });
+  await ViewerManager.hydratePartial(id, { onboarding: true });
 
-  return res.status(200).send({ decorator: "SERVER_CREATE_SURVEY_SUCCESS" });
+  return res.status(200).send({ decorator: "SERVER_CREATE_ONBOARDING_SUCCESS" });
 };

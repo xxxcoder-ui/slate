@@ -521,8 +521,8 @@ export const getUserVersion = async (data) => {
   });
 };
 
-export const createSurvey = async (data) => {
-  return await returnJSON(`/api/surveys/create`, {
+export const createOnboarding = async (data) => {
+  return await returnJSON(`/api/onboarding/create`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });

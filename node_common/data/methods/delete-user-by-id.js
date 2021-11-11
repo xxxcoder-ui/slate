@@ -37,7 +37,7 @@ export default async ({ id }) => {
 
       const usage = await DB.from("usage").where({ userId: id }).del();
 
-      const surveys = await DB.from("surveys").where({ userId: id }).del();
+      const onboarding = await DB.from("onboarding").where({ userId: id }).del();
 
       const data = await DB.from("users").where({ id }).del().returning("*");
 

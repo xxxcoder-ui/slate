@@ -11,7 +11,7 @@ export const getById = (id, viewer) => {
     return { ...errorPage };
   }
 
-  if (viewer?.survey.onboarding === false) {
+  if (viewer?.onboarding.survey === false) {
     return { ...surveyPage };
   }
 
@@ -28,7 +28,7 @@ export const getById = (id, viewer) => {
 
 export const getByHref = (href, viewer) => {
   let pathname;
-  if (viewer?.surveys?.onboarding === false) {
+  if (viewer?.onboarding?.survey === false) {
     return { page: { ...surveyPage } };
   }
   if (href) {

@@ -2,9 +2,10 @@ import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({ userId }) => {
   return await runQuery({
-    label: "GET_SURVEY_BY_USER_ID",
+    label: "GET_ONBOARDING_BY_USER_ID",
     queryFn: async (DB) => {
-      let query = await DB.select("*").from("surveys").where({ userId });
+      let query = await DB.select("*").from("onboarding").where({ userId });
+      console.log(query);
 
       if (!query || query.error) {
         return null;
@@ -18,7 +19,7 @@ export default async ({ userId }) => {
     errorFn: async () => {
       return {
         error: true,
-        decorator: "GET_SURVEY_BY_USER_ID",
+        decorator: "GET_ONBOARDING_BY_USER_ID",
       };
     },
   });
