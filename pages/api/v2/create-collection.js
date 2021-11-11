@@ -35,8 +35,8 @@ export default async (req, res) => {
     ownerId: id,
     slatename: Strings.createSlug(req.body.data.data.name),
     isPublic: req.body.data.isPublic,
-    name: req.body.data.data.name,
-    body: req.body.data.data.body,
+    name: req.body.data.name,
+    body: req.body.data.body,
   });
 
   if (!slate || slate.error) {
