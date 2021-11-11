@@ -138,10 +138,8 @@ export default async (req, res) => {
     Monitor.upload({ user, files });
   }
 
-  let reformattedFiles = filesToAddToSlate.map((file) => Conversions.convertToV2File(file));
-
   return res.status(200).send({
     decorator,
-    data: reformattedFiles,
+    data: filesToAddToSlate,
   });
 };

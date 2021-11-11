@@ -41,8 +41,8 @@ export default async (req, res) => {
     id: req.body.data.id,
     updatedAt: new Date(),
     isPublic: req.body.data.isPublic,
-    name: req.body.data.data?.name,
-    body: req.body.data.data?.body,
+    name: req.body.data.name,
+    body: req.body.data.body,
   };
 
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
@@ -108,7 +108,5 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 
-  let reformattedSlate = Conversions.convertToV2Slate(updatedSlate);
-
-  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: reformattedSlate });
+  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: updatedSlate });
 };

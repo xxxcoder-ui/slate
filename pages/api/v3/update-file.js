@@ -18,8 +18,8 @@ export default async (req, res) => {
   //NOTE(martina): cleans the input to remove fields they should not be changing like ownerId, createdAt, filename, size, type etc.
   let updates = {
     id: req.body.data.id,
-    name: req.body.data.data?.name,
-    body: req.body.data.data?.body,
+    name: req.body.data.name,
+    body: req.body.data.body,
   };
 
   const file = await Data.getFileById({ id: updates.id });
@@ -31,20 +31,18 @@ export default async (req, res) => {
     });
   }
 
-  let updatedFile = await Data.updateFileById(updates);
+  let response = await Data.updateFileById(updates);
 
-  if (!updatedFile || updatedFile.error) {
+  if (!response || response.error) {
     return res.status(500).send({ decorator: "UPDATE_FILE_FAILED", error: true });
   }
 
-  SearchManager.updateFile(updatedFile);
+  SearchManager.updateFile(response);
 
   ViewerManager.hydratePartial(user.id, { library: true, slates: true });
 
-  let reformattedFile = Conversions.convertToV2File(updatedFile);
-
   return res.status(200).send({
     decorator: "UPDATE_FILE",
-    file: reformattedFile,
+    file: response,
   });
 };

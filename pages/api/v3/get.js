@@ -1,40 +1,37 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
-import * as Powergate from "~/node_common/powergate";
 import * as RequestUtilities from "~/node_common/request-utilities";
+import * as Conversions from "~/common/conversions";
 
 export default async (req, res) => {
   const userInfo = await RequestUtilities.checkAuthorizationExternal(req, res);
   if (!userInfo) return;
   const { id, key, user } = userInfo;
 
-  let userId = req.body?.data?.id;
-
-  if (Strings.isEmpty(userId)) {
-    return res.status(400).send({ decorator: "NO_USER_ID_PROVIDED", error: true });
-  }
-
-  let targetUser = await Data.getUserById({
-    id: userId,
-    sanitize: true,
-    publicOnly: true,
+  let slates = await Data.getSlatesByUserId({
+    ownerId: id,
     includeFiles: true,
   });
 
-  if (!targetUser) {
+  if (!slates) {
     return res.status(404).send({
-      decorator: "USER_NOT_FOUND",
+      decorator: "COULD_NOT_FETCH_COLLECTIONS",
       error: true,
     });
   }
 
-  if (targetUser.error) {
+  if (slates.error) {
     return res.status(500).send({
-      decorator: "USER_NOT_FOUND",
+      decorator: "COULD_NOT_FETCH_COLLECTIONS",
       error: true,
     });
   }
 
-  return res.status(200).send({ decorator: "GET_USER", user: targetUser });
+  slates = slates.map((each) => {
+    each.data.url = `https://slate.host/${user.username}/${each.slatename}`;
+    return each;
+  });
+
+  return res.status(200).send({ decorator: "GET", user, collections: slates });
 };

@@ -9,31 +9,34 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, key, user } = userInfo;
 
-  let reformattedUser = Conversions.convertToV1User(user);
+  let slateId = req.body?.data?.id;
 
-  let slates = await Data.getSlatesByUserId({
-    ownerId: user.id,
-    includeFiles: true,
-    publicOnly: !req.body.data?.private,
-  });
+  if (Strings.isEmpty(slateId)) {
+    return res.status(400).send({ decorator: "NO_ID_PROVIDED", error: true });
+  }
 
-  if (!slates) {
+  let slate = await Data.getSlateById({ id: slateId, includeFiles: true });
+
+  if (!slate) {
     return res.status(404).send({
-      decorator: "COULD_NOT_FETCH_SLATES",
+      decorator: "COLLECTION_NOT_FOUND",
       error: true,
     });
   }
 
-  if (slates.error) {
+  if (slate.error) {
     return res.status(500).send({
-      decorator: "COULD_NOT_FETCH_SLATES",
+      decorator: "ERROR_WHILE_LOCATING_COLLECTION",
       error: true,
     });
   }
 
-  let reformattedSlates = slates.map((slate) => Conversions.convertToV1Slate(slate));
+  if (!slate.isPublic) {
+    return res.status(400).send({
+      decorator: "COLLECTION_IS_PRIVATE",
+      error: true,
+    });
+  }
 
-  return res
-    .status(200)
-    .send({ decorator: "V1_GET", slates: reformattedSlates, user: reformattedUser });
+  return res.status(200).send({ decorator: "GET_COLLECTION", collection: slate });
 };
