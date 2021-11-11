@@ -25,7 +25,7 @@ export const authenticate = async (state) => {
   if (jwt) {
     cookies.remove(Credentials.session.key, {
       path: "/",
-      maxAge: 3600 * 24 * 7,
+      maxAge: 3600 * 24 * 30,
       sameSite: "strict",
     });
   }
@@ -43,7 +43,7 @@ export const authenticate = async (state) => {
     // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
     cookies.set(Credentials.session.key, response.token, {
       path: "/",
-      maxAge: 3600 * 24 * 7,
+      maxAge: 3600 * 24 * 30,
       sameSite: "strict",
     });
   }
@@ -58,7 +58,7 @@ export const authenticateViaTwitter = (response) => {
   if (jwt) {
     cookies.remove(Credentials.session.key, {
       path: "/",
-      maxAge: 3600 * 24 * 7,
+      maxAge: 3600 * 24 * 30,
       sameSite: "strict",
     });
   }
@@ -74,7 +74,7 @@ export const authenticateViaTwitter = (response) => {
     // + Not using sessionStorage so the cookie doesn't leave when the browser dies.
     cookies.set(Credentials.session.key, response.token, {
       path: "/",
-      maxAge: 3600 * 24 * 7,
+      maxAge: 3600 * 24 * 30,
       sameSite: "strict",
     });
   }
@@ -96,7 +96,7 @@ export const signOut = async ({ viewer }) => {
   if (jwt) {
     cookies.remove(Credentials.session.key, {
       path: "/",
-      maxAge: 3600 * 24 * 7,
+      maxAge: 3600 * 24 * 30,
       sameSite: "strict",
     });
   }
