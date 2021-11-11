@@ -96,7 +96,7 @@ const surveyPage = {
   id: "NAV_SURVEY",
   name: "Onboarding Survey",
   pageTitle: "Welcome to Slate",
-  pathname: "/_/welcome",
+  pathname: "/_/data",
   ignore: true,
 };
 
