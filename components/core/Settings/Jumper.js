@@ -22,12 +22,6 @@ import { Textarea } from "~/components/system/components/Textarea";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
 import * as Type from "~/components/system/components/Typography";
 
-const STYLES_FLEX_ROW = `
-  display: flex;
-  flex-direction: row;
-  position: static;
-`;
-
 const STYLES_FLEX_COLUMN = `
   display: flex;
   flex-direction: column;
@@ -58,7 +52,7 @@ const STYLES_JUMPER_DISMISS_BUTTON = (theme) => css`
 `;
 
 const STYLES_JUMPER_MAIN = css`
-  ${STYLES_FLEX_ROW}
+  ${Styles.HORIZONTAL_CONTAINER};
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
@@ -67,10 +61,10 @@ const STYLES_JUMPER_MAIN = css`
 `;
 
 const STYLES_JUMPER_SIDEBAR = css`
-  ${STYLES_FLEX_ROW}
+  ${Styles.HORIZONTAL_CONTAINER};
   align-items: flex-start;
   width: 190px;
-  height: 344px;
+  height: 100%;
   padding: 20px 0px;
   border-right: 1px solid ${Constants.system.grayLight5};
 `;
@@ -82,9 +76,8 @@ const STYLES_JUMPER_CONTENT = css`
   height: 340px;
   overflow: scroll;
   margin: 0px 20px;
-  padding-bottom: 140px;
+  padding-bottom: 160px;
   padding-top: 20px;
-
   ::-webkit-scrollbar {
     width: 0;
     background: transparent; 
@@ -107,7 +100,7 @@ const STYLES_ITEM_CONTAINER = css`
   ${STYLES_FLEX_COLUMN}
   width: 100%;
   height: 76px;
-  margin: 20px 0px;
+  margin-top: 24px;
 `;
 
 const STYLES_ITEM_HEADER = css`
@@ -123,7 +116,7 @@ const STYLES_AVATAR_BOX = css`
 `;
 
 const STYLES_AVATAR_UPLOAD = css`
-  ${STYLES_FLEX_ROW}
+  ${Styles.HORIZONTAL_CONTAINER};
   align-items: flex-end;
 `;
 
@@ -132,7 +125,7 @@ const STYLES_EDIT_INFO_FOOTER = css`
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 452px;
+  width: 448px;
   height: 50px;
   padding: 12px 20px;
   background-color: ${Constants.system.white};
@@ -145,9 +138,8 @@ const STYLES_MENU_CONTAINER = css`
   flex-direction: column;
   align-items: flex-start;
   padding: 16px;
-  width: 184px;
+  width: 200px;
   height: auto;
-  margin: 0px 0px;
 `;
 
 const STYLES_MENU_ITEM = css`
@@ -171,18 +163,38 @@ const STYLES_MENU_ITEM_ICON = css`
   margin-right: 16px;
 `;
 
+const STYLES_FILE_HIDDEN = css`
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: -1px;
+  left: -1px;
+`;
+
+function truncateString(str, num) {
+  if (str.length > num) {
+    return str.slice(0, num) + "...";
+  } else {
+    return str;
+  }
+}
+
 const Sidebar = (props) => {
   return (
     <div css={STYLES_JUMPER_SIDEBAR}>
       <div css={STYLES_ACCOUNT}>
         <ProfilePhoto
           user={props.viewer}
-          style={{ margin: "10px 0px" }}
+          style={{ marginBottom: "4px", borderRadius: '10px' }}
           size={48}
         />
         <div css={STYLES_ACCOUNT_USER}>
-          <p style={{ fontWeight: "500", fontSize: "14px" }}>{props.viewer.username}</p>
-          <p style={{ fontWeight: "normal", fontSize: "12px" }}>{props.viewer.email}</p>
+          <p style={{ fontWeight: "500", fontSize: "14px" }}>{props.viewer.name}</p>
+          <p style={{ fontWeight: "normal", fontSize: "12px" }}>
+            {truncateString(props.viewer.email, 20)}
+          </p>
         </div>
 
         <div css={STYLES_MENU_CONTAINER}>
@@ -275,17 +287,25 @@ const TabContent = (props) => {
             <ProfilePhoto
               user={state}
               size={48}
+              style={{ borderRadius: '10px' }}
             />
-            <input style={{ visibility: 'hidden', width: '0px' }} type="file" id="upload-avatar" onChange={_handleUpload} />
+
+            <input 
+              type="file"
+              id="file-input-id"
+              css={STYLES_FILE_HIDDEN}
+              onChange={_handleUpload}
+            />
+
             <ButtonSecondary
-              style={{ marginLeft: "8px", minHeight: "24px" }}
+              style={{ marginLeft: "8px", minHeight: "24px", borderRadius: '8px' }}
               type="label"
-              for="upload-avatar"
-              accept="image/png, image/jpeg, image/jpg"
+              htmlFor="file-input-id"
               loading={state.changingAvatar}
             >
               Upload
             </ButtonSecondary>
+
           </div>
         </div>
 
@@ -295,6 +315,7 @@ const TabContent = (props) => {
             name="name"
             value={state.name}
             placeholder="Your name..."
+            maxLength="255"
             onChange={_handleChange}
           />
         </div>
@@ -305,18 +326,19 @@ const TabContent = (props) => {
             name="body"
             value={state.body}
             placeholder="A bit about yourself..."
+            maxLength="2000"
             onChange={_handleChange}
           />
         </div>
 
         <div css={STYLES_EDIT_INFO_FOOTER}>
           <ButtonSecondary 
-            style={{ minHeight: "24px", height: "24px", marginLeft: "auto" }}
+            style={{ minHeight: "24px", marginLeft: "auto", borderRadius: '8px' }}
           >
             Cancel
           </ButtonSecondary>
           <ButtonPrimary
-            style={{ minHeight: "24px", height: "24px", marginLeft: '8px' }}
+            style={{ minHeight: "24px", marginLeft: '8px', borderRadius: '8px' }}
             onClick={_handleSave}
             loading={state.savingNameBio}
           >
@@ -343,10 +365,6 @@ export function SettingsJumper({ data }) {
     {
       title: 'Profile',
       icon: <SVG.Users />
-    },
-    {
-      title: 'Theme',
-      icon: <SVG.Moon style={{ marginTop: '-4px' }} />
     },
     {
       title: 'Account',

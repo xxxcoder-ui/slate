@@ -29,10 +29,8 @@ const Trigger = ({ viewer, css, children, ...props }) => {
     Events.dispatchCustomEvent({ name: "open-settings-jumper" });
   };
   return (
-    <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-      <button css={[Styles.BUTTON_RESET, css]} onClick={showSettingsModal} {...props}>
-        {children}
-      </button>
+    <div onClick={showSettingsModal} {...props}>
+      {children}
     </div>
   );
 };
