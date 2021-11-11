@@ -157,7 +157,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
             {/**TODO: update Search component */}
             <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
           </div>
-          <UploadOnboarding viewer={viewer}>
+          <UploadOnboarding onAction={onAction} viewer={viewer}>
             <Upload.Provider page={page} data={data} viewer={viewer}>
               <Upload.Root data={data}>
                 <div css={STYLES_RIGHT}>
