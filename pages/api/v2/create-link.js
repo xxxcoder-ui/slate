@@ -48,7 +48,9 @@ export default async (req, res) => {
   });
 
   if (!filteredFiles?.length) {
-    return res.status(200).send({ decorator: "LINK_DUPLICATE", data: duplicateFiles });
+    let reformattedFiles = duplicateFiles.map((file) => Conversions.convertToV2File(file));
+
+    return res.status(200).send({ decorator: "LINK_DUPLICATE", data: reformattedFiles });
   }
 
   files = [];
@@ -127,7 +129,6 @@ export default async (req, res) => {
     if (returnedDecorator) {
       decorator = returnedDecorator;
     }
-    added = addedToSlate;
   }
 
   SearchManager.indexFile(createdFiles);

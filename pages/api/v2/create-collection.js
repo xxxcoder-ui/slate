@@ -33,7 +33,7 @@ export default async (req, res) => {
 
   const slate = await Data.createSlate({
     ownerId: id,
-    slatename: Strings.createSlug(req.body.data.data.name),
+    slatename: Strings.createSlug(req.body.data.name),
     isPublic: req.body.data.isPublic,
     name: req.body.data.name,
     body: req.body.data.body,

@@ -127,7 +127,6 @@ export default async (req, res) => {
     if (returnedDecorator) {
       decorator = returnedDecorator;
     }
-    added = addedToSlate;
   }
 
   SearchManager.indexFile(createdFiles);

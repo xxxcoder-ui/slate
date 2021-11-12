@@ -9,6 +9,8 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, key, user } = userInfo;
 
+  let reformattedUser = Conversions.convertToV3User(user);
+
   let slates = await Data.getSlatesByUserId({
     ownerId: id,
     includeFiles: true,
@@ -28,10 +30,5 @@ export default async (req, res) => {
     });
   }
 
-  slates = slates.map((each) => {
-    each.data.url = `https://slate.host/${user.username}/${each.slatename}`;
-    return each;
-  });
-
-  return res.status(200).send({ decorator: "GET", user, collections: slates });
+  return res.status(200).send({ decorator: "GET", user: reformattedUser, collections: slates });
 };
