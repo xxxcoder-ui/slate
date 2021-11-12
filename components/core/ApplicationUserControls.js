@@ -31,7 +31,7 @@ const STYLES_PROFILE_MOBILE = css`
 const STYLES_POPOVER_CONTANIER = (theme) => css`
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid ${theme.semantic.borderGrayLight4};
+  border: 1px solid ${theme.semantic.borderGrayLight};
   box-shadow: ${theme.shadow.lightLarge};
 
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
