@@ -58,6 +58,8 @@ export default async (req, res) => {
     SearchManager.updateFile(updatedFiles);
   }
 
+  Utilities.removeFromSlateCheckCoverImage(slate, fileIds);
+
   ViewerManager.hydratePartial(id, { slates: true });
 
   return res.status(200).send({

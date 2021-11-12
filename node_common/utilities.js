@@ -373,6 +373,8 @@ export const addToSlate = async ({ slate, files, user, saveCopy = false }) => {
     addToPublicCollectionUpdatePrivacy({ filteredFiles });
   }
 
+  addToSlateCheckCoverImage(slate, files);
+
   return { added: response.length };
 };
 
@@ -400,4 +402,57 @@ export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
     }
   }
   return madePublic;
+};
+
+const selectSlateCoverImage = (objects) => {
+  if (!objects.length) return null;
+  for (let object of objects) {
+    if (
+      Validations.isPreviewableImage(object.type) ||
+      (object.coverImage?.type && Validations.isPreviewableImage(object.coverImage.type))
+    ) {
+      return object;
+    }
+  }
+  return objects[0];
+};
+
+export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
+  if (slate.coverImage) {
+    if (Validations.isPreviewableImage(slate.coverImage.type)) return;
+    let imageCoverImage = slate.coverImage.coverImage;
+    if (imageCoverImage && Validations.isPreviewableImage(imageCoverImage.type)) return;
+  }
+  if (!filesAdded) return;
+  let files;
+  if (Array.isArray(filesAdded)) {
+    files = filesAdded;
+  } else {
+    files = [filesAdded];
+  }
+  let newObjects = (slate.objects || []).push(...files);
+  let coverImage = selectSlateCoverImage(newObjects);
+  if (coverImage.id !== slate.coverImage?.id) {
+    slate.coverImage = coverImage;
+    await Data.updateSlateById(slate);
+  }
+};
+
+export const removeFromSlateCheckCoverImage = async (slate, fileIdsRemoved) => {
+  if (!slate.coverImage) return;
+  let fileIds;
+  if (Array.isArray(fileIdsRemoved)) {
+    fileIds = fileIdsRemoved;
+  } else {
+    fileIds = [fileIdsRemoved];
+  }
+  for (let fileId of fileIds) {
+    if (fileId === slate.coverImage.id) {
+      let newObjects = slate.objects.filter((obj) => !fileIds.includes(obj.id));
+      let coverImage = selectSlateCoverImage(newObjects);
+      slate.coverImage = coverImage;
+      await Data.updateSlateById(slate);
+      return;
+    }
+  }
 };

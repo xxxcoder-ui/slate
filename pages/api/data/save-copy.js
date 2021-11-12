@@ -105,11 +105,6 @@ export default async (req, res) => {
     added = addedToSlate;
   }
 
-  //NOTE(martina): leaving createdFiles out of the privacy recalculation since those should already have the correct privacy
-  if (slate?.isPublic) {
-    await Utilities.addToPublicCollectionUpdatePrivacy({ files: duplicateFiles });
-  }
-
   let updatedFiles = await Data.getFilesByIds({ ids: filesToAddToSlate.map((file) => file.id) });
   SearchManager.indexFile(updatedFiles); //NOTE(martina): using createFile instead of updateFile b/c createFile also works for existing files (it just overwrites)
 
