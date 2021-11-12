@@ -49,7 +49,5 @@ export default async (req, res) => {
 
   Monitor.createSlate({ user, slate });
 
-  let reformattedSlate = Conversions.convertToV2Slate(slate);
-
-  return res.status(200).send({ decorator: "CREATE_COLLECTION", slate: reformattedSlate });
+  return res.status(200).send({ decorator: "CREATE_COLLECTION", slate });
 };

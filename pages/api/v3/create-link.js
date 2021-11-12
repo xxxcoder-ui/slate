@@ -48,9 +48,7 @@ export default async (req, res) => {
   });
 
   if (!filteredFiles?.length) {
-    let reformattedFiles = duplicateFiles.map((file) => Conversions.convertToV2File(file));
-
-    return res.status(200).send({ decorator: "LINK_DUPLICATE", data: reformattedFiles });
+    return res.status(200).send({ decorator: "LINK_DUPLICATE", data: duplicateFiles });
   }
 
   files = [];
@@ -139,10 +137,8 @@ export default async (req, res) => {
     Monitor.upload({ user, files });
   }
 
-  let reformattedFiles = filesToAddToSlate.map((file) => Conversions.convertToV2File(file));
-
   return res.status(200).send({
     decorator,
-    data: reformattedFiles,
+    data: filesToAddToSlate,
   });
 };

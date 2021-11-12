@@ -1,9 +1,12 @@
+import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import SearchManager from "~/node_common/managers/search";
 import * as ViewerManager from "~/node_common/managers/viewer";
 import * as RequestUtilities from "~/node_common/request-utilities";
+import * as Conversions from "~/common/conversions";
+
+import SearchManager from "~/node_common/managers/search";
 
 export default async (req, res) => {
   const userInfo = await RequestUtilities.checkAuthorizationExternal(req, res);
@@ -39,10 +42,8 @@ export default async (req, res) => {
     id: req.body.data.id,
     updatedAt: new Date(),
     isPublic: req.body.data.isPublic,
-    data: {
-      name: req.body.data.data?.name,
-      body: req.body.data.data?.body,
-    },
+    name: req.body.data.data?.name,
+    body: req.body.data.data?.body,
   };
 
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
@@ -61,8 +62,8 @@ export default async (req, res) => {
     }
   }
 
-  if (updates.data.name && updates.data.name !== slate.data.name) {
-    if (!Validations.slatename(slate.data.name)) {
+  if (updates.name && updates.name !== slate.name) {
+    if (!Validations.slatename(slate.name)) {
       return res.status(400).send({
         decorator: "INVALID_COLLECTION_NAME",
         error: true,
@@ -70,7 +71,7 @@ export default async (req, res) => {
     }
 
     const existingSlate = await Data.getSlateByName({
-      slatename: updates.data.name,
+      slatename: updates.name,
       ownerId: user.id,
     });
 
@@ -80,7 +81,7 @@ export default async (req, res) => {
         error: true,
       });
     } else {
-      updates.slatename = Strings.createSlug(updates.data.name);
+      updates.slatename = Strings.createSlug(updates.name);
     }
   }
 
@@ -108,5 +109,7 @@ export default async (req, res) => {
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 
-  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: updatedSlate });
+  let reformattedSlate = Conversions.convertToV2Slate(updatedSlate);
+
+  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: reformattedSlate });
 };

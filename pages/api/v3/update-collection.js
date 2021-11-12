@@ -13,37 +13,37 @@ export default async (req, res) => {
   if (!userInfo) return;
   const { id, key, user } = userInfo;
 
-  if (!req.body.data?.id) {
+  if (!req.body?.data?.id) {
     return res.status(500).send({
-      decorator: "NO_ID_PROVIDED",
+      decorator: "UPDATE_COLLECTION_MUST_PROVIDE_DATA",
       error: true,
     });
   }
 
-  const slate = await Data.getSlateById({ id: req.body.data.id });
+  const slate = await Data.getSlateById({ id: req.body.data.id, includeFiles: true });
 
   if (!slate) {
-    return res.status(404).send({ decorator: "SLATE_NOT_FOUND", error: true });
+    return res.status(404).send({ decorator: "COLLECTION_NOT_FOUND", error: true });
   }
 
   if (slate.error) {
-    return res.status(500).send({ decorator: "SLATE_NOT_FOUND", error: true });
+    return res.status(500).send({ decorator: "COLLECTION_NOT_FOUND", error: true });
   }
 
   if (slate.ownerId !== user.id) {
     return res.status(400).send({
-      decorator: "NOT_SLATE_OWNER_UPDATE_NOT_PERMITTED",
+      decorator: "NOT_COLLECTION_OWNER_UPDATE_NOT_PERMITTED",
       error: true,
     });
   }
 
-  const updates = {
+  //NOTE(martina): cleans the input to remove fields they should not be changing like ownerId, createdAt, etc.
+  let updates = {
     id: req.body.data.id,
-    slatename: req.body.data.slatename,
-    isPublic: req.body.data.data.public,
     updatedAt: new Date(),
-    name: req.body.data.data.name,
-    body: req.body.data.data.body,
+    isPublic: req.body.data.isPublic,
+    name: req.body.data.name,
+    body: req.body.data.body,
   };
 
   if (typeof updates.isPublic !== "undefined" && slate.isPublic !== updates.isPublic) {
@@ -54,29 +54,18 @@ export default async (req, res) => {
     });
 
     if (!privacyResponse) {
-      return res.status(404).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
+      return res.status(404).send({ decorator: "UPDATE_COLLECTION_PRIVACY_FAILED", error: true });
     }
 
     if (privacyResponse.error) {
-      return res.status(500).send({ decorator: "UPDATE_SLATE_PRIVACY_FAILED", error: true });
+      return res.status(500).send({ decorator: "UPDATE_COLLECTION_PRIVACY_FAILED", error: true });
     }
-
-    let updatedFiles;
-    if (!updates.isPublic) {
-      updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
-        files: slate.objects,
-      });
-    } else {
-      updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
-    }
-
-    SearchManager.updateFile(updatedFiles);
   }
 
   if (updates.name && updates.name !== slate.name) {
     if (!Validations.slatename(slate.name)) {
       return res.status(400).send({
-        decorator: "UPDATE_SLATE_INVALID_NAME",
+        decorator: "INVALID_COLLECTION_NAME",
         error: true,
       });
     }
@@ -88,7 +77,7 @@ export default async (req, res) => {
 
     if (existingSlate) {
       return res.status(500).send({
-        decorator: "UPDATE_SLATE_NAME_TAKEN",
+        decorator: "COLLECTION_NAME_TAKEN",
         error: true,
       });
     } else {
@@ -99,16 +88,26 @@ export default async (req, res) => {
   let updatedSlate = await Data.updateSlateById(updates);
 
   if (!updatedSlate) {
-    return res.status(404).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
+    return res.status(404).send({ decorator: "UPDATE_COLLECTION_FAILED", error: true });
   }
 
   if (updatedSlate.error) {
-    return res.status(500).send({ decorator: "UPDATE_SLATE_FAILED", error: true });
+    return res.status(500).send({ decorator: "UPDATE_COLLECTION_FAILED", error: true });
   }
+
+  let updatedFiles;
+  if (slate.isPublic && !updates.isPublic) {
+    updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
+      files: slate.objects,
+    });
+  } else if (!slate.isPublic && updates.isPublic) {
+    updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
+  }
+  SearchManager.updateFile(updatedFiles);
 
   SearchManager.updateSlate(updatedSlate);
 
   ViewerManager.hydratePartial(user.id, { slates: true });
 
-  return res.status(200).send({ decorator: "V1_UPDATE_SLATE", slate: updatedSlate });
+  return res.status(200).send({ decorator: "UPDATE_COLLECTION", collection: updatedSlate });
 };

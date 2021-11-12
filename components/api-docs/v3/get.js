@@ -3,7 +3,7 @@ import * as System from "~/components/system";
 
 import CodeBlock from "~/components/system/CodeBlock";
 
-const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v2/get', {
+const EXAMPLE_CODE_JS = (key) => `const response = await fetch('https://slate.host/api/v3/get', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ if (json.error) {
 const EXAMPLE_CODE_PY = (key) => `import requests
 import json as JSON
 
-url = "https://slate.host/api/v2/get"
+url = "https://slate.host/api/v3/get"
 headers = {
     "content-type": "application/json",
     "Authorization": "${key}",
@@ -39,7 +39,7 @@ print(JSON.dumps(r.json(), indent=2))`;
 
 const EXAMPLE_RESPONSE = `
 {
-  decorator: "V2_GET",
+  decorator: "V3_GET",
   slates: [
     {
       id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -51,20 +51,16 @@ const EXAMPLE_RESPONSE = `
           cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a"
           filename: "door.jpg",
           ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-          data: {
-            name: "Door",
-            size: 33676,
-            type: "image/jpeg",
-            blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
-          },
+          name: "Door",
+          size: 33676,
+          type: "image/jpeg",
+          blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
         },
       ],
       ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      data: {
-        body: "just a public collection, nothing special",
-        name: "Public Example",
-        url: "https://slate.host/devexamples/public-example",
-      },
+      body: "just a public collection, nothing special",
+      name: "Public Example",
+      url: "https://slate.host/devexamples/public-example",
     },
   ],
   user: {
@@ -75,21 +71,18 @@ const EXAMPLE_RESPONSE = `
         cid: "bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a", // the file URL is "https://slate.textile.io/ipfs/bafkreibrpxcv37juaq67it2gu7xyjo5fzq7v3r55ykcgzylvsfljcv3s3a"
         filename: "door.jpg",
         ownerId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        data: {
-          name: "Door",
-          size: 33676,
-          type: "image/jpeg",
-          blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
-        },
+        name: "Door",
+        size: 33676,
+        type: "image/jpeg",
+        blurhash: "U6BzILt700IADjWBx]oz00f6?bs:00Rj_Nt7",
       },
     ],
-    data: {
-      photo: "https://slate.textile.io/ipfs/cid-goes-here",
-      body: "A user of slate",
-      name: "Bob Smith",
-    },
+    photo: "https://slate.textile.io/ipfs/cid-goes-here",
+    body: "A user of slate",
+    name: "Bob Smith",
   },
-};`;
+};
+`;
 
 export default class APIDocsGet extends React.Component {
   render() {

@@ -1,8 +1,8 @@
 import * as Utilities from "~/node_common/utilities";
 import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
-import * as Powergate from "~/node_common/powergate";
 import * as RequestUtilities from "~/node_common/request-utilities";
+import * as Conversions from "~/common/conversions";
 
 export default async (req, res) => {
   const userInfo = await RequestUtilities.checkAuthorizationExternal(req, res);
@@ -35,28 +35,7 @@ export default async (req, res) => {
     return res.status(400).send({ decorator: "SLATE_IS_PRIVATE", error: true });
   }
 
-  //NOTE(martina): convert the new database structure to the old structure
-  let reformattedObjects = slate.objects.map((file) => {
-    return {
-      ...file,
-      ...file.data,
-      data: null,
-      url: Strings.getURLfromCID(file.cid),
-    };
-  });
-
-  let reformattedSlate = {
-    id: slate.id,
-    updated_at: slate.updatedAt,
-    created_at: slate.createdAt,
-    slatename: slate.slatename,
-    data: {
-      name: slate.data.name,
-      public: slate.isPublic,
-      objects: reformattedObjects,
-      ownerId: slate.ownerId,
-    },
-  };
+  let reformattedSlate = Conversions.convertToV1Slate(slate);
 
   return res.status(200).send({ decorator: "V1_GET_SLATE", slate: reformattedSlate });
 };
