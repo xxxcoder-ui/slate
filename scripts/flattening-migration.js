@@ -139,7 +139,7 @@ const addSlateColumns = async () => {
   await DB.schema.table("slates", function (table) {
     table.string("body", 2000).nullable();
     table.string("name").nullable();
-    table.string("preview").nullable();
+    table.string("coverImage").nullable();
   });
 };
 
@@ -224,7 +224,7 @@ const migrateSlateTable = async () => {
     let newSlate = {
       name: data.name,
       body: data.body,
-      preview: data.preview,
+      coverImage: data.preview,
     };
 
     if (defaultBody.includes(data.body)) {
@@ -357,7 +357,7 @@ Slates
 [ 
     'data.name', -> 'name' MIGRATED
     'data.body', -> 'body' MIGRATED
-    'data.preview', -> 'preview' MIGRATED
+    'data.preview', -> 'coverImage' MIGRATED
 ]
 
 Files

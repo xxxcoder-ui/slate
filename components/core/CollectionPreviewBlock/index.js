@@ -117,7 +117,9 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const title = collection.name || collection.slatename;
   const isOwner = viewer?.id === collection.ownerId;
 
-  const preview = React.useMemo(() => getObjectToPreview(collection.objects), [collection.objects]);
+  const preview = React.useMemo(() => getObjectToPreview(collection.coverImage), [
+    collection.coverImage,
+  ]);
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -330,17 +332,10 @@ const useAnimateDescription = ({
   return { containerVariants, descriptionControls };
 };
 
-const getObjectToPreview = (objects = []) => {
-  if (objects.length === 0) return { type: "EMPTY" };
+const getObjectToPreview = (coverImage) => {
+  let isImage =
+    Validations.isPreviewableImage(coverImage) ||
+    (coverImage.coverImage && Validations.isPreviewableImage(coverImage.coverImage));
 
-  let objectIdx = 0;
-  let isImage = false;
-
-  objects.some((object, i) => {
-    const isPreviewableImage = Validations.isPreviewableImage(object.type);
-    if (isPreviewableImage) (objectIdx = i), (isImage = true);
-    return isPreviewableImage;
-  });
-
-  return { object: objects[objectIdx], type: isImage ? "IMAGE" : "PLACEHOLDER" };
+  return { object: coverImage, type: isImage ? "IMAGE" : "PLACEHOLDER" };
 };

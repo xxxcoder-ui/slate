@@ -212,18 +212,7 @@ const STYLES_EMPTY_SLATE_PREVIEW = css`
 `;
 
 const SlatePreview = ({ slate, user }) => {
-  let preview;
-  if (slate.objects?.length) {
-    for (let obj of slate.objects) {
-      if (obj.type && Validations.isPreviewableImage(obj.type)) {
-        preview = obj;
-        break;
-      }
-    }
-    if (!preview) {
-      preview = slate.objects[0];
-    }
-  }
+  let preview = slate.coverImage;
   return (
     <div style={{ textAlign: "center" }}>
       <div css={STYLES_PREVIEW_IMAGE}>

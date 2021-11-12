@@ -230,21 +230,21 @@ export default class SceneSlate extends React.Component {
           description = `View the collection ${name} on Slate`;
         }
         title = `${name} • Slate`;
-        image = slate.preview;
-        const objects = slate.objects;
-        if (!image && objects) {
-          for (let i = 0; i < objects.length; i++) {
-            if (
-              objects[i].type &&
-              Validations.isPreviewableImage(objects[i].type) &&
-              objects[i].size &&
-              objects[i].size < Constants.linkPreviewSizeLimit
-            ) {
-              image = Strings.getURLfromCID(objects[i].cid);
-              break;
-            }
-          }
-        }
+        imageUrl = slate.coverImage?.cid ? Strings.getURLfromCID(slate.coverImage.cid) : null;
+        // const objects = slate.objects;
+        // if (!image && objects) {
+        //   for (let i = 0; i < objects.length; i++) {
+        //     if (
+        //       objects[i].type &&
+        //       Validations.isPreviewableImage(objects[i].type) &&
+        //       objects[i].size &&
+        //       objects[i].size < Constants.linkPreviewSizeLimit
+        //     ) {
+        //       image = Strings.getURLfromCID(objects[i].cid);
+        //       break;
+        //     }
+        //   }
+        // }
       }
 
       return (
@@ -330,26 +330,26 @@ class SlatePage extends React.Component {
     });
   };
 
-  _handleSavePreview = async (preview) => {
-    if (!this.props.viewer) {
-      return;
-    }
-    let updateObject = { id: this.props.data.id, data: { preview } };
+  // _handleSavePreview = async (preview) => {
+  //   if (!this.props.viewer) {
+  //     return;
+  //   }
+  //   let updateObject = { id: this.props.data.id, data: { preview } };
 
-    let slates = this.props.viewer.slates;
-    let slateId = this.props.data.id;
-    for (let slate of slates) {
-      if (slate.id === slateId) {
-        slate.preview = preview;
-        break;
-      }
-    }
-    this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
+  //   let slates = this.props.viewer.slates;
+  //   let slateId = this.props.data.id;
+  //   for (let slate of slates) {
+  //     if (slate.id === slateId) {
+  //       slate.preview = preview;
+  //       break;
+  //     }
+  //   }
+  //   this.props.onAction({ type: "UPDATE_VIEWER", viewer: { slates } });
 
-    const response = await Actions.updateSlate(updateObject);
+  //   const response = await Actions.updateSlate(updateObject);
 
-    Events.hasError(response);
-  };
+  //   Events.hasError(response);
+  // };
 
   // _handleSelect = (index) =>
   //   Events.dispatchCustomEvent({
