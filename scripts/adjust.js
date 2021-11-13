@@ -37,7 +37,12 @@ const deleteSourceAndAuthor = db.schema.table("files", function (table) {
   table.dropColumns("source", "author");
 });
 
-Promise.all([deleteSourceAndAuthor]);
+const addSlateCoverImage = db.schema.table("slates", function (table) {
+  table.dropColumns("preview");
+  table.jsonb("coverImage").nullable();
+});
+
+Promise.all([addSlateCoverImage]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

@@ -57,7 +57,7 @@ const createSlatesTable = db.schema.createTable("slates", function (table) {
   table.string("slatename").notNullable();
   table.string("body", 2000).nullable();
   table.string("name").nullable();
-  table.string("coverImage").nullable();
+  table.jsonb("coverImage").nullable();
   table.boolean("isPublic").notNullable().defaultTo(false);
   table.integer("subscriberCount").notNullable().defaultTo(0);
   table.integer("fileCount").notNullable().defaultTo(0);

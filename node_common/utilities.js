@@ -1,5 +1,6 @@
 import * as Environment from "~/node_common/environment";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
 import * as Constants from "~/node_common/constants";
 import * as Data from "~/node_common/data";
 import * as Social from "~/node_common/social";
@@ -404,17 +405,22 @@ export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
   return madePublic;
 };
 
-const selectSlateCoverImage = (objects) => {
+export const selectSlateCoverImage = (objects) => {
+  let selectedObject;
   if (!objects.length) return null;
   for (let object of objects) {
     if (
       Validations.isPreviewableImage(object.type) ||
-      (object.coverImage?.type && Validations.isPreviewableImage(object.coverImage.type))
+      (object.coverImage?.type && Validations.isPreviewableImage(object.coverImage.type)) ||
+      object.linkImage
     ) {
-      return object;
+      selectedObject = object;
+      break;
     }
   }
-  return objects[0];
+  selectedObject = objects[0];
+  let { tags, oldData, ...cleanedObject } = selectedObject;
+  return cleanedObject;
 };
 
 export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
