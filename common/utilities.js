@@ -169,3 +169,16 @@ export const clamp = (value, min, max) => {
   if (value > max) return max;
   return value;
 };
+
+export const getCoverImageUrlIfExists = (coverImage) => {
+  if (!coverImage) return;
+  if (Validations.isPreviewableImage(coverImage.type)) {
+    return Strings.getURLfromCID(coverImage.cid);
+  }
+  if (coverImage.coverImage) {
+    return Strings.getURLfromCID(coverImage.coverImage.cid);
+  }
+  if (coverImage.linkImage) {
+    return coverImage.linkImage;
+  }
+};

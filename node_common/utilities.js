@@ -8,6 +8,8 @@ import * as Logging from "~/common/logging";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 import * as Arrays from "~/common/arrays";
+import * as Utilities from "~/common/utilities";
+
 import SearchManager from "~/node_common/managers/search";
 
 import crypto from "crypto";
@@ -409,11 +411,7 @@ export const selectSlateCoverImage = (objects) => {
   let selectedObject;
   if (!objects.length) return null;
   for (let object of objects) {
-    if (
-      Validations.isPreviewableImage(object.type) ||
-      (object.coverImage?.type && Validations.isPreviewableImage(object.coverImage.type)) ||
-      object.linkImage
-    ) {
+    if (Utilities.getCoverImageUrlIfExists(object)) {
       selectedObject = object;
       break;
     }
@@ -424,10 +422,8 @@ export const selectSlateCoverImage = (objects) => {
 };
 
 export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
-  if (slate.coverImage) {
-    if (Validations.isPreviewableImage(slate.coverImage.type)) return;
-    let imageCoverImage = slate.coverImage.coverImage;
-    if (imageCoverImage && Validations.isPreviewableImage(imageCoverImage.type)) return;
+  if (Utilities.getCoverImageUrlIfExists(slate.coverImage)) {
+    return;
   }
   if (!filesAdded) return;
   let files;
@@ -436,11 +432,12 @@ export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
   } else {
     files = [filesAdded];
   }
-  let newObjects = (slate.objects || []).push(...files);
+  let newObjects = (slate.objects || []).concat(files);
   let coverImage = selectSlateCoverImage(newObjects);
-  if (coverImage.id !== slate.coverImage?.id) {
+  if (coverImage?.id !== slate.coverImage?.id) {
     slate.coverImage = coverImage;
-    await Data.updateSlateById(slate);
+    let updatedSlate = await Data.updateSlateById(slate);
+    await SearchManager.updateSlate(updatedSlate);
   }
 };
 
@@ -457,7 +454,8 @@ export const removeFromSlateCheckCoverImage = async (slate, fileIdsRemoved) => {
       let newObjects = slate.objects.filter((obj) => !fileIds.includes(obj.id));
       let coverImage = selectSlateCoverImage(newObjects);
       slate.coverImage = coverImage;
-      await Data.updateSlateById(slate);
+      let updatedSlate = await Data.updateSlateById(slate);
+      await SearchManager.updateSlate(updatedSlate);
       return;
     }
   }

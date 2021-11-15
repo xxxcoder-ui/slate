@@ -7,7 +7,7 @@ import { runQuery } from "~/node_common/data/utilities";
 //NOTE(martina): you can pass in an update object whose data component is incomplete (e.g. data: { name: "New name" }) without accidentally
 //wiping the rest of data b/c this updater method overlays it over the current value for data
 
-export default async (slate) => {
+export default async ({ objects, ...slate }) => {
   return await runQuery({
     label: "UPDATE_SLATE_BY_ID",
     queryFn: async (DB) => {

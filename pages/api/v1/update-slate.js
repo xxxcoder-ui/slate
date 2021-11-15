@@ -20,7 +20,7 @@ export default async (req, res) => {
     });
   }
 
-  const slate = await Data.getSlateById({ id: req.body.data.id });
+  const slate = await Data.getSlateById({ id: req.body.data.id, includeFiles: true });
 
   if (!slate) {
     return res.status(404).send({ decorator: "SLATE_NOT_FOUND", error: true });
@@ -70,7 +70,9 @@ export default async (req, res) => {
       updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
     }
 
-    SearchManager.updateFile(updatedFiles);
+    if (updatedFiles.length) {
+      SearchManager.updateFile(updatedFiles);
+    }
   }
 
   if (updates.name && updates.name !== slate.name) {

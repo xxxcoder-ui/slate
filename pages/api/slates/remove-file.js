@@ -55,7 +55,9 @@ export default async (req, res) => {
     let updatedFiles = await Utilities.removeFromPublicCollectionUpdatePrivacy({
       files: slate.objects,
     });
-    SearchManager.updateFile(updatedFiles);
+    if (updatedFiles.length) {
+      SearchManager.updateFile(updatedFiles);
+    }
   }
 
   Utilities.removeFromSlateCheckCoverImage(slate, fileIds);
