@@ -246,25 +246,9 @@ export class SlatePreviewBlock extends React.Component {
 
   render() {
     const slate = this.props.slate;
-    let objects;
-    if (slate.preview) {
-      const cid = Strings.urlToCid(slate.preview);
-      let preview = slate.objects.find((each) => each.cid === cid);
-      if (preview) {
-        objects = [preview];
-      }
-    }
-    if (!objects) {
-      objects = [];
-      for (let file of slate.objects) {
-        if (Validations.isPreviewableImage(file.type)) {
-          objects.push(file);
-        }
-        if (objects.length >= 4) break;
-      }
-    }
-    if (!objects.length && slate.objects?.length) {
-      objects = [slate.objects[0]];
+    let objects = [];
+    if (slate.coverImage) {
+      objects = [slate.coverImage];
     }
 
     let contextMenu = (

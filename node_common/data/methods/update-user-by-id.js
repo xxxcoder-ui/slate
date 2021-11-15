@@ -2,7 +2,7 @@ import * as Serializers from "~/node_common/serializers";
 
 import { runQuery } from "~/node_common/data/utilities";
 
-export default async (user) => {
+export default async ({ library, slates, ...user }) => {
   return await runQuery({
     label: "UPDATE_USER_BY_ID",
     queryFn: async (DB) => {

@@ -1,5 +1,6 @@
 import * as Environment from "~/node_common/environment";
 import * as Strings from "~/common/strings";
+import * as Validations from "~/common/validations";
 import * as Constants from "~/node_common/constants";
 import * as Data from "~/node_common/data";
 import * as Social from "~/node_common/social";
@@ -7,6 +8,8 @@ import * as Logging from "~/common/logging";
 import * as ArrayUtilities from "~/node_common/array-utilities";
 import * as Monitor from "~/node_common/monitor";
 import * as Arrays from "~/common/arrays";
+import * as Utilities from "~/common/utilities";
+
 import SearchManager from "~/node_common/managers/search";
 
 import crypto from "crypto";
@@ -373,6 +376,8 @@ export const addToSlate = async ({ slate, files, user, saveCopy = false }) => {
     addToPublicCollectionUpdatePrivacy({ filteredFiles });
   }
 
+  addToSlateCheckCoverImage(slate, files);
+
   return { added: response.length };
 };
 
@@ -400,4 +405,58 @@ export const addToPublicCollectionUpdatePrivacy = async ({ files }) => {
     }
   }
   return madePublic;
+};
+
+export const selectSlateCoverImage = (objects) => {
+  let selectedObject;
+  if (!objects.length) return null;
+  for (let object of objects) {
+    if (Utilities.getCoverImageUrlIfExists(object)) {
+      selectedObject = object;
+      break;
+    }
+  }
+  selectedObject = objects[0];
+  let { tags, oldData, ...cleanedObject } = selectedObject;
+  return cleanedObject;
+};
+
+export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
+  if (Utilities.getCoverImageUrlIfExists(slate.coverImage)) {
+    return;
+  }
+  if (!filesAdded) return;
+  let files;
+  if (Array.isArray(filesAdded)) {
+    files = filesAdded;
+  } else {
+    files = [filesAdded];
+  }
+  let newObjects = (slate.objects || []).concat(files);
+  let coverImage = selectSlateCoverImage(newObjects);
+  if (coverImage?.id !== slate.coverImage?.id) {
+    slate.coverImage = coverImage;
+    let updatedSlate = await Data.updateSlateById(slate);
+    await SearchManager.updateSlate(updatedSlate);
+  }
+};
+
+export const removeFromSlateCheckCoverImage = async (slate, fileIdsRemoved) => {
+  if (!slate.coverImage) return;
+  let fileIds;
+  if (Array.isArray(fileIdsRemoved)) {
+    fileIds = fileIdsRemoved;
+  } else {
+    fileIds = [fileIdsRemoved];
+  }
+  for (let fileId of fileIds) {
+    if (fileId === slate.coverImage.id) {
+      let newObjects = slate.objects.filter((obj) => !fileIds.includes(obj.id));
+      let coverImage = selectSlateCoverImage(newObjects);
+      slate.coverImage = coverImage;
+      let updatedSlate = await Data.updateSlateById(slate);
+      await SearchManager.updateSlate(updatedSlate);
+      return;
+    }
+  }
 };

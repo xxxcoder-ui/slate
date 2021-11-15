@@ -17,7 +17,7 @@ export default async (req, res) => {
   const slateId = req.body.data.slate?.id;
   let slate;
   if (slateId) {
-    slate = await Data.getSlateById({ id: slateId });
+    slate = await Data.getSlateById({ id: slateId, includeFiles: true });
 
     if (!slate || slate.error) {
       slate = null;

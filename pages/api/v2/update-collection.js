@@ -103,7 +103,10 @@ export default async (req, res) => {
   } else if (!slate.isPublic && updates.isPublic) {
     updatedFiles = await Utilities.addToPublicCollectionUpdatePrivacy({ files: slate.objects });
   }
-  SearchManager.updateFile(updatedFiles);
+
+  if (updatedFiles.length) {
+    SearchManager.updateFile(updatedFiles);
+  }
 
   SearchManager.updateSlate(updatedSlate);
 

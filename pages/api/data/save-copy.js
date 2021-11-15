@@ -37,7 +37,7 @@ export default async (req, res) => {
   const slateId = req.body.data.slate?.id;
   let slate;
   if (slateId) {
-    slate = await Data.getSlateById({ id: slateId });
+    slate = await Data.getSlateById({ id: slateId, includeFiles: true });
 
     if (!slate || slate.error) {
       slate = null;
@@ -103,11 +103,6 @@ export default async (req, res) => {
       decorator = returnedDecorator;
     }
     added = addedToSlate;
-  }
-
-  //NOTE(martina): leaving createdFiles out of the privacy recalculation since those should already have the correct privacy
-  if (slate?.isPublic) {
-    await Utilities.addToPublicCollectionUpdatePrivacy({ files: duplicateFiles });
   }
 
   let updatedFiles = await Data.getFilesByIds({ ids: filesToAddToSlate.map((file) => file.id) });

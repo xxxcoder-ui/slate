@@ -139,7 +139,7 @@ const addSlateColumns = async () => {
   await DB.schema.table("slates", function (table) {
     table.string("body", 2000).nullable();
     table.string("name").nullable();
-    table.string("preview").nullable();
+    table.string("coverImage").nullable();
   });
 };
 
@@ -217,14 +217,28 @@ const migrateUserTable = async () => {
 };
 
 const migrateSlateTable = async () => {
-  const slates = await DB.select("id", "data").from("slates");
+  const slateFiles = () =>
+    DB.raw("coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??", [
+      "files",
+      "slate_files.createdAt",
+      "files.id",
+      "objects",
+    ]);
+
+  const slates = await DB.select("slates.id", "slates.data", slateFiles())
+    .from("slates")
+    .leftJoin("slate_files", "slate_files.slateId", "=", "slates.id")
+    .leftJoin("files", "slate_files.fileId", "=", "files.id")
+    .groupBy("slates.id");
 
   for (let slate of slates) {
+    let coverImage = Utilities.selectSlateCoverImage(slate.objects);
+
     let data = slate.data;
     let newSlate = {
       name: data.name,
       body: data.body,
-      preview: data.preview,
+      coverImage,
     };
 
     if (defaultBody.includes(data.body)) {
@@ -325,13 +339,13 @@ const runScript = async () => {
   // await printSlatesTable();
   // await printFilesTable();
 
-  await addUserTextileColumns();
+  // await addUserTextileColumns();
   // await addUserColumns();
   // await addSlateColumns();
   // await addFileColumns();
 
   // await migrateUserTable();
-  // await migrateSlateTable();
+  await migrateSlateTable();
   // await migrateFileTable();
 
   // await deleteOldData();
@@ -357,7 +371,7 @@ Slates
 [ 
     'data.name', -> 'name' MIGRATED
     'data.body', -> 'body' MIGRATED
-    'data.preview', -> 'preview' MIGRATED
+    'data.preview', -> 'coverImage' MIGRATED
 ]
 
 Files

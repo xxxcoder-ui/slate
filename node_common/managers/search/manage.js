@@ -65,8 +65,8 @@ export const createSlateIndex = async () => {
         body: {
           type: "text",
         },
-        preview: {
-          type: "keyword",
+        coverImage: {
+          type: "object",
           index: false,
         },
         ownerId: {
