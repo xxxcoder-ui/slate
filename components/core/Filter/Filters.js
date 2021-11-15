@@ -11,7 +11,7 @@ import { useFilterContext } from "~/components/core/Filter/Provider";
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_FILTER_BUTTON_HIGHLIGHTED = (theme) => css`
-  background-color: ${theme.semantic.textGrayLight};
+  background-color: ${theme.semantic.bgGrayLight};
 `;
 
 const STYLES_FILTER_BUTTON = (theme) => css`
@@ -23,7 +23,7 @@ const STYLES_FILTER_BUTTON = (theme) => css`
   border-radius: 8px;
   color: ${theme.semantic.textBlack};
   &:hover {
-    background-color: ${theme.semantic.textGrayLight};
+    background-color: ${theme.semantic.bgGrayLight};
     color: ${theme.semantic.textBlack};
   }
 
@@ -59,7 +59,7 @@ const FilterButton = ({ children, Icon, isSelected, ...props }) => (
 const FilterSection = ({ title, children, ...props }) => (
   <div {...props}>
     {title && (
-      <Typography.H6 style={{ paddingLeft: 8 }} color="textGray">
+      <Typography.H6 style={{ paddingLeft: 8, paddingBottom: 4 }} color="textGray">
         {title}
       </Typography.H6>
     )}
@@ -90,12 +90,12 @@ function Initial({ filters, goToBrowserView }) {
           My Library
         </FilterButton>
       </FilterSection>
-      <FilterSection title="Connected" style={{ marginTop: 12 }}>
+      <FilterSection title="Connected" style={{ marginTop: 16 }}>
         <FilterButton Icon={SVG.Layout} onClick={goToBrowserView}>
           Browser
         </FilterButton>
       </FilterSection>
-      <FilterSection style={{ marginTop: 12 }} title="Types">
+      <FilterSection style={{ marginTop: 16 }} title="Types">
         <FilterButton
           Icon={SVG.Image}
           isSelected={currentFilterType === filters.images}

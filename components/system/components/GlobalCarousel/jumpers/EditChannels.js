@@ -371,11 +371,13 @@ export function EditChannels({ file, viewer, isOpen, onClose }) {
     file,
   });
 
-  const [{ searchQuery, searchResults, channelAlreadyExists }, { handleQueryChange, clearQuery }] =
-    useChannelsSearch({
-      privateChannels: privateChannels,
-      publicChannels: publicChannels,
-    });
+  const [
+    { searchQuery, searchResults, channelAlreadyExists },
+    { handleQueryChange, clearQuery },
+  ] = useChannelsSearch({
+    privateChannels: privateChannels,
+    publicChannels: publicChannels,
+  });
 
   const isSearching = searchQuery.length > 0;
 
@@ -449,11 +451,13 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
     file,
   });
 
-  const [{ searchQuery, searchResults, channelAlreadyExists }, { handleQueryChange, clearQuery }] =
-    useChannelsSearch({
-      privateChannels: privateChannels,
-      publicChannels: publicChannels,
-    });
+  const [
+    { searchQuery, searchResults, channelAlreadyExists },
+    { handleQueryChange, clearQuery },
+  ] = useChannelsSearch({
+    privateChannels: privateChannels,
+    publicChannels: publicChannels,
+  });
 
   const isSearching = searchQuery.length > 0;
 
@@ -499,12 +503,7 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
         </div>
       </MobileJumper.Content>
       <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-        <button
-          type="button"
-          css={Styles.BUTTON_RESET}
-          style={{ width: 32, height: 32 }}
-          onClick={() => (onClose(), clearQuery())}
-        >
+        <button type="button" css={Styles.BUTTON_RESET} onClick={() => (onClose(), clearQuery())}>
           <SVG.Hash width={16} height={16} style={{ color: Constants.system.blue }} />
         </button>
       </MobileJumper.Footer>

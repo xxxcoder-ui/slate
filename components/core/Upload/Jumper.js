@@ -13,13 +13,9 @@ import { useUploadContext } from "~/components/core/Upload/Provider";
 import { AnimatePresence, motion } from "framer-motion";
 
 const STYLES_LINK_INPUT = (theme) => css`
-  width: 392px;
-  border-radius: 12;
   background-color: ${theme.semantic.bgWhite};
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    width: 100%;
-  }
+  width: calc(100% - 8px);
+  margin-right: 8px;
 `;
 
 const STYLES_JUMPER_OVERLAY = (theme) => css`
@@ -55,6 +51,13 @@ const STYLES_FILES_UPLOAD_WRAPPER = css`
   ${Styles.VERTICAL_CONTAINER_CENTERED};
   padding-top: 55px;
   padding-bottom: 55px;
+`;
+
+const STYLES_MOBILE_HIDDEN = css`
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    display: none;
+    pointer-events: none;
+  }
 `;
 
 export function UploadJumper({ data }) {
@@ -112,45 +115,44 @@ export function UploadJumper({ data }) {
                     ? `0 0 0 1px ${Constants.system.red} inset`
                     : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
                 }}
-                containerStyle={{ maxWidth: 600 }}
                 name="url"
                 type="url"
                 onChange={handleChange}
                 onSubmit={handleUploadLink}
                 autoFocus
               />
-              <System.ButtonPrimary style={{ marginLeft: 8, width: 96 }} onClick={handleUploadLink}>
-                Save
-              </System.ButtonPrimary>
+              <System.ButtonPrimary onClick={handleUploadLink}>Save</System.ButtonPrimary>
             </div>
           </Jumper.Item>
-          <Jumper.Divider />
-          <Jumper.Item css={STYLES_FILES_UPLOAD_WRAPPER}>
-            <input
-              css={STYLES_FILE_HIDDEN}
-              multiple
-              type="file"
-              id="file"
-              onChange={handleUpload}
-            />
-            <System.H5 color="textGrayDark" as="p" style={{ textAlign: "center" }}>
-              Drop or select files to save to Slate
-              <br />
-              <System.P3 color="textGrayDark" as="span">
-                (we recommend uploading fewer than 200 files at a time)
-              </System.P3>
-            </System.H5>
-            <System.ButtonTertiary
-              type="label"
-              htmlFor="file"
-              style={{
-                marginTop: 23,
-                maxWidth: 122,
-              }}
-            >
-              Select files
-            </System.ButtonTertiary>
-          </Jumper.Item>
+          <div css={STYLES_MOBILE_HIDDEN}>
+            <Jumper.Divider />
+            <Jumper.Item css={STYLES_FILES_UPLOAD_WRAPPER}>
+              <input
+                css={STYLES_FILE_HIDDEN}
+                multiple
+                type="file"
+                id="file"
+                onChange={handleUpload}
+              />
+              <System.H5 color="textGrayDark" as="p" style={{ textAlign: "center" }}>
+                Drop or select files to save to Slate
+                <br />
+                <System.P3 color="textGrayDark" as="span">
+                  (we recommend uploading fewer than 200 files at a time)
+                </System.P3>
+              </System.H5>
+              <System.ButtonTertiary
+                type="label"
+                htmlFor="file"
+                style={{
+                  marginTop: 23,
+                  maxWidth: 122,
+                }}
+              >
+                Select files
+              </System.ButtonTertiary>
+            </Jumper.Item>
+          </div>
         </Jumper.Root>
       ) : null}
     </Jumper.AnimatePresence>

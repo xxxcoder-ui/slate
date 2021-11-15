@@ -214,7 +214,7 @@ export class SignIn extends React.Component {
 
             <System.ButtonSecondary
               full
-              style={{ marginTop: 16 }}
+              style={{ marginTop: 8 }}
               onClick={() => this.setState({ scene: "SIGN_IN" })}
               loading={this.state.loading}
             >
@@ -385,7 +385,7 @@ export class SignIn extends React.Component {
 
           <System.ButtonPrimary
             full
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 8 }}
             onClick={!this.state.loading ? this._handleSubmit : () => {}}
             loading={this.state.loading}
           >

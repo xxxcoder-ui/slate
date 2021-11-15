@@ -29,9 +29,9 @@ const STYLES_PROFILE_MOBILE = css`
 `;
 
 const STYLES_POPOVER_CONTANIER = (theme) => css`
-  padding: 16px 20px;
+  padding: 20px;
   border-radius: 16px;
-  border: 1px solid ${theme.semantic.borderGrayLight4};
+  border: 1px solid ${theme.semantic.borderGrayLight};
   box-shadow: ${theme.shadow.lightLarge};
 
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
@@ -39,15 +39,17 @@ const STYLES_POPOVER_CONTANIER = (theme) => css`
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
   }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 16px;
+  }
 `;
 
 const STYLES_POPOVER_SECTION = (theme) => css`
   border-top: 1px solid ${theme.semantic.borderGrayLight4};
   border-bottom: none;
-  padding: 0;
+  padding: 8px 0;
   margin: 0;
-  padding-top: 8px;
-  padding-bottom: 8px;
 
   p {
     display: block;
@@ -57,27 +59,26 @@ const STYLES_POPOVER_SECTION = (theme) => css`
   :last-child {
     padding-bottom: 0px;
   }
-
-  * + * {
-    margin-top: 4px;
-  }
 `;
 
 const STYLES_POPOVER_SECTION_ITEM = (theme) => css`
   position: relative;
-  padding: 0px;
   width: calc(100% + 16px);
   left: -8px;
   a {
     display: block;
   }
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    margin: 8px 0;
+  }
 `;
 
 const STYLES_SECTION_ITEM_HOVER = (theme) => css`
-  padding: 1px 8px 3px;
+  padding: 5px 8px 7px;
   border-radius: 8px;
   &:hover {
-    background-color: ${theme.system.grayLight4};
+    background-color: ${theme.semantic.bgGrayLight};
   }
 `;
 
@@ -161,11 +162,8 @@ export class ApplicationUserControlsPopup extends React.Component {
       <div css={Styles.MOBILE_HIDDEN}>
         <ButtonPrimaryFull
           style={{
-            padding: "0px 12px",
-            marginTop: "4px",
-            marginBottom: "28px",
-            minHeight: "30px",
-            fontFamily: Constants.font.text,
+            padding: "5px 24px 7px",
+            marginTop: "8px",
           }}
           onClick={this._handleExtensionDownloadLink}
         >

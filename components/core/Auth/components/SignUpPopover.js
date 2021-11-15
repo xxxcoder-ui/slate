@@ -11,8 +11,8 @@ const STYLES_POPOVER = (theme) => css`
   max-width: 432px;
   height: 544px;
   width: 95vw;
-  border-radius: 8px;
-  padding: 48px 32px 36px 32px;
+  border-radius: 20px;
+  padding: 36px 32px 36px 32px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     flex-grow: 1;

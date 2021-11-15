@@ -40,6 +40,10 @@ const STYLES_NAVBAR = (theme) => css`
     backdrop-filter: blur(75px);
     background-color: ${theme.semantic.bgBlurWhite};
   }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 9px 16px 11px;
+  }
 `;
 
 export function Navbar({ children }) {

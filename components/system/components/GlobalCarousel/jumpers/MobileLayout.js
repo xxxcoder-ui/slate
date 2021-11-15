@@ -82,6 +82,7 @@ const STYLES_JUMPER_MOBILE_FOOTER = (theme) => css`
   left: 0;
   width: 100%;
   padding: 8px 16px;
+  min-height: 48px;
 
   border-top: 1px solid ${theme.semantic.borderGrayLight};
   background-color: ${theme.semantic.bgWhite};

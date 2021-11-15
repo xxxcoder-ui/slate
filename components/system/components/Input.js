@@ -15,9 +15,8 @@ const INPUT_STYLES = css`
   height: 40px;
   background: transparent;
   font-size: 14px;
-  border-radius: 8px;
-
-  padding: 0 16px 0 16px;
+  border-radius: 12px;
+  padding: 9px 12px 11px;
   outline: 0;
   border: none;
   box-sizing: border-box;
@@ -76,7 +75,7 @@ const STYLES_INPUT = css`
   align-items: center;
   justify-content: flex-start;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 12px;
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;

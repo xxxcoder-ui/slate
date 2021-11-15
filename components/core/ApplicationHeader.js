@@ -54,7 +54,7 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: ${theme.semantic.bgBlurWhiteOP};
   }
 `;
 
@@ -128,6 +128,12 @@ const STYLES_UPLOAD_BUTTON = css`
   height: 24px;
   cursor: pointer;
   pointer-events: auto;
+  transition: all 200ms;
+
+  :hover {
+    background-color: ${Constants.semantic.bgGrayLight4};
+    color: ${Constants.semantic.textBlack};
+  }
 `;
 
 export default function ApplicationHeader({ viewer, page, data, onAction }) {

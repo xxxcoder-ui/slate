@@ -148,7 +148,7 @@ export default function Initial({
           <Toggle
             toggleValue={toggleValue}
             options={TOGGLE_OPTIONS}
-            style={{ margin: "20px auto 0px" }}
+            style={{ margin: "20px auto 8px" }}
             onChange={handleToggleChange}
           />
         </div>
@@ -201,10 +201,10 @@ export default function Initial({
                 <System.ButtonPrimary
                   full
                   type="submit"
-                  style={{ marginTop: "16px" }}
+                  style={{ marginTop: "8px" }}
                   loading={isCheckingEmail}
                 >
-                  Send verification link
+                  Send verification code
                 </System.ButtonPrimary>
               </motion.div>
             </form>

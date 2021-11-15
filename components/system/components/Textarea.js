@@ -15,7 +15,7 @@ const STYLES_TEXTAREA = css`
   resize: none;
   background: ${Constants.system.white};
   color: ${Constants.system.black};
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   font-size: 14px;
   align-items: center;
@@ -23,7 +23,7 @@ const STYLES_TEXTAREA = css`
   outline: 0;
   border: 0;
   transition: 200ms ease all;
-  padding: 16px;
+  padding: 9px 12px 11px;
   box-shadow: 0 0 0 1px ${Constants.semantic.borderGrayLight} inset;
 
   ::placeholder {

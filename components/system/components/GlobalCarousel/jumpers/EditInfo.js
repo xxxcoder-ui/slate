@@ -17,11 +17,8 @@ const STYLES_EDIT_INFO_INPUT = (theme) => css`
   width: 100%;
   max-width: unset;
   box-shadow: 0 0 0 1px ${theme.semantic.borderGrayLight4} inset;
-  height: 32px;
   border-radius: 12px;
   background-color: transparent;
-  padding-top: 5px;
-  padding-bottom: 7px;
   color: ${theme.semantic.textBlack};
 `;
 
@@ -111,13 +108,13 @@ function UpdateFileForm({ file, isMobile, onClose }) {
               <System.ButtonSecondary
                 type="button"
                 onClick={onClose}
-                style={{ marginLeft: "auto", minHeight: "32px" }}
+                style={{ marginLeft: "auto", padding: "5px 24px 7px", minHeight: "24px" }}
               >
                 Cancel
               </System.ButtonSecondary>
               <System.ButtonPrimary
                 type="submit"
-                style={{ marginLeft: "8px", minHeight: "32px" }}
+                style={{ marginLeft: "8px", padding: "5px 24px 7px", minHeight: "24px" }}
                 loading={isSubmitting}
               >
                 Save
@@ -130,13 +127,23 @@ function UpdateFileForm({ file, isMobile, onClose }) {
               <System.ButtonSecondary
                 type="button"
                 onClick={onClose}
-                style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
+                style={{
+                  marginLeft: "auto",
+                  minHeight: "24px",
+                  padding: "1px 12px 3px",
+                  borderRadius: "8px",
+                }}
               >
                 Cancel
               </System.ButtonSecondary>
               <System.ButtonPrimary
                 type="submit"
-                style={{ marginLeft: "8px", minHeight: "24px", padding: "1px 12px 3px" }}
+                style={{
+                  marginLeft: "8px",
+                  minHeight: "24px",
+                  padding: "1px 12px 3px",
+                  borderRadius: "8px",
+                }}
                 loading={isSubmitting}
               >
                 Save

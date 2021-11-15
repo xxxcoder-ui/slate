@@ -11,11 +11,12 @@ const STYLES_BUTTON = `
   outline: 0;
   border: 0;
   min-height: 40px;
-  padding: 4px 20px;
+  padding: 9px 24px 11px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: 14px;
+  line-height: 20px;
   letter-spacing: -0.006px;
   font-family: ${Constants.font.medium};
   transition: 200ms ease all;
