@@ -485,3 +485,22 @@ export const useCache = () => {
   const setCache = ({ key, value }) => (cache[key] = value);
   return [cache, setCache];
 };
+
+// NOTE(amine): Slate extension will notify the app that it is installed, by injecting isDownloaded class to the element with browser_extension as its id
+const checkIfExtensionIsDownloaded = () => {
+  const extensionElement = document.getElementById("browser_extension");
+  if (!extensionElement) return false;
+  return extensionElement.className.includes("isDownloaded");
+};
+export const useCheckIfExtensionIsInstalled = () => {
+  const [isExtensionDownloaded, setExtensionDownload] = React.useState(false);
+
+  React.useEffect(() => {
+    if (document) {
+      const isExtensionDownloaded = checkIfExtensionIsDownloaded();
+      setExtensionDownload(isExtensionDownloaded);
+    }
+  }, []);
+
+  return { isExtensionDownloaded };
+};
