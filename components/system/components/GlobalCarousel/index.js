@@ -14,6 +14,7 @@ import {
   useDetectTextOverflow,
   useEscapeKey,
   useEventListener,
+  useIsomorphicLayoutEffect,
   useLockScroll,
 } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
@@ -156,7 +157,7 @@ function CarouselHeader({
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isJumperOpen) {
       return;
     }
