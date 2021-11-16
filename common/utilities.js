@@ -10,29 +10,6 @@ import moment from "moment";
 //For API related utility functions, see common/user-behaviors.js
 //And for uploading related utility functions, see common/file-utilities.js
 
-export const getImageUrlIfExists = (file, sizeLimit = null) => {
-  if (!file) return;
-  const coverImage = file.coverImage;
-  if (coverImage) {
-    if (sizeLimit && coverImage.size && coverImage.size > sizeLimit) {
-      return;
-    }
-    if (coverImage.url) {
-      return coverImage.url;
-    }
-    if (coverImage.cid) {
-      return Strings.getURLfromCID(coverImage.cid);
-    }
-  }
-
-  if (Validations.isPreviewableImage(file.type)) {
-    if (sizeLimit && file.size > sizeLimit) {
-      return;
-    }
-    return Strings.getURLfromCID(file.cid);
-  }
-};
-
 export const generateNumberByStep = ({ min, max, step = 1 }) => {
   var numbers = [];
   for (var n = min; n <= max; n += step) {
@@ -170,15 +147,22 @@ export const clamp = (value, min, max) => {
   return value;
 };
 
-export const getCoverImageUrlIfExists = (coverImage) => {
-  if (!coverImage) return;
-  if (Validations.isPreviewableImage(coverImage.type)) {
+export const getImageUrlIfExists = (file, sizeLimit = null) => {
+  if (!file) return;
+  if (Validations.isPreviewableImage(file.type)) {
+    if (sizeLimit && file.size && file.size > sizeLimit) {
+      return;
+    }
+    return Strings.getURLfromCID(file.cid);
+  }
+  let coverImage = file.coverImage;
+  if (coverImage) {
+    if (sizeLimit && coverImage.size && coverImage.size > sizeLimit) {
+      return;
+    }
     return Strings.getURLfromCID(coverImage.cid);
   }
-  if (coverImage.coverImage) {
-    return Strings.getURLfromCID(coverImage.coverImage.cid);
-  }
-  if (coverImage.linkImage) {
-    return coverImage.linkImage;
+  if (file.linkImage) {
+    return file.linkImage;
   }
 };

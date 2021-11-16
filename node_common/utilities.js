@@ -411,7 +411,7 @@ export const selectSlateCoverImage = (objects) => {
   let selectedObject;
   if (!objects.length) return null;
   for (let object of objects) {
-    if (Utilities.getCoverImageUrlIfExists(object)) {
+    if (Utilities.getImageUrlIfExists(object)) {
       selectedObject = object;
       break;
     }
@@ -422,7 +422,7 @@ export const selectSlateCoverImage = (objects) => {
 };
 
 export const addToSlateCheckCoverImage = async (slate, filesAdded) => {
-  if (Utilities.getCoverImageUrlIfExists(slate.coverImage)) {
+  if (Utilities.getImageUrlIfExists(slate.coverImage)) {
     return;
   }
   if (!filesAdded) return;
