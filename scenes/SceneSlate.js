@@ -230,7 +230,7 @@ export default class SceneSlate extends React.Component {
           description = `View the collection ${name} on Slate`;
         }
         title = `${name} • Slate`;
-        imageUrl = slate.coverImage?.cid ? Strings.getURLfromCID(slate.coverImage.cid) : null;
+        image = Utilities.getImageUrlIfExists(slate.coverImage);
         // const objects = slate.objects;
         // if (!image && objects) {
         //   for (let i = 0; i < objects.length; i++) {

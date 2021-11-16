@@ -3,6 +3,7 @@ import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { FollowButton, ShareButton } from "~/components/core/CollectionPreviewBlock/components";
@@ -333,9 +334,9 @@ const useAnimateDescription = ({
 };
 
 const getObjectToPreview = (coverImage) => {
-  let isImage =
-    Validations.isPreviewableImage(coverImage) ||
-    (coverImage.coverImage && Validations.isPreviewableImage(coverImage.coverImage));
+  if (!coverImage) return { type: "EMPTY" };
 
-  return { object: coverImage, type: isImage ? "IMAGE" : "PLACEHOLDER" };
+  let coverImageUrl = Utilities.getImageUrlIfExists(coverImage);
+
+  return { object: coverImage, type: coverImageUrl ? "IMAGE" : "PLACEHOLDER" };
 };
