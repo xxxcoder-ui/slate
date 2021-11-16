@@ -6,7 +6,7 @@ import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";

@@ -11,7 +11,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
 import * as FileUtilities from "~/common/file-utilities";
 import * as Validations from "~/common/validations";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Show } from "~/components/utility/Show";

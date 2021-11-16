@@ -5,7 +5,7 @@ import * as Jumper from "~/components/core/Jumper";
 import * as SVG from "~/common/svg";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
