@@ -334,8 +334,8 @@ const useAnimateDescription = ({
 
 const getObjectToPreview = (coverImage) => {
   let isImage =
-    Validations.isPreviewableImage(coverImage) ||
-    (coverImage.coverImage && Validations.isPreviewableImage(coverImage.coverImage));
+    Validations.isPreviewableImage(coverImage.type) ||
+    (coverImage.coverImage && Validations.isPreviewableImage(coverImage.coverImage.type));
 
   return { object: coverImage, type: isImage ? "IMAGE" : "PLACEHOLDER" };
 };
