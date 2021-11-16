@@ -20,7 +20,6 @@ const STYLES_SHARING_BUTTON = (theme) => css`
   :active {
     background-color: ${theme.semantic.bgGrayLight};
   }
-
   :hover {
     color: ${theme.semantic.textBlack};
   }

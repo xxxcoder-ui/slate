@@ -673,7 +673,7 @@ const STYLES_PREVIEW_WRAPPER = (theme) => css`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: ${Constants.semantic.bgGrayLight4};
+  background-color: ${theme.semantic.bgGrayLight4};
 
   @media (max-width: ${theme.sizes.mobile}px) {
     min-height: 75vh;
@@ -735,7 +735,12 @@ export function CarouselContent({
             <Show when={file.isLink}>
               <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
                 <LinkIcon file={file} width={12} height={12} />
-                <System.P2 as="a" nbrOflines={1} href={file.url} style={{ marginLeft: 5 }}>
+                <System.P2
+                  as="a"
+                  nbrOflines={1}
+                  href={file.url}
+                  style={{ marginLeft: 5, textDecoration: "none", color: Constants.system.blue }}
+                >
                   {file.url}
                 </System.P2>
               </div>
