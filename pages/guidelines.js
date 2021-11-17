@@ -148,7 +148,7 @@ export default class GuidelinesPage extends React.Component {
             <div css={STYLES_CONTENT_BLOCK1}>
               <h1 css={STYLES_H1}>Community Guidelines</h1>
               <br />
-              <System.P1 style={{ marginLeft: 1 }}>In this page</System.P1>
+              <System.P1>In this page</System.P1>
               <ul css={STYLES_LIST}>
                 <li>
                   <a css={STYLES_LINK} href="#Friendly Harassment-Free Space">

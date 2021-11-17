@@ -89,8 +89,9 @@ const STYLES_LIST = css`
   font-family: ${Constants.font.text};
   font-weight: 400;
   font-size: ${Constants.typescale.lvl1};
+  letter-spacing: -0.011rem;
   line-height: 1.5;
-  margin: 0px 0 0 4px;
+  margin: 4px 0 0 16px;
   opacity: 0.7;
   padding: 0;
 `;
@@ -127,6 +128,7 @@ export default class TermsPage extends React.Component {
             <div css={STYLES_CONTENT_BLOCK1}>
               <h1 css={STYLES_H1}>Terms of Service</h1>
               <br />
+              <System.P1>In this page</System.P1>
               <ul css={STYLES_LIST}>
                 <li>
                   <a css={STYLES_LINK} href="#Storage deals">
