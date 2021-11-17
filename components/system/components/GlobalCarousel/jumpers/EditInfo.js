@@ -30,6 +30,7 @@ const STYLES_EDIT_INFO_FOOTER = (theme) => css`
   width: 100%;
   height: 50px;
   background-color: ${theme.semantic.bgWhite};
+  border-top: 1px solid ${theme.semantic.borderGrayLight};
 `;
 
 const STYLES_EDIT_INFO_FORM = css`
