@@ -913,7 +913,7 @@ export default class IndexPage extends React.Component {
   render() {
     const title = `Slate`;
     const description = "Your personal search engine";
-    const url = "https://slate.host/index-new";
+    const url = "https://slate.host/";
     const image =
       "https://slate.textile.io/ipfs/bafkreiddhzzwu5l6i7cikmydvumgnqwoml4rsurzftkopcvgcnwhndo7fa";
 
