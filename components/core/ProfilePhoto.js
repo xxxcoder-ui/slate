@@ -34,7 +34,12 @@ function BoringAvatar({ avatarCss, ...props }) {
   let avatarUrl = `https://source.boringavatars.com/marble/${props.size}/${props.userId}?square&colors=${colors}`;
   return (
     <Dismissible captureResize={false} captureScroll={true}>
-      <img src={avatarUrl} css={[avatarCss, STYLES_AVATAR]} alt="profile preview" />
+      <img
+        src={avatarUrl}
+        css={[avatarCss, STYLES_AVATAR]}
+        style={props.style}
+        alt="profile preview"
+      />
     </Dismissible>
   );
 }
