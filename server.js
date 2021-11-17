@@ -122,7 +122,7 @@ app.prepare().then(async () => {
     // });
   });
 
-  server.get("/_/object/:id", async (req, res) => {
+  server.get("/_/view/:id", async (req, res) => {
     let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     let isMac = Window.isMac(req.headers["user-agent"]);
 
