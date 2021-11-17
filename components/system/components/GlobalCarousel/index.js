@@ -36,7 +36,7 @@ const VisitLinkButton = ({ file }) => {
       style={{
         color: Constants.semantic.textGrayDark,
         padding: "4px 8px 7px",
-        marginLeft: 4,
+        marginLeft: 16,
         minHeight: 30,
       }}
       href={file.url}
