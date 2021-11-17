@@ -2,8 +2,16 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { motion } from "framer-motion";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
+import { motion, AnimatePresence as FramerAnimatePresence } from "framer-motion";
+
+/* -------------------------------------------------------------------------------------------------
+ *  AnimatePresence
+ * -----------------------------------------------------------------------------------------------*/
+
+function AnimatePresence({ children, ...props }) {
+  return <FramerAnimatePresence {...props}>{children}</FramerAnimatePresence>;
+}
 
 /* -------------------------------------------------------------------------------------------------
  *  Root
@@ -88,7 +96,7 @@ const STYLES_JUMPER_MOBILE_FOOTER = (theme) => css`
   border-top: 1px solid ${theme.semantic.borderGrayLight4};
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    background-color: ${theme.semantic.bgBlurWhite};
+    background-color: ${theme.semantic.bgBlurLight};
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
   }
@@ -106,4 +114,4 @@ function Footer({ children, css, ...props }) {
   );
 }
 
-export { Root, Header, Content, Footer };
+export { Root, AnimatePresence, Header, Content, Footer };

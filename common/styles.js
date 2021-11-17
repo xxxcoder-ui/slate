@@ -33,8 +33,8 @@ const TEXT = css`
 
 export const H1 = css`
   font-family: ${Constants.font.medium};
-  font-size: 32px;
-  line-height: 48px;
+  font-size: 2rem;
+  line-height: 1.5;
   letter-spacing: -0.021px;
 
   ${TEXT}
@@ -42,8 +42,8 @@ export const H1 = css`
 
 export const H2 = css`
   font-family: ${Constants.font.medium};
-  font-size: 24px;
-  line-height: 36px;
+  font-size: 1.5rem;
+  line-height: 1.5;
   letter-spacing: -0.019px;
 
   ${TEXT}
