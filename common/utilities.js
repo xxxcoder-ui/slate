@@ -166,3 +166,7 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
     return file.linkImage;
   }
 };
+
+export const getUserDisplayName = (user) => {
+  return user.name || `@${user.username}`;
+};

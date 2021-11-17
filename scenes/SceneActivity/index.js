@@ -96,7 +96,6 @@ export default function SceneActivity({ page, viewer, external, onAction, ...pro
       </ScenePage>
 
       <GlobalCarousel
-        carouselType="ACTIVITY"
         viewer={viewer}
         objects={globalCarouselState.currentObjects}
         index={globalCarouselState.currentCarousel}

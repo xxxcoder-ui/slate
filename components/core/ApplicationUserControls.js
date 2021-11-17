@@ -4,6 +4,7 @@ import * as Styles from "~/common/styles";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Strings from "~/common/strings";
 import * as Environment from "~/common/environment";
+import * as Utilities from "~/common/utilities";
 
 import { ButtonPrimaryFull, PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
@@ -129,7 +130,7 @@ export class ApplicationUserControlsPopup extends React.Component {
   render() {
     if (this.props.popup !== "profile") return null;
 
-    const username = this.props.viewer.name || `@${this.props.viewer.username}`;
+    const username = Utilities.getUserDisplayName(this.props.viewer);
     const objectsLength = this.props.viewer.library.length;
     const { stats } = this.props.viewer;
 

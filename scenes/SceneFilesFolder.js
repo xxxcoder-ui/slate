@@ -36,7 +36,6 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
     >
       <ScenePage css={STYLES_SCENE_PAGE}>
         <GlobalCarousel
-          carouselType="DATA"
           viewer={viewer}
           objects={objects}
           onAction={onAction}
