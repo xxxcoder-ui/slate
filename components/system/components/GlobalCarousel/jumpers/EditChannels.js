@@ -221,6 +221,7 @@ function Channels({
                     top: -1,
                     verticalAlign: "middle",
                     pointerEvents: "none",
+                    display: "inline",
                   }}
                 />
                 <span style={{ marginLeft: 4 }}>{searchQuery}</span>
