@@ -789,7 +789,7 @@ const getCarouselHandlers = ({ index, objects, params, onChange, onAction }) => 
 
     let { cid } = objects[prevIndex];
     onChange(prevIndex);
-    onAction({ type: "UPDATE_PARAMS", params: { params, cid }, redirect: true });
+    onAction({ type: "UPDATE_PARAMS", params: { ...params, cid }, redirect: true });
   };
 
   const handleClose = (e) => {
