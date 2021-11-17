@@ -17,7 +17,6 @@ import * as Environment from "~/common/environment";
 // Scenes each have an ID and can be navigated to with _handleAction
 import SceneError from "~/scenes/SceneError";
 import SceneEditAccount from "~/scenes/SceneEditAccount";
-import SceneFile from "~/scenes/SceneFile";
 import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
@@ -75,7 +74,6 @@ const SCENES = {
   NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
-  // NAV_FILE: <SceneFile />,
   NAV_SLATE: <SceneSlate />,
   NAV_API: <SceneSettingsDeveloper />,
   NAV_SETTINGS: <SceneEditAccount />,

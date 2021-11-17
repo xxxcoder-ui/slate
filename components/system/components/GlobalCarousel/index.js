@@ -4,6 +4,7 @@ import * as SVG from "~/common/svg";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
@@ -19,6 +20,7 @@ import { ModalPortal } from "~/components/core/ModalPortal";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 /* -------------------------------------------------------------------------------------------------
  *  Carousel Header
@@ -79,6 +81,7 @@ const STYLES_ACTION_BUTTON = css`
 `;
 
 function CarouselHeader({
+  isStandalone,
   viewer,
   data,
   external,
@@ -295,11 +298,27 @@ function CarouselHeader({
               {file.isLink ? <VisitLinkButton file={file} /> : null}
             </div>
           </AnimateSharedLayout>
-          <div style={{ marginLeft: 80 }}>
-            <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
-              <SVG.Dismiss />
-            </button>
-          </div>
+          {isStandalone ? (
+            <a href={`/${file.owner.username}`} css={Styles.LINK} style={{ marginLeft: 80 }}>
+              <div
+                style={{ gap: 8, maxWidth: "138px", justifyContent: "flex-end" }}
+                css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+              >
+                <div>
+                  <ProfilePhoto user={file.owner} style={{ borderRadius: "8px" }} size={20} />
+                </div>
+                <p css={[Styles.H5, Styles.OVERFLOW_ELLIPSIS]}>
+                  {Utilities.getUserDisplayName(file.owner)}
+                </p>
+              </div>
+            </a>
+          ) : (
+            <div style={{ marginLeft: 80 }}>
+              <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
+                <SVG.Dismiss />
+              </button>
+            </div>
+          )}
         </div>
       </motion.nav>
     </>
@@ -346,27 +365,71 @@ const STYLES_CAROUSEL_MOBILE_SLIDE_COUNT = css`
   transform: translate(-50%, -50%);
 `;
 
-function CarouselHeaderMobile({ current, total, onClose, onNextSlide, onPreviousSlide }) {
+function CarouselHeaderMobile({
+  isStandalone,
+  file,
+  current,
+  total,
+  onClose,
+  onNextSlide,
+  onPreviousSlide,
+}) {
+  const isPreviousButtonDisabled = current === 1;
+  const isNextButtonDisabled = current === total;
   return (
     <nav css={STYLES_CAROUSEL_MOBILE_HEADER} style={{ justifyContent: "space-between" }}>
-      <div style={{ width: 76 }}>
-        <button css={STYLES_ACTION_BUTTON} onClick={onPreviousSlide}>
-          <SVG.ChevronLeft width={16} height={16} />
-        </button>
-        <button style={{ marginLeft: 12 }} css={STYLES_ACTION_BUTTON} onClick={onNextSlide}>
-          <SVG.ChevronRight width={16} height={16} />
-        </button>
-      </div>
+      {!isStandalone && (
+        <>
+          <div style={{ width: 76 }}>
+            <button
+              css={STYLES_ACTION_BUTTON}
+              disabled={isPreviousButtonDisabled}
+              style={isPreviousButtonDisabled ? { color: Constants.system.grayLight3 } : null}
+              onClick={onPreviousSlide}
+            >
+              <SVG.ChevronLeft width={16} height={16} />
+            </button>
+            <button
+              style={
+                isNextButtonDisabled
+                  ? { color: Constants.system.grayLight3, marginLeft: 12 }
+                  : {
+                      marginLeft: 12,
+                    }
+              }
+              disabled={isNextButtonDisabled}
+              css={STYLES_ACTION_BUTTON}
+              onClick={onNextSlide}
+            >
+              <SVG.ChevronRight width={16} height={16} />
+            </button>
+          </div>
 
-      <System.H5 color="textGray" as="p" css={STYLES_CAROUSEL_MOBILE_SLIDE_COUNT}>
-        {current} / {total}
-      </System.H5>
+          <System.H5 color="textGray" as="p" css={STYLES_CAROUSEL_MOBILE_SLIDE_COUNT}>
+            {current} / {total}
+          </System.H5>
+        </>
+      )}
 
-      <div style={{ textAlign: "right" }}>
-        <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
-          <SVG.Dismiss />
-        </button>
-      </div>
+      {isStandalone ? (
+        <div
+          style={{ gap: 8, maxWidth: "138px", justifyContent: "flex-end" }}
+          css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+        >
+          <div>
+            <ProfilePhoto user={file.owner} style={{ borderRadius: "8px" }} size={20} />
+          </div>
+          <p css={[Styles.H5, Styles.OVERFLOW_ELLIPSIS]}>
+            {Utilities.getUserDisplayName(file.owner)}
+          </p>
+        </div>
+      ) : (
+        <div style={{ textAlign: "right" }}>
+          <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
+            <SVG.Dismiss />
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
@@ -617,7 +680,6 @@ const STYLES_PREVIEW_WRAPPER = (theme) => css`
 `;
 
 export function CarouselContent({
-  carouselType,
   objects,
   index,
   data,
@@ -628,9 +690,6 @@ export function CarouselContent({
   onClose,
 }) {
   const file = objects?.[index];
-
-  let isRepost = false;
-  if (carouselType === "SLATE") isRepost = data?.ownerId !== file.ownerId;
 
   useLockScroll();
 
@@ -730,7 +789,7 @@ const getCarouselHandlers = ({ index, objects, params, onChange, onAction }) => 
 
     let { cid } = objects[prevIndex];
     onChange(prevIndex);
-    onAction({ type: "UPDATE_PARAMS", params: { params, cid }, redirect: true });
+    onAction({ type: "UPDATE_PARAMS", params: { ...params, cid }, redirect: true });
   };
 
   const handleClose = (e) => {
@@ -782,7 +841,7 @@ const STYLES_ROOT = (theme) => css`
 `;
 
 export function GlobalCarousel({
-  carouselType,
+  isStandalone,
   objects,
   index,
   params,
@@ -797,7 +856,7 @@ export function GlobalCarousel({
   style,
 }) {
   const file = objects?.[index];
-  const isCarouselOpen = (carouselType || index > 0 || index <= objects.length) && !!file;
+  const isCarouselOpen = (index > 0 || index <= objects.length) && !!file;
 
   useCarouselViaParams({ index, params, objects, onChange });
 
@@ -815,6 +874,8 @@ export function GlobalCarousel({
     <div css={STYLES_ROOT}>
       {isMobile ? (
         <CarouselHeaderMobile
+          isStandalone={isStandalone}
+          file={file}
           current={index + 1}
           total={objects.length}
           onPreviousSlide={handlePrevious}
@@ -823,6 +884,7 @@ export function GlobalCarousel({
         />
       ) : (
         <CarouselHeader
+          isStandalone={isStandalone}
           viewer={viewer}
           external={external}
           isOwner={isOwner}
@@ -839,7 +901,6 @@ export function GlobalCarousel({
         />
       )}
       <CarouselContent
-        carouselType={carouselType}
         objects={objects}
         index={index}
         data={data}

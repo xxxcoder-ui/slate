@@ -122,6 +122,41 @@ app.prepare().then(async () => {
     // });
   });
 
+  server.get("/_/object/:id", async (req, res) => {
+    let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
+    let isMac = Window.isMac(req.headers["user-agent"]);
+
+    const fileId = req.params.id;
+
+    const file = await Data.getFileById({ id: fileId });
+
+    const id = Utilities.getIdFromCookie(req);
+
+    if (!file.isPublic && file.ownerId !== id) {
+      return res.redirect("/_/404");
+    }
+
+    let viewer = null;
+    if (id) {
+      viewer = await ViewerManager.getById({
+        id,
+      });
+    }
+
+    if (id && id === file.ownerId) {
+      file.owner = viewer;
+    } else {
+      file.owner = await Data.getUserById({ id: file.ownerId, sanitize: true });
+    }
+
+    return app.render(req, res, "/_/file", {
+      viewer,
+      isMobile,
+      isMac,
+      data: file,
+    });
+  });
+
   server.get("/_/:scene", async (req, res) => {
     let isMobile = Window.isMobileBrowser(req.headers["user-agent"]);
     let isMac = Window.isMac(req.headers["user-agent"]);

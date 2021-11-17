@@ -310,7 +310,6 @@ export default class SlatePage extends React.Component {
           <div css={STYLES_SLATE}>
             <GlobalCarousel
               data={this.props.slate}
-              carouselType="SLATE"
               viewer={this.props.viewer}
               objects={objects}
               isMobile={this.props.isMobile}

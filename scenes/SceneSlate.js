@@ -465,7 +465,6 @@ class SlatePage extends React.Component {
         {objects && objects.length ? (
           <>
             <GlobalCarousel
-              carouselType="SLATE"
               viewer={this.props.viewer}
               objects={objects}
               data={this.props.data}

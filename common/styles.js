@@ -4,14 +4,19 @@ import { css } from "@emotion/react";
 
 /* TYPOGRAPHY */
 
+export const OVERFLOW_ELLIPSIS = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 export const LINK = css`
   text-decoration: none;
-  color: ${Constants.system.blue};
+  color: ${Constants.semantic.textBlack};
   cursor: pointer;
-  transition: 200ms ease color;
 
   :visited {
-    color: ${Constants.system.blue};
+    color: ${Constants.semantic.textBlack};
   }
 `;
 

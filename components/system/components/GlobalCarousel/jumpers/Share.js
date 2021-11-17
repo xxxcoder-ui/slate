@@ -36,6 +36,12 @@ const getSlateURLFromViewer = ({ viewer, file }) => {
   return `${rootUrl}/${username}/${collection.slatename}?cid=${file.cid}`;
 };
 
+const getFileURL = ({ file }) => {
+  const rootUrl = window?.location?.origin;
+
+  return `${rootUrl}/_/object/${file.id}`;
+};
+
 const getSlateURLFromData = ({ data, file }) => {
   const username = data?.user?.username;
   const rootUrl = window?.location?.origin;
@@ -46,9 +52,7 @@ const getSlateURLFromData = ({ data, file }) => {
 function FileSharingButtons({ file, data, viewer }) {
   const fileName = file?.name || file?.filename;
   const username = data?.user?.username || viewer?.username;
-  const fileLink = data
-    ? getSlateURLFromData({ data, file })
-    : getSlateURLFromViewer({ viewer, file });
+  const fileLink = getFileURL({ file });
   const [copyState, setCopyState] = React.useState({ isCidCopied: false, isLinkCopied: false });
 
   const handleTwitterSharing = () =>
@@ -61,9 +65,8 @@ function FileSharingButtons({ file, data, viewer }) {
     window.open(`mailto: ?subject=${fileName} by ${username} on Slate&body=${fileLink}`, "_b");
   };
 
-  const cidLink = Strings.getURLfromCID(file.cid);
   const handleLinkCopy = () => (
-    Utilities.copyToClipboard(cidLink), setCopyState({ isLinkCopied: true })
+    Utilities.copyToClipboard(fileLink), setCopyState({ isLinkCopied: true })
   );
   const handleCidCopy = () => (
     Utilities.copyToClipboard(file.cid), setCopyState({ isCidCopied: true })
@@ -82,7 +85,7 @@ function FileSharingButtons({ file, data, viewer }) {
       <button css={STYLES_SHARING_BUTTON} onClick={handleLinkCopy}>
         <SVG.Link width={16} />
         <System.P2 style={{ marginLeft: 12 }}>
-          {copyState.isLinkCopied ? "Copied" : "Copy CID link"}
+          {copyState.isLinkCopied ? "Copied" : "Copy link"}
         </System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleCidCopy}>

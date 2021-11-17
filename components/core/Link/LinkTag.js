@@ -67,11 +67,9 @@ export default function LinkTag({ url, ...props }) {
         <System.P2
           style={{
             paddingRight: 8,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
             ...props.style,
           }}
+          css={Styles.OVERFLOW_ELLIPSIS}
         >
           {url}
         </System.P2>
