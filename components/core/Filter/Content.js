@@ -16,7 +16,7 @@ const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   min-height: 100vh;
   padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    padding: 31px 16px 44px;
+    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
   }
 `;
 
@@ -36,7 +36,7 @@ const STYLES_UPLOAD_BUTTON = (theme) => css`
   box-shadow: ${theme.shadow.lightSmall};
 `;
 
-export function Content({ viewer, onAction, page, ...props }) {
+export function Content({ viewer, onAction, isMobile, page, ...props }) {
   const [{ filterState }] = useFilterContext();
   const { objects } = filterState;
 
@@ -49,7 +49,12 @@ export function Content({ viewer, onAction, page, ...props }) {
   return (
     <div css={STYLES_DATAVIEWER_WRAPPER} {...props}>
       {objects.length > 0 ? (
-        <TagsOnboarding onAction={onAction} viewer={viewer} isActive={isOnboardingActive}>
+        <TagsOnboarding
+          onAction={onAction}
+          viewer={viewer}
+          isActive={isOnboardingActive}
+          isMobile={isMobile}
+        >
           <DataView
             key="scene-files-folder"
             /** TODO(amine): when updating filters, update isOwner prop */
@@ -58,6 +63,7 @@ export function Content({ viewer, onAction, page, ...props }) {
             onAction={onAction}
             viewer={viewer}
             page={page}
+            isMobile={isMobile}
             view="grid"
           />
         </TagsOnboarding>

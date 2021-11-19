@@ -28,7 +28,6 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   z-index: ${theme.zindex.tooltip};
   @media (max-width: ${theme.sizes.mobile}px) {
     right: 50%;
-    transform: translateX(50%);
   }
 `;
 
@@ -164,7 +163,7 @@ const useUploadSummary = ({ fileLoading }) =>
     };
   }, [fileLoading]);
 
-export function Popup() {
+export function Popup({ isMobile }) {
   const {
     state: { isFinished, fileLoading },
     handlers: { resetUploadState },
@@ -184,7 +183,7 @@ export function Popup() {
       {popupState.isVisible ? (
         <motion.div
           css={STYLES_POPUP_WRAPPER}
-          initial={{ opacity: 0, y: 0 }}
+          initial={{ opacity: 0, y: 0, x: "50%" }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           onMouseEnter={handleOnMouseEnter}
@@ -211,7 +210,7 @@ export function Popup() {
               collapseUploadSummary={collapseUploadSummary}
             />
           </div>
-          <Show when={isHovered && isFinished}>
+          <Show when={isFinished && (isHovered || isMobile)}>
             <button
               css={STYLES_DISMISS_BUTTON}
               onClick={() => (hideUploadPopup(), resetUploadState())}

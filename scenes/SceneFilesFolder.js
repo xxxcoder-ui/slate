@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";

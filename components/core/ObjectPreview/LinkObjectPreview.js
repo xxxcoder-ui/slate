@@ -75,7 +75,7 @@ export default function LinkObjectPreview({ file, ratio, ...props }) {
       href={file.url}
       target="_blank"
       rel="noreferrer"
-      style={{ position: "relative", zIndex: 2 }}
+      style={{ position: "relative" }}
       onClick={(e) => e.stopPropagation()}
     >
       <div css={STYLES_TAG_CONTAINER}>
