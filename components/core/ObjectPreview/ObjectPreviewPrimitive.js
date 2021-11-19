@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as ObjectJumpers from "~/components/system/components/GlobalCarousel/jumpers";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { H5, P2, P3 } from "~/components/system/components/Typography";
@@ -11,6 +12,7 @@ import { TagsButton } from "~/components/core/ObjectPreview/components";
 
 import ImageObjectPreview from "~/components/core/ObjectPreview/ImageObjectPreview";
 import { useTagsOnboardingContext } from "~/components/core/Onboarding/Tags";
+import { ModalPortal } from "../ModalPortal";
 
 const STYLES_WRAPPER = (theme) => css`
   position: relative;
@@ -28,7 +30,6 @@ const STYLES_DESCRIPTION = (theme) => css`
   box-sizing: border-box;
   width: 100%;
   background-color: ${theme.semantic.bgLight};
-  z-index: 1;
 `;
 
 const STYLES_INNER_DESCRIPTION = (theme) => css`
@@ -43,7 +44,6 @@ const STYLES_INNER_DESCRIPTION = (theme) => css`
 
 const STYLES_TAG = css`
   position: relative;
-  z-index: 1;
   display: flex;
   padding: 4px 16px 8px;
 `;
@@ -58,13 +58,46 @@ const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
 `;
 
-const STYLES_CONTROLS = css`
+const STYLES_CONTROLS = (theme) => css`
   position: absolute;
-  z-index: 1;
   right: 16px;
   top: 16px;
+  z-index: 1;
   & > * + * {
     margin-top: 8px !important;
+  }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    ${Styles.CONTAINER_CENTERED}
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+`;
+
+const STYLES_MOBILE_SHOW_CONTROLS = (theme) => css`
+  display: none;
+  ${Styles.BUTTON_RESET};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    z-index: 1;
+    display: flex;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px ${theme.system.grayLight5}, ${theme.shadow.lightLarge};
+
+    background-color: ${theme.semantic.bgWhite};
+    @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+      -webkit-backdrop-filter: blur(25px);
+      backdrop-filter: blur(25px);
+      background-color: ${theme.semantic.bgBlurWhiteTRN};
+    }
   }
 `;
 
@@ -76,6 +109,7 @@ export default function ObjectPreviewPrimitive({
   children,
   tag = "FILE",
   file,
+  isMobile,
   isSelected,
   viewer,
   owner,
@@ -93,6 +127,7 @@ export default function ObjectPreviewPrimitive({
   const [areControlsVisible, setShowControls] = React.useState(false);
   const showControls = () => setShowControls(true);
   const hideControls = () => setShowControls(false);
+  const toggleControls = () => setShowControls((prev) => !prev);
 
   const description = file?.body;
   const media = useMediaQuery();
@@ -130,32 +165,56 @@ export default function ObjectPreviewPrimitive({
   return (
     <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
       <AspectRatio ratio={248 / 248}>
-        <div css={Styles.VERTICAL_CONTAINER}>
-          <div css={STYLES_PREVIEW} onMouseEnter={showControls} onMouseLeave={hideControls}>
-            {isOwner && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: areControlsVisible ? 1 : 0 }}
-                css={STYLES_CONTROLS}
-              >
-                <>
-                  <TagsButton
-                    onClick={() => (showTagsJumper(), onboardingContext?.goToNextStep?.call())}
-                  />
-                  <ObjectJumpers.EditChannels
-                    file={file}
-                    viewer={viewer}
-                    isOpen={isTagsJumperVisible}
-                    onClose={() => (
-                      hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call()
-                    )}
-                  />
-                </>
-              </motion.div>
-            )}
+        <div
+          css={Styles.VERTICAL_CONTAINER}
+          onMouseEnter={() => !isMobile && showControls()}
+          onMouseLeave={() => !isMobile && hideControls()}
+        >
+          {isOwner && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: areControlsVisible ? 1 : 0 }}
+              style={{ pointerEvents: areControlsVisible ? "all" : "none" }}
+              onClick={(e) => (e.stopPropagation(), isMobile && toggleControls())}
+              css={STYLES_CONTROLS}
+            >
+              <>
+                <TagsButton
+                  onClick={() => (showTagsJumper(), onboardingContext?.goToNextStep?.call())}
+                />
+                <ModalPortal>
+                  {isMobile ? (
+                    <ObjectJumpers.EditChannelsMobile
+                      file={file}
+                      viewer={viewer}
+                      isOpen={isTagsJumperVisible}
+                      onClose={() => (
+                        hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call()
+                      )}
+                    />
+                  ) : (
+                    <ObjectJumpers.EditChannels
+                      file={file}
+                      viewer={viewer}
+                      isOpen={isTagsJumperVisible}
+                      onClose={() => (
+                        hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call()
+                      )}
+                    />
+                  )}
+                </ModalPortal>
+              </>
+            </motion.div>
+          )}
 
-            {children}
-          </div>
+          <button
+            css={STYLES_MOBILE_SHOW_CONTROLS}
+            onClick={(e) => (e.preventDefault(), e.stopPropagation(), toggleControls())}
+          >
+            <SVG.MoreHorizontal style={{ display: "block" }} width={16} />
+          </button>
+
+          <div css={STYLES_PREVIEW}>{children}</div>
 
           <motion.article css={STYLES_DESCRIPTION}>
             <div style={{ position: "relative", paddingTop: 9 }}>
