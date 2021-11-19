@@ -477,8 +477,8 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
       <div style={{ padding: "13px 16px 11px" }}>
         <Jumper.ObjectPreview file={file} />
       </div>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <MobileJumper.Content>
+      <System.Divider height={1} color="borderGrayLight" />
+      <MobileJumper.Content style={{ paddingBottom: 60 }}>
         <Channels
           header="Private"
           isCreatingChannel={isSearching && !channelAlreadyExists}

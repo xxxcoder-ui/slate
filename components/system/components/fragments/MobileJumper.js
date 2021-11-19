@@ -23,8 +23,7 @@ const STYLES_JUMPER_MOBILE_WRAPPER = (theme) => css`
   width: 100%;
   top: 0;
   left: 0;
-
-  z-index: ${theme.zindex.modal};
+  z-index: ${theme.zindex.jumper};
 
   background-color: ${theme.semantic.bgWhite};
 

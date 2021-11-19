@@ -73,7 +73,7 @@ const STYLES_TAGS_BUTTON = (theme) => css`
   top: 3px;
 `;
 
-function TagsWalkthrought() {
+function TagsWalkthrought({ isMobile }) {
   const [isOrganizeTagsPopupVisible, setOrganizeTagsPopupVisiblity] = React.useState(true);
   const hideOrganizeTagsPopup = () => setOrganizeTagsPopupVisiblity(false);
 
@@ -96,13 +96,27 @@ function TagsWalkthrought() {
         >
           {currentStep === steps.trigger ? (
             <>
-              <System.P2 color="textBlack">
-                Hover over the object, then select
-                <span css={STYLES_TAGS_BUTTON} style={{ marginLeft: 8, marginRight: 8 }}>
-                  <SVG.Hash width={16} height={16} />
-                </span>
-                to apply tags to it.
-              </System.P2>
+              {isMobile ? (
+                <System.P2 color="textBlack">
+                  Click on
+                  <span css={STYLES_TAGS_BUTTON} style={{ marginLeft: 8, marginRight: 8 }}>
+                    <SVG.MoreHorizontal width={16} height={16} />
+                  </span>
+                  on the object, then select
+                  <span css={STYLES_TAGS_BUTTON} style={{ marginLeft: 8 }}>
+                    <SVG.Hash width={16} height={16} />
+                  </span>
+                  to apply tags to it.
+                </System.P2>
+              ) : (
+                <System.P2 color="textBlack">
+                  Hover over the object, then select
+                  <span css={STYLES_TAGS_BUTTON} style={{ marginLeft: 8, marginRight: 8 }}>
+                    <SVG.Hash width={16} height={16} />
+                  </span>
+                  to apply tags to it.
+                </System.P2>
+              )}
               <System.ButtonPrimary
                 style={{ display: "block", marginLeft: "auto", marginTop: 14, minHeight: "24px" }}
                 onClick={hideOrganizeTagsPopup}
@@ -133,10 +147,10 @@ function TagsWalkthrought() {
   return null;
 }
 
-export function TagsOnboarding({ isActive, onAction, viewer, children }) {
+export function TagsOnboarding({ isActive, isMobile, onAction, viewer, children }) {
   return (
     <Provider viewer={viewer} onAction={onAction}>
-      {isActive ? <TagsWalkthrought /> : null}
+      {isActive ? <TagsWalkthrought isMobile={isMobile} /> : null}
       {children}
     </Provider>
   );
