@@ -20,14 +20,31 @@ const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   }
 `;
 
+const STYLES_DATAVIEWER_EMPTY = (theme) => css`
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: calc(${theme.sizes.filterNavbar}px) 0px 0px;
+  }
+`;
+
 const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
   // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
   height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
   margin-top: 0px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    height: 100%;
+  }
+`;
+
+const STYLES_EMPTY_STATE_DEMO = (theme) => css`
+  margin-top: 36px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    margin-top: 65px;
+  }
 `;
 
 const STYLES_UPLOAD_BUTTON = (theme) => css`
   ${Styles.CONTAINER_CENTERED};
+  display: inline-flex;
   background-color: ${theme.semantic.bgGrayLight};
   border-radius: 8px;
   width: 24px;
@@ -46,9 +63,11 @@ export function Content({ viewer, onAction, isMobile, page, ...props }) {
     filterState?.type === "library" &&
     objects.length > 0;
 
+  const isObjectsEmpty = objects.length === 0;
+
   return (
-    <div css={STYLES_DATAVIEWER_WRAPPER} {...props}>
-      {objects.length > 0 ? (
+    <div css={[STYLES_DATAVIEWER_WRAPPER, isObjectsEmpty && STYLES_DATAVIEWER_EMPTY]} {...props}>
+      {!isObjectsEmpty ? (
         <TagsOnboarding
           onAction={onAction}
           viewer={viewer}
@@ -70,12 +89,20 @@ export function Content({ viewer, onAction, isMobile, page, ...props }) {
       ) : (
         <EmptyState css={STYLES_EMPTY_STATE_WRAPPER}>
           <FileTypeGroup />
-          <div style={{ marginTop: 24 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-            <System.H5>Use</System.H5>
-            <span css={STYLES_UPLOAD_BUTTON} style={{ marginLeft: 8 }}>
-              <SVG.Plus height="16px" />
-            </span>
-            <System.H5 style={{ marginLeft: 8 }}>or drop files to save to Slate</System.H5>
+          <div css={STYLES_EMPTY_STATE_DEMO}>
+            <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
+              Use
+              <span
+                css={STYLES_UPLOAD_BUTTON}
+                style={{ marginLeft: 8, marginRight: 8, position: "relative", top: 2 }}
+              >
+                <SVG.Plus height="16px" />
+              </span>
+              on the top right corner <br />
+            </System.H5>
+            <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
+              or drop files {isMobile ? <span> on desktop</span> : null} to save to Slate
+            </System.H5>
           </div>
         </EmptyState>
       )}

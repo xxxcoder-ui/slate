@@ -22,12 +22,14 @@ import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_POPUP_WRAPPER = (theme) => css`
+  width: 264px;
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: ${theme.zindex.tooltip};
   @media (max-width: ${theme.sizes.mobile}px) {
-    right: 50%;
+    left: 0px;
+    margin: 0 auto;
   }
 `;
 
@@ -183,7 +185,7 @@ export function Popup({ isMobile }) {
       {popupState.isVisible ? (
         <motion.div
           css={STYLES_POPUP_WRAPPER}
-          initial={{ opacity: 0, y: 0, x: "50%" }}
+          initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           onMouseEnter={handleOnMouseEnter}

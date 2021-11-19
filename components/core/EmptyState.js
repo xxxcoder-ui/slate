@@ -24,6 +24,10 @@ const STYLES_EMPTY_FRAME = (theme) => css`
   border-left: 2px solid;
   border-top: 2px solid;
   border-color: ${theme.semantic.borderGrayLight4};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    display: none;
+  }
 `;
 
 export default function EmptyState({ children, css, ...props }) {

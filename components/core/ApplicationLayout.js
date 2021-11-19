@@ -32,11 +32,6 @@ const STYLES_CONTENT = css`
   min-width: 10%;
   min-height: 100vh;
   position: relative;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    padding-left: 0px;
-    padding: 0 0 88px 0;
-  }
 `;
 
 const STYLES_SIDEBAR_ELEMENTS = css`

@@ -48,22 +48,18 @@ export function FileTypeIcon({ file, ...props }) {
 
 const STYLES_FILE_TYPE_GROUP_WRAPPER = (theme) => css`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 120px);
   grid-gap: 24px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
-    grid-template-columns: repeat(2, 1fr);
-
-    & > :nth-child(n + 5) {
-      display: none;
-    }
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
   }
 `;
 
 const STYLES_FILE_TYPE_PLACEHOLDER = css`
   ${Styles.CONTAINER_CENTERED};
-  height: 120px;
-  width: 120px;
+  width: 100%;
 `;
 
 export function FileTypeGroup(props) {
