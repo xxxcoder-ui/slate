@@ -19,7 +19,7 @@ import { css } from "@emotion/react";
 import { useEventListener } from "~/common/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 
-const useCoverImgDrop = ({ onUpload, ref }) => {
+const useCoverImgDrop = ({ onUpload, enabled, ref }) => {
   const [isDropping, setDroppingState] = React.useState(false);
 
   const handleDragEnter = (e) => (e.preventDefault(), e.stopPropagation(), setDroppingState(true));
@@ -50,10 +50,10 @@ const useCoverImgDrop = ({ onUpload, ref }) => {
     onUpload(coverImg);
   };
 
-  useEventListener({ type: "dragenter", handler: handleDragEnter, ref }, []);
-  useEventListener({ type: "dragleave", handler: handleDragLeave, ref }, []);
-  useEventListener({ type: "dragover", handler: handleDragOver, ref }, []);
-  useEventListener({ type: "drop", handler: handleDrop, ref }, []);
+  useEventListener({ type: "dragenter", handler: handleDragEnter, enabled, ref }, []);
+  useEventListener({ type: "dragleave", handler: handleDragLeave, enabled, ref }, []);
+  useEventListener({ type: "dragover", handler: handleDragOver, enabled, ref }, []);
+  useEventListener({ type: "drop", handler: handleDrop, enabled, ref }, []);
   return { isDroppingCoverImg: isDropping };
 };
 
@@ -145,6 +145,7 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
   const coverImgDropzoneRef = React.useRef();
   const { isDroppingCoverImg } = useCoverImgDrop({
     onUpload: handleCoverImgUpload,
+    enabled: isFileOwner && !isMobile,
     ref: coverImgDropzoneRef,
   });
 
@@ -185,7 +186,7 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
                 css={STYLES_FILE_HIDDEN}
                 type="file"
                 id="file"
-                disabled={isUploadingCoverImg}
+                disabled={!isFileOwner || isUploadingCoverImg}
                 onChange={handleInputChange}
               />
               <div
@@ -212,12 +213,20 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
             css={[STYLES_IMAGE_PREVIEW, Styles.CONTAINER_CENTERED]}
             style={{ flexDirection: "column" }}
           >
-            <SVG.UploadCloud width={16} />
-            <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
-              {isMobile
-                ? "Select an image as object preview"
-                : "Drop or select an image as object preview"}
-            </System.P3>
+            {isFileOwner ? (
+              <>
+                <SVG.UploadCloud width={16} />
+                <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
+                  {isMobile
+                    ? "Select an image as object preview"
+                    : "Drop or select an image as object preview"}
+                </System.P3>
+              </>
+            ) : (
+              <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
+                No preview image
+              </System.P3>
+            )}
           </div>
         )}
 
@@ -338,51 +347,6 @@ function FileMetadata({ file, ...props }) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const useFileDownload = ({ file, viewer, downloadRef }) => {
-  const [isDownloading, setDownloadingState] = React.useState(false);
-  const handleDownload = async () => {
-    if (!viewer) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-    setDownloadingState(true);
-    const response = await UserBehaviors.download(file, downloadRef);
-    setDownloadingState(false);
-    Events.hasError(response);
-  };
-
-  return [isDownloading, handleDownload];
-};
-
-function DownloadButton({ file, viewer, ...props }) {
-  /**NOTE(amine):  UserBehaviors.download creates a link and clicks it to trigger a download,
-                   which triggers the Boundary component and closes the jumper. 
-                   To fix this we create the link inside the downloadRef element */
-  const downloadRef = React.useRef();
-  const [isDownloading, handleDownload] = useFileDownload({ file, viewer, downloadRef });
-
-  return !file.isLink ? (
-    <div ref={downloadRef}>
-      <System.ButtonSecondary onClick={handleDownload} loading={isDownloading} {...props}>
-        Download
-      </System.ButtonSecondary>
-    </div>
-  ) : null;
-}
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const STYLES_DOWNLOAD_SECTION = (theme) => css`
-  ${Styles.CONTAINER_CENTERED};
-  justify-content: flex-end;
-  background-color: ${theme.semantic.bgWhite};
-  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    -webkit-backdrop-filter: blur(75px);
-    backdrop-filter: blur(75px);
-    background-color: ${theme.semantic.bgBlurLight};
-  }
-`;
-
 export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
   const isFileOwner = !external && isOwner && viewer;
 
@@ -407,15 +371,6 @@ export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
             />
             <FileMetadata file={file} style={{ width: "100%", marginTop: 14 }} />
           </Jumper.Item>
-          {!!file.isLink ? null : (
-            <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
-              <DownloadButton
-                file={file}
-                viewer={viewer}
-                style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
-              />
-            </Jumper.Item>
-          )}
         </Jumper.Root>
       ) : null}
     </Jumper.AnimatePresence>
@@ -450,13 +405,6 @@ export function MoreInfoMobile({ external, viewer, isOwner, file, isOpen, onClos
         >
           <SVG.InfoCircle width={16} height={16} style={{ color: Constants.system.blue }} />
         </button>
-        <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
-          <DownloadButton
-            file={file}
-            viewer={viewer}
-            style={{ marginLeft: "8px", minHeight: "32px" }}
-          />
-        </div>
       </MobileJumper.Footer>
     </MobileJumper.Root>
   ) : null;

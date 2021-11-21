@@ -398,8 +398,10 @@ export const useMediaQuery = () => {
   };
 };
 
-export const useEventListener = ({ type, handler, ref }, dependencies) => {
+export const useEventListener = ({ type, handler, ref, enabled = true }, dependencies) => {
   React.useEffect(() => {
+    if (!enabled) return;
+
     let element = window;
     if (ref) element = ref.current;
 
