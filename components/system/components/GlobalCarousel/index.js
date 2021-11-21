@@ -110,25 +110,17 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
 
   const isJumperOpen =
     isFileDescriptionVisible ||
@@ -278,17 +270,14 @@ function CarouselHeader({
                 </motion.button>
               </Show>
 
-              <Show when={file.isPublic}>
-                <motion.button
-                  layoutId="jumper-desktop-share"
-                  onClick={showShareFile}
-                  style={{ marginLeft: 4 }}
-                  css={STYLES_ACTION_BUTTON}
-                >
-                  <SVG.Share style={{ pointerEvents: "none" }} />
-                </motion.button>
-              </Show>
-
+              <motion.button
+                layoutId="jumper-desktop-share"
+                onClick={showShareFile}
+                style={{ marginLeft: 4 }}
+                css={STYLES_ACTION_BUTTON}
+              >
+                <SVG.Share style={{ pointerEvents: "none" }} />
+              </motion.button>
               <motion.button
                 layoutId="jumper-desktop-info"
                 onClick={showMoreInfo}
@@ -438,25 +427,17 @@ function CarouselHeaderMobile({
 }
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
   return (
     <>
       <ModalPortal>
@@ -508,16 +489,14 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
               <SVG.Hash />
             </motion.button>
           </Show>
-          <Show when={file.isPublic}>
-            <motion.button
-              layoutId="jumper-mobile-share"
-              style={{ marginLeft: 4 }}
-              css={STYLES_ACTION_BUTTON}
-              onClick={showShareFile}
-            >
-              <SVG.Share />
-            </motion.button>
-          </Show>
+          <motion.button
+            layoutId="jumper-mobile-share"
+            style={{ marginLeft: 4 }}
+            css={STYLES_ACTION_BUTTON}
+            onClick={showShareFile}
+          >
+            <SVG.Share />
+          </motion.button>
           <motion.button
             layoutId="jumper-mobile-info"
             style={{ marginLeft: 4 }}
