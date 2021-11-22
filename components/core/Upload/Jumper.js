@@ -6,31 +6,15 @@ import * as Logging from "~/common/logging";
 import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
 import * as Constants from "~/common/constants";
-import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { useUploadContext } from "~/components/core/Upload/Provider";
-import { AnimatePresence, motion } from "framer-motion";
+import { useUploadStore } from "~/components/core/Upload/store";
 
 const STYLES_LINK_INPUT = (theme) => css`
   background-color: ${theme.semantic.bgWhite};
   width: calc(100% - 8px);
   margin-right: 8px;
-`;
-
-const STYLES_JUMPER_OVERLAY = (theme) => css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: ${theme.zindex.jumper};
-
-  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    -webkit-backdrop-filter: blur(75px);
-    backdrop-filter: blur(75px);
-    background-color: ${theme.semantic.bgBlurLightTRN};
-  }
 `;
 
 const STYLES_FILE_HIDDEN = css`
@@ -61,7 +45,9 @@ const STYLES_MOBILE_HIDDEN = css`
 `;
 
 export function UploadJumper({ data }) {
-  const [{ isUploadJumperVisible }, { upload, uploadLink, hideUploadJumper }] = useUploadContext();
+  const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
+
+  const { upload, uploadLink } = useUploadStore((store) => store.handlers);
 
   const [state, setState] = React.useState({
     url: "",

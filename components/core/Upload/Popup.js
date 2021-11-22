@@ -5,16 +5,16 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 
-import { useUploadContext } from "~/components/core/Upload/Provider";
 import { motion, AnimatePresence } from "framer-motion";
 import { css } from "@emotion/react";
 import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
 import { useHover } from "~/common/hooks";
+import { clamp } from "lodash";
+import { useUploadStore } from "~/components/core/Upload/store";
 
 import DataMeter from "~/components/core/DataMeter";
 import BlobObjectPreview from "~/components/core/BlobObjectPreview";
-import { clamp } from "lodash";
 /* -------------------------------------------------------------------------------------------------
  * Popup
  * -----------------------------------------------------------------------------------------------*/
@@ -58,7 +58,11 @@ const STYLES_POPUP_CONTENT = css`
 `;
 
 const useUploadPopup = ({ totalFilesSummary }) => {
-  const [{ isFinished }, { resetUploadState }] = useUploadContext();
+  const {
+    state: { isFinished },
+    handlers: { resetUploadState },
+  } = useUploadStore();
+
   const [popupState, setPopupState] = React.useState({
     isVisible: false,
     isSummaryExpanded: false,
@@ -159,7 +163,11 @@ const useUploadSummary = ({ fileLoading }) =>
   }, [fileLoading]);
 
 export function Popup() {
-  const [{ isFinished, fileLoading }, { resetUploadState }] = useUploadContext();
+  const {
+    state: { isFinished, fileLoading },
+    handlers: { resetUploadState },
+  } = useUploadStore();
+
   const { uploadSummary, totalFilesSummary } = useUploadSummary({ fileLoading });
 
   const [isHovered, { handleOnMouseEnter, handleOnMouseLeave }] = useHover();
@@ -244,7 +252,10 @@ const STYLES_RESET_BORDER_TOP = css`
 `;
 
 function Header({ totalFilesSummary, popupState, expandUploadSummary, collapseUploadSummary }) {
-  const [{ isFinished, totalBytesUploaded, totalBytes }, { retryAll }] = useUploadContext();
+  const {
+    state: { isFinished, totalBytesUploaded, totalBytes },
+    handlers: { retryAll },
+  } = useUploadStore();
 
   const uploadProgress = clamp(Math.floor((totalBytesUploaded / totalBytes) * 100), 0, 100);
 
@@ -353,7 +364,8 @@ const STYLES_SUMMARY_ACTION = css`
 `;
 
 function Summary({ uploadSummary }) {
-  const [, { retry, cancel }] = useUploadContext();
+  const { retry, cancel } = useUploadStore((store) => store.handlers);
+
   return (
     <div css={STYLES_SUMMARY}>
       {uploadSummary.map((file) => (
