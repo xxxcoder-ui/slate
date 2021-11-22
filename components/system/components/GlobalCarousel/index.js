@@ -6,6 +6,8 @@ import * as Styles from "~/common/styles";
 import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers";
 import * as Utilities from "~/common/utilities";
 import * as Validations from "~/common/validations";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
@@ -20,6 +22,7 @@ import {
 import { Show } from "~/components/utility/Show";
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
@@ -47,6 +50,69 @@ const VisitLinkButton = ({ file }) => {
       <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} />
       <span style={{ whiteSpace: "nowrap" }}>Visit site</span>
     </System.ButtonTertiary>
+  );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+// NOTE(amine): manage file saving state
+export const useSaveHandler = ({ file, viewer, onAction }) => {
+  const isSaved = React.useMemo(
+    () => viewer?.libraryCids[file.cid],
+    [viewer?.libraryCids, file.cid]
+  );
+
+  // NOTE(amine): handle the saving state for each file independently.
+  const [isSaving, setIsSaving] = React.useState({
+    [file.id]: false,
+  });
+
+  const saveFile = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+
+    if (isSaved) {
+      const fileLibraryURL = `/_/data?cid=${file.cid}`;
+      onAction({
+        type: "NAVIGATE",
+        href: fileLibraryURL,
+        redirect: false,
+      });
+
+      return;
+    }
+
+    setIsSaving((prev) => ({ ...prev, [file.id]: true }));
+    // TODO(amine): show saving progress in the upload popup.
+    const response = await Actions.saveCopy({ files: [file] });
+    setIsSaving((prev) => ({ ...prev, [file.id]: false }));
+
+    if (Events.hasError(response)) {
+      return;
+    }
+  };
+
+  return { saveFile, isSaved, isSaving: isSaving[file.id] };
+};
+
+const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
+  const { saveFile, isSaved, isSaving } = useSaveHandler({ file, viewer, onAction });
+
+  return (
+    <motion.button onClick={saveFile} disabled={isSaving} {...props}>
+      {isSaving ? (
+        <LoaderSpinner style={{ height: 16, width: 16 }} />
+      ) : isSaved ? (
+        <SVG.CheckCircle
+          height={16}
+          style={{ pointerEvents: "none", color: Constants.system.green }}
+        />
+      ) : (
+        <SVG.FilePlus height={16} style={{ pointerEvents: "none" }} />
+      )}
+    </motion.button>
   );
 };
 
@@ -86,6 +152,7 @@ const STYLES_ACTION_BUTTON = css`
 function CarouselHeader({
   isStandalone,
   viewer,
+  onAction,
   data,
   external,
   isOwner,
@@ -249,7 +316,7 @@ function CarouselHeader({
         <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
           <AnimateSharedLayout>
             <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-              <Show when={isOwner}>
+              {isOwner && (
                 <motion.button
                   layoutId="jumper-desktop-edit"
                   onClick={showEditInfo}
@@ -257,9 +324,9 @@ function CarouselHeader({
                 >
                   <SVG.Edit style={{ pointerEvents: "none" }} />
                 </motion.button>
-              </Show>
+              )}
 
-              <Show when={isOwner}>
+              {isOwner && (
                 <motion.button
                   layoutId="jumper-desktop-channels"
                   onClick={showEditChannels}
@@ -268,7 +335,17 @@ function CarouselHeader({
                 >
                   <SVG.Hash style={{ pointerEvents: "none" }} />
                 </motion.button>
-              </Show>
+              )}
+
+              {!isOwner && (
+                <SaveFileButton
+                  style={{ marginLeft: 4 }}
+                  css={STYLES_ACTION_BUTTON}
+                  file={file}
+                  viewer={viewer}
+                  onAction={onAction}
+                />
+              )}
 
               <motion.button
                 layoutId="jumper-desktop-share"
@@ -278,6 +355,7 @@ function CarouselHeader({
               >
                 <SVG.Share style={{ pointerEvents: "none" }} />
               </motion.button>
+
               <motion.button
                 layoutId="jumper-desktop-info"
                 onClick={showMoreInfo}
@@ -470,7 +548,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
       </ModalPortal>
       <AnimateSharedLayout>
         <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
-          <Show when={isOwner}>
+          {isOwner && (
             <motion.button
               layoutId="jumper-mobile-edit"
               css={STYLES_ACTION_BUTTON}
@@ -478,8 +556,9 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
             >
               <SVG.Edit />
             </motion.button>
-          </Show>
-          <Show when={isOwner}>
+          )}
+
+          {isOwner && (
             <motion.button
               layoutId="jumper-mobile-channels"
               style={{ marginLeft: 4 }}
@@ -488,7 +567,18 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
             >
               <SVG.Hash />
             </motion.button>
-          </Show>
+          )}
+
+          {!isOwner && (
+            <SaveFileButton
+              style={{ marginLeft: 4 }}
+              css={STYLES_ACTION_BUTTON}
+              file={file}
+              viewer={viewer}
+              onAction={onAction}
+            />
+          )}
+
           <motion.button
             layoutId="jumper-mobile-share"
             style={{ marginLeft: 4 }}
@@ -497,6 +587,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
           >
             <SVG.Share />
           </motion.button>
+
           <motion.button
             layoutId="jumper-mobile-info"
             style={{ marginLeft: 4 }}

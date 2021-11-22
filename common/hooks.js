@@ -263,51 +263,6 @@ export const useInView = ({ ref }) => {
   return { isInView };
 };
 
-// NOTE(amine): manage file saving state
-export const useSaveHandler = ({ file, viewer }) => {
-  const savedFile = React.useMemo(() => viewer?.libraryCids[file.cid], [viewer]);
-  const [state, setState] = React.useState({
-    isSaved: !!savedFile,
-    // NOTE(amine): viewer will have the hydrated state
-    saveCount: file.saveCount,
-  });
-
-  const handleSaveState = () => {
-    setState((prev) => {
-      if (prev.isSaved) {
-        return {
-          isSaved: false,
-          saveCount: prev.saveCount - 1,
-        };
-      }
-      return {
-        isSaved: true,
-        saveCount: prev.saveCount + 1,
-      };
-    });
-  };
-
-  const save = async () => {
-    if (!viewer) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-    // NOTE(amine): optimistic update
-    handleSaveState();
-    const response =
-      state.isSaved && savedFile
-        ? await Actions.deleteFiles({ ids: [savedFile.id] })
-        : await Actions.saveCopy({ files: [file] });
-    if (Events.hasError(response)) {
-      // NOTE(amine): revert back to old state if there is an error
-      handleSaveState();
-      return;
-    }
-  };
-
-  return { save, ...state };
-};
-
 export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
   const [isFollowing, setFollowing] = React.useState(
     !viewer

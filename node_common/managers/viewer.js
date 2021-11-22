@@ -55,8 +55,6 @@ export const hydratePartial = async (
         id,
         includeFiles: true,
       });
-      update.libraryCids =
-        user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
     } else {
       user = await Data.getUserById({
         id,
@@ -72,6 +70,9 @@ export const hydratePartial = async (
     library = await Data.getFilesByUserId({ id, publicOnly: false });
     update.library = library;
   }
+
+  update.libraryCids =
+    update?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: true }), {}) || {};
 
   if (slates) {
     const slates = await Data.getSlatesByUserId({
@@ -159,7 +160,7 @@ export const getById = async ({ id }) => {
   ).map((item) => item.value);
 
   const libraryCids =
-    user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
+    user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: true }), {}) || {};
 
   let cids = {};
   let bytes = 0;

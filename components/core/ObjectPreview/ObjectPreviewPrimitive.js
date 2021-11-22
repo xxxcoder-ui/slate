@@ -81,9 +81,6 @@ export default function ObjectPreviewPrimitive({
   isImage,
   onAction,
 }) {
-  // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
-  // const showSaveButton = viewer?.id !== file?.ownerId;
-
   // const [areControlsVisible, setShowControls] = React.useState(false);
   // const showControls = () => setShowControls(true);
   // const hideControls = () => setShowControls(false);
@@ -136,9 +133,6 @@ export default function ObjectPreviewPrimitive({
               css={STYLES_CONTROLS}
             >
               <LikeButton onClick={like} isLiked={isLiked} likeCount={likeCount} />
-              {showSaveButton && (
-                <SaveButton onSave={save} isSaved={isSaved} saveCount={saveCount} />
-              )}
             </motion.div>
           )}
         </AnimatePresence> */}
