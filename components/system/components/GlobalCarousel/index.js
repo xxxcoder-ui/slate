@@ -5,6 +5,7 @@ import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers";
 import * as Utilities from "~/common/utilities";
+import * as UploadUtilities from "~/common/upload-utilities";
 import * as Validations from "~/common/validations";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
@@ -23,6 +24,7 @@ import { Show } from "~/components/utility/Show";
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
+import { useUploadStore } from "~/components/core/Upload/store";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
@@ -57,17 +59,18 @@ const VisitLinkButton = ({ file }) => {
 
 // NOTE(amine): manage file saving state
 export const useSaveHandler = ({ file, viewer, onAction }) => {
+  const { saveCopy, isSaving } = useUploadStore((store) => {
+    const selectedFile = store.state.fileLoading[UploadUtilities.getFileKey(file)];
+
+    return { isSaving: selectedFile?.status === "uploading", saveCopy: store.handlers.saveCopy };
+  });
+
   const isSaved = React.useMemo(
     () => viewer?.libraryCids[file.cid],
     [viewer?.libraryCids, file.cid]
   );
 
-  // NOTE(amine): handle the saving state for each file independently.
-  const [isSaving, setIsSaving] = React.useState({
-    [file.id]: false,
-  });
-
-  const saveFile = async () => {
+  const handleSave = async () => {
     if (!viewer) {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
@@ -84,24 +87,17 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
       return;
     }
 
-    setIsSaving((prev) => ({ ...prev, [file.id]: true }));
-    // TODO(amine): show saving progress in the upload popup.
-    const response = await Actions.saveCopy({ files: [file] });
-    setIsSaving((prev) => ({ ...prev, [file.id]: false }));
-
-    if (Events.hasError(response)) {
-      return;
-    }
+    saveCopy(file);
   };
 
-  return { saveFile, isSaved, isSaving: isSaving[file.id] };
+  return { handleSave, isSaved, isSaving: isSaving };
 };
 
 const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
-  const { saveFile, isSaved, isSaving } = useSaveHandler({ file, viewer, onAction });
+  const { handleSave, isSaved, isSaving } = useSaveHandler({ file, viewer, onAction });
 
   return (
-    <motion.button onClick={saveFile} disabled={isSaving} {...props}>
+    <motion.button onClick={handleSave} disabled={isSaving} {...props}>
       {isSaving ? (
         <LoaderSpinner style={{ height: 16, width: 16 }} />
       ) : isSaved ? (

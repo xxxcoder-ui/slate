@@ -490,7 +490,6 @@ export default class ApplicationPage extends React.Component {
             header={headerElement}
             sidebar={sidebarElement}
             onDismissSidebar={this._handleDismissSidebar}
-            fileLoading={this.state.fileLoading}
             isMobile={this.state.isMobile}
             isMac={this.props.isMac}
             viewer={this.state.viewer}

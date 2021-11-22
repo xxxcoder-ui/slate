@@ -41,8 +41,9 @@ export const useUploadStore = create((setUploadState) => {
           ...prev.state.fileLoading,
           [fileKey]: {
             id: fileKey,
-            status: "saving",
-            name: file.name,
+            status: "uploading",
+            name: file?.name || file?.filename,
+            cid: file.cid,
             type: file.type,
             createdAt: Date.now(),
             loaded: 0,
@@ -57,11 +58,10 @@ export const useUploadStore = create((setUploadState) => {
     }));
   };
 
-  const handleSuccess = ({ fileKey, cid }) => {
+  const handleSuccess = ({ fileKey }) => {
     setUploadState((prev) => {
       const newFileLoading = { ...prev.state.fileLoading };
       newFileLoading[fileKey].status = "saved";
-      newFileLoading[fileKey].cid = cid;
       return {
         ...prev,
         state: {

@@ -54,6 +54,13 @@ export const uploadLink = async ({ url, slate, uploadAbort }) => {
   return createResponse;
 };
 
+export const saveCopy = async ({ file, uploadAbort }) => {
+  const abortController = new AbortController();
+  if (uploadAbort) uploadAbort.abort = abortController.abort.bind(abortController);
+
+  return await Actions.saveCopy({ files: [file] }, { signal: abortController.signal });
+};
+
 export const upload = async ({ file, onProgress, bucketName, uploadAbort }) => {
   let formData = new FormData();
   const HEIC2ANY = require("heic2any");
