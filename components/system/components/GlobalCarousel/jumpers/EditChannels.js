@@ -6,7 +6,7 @@ import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
@@ -221,6 +221,7 @@ function Channels({
                     top: -1,
                     verticalAlign: "middle",
                     pointerEvents: "none",
+                    display: "inline",
                   }}
                 />
                 <span style={{ marginLeft: 4 }}>{searchQuery}</span>
@@ -476,11 +477,11 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
           autoFocus={viewer?.slates?.length === 0}
         />
       </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <div style={{ padding: "13px 16px 11px" }}>
         <Jumper.ObjectPreview file={file} />
       </div>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <MobileJumper.Content>
         <Channels
           header="Private"

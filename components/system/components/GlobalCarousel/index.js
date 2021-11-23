@@ -5,6 +5,10 @@ import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers";
 import * as Utilities from "~/common/utilities";
+import * as UploadUtilities from "~/common/upload-utilities";
+import * as Validations from "~/common/validations";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
@@ -13,10 +17,14 @@ import {
   useDetectTextOverflow,
   useEscapeKey,
   useEventListener,
+  useIsomorphicLayoutEffect,
   useLockScroll,
 } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 import { ModalPortal } from "~/components/core/ModalPortal";
+import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
+import { useUploadStore } from "~/components/core/Upload/store";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
@@ -33,7 +41,7 @@ const VisitLinkButton = ({ file }) => {
       style={{
         color: Constants.semantic.textGrayDark,
         padding: "4px 8px 7px",
-        marginLeft: 4,
+        marginLeft: 16,
         minHeight: 30,
       }}
       href={file.url}
@@ -44,6 +52,63 @@ const VisitLinkButton = ({ file }) => {
       <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} />
       <span style={{ whiteSpace: "nowrap" }}>Visit site</span>
     </System.ButtonTertiary>
+  );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+// NOTE(amine): manage file saving state
+export const useSaveHandler = ({ file, viewer, onAction }) => {
+  const { saveCopy, isSaving } = useUploadStore((store) => {
+    const selectedFile = store.state.fileLoading[UploadUtilities.getFileKey(file)];
+
+    return { isSaving: selectedFile?.status === "uploading", saveCopy: store.handlers.saveCopy };
+  });
+
+  const isSaved = React.useMemo(
+    () => viewer?.libraryCids[file.cid],
+    [viewer?.libraryCids, file.cid]
+  );
+
+  const handleSave = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+
+    if (isSaved) {
+      const fileLibraryURL = `/_/data?cid=${file.cid}`;
+      onAction({
+        type: "NAVIGATE",
+        href: fileLibraryURL,
+        redirect: false,
+      });
+
+      return;
+    }
+
+    saveCopy(file);
+  };
+
+  return { handleSave, isSaved, isSaving: isSaving };
+};
+
+const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
+  const { handleSave, isSaved, isSaving } = useSaveHandler({ file, viewer, onAction });
+
+  return (
+    <motion.button onClick={handleSave} disabled={isSaving} {...props}>
+      {isSaving ? (
+        <LoaderSpinner style={{ height: 16, width: 16 }} />
+      ) : isSaved ? (
+        <SVG.CheckCircle
+          height={16}
+          style={{ pointerEvents: "none", color: Constants.system.green }}
+        />
+      ) : (
+        <SVG.FilePlus height={16} style={{ pointerEvents: "none" }} />
+      )}
+    </motion.button>
   );
 };
 
@@ -83,6 +148,7 @@ const STYLES_ACTION_BUTTON = css`
 function CarouselHeader({
   isStandalone,
   viewer,
+  onAction,
   data,
   external,
   isOwner,
@@ -107,25 +173,17 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
 
   const isJumperOpen =
     isFileDescriptionVisible ||
@@ -154,7 +212,7 @@ function CarouselHeader({
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isJumperOpen) {
       return;
     }
@@ -254,7 +312,7 @@ function CarouselHeader({
         <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
           <AnimateSharedLayout>
             <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-              <Show when={isOwner}>
+              {isOwner && (
                 <motion.button
                   layoutId="jumper-desktop-edit"
                   onClick={showEditInfo}
@@ -262,9 +320,9 @@ function CarouselHeader({
                 >
                   <SVG.Edit style={{ pointerEvents: "none" }} />
                 </motion.button>
-              </Show>
+              )}
 
-              <Show when={isOwner}>
+              {isOwner && (
                 <motion.button
                   layoutId="jumper-desktop-channels"
                   onClick={showEditChannels}
@@ -273,18 +331,26 @@ function CarouselHeader({
                 >
                   <SVG.Hash style={{ pointerEvents: "none" }} />
                 </motion.button>
-              </Show>
+              )}
 
-              <Show when={file.isPublic}>
-                <motion.button
-                  layoutId="jumper-desktop-share"
-                  onClick={showShareFile}
+              {!isOwner && (
+                <SaveFileButton
                   style={{ marginLeft: 4 }}
                   css={STYLES_ACTION_BUTTON}
-                >
-                  <SVG.Share style={{ pointerEvents: "none" }} />
-                </motion.button>
-              </Show>
+                  file={file}
+                  viewer={viewer}
+                  onAction={onAction}
+                />
+              )}
+
+              <motion.button
+                layoutId="jumper-desktop-share"
+                onClick={showShareFile}
+                style={{ marginLeft: 4 }}
+                css={STYLES_ACTION_BUTTON}
+              >
+                <SVG.Share style={{ pointerEvents: "none" }} />
+              </motion.button>
 
               <motion.button
                 layoutId="jumper-desktop-info"
@@ -435,25 +501,17 @@ function CarouselHeaderMobile({
 }
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
   return (
     <>
       <ModalPortal>
@@ -486,7 +544,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
       </ModalPortal>
       <AnimateSharedLayout>
         <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
-          <Show when={isOwner}>
+          {isOwner && (
             <motion.button
               layoutId="jumper-mobile-edit"
               css={STYLES_ACTION_BUTTON}
@@ -494,8 +552,9 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
             >
               <SVG.Edit />
             </motion.button>
-          </Show>
-          <Show when={isOwner}>
+          )}
+
+          {isOwner && (
             <motion.button
               layoutId="jumper-mobile-channels"
               style={{ marginLeft: 4 }}
@@ -504,17 +563,27 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
             >
               <SVG.Hash />
             </motion.button>
-          </Show>
-          <Show when={file.isPublic}>
-            <motion.button
-              layoutId="jumper-mobile-share"
+          )}
+
+          {!isOwner && (
+            <SaveFileButton
               style={{ marginLeft: 4 }}
               css={STYLES_ACTION_BUTTON}
-              onClick={showShareFile}
-            >
-              <SVG.Share />
-            </motion.button>
-          </Show>
+              file={file}
+              viewer={viewer}
+              onAction={onAction}
+            />
+          )}
+
+          <motion.button
+            layoutId="jumper-mobile-share"
+            style={{ marginLeft: 4 }}
+            css={STYLES_ACTION_BUTTON}
+            onClick={showShareFile}
+          >
+            <SVG.Share />
+          </motion.button>
+
           <motion.button
             layoutId="jumper-mobile-info"
             style={{ marginLeft: 4 }}
@@ -670,7 +739,7 @@ const STYLES_PREVIEW_WRAPPER = (theme) => css`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: ${Constants.semantic.bgGrayLight4};
+  background-color: ${theme.semantic.bgGrayLight4};
 
   @media (max-width: ${theme.sizes.mobile}px) {
     min-height: 75vh;
@@ -693,6 +762,11 @@ export function CarouselContent({
 
   useLockScroll();
 
+  const { linkHtml, linkIFrameAllowed } = file;
+  const isNFTLink = Validations.isNFTLink(file);
+  // NOTE(amine): hide the title and description when using LinkCard as SlateMediaObject
+  const hideDescription = file.isLink && (!linkHtml || !linkIFrameAllowed || isNFTLink);
+
   return (
     <>
       <Alert
@@ -714,29 +788,31 @@ export function CarouselContent({
           <SlateMediaObject file={file} isMobile={isMobile} />
         </div>
 
-        <div css={Styles.MOBILE_ONLY} style={{ padding: "13px 16px 44px", width: "100%" }}>
-          <System.H5 color="textBlack" as="h1">
-            {file?.name || file?.filename}
-          </System.H5>
-          <Show when={file?.body}>
-            <System.P2 color="textBlack" style={{ marginTop: 4 }}>
-              {file?.body}
-            </System.P2>
-          </Show>
-          <Show when={file.isLink}>
-            <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-              <LinkIcon file={file} width={12} height={12} />
-              <System.P2
-                as="a"
-                nbrOflines={1}
-                href={file.url}
-                style={{ marginLeft: 5, textDecoration: "none", color: Constants.system.blue }}
-              >
-                {file.url}
+        {!hideDescription && (
+          <div css={Styles.MOBILE_ONLY} style={{ padding: "13px 16px 44px", width: "100%" }}>
+            <System.H5 color="textBlack" as="h1">
+              {file?.name || file?.filename}
+            </System.H5>
+            <Show when={file?.body}>
+              <System.P2 color="textBlack" style={{ marginTop: 4 }}>
+                {file?.body}
               </System.P2>
-            </div>
-          </Show>
-        </div>
+            </Show>
+            <Show when={file.isLink}>
+              <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <LinkIcon file={file} width={12} height={12} />
+                <System.P2
+                  as="a"
+                  nbrOflines={1}
+                  href={file.url}
+                  style={{ marginLeft: 5, textDecoration: "none", color: Constants.system.blue }}
+                >
+                  {file.url}
+                </System.P2>
+              </div>
+            </Show>
+          </div>
+        )}
       </div>
     </>
   );
@@ -810,7 +886,6 @@ const STYLES_ROOT = (theme) => css`
   right: 0;
   bottom: 0;
   top: 0;
-  height: 100vh;
   color: ${Constants.system.white};
   z-index: ${Constants.zindex.modal};
   background-color: rgba(0, 0, 0, 0.8);
@@ -871,7 +946,7 @@ export function GlobalCarousel({
   });
 
   return (
-    <div css={STYLES_ROOT}>
+    <FullHeightLayout css={STYLES_ROOT}>
       {isMobile ? (
         <CarouselHeaderMobile
           isStandalone={isStandalone}
@@ -881,6 +956,8 @@ export function GlobalCarousel({
           onPreviousSlide={handlePrevious}
           onNextSlide={handleNext}
           onClose={handleClose}
+          enableNextSlide={index < objects.length - 1}
+          enablePreviousSlide={index > 0}
         />
       ) : (
         <CarouselHeader
@@ -921,6 +998,6 @@ export function GlobalCarousel({
           isOwner={isOwner}
         />
       ) : null}
-    </div>
+    </FullHeightLayout>
   );
 }

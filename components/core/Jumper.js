@@ -57,12 +57,7 @@ const STYLES_JUMPER_OVERLAY = (theme) => css`
   width: 100%;
   height: 100%;
   z-index: ${theme.zindex.jumper};
-
-  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    -webkit-backdrop-filter: blur(75px);
-    backdrop-filter: blur(75px);
-    background-color: ${theme.semantic.bgBlurLightTRN};
-  }
+  background-color: ${theme.semantic.bgBlurDark};
 `;
 
 const JumperContext = React.createContext({});
@@ -78,9 +73,9 @@ function Root({ children, onClose, ...props }) {
     <ModalPortal>
       <div>
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 10, opacity: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
           css={STYLES_JUMPER_OVERLAY}
         />
@@ -152,7 +147,7 @@ function Item({ children, ...props }) {
  * -----------------------------------------------------------------------------------------------*/
 function Divider({ children, ...props }) {
   return (
-    <System.Divider height={1} color="bgGrayLight" {...props}>
+    <System.Divider height={1} color="bgGrayLight4" {...props}>
       {children}
     </System.Divider>
   );
@@ -169,7 +164,7 @@ function ObjectPreview({ file }) {
       style={{ color: Constants.system.green, width: "100%" }}
     >
       <div>
-        <SVG.CheckCircle />
+        <SVG.CheckCircle style={{ display: "block" }} />
       </div>
       <div style={{ marginLeft: 12, marginRight: 12 }}>
         <AnimateSharedLayout>

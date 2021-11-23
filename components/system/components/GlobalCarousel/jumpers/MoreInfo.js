@@ -11,7 +11,7 @@ import * as UserBehaviors from "~/common/user-behaviors";
 import * as Constants from "~/common/constants";
 import * as FileUtilities from "~/common/file-utilities";
 import * as Validations from "~/common/validations";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { Show } from "~/components/utility/Show";
@@ -19,7 +19,7 @@ import { css } from "@emotion/react";
 import { useEventListener } from "~/common/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 
-const useCoverImgDrop = ({ onUpload, ref }) => {
+const useCoverImgDrop = ({ onUpload, enabled, ref }) => {
   const [isDropping, setDroppingState] = React.useState(false);
 
   const handleDragEnter = (e) => (e.preventDefault(), e.stopPropagation(), setDroppingState(true));
@@ -50,10 +50,10 @@ const useCoverImgDrop = ({ onUpload, ref }) => {
     onUpload(coverImg);
   };
 
-  useEventListener({ type: "dragenter", handler: handleDragEnter, ref }, []);
-  useEventListener({ type: "dragleave", handler: handleDragLeave, ref }, []);
-  useEventListener({ type: "dragover", handler: handleDragOver, ref }, []);
-  useEventListener({ type: "drop", handler: handleDrop, ref }, []);
+  useEventListener({ type: "dragenter", handler: handleDragEnter, enabled, ref }, []);
+  useEventListener({ type: "dragleave", handler: handleDragLeave, enabled, ref }, []);
+  useEventListener({ type: "dragover", handler: handleDragOver, enabled, ref }, []);
+  useEventListener({ type: "drop", handler: handleDrop, enabled, ref }, []);
   return { isDroppingCoverImg: isDropping };
 };
 
@@ -104,7 +104,7 @@ const STYLES_IMAGE_PREVIEW = (theme) => css`
   border-radius: 16px;
   margin-top: 8px;
   box-shadow: ${theme.shadow.lightSmall};
-  border: 1px solid ${theme.semantic.borderGrayLight};
+  border: 1px solid ${theme.semantic.borderGrayLight4};
   overflow: hidden;
   img {
     width: 100%;
@@ -126,7 +126,7 @@ const STYLES_COVER_IMG_DROP = (theme) => css`
   height: 100%;
   border-radius: 16px;
   background-color: ${theme.semantic.bgWhite};
-  border: 1px solid ${theme.semantic.borderGrayLight};
+  border: 1px solid ${theme.semantic.borderGrayLight4};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
@@ -145,8 +145,20 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
   const coverImgDropzoneRef = React.useRef();
   const { isDroppingCoverImg } = useCoverImgDrop({
     onUpload: handleCoverImgUpload,
+    enabled: isFileOwner && !isMobile,
     ref: coverImgDropzoneRef,
   });
+
+  if (Validations.isImageType(file?.type)) {
+    return (
+      <div style={{ marginTop: 14 }}>
+        <System.H6 color="textGray">Preview image</System.H6>
+        <div css={STYLES_IMAGE_PREVIEW}>
+          <img src={Strings.getURLfromCID(file.cid)} alt="file preview" />
+        </div>
+      </div>
+    );
+  }
 
   const handleInputChange = (e) => {
     e.persist();
@@ -174,7 +186,7 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
                 css={STYLES_FILE_HIDDEN}
                 type="file"
                 id="file"
-                disabled={isUploadingCoverImg}
+                disabled={!isFileOwner || isUploadingCoverImg}
                 onChange={handleInputChange}
               />
               <div
@@ -201,12 +213,20 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
             css={[STYLES_IMAGE_PREVIEW, Styles.CONTAINER_CENTERED]}
             style={{ flexDirection: "column" }}
           >
-            <SVG.UploadCloud width={16} />
-            <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
-              {isMobile
-                ? "Select an image as object preview"
-                : "Drop or select an image as object preview"}
-            </System.P3>
+            {isFileOwner ? (
+              <>
+                <SVG.UploadCloud width={16} />
+                <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
+                  {isMobile
+                    ? "Select an image as object preview"
+                    : "Drop or select an image as object preview"}
+                </System.P3>
+              </>
+            ) : (
+              <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
+                No preview image
+              </System.P3>
+            )}
           </div>
         )}
 
@@ -257,7 +277,7 @@ function FileMetadata({ file, ...props }) {
         <System.P3>{Strings.capitalize(file.type)}</System.P3>
       </div>
       <System.Divider
-        color="borderGrayLight"
+        color="borderGrayLight4"
         height={1}
         style={{ marginTop: 4, marginBottom: 4 }}
       />
@@ -271,7 +291,7 @@ function FileMetadata({ file, ...props }) {
       {Validations.isPreviewableImage(file?.type || "") ? (
         <>
           <System.Divider
-            color="borderGrayLight"
+            color="borderGrayLight4"
             height={1}
             style={{ marginTop: 4, marginBottom: 4 }}
           />
@@ -287,7 +307,7 @@ function FileMetadata({ file, ...props }) {
         </>
       ) : null}
       <System.Divider
-        color="borderGrayLight"
+        color="borderGrayLight4"
         height={1}
         style={{ marginTop: 4, marginBottom: 4 }}
       />
@@ -299,7 +319,7 @@ function FileMetadata({ file, ...props }) {
         <System.P3>{Utilities.formatDateToString(file.createdAt)}</System.P3>
       </div>
       <System.Divider
-        color="borderGrayLight"
+        color="borderGrayLight4"
         height={1}
         style={{ marginTop: 4, marginBottom: 4 }}
       />
@@ -327,51 +347,6 @@ function FileMetadata({ file, ...props }) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const useFileDownload = ({ file, viewer, downloadRef }) => {
-  const [isDownloading, setDownloadingState] = React.useState(false);
-  const handleDownload = async () => {
-    if (!viewer) {
-      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
-      return;
-    }
-    setDownloadingState(true);
-    const response = await UserBehaviors.download(file, downloadRef);
-    setDownloadingState(false);
-    Events.hasError(response);
-  };
-
-  return [isDownloading, handleDownload];
-};
-
-function DownloadButton({ file, viewer, ...props }) {
-  /**NOTE(amine):  UserBehaviors.download creates a link and clicks it to trigger a download,
-                   which triggers the Boundary component and closes the jumper. 
-                   To fix this we create the link inside the downloadRef element */
-  const downloadRef = React.useRef();
-  const [isDownloading, handleDownload] = useFileDownload({ file, viewer, downloadRef });
-
-  return !file.isLink ? (
-    <div ref={downloadRef}>
-      <System.ButtonSecondary onClick={handleDownload} loading={isDownloading} {...props}>
-        Download
-      </System.ButtonSecondary>
-    </div>
-  ) : null;
-}
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const STYLES_DOWNLOAD_SECTION = (theme) => css`
-  ${Styles.CONTAINER_CENTERED};
-  justify-content: flex-end;
-  background-color: ${theme.semantic.bgWhite};
-  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    -webkit-backdrop-filter: blur(75px);
-    backdrop-filter: blur(75px);
-    background-color: ${theme.semantic.bgBlurLight};
-  }
-`;
-
 export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
   const isFileOwner = !external && isOwner && viewer;
 
@@ -379,7 +354,9 @@ export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
     <Jumper.AnimatePresence>
       {isOpen ? (
         <Jumper.Root onClose={onClose}>
-          <Jumper.Header>More info</Jumper.Header>
+          <Jumper.Header>
+            <System.H5 color="textBlack">More info</System.H5>
+          </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item
             css={Styles.HORIZONTAL_CONTAINER}
@@ -388,21 +365,12 @@ export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
             <CoverImageUpload file={file} viewer={viewer} isFileOwner={isFileOwner} />
             <System.Divider
               style={{ marginLeft: 20, marginRight: 20 }}
-              color="borderGrayLight"
+              color="borderGrayLight4"
               width={1}
               height="unset"
             />
             <FileMetadata file={file} style={{ width: "100%", marginTop: 14 }} />
           </Jumper.Item>
-          {!!file.isLink ? null : (
-            <Jumper.Item css={STYLES_DOWNLOAD_SECTION}>
-              <DownloadButton
-                file={file}
-                viewer={viewer}
-                style={{ marginLeft: "auto", minHeight: "24px", padding: "1px 12px 3px" }}
-              />
-            </Jumper.Item>
-          )}
         </Jumper.Root>
       ) : null}
     </Jumper.AnimatePresence>
@@ -419,11 +387,11 @@ export function MoreInfoMobile({ external, viewer, isOwner, file, isOpen, onClos
           More Info
         </System.H5>
       </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <div style={{ padding: "13px 16px 11px" }}>
         <Jumper.ObjectPreview file={file} />
       </div>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <MobileJumper.Content>
         <CoverImageUpload isMobile file={file} viewer={viewer} isFileOwner={isFileOwner} />
         <FileMetadata file={file} style={{ marginTop: 22 }} />
@@ -437,13 +405,6 @@ export function MoreInfoMobile({ external, viewer, isOwner, file, isOpen, onClos
         >
           <SVG.InfoCircle width={16} height={16} style={{ color: Constants.system.blue }} />
         </button>
-        <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
-          <DownloadButton
-            file={file}
-            viewer={viewer}
-            style={{ marginLeft: "8px", minHeight: "32px" }}
-          />
-        </div>
       </MobileJumper.Footer>
     </MobileJumper.Root>
   ) : null;

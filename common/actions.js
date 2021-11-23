@@ -364,11 +364,12 @@ export const deleteAPIKey = async (data) => {
   });
 };
 
-export const saveCopy = async (data) => {
+export const saveCopy = async (data, options) => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/data/save-copy`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
+    ...options,
   });
 };
 

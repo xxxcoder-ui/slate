@@ -5,16 +5,18 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 
-import { useUploadContext } from "~/components/core/Upload/Provider";
 import { motion, AnimatePresence } from "framer-motion";
 import { css } from "@emotion/react";
 import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
 import { useHover } from "~/common/hooks";
+import { clamp } from "lodash";
+import { useUploadStore } from "~/components/core/Upload/store";
 
 import DataMeter from "~/components/core/DataMeter";
 import BlobObjectPreview from "~/components/core/BlobObjectPreview";
-import { clamp } from "lodash";
+import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
+
 /* -------------------------------------------------------------------------------------------------
  * Popup
  * -----------------------------------------------------------------------------------------------*/
@@ -58,7 +60,11 @@ const STYLES_POPUP_CONTENT = css`
 `;
 
 const useUploadPopup = ({ totalFilesSummary }) => {
-  const [{ isFinished }, { resetUploadState }] = useUploadContext();
+  const {
+    state: { isFinished },
+    handlers: { resetUploadState },
+  } = useUploadStore();
+
   const [popupState, setPopupState] = React.useState({
     isVisible: false,
     isSummaryExpanded: false,
@@ -138,14 +144,14 @@ const useUploadSummary = ({ fileLoading }) =>
     let totalFilesSummary = { failed: 0, duplicate: 0, saved: 0, total: 0 };
     const uploadSummary = Object.entries(fileLoading).map(([, file]) => {
       totalFilesSummary["total"]++;
-      if (file.status === "saving") return { ...file, filename: file.name };
+      if (file.status === "uploading") return { ...file, filename: file.name };
       totalFilesSummary[file.status]++;
       return { ...file, filename: file.name };
     });
 
     const statusOrder = {
       failed: 1,
-      saving: 2,
+      uploading: 2,
       duplicate: 3,
       saved: 4,
     };
@@ -159,7 +165,11 @@ const useUploadSummary = ({ fileLoading }) =>
   }, [fileLoading]);
 
 export function Popup() {
-  const [{ isFinished, fileLoading }, { resetUploadState }] = useUploadContext();
+  const {
+    state: { isFinished, fileLoading },
+    handlers: { resetUploadState },
+  } = useUploadStore();
+
   const { uploadSummary, totalFilesSummary } = useUploadSummary({ fileLoading });
 
   const [isHovered, { handleOnMouseEnter, handleOnMouseLeave }] = useHover();
@@ -244,7 +254,10 @@ const STYLES_RESET_BORDER_TOP = css`
 `;
 
 function Header({ totalFilesSummary, popupState, expandUploadSummary, collapseUploadSummary }) {
-  const [{ isFinished, totalBytesUploaded, totalBytes }, { retryAll }] = useUploadContext();
+  const {
+    state: { isFinished, totalBytesUploaded, totalBytes },
+    handlers: { retryAll },
+  } = useUploadStore();
 
   const uploadProgress = clamp(Math.floor((totalBytesUploaded / totalBytes) * 100), 0, 100);
 
@@ -353,7 +366,8 @@ const STYLES_SUMMARY_ACTION = css`
 `;
 
 function Summary({ uploadSummary }) {
-  const [, { retry, cancel }] = useUploadContext();
+  const { retry, cancel } = useUploadStore((store) => store.handlers);
+
   return (
     <div css={STYLES_SUMMARY}>
       {uploadSummary.map((file) => (
@@ -364,10 +378,14 @@ function Summary({ uploadSummary }) {
             css={Styles.HORIZONTAL_CONTAINER_CENTERED}
           >
             <div css={STYLES_PREVIEW_WRAPPER}>
-              <BlobObjectPreview file={file} placeholderRatio={2.4} />
+              {file.cid ? (
+                <ObjectBoxPreview file={file.blob} placeholderRatio={2.4} />
+              ) : (
+                <BlobObjectPreview file={file} placeholderRatio={2.4} />
+              )}
             </div>
 
-            <div style={{ marginLeft: 12, maxWidth: 164 }}>
+            <div style={{ marginLeft: 12, width: 164 }}>
               <System.H5 nbrOflines={1} as="p">
                 {file.name}
               </System.H5>
@@ -376,7 +394,7 @@ function Summary({ uploadSummary }) {
                   <System.P3 color="textGrayDark">{Strings.bytesToSize(file.total, 0)}</System.P3>
                 }
               >
-                <Match when={file.status === "saving"}>
+                <Match when={file.status === "uploading"}>
                   <DataMeter
                     bytes={file.loaded}
                     maximumBytes={file.total}
@@ -394,7 +412,7 @@ function Summary({ uploadSummary }) {
 
             <div style={{ marginLeft: "auto" }}>
               <Switch fallback={<SVG.CheckCircle style={{ color: Constants.system.green }} />}>
-                <Match when={file.status === "saving"}>
+                <Match when={file.status === "uploading"}>
                   <button
                     css={STYLES_SUMMARY_ACTION}
                     style={{ color: Constants.semantic.textGray }}

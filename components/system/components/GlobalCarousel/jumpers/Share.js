@@ -5,10 +5,14 @@ import * as Jumper from "~/components/core/Jumper";
 import * as SVG from "~/common/svg";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
-import * as Strings from "~/common/strings";
+import * as MobileJumper from "~/components/core/MobileJumper";
+import * as Events from "~/common/custom-events";
+import * as UserBehaviors from "~/common/user-behaviors";
 
 import { css } from "@emotion/react";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const STYLES_SHARING_BUTTON = (theme) => css`
   ${Styles.BUTTON_RESET};
@@ -20,33 +24,14 @@ const STYLES_SHARING_BUTTON = (theme) => css`
   :active {
     background-color: ${theme.semantic.bgGrayLight};
   }
-
   :hover {
     color: ${theme.semantic.textBlack};
   }
 `;
-
-const getSlateURLFromViewer = ({ viewer, file }) => {
-  const username = viewer?.username;
-  const rootUrl = window?.location?.origin;
-  const collection = viewer.slates.find(
-    (item) => item.isPublic && item.objects.some((object) => object.id === file.id)
-  );
-
-  return `${rootUrl}/${username}/${collection.slatename}?cid=${file.cid}`;
-};
-
 const getFileURL = ({ file }) => {
   const rootUrl = window?.location?.origin;
 
-  return `${rootUrl}/_/object/${file.id}`;
-};
-
-const getSlateURLFromData = ({ data, file }) => {
-  const username = data?.user?.username;
-  const rootUrl = window?.location?.origin;
-
-  return `${rootUrl}/${username}/${data.slatename}?cid=${file.cid}`;
+  return `${rootUrl}/_/view/${file.id}`;
 };
 
 function FileSharingButtons({ file, data, viewer }) {
@@ -76,16 +61,16 @@ function FileSharingButtons({ file, data, viewer }) {
     <>
       <button css={STYLES_SHARING_BUTTON} onClick={handleTwitterSharing}>
         <SVG.Twitter width={16} />
-        <System.P2 style={{ marginLeft: 12 }}>Share Via Twitter</System.P2>
+        <System.P2 style={{ marginLeft: 12 }}>Share via Twitter</System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleEmailSharing}>
         <SVG.Mail width={16} />
-        <System.P2 style={{ marginLeft: 12 }}>Share Via Email </System.P2>
+        <System.P2 style={{ marginLeft: 12 }}>Share via email </System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleLinkCopy}>
         <SVG.Link width={16} />
         <System.P2 style={{ marginLeft: 12 }}>
-          {copyState.isLinkCopied ? "Copied" : "Copy link"}
+          {copyState.isLinkCopied ? "Copied" : "Copy public link"}
         </System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleCidCopy}>
@@ -94,8 +79,48 @@ function FileSharingButtons({ file, data, viewer }) {
           {copyState.isCidCopied ? "Copied" : "Copy CID "}
         </System.P2>
       </button>
+      <DownloadButton file={file} viewer={viewer} />
     </>
   );
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const useFileDownload = ({ file, viewer, downloadRef }) => {
+  const [isDownloading, setDownloadingState] = React.useState(false);
+  const handleDownload = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    setDownloadingState(true);
+    const response = await UserBehaviors.download(file, downloadRef);
+    setDownloadingState(false);
+    Events.hasError(response);
+  };
+
+  return [isDownloading, handleDownload];
+};
+
+function DownloadButton({ file, viewer, ...props }) {
+  /**NOTE(amine):  UserBehaviors.download creates a link and clicks it to trigger a download,
+                   which triggers the Boundary component and closes the jumper. 
+                   To fix this we create the link inside the downloadRef element */
+  const downloadRef = React.useRef();
+  const [isDownloading, handleDownload] = useFileDownload({ file, viewer, downloadRef });
+
+  return !file.isLink ? (
+    <div ref={downloadRef}>
+      <button css={STYLES_SHARING_BUTTON} onClick={handleDownload} {...props}>
+        {isDownloading ? (
+          <LoaderSpinner style={{ height: 16, width: 16 }} />
+        ) : (
+          <SVG.Download width={16} />
+        )}
+        <System.P2 style={{ marginLeft: 12 }}>Download file</System.P2>
+      </button>
+    </div>
+  ) : null;
 }
 
 /* -----------------------------------------------------------------------------------------------*/
@@ -118,7 +143,9 @@ export function Share({ file, data, viewer, isOpen, onClose }) {
     <Jumper.AnimatePresence>
       {isOpen ? (
         <Jumper.Root onClose={onClose}>
-          <Jumper.Header>Share</Jumper.Header>
+          <Jumper.Header>
+            <System.H5 color="textBlack">Share</System.H5>
+          </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item>
             <Jumper.ObjectPreview file={file} />
@@ -136,7 +163,7 @@ export function Share({ file, data, viewer, isOpen, onClose }) {
               rel="noreferrer"
             >
               <SVG.InfoCircle width={16} />
-              <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
+              <System.P2 style={{ marginLeft: 4 }}>What is a CID?</System.P2>
             </a>
           </Jumper.Item>
         </Jumper.Root>
@@ -153,11 +180,11 @@ export function ShareMobile({ file, data, viewer, isOpen, onClose }) {
           Share
         </System.H5>
       </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <div style={{ padding: "13px 16px 11px" }}>
         <Jumper.ObjectPreview file={file} />
       </div>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <MobileJumper.Content>
         <FileSharingButtons file={file} data={data} viewer={viewer} />
       </MobileJumper.Content>

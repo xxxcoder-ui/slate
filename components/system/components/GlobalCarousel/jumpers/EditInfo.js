@@ -6,7 +6,7 @@ import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/system/components/GlobalCarousel/jumpers/MobileLayout";
+import * as MobileJumper from "~/components/core/MobileJumper";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
@@ -164,7 +164,9 @@ export function EditInfo({ file, isOpen, onClose }) {
     <Jumper.AnimatePresence>
       {isOpen ? (
         <Jumper.Root onClose={onClose}>
-          <Jumper.Header>Edit info</Jumper.Header>
+          <Jumper.Header>
+            <System.H5 color="textBlack">Edit info</System.H5>
+          </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item>
             <Jumper.ObjectPreview file={file} />
@@ -185,11 +187,11 @@ export function EditInfoMobile({ file, isOpen, onClose }) {
           Edit Info
         </System.H5>
       </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <div style={{ padding: "13px 16px 11px" }}>
         <Jumper.ObjectPreview file={file} />
       </div>
-      <System.Divider height={1} color="borderGrayLight" />
+      <System.Divider height={1} color="borderGrayLight4" />
       <UpdateFileForm isMobile key={file.id} file={file} onClose={onClose} />
     </MobileJumper.Root>
   ) : null;

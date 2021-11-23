@@ -8,7 +8,7 @@ export const Loader = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M8 1.68237V4.34904" />
       <path d="M8 12.3491V15.0158" />
@@ -32,6 +32,7 @@ export const Link = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
@@ -49,6 +50,7 @@ export const ExternalLink = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" />
       <path d="M15 3H21V9" />
@@ -68,7 +70,7 @@ export const Directory = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <circle cx="12" cy="12" r="4" />
       <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
@@ -87,7 +89,7 @@ export const ResizeHandle = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M21 3L3 21" />
       <path d="M21 11L11 21" />
@@ -107,7 +109,7 @@ export const Undo = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M1 4V10H7" />
       <path d="M3.51 15C4.15839 16.8404 5.38734 18.4202 7.01166 19.5014C8.63598 20.5826 10.5677 21.1066 12.5157 20.9945C14.4637 20.8824 16.3226 20.1402 17.8121 18.8798C19.3017 17.6193 20.3413 15.909 20.7742 14.0064C21.2072 12.1037 21.0101 10.112 20.2126 8.3311C19.4152 6.55025 18.0605 5.0768 16.3528 4.13277C14.6451 3.18874 12.6769 2.82527 10.7447 3.09712C8.81245 3.36897 7.02091 4.26142 5.64 5.64L1 10" />
@@ -128,6 +130,7 @@ export const Edit = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M17 3C17.2626 2.73735 17.5744 2.52901 17.9176 2.38687C18.2608 2.24473 18.6286 2.17157 19 2.17157C19.3714 2.17157 19.7392 2.24473 20.0824 2.38687C20.4256 2.52901 20.7374 2.73735 21 3C21.2626 3.26264 21.471 3.57444 21.6131 3.9176C21.7553 4.26077 21.8284 4.62856 21.8284 5C21.8284 5.37143 21.7553 5.73923 21.6131 6.08239C21.471 6.42555 21.2626 6.73735 21 7L7.5 20.5L2 22L3.5 16.5L17 3Z" />
     </svg>
@@ -145,7 +148,7 @@ export const PlusCircle = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
       <path d="M12 8V16" />
@@ -165,7 +168,7 @@ export const Users = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" />
       <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" />
@@ -186,7 +189,7 @@ export const Alert = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
       <path d="M12 8V12" />
@@ -201,7 +204,7 @@ export const Alert = (props) => {
 //       viewBox="0 0 24 24"
 //       xmlns="http://www.w3.org/2000/svg"
 //       height={props.height}
-//       style={props.style}
+//       style={{ display: "block", ...props.style}}
 //     >
 //       <g
 //         fill="none"
@@ -229,7 +232,7 @@ export const Search = (props) => {
       strokeLinejoin="round"
       strokeWidth="2"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <circle cx="11" cy="11" r="8" />
       <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -247,7 +250,7 @@ export const SecurityLock = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -259,9 +262,9 @@ export const MacCommand = (props) => {
   return (
     <svg
       height={props.height}
-      style={props.style}
       viewBox="0 0 14 14"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ display: "block", ...props.style }}
     >
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
         <path
@@ -279,7 +282,7 @@ export const SettingsDeveloper = (props) => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
         <path d="m18.25 2.251c-1.061 1.061-3.04.96-4.75-.75l-1.5 1.499 8 8 3.5-3.5z" />
@@ -302,7 +305,7 @@ export const Activity = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
     </svg>
@@ -315,7 +318,7 @@ export const ProfileUser = (props) => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       height={props.height}
-      style={props.style}
+      style={{ display: "block", ...props.style }}
     >
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
         <path d="m1.9 17.5h10.12" />
@@ -336,7 +339,7 @@ export const Slates = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
   >
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m17.42 17.27-2.787-8.02-3.42 6-2.138-3-2.476 5.048" />
@@ -352,7 +355,7 @@ export const Layers = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
   >
     <g
       fill="none"
@@ -373,7 +376,7 @@ export const HardDrive = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
   >
     <g
       fill="none"
@@ -395,7 +398,7 @@ export const ExpandBox = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
   >
     <g
       fill="none"
@@ -412,7 +415,7 @@ export const ExpandBox = (props) => (
 );
 
 export const ExpandArrow = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <path
       d="m5.5.75 10.72 10.72c.292711.292294.293049.766535.00075431 1.05925-.00025126.00025162-.0005027.00050305-.00075431.00075431l-10.72 10.72"
       fill="none"
@@ -429,7 +432,7 @@ export const OldWallet = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
   >
     <g
       fill="none"
@@ -452,7 +455,12 @@ export const OldWallet = (props) => (
 );
 
 export const RightArrow = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style} {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    height={props.height}
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <g
       fill="none"
       stroke="currentColor"
@@ -467,7 +475,7 @@ export const RightArrow = (props) => (
 );
 
 // export const Home = (props) => (
-//   <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+//   <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style}}>
 //     <path
 //       d="m19.5 8.4v-4.9a.5.5 0 0 0 -.5-.5h-2a.5.5 0 0 0 -.5.5v2.14l-4.162-3.829a.5.5 0 0 0 -.678 0l-11 10.321a.5.5 0 0 0 .34.868h2.5v9.5a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1v-9.5h2.5a.5.5 0 0 0 .339-.868z"
 //       fill="none"
@@ -479,7 +487,7 @@ export const RightArrow = (props) => (
 // );
 
 export const Home = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g
       fill="none"
       stroke="currentColor"
@@ -497,7 +505,7 @@ export const Home = (props) => (
 //     viewBox="0 0 24 24"
 //     xmlns="http://www.w3.org/2000/svg"
 //     height={props.height}
-//     style={props.style}
+//     style={{ display: "block", ...props.style}}
 //   >
 //     <path
 //       d="m11.236 6h.00000005c-.378666-.0002022-.724736-.214271-.894-.553l-.948-1.894.00000002.00000003c-.169264-.338729-.515334-.552798-.894-.553h-6.5-.00000004c-.552285.00000002-1 .447715-1 1v16 .00000015c.00000008.552285.447715 1 1 1h20-.00000004c.552285.00000002 1-.447715 1-1v-13c0-.552285-.447715-1-1-1z"
@@ -510,7 +518,7 @@ export const Home = (props) => (
 // );
 
 export const Channels = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="16.004" cy="8" r="7.5" />
       <path d="m8.53 8.526a7.5 7.5 0 1 0 6.948 6.948" />
@@ -525,7 +533,7 @@ export const Channels = (props) => (
 );
 
 export const Peers = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m17 7.02 3.11-3.09" />
       <path d="m22.9142 1.08579c.781049.781049.781049 2.04738 0 2.82843-.781049.781049-2.04738.781049-2.82843 0-.781049-.781049-.781049-2.04738 0-2.82843.781049-.781049 2.04738-.781049 2.82843 0" />
@@ -546,7 +554,7 @@ export const Peers = (props) => (
 );
 
 export const Deals = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g
       fill="none"
       stroke="currentColor"
@@ -565,7 +573,7 @@ export const Deals = (props) => (
 );
 
 export const DataTransfer = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m20.5 14.406a4.311 4.311 0 0 0 2.5-4.049 4.711 4.711 0 0 0 -4.954-4.635 6.706 6.706 0 0 0 -6.046-3.722 6.605 6.605 0 0 0 -6.675 6.109 3.561 3.561 0 0 0 -4.325 3.409 3.186 3.186 0 0 0 2.5 3.282" />
       <path d="m6 19 3 3 3-3" />
@@ -577,7 +585,7 @@ export const DataTransfer = (props) => (
 );
 
 export const Stats = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <path
       d="m.5 12.001h6l3-10 3 19 3-14 2 5h6"
       fill="none"
@@ -589,7 +597,7 @@ export const Stats = (props) => (
 );
 
 export const Logs = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m8.5 20.5h-7a1 1 0 0 1 -1-1v-16a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v5" />
       <path d="m4.5 4.5v-4" />
@@ -603,7 +611,7 @@ export const Logs = (props) => (
 );
 
 export const Status = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m14.061 5.243a1.5 1.5 0 0 1 0 2.121" />
       <path d="m16.182 3.121a4.5 4.5 0 0 1 0 6.364" />
@@ -626,7 +634,7 @@ export const Status = (props) => (
 );
 
 export const Miners = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g
       fill="none"
       stroke="currentColor"
@@ -642,7 +650,7 @@ export const Miners = (props) => (
 );
 
 export const StorageMarket = (props) => (
-  <svg viewBox="0 0 24 24" height={props.height} style={props.style}>
+  <svg viewBox="0 0 24 24" height={props.height} style={{ display: "block", ...props.style }}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m23.5 22h-22.5a.5.5 0 0 1 -.5-.5v-19.5" />
       <path d="m12.872 15.523c.182 1 .458 3.477 3.128 3.477" />
@@ -656,13 +664,13 @@ export const PowerButton = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
     <line x1="12" y1="2" x2="12" y2="12" />
@@ -673,13 +681,13 @@ export const Bell = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
     <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -690,13 +698,13 @@ export const Slate = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M21 16V8.00002C20.9996 7.6493 20.9071 7.30483 20.7315 7.00119C20.556 6.69754 20.3037 6.44539 20 6.27002L13 2.27002C12.696 2.09449 12.3511 2.00208 12 2.00208C11.6489 2.00208 11.304 2.09449 11 2.27002L4 6.27002C3.69626 6.44539 3.44398 6.69754 3.26846 7.00119C3.09294 7.30483 3.00036 7.6493 3 8.00002V16C3.00036 16.3508 3.09294 16.6952 3.26846 16.9989C3.44398 17.3025 3.69626 17.5547 4 17.73L11 21.73C11.304 21.9056 11.6489 21.998 12 21.998C12.3511 21.998 12.696 21.9056 13 21.73L20 17.73C20.3037 17.5547 20.556 17.3025 20.7315 16.9989C20.9071 16.6952 20.9996 16.3508 21 16Z" />
     <path d="M3.27002 6.95996L12 12.01L20.73 6.95996" />
@@ -708,13 +716,13 @@ export const Trash = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M3 6H5H21" />
     <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" />
@@ -727,13 +735,13 @@ export const DownloadCircle = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
     <path d="M8 12L12 16L16 12" />
@@ -745,13 +753,13 @@ export const Folder = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M22 19C22 19.5304 21.7893 20.0391 21.4142 20.4142C21.0391 20.7893 20.5304 21 20 21H4C3.46957 21 2.96086 20.7893 2.58579 20.4142C2.21071 20.0391 2 19.5304 2 19V5C2 4.46957 2.21071 3.96086 2.58579 3.58579C2.96086 3.21071 3.46957 3 4 3H9L11 6H20C20.5304 6 21.0391 6.21071 21.4142 6.58579C21.7893 6.96086 22 7.46957 22 8V19Z" />
   </svg>
@@ -761,13 +769,13 @@ export const Tool = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M14.6999 6.30001C14.5166 6.48694 14.414 6.73826 14.414 7.00001C14.414 7.26176 14.5166 7.51308 14.6999 7.70001L16.2999 9.30001C16.4868 9.48324 16.7381 9.58587 16.9999 9.58587C17.2616 9.58587 17.5129 9.48324 17.6999 9.30001L21.4699 5.53001C21.9727 6.6412 22.1249 7.87924 21.9063 9.07916C21.6877 10.2791 21.1086 11.3839 20.2461 12.2463C19.3837 13.1087 18.2789 13.6878 17.079 13.9065C15.8791 14.1251 14.641 13.9728 13.5299 13.47L6.61986 20.38C6.22203 20.7778 5.68246 21.0013 5.11986 21.0013C4.55725 21.0013 4.01768 20.7778 3.61986 20.38C3.22203 19.9822 2.99854 19.4426 2.99854 18.88C2.99854 18.3174 3.22203 17.7778 3.61986 17.38L10.5299 10.47C10.027 9.35882 9.87477 8.12078 10.0934 6.92087C10.312 5.72095 10.8911 4.61617 11.7536 3.75373C12.616 2.8913 13.7208 2.31218 14.9207 2.09355C16.1206 1.87493 17.3587 2.02718 18.4699 2.53001L14.7099 6.29001L14.6999 6.30001Z" />
   </svg>
@@ -777,12 +785,12 @@ export const Wallet = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4Z"
@@ -815,13 +823,13 @@ export const Refresh = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <polyline points="23 4 23 10 17 10" />
     <polyline points="1 20 1 14 7 14" />
@@ -833,13 +841,13 @@ export const TextDocument = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" />
     <path d="M14 2V8H20" />
@@ -853,13 +861,13 @@ export const Document = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{ display: "block", ...props.style }}
   >
     <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" />
     <path d="M13 2V9H20" />
@@ -870,7 +878,7 @@ export const Book = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -887,7 +895,7 @@ export const Sound = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -904,7 +912,7 @@ export const Video = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -927,7 +935,7 @@ export const Image = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -951,8 +959,8 @@ export const Eye = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     height={props.height}
-    style={props.style}
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" />
     <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" />
@@ -969,8 +977,8 @@ export const EyeOff = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     height={props.height}
-    style={props.style}
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M14.12 14.12C13.8454 14.4147 13.5141 14.6511 13.1462 14.8151C12.7782 14.9791 12.3809 15.0673 11.9781 15.0744C11.5753 15.0815 11.1752 15.0074 10.8016 14.8565C10.4281 14.7056 10.0887 14.481 9.80385 14.1961C9.51897 13.9113 9.29439 13.5719 9.14351 13.1984C8.99262 12.8248 8.91853 12.4247 8.92563 12.0219C8.93274 11.6191 9.02091 11.2218 9.18488 10.8538C9.34884 10.4858 9.58525 10.1546 9.88 9.87999M17.94 17.94C16.2306 19.243 14.1491 19.9649 12 20C5 20 1 12 1 12C2.24389 9.68189 3.96914 7.6566 6.06 6.05999L17.94 17.94ZM9.9 4.23999C10.5883 4.07887 11.2931 3.99833 12 3.99999C19 3.99999 23 12 23 12C22.393 13.1356 21.6691 14.2047 20.84 15.19L9.9 4.23999Z" />
     <path d="M1 1L23 23" />
@@ -989,8 +997,8 @@ export const Dismiss = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     // tabIndex="0"
-    style={props.style}
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
@@ -1000,7 +1008,7 @@ export const Dismiss = (props) => (
 export const Settings = (props) => (
   <svg
     height={props.height}
-    style={props.style}
+    style={{ display: "block", ...props.style }}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -1018,8 +1026,8 @@ export const Privacy = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <g
       fill="none"
@@ -1042,8 +1050,8 @@ export const FileImage = (props) => (
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     height={props.height}
-    style={props.style}
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path d="m21.207 4.5-.00000002-.00000002c.187549.187493.292943.441805.293.707v17.293c0 .552285-.447715 1-1 1h-17-.00000004c-.552285-.00000002-1-.447715-1-1v-21 .00000015c-.00000008-.552285.447715-1 1-1h13.293.00000001c.265195.00005664.519507.105451.707.293z" />
@@ -1074,6 +1082,7 @@ export const InfoCircle = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
     <path d="M12 16V12" />
@@ -1091,6 +1100,7 @@ export const Minimize = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M4 14H10V20" />
     <path d="M20 10H14V4" />
@@ -1109,6 +1119,7 @@ export const Maximize = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M15 3H21V9" />
     <path d="M9 21H3V15" />
@@ -1127,6 +1138,7 @@ export const Plus = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <line x1="12" y1="5" x2="12" y2="19" />
     <line x1="5" y1="12" x2="19" y2="12" />
@@ -1143,6 +1155,7 @@ export const Minus = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M5 12H19" />
   </svg>
@@ -1152,9 +1165,9 @@ export const FilecoinLogo = (props) => (
   <svg
     viewBox="0 0 127 127"
     height={props.height}
-    style={props.style}
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="m71.4 57.6c-.7 3.3-1.3 6.4-2 9.8 5.9.9 11.7 1.7 17.7 2.6-.5 1.6-.9 3.1-1.4 4.8-5.8-.8-11.5-1.7-17.3-2.5-1.1 4.2-2 8.3-3.3 12.2-1.4 4.4-3 8.7-5 12.9-2.6 5.2-6.8 8.9-12.7 10.1-3.5.7-7 .4-10-1.9-.9-.7-1.8-1.8-1.9-2.8-.1-1.1.5-2.7 1.4-3.3.6-.5 2.3-.1 3.1.5 1.1.8 1.8 2.1 2.6 3.3 1.8 2.5 4.4 2.9 6.8.8 2.9-2.5 4.4-5.8 5.3-9.3 1.9-7.3 3.6-14.8 5.3-22.2.1-.3 0-.7 0-1.3-5.4-.8-10.8-1.7-16.5-2.5.2-1.6.4-3 .6-4.8 5.6.8 11.1 1.6 17 2.4.8-3.2 1.5-6.4 2.3-9.7-6-.9-11.7-1.8-17.8-2.7.2-1.6.4-3.2.6-4.8 6.1.9 12 1.7 18.2 2.6.5-1.8.9-3.5 1.4-5.1 1.7-5.6 3.2-11.3 6.8-16.2s8.1-8.1 14.5-7.8c2.8.1 5.5.9 7.5 3.2.4.5 1 1.1 1 1.6-.1 1.2 0 2.9-.8 3.6-1.1 1.1-2.8.5-4-.6-.9-.9-1.6-1.9-2.3-2.9-1.8-2.4-4.7-2.9-6.8-.7-1.6 1.7-3.2 3.7-3.9 5.9-2.1 6.6-3.8 13.2-5.8 20.2 5.9.9 11.4 1.7 17.1 2.5-.5 1.6-.9 3.1-1.3 4.7-5.5-1.1-10.9-1.9-16.4-2.6z"
@@ -1165,7 +1178,14 @@ export const FilecoinLogo = (props) => (
 
 export const ChevronUp = (props) => {
   return (
-    <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      width={16}
+      height={16}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      style={{ display: "block", ...props.style }}
+    >
       <path
         d="M12 10L8 6l-4 4"
         stroke="currentColor"
@@ -1188,6 +1208,7 @@ export const ChevronDown = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <polyline points="6 9 12 15 18 9" />
     </svg>
@@ -1205,6 +1226,7 @@ export const CheckBox = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <polyline points="20 6 9 17 4 12" />
     </svg>
@@ -1222,6 +1244,7 @@ export const Help = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
       <path d="M9.08997 8.99996C9.32507 8.33163 9.78912 7.76807 10.3999 7.40909C11.0107 7.05012 11.7289 6.9189 12.4271 7.03867C13.1254 7.15844 13.7588 7.52148 14.215 8.06349C14.6713 8.60549 14.921 9.29148 14.92 9.99996C14.92 12 11.92 13 11.92 13" />
@@ -1241,6 +1264,7 @@ export const CopyAndPaste = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9 21.1046 9.89543 22 11 22H20C21.1046 22 22 21.1046 22 20V11C22 9.89543 21.1046 9 20 9Z" />
       <path d="M5 15H4C3.46957 15 2.96086 14.7893 2.58579 14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957 2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H13C13.5304 2 14.0391 2.21071 14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V5" />
@@ -1259,6 +1283,7 @@ export const Data = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M22 12H2" />
       <path d="M5.45 5.11L2 12V18C2 18.5304 2.21071 19.0391 2.58579 19.4142C2.96086 19.7893 3.46957 20 4 20H20C20.5304 20 21.0391 19.7893 21.4142 19.4142C21.7893 19.0391 22 18.5304 22 18V12L18.55 5.11C18.3844 4.77679 18.1292 4.49637 17.813 4.30028C17.4967 4.10419 17.1321 4.0002 16.76 4H7.24C6.86792 4.0002 6.50326 4.10419 6.18704 4.30028C5.87083 4.49637 5.61558 4.77679 5.45 5.11V5.11Z" />
@@ -1279,6 +1304,7 @@ export const BandwidthDown = (props) => {
       strokeLinejoin="round"
       strokeWidth="1.5"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="m20.25 17.25h-.00000013c1.65685-.00000007 3 1.34315 3 3 .00000007 1.65685-1.34315 3-3 3h-16.5-.00000013c-1.65685-.00000007-3-1.34315-3-3 .00000007-1.65685 1.34315-3 3-3z" />
       <path d="m7.5 6.751h-1.356-.00000002c-1.39991-.00004099-2.61375.968129-2.925 2.333l-2.394 10.499" />
@@ -1302,6 +1328,7 @@ export const BandwidthUp = (props) => {
       strokeLinejoin="round"
       strokeWidth="1.5"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="m20.25 17.25h-.00000013c1.65685-.00000007 3 1.34315 3 3 .00000007 1.65685-1.34315 3-3 3h-16.5-.00000013c-1.65685-.00000007-3-1.34315-3-3 .00000007-1.65685 1.34315-3 3-3z" />
       <path d="m7.5 6.751h-1.356-.00000002c-1.39991-.00004099-2.61375.968129-2.925 2.333l-2.394 10.499" />
@@ -1325,6 +1352,7 @@ export const Reorder = (props) => {
       strokeLinejoin="round"
       strokeWidth="1.5"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M2 10C2.55228 10 3 9.55228 3 9C3 8.44772 2.55228 8 2 8C1.44772 8 1 8.44772 1 9C1 9.55228 1.44772 10 2 10Z" />
       <path d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z" />
@@ -1345,6 +1373,7 @@ export const Calendar = (props) => {
       strokeLinejoin="round"
       strokeWidth="1.5"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
       <line x1="16" y1="2" x2="16" y2="6" />
@@ -1365,6 +1394,7 @@ export const ChevronRight = (props) => {
       strokeLinejoin="round"
       strokeWidth="2"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <polyline points="9 18 15 12 9 6" />
     </svg>
@@ -1382,6 +1412,7 @@ export const ChevronLeft = (props) => {
       strokeLinejoin="round"
       strokeWidth="2"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <polyline points="15 18 9 12 15 6" />
     </svg>
@@ -1399,6 +1430,7 @@ export const Check = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M20 6L9 17L4 12" />
     </svg>
@@ -1416,6 +1448,7 @@ export const LocationPin = (props) => {
       strokeLinejoin="round"
       strokeWidth="1.5"
       {...props}
+      style={{ display: "block", ...props.style }}
     >
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
@@ -1433,6 +1466,7 @@ export const MoreHorizontal = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" />
     <path d="M19 13C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11C18.4477 11 18 11.4477 18 12C18 12.5523 18.4477 13 19 13Z" />
@@ -1450,6 +1484,7 @@ export const GridView = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M10 3H3V10H10V3Z" />
     <path d="M21 3H14V10H21V3Z" />
@@ -1468,6 +1503,7 @@ export const TableView = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M8 6H21" />
     <path d="M8 12H21" />
@@ -1488,6 +1524,7 @@ export const FeedView = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M21 3H3V10H21V3Z" />
     <path d="M21 14H3V21H21V14Z" />
@@ -1504,6 +1541,7 @@ export const Upload = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" />
     <path d="M17 8L12 3L7 8" />
@@ -1521,6 +1559,7 @@ export const Download = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" />
     <path d="M7 10L12 15L17 10" />
@@ -1538,6 +1577,7 @@ export const Save = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16L21 8V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21Z" />
     <path d="M17 21V13H7V21" />
@@ -1555,6 +1595,7 @@ export const DismissCircle = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
     <path d="M15 9L9 15" />
@@ -1572,6 +1613,7 @@ export const DragHandle = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M15.5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V15.5" />
   </svg>
@@ -1587,6 +1629,7 @@ export const FileNotFound = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" />
     <path d="M13 2V9H20" />
@@ -1606,6 +1649,7 @@ export const Desktop = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M13.3334 2H2.66671C1.93033 2 1.33337 2.59695 1.33337 3.33333V10C1.33337 10.7364 1.93033 11.3333 2.66671 11.3333H13.3334C14.0698 11.3333 14.6667 10.7364 14.6667 10V3.33333C14.6667 2.59695 14.0698 2 13.3334 2Z" />
     <path d="M5.33337 14H10.6667" />
@@ -1623,6 +1667,7 @@ export const DesktopEye = (props) => (
     strokeLinejoin="round"
     strokeWidth="1.3333"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M13.3334 2H2.66671C1.93033 2 1.33337 2.59695 1.33337 3.33333V10C1.33337 10.7364 1.93033 11.3333 2.66671 11.3333H13.3334C14.0698 11.3333 14.6667 10.7364 14.6667 10V3.33333C14.6667 2.59695 14.0698 2 13.3334 2Z"
@@ -1653,6 +1698,7 @@ export const ArrowDownLeft = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M9 10L4 15L9 20" />
     <path d="M20 4V11C20 12.0609 19.5786 13.0783 18.8284 13.8284C18.0783 14.5786 17.0609 15 16 15H4" />
@@ -1671,6 +1717,7 @@ export const Hash = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M2.66663 6H13.3333" />
     <path d="M2.66663 10H13.3333" />
@@ -1689,6 +1736,7 @@ export const Filter = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" />
   </svg>
@@ -1703,6 +1751,7 @@ export const MenuAlt = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M13 2H11C10.4477 2 10 2.44772 10 3V5C10 5.55228 10.4477 6 11 6H13C13.5523 6 14 5.55228 14 5V3C14 2.44772 13.5523 2 13 2Z" />
     <path d="M5 2H3C2.44772 2 2 2.44772 2 3V5C2 5.55228 2.44772 6 3 6H5C5.55228 6 6 5.55228 6 5V3C6 2.44772 5.55228 2 5 2Z" />
@@ -1725,6 +1774,7 @@ export const Menu = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M4 8H8V4H4V8ZM10 20H14V16H10V20ZM4 20H8V16H4V20ZM4 14H8V10H4V14ZM10 14H14V10H10V14ZM16 4V8H20V4H16ZM10 8H14V4H10V8ZM16 14H20V10H16V14ZM16 20H20V16H16V20Z" />
   </svg>
@@ -1740,6 +1790,7 @@ export const MenuMinimal = (props) => (
     strokeLinejoin="round"
     stroke="currentColor"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M3.33331 6H21.3333" />
     <path d="M3.33331 18H21.3333" />
@@ -1756,6 +1807,7 @@ export const Globe = (props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
     <path d="M2 12H22" />
@@ -1771,6 +1823,7 @@ export const Moon = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79v0z"
@@ -1790,6 +1843,7 @@ export const Sun = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M12 17a5 5 0 100-10 5 5 0 000 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
@@ -1809,6 +1863,7 @@ export const Sliders = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"
@@ -1828,6 +1883,7 @@ export const AlignLeft = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M17 10H3M21 6H3M21 14H3M17 18H3"
@@ -1847,6 +1903,7 @@ export const AlignCenter = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M18 10H6M21 6H3M21 14H3M18 18H6"
@@ -1865,6 +1922,7 @@ export const AlignRight = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M21 10H7M21 6H3M21 14H3M21 18H7"
@@ -1884,6 +1942,7 @@ export const RotateCcw = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    style={{ display: "block", ...props.style }}
   >
     <path
       d="M1 4v6h6"
@@ -1903,7 +1962,14 @@ export const RotateCcw = (props) => (
 );
 
 export const MehCircle = (props) => (
-  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={17}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M8 15.167A6.667 6.667 0 108 1.834a6.667 6.667 0 000 13.333zM5.333 10.5h5.334M6 6.5h.007M10 6.5h.007"
       stroke="#FF4530"
@@ -1915,7 +1981,14 @@ export const MehCircle = (props) => (
 );
 
 export const Heart = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M13.893 3.073a3.667 3.667 0 00-5.186 0L8 3.78l-.707-.707A3.667 3.667 0 102.107 8.26l.706.707L8 14.153l5.187-5.186.706-.707a3.667 3.667 0 000-5.187v0z"
       stroke="currentColor"
@@ -1927,7 +2000,14 @@ export const Heart = (props) => (
 );
 
 export const SmileCircle = (props) => (
-  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={17}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M8 15.167A6.667 6.667 0 108 1.834a6.667 6.667 0 000 13.333z"
       stroke="#34D159"
@@ -1946,7 +2026,14 @@ export const SmileCircle = (props) => (
 );
 
 export const FolderPlus = (props) => (
-  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={20}
+    height={21}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M18.333 16.333A1.667 1.667 0 0116.667 18H3.333a1.667 1.667 0 01-1.666-1.667V4.667A1.667 1.667 0 013.333 3H7.5l1.667 2.5h7.5a1.667 1.667 0 011.666 1.667v9.166zM10 9.667v5M7.5 12.167h5"
       stroke="#48484A"
@@ -1958,7 +2045,14 @@ export const FolderPlus = (props) => (
 );
 
 export const PlayButton = (props) => (
-  <svg width={40} height={40} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={40}
+    height={40}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <g filter="url(#prefix__filter0_b)">
       <rect width={40} height={40} rx={20} fill="#fff" fillOpacity={0.3} />
       <path d="M15.333 14l9.334 6-9.334 6V14z" fill="#F2F2F7" />
@@ -1983,7 +2077,14 @@ export const PlayButton = (props) => (
 );
 
 export const RSS = (props) => (
-  <svg width={20} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={20}
+    height={21}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M3.333 9.667a7.5 7.5 0 017.5 7.5M3.333 3.833a13.333 13.333 0 0113.334 13.334M4.167 17.167a.833.833 0 100-1.667.833.833 0 000 1.667z"
       stroke="#000002"
@@ -1995,7 +2096,14 @@ export const RSS = (props) => (
 );
 
 export const Box = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M14 10.667V5.333a1.333 1.333 0 00-.667-1.153L8.667 1.513a1.333 1.333 0 00-1.334 0L2.667 4.18A1.333 1.333 0 002 5.333v5.334a1.334 1.334 0 00.667 1.153l4.666 2.667a1.334 1.334 0 001.334 0l4.666-2.667A1.333 1.333 0 0014 10.667z"
       stroke="currentColor"
@@ -2014,7 +2122,14 @@ export const Box = (props) => (
 );
 
 export const Share = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M12 5.333a2 2 0 100-4 2 2 0 000 4zM4 10a2 2 0 100-4 2 2 0 000 4zM12 14.667a2 2 0 100-4 2 2 0 000 4zM5.727 9.007l4.553 2.653M10.273 4.34L5.727 6.993"
       stroke="currentColor"
@@ -2026,7 +2141,14 @@ export const Share = (props) => (
 );
 
 export const Mail = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M2.667 2.667h10.666c.734 0 1.334.6 1.334 1.333v8c0 .733-.6 1.333-1.334 1.333H2.667c-.734 0-1.334-.6-1.334-1.333V4c0-.733.6-1.333 1.334-1.333z"
       stroke="currentColor"
@@ -2046,7 +2168,14 @@ export const Mail = (props) => (
 
 // TODO(amine): update this logo when working on object sharing
 export const TwitterWhiteLogo = (props) => (
-  <svg width={16} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={14}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M15.333 1a7.268 7.268 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 15 14 11.667 14 4c0-.186-.018-.371-.053-.553A5.147 5.147 0 0015.333 1z"
       fill="#fff"
@@ -2059,7 +2188,14 @@ export const TwitterWhiteLogo = (props) => (
 );
 
 export const Clipboard = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M10.667 2.667H12A1.333 1.333 0 0113.333 4v9.333A1.333 1.333 0 0112 14.667H4a1.333 1.333 0 01-1.333-1.334V4A1.333 1.333 0 014 2.667h1.333"
       stroke="currentColor"
@@ -2078,7 +2214,14 @@ export const Clipboard = (props) => (
 );
 
 export const List = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M5.333 4H14M5.333 8H14M5.333 12H14M2 4h.007M2 8h.007M2 12h.007"
       stroke="currentColor"
@@ -2090,7 +2233,14 @@ export const List = (props) => (
 );
 
 export const Radio = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M8 9.333a1.333 1.333 0 100-2.666 1.333 1.333 0 000 2.666zM10.827 5.173a4 4 0 010 5.66m-5.654-.006a4 4 0 010-5.66m7.54-1.88a6.667 6.667 0 010 9.426m-9.426 0a6.667 6.667 0 010-9.426"
       stroke="currentColor"
@@ -2102,7 +2252,14 @@ export const Radio = (props) => (
 );
 
 export const FileText = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M9.333 1.333H4a1.333 1.333 0 00-1.333 1.334v10.666A1.333 1.333 0 004 14.667h8a1.333 1.333 0 001.333-1.334v-8l-4-4z"
       stroke="currentColor"
@@ -2121,7 +2278,14 @@ export const FileText = (props) => (
 );
 
 export const Sidebar = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M12.667 2H3.333C2.597 2 2 2.597 2 3.333v9.334C2 13.403 2.597 14 3.333 14h9.334c.736 0 1.333-.597 1.333-1.333V3.333C14 2.597 13.403 2 12.667 2z"
       stroke="currentColor"
@@ -2134,7 +2298,14 @@ export const Sidebar = (props) => (
 );
 
 export const Clock = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M8 14.667A6.667 6.667 0 108 1.333a6.667 6.667 0 000 13.334z"
       stroke="currentColor"
@@ -2153,7 +2324,14 @@ export const Clock = (props) => (
 );
 
 export const Layout = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M12.667 2H3.333C2.597 2 2 2.597 2 3.333v9.334C2 13.403 2.597 14 3.333 14h9.334c.736 0 1.333-.597 1.333-1.333V3.333C14 2.597 13.403 2 12.667 2zM2 6h12M6 14V6"
       stroke="currentColor"
@@ -2165,7 +2343,14 @@ export const Layout = (props) => (
 );
 
 export const Twitter = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M15.333 2a7.268 7.268 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 16 14 12.667 14 5c0-.186-.018-.371-.053-.553A5.147 5.147 0 0015.333 2v0z"
       stroke="currentColor"
@@ -2177,7 +2362,14 @@ export const Twitter = (props) => (
 );
 
 export const Bookmark = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M12.667 14L8 10.667 3.333 14V3.333A1.333 1.333 0 014.667 2h6.666a1.333 1.333 0 011.334 1.333V14z"
       stroke="currentColor"
@@ -2189,7 +2381,14 @@ export const Bookmark = (props) => (
 );
 
 export const FilePlus = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M9.333 1.333H4a1.333 1.333 0 00-1.333 1.334v10.666A1.333 1.333 0 004 14.667h8a1.334 1.334 0 001.333-1.334v-8l-4-4z"
       stroke="currentColor"
@@ -2208,7 +2407,14 @@ export const FilePlus = (props) => (
 );
 
 export const Youtube = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M15.027 4.28a1.853 1.853 0 00-1.294-1.333C12.587 2.667 8 2.667 8 2.667s-4.587 0-5.733.306A1.853 1.853 0 00.973 4.307a19.333 19.333 0 00-.306 3.526c-.008 1.192.095 2.381.306 3.554a1.853 1.853 0 001.294 1.28c1.146.306 5.733.306 5.733.306s4.587 0 5.733-.306a1.853 1.853 0 001.294-1.334 19.33 19.33 0 00.306-3.5 19.33 19.33 0 00-.306-3.553v0z"
       stroke="currentColor"
@@ -2227,7 +2433,14 @@ export const Youtube = (props) => (
 );
 
 export const Github = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M6 12.667c-3.333 1-3.333-1.667-4.667-2m9.334 4v-2.58a2.246 2.246 0 00-.627-1.74c2.093-.234 4.293-1.027 4.293-4.667 0-.93-.358-1.826-1-2.5a3.38 3.38 0 00-.06-2.513s-.786-.234-2.606.986a8.92 8.92 0 00-4.667 0C4.18.433 3.393.667 3.393.667a3.38 3.38 0 00-.06 2.513 3.627 3.627 0 00-1 2.52c0 3.613 2.2 4.407 4.294 4.667A2.246 2.246 0 006 12.087v2.58"
       stroke="currentColor"
@@ -2239,7 +2452,14 @@ export const Github = (props) => (
 );
 
 export const Twitch = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M10.667 7.333V4.667M14 1.333H2V12h3.333v2.667L8 12h3.333L14 9.333v-8zm-6.667 6V4.667v2.666z"
       stroke="currentColor"
@@ -2251,7 +2471,14 @@ export const Twitch = (props) => (
 );
 
 export const Instagram = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M11.333 1.333H4.667a3.333 3.333 0 00-3.334 3.334v6.666a3.333 3.333 0 003.334 3.334h6.666a3.333 3.333 0 003.334-3.334V4.667a3.333 3.333 0 00-3.334-3.334z"
       stroke="currentColor"
@@ -2270,7 +2497,14 @@ export const Instagram = (props) => (
 );
 
 export const UploadCloud = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M10.667 10.667L8 8l-2.667 2.667M8 8v6"
       stroke="currentColor"
@@ -2296,7 +2530,14 @@ export const UploadCloud = (props) => (
 );
 
 export const XCircle = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M8 14.667A6.667 6.667 0 108 1.333a6.667 6.667 0 000 13.334zM10 6l-4 4M6 6l4 4"
       stroke="currentColor"
@@ -2308,7 +2549,14 @@ export const XCircle = (props) => (
 );
 
 export const CheckCircle = (props) => (
-  <svg width={16} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={17}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M14.667 7.887V8.5a6.666 6.666 0 11-3.954-6.093"
       stroke="currentColor"
@@ -2327,7 +2575,14 @@ export const CheckCircle = (props) => (
 );
 
 export const AlertTriangle = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M6.86 2.573L1.213 12a1.333 1.333 0 001.14 2h11.294a1.333 1.333 0 001.14-2L9.14 2.573a1.333 1.333 0 00-2.28 0v0zM8 6v2.667M8 11.333h.007"
       stroke="currentColor"
@@ -2339,7 +2594,14 @@ export const AlertTriangle = (props) => (
 );
 
 export const Hexagon = (props) => (
-  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={16}
+    height={16}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    style={{ display: "block", ...props.style }}
+  >
     <path
       d="M14 10.666V5.333a1.333 1.333 0 00-.667-1.153L8.667 1.513a1.333 1.333 0 00-1.334 0L2.667 4.18A1.333 1.333 0 002 5.333v5.333a1.333 1.333 0 00.667 1.154l4.666 2.666a1.333 1.333 0 001.334 0l4.666-2.666A1.333 1.333 0 0014 10.666z"
       stroke="currentColor"

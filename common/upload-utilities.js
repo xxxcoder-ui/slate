@@ -3,7 +3,7 @@ import * as Logging from "~/common/logging";
 import * as Actions from "~/common/actions";
 
 // NOTE(amine): utilities
-export const getFileKey = ({ lastModified, name }) => `${lastModified}-${name}`;
+export const getFileKey = ({ lastModified, name, cid }) => cid || `${lastModified}-${name}`;
 
 const getLinkSize = (url) => new TextEncoder().encode(url).length;
 
@@ -85,6 +85,16 @@ export function createUploadProvider({
             if (onSuccess) onSuccess({ fileKey, cid: fileCid });
           }
         }
+        // NOTE(amine): if the file being upload has a cid, use savecopy action.
+      } else if (file.cid) {
+        onProgress({ fileKey, loaded: file.size });
+        const response = await FileUtilities.saveCopy({ file, uploadAbort: UploadAbort });
+
+        if (!response?.aborted) {
+          if (!response || response.error) throw new Error(response);
+
+          if (onSuccess) onSuccess({ fileKey });
+        }
       } else {
         const response = await FileUtilities.upload({
           file,
@@ -128,13 +138,13 @@ export function createUploadProvider({
     if (onFinish) onFinish();
   };
 
-  const addToUploadQueue = ({ files, slate }) => {
+  const addBlobToUploadQueue = ({ files, slate }) => {
     if (!files || !files.length) return;
 
     for (let i = 0; i < files.length; i++) {
       const fileKey = getFileKey(files[i]);
       const doesQueueIncludeFile = getUploadQueue().some(
-        ({ file }) => getFileKey(file) === fileKey
+        ({ file }) => fileKey === getFileKey(file)
       );
       const isUploaded = fileKey in UploadStore.uploadedFiles;
       const isUploading = UploadAbort.currentUploadingFile === fileKey;
@@ -161,7 +171,11 @@ export function createUploadProvider({
       addLinkToUploadQueue({ url: file.name, slate });
       return;
     }
-    addToUploadQueue({ files: [file], slate });
+    if (file.cid) {
+      return addFileToUploadQueue(file);
+    }
+
+    addBlobToUploadQueue({ files: [file], slate });
   };
 
   const retryAll = () => {
@@ -191,17 +205,15 @@ export function createUploadProvider({
   };
 
   const addLinkToUploadQueue = async ({ url, slate }) => {
-    const linkAsFile = {
+    const linkAsBlob = {
       name: url,
       type: "link",
       size: getLinkSize(url),
       lastModified: "",
     };
-    const fileKey = getFileKey(linkAsFile);
+    const fileKey = getFileKey(linkAsBlob);
 
-    const doesQueueIncludeFile = getUploadQueue().some(
-      ({ file }) => getFileKey(linkAsFile) === getFileKey(file)
-    );
+    const doesQueueIncludeFile = getUploadQueue().some(({ file }) => fileKey === getFileKey(file));
     const isUploaded = fileKey in UploadStore.uploadedFiles;
     const isUploading = UploadAbort.currentUploadingFile === fileKey;
     // NOTE(amine): skip the file if already uploaded or is in queue
@@ -210,8 +222,34 @@ export function createUploadProvider({
     // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
     if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
 
-    if (onAddedToQueue) onAddedToQueue(linkAsFile);
-    pushToUploadQueue({ file: linkAsFile, slate, type: "link" });
+    if (onAddedToQueue) onAddedToQueue(linkAsBlob);
+    pushToUploadQueue({ file: linkAsBlob, slate });
+
+    const isQueueEmpty = getUploadQueue().length === 0;
+    if (!UploadStore.isUploading && !isQueueEmpty && onStart) {
+      onStart();
+      scheduleQueueUpload();
+    }
+  };
+
+  const addFileToUploadQueue = async (file) => {
+    const fileAsBlob = {
+      ...file,
+    };
+
+    const fileKey = getFileKey(fileAsBlob);
+
+    const doesQueueIncludeFile = getUploadQueue().some(({ file }) => fileKey === getFileKey(file));
+    const isUploaded = fileKey in UploadStore.uploadedFiles;
+    const isUploading = UploadAbort.currentUploadingFile === fileKey;
+    // NOTE(amine): skip the file if already uploaded or is in queue
+    if (doesQueueIncludeFile || isUploaded || isUploading) return;
+
+    // NOTE(amine): if the added file has failed before, remove it from failedFilesCache
+    if (fileKey in UploadStore.failedFilesCache) removeFileFromCache({ fileKey });
+
+    if (onAddedToQueue) onAddedToQueue(fileAsBlob);
+    pushToUploadQueue({ file: fileAsBlob });
 
     const isQueueEmpty = getUploadQueue().length === 0;
     if (!UploadStore.isUploading && !isQueueEmpty && onStart) {
@@ -226,7 +264,8 @@ export function createUploadProvider({
   };
 
   return {
-    upload: addToUploadQueue,
+    upload: addBlobToUploadQueue,
+    saveCopy: addFileToUploadQueue,
     uploadLink: addLinkToUploadQueue,
     retry,
     retryAll,
