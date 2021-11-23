@@ -31,7 +31,7 @@ const STYLES_SHARING_BUTTON = (theme) => css`
 const getFileURL = ({ file }) => {
   const rootUrl = window?.location?.origin;
 
-  return `${rootUrl}/_/object/${file.id}`;
+  return `${rootUrl}/_/view/${file.id}`;
 };
 
 function FileSharingButtons({ file, data, viewer }) {
@@ -61,16 +61,16 @@ function FileSharingButtons({ file, data, viewer }) {
     <>
       <button css={STYLES_SHARING_BUTTON} onClick={handleTwitterSharing}>
         <SVG.Twitter width={16} />
-        <System.P2 style={{ marginLeft: 12 }}>Share Via Twitter</System.P2>
+        <System.P2 style={{ marginLeft: 12 }}>Share via Twitter</System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleEmailSharing}>
         <SVG.Mail width={16} />
-        <System.P2 style={{ marginLeft: 12 }}>Share Via Email </System.P2>
+        <System.P2 style={{ marginLeft: 12 }}>Share via email </System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleLinkCopy}>
         <SVG.Link width={16} />
         <System.P2 style={{ marginLeft: 12 }}>
-          {copyState.isLinkCopied ? "Copied" : "Copy link"}
+          {copyState.isLinkCopied ? "Copied" : "Copy public link"}
         </System.P2>
       </button>
       <button css={STYLES_SHARING_BUTTON} onClick={handleCidCopy}>
@@ -117,7 +117,7 @@ function DownloadButton({ file, viewer, ...props }) {
         ) : (
           <SVG.Download width={16} />
         )}
-        <System.P2 style={{ marginLeft: 12 }}>Download File</System.P2>
+        <System.P2 style={{ marginLeft: 12 }}>Download file</System.P2>
       </button>
     </div>
   ) : null;
@@ -163,7 +163,7 @@ export function Share({ file, data, viewer, isOpen, onClose }) {
               rel="noreferrer"
             >
               <SVG.InfoCircle width={16} />
-              <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
+              <System.P2 style={{ marginLeft: 4 }}>What is a CID?</System.P2>
             </a>
           </Jumper.Item>
         </Jumper.Root>

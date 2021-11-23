@@ -132,10 +132,6 @@ app.prepare().then(async () => {
 
     const id = Utilities.getIdFromCookie(req);
 
-    if (!file.isPublic && file.ownerId !== id) {
-      return res.redirect("/_/404");
-    }
-
     let viewer = null;
     if (id) {
       viewer = await ViewerManager.getById({
