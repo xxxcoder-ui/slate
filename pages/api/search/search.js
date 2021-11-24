@@ -9,7 +9,7 @@ import SearchManager from "~/node_common/managers/search";
 //               tagsIds: Applies when searching for only files. Will only search for files contained within the given tags
 //               grouped: Applies when searching for multiple object types only. Specifies whether to group the results by object type in the form { users: [user1, user2, ...], slates: [slate1, slate2, ...], files: [file1, file2, ...]}
 export default async (req, res) => {
-  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res);
+  const userInfo = await RequestUtilities.checkAuthorizationInternal(req, res, true);
   if (!userInfo) return;
   const { id, user } = userInfo;
 

@@ -2,28 +2,31 @@ import * as Data from "~/node_common/data";
 import * as Strings from "~/common/strings";
 import * as Utilities from "~/node_common/utilities";
 
-export const checkAuthorizationInternal = async (req, res) => {
+export const checkAuthorizationInternal = async (req, res, allowUnauthenticated = false) => {
   const id = Utilities.getIdFromCookie(req);
-  if (!id) {
+  if (!id && !allowUnauthenticated) {
     return res.status(401).send({ decorator: "SERVER_NOT_AUTHENTICATED", error: true });
   }
 
-  const user = await Data.getUserById({
-    id,
-  });
-
-  if (!user) {
-    return res.status(404).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
+  let user;
+  if (id) {
+    user = await Data.getUserById({
+      id,
     });
-  }
 
-  if (user.error) {
-    return res.status(500).send({
-      decorator: "SERVER_USER_NOT_FOUND",
-      error: true,
-    });
+    if (!user) {
+      return res.status(404).send({
+        decorator: "SERVER_USER_NOT_FOUND",
+        error: true,
+      });
+    }
+
+    if (user.error) {
+      return res.status(500).send({
+        decorator: "SERVER_USER_NOT_FOUND",
+        error: true,
+      });
+    }
   }
 
   return { id, user };

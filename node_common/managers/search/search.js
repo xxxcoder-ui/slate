@@ -32,9 +32,12 @@ export const searchMultiple = async ({
   } else {
     ownerQuery = {
       bool: {
-        should: [{ term: { ownerId } }],
+        should: [],
       },
     };
+    if (ownerId) {
+      ownerQuery.bool.should.push({ term: { ownerId } });
+    }
     if (globalSearch) {
       ownerQuery.bool.should.push({ term: { isPublic: true } });
     }
@@ -214,9 +217,12 @@ export const searchSlate = async ({ query, ownerId, userId, globalSearch = false
     } else {
       ownerQuery = {
         bool: {
-          should: [{ term: { ownerId } }],
+          should: [],
         },
       };
+      if (ownerId) {
+        ownerQuery.bool.should.push({ term: { ownerId } });
+      }
       if (globalSearch) {
         ownerQuery.bool.should.push({ term: { isPublic: true } });
       }
@@ -289,9 +295,12 @@ export const searchFile = async ({ query, ownerId, userId, globalSearch = false,
     } else {
       ownerQuery = {
         bool: {
-          should: [{ term: { ownerId } }],
+          should: [],
         },
       };
+      if (ownerId) {
+        ownerQuery.bool.should.push({ term: { ownerId } });
+      }
       if (globalSearch) {
         ownerQuery.bool.should.push({ term: { isPublic: true } });
       }
@@ -304,55 +313,10 @@ export const searchFile = async ({ query, ownerId, userId, globalSearch = false,
         query: {
           bool: {
             must,
-            // filter: [{ term: { "tags.id": "0824a3cb-e839-4246-8ff4-d919919e1487" } }],
-            // filter: [{ term: { isLink: true } }],
-            // filter: [{ term: { ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258" } }],
-            // filter: [
-            //   { term: { ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258" } },
-            //   { term: { isLink: true } },
-            // ],
           },
         },
       },
     });
-    // const result = await searchClient.search({
-    //   index: "files",
-    //   body: {
-    //     query: {
-    //       bool: {
-    //         must: {
-    //           multi_match: {
-    //             query,
-    //             fuzziness: "AUTO",
-    //             type: "best_fields",
-    //             fields: [
-    //               "name",
-    //               "body",
-    //               "linkName",
-    //               "linkBody",
-    //               "linkAuthor",
-    //               "linkSource",
-    //               "linkDomain",
-    //             ],
-    //             tie_breaker: 0.3,
-    //           },
-    //         },
-    //         should: [
-    //           { term: { ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258" } },
-    //           { term: { isLink: false } },
-    //         ],
-    //         minimum_should_match: 1,
-    //         // filter: [{ term: { "tags.id": "0824a3cb-e839-4246-8ff4-d919919e1487" } }],
-    //         // filter: [{ term: { isLink: true } }],
-    //         // filter: [{ term: { ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258" } }],
-    //         // filter: [
-    //         //   { term: { ownerId: "f9cc7b00-ce59-4b49-abd1-c7ef7253e258" } },
-    //         //   { term: { isLink: true } },
-    //         // ], //this does an AND, not an OR
-    //       },
-    //     },
-    //   },
-    // });
 
     if (result.statusCode !== 200) return;
     const hits = result?.body?.hits?.hits;
