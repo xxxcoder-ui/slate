@@ -1,13 +1,15 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as Filter from "~/components/core/Filter";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
+import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 
 import ScenePage from "~/components/core/ScenePage";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import DataView from "~/components/core/DataView";
+import EmptyState from "~/components/core/EmptyState";
 
 const STYLES_SCENE_PAGE = css`
   padding: 0px;
@@ -16,22 +18,12 @@ const STYLES_SCENE_PAGE = css`
   }
 `;
 
-const STYLES_FILTER_TITLE_WRAPPER = css`
-  ${Styles.MOBILE_HIDDEN};
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const STYLES_FILTER_POPUP_WRAPPER = (theme) => css`
-  position: absolute;
-  top: calc(${theme.sizes.filterNavbar}px + 4px);
-  left: 4px;
+const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   width: 100%;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
+  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    top: ${theme.sizes.filterNavbar}px;
-    left: 0px;
+    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
   }
 `;
 
@@ -57,34 +49,24 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           index={index}
           onChange={(index) => setIndex(index)}
         />
-        <Filter.Provider viewer={viewer}>
-          <Filter.NavbarPortal>
-            <div css={STYLES_FILTER_POPUP_WRAPPER}>
-              <Filter.Popup viewer={viewer} />
-            </div>
-
-            <div css={Styles.CONTAINER_CENTERED}>
-              <div css={Styles.MOBILE_HIDDEN}>
-                <Filter.SidebarTrigger />
-              </div>
-              <Filter.PopupTrigger isMobile={isMobile} style={{ marginLeft: 2 }}>
-                <span css={Styles.MOBILE_ONLY} style={{ marginRight: 8 }}>
-                  <Filter.Title />
-                </span>
-              </Filter.PopupTrigger>
-            </div>
-
-            <div css={STYLES_FILTER_TITLE_WRAPPER}>
-              <Filter.Title />
-            </div>
-            <Filter.Actions />
-          </Filter.NavbarPortal>
-
-          <div css={Styles.HORIZONTAL_CONTAINER}>
-            <Filter.Sidebar viewer={viewer} isMobile={isMobile} />
-            <Filter.Content onAction={onAction} viewer={viewer} page={page} />
-          </div>
-        </Filter.Provider>
+        <div css={STYLES_DATAVIEWER_WRAPPER}>
+          {objects.length ? (
+            <DataView
+              key="scene-files-folder"
+              isOwner={true}
+              items={objects}
+              onAction={onAction}
+              viewer={viewer}
+              page={page}
+              view="grid"
+            />
+          ) : (
+            <EmptyState>
+              <FileTypeGroup />
+              <div style={{ marginTop: 24 }}>Drag and drop files into Slate to upload</div>
+            </EmptyState>
+          )}
+        </div>
       </ScenePage>
     </WebsitePrototypeWrapper>
   );
