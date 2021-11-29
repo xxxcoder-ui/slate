@@ -5,7 +5,7 @@ import * as Styles from "~/common/styles";
 import * as Utilities from "~/common/utilities";
 
 import { P3 } from "~/components/system";
-import { useIsomorphicLayoutEffect } from "~/common/hooks";
+import { useCache, useIsomorphicLayoutEffect } from "~/common/hooks";
 import { css } from "@emotion/react";
 
 import FilePlaceholder from "~/components/core/ObjectPreview/placeholders/File";
@@ -29,12 +29,21 @@ const STYLES_TEXT_PREVIEW = (theme) =>
   });
 
 export default function TextObjectPreview({ url, file, ...props }) {
-  const [{ content, error }, setState] = React.useState({ content: "", error: undefined });
+  const [cache, setCache] = useCache();
+  const cachedContent = cache[file.cid] || "";
+
+  const [{ content, error }, setState] = React.useState({
+    content: cachedContent,
+    error: undefined,
+  });
 
   useIsomorphicLayoutEffect(() => {
+    if (cachedContent) return;
+
     fetch(url)
       .then(async (res) => {
         const content = await res.text();
+        setCache({ key: file.cid, value: content });
         setState({ content });
       })
       .catch((e) => {

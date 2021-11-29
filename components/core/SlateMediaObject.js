@@ -198,7 +198,7 @@ export default class SlateMediaObject extends React.Component {
     }
 
     if (Validations.isMarkdown(file.filename, type)) {
-      return <MarkdownFrame date={file.createdAt} url={url} />;
+      return <MarkdownFrame date={file.createdAt} cid={file?.cid} url={url} />;
     }
 
     if (Validations.isPreviewableImage(type)) {

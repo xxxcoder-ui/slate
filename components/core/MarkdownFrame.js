@@ -6,6 +6,7 @@ import * as Strings from "~/common/strings";
 import { css } from "@emotion/react";
 import { Markdown } from "~/components/system/components/Markdown";
 import { H1, H2, H3, H4, P1, UL, OL, LI, A } from "~/components/system/components/Typography";
+import { useCache, useIsomorphicLayoutEffect } from "~/common/hooks";
 
 const STYLES_ASSET = (theme) => css`
   padding: 120px calc(32px + 16px + 8px);
@@ -133,12 +134,18 @@ const STYLES_INTENT = (theme) => css`
   );
 `;
 
-export default function MarkdownFrame({ url, date }) {
-  const [content, setContent] = React.useState("");
+export default function MarkdownFrame({ cid, url, date }) {
+  const [cache, setCache] = useCache();
+  const cachedContent = cache[cid] || "";
 
-  React.useEffect(() => {
+  const [content, setContent] = React.useState(cachedContent);
+
+  useIsomorphicLayoutEffect(() => {
+    if (cachedContent) return;
+
     fetch(url).then(async (res) => {
       const content = await res.text();
+      setCache(content);
       setContent(content);
     });
   }, []);
