@@ -4,15 +4,16 @@ export const values = {
 };
 
 export const sizes = {
-  mobile: 768,
+  header: 52,
   navigation: 288,
+  intercomWidget: 60,
   sidebar: 416,
-  // NOTE(amine): header's height + filter navbar's height
-  header: 55,
   filterNavbar: 40,
+  topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
+
+  mobile: 768,
   tablet: 960,
   desktop: 1024,
-  topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
 };
 
 export const system = {
