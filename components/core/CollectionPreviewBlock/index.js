@@ -118,9 +118,10 @@ export default function CollectionPreview({ collection, viewer, owner, onAction 
   const title = collection.name || collection.slatename;
   const isOwner = viewer?.id === collection.ownerId;
 
-  const preview = React.useMemo(() => getObjectToPreview(collection.coverImage), [
-    collection.coverImage,
-  ]);
+  const preview = React.useMemo(
+    () => getObjectToPreview(collection.coverImage),
+    [collection.coverImage]
+  );
 
   return (
     <div css={STYLES_CONTAINER}>
@@ -228,7 +229,7 @@ function Metrics({ fileCount, owner, isOwner, onAction }) {
       </div>
 
       <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
-        {!isOwner && (
+        {isOwner && (
           <>
             <Link
               href={`/$/user/${owner.id}`}

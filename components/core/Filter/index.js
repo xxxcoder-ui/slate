@@ -68,12 +68,15 @@ const STYLES_FILTER_CONTENT = (theme) => css`
 
 export default function Filter({ isActive, viewer, onAction, page, data, isMobile, children }) {
   const { results, isSearching } = useSearchStore();
+  const showSearchResult = isSearching && !!results;
 
   if (!isActive) {
-    return children;
+    return showSearchResult ? (
+      <Search.Content viewer={viewer} page={page} onAction={onAction} />
+    ) : (
+      children
+    );
   }
-
-  const showSearchResult = isSearching && !!results;
 
   return (
     <>
