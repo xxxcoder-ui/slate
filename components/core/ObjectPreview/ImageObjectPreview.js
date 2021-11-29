@@ -6,8 +6,10 @@ import { AspectRatio } from "~/components/system";
 import { useInView } from "~/common/hooks";
 import { Blurhash } from "react-blurhash";
 import { isBlurhashValid } from "blurhash";
-
+import { AnimatePresence, motion } from "framer-motion";
 import { css } from "@emotion/react";
+import { useCache } from "~/common/hooks";
+
 import ObjectPreviewPrimitive from "~/components/core/ObjectPreview/ObjectPreviewPrimitive";
 
 const STYLES_PLACEHOLDER_ABSOLUTE = css`
@@ -29,8 +31,8 @@ const STYLES_IMAGE = css`
   width: 100%;
 `;
 
-const ImagePlaceholder = ({ blurhash }) => (
-  <div css={STYLES_PLACEHOLDER_ABSOLUTE}>
+const ImagePlaceholder = ({ blurhash, ...props }) => (
+  <motion.div css={STYLES_PLACEHOLDER_ABSOLUTE} {...props}>
     <div css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
       <AspectRatio ratio={1}>
         <div>
@@ -45,11 +47,8 @@ const ImagePlaceholder = ({ blurhash }) => (
         </div>
       </AspectRatio>
     </div>
-  </div>
+  </motion.div>
 );
-
-// NOTE(amine): cache
-const cidsLoaded = {};
 
 export default function ImageObjectPreview({
   url,
@@ -58,22 +57,20 @@ export default function ImageObjectPreview({
   tag,
   ...props
 }) {
-  const isCached = cidsLoaded[file.cid];
+  /** NOTE(amine):  To minimize the network load, we only load images when they're in view.
+                    This creates an issue where cached images will reload each time they came to view. 
+                    To prevent reloading we'll keep track of the images that already loaded */
+  const [cache, setCache] = useCache();
+  const isCached = cache[file.cid];
 
   const previewerRef = React.useRef();
-  const [isLoading, setLoading] = React.useState(isCached);
-  const handleOnLoaded = () => {
-    cidsLoaded[file.cid] = true;
-    setLoading(false);
-  };
-
   const { isInView } = useInView({
     ref: previewerRef,
   });
 
   const { type, coverImage } = file;
   const imgTag = type.split("/")[1];
-
+  const imageUrl = coverImage ? coverImage?.url || Strings.getURLfromCID(coverImage?.cid) : url;
   const blurhash = React.useMemo(() => {
     return file.blurhash && isBlurhashValid(file.blurhash).result
       ? file.blurhash
@@ -82,14 +79,14 @@ export default function ImageObjectPreview({
       : null;
   }, [file]);
 
-  const shouldShowPlaceholder = isLoading && blurhash;
-
-  const imageUrl = coverImage ? coverImage?.url || Strings.getURLfromCID(coverImage?.cid) : url;
+  const [isLoading, setLoading] = React.useState(true);
+  const handleOnLoaded = () => (setCache({ key: file.cid, value: true }), setLoading(false));
+  const shouldShowPlaceholder = !isCached && isLoading && !!blurhash;
 
   return (
     <ObjectPreviewPrimitive file={file} tag={tag || imgTag} isImage {...props}>
       <div ref={previewerRef} css={[Styles.CONTAINER_CENTERED, STYLES_FLUID_CONTAINER]}>
-        {isInView && (
+        {(isCached || isInView) && (
           <img
             css={STYLES_IMAGE}
             src={imageUrl}
@@ -97,7 +94,11 @@ export default function ImageObjectPreview({
             onLoad={handleOnLoaded}
           />
         )}
-        {shouldShowPlaceholder && <ImagePlaceholder blurhash={blurhash} />}
+        <AnimatePresence>
+          {shouldShowPlaceholder && (
+            <ImagePlaceholder blurhash={blurhash} initial={{ opacity: 1 }} exit={{ opacity: 0 }} />
+          )}
+        </AnimatePresence>
       </div>
     </ObjectPreviewPrimitive>
   );

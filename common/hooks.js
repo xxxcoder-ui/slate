@@ -459,3 +459,9 @@ export const useDetectTextOverflow = ({ ref }, dependencies) => {
 
   return isTextOverflowing;
 };
+
+let cache = {};
+export const useCache = () => {
+  const setCache = ({ key, value }) => (cache[key] = value);
+  return [cache, setCache];
+};
