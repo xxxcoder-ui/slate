@@ -46,6 +46,7 @@ import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import PortalsProvider from "~/components/core/PortalsProvider";
 import CTATransition from "~/components/core/CTATransition";
+import Filter from "~/components/core/Filter";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
@@ -347,6 +348,7 @@ export default class ApplicationPage extends React.Component {
     let body = document.documentElement || document.body;
     if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
       state.loading = true;
+      state.data = { id: details.id };
     }
     this.setState(state, () => {
       if (!popstate) {
@@ -494,19 +496,28 @@ export default class ApplicationPage extends React.Component {
             isMac={this.props.isMac}
             viewer={this.state.viewer}
           >
-            {this.state.loading ? (
-              <div
-                css={Styles.CONTAINER_CENTERED}
-                style={{
-                  width: "100vw",
-                  height: "100vh",
-                }}
-              >
-                <LoaderSpinner style={{ height: 32, width: 32 }} />
-              </div>
-            ) : (
-              scene
-            )}
+            <Filter
+              isActive={!!this.state.viewer}
+              viewer={this.state.viewer}
+              page={page}
+              data={this.state.data}
+              isMobile={this.props.isMobile}
+              onAction={this._handleAction}
+            >
+              {this.state.loading ? (
+                <div
+                  css={Styles.CONTAINER_CENTERED}
+                  style={{
+                    width: "100%",
+                    height: "100vh",
+                  }}
+                >
+                  <LoaderSpinner style={{ height: 32, width: 32 }} />
+                </div>
+              ) : (
+                scene
+              )}
+            </Filter>
           </ApplicationLayout>
         </PortalsProvider>
         <GlobalModal />

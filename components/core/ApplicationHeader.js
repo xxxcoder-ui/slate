@@ -1,11 +1,9 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
-import * as Events from "~/common/custom-events";
 import * as Styles from "~/common/styles";
 import * as Upload from "~/components/core/Upload";
-import * as Filter from "~/components/core/Filter";
-import * as Actions from "~/common/actions";
+import * as Search from "~/components/core/Search";
 
 import {
   ApplicationUserControls,
@@ -18,30 +16,10 @@ import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
 import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
-import { useField, useMediaQuery } from "~/common/hooks";
-import { Input } from "~/components/system/components/Input";
+import { useMediaQuery } from "~/common/hooks";
 import { AnimatePresence, motion } from "framer-motion";
-
-const STYLES_SEARCH_COMPONENT = (theme) => css`
-  background-color: transparent;
-  box-shadow: none;
-  height: 100%;
-  input {
-    height: 100%;
-    padding: 0px 4px;
-    border-radius: 0px;
-  }
-  input::placeholder {
-    color: ${theme.semantic.textGray};
-    font-size: ${theme.typescale.lvl1};
-  }
-`;
-
-const STYLES_DISMISS_BUTTON = (theme) => css`
-  display: block;
-  ${Styles.BUTTON_RESET};
-  color: ${theme.semantic.textGray};
-`;
+import { Navbar as FilterNavbar } from "~/components/core/Filter/Navbar";
+import { useSearchStore } from "~/components/core/Search/store";
 
 const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   position: absolute;
@@ -51,7 +29,6 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   left: 0;
   z-index: -1;
   background-color: ${theme.system.white};
-  box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
@@ -105,9 +82,10 @@ const STYLES_BACKGROUND = css`
   animation: fade-in 200ms ease-out;
 `;
 
-const STYLES_HEADER = css`
-  z-index: ${Constants.zindex.header};
+const STYLES_HEADER = (theme) => css`
+  z-index: ${theme.zindex.header};
   width: 100vw;
+  height: ${theme.sizes.header}px;
   position: fixed;
   right: 0;
   top: 0;
@@ -118,7 +96,7 @@ const STYLES_FILTER_NAVBAR = (theme) => css`
   width: 100vw;
   position: fixed;
   right: 0;
-  top: ${theme.sizes.header};
+  top: ${theme.sizes.header}px;
 `;
 
 const STYLES_UPLOAD_BUTTON = css`
@@ -142,7 +120,6 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
     showDropdown: false,
     popup: null,
     isRefreshing: false,
-    query: "",
   });
 
   const _handleTogglePopup = (value) => {
@@ -153,38 +130,10 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
     }
   };
 
-  const _handleInputChange = (e) => {
-    setState((prev) => ({ ...prev, query: e.target.value }));
-  };
-
-  //TODO(amine): plug in the right values
-  //for more context, look at node_common/managers/search/search.js
-  //userId: (optional) the id of the user whose stuff we are searching through. If specified, globalSearch is disregarded since the search will be limited to that user's public items. Does not apply when searching for type USER
-  //types: leaving it null searches everything. Doing ["SLATE"] searches just slates, doing ["USER", "FILE"] searches users and files.
-  //globalSearch: whether you are just searching the user's files/slates or global files/slates. This option doesn't exist for searching users since there is no notion of public or private users
-  //tagIds: only applies when searching files. the ids of the tags (aka collections) you are searching within. aka if you only want to search for files in a given slate, provide that slate's id. If no tag ids are provided, it searches all files
-  //grouped: whether to group the results by type (slate, user, file) when searching multiple types. Doesn't apply when searching only one type e.g. types: ["SLATE"]
-  const handleSearch = async () => {
-    const response = await Actions.search({
-      types: null,
-      query: state.query,
-      globalSearch: true,
-      tagIds: null,
-      grouped: true,
-    });
-    console.log(response);
-  };
-
-  const { getFieldProps, value: searchQuery, setFieldValue } = useField({
-    initialValue: "",
-    onSubmit: handleSearch,
-  });
-
-  const handleDismissSearch = () => setFieldValue("");
+  const { isSearching } = useSearchStore();
 
   const { mobile } = useMediaQuery();
   const isSignedOut = !viewer;
-  const isSearching = searchQuery.length !== 0;
 
   return (
     <>
@@ -210,17 +159,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
             </div>
             <div css={STYLES_MIDDLE}>
               {/**TODO: update Search component */}
-              <Input
-                containerStyle={{ height: "100%" }}
-                full
-                placeholder={`Search ${!viewer ? "slate.host" : ""}`}
-                inputCss={STYLES_SEARCH_COMPONENT}
-                onSubmit={handleSearch}
-                name="search"
-                {...getFieldProps()}
-                onChange={_handleInputChange}
-                value={state.query}
-              />
+              <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
             </div>
             <Upload.Provider page={page} data={data} viewer={viewer}>
               <Upload.Root data={data}>
@@ -238,7 +177,6 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
                     isSearching={isSearching}
                     isSignedOut={isSignedOut}
                     onAction={onAction}
-                    onDismissSearch={handleDismissSearch}
                   />
                 </div>
               </Upload.Root>
@@ -261,14 +199,14 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
       </div>
       <div css={STYLES_FILTER_NAVBAR}>
         <Show when={!!viewer}>
-          <Filter.Navbar />
+          <FilterNavbar />
         </Show>
       </div>
     </>
   );
 }
 
-const UserActions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismissSearch }) => {
+const UserActions = ({ uploadAction, isSignedOut, isSearching, onAction }) => {
   const authActions = React.useMemo(
     () => (
       <>
@@ -316,13 +254,7 @@ const UserActions = ({ uploadAction, isSignedOut, isSearching, onAction, onDismi
             animate={{ opacity: 1, y: 0 }}
             exit={{ y: -10, opacity: 0 }}
           >
-            <button
-              onClick={onDismissSearch}
-              style={{ marginRight: 4 }}
-              css={STYLES_DISMISS_BUTTON}
-            >
-              <SVG.Dismiss style={{ display: "block" }} height={16} width={16} />
-            </button>
+            <Search.Dismiss style={{ marginLeft: 4 }} />
           </motion.div>
         </Match>
       </Switch>

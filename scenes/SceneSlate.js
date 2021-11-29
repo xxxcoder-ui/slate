@@ -261,6 +261,26 @@ export default class SceneSlate extends React.Component {
   }
 }
 
+const STYLES_RESET_SCENE_PAGE_PADDING = css`
+  padding: 0px;
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    padding: 0px;
+  }
+`;
+
+const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
+  width: 100%;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
+  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
+  }
+`;
+
+const STYLES_DATAVIEWER_WRAPPER_EXTERNAL = css`
+  margin-top: 40px;
+`;
+
 class SlatePage extends React.Component {
   _copy = null;
   _timeout = null;
@@ -394,74 +414,34 @@ class SlatePage extends React.Component {
     const { user, name, objects, body, isPublic, ownerId } = this.props.data;
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
-    let actions = isOwner ? (
-      <span css={Styles.HORIZONTAL_CONTAINER}>
-        <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
-          <SVG.Download height="16px" />
-        </SquareButtonGray>
-        <Upload.Trigger viewer={this.props.viewer} style={{ marginRight: 16 }}>
-          <SquareButtonGray>
-            <SVG.Plus height="16px" />
-          </SquareButtonGray>
-        </Upload.Trigger>
-        <SquareButtonGray onClick={this._handleShowSettings}>
-          <SVG.Settings height="16px" />
-        </SquareButtonGray>
-      </span>
-    ) : (
-      <div style={{ display: `flex` }}>
-        <SquareButtonGray onClick={this._handleDownload} style={{ marginRight: 16 }}>
-          <SVG.Download height="16px" />
-        </SquareButtonGray>
-        <div onClick={this._handleSubscribe}>
-          {this.state.isSubscribed ? (
-            <ButtonSecondary>Unsubscribe</ButtonSecondary>
-          ) : (
-            <ButtonPrimary>Subscribe</ButtonPrimary>
-          )}
-        </div>
-      </div>
-    );
     return (
-      <ScenePage>
-        <ScenePageHeader
-          wide
-          title={
-            user && !isOwner ? (
-              <span>
-                <Link href={`/$/user/${user.id}`} onAction={this.props.onAction}>
-                  <span
-                    // onClick={() =>
-                    //   this.props.onAction({
-                    //     type: "NAVIGATE",
-                    //     value: "NAV_PROFILE",
-                    //     shallow: true,
-                    //     data: user,
-                    //   })
-                    // }
-                    css={STYLES_USERNAME}
-                  >
-                    {user.username}
-                  </span>{" "}
-                </Link>
-                / {name}
-              </span>
-            ) : (
-              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                <span>{name}</span>
-                {isOwner && !isPublic && (
-                  <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 16 }}>
-                    <SVG.SecurityLock height="16px" style={{ display: "block" }} />
-                  </div>
-                )}
-              </div>
-            )
-          }
-          actions={<span css={STYLES_MOBILE_HIDDEN}>{actions}</span>}
-        >
-          {body}
-        </ScenePageHeader>
-        <span css={STYLES_MOBILE_ONLY}>{actions}</span>
+      <ScenePage css={!this.props.external && STYLES_RESET_SCENE_PAGE_PADDING}>
+        {this.props.external ? (
+          <ScenePageHeader
+            wide
+            title={
+              user && !isOwner ? (
+                <span>
+                  <Link href={`/$/user/${user.id}`} onAction={this.props.onAction}>
+                    <span css={STYLES_USERNAME}>{user.username}</span>{" "}
+                  </Link>
+                  / {name}
+                </span>
+              ) : (
+                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                  <span>{name}</span>
+                  {isOwner && !isPublic && (
+                    <div css={STYLES_SECURITY_LOCK_WRAPPER} style={{ marginLeft: 16 }}>
+                      <SVG.SecurityLock height="16px" style={{ display: "block" }} />
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          >
+            {body}
+          </ScenePageHeader>
+        ) : null}
         {objects && objects.length ? (
           <>
             <GlobalCarousel
@@ -476,7 +456,11 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            <div style={{ marginTop: 40 }}>
+            <div
+              css={
+                this.props.external ? STYLES_DATAVIEWER_WRAPPER_EXTERNAL : STYLES_DATAVIEWER_WRAPPER
+              }
+            >
               <DataView
                 key="scene-files-folder"
                 type="collection"
