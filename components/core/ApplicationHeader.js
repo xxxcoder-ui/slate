@@ -40,7 +40,7 @@ const STYLES_APPLICATION_HEADER = css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   padding: 14px 24px;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 16px 16px 12px;
+    padding: 14px 16px;
     width: 100%;
   }
 `;
