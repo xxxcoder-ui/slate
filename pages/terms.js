@@ -5,25 +5,26 @@ import * as Constants from "~/common/constants";
 import { css } from "@emotion/react";
 
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import WebsitePrototypeHeader from "~/components/core/NewWebsitePrototypeHeader";
-import WebsitePrototypeFooter from "~/components/core/NewWebsitePrototypeFooter";
+import WebsitePrototypeHeader from "~/components/core/WebsiteHeader";
+import WebsitePrototypeFooter from "~/components/core/WebsiteFooter";
 
 const STYLES_ROOT = css`
-  padding: 0 88px 128px 88px;
-  margin: -88px auto 0 auto;
   width: 100%;
-  background-color: ${Constants.system.grayLight6};
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: block;
-    padding: 128px 24px;
-  }
+  height: 100%;
+  min-height: 100vh;
+  background-color: ${Constants.semantic.bgLight};
+  color: ${Constants.semantic.textGrayDark};
 `;
 
 const STYLES_CONTAINER = css`
-  max-width: 1440px;
-  width: 100%;
+  max-width: 1080px;
   margin: 0 auto;
+  padding: 160px 24px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    max-width: 480px;
+    padding: 96px 16px;
+  }
 `;
 
 const STYLES_H1 = css`
@@ -74,8 +75,8 @@ const STYLES_CONTENT_BLOCK1 = css`
 `;
 
 const STYLES_CONTENT_BLOCK2 = css`
-  margin: -120px 0 0 auto;
-  width: 50%;
+  margin: -264px 0 0 auto;
+  width: 55%;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin: 48px 0 0 0;
@@ -88,8 +89,9 @@ const STYLES_LIST = css`
   font-family: ${Constants.font.text};
   font-weight: 400;
   font-size: ${Constants.typescale.lvl1};
+  letter-spacing: -0.011rem;
   line-height: 1.5;
-  margin: 0px 0 0 4px;
+  margin: 4px 0 0 16px;
   opacity: 0.7;
   padding: 0;
 `;
@@ -126,6 +128,7 @@ export default class TermsPage extends React.Component {
             <div css={STYLES_CONTENT_BLOCK1}>
               <h1 css={STYLES_H1}>Terms of Service</h1>
               <br />
+              <System.P1>In this page</System.P1>
               <ul css={STYLES_LIST}>
                 <li>
                   <a css={STYLES_LINK} href="#Storage deals">

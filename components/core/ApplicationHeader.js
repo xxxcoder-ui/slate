@@ -31,8 +31,9 @@ const STYLES_SEARCH_COMPONENT = (theme) => css`
     padding: 0px 4px;
     border-radius: 0px;
   }
-  &::placeholder {
+  input::placeholder {
     color: ${theme.semantic.textGray};
+    font-size: ${theme.typescale.lvl1};
   }
 `;
 
@@ -62,7 +63,7 @@ const STYLES_APPLICATION_HEADER = css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   padding: 14px 24px;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 16px 16px 12px;
+    padding: 14px 16px;
     width: 100%;
   }
 `;

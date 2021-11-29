@@ -2,199 +2,148 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import WebsitePrototypeHeader from "~/components/core/NewWebsitePrototypeHeader";
-import WebsitePrototypeFooter from "~/components/core/NewWebsitePrototypeFooter";
+import WebsiteHeader from "~/components/core/WebsiteHeader";
+import WebsiteFooter from "~/components/core/WebsiteFooter";
 
 import { css } from "@emotion/react";
 
 const STYLES_ROOT = css`
   width: 100%;
-  margin: -88px auto 0 auto;
-  padding: 0 88px 128px 88px;
-  background-color: ${Constants.system.grayLight6};
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 48px 24px;
-  }
+  height: 100%;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: ${Constants.semantic.bgLight};
+  color: ${Constants.semantic.textGrayDark};
 `;
 
 const STYLES_CONTAINER = css`
-  max-width: 1440px;
-  width: 100%;
+  max-width: 1080px;
   margin: 0 auto;
-`;
-
-const STYLES_H1 = css`
-  font-family: ${Constants.font.medium};
-  font-weight: 400;
-  font-size: ${Constants.typescale.lvl4};
-  letter-spacing: -0.022rem;
-  line-height: 1.3;
-  color: ${Constants.system.grayDark6};
-  margin-bottom: 1rem;
-  width: 95%;
+  padding: 160px 24px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: ${Constants.typescale.lvl3};
+    max-width: 480px;
+    padding: 96px 16px;
   }
 `;
 
-const STYLES_H2 = css`
-  font-family: ${Constants.font.medium};
-  font-weight: 400;
-  font-size: ${Constants.typescale.lvl2};
-  letter-spacing: -0.017rem;
-  line-height: 1.3;
-  color: ${Constants.system.blue};
-  margin-bottom: 1rem;
-  width: 95%;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: ${Constants.typescale.lvl1};
-  }
-`;
-
-const STYLES_P = css`
-  font-family: ${Constants.font.text};
-  font-weight: 400;
-  font-size: ${Constants.typescale.lvl1};
-  letter-spacing: -0.011rem;
-  line-height: 1.5;
-  margin: 4px 0 0 0;
-  color: ${Constants.system.grayDark6};
-  width: 80%;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    width: 100%;
-  }
-`;
-
-const STYLES_SECTION_WRAPPER = css`
-  width: 100%;
-  height: 100%;
-  padding: 120px 0;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 120px 0 48px 0;
-  }
-`;
-
-const STYLES_SECTION_FLEXWRAPPER = css`
+const STYLES_HERO_TEXT = css`
   display: flex;
-  width: 100%;
-  height: 100%;
+  align-items: center;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
   }
 `;
 
-const STYLES_TEXT_BLOCK = css`
-  width: 33.33%;
+const STYLES_HEADING = css`
+  font-family: ${Constants.font.semiBold};
+  flex-shrink: 0;
+  color: ${Constants.semantic.textBlack};
+  flex-shrink: 0;
+  min-width: 50%;
+  max-width: 100%;
+`;
+
+const STYLES_HEADING1 = css`
+  ${STYLES_HEADING};
+  font-size: 84px;
+  line-height: 88px;
+  letter-spacing: -0.05em;
+  display: flex;
+  align-items: baseline;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
-    width: 100%;
+    font-size: 64px;
+    line-height: 68px;
+    letter-spacing: -0.04em;
   }
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    font-size: 48px;
+    line-height: 52px;
+    letter-spacing: -0.04em;
+  }
+`;
+
+const STYLES_BODY1 = css`
+  font-family: ${Constants.font.text};
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+
+  @media (max-width: ${Constants.sizes.tablet}px) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 20px;
+  }
+`;
+
+const STYLES_IMG = css`
+  max-width: 100%;
+  overflow: hidden;
+  box-shadow: 0px 10.8725px 57.9866px rgba(174, 176, 178, 0.3);
+  max-width: calc(50% - 24px);
+`;
+
+const STYLES_IMG_HERO = css`
+  ${STYLES_IMG};
+  max-width: 100%;
+  border: 12px solid ${Constants.semantic.textBlack};
+  border-radius: 40px;
+
+  @media (max-width: ${Constants.sizes.tablet}px) {
+    border: 8px solid ${Constants.semantic.textBlack};
+    border-radius: 24px;
+  }
+`;
+
+const STYLES_BUTTON = css`
+  cursor: poitner;
+  display: inline-flex;
+  flex-grow: 0;
+  justify-content: center;
+  align-items: center;
+  box-shadow: ${Constants.shadow.lightMedium};
+  text-decoration: none;
+  font-family: ${Constants.font.medium};
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.006px;
+  cursor: pointer;
 `;
 
 const STYLES_BUTTON_PRIMARY = css`
-  margin: 32px 0 0 0;
-  min-height: 48px;
-  box-sizing: border-box;
-  border: 0;
-  border-radius: 4px;
-  padding: 0 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+  ${STYLES_BUTTON};
+  color: ${Constants.semantic.textWhite};
   background-color: ${Constants.system.blue};
-  color: ${Constants.system.white};
-  text-decoration: none;
-  font-family: ${Constants.font.semiBold};
-  font-weight: 400;
-  font-size: ${Constants.typescale.lvl1};
-  letter-spacing: -0.011rem;
-  transition: 200ms ease all;
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.9;
-  }
 `;
 
-const STYLES_BUTTON_SECONDARY = css`
-  margin: 32px 0 16px 0;
-  min-height: 48px;
-  box-sizing: border-box;
-  border: 1px solid ${Constants.system.grayLight2};
-  border-radius: 4px;
-  padding: 0 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  background-color: ${Constants.system.grayLight6};
-  color: ${Constants.system.blue};
-  text-decoration: none;
-  font-family: ${Constants.font.semiBold};
-  font-weight: 400;
-  font-size: ${Constants.typescale.lvl1};
-  letter-spacing: -0.011rem;
-  transition: 200ms ease all;
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.9;
-  }
+const STYLES_BUTTON_PRIMARY_BIG = css`
+  ${STYLES_BUTTON_PRIMARY};
+  padding: 18px 28px 18px 24px;
+  border-radius: 20px;
+  font-size: 16px;
+  line-height: 24px;
 `;
 
-const STYLES_BLUE = css`
-  color: ${Constants.system.blue};
-`;
-
-const STYLES_HALFBLOCK = css`
-  width: 50%;
-  margin-bottom: 64px;
+const STYLES_BUTTON_PRIMARY_BIG_HERO = css`
+  ${STYLES_BUTTON_PRIMARY_BIG};
+  margin-bottom: 48px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
-    width: 100%;
+    margin-bottom: 32px;
   }
 `;
 
-const styleCenterBlock = {
-  textAlign: `center`,
-  margin: `0 auto`,
-};
-
-const STYLES_IMG = css`
-  width: 70%;
-  margin: 0 auto;
+const STYLES_FEATURE_IMG = css`
   display: block;
-  box-shadow: 0px 10px 50px 20px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: ${Constants.sizes.tablet}px) {
-    width: 100%;
-  }
-`;
-
-const STYLES_VR = css`
-  width: 1px;
-  height: 48px;
-  background-color: ${Constants.system.grayLight2};
-  margin: 0 auto;
-`;
-
-const STYLES_IMG_OVERLAY = css`
-  width: 24%;
-  margin: -30% 0 0 70%;
-  display: block;
-  box-shadow: 0px 10px 50px 20px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: ${Constants.sizes.tablet}px) {
-    margin: -30% 0 0 60%;
-    width: 30%;
-  }
+  margin: 0 20px;
+  width: 60%;
+  border: ${Constants.semantic.borderGrayLight4};
+  border-radius: 16px;
+  box-shadow: ${Constants.shadow.darkMedium};
 `;
 
 export default class SlateForChromePage extends React.Component {
@@ -207,65 +156,27 @@ export default class SlateForChromePage extends React.Component {
 
     return (
       <WebsitePrototypeWrapper title={title} description={description} url={url} image={image}>
-        <WebsitePrototypeHeader />
+        <WebsiteHeader />
         <div css={STYLES_ROOT}>
           <div css={STYLES_CONTAINER}>
-            <div css={STYLES_SECTION_WRAPPER}>
-              <div css={STYLES_TEXT_BLOCK} style={styleCenterBlock}>
-                <h1 css={STYLES_H1}>
-                  <span css={STYLES_BLUE}>Upload images to Slate</span> <br />
-                  from anywhere on the web
-                </h1>
-                <a
-                  css={STYLES_BUTTON_PRIMARY}
-                  href="https://chrome.google.com/webstore/detail/slate/gloembacbehhbfbkcfjmloikeeaebnoc"
-                  target="_blank"
-                >
-                  Add Slate to Chrome
-                </a>
-                <div css={STYLES_VR} />
-              </div>
-              <img
-                css={STYLES_IMG}
-                src="https://slate.textile.io/ipfs/bafybeiarvezzcqx3f7vjmx25kzog3metgz35n4p5gtiexwl7hcgwzev64a"
-              />
-              <img
-                css={STYLES_IMG_OVERLAY}
-                src="https://slate.textile.io/ipfs/bafkreig2ynqlvfynv3zvft73fh2igyyks5bgmthugtq7azeed6rehd3s5u"
-              />
+            <div css={STYLES_HEADING1}>Slate web extension</div>
+            <br />
+            <div css={STYLES_BODY1}>
+              Access Slate anytime, anywhere when you browse the Internet.
             </div>
-            <div css={STYLES_SECTION_FLEXWRAPPER}>
-              <div css={STYLES_HALFBLOCK}>
-                <h2 css={STYLES_H2}>Contribute</h2>
-                <p css={STYLES_P}>
-                  We would love for you to join us. You are welcome to file an issue or submit a
-                  pull request on Github.
-                </p>
-                <a
-                  css={STYLES_BUTTON_PRIMARY}
-                  href="https://github.com/jasonleyser/slate-for-chrome"
-                  target="_blank"
-                >
-                  View Github
-                </a>
-              </div>
-              <div css={STYLES_HALFBLOCK}>
-                <h2 css={STYLES_H2}>Release</h2>
-                <p css={STYLES_P}>
-                  Slate for Chrome is open source and past versions are also available for download.
-                </p>
-                <a
-                  css={STYLES_BUTTON_SECONDARY}
-                  href="https://slate.textile.io/ipfs/bafybeibxdmhrddveho4mkyveixhhpiabjmtyvp2h7s3byexbkr3if74rwu"
-                  download="Slate Chrome extension.zip"
-                >
-                  Download Slate for Chrome
-                </a>
-              </div>
-            </div>
+            <a css={STYLES_BUTTON_PRIMARY_BIG_HERO}>Get Slate for Chrome</a>
+            <img
+              css={STYLES_IMG_HERO}
+              src="https://slate.textile.io/ipfs/bafybeihsrxgjk5ax4wzbnfnq2kyg4djylrvpsbzrhitvnmcjixupbk5qjm"
+            />
+            <img
+              css={STYLES_FEATURE_IMG}
+              style={{ margin: "-50% auto 48px auto" }}
+              src="https://slate.textile.io/ipfs/bafkreidm2ffwdjgk5j5w4ja2p7fjrflfeldyhak2qigkpatvhazc5rsvda"
+            />
           </div>
         </div>
-        <WebsitePrototypeFooter />
+        <WebsiteFooter />
       </WebsitePrototypeWrapper>
     );
   }

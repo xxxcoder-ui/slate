@@ -93,7 +93,7 @@ function ChannelKeyboardShortcut({ searchResults, searchQuery, onAddFileToChanne
   );
 }
 
-const STYLES_SEARCH_CHANNELS_INPUT = (theme) => css`
+const STYLES_SEARCH_TAGS_INPUT = (theme) => css`
   background-color: transparent;
   ${theme.semantic.textGray};
   box-shadow: none;
@@ -115,8 +115,8 @@ function ChannelInput({ value, searchResults, onChange, onAddFileToChannel, ...p
         value={value}
         onChange={onChange}
         name="search"
-        placeholder="Search or create a new channel"
-        inputCss={STYLES_SEARCH_CHANNELS_INPUT}
+        placeholder="Search or create a new tag"
+        inputCss={STYLES_SEARCH_TAGS_INPUT}
         {...props}
       />
       <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", right: 20 }}>

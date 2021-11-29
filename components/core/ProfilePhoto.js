@@ -13,7 +13,7 @@ const STYLES_AVATAR = css`
   background-position: 50% 50%;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   position: relative;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: ${Constants.system.black};
   display: block;
 `;

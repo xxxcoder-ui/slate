@@ -10,8 +10,7 @@ const STYLES_BUTTON = `
   border-radius: 12px;
   outline: 0;
   border: 0;
-  min-height: 40px;
-  padding: 9px 24px 11px;
+  padding: 9px 24px 11px 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
