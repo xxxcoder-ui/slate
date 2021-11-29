@@ -45,10 +45,10 @@ export function SidebarTrigger({ css }) {
 const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   position: sticky;
   top: ${theme.sizes.header + theme.sizes.filterNavbar}px;
-  width: 236px;
+  width: 300px;
   max-height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
   overflow-y: auto;
-  padding: 20px 24px;
+  padding: 20px 24px calc(16px + ${theme.sizes.intercomWidget}px + ${theme.sizes.filterNavbar}px);
   background-color: ${theme.semantic.bgLight};
 
   @media (max-width: ${theme.sizes.mobile}px) {
@@ -56,15 +56,21 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   }
 `;
 
-export function Sidebar({ viewer, isMobile }) {
+export function Sidebar({ viewer, onAction, data, page, isMobile }) {
   const [{ sidebarState }] = useFilterContext();
 
   if (!sidebarState.isVisible || isMobile) return null;
 
   return (
     <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
-      <Filters.Library />
-      <Filters.Tags viewer={viewer} style={{ marginTop: 12 }} />
+      <Filters.Library page={page} onAction={onAction} />
+      <Filters.Tags
+        page={page}
+        onAction={onAction}
+        data={data}
+        viewer={viewer}
+        style={{ marginTop: 12 }}
+      />
     </div>
   );
 }

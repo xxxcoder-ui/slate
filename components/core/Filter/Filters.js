@@ -2,10 +2,10 @@ import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 import * as Typography from "~/components/system/components/Typography";
-import * as FilterUtilities from "~/common/filter-utilities";
 
 import { css } from "@emotion/react";
 import { useFilterContext } from "~/components/core/Filter/Provider";
+import { Link } from "~/components/core/Link";
 
 /* -------------------------------------------------------------------------------------------------
  *  Shared components between filters
@@ -46,14 +46,14 @@ const STYLES_FILTERS_GROUP = css`
 
 const FilterButton = ({ children, Icon, isSelected, ...props }) => (
   <li>
-    <Typography.P2
-      as="button"
-      css={[STYLES_FILTER_BUTTON, isSelected && STYLES_FILTER_BUTTON_HIGHLIGHTED]}
-      {...props}
-    >
-      <Icon height={16} width={16} />
-      <span style={{ marginLeft: 6 }}>{children}</span>
-    </Typography.P2>
+    <Link {...props}>
+      <span as="span" css={[STYLES_FILTER_BUTTON, isSelected && STYLES_FILTER_BUTTON_HIGHLIGHTED]}>
+        <Icon height={16} width={16} style={{ flexShrink: 0 }} />
+        <Typography.P2 as="span" nbrOflines={1} style={{ marginLeft: 6 }}>
+          {children}
+        </Typography.P2>
+      </span>
+    </Link>
   </li>
 );
 
@@ -72,26 +72,20 @@ const FilterSection = ({ title, children, ...props }) => (
  *  InitialFilters
  * -----------------------------------------------------------------------------------------------*/
 
-function Library() {
-  const [{ filterState }, { setFilterType, hidePopup }] = useFilterContext();
-  const currentFilterType = filterState.type;
+function Library({ page, onAction }) {
+  const [, { hidePopup }] = useFilterContext();
 
-  const libraryFilterType = FilterUtilities.TYPES_IDS.initial.library;
+  const isSelected = page.id === "NAV_DATA";
 
   return (
     <>
       <FilterSection>
         <FilterButton
+          href="/_/data"
+          isSelected={isSelected}
+          onAction={onAction}
           Icon={SVG.Clock}
-          isSelected={currentFilterType === libraryFilterType}
-          onClick={() => {
-            setFilterType({
-              view: FilterUtilities.VIEWS_IDS.initial,
-              type: libraryFilterType,
-              title: "Library",
-            });
-            hidePopup();
-          }}
+          onClick={hidePopup}
         >
           My Library
         </FilterButton>
@@ -100,31 +94,19 @@ function Library() {
   );
 }
 
-function Tags({ viewer, ...props }) {
-  const [{ filterState }, { setFilterType, hidePopup }] = useFilterContext();
-  const currentFilterType = filterState.type;
-
-  const tagFilterType = FilterUtilities.TYPES_IDS.initial.tags;
-
-  const checkIsTagSelected = (slateId) =>
-    currentFilterType === tagFilterType && filterState?.context?.slateId === slateId;
-
-  const setSelectedTag = (slate) =>
-    setFilterType({
-      view: FilterUtilities.VIEWS_IDS.initial,
-      type: tagFilterType,
-      title: "#" + slate.slatename,
-      context: { slateId: slate.id },
-    });
+function Tags({ viewer, data, onAction, ...props }) {
+  const [, { hidePopup }] = useFilterContext();
 
   return (
     <FilterSection title="Tags" {...props}>
       {viewer.slates.map((slate) => (
         <FilterButton
-          Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
           key={slate.id}
-          isSelected={checkIsTagSelected(slate.id)}
-          onClick={() => (setSelectedTag(slate), hidePopup())}
+          href={`/$/slate/${slate.id}`}
+          isSelected={slate.id === data?.id}
+          onAction={onAction}
+          Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
+          onClick={hidePopup}
         >
           {slate.slatename}
         </FilterButton>

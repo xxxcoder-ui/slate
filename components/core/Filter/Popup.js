@@ -29,7 +29,7 @@ export function PopupTrigger({ children, isMobile, ...props }) {
       {...props}
     >
       {children}
-      <motion.div initial={null} animate={{ rotateX: popupState.isVisible ? 180 : 0 }}>
+      <motion.div initial={null} animate={{ rotateX: popupState.isVisible ? 0 : 180 }}>
         <SVG.ChevronUp style={{ display: "block" }} />
       </motion.div>
     </button>
@@ -66,15 +66,21 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   }
 `;
 
-export function Popup({ viewer, css, ...props }) {
+export function Popup({ viewer, onAction, css, data, page, ...props }) {
   const [{ popupState }] = useFilterContext();
 
   if (!popupState.isVisible) return null;
 
   return (
     <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>
-      <Filters.Library />
-      <Filters.Tags viewer={viewer} style={{ marginTop: 12 }} />
+      <Filters.Library page={page} onAction={onAction} />
+      <Filters.Tags
+        viewer={viewer}
+        data={data}
+        page={page}
+        onAction={onAction}
+        style={{ marginTop: 12 }}
+      />
     </div>
   );
 }
