@@ -21,9 +21,9 @@ const STYLES_SCENE_PAGE = css`
 const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   width: 100%;
   min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
-  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
+  padding: 20px 24px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
+    padding: 31px 16px 44px;
   }
 `;
 
