@@ -279,6 +279,7 @@ app.prepare().then(async () => {
     let user = await Data.getUserByUsername({
       username,
       sanitize: true,
+      includeFiles: true,
       publicOnly: true,
     });
 
@@ -292,7 +293,6 @@ app.prepare().then(async () => {
 
     const slates = await Data.getSlatesByUserId({
       ownerId: user.id,
-      // includeFiles: true,
       publicOnly: true,
     });
 

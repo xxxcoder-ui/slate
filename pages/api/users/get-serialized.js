@@ -42,7 +42,7 @@ export default async (req, res) => {
 
   let slates = await Data.getSlatesByUserId({
     ownerId: user.id,
-    // includeFiles: true,
+    includeFiles: true,
     publicOnly: true,
   });
 

@@ -120,6 +120,7 @@ function Tags({ viewer, data, onAction, ...props }) {
 }
 
 function Profile({ viewer, data, page, onAction, ...props }) {
+  console.log(data);
   if (page.id === "NAV_SLATE") {
     data = data.owner;
   }

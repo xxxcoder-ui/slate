@@ -188,7 +188,7 @@ export default class SceneProfile extends React.Component {
           {user.library?.length ? (
             <DataView
               key="scene-files-folder"
-              isOwner={this.props.viewer.id === this.props.user.id}
+              isOwner={isOwner}
               items={user.library}
               onAction={this.props.onAction}
               viewer={this.props.viewer}

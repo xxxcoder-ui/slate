@@ -58,7 +58,8 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
 
 export function Sidebar({ viewer, onAction, data, page, isMobile }) {
   const [{ sidebarState }] = useFilterContext();
-
+  console.log(data);
+  console.log(page);
   if (!sidebarState.isVisible || isMobile) return null;
 
   if (

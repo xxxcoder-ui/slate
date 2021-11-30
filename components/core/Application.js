@@ -345,22 +345,23 @@ export default class ApplicationPage extends React.Component {
       state.activePage = page.id;
     }
 
-    let body = document.documentElement || document.body;
     if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
       state.loading = true;
       state.data = { id: details.id };
     }
-    this.setState(state, () => {
-      if (!popstate) {
-        body.scrollTo(0, 0);
-      }
-      if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
-        this.updateDataAndPathname({ page, details });
-      }
-    });
+    if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
+      this.updateDataAndPathname({ page, details, state, popstate });
+    } else {
+      this.setState(state, () => {
+        let body = document.documentElement || document.body;
+        if (!popstate) {
+          body.scrollTo(0, 0);
+        }
+      });
+    }
   };
 
-  updateDataAndPathname = async ({ page, details }) => {
+  updateDataAndPathname = async ({ page, details, state, popstate }) => {
     let pathname = page.pathname.split("?")[0];
     let search = Strings.getQueryStringFromParams(page.params);
     let data;
@@ -372,7 +373,7 @@ export default class ApplicationPage extends React.Component {
         return;
       }
       data = response.data;
-      pathname = `/${data.user.username}/${data.slatename}${search}`;
+      pathname = `/${data.owner.username}/${data.slatename}${search}`;
     } else if (page?.id === "NAV_PROFILE") {
       let response = await Actions.getSerializedProfile(details);
       if (!response || response.error) {
@@ -384,7 +385,12 @@ export default class ApplicationPage extends React.Component {
       pathname = `/${data.username}${search}`;
     }
 
-    this.setState({ data, loading: false });
+    this.setState({ ...state, data, loading: false }, () => {
+      if (!popstate) {
+        let body = document.documentElement || document.body;
+        body.scrollTo(0, 0);
+      }
+    });
 
     window.history.replaceState(null, "Slate", pathname);
   };
