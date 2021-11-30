@@ -61,6 +61,24 @@ export function Sidebar({ viewer, onAction, data, page, isMobile }) {
 
   if (!sidebarState.isVisible || isMobile) return null;
 
+  if (
+    (page.id === "NAV_SLATE" && data?.ownerId !== viewer?.id) ||
+    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id)
+  ) {
+    return (
+      <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
+        <Filters.Profile page={page} data={data} viewer={viewer} onAction={onAction} />
+        <Filters.ProfileTags
+          page={page}
+          onAction={onAction}
+          data={data}
+          viewer={viewer}
+          style={{ marginTop: 12 }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
       <Filters.Library page={page} onAction={onAction} />

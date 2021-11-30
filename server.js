@@ -292,7 +292,7 @@ app.prepare().then(async () => {
 
     const slates = await Data.getSlatesByUserId({
       ownerId: user.id,
-      includeFiles: true,
+      // includeFiles: true,
       publicOnly: true,
     });
 
@@ -401,20 +401,29 @@ app.prepare().then(async () => {
       return res.redirect("/_/404");
     }
 
-    const user = await Data.getUserById({
+    const owner = await Data.getUserById({
       id: slate.ownerId,
       sanitize: true,
     });
 
-    if (!user) {
+    if (!owner) {
       return res.redirect("/_/404");
     }
 
-    if (user.error) {
+    if (owner.error) {
       return res.redirect("/_/404");
     }
 
-    slate.user = user;
+    let slates = await Data.getSlatesByUserId({
+      ownerId: owner.id,
+      publicOnly: true,
+    });
+
+    if (slates && !slates.error) {
+      owner.slates = slates;
+    }
+
+    slate.owner = owner;
 
     return app.render(req, res, "/_", {
       viewer,

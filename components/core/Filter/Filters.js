@@ -2,10 +2,14 @@ import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 import * as Typography from "~/components/system/components/Typography";
+import * as Utilities from "~/common/utilities";
+
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 import { css } from "@emotion/react";
 import { useFilterContext } from "~/components/core/Filter/Provider";
 import { Link } from "~/components/core/Link";
+import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
 
 /* -------------------------------------------------------------------------------------------------
  *  Shared components between filters
@@ -115,4 +119,115 @@ function Tags({ viewer, data, onAction, ...props }) {
   );
 }
 
-export { Library, Tags };
+function Profile({ viewer, data, page, onAction, ...props }) {
+  if (page.id === "NAV_SLATE") {
+    data = data.owner;
+  }
+
+  const [, { hidePopup }] = useFilterContext();
+  const isAuthenticated = !!viewer;
+  const isOwner = viewer?.id === data.id;
+
+  const [isFollowing, setIsFollowing] = React.useState(() =>
+    isOwner
+      ? false
+      : !!viewer?.following.some((entry) => {
+          return entry.id === data.id;
+        })
+  );
+
+  React.useEffect(() => {
+    let updatedIsFollowing = isOwner
+      ? false
+      : !!viewer?.following.some((entry) => {
+          return entry.id === data.id;
+        });
+    setIsFollowing(updatedIsFollowing);
+  }, [viewer?.following, data?.id]);
+
+  const handleFollow = async () => {
+    if (!isAuthenticated) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    await Actions.createSubscription({
+      userId: data.id,
+    });
+  };
+
+  const username = Utilities.getUserDisplayName(data);
+  let { twitterUsername, body } = data;
+
+  return (
+    <FilterSection style={{ marginBottom: "24px" }}>
+      <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "12px" }}>
+        <ProfilePhoto user={data} style={{ borderRadius: "20px" }} size={80} />
+        <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "4px" }}>
+          <Typography.H4 color="textGrayDark" style={{ marginTop: 10 }}>
+            {username}
+          </Typography.H4>
+          {twitterUsername && (
+            <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ gap: "4px" }}>
+              <SVG.Twitter style={{ width: "16px" }} />
+              <Typography.P2 color="textGrayDark">{twitterUsername}</Typography.P2>
+            </div>
+          )}
+          {body && (
+            <Typography.P2 color="textGrayDark" nbrOflines={4} style={{ textAlign: "center" }}>
+              {body}
+            </Typography.P2>
+          )}
+        </div>
+        {isFollowing ? (
+          <ButtonSecondary
+            full
+            onClick={() => {
+              setIsFollowing(false);
+              handleFollow();
+            }}
+          >
+            Unfollow
+          </ButtonSecondary>
+        ) : (
+          <ButtonPrimary
+            full
+            onClick={() => {
+              setIsFollowing(true);
+              handleFollow();
+            }}
+          >
+            Follow
+          </ButtonPrimary>
+        )}
+      </div>
+    </FilterSection>
+  );
+}
+
+function ProfileTags({ viewer, data, page, onAction, ...props }) {
+  const [, { hidePopup }] = useFilterContext();
+
+  let user = data;
+  if (page.id === "NAV_SLATE") {
+    user = data.owner;
+  }
+
+  return (
+    <FilterSection {...props}>
+      {user?.slates?.map((slate) => (
+        <FilterButton
+          key={slate.id}
+          href={`/$/slate/${slate.id}`}
+          isSelected={slate.id === data?.id}
+          onAction={onAction}
+          Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
+          onClick={hidePopup}
+        >
+          {slate.slatename}
+        </FilterButton>
+      ))}
+    </FilterSection>
+  );
+}
+
+export { Library, Tags, Profile, ProfileTags };

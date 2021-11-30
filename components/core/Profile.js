@@ -12,6 +12,7 @@ import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/B
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
+import DataView from "~/components/core/DataView";
 import ProcessedText from "~/components/core/ProcessedText";
 import EmptyState from "~/components/core/EmptyState";
 import ProfilePhoto from "~/components/core/ProfilePhoto";
@@ -299,6 +300,24 @@ export default class Profile extends React.Component {
     // let fileCount = user.library?.length || 0;
 
     const showStatusIndicator = this.props.isAuthenticated;
+
+    return (
+      <div>
+        {this.props.data.slates?.length && (
+          <DataView
+            key="scene-files-folder"
+            type="collection"
+            collection={this.props.data.slates[0]}
+            onAction={this.props.onAction}
+            viewer={this.props.viewer}
+            items={this.props.data.slates[0].objects}
+            view={"grid"}
+            isOwner={isOwner}
+            page={this.props.page}
+          />
+        )}
+      </div>
+    );
 
     return (
       <div>

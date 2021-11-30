@@ -411,7 +411,7 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, name, objects, body, isPublic, ownerId } = this.props.data;
+    const { owner: user, name, objects, body, isPublic, ownerId } = this.props.data;
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     return (

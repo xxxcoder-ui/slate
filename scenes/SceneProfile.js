@@ -9,6 +9,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
+import DataView from "~/components/core/DataView";
 import ScenePage from "~/components/core/ScenePage";
 import Profile from "~/components/core/Profile";
 import EmptyState from "~/components/core/EmptyState";
@@ -20,6 +21,15 @@ const STYLES_LOADER = css`
   justify-content: center;
   height: 90vh;
   width: 100%;
+`;
+
+const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
+  width: 100%;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
+  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
+  }
 `;
 
 export default class SceneProfile extends React.Component {
@@ -135,6 +145,7 @@ export default class SceneProfile extends React.Component {
   // };
 
   render() {
+    const viewer = this.props.viewer;
     let user = this.props.data;
     if (!user) {
       return (
@@ -151,6 +162,7 @@ export default class SceneProfile extends React.Component {
         </WebsitePrototypeWrapper>
       );
     }
+    const isOwner = user.id === viewer.id;
     let name = user.name || `@${user.username}`;
     let description, title;
     const image = user.photo;
@@ -172,13 +184,28 @@ export default class SceneProfile extends React.Component {
         url={`${Constants.hostname}${this.props.page.pathname}`}
         image={image}
       >
-        <Profile
+        <div css={STYLES_DATAVIEWER_WRAPPER}>
+          {user.library?.length ? (
+            <DataView
+              key="scene-files-folder"
+              isOwner={this.props.viewer.id === this.props.user.id}
+              items={user.library}
+              onAction={this.props.onAction}
+              viewer={this.props.viewer}
+              page={this.props.page}
+              view="grid"
+            />
+          ) : (
+            <EmptyState>This user doesn't have any public content</EmptyState>
+          )}
+        </div>
+        {/* <Profile
           {...this.props}
           user={user}
           isOwner={this.props.viewer ? user.id === this.props.viewer.id : false}
           isAuthenticated={this.props.viewer !== null}
           key={user.id}
-        />
+        /> */}
       </WebsitePrototypeWrapper>
     );
 
