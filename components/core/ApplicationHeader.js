@@ -14,10 +14,9 @@ import { css } from "@emotion/react";
 import { DarkSymbol } from "~/common/logo";
 import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonTertiary } from "~/components/system/components/Buttons";
-import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
 import { useMediaQuery } from "~/common/hooks";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useSearchStore } from "~/components/core/Search/store";
 import { UploadOnboarding } from "~/components/core/Onboarding/Upload";
 
@@ -127,8 +126,6 @@ export default function ApplicationHeader({ viewer, page, data, onAction, isMobi
     }
   };
 
-  const { isSearching } = useSearchStore();
-
   const { mobile } = useMediaQuery();
   const isSignedOut = !viewer;
 
@@ -153,32 +150,23 @@ export default function ApplicationHeader({ viewer, page, data, onAction, isMobi
               />
             </Show>
           </div>
-          <div css={[STYLES_MIDDLE, Styles.HORIZONTAL_CONTAINER_CENTERED]}>
+          <div css={STYLES_MIDDLE}>
             {/**TODO: update Search component */}
             <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
           </div>
-          <UploadOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
-            <Upload.Provider page={page} data={data} viewer={viewer}>
-              <Upload.Root data={data}>
-                <div css={STYLES_RIGHT}>
-                  <UserActions
-                    uploadAction={
-                      <Upload.Trigger
-                        viewer={viewer}
-                        aria-label="Upload"
-                        css={STYLES_UPLOAD_BUTTON}
-                      >
-                        <SVG.Plus height="16px" />
-                      </Upload.Trigger>
-                    }
-                    isSearching={isSearching}
-                    isSignedOut={isSignedOut}
-                    onAction={onAction}
-                  />
-                </div>
-              </Upload.Root>
-            </Upload.Provider>
-          </UploadOnboarding>
+          {isSignedOut ? (
+            <AuthActions onAction={onAction} />
+          ) : (
+            <UploadOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
+              <Upload.Provider page={page} data={data} viewer={viewer}>
+                <Upload.Root data={data} isMobile={isMobile}>
+                  <div css={STYLES_RIGHT}>
+                    <UserActions viewer={viewer} />
+                  </div>
+                </Upload.Root>
+              </Upload.Provider>
+            </UploadOnboarding>
+          )}
         </div>
         <Show when={mobile && state.popup === "profile"}>
           <ApplicationUserControlsPopup
@@ -198,58 +186,64 @@ export default function ApplicationHeader({ viewer, page, data, onAction, isMobi
   );
 }
 
-const UserActions = ({ uploadAction, isSignedOut, isSearching, onAction }) => {
-  const authActions = React.useMemo(
-    () => (
-      <>
-        <Link href="/_/auth?tab=signin" onAction={onAction} style={{ pointerEvents: "auto" }}>
-          <span css={Styles.MOBILE_HIDDEN}>
-            <ButtonTertiary
-              style={{
-                padding: "0px 12px",
-                minHeight: "30px",
-                fontFamily: Constants.font.text,
-                marginRight: 8,
-              }}
-            >
-              Sign in
-            </ButtonTertiary>
-          </span>
-        </Link>
-        <Link href="/_/auth?tab=signup" onAction={onAction} style={{ pointerEvents: "auto" }}>
-          <ButtonPrimary
-            style={{ padding: "0px 12px", minHeight: "30px", fontFamily: Constants.font.text }}
-          >
-            Sign up
-          </ButtonPrimary>
-        </Link>
-      </>
-    ),
-    [onAction]
-  );
+const AuthActions = ({ onAction }) => {
+  const { isSearching } = useSearchStore();
+
+  if (isSearching) {
+    return (
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <Search.Dismiss style={{ marginLeft: 4 }} />
+      </motion.div>
+    );
+  }
 
   return (
-    <AnimatePresence>
-      <Switch fallback={uploadAction}>
-        <Match when={isSignedOut}>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ y: 10, opacity: 0 }}
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ y: 10, opacity: 0 }}
+    >
+      <Link href="/_/auth?tab=signin" onAction={onAction} style={{ pointerEvents: "auto" }}>
+        <span css={Styles.MOBILE_HIDDEN}>
+          <ButtonTertiary
+            style={{
+              padding: "0px 12px",
+              minHeight: "30px",
+              fontFamily: Constants.font.text,
+              marginRight: 8,
+            }}
           >
-            {authActions}
-          </motion.div>
-        </Match>
-        <Match when={isSearching}>
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ y: -10, opacity: 0 }}
-          >
-            <Search.Dismiss style={{ marginLeft: 4 }} />
-          </motion.div>
-        </Match>
-      </Switch>
-    </AnimatePresence>
+            Sign in
+          </ButtonTertiary>
+        </span>
+      </Link>
+      <Link href="/_/auth?tab=signup" onAction={onAction} style={{ pointerEvents: "auto" }}>
+        <ButtonPrimary
+          style={{ padding: "0px 12px", minHeight: "30px", fontFamily: Constants.font.text }}
+        >
+          Sign up
+        </ButtonPrimary>
+      </Link>
+    </motion.div>
+  );
+};
+
+const UserActions = ({ viewer }) => {
+  const { isSearching } = useSearchStore();
+
+  if (isSearching) {
+    return (
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <Search.Dismiss style={{ marginLeft: 4 }} />
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+      <Upload.Trigger viewer={viewer} aria-label="Upload" css={STYLES_UPLOAD_BUTTON}>
+        <SVG.Plus height="16px" />
+      </Upload.Trigger>
+    </motion.div>
   );
 };
