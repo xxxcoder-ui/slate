@@ -1,5 +1,8 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
+import * as Styles from "~/common/styles";
+import * as System from "~/components/system";
+import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
@@ -15,6 +18,33 @@ const STYLES_SCENE_PAGE = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 0px;
   }
+`;
+
+const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
+  // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
+  height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
+  margin-top: 0px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    height: 100%;
+  }
+`;
+
+const STYLES_EMPTY_STATE_DEMO = (theme) => css`
+  margin-top: 36px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    margin-top: 65px;
+  }
+`;
+
+const STYLES_UPLOAD_BUTTON = (theme) => css`
+  ${Styles.CONTAINER_CENTERED};
+  display: inline-flex;
+  background-color: ${theme.semantic.bgGrayLight};
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  pointer-events: auto;
+  box-shadow: ${theme.shadow.lightSmall};
 `;
 
 export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
@@ -51,9 +81,23 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
               view="grid"
             />
           ) : (
-            <EmptyState>
+            <EmptyState css={STYLES_EMPTY_STATE_WRAPPER}>
               <FileTypeGroup />
-              <div style={{ marginTop: 24 }}>Drag and drop files into Slate to upload</div>
+              <div css={STYLES_EMPTY_STATE_DEMO}>
+                <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
+                  Use
+                  <span
+                    css={STYLES_UPLOAD_BUTTON}
+                    style={{ marginLeft: 8, marginRight: 8, position: "relative", top: 2 }}
+                  >
+                    <SVG.Plus height="16px" />
+                  </span>
+                  on the top right corner <br />
+                </System.H5>
+                <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
+                  or drop files {isMobile ? <span> on desktop</span> : null} to save to Slate
+                </System.H5>
+              </div>
             </EmptyState>
           )}
         </div>
