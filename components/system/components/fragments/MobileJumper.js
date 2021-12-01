@@ -95,7 +95,7 @@ const STYLES_JUMPER_MOBILE_FOOTER = (theme) => css`
   border-top: 1px solid ${theme.semantic.borderGrayLight4};
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
-    background-color: ${theme.semantic.bgBlurLight};
+    background-color: ${theme.semantic.bgBlurWhite};
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
   }
