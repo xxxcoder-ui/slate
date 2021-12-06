@@ -118,7 +118,7 @@ function TagsWalkthrought({ isMobile }) {
                 </System.P2>
               )}
               <System.ButtonPrimary
-                style={{ display: "block", marginLeft: "auto", marginTop: 14, minHeight: "24px" }}
+                style={{ float: "right", marginTop: 14, maxHeight: "24px" }}
                 onClick={hideOrganizeTagsPopup}
               >
                 Got it
@@ -132,7 +132,7 @@ function TagsWalkthrought({ isMobile }) {
                 they will show up on your profile.
               </System.P2>
               <System.ButtonPrimary
-                style={{ display: "block", marginLeft: "auto", marginTop: 14, minHeight: "24px" }}
+                style={{ float: "right", marginTop: 14, maxHeight: "24px" }}
                 onClick={hideTagsPrivacyPopup}
               >
                 Got it

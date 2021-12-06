@@ -142,12 +142,12 @@ const STYLES_BUTTON_SECONDARY_TRANSPARENT = css`
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonSecondary = (props) => {
+export const ButtonSecondary = ({ style, ...props }) => {
   if (props.loading) {
     return (
       <button
         css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        style={{ width: props.full ? "100%" : "auto", ...style }}
         type={props.type}
       >
         <LoaderSpinner style={{ height: 16, width: 16 }} />
@@ -159,7 +159,7 @@ export const ButtonSecondary = (props) => {
     return (
       <label
         css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        style={{ width: props.full ? "100%" : "auto", ...style }}
         onClick={props.onClick}
         children={props.children}
         type={props.label}
@@ -172,7 +172,7 @@ export const ButtonSecondary = (props) => {
     return (
       <a
         css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
+        style={{ width: props.full ? "100%" : "auto", ...style }}
         {...props}
       />
     );
@@ -184,7 +184,7 @@ export const ButtonSecondary = (props) => {
       onClick={props.onClick}
       children={props.children}
       type={props.type}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
+      style={{ width: props.full ? "100%" : "auto", ...style }}
     />
   );
 };

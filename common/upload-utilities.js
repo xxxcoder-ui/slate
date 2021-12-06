@@ -207,6 +207,7 @@ export function createUploadProvider({
   const addLinkToUploadQueue = async ({ url, slate }) => {
     const linkAsBlob = {
       name: url,
+      filename: url,
       type: "link",
       size: getLinkSize(url),
       lastModified: "",

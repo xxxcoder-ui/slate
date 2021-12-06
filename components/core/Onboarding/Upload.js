@@ -6,6 +6,7 @@ import * as Jumper from "~/components/system/components/fragments/Jumper";
 import * as MobileJumper from "~/components/system/components/fragments/MobileJumper";
 import * as Utilities from "~/common/utilities";
 import * as Actions from "~/common/actions";
+import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 import { ModalPortal } from "~/components/core/ModalPortal";
@@ -157,11 +158,11 @@ function PrivacyAndSecurityOnboarding({ isMobile }) {
         href={PROTO_SCHOOL_CID}
         target="_blank"
         rel="noreferrer"
-        style={{ marginLeft: "auto", minHeight: "24px" }}
+        style={{ marginLeft: "auto", maxHeight: "24px" }}
       >
         Learn More
       </System.ButtonSecondary>
-      <System.ButtonPrimary style={{ marginLeft: 8, minHeight: "24px" }} onClick={goToNextStep}>
+      <System.ButtonPrimary style={{ marginLeft: 8, maxHeight: "24px" }} onClick={goToNextStep}>
         Got it
       </System.ButtonPrimary>
     </>
@@ -221,11 +222,11 @@ function ExtensionOnboarding({ isMobile }) {
     <>
       <System.ButtonSecondary
         onClick={goToNextStep}
-        style={{ marginLeft: "auto", minHeight: "24px" }}
+        style={{ marginLeft: "auto", maxHeight: "24px" }}
       >
         Later
       </System.ButtonSecondary>
-      <DownloadExtensionButton style={{ marginLeft: 8, minHeight: "24px" }} />
+      <DownloadExtensionButton style={{ marginLeft: 8, minHeight: "24px", maxHeight: "24px" }} />
     </>
   );
 
@@ -291,10 +292,14 @@ const STYLES_UPLOAD_BUTTON = (theme) => css`
 `;
 
 const STYLES_COPIED_INITIAL = (theme) => css`
-  color: ${theme.semantic.textGrayDark};
+  ${Styles.LINK};
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  color: ${theme.system.blue};
 `;
 
 const STYLES_COPIED_SUCCESS = (theme) => css`
+  ${Styles.LINK};
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   color: ${theme.system.blue};
 `;
 
@@ -325,7 +330,7 @@ function UploadWalkthrough() {
           <>
             <System.P2>
               Save something you find interesting today.
-              <br /> Or try pasting →{" "}
+              <br /> Or try pasting →
               <button
                 css={[Styles.ICON_CONTAINER, Styles.BUTTON_RESET]}
                 style={{ display: "inline-flex" }}
@@ -334,16 +339,20 @@ function UploadWalkthrough() {
                 <DynamicIcon
                   successState={
                     <span css={STYLES_COPIED_SUCCESS}>
-                      <span css={Styles.LINK}>{LINK_ARCHILLECT}</span>
-                      <SVG.Check height="16px" style={{ position: "relative", top: 4, left: 4 }} />
+                      <System.P2 as="span" style={{ marginLeft: 4 }}>
+                        {LINK_ARCHILLECT}
+                      </System.P2>
+                      <SVG.Check height="16px" style={{ marginLeft: 4 }} />
                     </span>
                   }
                 >
-                  <span css={STYLES_COPIED_INITIAL}>
-                    <span css={Styles.LINK}>{LINK_ARCHILLECT}</span>
+                  <span css={[STYLES_COPIED_INITIAL]}>
+                    <System.P2 as="span" style={{ marginLeft: 4 }}>
+                      {LINK_ARCHILLECT}
+                    </System.P2>
                     <SVG.CopyAndPaste
                       height="16px"
-                      style={{ position: "relative", top: 4, left: 4 }}
+                      style={{ marginLeft: 4, color: Constants.semantic.textGrayDark }}
                     />
                   </span>
                 </DynamicIcon>

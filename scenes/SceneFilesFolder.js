@@ -7,6 +7,7 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { FileTypeGroup } from "~/components/core/FileTypeIcon";
+import { TagsOnboarding } from "~/components/core/Onboarding/Tags";
 
 import ScenePage from "~/components/core/ScenePage";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
@@ -53,6 +54,8 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
   let objects = viewer.library;
   // const tab = page.params?.tab || "grid";
 
+  const isOnboardingActive = viewer?.onboarding?.upload && !viewer?.onboarding?.tags;
+
   return (
     <WebsitePrototypeWrapper
       title={`${page.pageTitle} • Slate`}
@@ -70,16 +73,23 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           onChange={(index) => setIndex(index)}
         />
         <div css={Styles.PAGE_CONTENT_WRAPPER}>
-          {objects.length ? (
-            <DataView
-              key="scene-files-folder"
-              isOwner={true}
-              items={objects}
+          {objects.length > 0 ? (
+            <TagsOnboarding
               onAction={onAction}
               viewer={viewer}
-              page={page}
-              view="grid"
-            />
+              isActive={isOnboardingActive}
+              isMobile={isMobile}
+            >
+              <DataView
+                key="scene-files-folder"
+                isOwner={true}
+                items={objects}
+                onAction={onAction}
+                viewer={viewer}
+                page={page}
+                view="grid"
+              />
+            </TagsOnboarding>
           ) : (
             <EmptyState css={STYLES_EMPTY_STATE_WRAPPER}>
               <FileTypeGroup />
