@@ -164,6 +164,7 @@ export const useForm = ({
   return {
     getFieldProps,
     getFormProps,
+    submitForm: submitAsync,
     values: state.values,
     isSubmitting: internal.isSubmitting,
     isValidating: internal.isValidating,
@@ -247,7 +248,13 @@ export const useField = ({
     onSubmit: handleFormOnSubmit,
   });
 
-  return { getFieldProps, value: state.value, setFieldValue, isSubmitting: state.isSubmitting };
+  return {
+    getFieldProps,
+    submitField: handleFormOnSubmit,
+    value: state.value,
+    setFieldValue,
+    isSubmitting: state.isSubmitting,
+  };
 };
 
 export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
