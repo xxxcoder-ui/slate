@@ -10,9 +10,9 @@ import * as Styles from "~/common/styles";
 import { css } from "@emotion/react";
 import { useField, useForm } from "~/common/hooks";
 import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
+import { AnimateSharedLayout, motion } from "framer-motion";
 
 import Field from "~/components/core/Field";
-import { AnimateSharedLayout, motion } from "framer-motion";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
@@ -217,21 +217,19 @@ function Initial(
         )}
 
         {showTermsAndServices && (
-          <AnimateSharedLayout>
-            <motion.div style={{ marginTop: "auto" }}>
-              <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Terms of service
-                </div>
-              </a>
+          <div style={{ marginTop: "auto" }}>
+            <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
+              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Terms of service
+              </div>
+            </a>
 
-              <a css={STYLES_LINK_ITEM} style={{ marginTop: 4 }} href="/guidelines" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Community guidelines
-                </div>
-              </a>
-            </motion.div>
-          </AnimateSharedLayout>
+            <a css={STYLES_LINK_ITEM} style={{ marginTop: 4 }} href="/guidelines" target="_blank">
+              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Community guidelines
+              </div>
+            </a>
+          </div>
         )}
       </div>
     </SignUpPopover>

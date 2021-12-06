@@ -5,8 +5,9 @@ import * as Strings from "~/common/strings";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { css } from "@emotion/react";
-import AuthInitial from "~/components/core/Auth/Initial";
 import { Alert } from "~/components/core/Alert";
+
+import AuthInitial from "~/components/core/Auth/Initial";
 
 const STYLES_BACKGROUND = css`
   z-index: ${Constants.zindex.cta};
