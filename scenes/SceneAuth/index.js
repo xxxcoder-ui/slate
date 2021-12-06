@@ -47,7 +47,7 @@ const STYLES_MIDDLE = css`
   padding: 24px;
 `;
 
-const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) => {
+const AuthScene = ({ onAuthenticate, onTwitterAuthenticate, page, onAction, ...props }) => {
   const {
     goToSigninScene,
     goToSignupScene,
@@ -61,20 +61,41 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     context,
   } = useAuthFlow();
 
+  // NOTE(amine): if the redirectUrl is provided, redirect users to it when they authenticate
+  const redirectUrl = React.useRef(decodeURI(page?.params?.redirect));
+  const handleAuthentication = (...params) => onAuthenticate(redirectUrl.current, ...params);
+  const handleTwitterAuthentication = (...params) =>
+    onTwitterAuthenticate(redirectUrl.current, ...params);
+
   const signinProvider = useSignin({
-    onAuthenticate,
+    onAuthenticate: handleAuthentication,
   });
+
+  const signupProvider = useSignup({ onAuthenticate: handleAuthentication });
+
   const twitterProvider = useTwitter({
-    onTwitterAuthenticate: onTwitterAuthenticate,
-    onAuthenticate,
+    onTwitterAuthenticate: handleTwitterAuthentication,
+    onAuthenticate: handleAuthentication,
     goToTwitterSignupScene,
   });
 
-  const signupProvider = useSignup({ onAuthenticate });
-
   const passwordResetProvider = usePasswordReset({
-    onAuthenticate,
+    onAuthenticate: handleAuthentication,
   });
+
+  // NOTE(amine): authenticate via params
+  const initialScreenRef = React.useRef();
+  React.useEffect(() => {
+    if (!initialScreenRef.current) return;
+
+    if (page?.params?.tab === "twitter") twitterProvider.signin();
+
+    if (page?.params?.tab === "signup" && page?.params?.email)
+      initialScreenRef.current.submitSignupForm();
+
+    if (page?.params?.tab === "signin" && page?.params?.email)
+      initialScreenRef.current.submitSigninField();
+  }, []);
 
   if (scene === "signin")
     return (
@@ -137,16 +158,21 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
   }
   // NOTE(amine): if the user goes back, we should prefill the email
   const initialEmail =
-    prevScene === "signin" && context.emailOrUsername ? context.emailOrUsername : "";
+    prevScene === "signin" && context.emailOrUsername
+      ? context.emailOrUsername
+      : page?.params?.email || "";
+
   return (
     <Initial
-      createVerification={signupProvider.createVerification}
+      ref={initialScreenRef}
+      page={page}
+      initialEmail={initialEmail}
       isSigninViaTwitter={twitterProvider.isLoggingIn}
       onTwitterSignin={twitterProvider.signin}
-      initialEmail={initialEmail}
       goToSigninScene={goToSigninScene}
       goToSignupScene={goToSignupScene}
-      page={page}
+      createVerification={signupProvider.createVerification}
+      onAction={onAction}
     />
   );
 };
@@ -163,4 +189,4 @@ const WithCustomWrapper = (Component) => (props) => {
   );
 };
 
-export default WithCustomWrapper(SigninScene);
+export default WithCustomWrapper(AuthScene);
