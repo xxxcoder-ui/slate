@@ -230,6 +230,11 @@ export const getQueryStringFromParams = (params) => {
   return query;
 };
 
+export const getCurrentURL = (params) => {
+  const query = getQueryStringFromParams(params);
+  return window.location.pathname.concat(query);
+};
+
 //NOTE(martina): works with both url and search passed in
 export const getParamsFromUrl = (url) => {
   let startIndex = url.indexOf("?") + 1;

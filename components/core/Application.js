@@ -242,54 +242,56 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _withAuthenticationBehavior = (authenticate) => async (state, newAccount) => {
-    let response = await authenticate(state);
-    if (Events.hasError(response)) {
-      return response;
-    }
-    if (response.shouldMigrate) {
-      return response;
-    }
-    let viewer = await UserBehaviors.hydrate();
-    if (Events.hasError(viewer)) {
-      return viewer;
-    }
-
-    this.setState({ viewer });
-    await this._handleSetupWebsocket();
-
-    let unseenAnnouncements = [];
-    for (let feature of announcements) {
-      if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
-        unseenAnnouncements.push(feature);
+  _withAuthenticationBehavior =
+    (authenticate) =>
+    async (href = "/_/data", state, newAccount) => {
+      let response = await authenticate(state);
+      if (Events.hasError(response)) {
+        return response;
       }
-    }
+      if (response.shouldMigrate) {
+        return response;
+      }
+      let viewer = await UserBehaviors.hydrate();
+      if (Events.hasError(viewer)) {
+        return viewer;
+      }
 
-    if (newAccount || unseenAnnouncements.length) {
-      Events.dispatchCustomEvent({
-        name: "create-modal",
-        detail: {
-          modal: (
-            <OnboardingModal
-              onAction={this._handleAction}
-              viewer={viewer}
-              newAccount={newAccount}
-              unseenAnnouncements={unseenAnnouncements}
-            />
-          ),
-          noBoundary: true,
-        },
-      });
-    }
+      this.setState({ viewer });
+      await this._handleSetupWebsocket();
 
-    // let redirected = this._handleURLRedirect();
-    // if (!redirected) {
-    //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
-    // }
-    this._handleNavigateTo({ href: "/_/data", redirect: true });
+      let unseenAnnouncements = [];
+      for (let feature of announcements) {
+        if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
+          unseenAnnouncements.push(feature);
+        }
+      }
 
-    return response;
-  };
+      if (newAccount || unseenAnnouncements.length) {
+        Events.dispatchCustomEvent({
+          name: "create-modal",
+          detail: {
+            modal: (
+              <OnboardingModal
+                onAction={this._handleAction}
+                viewer={viewer}
+                newAccount={newAccount}
+                unseenAnnouncements={unseenAnnouncements}
+              />
+            ),
+            noBoundary: true,
+          },
+        });
+      }
+
+      // let redirected = this._handleURLRedirect();
+      // if (!redirected) {
+      //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
+      // }
+      this._handleNavigateTo({ href, redirect: true });
+
+      return response;
+    };
 
   _handleSelectedChange = (e) => {
     this.setState({
@@ -409,8 +411,7 @@ export default class ApplicationPage extends React.Component {
   };
 
   _handleUpdatePageParams = ({ params, callback, redirect = false }) => {
-    let query = Strings.getQueryStringFromParams(params);
-    const href = window.location.pathname.concat(query);
+    const href = Strings.getCurrentURL(params);
     if (redirect) {
       window.history.replaceState(null, "Slate", href);
     } else {
@@ -520,7 +521,7 @@ export default class ApplicationPage extends React.Component {
         >
           <Filter
             isProfilePage={isProfilePage}
-            isActive={page.id !== "NAV_SIGN_IN" && page.id !== "NAV_ERROR"}
+            isActive={!!this.state.viewer && page.id !== "NAV_SIGN_IN" && page.id !== "NAV_ERROR"}
             viewer={this.state.viewer}
             page={page}
             data={this.state.data}
@@ -528,13 +529,7 @@ export default class ApplicationPage extends React.Component {
             onAction={this._handleAction}
           >
             {this.state.loading ? (
-              <div
-                css={Styles.CONTAINER_CENTERED}
-                style={{
-                  width: "100%",
-                  height: "100vh",
-                }}
-              >
+              <div css={Styles.CONTAINER_CENTERED} style={{ width: "100%", height: "100vh" }}>
                 <LoaderSpinner style={{ height: 32, width: 32 }} />
               </div>
             ) : (
@@ -543,7 +538,7 @@ export default class ApplicationPage extends React.Component {
           </Filter>
         </ApplicationLayout>
         <GlobalModal />
-        <CTATransition onAction={this._handleAction} />
+        <CTATransition onAction={this._handleAction} page={page} />
         {/* {!this.state.loaded ? (
             <div
               style={{
