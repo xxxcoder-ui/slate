@@ -27,7 +27,6 @@ export const useUploadOnboardingContext = () => React.useContext(UploadOnboardin
 
 const steps = {
   welcome: "welcome",
-  privacyAndSecurity: "privacyAndSecurity",
   extension: "extension",
   trigger: "trigger",
   jumper: "jumper",
@@ -45,8 +44,7 @@ function Provider({ children, viewer, onAction, ...props }) {
     if (currentStep === steps.finish) return;
 
     const nextStep = {
-      welcome: "privacyAndSecurity",
-      privacyAndSecurity: isExtensionDownloaded ? "trigger" : "extension",
+      welcome: "extension",
       extension: "trigger",
       trigger: "jumper",
       jumper: "finish",
@@ -119,73 +117,6 @@ function WelcomeOnboarding({ viewer }) {
           </System.ButtonSecondary>
         </div>
       </div>
-    </ModalPortal>
-  );
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Privacy And Security
- * -----------------------------------------------------------------------------------------------*/
-
-function PrivacyAndSecurityOnboarding({ isMobile }) {
-  const { goToNextStep } = useUploadOnboardingContext();
-
-  const header = <System.H2 as="h1">Privacy, security & portability of your data</System.H2>;
-  const body = (
-    <System.P2>
-      Files (not including links) you save to Slate will be stored on IPFS. <br /> You will get a
-      CID link when you save with Slate. <br />
-      Anyone can access your files on IPFS with a CID link.
-      <br />
-      <br />
-      Example:
-      <br />
-      <a
-        css={Styles.LINK}
-        href="https://ipfs.io/bafkreiabty76ayakifavlpzwvxjha255aajcii2dwl7pdfmcuubswx7qja"
-        target="_blank"
-        rel="noreferrer"
-      >
-        https://ipfs.io/bafkreiabty76ayakifavlpzwvxjha255aajcii2dwl7pdfmcuubswx7qja
-      </a>
-    </System.P2>
-  );
-
-  const actions = (
-    <>
-      <System.ButtonSecondary
-        type="link"
-        href={PROTO_SCHOOL_CID}
-        target="_blank"
-        rel="noreferrer"
-        style={{ marginLeft: "auto", maxHeight: "24px" }}
-      >
-        Learn More
-      </System.ButtonSecondary>
-      <System.ButtonPrimary style={{ marginLeft: 8, maxHeight: "24px" }} onClick={goToNextStep}>
-        Got it
-      </System.ButtonPrimary>
-    </>
-  );
-
-  return (
-    <ModalPortal>
-      {isMobile ? (
-        <MobileJumper.Root>
-          <MobileJumper.Header>{header}</MobileJumper.Header>
-          <MobileJumper.Content>{body}</MobileJumper.Content>
-          <MobileJumper.Footer style={{ display: "flex" }}>{actions}</MobileJumper.Footer>
-        </MobileJumper.Root>
-      ) : (
-        <Jumper.Root withDismissButton={false}>
-          <Jumper.Header>{header}</Jumper.Header>
-          <Jumper.Item style={{ flexGrow: 1 }}>{body}</Jumper.Item>
-          <Jumper.Divider style={{ marginTop: "auto" }} />
-          <Jumper.Item css={STYLES_JUMPER_FOOTER} style={{ marginTop: "auto" }}>
-            {actions}
-          </Jumper.Item>
-        </Jumper.Root>
-      )}
     </ModalPortal>
   );
 }
@@ -372,8 +303,6 @@ function UploadSteps({ viewer, isMobile }) {
   const { currentStep, steps } = useUploadOnboardingContext();
 
   if (currentStep === steps.welcome) return <WelcomeOnboarding viewer={viewer} />;
-  if (currentStep === steps.privacyAndSecurity)
-    return <PrivacyAndSecurityOnboarding isMobile={isMobile} />;
   if (currentStep === steps.extension) return <ExtensionOnboarding isMobile={isMobile} />;
   if (currentStep === steps.trigger || currentStep === steps.jumper) return <UploadWalkthrough />;
 
