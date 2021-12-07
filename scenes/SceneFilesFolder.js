@@ -24,9 +24,10 @@ const STYLES_SCENE_PAGE = css`
 const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
   // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
   height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
-  margin-top: 0px;
+  margin: 20px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    height: 100%;
+    margin: 0px;
+    height: calc(100vh - ${theme.sizes.header}px - 44px);
   }
 `;
 
@@ -72,8 +73,8 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           index={index}
           onChange={(index) => setIndex(index)}
         />
-        <div css={Styles.PAGE_CONTENT_WRAPPER}>
-          {objects.length > 0 ? (
+        {objects.length > 0 ? (
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <TagsOnboarding
               onAction={onAction}
               viewer={viewer}
@@ -90,27 +91,27 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
                 view="grid"
               />
             </TagsOnboarding>
-          ) : (
-            <EmptyState css={STYLES_EMPTY_STATE_WRAPPER}>
-              <FileTypeGroup />
-              <div css={STYLES_EMPTY_STATE_DEMO}>
-                <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
-                  Use
-                  <span
-                    css={STYLES_UPLOAD_BUTTON}
-                    style={{ marginLeft: 8, marginRight: 8, position: "relative", top: 2 }}
-                  >
-                    <SVG.Plus height="16px" />
-                  </span>
-                  on the top right corner <br />
-                </System.H5>
-                <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
-                  or drop files {isMobile ? <span> on desktop</span> : null} to save to Slate
-                </System.H5>
-              </div>
-            </EmptyState>
-          )}
-        </div>
+          </div>
+        ) : (
+          <EmptyState css={STYLES_EMPTY_STATE_WRAPPER}>
+            <FileTypeGroup />
+            <div css={STYLES_EMPTY_STATE_DEMO}>
+              <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
+                Use
+                <span
+                  css={STYLES_UPLOAD_BUTTON}
+                  style={{ marginLeft: 8, marginRight: 8, position: "relative", top: 2 }}
+                >
+                  <SVG.Plus height="16px" />
+                </span>
+                on the top right corner <br />
+              </System.H5>
+              <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
+                or drop files {isMobile ? <span> on desktop</span> : null} to save to Slate
+              </System.H5>
+            </div>
+          </EmptyState>
+        )}
       </ScenePage>
     </WebsitePrototypeWrapper>
   );

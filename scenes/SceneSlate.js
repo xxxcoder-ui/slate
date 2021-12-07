@@ -70,9 +70,10 @@ const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
 const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
   // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
   height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
-  margin-top: 0px;
+  margin: 20px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    height: 100%;
+    margin: 0px;
+    height: calc(100vh - ${theme.sizes.header}px - 44px);
   }
 `;
 
@@ -500,8 +501,8 @@ class SlatePage extends React.Component {
                   on the top right corner <br />
                 </System.H5>
                 <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
-                  or drop files {this.props.mobile ? <span> on desktop</span> : null} to add them to
-                  this collection
+                  or drop files {this.props.isMobile ? <span> on desktop</span> : null} to add them
+                  to this collection
                 </System.H5>
               </div>
             </EmptyState>
