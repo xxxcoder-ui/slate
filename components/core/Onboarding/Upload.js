@@ -153,11 +153,13 @@ function ExtensionOnboarding({ isMobile }) {
     <>
       <System.ButtonSecondary
         onClick={goToNextStep}
-        style={{ marginLeft: "auto", maxHeight: "24px" }}
+        style={{ marginLeft: "auto", borderRadius: "8px", maxHeight: "24px" }}
       >
         Later
       </System.ButtonSecondary>
-      <DownloadExtensionButton style={{ marginLeft: 8, minHeight: "24px", maxHeight: "24px" }} />
+      <DownloadExtensionButton
+        style={{ marginLeft: 8, borderRadius: "8px", minHeight: "24px", maxHeight: "24px" }}
+      />
     </>
   );
 

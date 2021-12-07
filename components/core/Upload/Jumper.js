@@ -42,7 +42,7 @@ function ExtensionBar() {
     <Jumper.Item css={STYLES_EXTENSION_BAR}>
       <System.P2 color="textBlack">Save from anywhere on the Web</System.P2>
       <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-        <DownloadExtensionButton style={{ minHeight: 24 }} />
+        <DownloadExtensionButton style={{ minHeight: 24, borderRadius: "8px" }} />
         <button
           css={Styles.BUTTON_RESET}
           style={{ marginLeft: 16, color: Constants.semantic.textGray }}
