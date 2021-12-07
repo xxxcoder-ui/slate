@@ -66,7 +66,7 @@ const STYLES_TAGS_BUTTON = (theme) => css`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: ${theme.semantic.bgGrayLight4};
+  background-color: ${theme.semantic.bgGrayLight};
   border-radius: 8px;
   padding: 2px;
   position: relative;

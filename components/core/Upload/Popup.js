@@ -27,10 +27,7 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   bottom: 24px;
   right: 24px;
   z-index: ${theme.zindex.tooltip};
-  @media (max-width: ${theme.sizes.mobile}px) {
-    left: 0px;
-    margin: 0 auto;
-  }
+  box-shadow: ${theme.shadow.lightLarge};
 `;
 
 const STYLES_DISMISS_BUTTON = (theme) => css`
