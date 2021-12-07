@@ -97,7 +97,7 @@ const STYLES_SEARCH_TAGS_INPUT = (theme) => css`
   background-color: transparent;
   ${theme.semantic.textGray};
   box-shadow: none;
-  height: 52px;
+  height: 43px;
   padding: 0px;
   ::placeholder {
     color: ${theme.semantic.textGray};
@@ -458,52 +458,60 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
 
   const isSearching = searchQuery.length > 0;
 
-  return isOpen ? (
-    <MobileJumper.Root>
-      <MobileJumper.Header
-        css={STYLES_EDIT_CHANNELS_HEADER}
-        style={{ paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}
-      >
-        <SVG.Hash width={16} />
-        <ChannelInput
-          value={searchQuery}
-          onChange={handleQueryChange}
-          searchResults={searchResults}
-          onAddFileToChannel={handleAddFileToChannel}
-          autoFocus={viewer?.slates?.length === 0}
-        />
-      </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <div style={{ padding: "13px 16px 11px" }}>
-        <Jumper.ObjectPreview file={file} />
-      </div>
-      <System.Divider height={1} color="borderGrayLight" />
-      <MobileJumper.Content style={{ paddingBottom: 60 }}>
-        <Channels
-          header="Private"
-          isCreatingChannel={isSearching && !channelAlreadyExists}
-          channels={isSearching ? searchResults.privateChannels : privateChannels}
-          searchQuery={searchQuery}
-          onAddFileToChannel={handleAddFileToChannel}
-          onCreateChannel={handleCreateChannel(false)}
-        />
-        <div style={{ marginTop: 20 }}>
-          <Channels
-            header="Public"
-            isPublic
-            searchQuery={searchQuery}
-            isCreatingChannel={isSearching && !channelAlreadyExists}
-            channels={isSearching ? searchResults.publicChannels : publicChannels}
-            onAddFileToChannel={handleAddFileToChannel}
-            onCreateChannel={handleCreateChannel(true)}
-          />
-        </div>
-      </MobileJumper.Content>
-      <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-        <button type="button" css={Styles.BUTTON_RESET} onClick={() => (onClose(), clearQuery())}>
-          <SVG.Hash width={16} height={16} style={{ color: Constants.system.blue }} />
-        </button>
-      </MobileJumper.Footer>
-    </MobileJumper.Root>
-  ) : null;
+  return (
+    <MobileJumper.AnimatePresence>
+      {isOpen ? (
+        <MobileJumper.Root onClose={onClose}>
+          <MobileJumper.Header
+            style={{ paddingTop: 0, paddingBottom: 0 }}
+            css={STYLES_EDIT_CHANNELS_HEADER}
+          >
+            <SVG.Hash width={16} />
+            <ChannelInput
+              value={searchQuery}
+              onChange={handleQueryChange}
+              searchResults={searchResults}
+              onAddFileToChannel={handleAddFileToChannel}
+              autoFocus={viewer?.slates?.length === 0}
+            />
+          </MobileJumper.Header>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <div style={{ padding: "13px 16px 11px" }}>
+            <Jumper.ObjectPreview file={file} />
+          </div>
+          <System.Divider height={1} color="borderGrayLight" />
+          <MobileJumper.Content style={{ paddingBottom: 60 }}>
+            <Channels
+              header="Private"
+              isCreatingChannel={isSearching && !channelAlreadyExists}
+              channels={isSearching ? searchResults.privateChannels : privateChannels}
+              searchQuery={searchQuery}
+              onAddFileToChannel={handleAddFileToChannel}
+              onCreateChannel={handleCreateChannel(false)}
+            />
+            <div style={{ marginTop: 20 }}>
+              <Channels
+                header="Public"
+                isPublic
+                searchQuery={searchQuery}
+                isCreatingChannel={isSearching && !channelAlreadyExists}
+                channels={isSearching ? searchResults.publicChannels : publicChannels}
+                onAddFileToChannel={handleAddFileToChannel}
+                onCreateChannel={handleCreateChannel(true)}
+              />
+            </div>
+          </MobileJumper.Content>
+          <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+            <button
+              type="button"
+              css={Styles.BUTTON_RESET}
+              onClick={() => (onClose(), clearQuery())}
+            >
+              <SVG.Hash width={16} height={16} style={{ color: Constants.system.blue }} />
+            </button>
+          </MobileJumper.Footer>
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
+  );
 }

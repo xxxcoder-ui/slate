@@ -181,19 +181,23 @@ export function EditInfo({ file, isOpen, onClose }) {
 }
 
 export function EditInfoMobile({ file, isOpen, onClose }) {
-  return isOpen ? (
-    <MobileJumper.Root>
-      <MobileJumper.Header>
-        <System.H5 as="p" color="textBlack">
-          Edit Info
-        </System.H5>
-      </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <div style={{ padding: "13px 16px 11px" }}>
-        <Jumper.ObjectPreview file={file} />
-      </div>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <UpdateFileForm isMobile key={file.id} file={file} onClose={onClose} />
-    </MobileJumper.Root>
-  ) : null;
+  return (
+    <MobileJumper.AnimatePresence>
+      {isOpen ? (
+        <MobileJumper.Root onClose={onClose}>
+          <MobileJumper.Header>
+            <System.H5 as="p" color="textBlack">
+              Edit Info
+            </System.H5>
+          </MobileJumper.Header>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <div style={{ padding: "13px 16px 11px" }}>
+            <Jumper.ObjectPreview file={file} />
+          </div>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <UpdateFileForm isMobile key={file.id} file={file} onClose={onClose} />
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
+  );
 }

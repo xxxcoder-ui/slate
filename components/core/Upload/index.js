@@ -5,7 +5,7 @@ import * as Events from "~/common/custom-events";
 import { ModalPortal } from "../ModalPortal";
 import { Provider } from "~/components/core/Upload/Provider";
 import { Popup } from "~/components/core/Upload/Popup";
-import { UploadJumper as Jumper } from "~/components/core/Upload/Jumper";
+import { UploadJumper, MobileUploadJumper } from "~/components/core/Upload/Jumper";
 import { useUploadOnboardingContext } from "~/components/core/Onboarding/Upload";
 
 import DropIndicator from "~/components/core/Upload/DropIndicator";
@@ -17,7 +17,7 @@ const Root = ({ children, data, isMobile }) => {
   return (
     <>
       {children}
-      <Jumper data={data} />
+      {isMobile ? <MobileUploadJumper data={data} /> : <UploadJumper data={data} />}
       <ModalPortal>
         <Popup isMobile={isMobile} />
         <DropIndicator data={data} />

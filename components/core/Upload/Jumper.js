@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Jumper from "~/components/system/components/fragments/Jumper";
+import * as MobileJumper from "~/components/system/components/fragments/MobileJumper";
 import * as System from "~/components/system";
 import * as FileUtilities from "~/common/file-utilities";
 import * as Logging from "~/common/logging";
@@ -53,24 +54,12 @@ function ExtensionBar() {
   );
 }
 
+/* -----------------------------------------------------------------------------------------------*/
+
 const STYLES_LINK_INPUT = (theme) => css`
   background-color: ${theme.semantic.bgWhite};
   width: calc(100% - 8px);
   margin-right: 8px;
-`;
-
-const STYLES_FILE_HIDDEN = css`
-  height: 1px;
-  width: 1px;
-  opacity: 0;
-  visibility: hidden;
-  position: fixed;
-  top: -1px;
-  left: -1px;
-`;
-
-const STYLES_LINK_UPLOAD_WRAPPER = css`
-  padding: 50px 72px;
 `;
 
 const STYLES_FILES_UPLOAD_WRAPPER = css`
@@ -79,30 +68,17 @@ const STYLES_FILES_UPLOAD_WRAPPER = css`
   padding-bottom: 55px;
 `;
 
-const STYLES_MOBILE_HIDDEN = css`
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: none;
-    pointer-events: none;
-  }
-`;
-
-export function UploadJumper({ data }) {
-  const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
-
-  const { upload, uploadLink } = useUploadStore((store) => store.handlers);
+function LinkForm({ data }) {
+  const { uploadLink } = useUploadStore((store) => store.handlers);
+  const [, { hideUploadJumper }] = useUploadContext();
   const onboardingContext = useUploadOnboardingContext();
 
   const [state, setState] = React.useState({
     url: "",
     urlError: false,
   });
-
-  const handleUpload = (e) => {
-    const { files } = FileUtilities.formatUploadedFiles({ files: e.target.files });
-    upload({ files, slate: data });
-    onboardingContext.goToNextStep();
-    hideUploadJumper();
-  };
+  const handleChange = (e) =>
+    setState((prev) => ({ ...prev, [e.target.name]: e.target.value, urlError: false }));
 
   const handleUploadLink = () => {
     if (Strings.isEmpty(state.url)) {
@@ -119,15 +95,71 @@ export function UploadJumper({ data }) {
 
     uploadLink({ url: state.url, slate: data });
     setState({ url: "", urlError: false });
-    onboardingContext.goToNextStep();
+    onboardingContext?.goToNextStep?.();
     hideUploadJumper();
   };
 
-  const handleChange = (e) => {
-    setState((prev) => ({ ...prev, [e.target.name]: e.target.value, urlError: false }));
+  return (
+    <div css={Styles.HORIZONTAL_CONTAINER}>
+      <System.Input
+        placeholder="Paste a link to save"
+        value={state.url}
+        inputCss={STYLES_LINK_INPUT}
+        style={{
+          boxShadow: state.urlError
+            ? `0 0 0 1px ${Constants.system.red} inset`
+            : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
+        }}
+        name="url"
+        type="url"
+        onChange={handleChange}
+        onSubmit={handleUploadLink}
+        autoFocus
+      />
+      <System.ButtonPrimary onClick={handleUploadLink}>Save</System.ButtonPrimary>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------------
+ *  UploadJumper
+ * -----------------------------------------------------------------------------------------------*/
+
+const STYLES_FILE_HIDDEN = css`
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: -1px;
+  left: -1px;
+`;
+
+const STYLES_LINK_UPLOAD_WRAPPER = css`
+  padding: 50px 72px;
+`;
+
+const useFileUpload = ({ onUpload, data }) => {
+  const { upload } = useUploadStore((store) => store.handlers);
+  const [, { hideUploadJumper }] = useUploadContext();
+
+  const handleUpload = (e) => {
+    const { files } = FileUtilities.formatUploadedFiles({ files: e.target.files });
+    upload({ files, slate: data });
+    onUpload?.();
+    hideUploadJumper();
   };
 
+  return { handleUpload };
+};
+
+export function UploadJumper({ data }) {
+  const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
+
+  const onboardingContext = useUploadOnboardingContext();
   const isOnboarding = onboardingContext.currentStep === onboardingContext.steps.jumper;
+
+  const { handleUpload } = useFileUpload({ data, onUpload: onboardingContext?.goToNextStep });
 
   return (
     <Jumper.AnimatePresence>
@@ -139,26 +171,9 @@ export function UploadJumper({ data }) {
           <Jumper.Divider />
           {isOnboarding && <ExtensionBar />}
           <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
-            <div css={Styles.HORIZONTAL_CONTAINER}>
-              <System.Input
-                placeholder="Paste a link to save"
-                value={state.url}
-                inputCss={STYLES_LINK_INPUT}
-                style={{
-                  boxShadow: state.urlError
-                    ? `0 0 0 1px ${Constants.system.red} inset`
-                    : `${Constants.shadow.lightSmall}, 0 0 0 1px ${Constants.semantic.bgGrayLight} inset`,
-                }}
-                name="url"
-                type="url"
-                onChange={handleChange}
-                onSubmit={handleUploadLink}
-                autoFocus
-              />
-              <System.ButtonPrimary onClick={handleUploadLink}>Save</System.ButtonPrimary>
-            </div>
+            <LinkForm data={data} />
           </Jumper.Item>
-          <div css={STYLES_MOBILE_HIDDEN}>
+          <div>
             <Jumper.Divider />
             <Jumper.Item css={STYLES_FILES_UPLOAD_WRAPPER}>
               <input
@@ -190,5 +205,38 @@ export function UploadJumper({ data }) {
         </Jumper.Root>
       ) : null}
     </Jumper.AnimatePresence>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------------
+ *  MobileUploadJumper
+ * -----------------------------------------------------------------------------------------------*/
+
+export function MobileUploadJumper({ data }) {
+  const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
+
+  return (
+    <MobileJumper.AnimatePresence>
+      {isUploadJumperVisible ? (
+        <MobileJumper.Root onClose={hideUploadJumper}>
+          <MobileJumper.Header>
+            <System.H5 color="textBlack">Upload</System.H5>
+          </MobileJumper.Header>
+          <MobileJumper.Divider color="borderGrayLight" />
+          <MobileJumper.Content style={{ padding: 0 }}>
+            <div style={{ padding: "40px 16px" }}>
+              <LinkForm data={data} />
+            </div>
+            <MobileJumper.Divider />
+            <div style={{ padding: "40px 16px", textAlign: "center" }}>
+              <SVG.Airplay color="textBlack" />
+              <System.H5 as="p" color="textGrayDark" style={{ marginTop: 6, textAlign: "center" }}>
+                open Slate on desktop to upload files
+              </System.H5>
+            </div>
+          </MobileJumper.Content>
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
   );
 }

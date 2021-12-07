@@ -148,9 +148,9 @@ function Item({ children, ...props }) {
 /* -------------------------------------------------------------------------------------------------
  *  Divider
  * -----------------------------------------------------------------------------------------------*/
-function Divider({ children, ...props }) {
+function Divider({ children, color = "borderGrayLight4", ...props }) {
   return (
-    <System.Divider height={1} color="borderGrayLight4" {...props}>
+    <System.Divider height={1} color={color} {...props}>
       {children}
     </System.Divider>
   );

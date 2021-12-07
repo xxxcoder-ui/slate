@@ -380,32 +380,36 @@ export function MoreInfo({ external, viewer, isOwner, file, isOpen, onClose }) {
 export function MoreInfoMobile({ external, viewer, isOwner, file, isOpen, onClose }) {
   const isFileOwner = !external && isOwner && viewer;
 
-  return isOpen ? (
-    <MobileJumper.Root>
-      <MobileJumper.Header>
-        <System.H5 as="p" color="textBlack">
-          More Info
-        </System.H5>
-      </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <div style={{ padding: "13px 16px 11px" }}>
-        <Jumper.ObjectPreview file={file} />
-      </div>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <MobileJumper.Content>
-        <CoverImageUpload isMobile file={file} viewer={viewer} isFileOwner={isFileOwner} />
-        <FileMetadata file={file} style={{ marginTop: 22 }} />
-      </MobileJumper.Content>
-      <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-        <button
-          type="button"
-          css={Styles.BUTTON_RESET}
-          style={{ width: 32, height: 32 }}
-          onClick={onClose}
-        >
-          <SVG.InfoCircle width={16} height={16} style={{ color: Constants.system.blue }} />
-        </button>
-      </MobileJumper.Footer>
-    </MobileJumper.Root>
-  ) : null;
+  return (
+    <MobileJumper.AnimatePresence>
+      {isOpen ? (
+        <MobileJumper.Root onClose={onClose}>
+          <MobileJumper.Header>
+            <System.H5 as="p" color="textBlack">
+              More Info
+            </System.H5>
+          </MobileJumper.Header>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <div style={{ padding: "13px 16px 11px" }}>
+            <Jumper.ObjectPreview file={file} />
+          </div>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <MobileJumper.Content>
+            <CoverImageUpload isMobile file={file} viewer={viewer} isFileOwner={isFileOwner} />
+            <FileMetadata file={file} style={{ marginTop: 22 }} />
+          </MobileJumper.Content>
+          <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+            <button
+              type="button"
+              css={Styles.BUTTON_RESET}
+              style={{ width: 32, height: 32 }}
+              onClick={onClose}
+            >
+              <SVG.InfoCircle width={16} height={16} style={{ color: Constants.system.blue }} />
+            </button>
+          </MobileJumper.Footer>
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
+  );
 }

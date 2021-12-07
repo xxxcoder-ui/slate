@@ -2611,3 +2611,22 @@ export const Hexagon = (props) => (
     />
   </svg>
 );
+
+export const Airplay = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M3.333 11.333h-.666A1.333 1.333 0 011.333 10V3.333A1.333 1.333 0 012.667 2h10.666a1.333 1.333 0 011.334 1.333V10a1.333 1.333 0 01-1.334 1.333h-.666"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M8 10l3.333 4H4.667L8 10z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
