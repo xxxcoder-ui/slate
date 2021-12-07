@@ -511,3 +511,9 @@ export const useCheckIfExtensionIsInstalled = () => {
 
   return { isExtensionDownloaded };
 };
+
+export const useLocalStorage = (key) => ({
+  setItem: (value) => localStorage?.setItem(key, value),
+  getItem: () => localStorage?.getItem(key),
+  removeItem: () => localStorage?.removeItem(key),
+});

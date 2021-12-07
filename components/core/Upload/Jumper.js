@@ -15,7 +15,7 @@ import { useUploadStore } from "~/components/core/Upload/store";
 import { useUploadOnboardingContext } from "~/components/core/Onboarding/Upload";
 
 import DownloadExtensionButton from "~/components/core/Extension/DownloadExtensionButton";
-import { useCheckIfExtensionIsInstalled } from "~/common/hooks";
+import { useCheckIfExtensionIsInstalled, useLocalStorage } from "~/common/hooks";
 
 const STYLES_EXTENSION_BAR = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
@@ -30,11 +30,12 @@ const STYLES_EXTENSION_BAR = (theme) => css`
 `;
 
 function ExtensionBar() {
+  const localStorage = useLocalStorage("upload-jumper-extension-bar");
+
+  const [isVisible, setVisibility] = React.useState(JSON.parse(localStorage.getItem() || true));
+  const hideExtensionBar = () => (setVisibility(false), localStorage.setItem(false));
+
   const { isExtensionDownloaded } = useCheckIfExtensionIsInstalled();
-
-  const [isVisible, setVisibility] = React.useState(true);
-  const hideExtensionBar = () => setVisibility(false);
-
   if (isExtensionDownloaded || !isVisible) return null;
 
   return (
@@ -157,7 +158,6 @@ export function UploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
 
   const onboardingContext = useUploadOnboardingContext();
-  const isOnboarding = onboardingContext.currentStep === onboardingContext.steps.jumper;
 
   const { handleUpload } = useFileUpload({ data, onUpload: onboardingContext?.goToNextStep });
 
@@ -169,7 +169,7 @@ export function UploadJumper({ data }) {
             <System.H5 color="textBlack">Upload</System.H5>
           </Jumper.Header>
           <Jumper.Divider />
-          {isOnboarding && <ExtensionBar />}
+          <ExtensionBar />
           <Jumper.Item css={STYLES_LINK_UPLOAD_WRAPPER}>
             <LinkForm data={data} />
           </Jumper.Item>
