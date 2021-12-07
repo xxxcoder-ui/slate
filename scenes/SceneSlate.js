@@ -277,10 +277,6 @@ const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
   }
 `;
 
-const STYLES_DATAVIEWER_WRAPPER_EXTERNAL = css`
-  margin-top: 40px;
-`;
-
 class SlatePage extends React.Component {
   _copy = null;
   _timeout = null;
@@ -415,8 +411,8 @@ class SlatePage extends React.Component {
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     return (
-      <ScenePage css={!this.props.external && STYLES_RESET_SCENE_PAGE_PADDING}>
-        {this.props.external ? (
+      <ScenePage css={STYLES_RESET_SCENE_PAGE_PADDING}>
+        {/* {this.props.external ? (
           <ScenePageHeader
             wide
             title={
@@ -441,7 +437,7 @@ class SlatePage extends React.Component {
           >
             {body}
           </ScenePageHeader>
-        ) : null}
+        ) : null} */}
         {objects && objects.length ? (
           <>
             <GlobalCarousel
@@ -456,11 +452,7 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            <div
-              css={
-                this.props.external ? STYLES_DATAVIEWER_WRAPPER_EXTERNAL : STYLES_DATAVIEWER_WRAPPER
-              }
-            >
+            <div css={STYLES_DATAVIEWER_WRAPPER}>
               <DataView
                 key="scene-files-folder"
                 type="collection"

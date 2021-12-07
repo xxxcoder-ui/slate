@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Strings from "~/common/strings";
+import * as Styles from "~/common/styles";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
 import * as Events from "~/common/custom-events";
@@ -11,7 +12,6 @@ import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import DataView from "~/components/core/DataView";
 import ScenePage from "~/components/core/ScenePage";
-import Profile from "~/components/core/Profile";
 import EmptyState from "~/components/core/EmptyState";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
@@ -162,7 +162,22 @@ export default class SceneProfile extends React.Component {
         </WebsitePrototypeWrapper>
       );
     }
-    const isOwner = user.id === viewer.id;
+    if (!user.slates?.length) {
+      return (
+        <WebsitePrototypeWrapper
+          title={`${this.props.page.pageTitle} • Slate`}
+          url={`${Constants.hostname}${this.props.page.pathname}`}
+        >
+          <ScenePage>
+            <EmptyState>
+              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+              <div>This user doesn't have any public content</div>
+            </EmptyState>
+          </ScenePage>
+        </WebsitePrototypeWrapper>
+      );
+    }
+    const isOwner = user.id === viewer?.id;
     let name = user.name || `@${user.username}`;
     let description, title;
     const image = user.photo;
@@ -188,10 +203,10 @@ export default class SceneProfile extends React.Component {
           {user.library?.length ? (
             <DataView
               key="scene-files-folder"
-              isOwner={isOwner}
+              isOwner={false}
               items={user.library}
               onAction={this.props.onAction}
-              viewer={this.props.viewer}
+              viewer={viewer}
               page={this.props.page}
               view="grid"
             />
@@ -199,13 +214,6 @@ export default class SceneProfile extends React.Component {
             <EmptyState>This user doesn't have any public content</EmptyState>
           )}
         </div>
-        {/* <Profile
-          {...this.props}
-          user={user}
-          isOwner={this.props.viewer ? user.id === this.props.viewer.id : false}
-          isAuthenticated={this.props.viewer !== null}
-          key={user.id}
-        /> */}
       </WebsitePrototypeWrapper>
     );
 

@@ -44,7 +44,6 @@ import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import PortalsProvider from "~/components/core/PortalsProvider";
 import CTATransition from "~/components/core/CTATransition";
 import Filter from "~/components/core/Filter";
 
@@ -472,6 +471,10 @@ export default class ApplicationPage extends React.Component {
     const description = "";
     const url = "https://slate.host/_";
 
+    const isProfilePage =
+      (page.id === "NAV_SLATE" && this.state.data?.ownerId !== this.state.viewer?.id) ||
+      (page.id === "NAV_PROFILE" && this.state.data?.id !== this.state.viewer?.id);
+
     // if (!this.state.loaded) {
     //   return (
     //     <WebsitePrototypeWrapper description={description} title={title} url={url}>
@@ -490,42 +493,41 @@ export default class ApplicationPage extends React.Component {
     // }
     return (
       <React.Fragment>
-        <PortalsProvider>
-          <ApplicationLayout
-            sidebarName={this.state.sidebar}
-            page={page}
-            onAction={this._handleAction}
-            header={headerElement}
-            sidebar={sidebarElement}
-            onDismissSidebar={this._handleDismissSidebar}
-            isMobile={this.state.isMobile}
-            isMac={this.props.isMac}
+        <ApplicationLayout
+          sidebarName={this.state.sidebar}
+          page={page}
+          onAction={this._handleAction}
+          header={headerElement}
+          sidebar={sidebarElement}
+          onDismissSidebar={this._handleDismissSidebar}
+          isMobile={this.state.isMobile}
+          isMac={this.props.isMac}
+          viewer={this.state.viewer}
+        >
+          <Filter
+            // isActive={isProfilePage || !!this.state.viewer}
+            isActive={true}
             viewer={this.state.viewer}
+            page={page}
+            data={this.state.data}
+            isMobile={this.props.isMobile}
+            onAction={this._handleAction}
           >
-            <Filter
-              isActive={!!this.state.viewer}
-              viewer={this.state.viewer}
-              page={page}
-              data={this.state.data}
-              isMobile={this.props.isMobile}
-              onAction={this._handleAction}
-            >
-              {this.state.loading ? (
-                <div
-                  css={Styles.CONTAINER_CENTERED}
-                  style={{
-                    width: "100%",
-                    height: "100vh",
-                  }}
-                >
-                  <LoaderSpinner style={{ height: 32, width: 32 }} />
-                </div>
-              ) : (
-                scene
-              )}
-            </Filter>
-          </ApplicationLayout>
-        </PortalsProvider>
+            {this.state.loading ? (
+              <div
+                css={Styles.CONTAINER_CENTERED}
+                style={{
+                  width: "100%",
+                  height: "100vh",
+                }}
+              >
+                <LoaderSpinner style={{ height: 32, width: 32 }} />
+              </div>
+            ) : (
+              scene
+            )}
+          </Filter>
+        </ApplicationLayout>
         <GlobalModal />
         <SearchModal
           viewer={this.state.viewer}

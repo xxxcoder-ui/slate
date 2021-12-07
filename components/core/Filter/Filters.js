@@ -120,7 +120,6 @@ function Tags({ viewer, data, onAction, ...props }) {
 }
 
 function Profile({ viewer, data, page, onAction, ...props }) {
-  console.log(data);
   if (page.id === "NAV_SLATE") {
     data = data.owner;
   }
@@ -160,7 +159,7 @@ function Profile({ viewer, data, page, onAction, ...props }) {
   let { twitterUsername, body } = data;
 
   return (
-    <FilterSection style={{ marginBottom: "24px" }}>
+    <FilterSection {...props}>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "12px" }}>
         <ProfilePhoto user={data} style={{ borderRadius: "20px" }} size={80} />
         <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "4px" }}>

@@ -43,10 +43,10 @@ export function SidebarTrigger({ css }) {
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
-  position: sticky;
+  position: fixed;
   top: ${theme.sizes.header + theme.sizes.filterNavbar}px;
   width: 300px;
-  max-height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
+  height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
   overflow-y: auto;
   padding: 20px 24px calc(16px + ${theme.sizes.intercomWidget}px + ${theme.sizes.filterNavbar}px);
   background-color: ${theme.semantic.bgLight};
@@ -58,18 +58,40 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
 
 export function Sidebar({ viewer, onAction, data, page, isMobile }) {
   const [{ sidebarState }] = useFilterContext();
-  console.log(data);
-  console.log(page);
-  if (!sidebarState.isVisible || isMobile) return null;
-
-  if (
+  const isProfilePage =
     (page.id === "NAV_SLATE" && data?.ownerId !== viewer?.id) ||
-    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id)
-  ) {
+    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id);
+
+  if ((!isProfilePage || isMobile) && (!sidebarState.isVisible || isMobile)) return null;
+
+  if (isProfilePage) {
     return (
+      <div style={{ width: 300 }}>
+        <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
+          <Filters.Profile
+            page={page}
+            data={data}
+            viewer={viewer}
+            onAction={onAction}
+            style={{ marginBottom: 24 }}
+          />
+          <Filters.ProfileTags
+            page={page}
+            onAction={onAction}
+            data={data}
+            viewer={viewer}
+            style={{ marginTop: 12 }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ width: 300 }}>
       <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
-        <Filters.Profile page={page} data={data} viewer={viewer} onAction={onAction} />
-        <Filters.ProfileTags
+        <Filters.Library page={page} onAction={onAction} />
+        <Filters.Tags
           page={page}
           onAction={onAction}
           data={data}
@@ -77,19 +99,6 @@ export function Sidebar({ viewer, onAction, data, page, isMobile }) {
           style={{ marginTop: 12 }}
         />
       </div>
-    );
-  }
-
-  return (
-    <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
-      <Filters.Library page={page} onAction={onAction} />
-      <Filters.Tags
-        page={page}
-        onAction={onAction}
-        data={data}
-        viewer={viewer}
-        style={{ marginTop: 12 }}
-      />
     </div>
   );
 }

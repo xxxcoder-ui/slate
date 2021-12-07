@@ -66,10 +66,31 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   }
 `;
 
-export function Popup({ viewer, onAction, css, data, page, ...props }) {
+export function Popup({ viewer, onAction, css, data, page, isMobile, ...props }) {
   const [{ popupState }] = useFilterContext();
 
+  const isProfilePage =
+    (page.id === "NAV_SLATE" && data?.ownerId !== viewer?.id) ||
+    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id);
+  if (isProfilePage && !isMobile) {
+    return null;
+  }
+
   if (!popupState.isVisible) return null;
+
+  if (isProfilePage) {
+    return (
+      <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>
+        <Filters.ProfileTags
+          page={page}
+          onAction={onAction}
+          data={data}
+          viewer={viewer}
+          style={{ marginTop: 12 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>

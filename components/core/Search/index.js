@@ -128,7 +128,7 @@ function Input({ viewer, data, page, onAction }) {
   useDebouncedSearch({ handleSearch });
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <InputPrimitive
         full
         containerStyle={{ height: "100%" }}

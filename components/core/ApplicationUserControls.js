@@ -136,7 +136,10 @@ export class ApplicationUserControlsPopup extends React.Component {
 
     const topSection = (
       <Link href="/_/data" onAction={this._handleAction}>
-        <div style={{ marginBottom: 16 }} css={Styles.VERTICAL_CONTAINER_CENTERED}>
+        <div
+          css={Styles.VERTICAL_CONTAINER_CENTERED}
+          style={{ marginBottom: 16, ...this.props.style }}
+        >
           <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "12px" }} size={48} />
           <H4 color="textBlack" style={{ marginTop: 10 }}>
             {username}

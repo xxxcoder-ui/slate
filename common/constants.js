@@ -8,7 +8,7 @@ export const sizes = {
   navigation: 288,
   intercomWidget: 60,
   sidebar: 416,
-  filterNavbar: 40,
+  filterNavbar: 42,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
 
   mobile: 768,
