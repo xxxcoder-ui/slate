@@ -54,62 +54,77 @@ const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   color: ${Constants.system.blue};
 `;
 
-export const ButtonPrimary = ({ style, full, ...props }) => {
-  if (props.loading) {
+export const ButtonPrimary = ({
+  children,
+  css,
+  style,
+  full,
+  transparent,
+  loading,
+  label,
+  type,
+  ...props
+}) => {
+  if (loading) {
     return (
       <button
-        css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
+        css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
-        type={props.type}
+        type={type}
+        {...props}
       >
         <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
     );
   }
 
-  if (props.type === "label") {
+  if (type === "label") {
     return (
       <label
-        css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
+        css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
-        children={props.children}
-        type={props.label}
-        htmlFor={props.htmlFor}
-        onClick={props.onClick}
-      />
+        type={label}
+        {...props}
+      >
+        {children}
+      </label>
     );
   }
 
-  if (props.type === "link") {
+  if (type === "link") {
     return (
       <a
-        css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
+        css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         {...props}
-      />
+      >
+        {children}
+      </a>
     );
   }
 
   if (props.disabled) {
     return (
       <button
-        css={STYLES_BUTTON_PRIMARY_DISABLED}
+        css={[STYLES_BUTTON_PRIMARY_DISABLED, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
-        onClick={props.onClick}
-        children={props.children}
-        type={props.type}
-      />
+        type={type}
+        {...props}
+      >
+        {children}
+      </button>
     );
   }
 
   return (
     <button
-      css={props.transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY}
+      css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
       style={{ width: full ? "100%" : "auto", ...style }}
-      onClick={props.onClick}
-      children={props.children}
-      type={props.type}
-    />
+      type={type}
+      {...props}
+    >
+      {children}
+    </button>
   );
 };
 
@@ -142,50 +157,64 @@ const STYLES_BUTTON_SECONDARY_TRANSPARENT = css`
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonSecondary = ({ style, ...props }) => {
-  if (props.loading) {
+export const ButtonSecondary = ({
+  children,
+  css,
+  style,
+  full,
+  transparent,
+  loading,
+  label,
+  type,
+  ...props
+}) => {
+  if (loading) {
     return (
       <button
-        css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...style }}
-        type={props.type}
+        css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={type}
+        {...props}
       >
         <LoaderSpinner style={{ height: 16, width: 16 }} />
       </button>
     );
   }
 
-  if (props.type === "label") {
+  if (type === "label") {
     return (
       <label
-        css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...style }}
-        onClick={props.onClick}
-        children={props.children}
-        type={props.label}
-        htmlFor={props.htmlFor}
-      />
+        css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={label}
+        {...props}
+      >
+        {children}
+      </label>
     );
   }
 
-  if (props.type === "link") {
+  if (type === "link") {
     return (
       <a
-        css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-        style={{ width: props.full ? "100%" : "auto", ...style }}
+        css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
         {...props}
-      />
+      >
+        {children}
+      </a>
     );
   }
 
   return (
     <button
-      css={props.transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY}
-      onClick={props.onClick}
-      children={props.children}
-      type={props.type}
-      style={{ width: props.full ? "100%" : "auto", ...style }}
-    />
+      css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+      style={{ width: full ? "100%" : "auto", ...style }}
+      type={type}
+      {...props}
+    >
+      {children}
+    </button>
   );
 };
 
@@ -219,11 +248,21 @@ const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonTertiary = ({ loading, type, transparent, full, style, children, ...props }) => {
+export const ButtonTertiary = ({
+  children,
+  css,
+  style,
+  full,
+  transparent,
+  loading,
+  label,
+  type,
+  ...props
+}) => {
   if (loading) {
     return (
       <button
-        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         type={type}
         {...props}
@@ -236,7 +275,7 @@ export const ButtonTertiary = ({ loading, type, transparent, full, style, childr
   if (type === "label") {
     return (
       <label
-        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         {...props}
       >
@@ -248,7 +287,7 @@ export const ButtonTertiary = ({ loading, type, transparent, full, style, childr
   if (type === "link") {
     return (
       <a
-        css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+        css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         {...props}
       >
@@ -259,7 +298,7 @@ export const ButtonTertiary = ({ loading, type, transparent, full, style, childr
 
   return (
     <button
-      css={transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY}
+      css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
       style={{ width: full ? "100%" : "auto", ...style }}
       type={type}
       {...props}
@@ -293,16 +332,16 @@ const STYLES_BUTTON_DISABLED_TRANSPARENT = css`
   color: ${Constants.system.gray};
 `;
 
-export const ButtonDisabled = (props) => {
+export const ButtonDisabled = ({ children, css, style, full, label, ...props }) => {
   return (
     <button
-      css={props.transparent ? STYLES_BUTTON_DISABLED_TRANSPARENT : STYLES_BUTTON_DISABLED}
-      onClick={props.onClick}
-      children={props.children}
-      type={props.label}
-      htmlFor={props.htmlFor}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-    />
+      css={[props.transparent ? STYLES_BUTTON_DISABLED_TRANSPARENT : STYLES_BUTTON_DISABLED, css]}
+      type={label}
+      style={{ width: full ? "100%" : "auto", ...style }}
+      {...props}
+    >
+      {children}
+    </button>
   );
 };
 
@@ -341,52 +380,66 @@ const STYLES_BUTTON_WARNING_TRANSPARENT = css`
   color: ${Constants.system.red};
 `;
 
-export const ButtonWarning = (props) => {
-  if (props.loading) {
+export const ButtonWarning = ({
+  children,
+  css,
+  style,
+  full,
+  transparent,
+  type,
+  disabled,
+  loading,
+  label,
+  ...props
+}) => {
+  if (loading) {
     return (
       <button
-        css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-        type={props.type}
+        css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={type}
+        {...props}
       >
         <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
       </button>
     );
   }
 
-  if (props.type === "label") {
+  if (type === "label") {
     return (
       <label
-        css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-        children={props.children}
-        type={props.label}
-        htmlFor={props.htmlFor}
-        onClick={props.onClick}
-      />
+        css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={label}
+        {...props}
+      >
+        {children}
+      </label>
     );
   }
 
-  if (props.disabled) {
+  if (disabled) {
     return (
       <button
-        css={STYLES_BUTTON_WARNING_DISABLED}
-        style={{ width: props.full ? "100%" : "auto", ...props.style }}
-        type={props.type}
-        onClick={props.onClick}
-        children={props.children}
-      />
+        css={[STYLES_BUTTON_WARNING_DISABLED, css]}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        type={type}
+        {...props}
+      >
+        {children}
+      </button>
     );
   }
 
   return (
     <button
-      css={props.transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING}
-      style={{ width: props.full ? "100%" : "auto", ...props.style }}
-      type={props.type}
-      onClick={props.onClick}
-      children={props.children}
-    />
+      css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
+      style={{ width: full ? "100%" : "auto", ...style }}
+      type={type}
+      {...props}
+    >
+      {children}
+    </button>
   );
 };
 

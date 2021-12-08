@@ -135,6 +135,17 @@ function WelcomeOnboarding({ viewer }) {
 /* -------------------------------------------------------------------------------------------------
  * Extension
  * -----------------------------------------------------------------------------------------------*/
+const STYLES_BUTTON_SMALL = (theme) => css`
+  border-radius: 8px;
+  min-height: 24px;
+  max-height: 24px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    border-radius: 12px;
+    padding: 5px 24px 7px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+`;
 
 function ExtensionOnboarding({ isMobile }) {
   const { goToNextStep } = useUploadOnboardingContext();
@@ -164,13 +175,12 @@ function ExtensionOnboarding({ isMobile }) {
     <>
       <System.ButtonSecondary
         onClick={goToNextStep}
-        style={{ marginLeft: "auto", borderRadius: "8px", maxHeight: "24px" }}
+        css={STYLES_BUTTON_SMALL}
+        style={{ marginLeft: "auto" }}
       >
         Later
       </System.ButtonSecondary>
-      <DownloadExtensionButton
-        style={{ marginLeft: 8, borderRadius: "8px", minHeight: "24px", maxHeight: "24px" }}
-      />
+      <DownloadExtensionButton css={STYLES_BUTTON_SMALL} style={{ marginLeft: 8 }} />
     </>
   );
 

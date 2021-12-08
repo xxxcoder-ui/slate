@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as Environment from "~/common/environment";
 import * as System from "~/components/system";
-import * as Constants from "~/common/constants";
 
 import { useCheckIfExtensionIsInstalled } from "~/common/hooks";
+import { css } from "@emotion/react";
 
 const getExtensionBrowserAndLink = () => {
   const testUserAgent = (regex) => regex.test(window.navigator.userAgent);
@@ -19,7 +19,13 @@ const getExtensionBrowserAndLink = () => {
   return { browser: "Chrome", link: Environment.EXTENSION_CHROME };
 };
 
-export default function DownloadExtensionButton({ hideIfDownloaded = true, style, ...props }) {
+const STYLES_EXTENSION_BUTTON = (theme) => css`
+  padding: 0px 12px;
+  min-height: 30px;
+  font-family: ${theme.font.text};
+`;
+
+export default function DownloadExtensionButton({ hideIfDownloaded = true, css, ...props }) {
   const { isExtensionDownloaded } = useCheckIfExtensionIsInstalled();
 
   if (hideIfDownloaded && isExtensionDownloaded) return null;
@@ -28,12 +34,7 @@ export default function DownloadExtensionButton({ hideIfDownloaded = true, style
 
   return (
     <System.ButtonPrimary
-      style={{
-        padding: "0px 12px",
-        minHeight: "30px",
-        fontFamily: Constants.font.text,
-        ...style,
-      }}
+      css={[STYLES_EXTENSION_BUTTON, css]}
       onClick={() => window.open(extension.link, "_blank")}
       {...props}
     >

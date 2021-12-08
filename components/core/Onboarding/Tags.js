@@ -73,6 +73,18 @@ const STYLES_TAGS_BUTTON = (theme) => css`
   top: 3px;
 `;
 
+const STYLES_BUTTON_SMALL = (theme) => css`
+  border-radius: 8px;
+  min-height: 24px;
+  max-height: 24px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    border-radius: 12px;
+    padding: 5px 24px 7px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+`;
+
 function TagsWalkthrought({ isMobile }) {
   const [isOrganizeTagsPopupVisible, setOrganizeTagsPopupVisiblity] = React.useState(true);
   const hideOrganizeTagsPopup = () => setOrganizeTagsPopupVisiblity(false);
@@ -118,7 +130,8 @@ function TagsWalkthrought({ isMobile }) {
                 </System.P2>
               )}
               <System.ButtonPrimary
-                style={{ float: "right", marginTop: 14, borderRadius: "8px", maxHeight: "24px" }}
+                css={STYLES_BUTTON_SMALL}
+                style={{ float: "right", marginTop: 14 }}
                 onClick={hideOrganizeTagsPopup}
               >
                 Got it
@@ -132,7 +145,8 @@ function TagsWalkthrought({ isMobile }) {
                 they will show up on your profile.
               </System.P2>
               <System.ButtonPrimary
-                style={{ float: "right", borderRadius: "8px", marginTop: 14, maxHeight: "24px" }}
+                css={STYLES_BUTTON_SMALL}
+                style={{ float: "right", marginTop: 14 }}
                 onClick={hideTagsPrivacyPopup}
               >
                 Got it
