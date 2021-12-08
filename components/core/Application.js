@@ -253,56 +253,54 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _withAuthenticationBehavior =
-    (authenticate) =>
-    async (href = "/_/data", state, newAccount) => {
-      let response = await authenticate(state);
-      if (Events.hasError(response)) {
-        return response;
-      }
-      if (response.shouldMigrate) {
-        return response;
-      }
-      let viewer = await UserBehaviors.hydrate();
-      if (Events.hasError(viewer)) {
-        return viewer;
-      }
-
-      this.setState({ viewer });
-      await this._handleSetupWebsocket();
-
-      let unseenAnnouncements = [];
-      for (let feature of announcements) {
-        if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
-          unseenAnnouncements.push(feature);
-        }
-      }
-
-      if (newAccount || unseenAnnouncements.length) {
-        Events.dispatchCustomEvent({
-          name: "create-modal",
-          detail: {
-            modal: (
-              <OnboardingModal
-                onAction={this._handleAction}
-                viewer={viewer}
-                newAccount={newAccount}
-                unseenAnnouncements={unseenAnnouncements}
-              />
-            ),
-            noBoundary: true,
-          },
-        });
-      }
-
-      // let redirected = this._handleURLRedirect();
-      // if (!redirected) {
-      //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
-      // }
-      this._handleNavigateTo({ href, redirect: true });
-
+  _withAuthenticationBehavior = (authenticate) => async (href, state, newAccount) => {
+    let response = await authenticate(state);
+    if (Events.hasError(response)) {
       return response;
-    };
+    }
+    if (response.shouldMigrate) {
+      return response;
+    }
+    let viewer = await UserBehaviors.hydrate();
+    if (Events.hasError(viewer)) {
+      return viewer;
+    }
+
+    this.setState({ viewer });
+    await this._handleSetupWebsocket();
+
+    let unseenAnnouncements = [];
+    for (let feature of announcements) {
+      if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
+        unseenAnnouncements.push(feature);
+      }
+    }
+
+    if (newAccount || unseenAnnouncements.length) {
+      Events.dispatchCustomEvent({
+        name: "create-modal",
+        detail: {
+          modal: (
+            <OnboardingModal
+              onAction={this._handleAction}
+              viewer={viewer}
+              newAccount={newAccount}
+              unseenAnnouncements={unseenAnnouncements}
+            />
+          ),
+          noBoundary: true,
+        },
+      });
+    }
+
+    // let redirected = this._handleURLRedirect();
+    // if (!redirected) {
+    //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
+    // }
+    this._handleNavigateTo({ href, redirect: true });
+
+    return response;
+  };
 
   _handleSelectedChange = (e) => {
     this.setState({
