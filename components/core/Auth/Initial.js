@@ -43,11 +43,8 @@ const STYLES_LINK_ITEM = (theme) => css`
 
 // NOTE(amine): used to remove content jumping
 // when switching between signin/signup in mobile
-const STYLES_SPACER = (theme) => css`
-  height: 20px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    height: 40px;
-  }
+const STYLES_SPACER = css`
+  height: 40px;
 `;
 
 const useToggler = ({ params, onAction }) => {

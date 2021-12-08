@@ -215,10 +215,12 @@ export function UploadJumper({ data }) {
 export function MobileUploadJumper({ data }) {
   const [{ isUploadJumperVisible }, { hideUploadJumper }] = useUploadContext();
 
+  const onboardingContext = useUploadOnboardingContext();
+
   return (
     <MobileJumper.AnimatePresence>
       {isUploadJumperVisible ? (
-        <MobileJumper.Root onClose={hideUploadJumper}>
+        <MobileJumper.Root onClose={() => (onboardingContext.goToNextStep(), hideUploadJumper())}>
           <MobileJumper.Header>
             <System.H5 color="textBlack">Upload</System.H5>
           </MobileJumper.Header>

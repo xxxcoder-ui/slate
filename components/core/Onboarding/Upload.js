@@ -103,20 +103,14 @@ function WelcomeOnboarding({ viewer }) {
       <div css={STYLES_WELCOME_WRAPPER}>
         <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
           <ProfilePhoto user={viewer} style={{ borderRadius: "12px" }} size={64} />
-          <System.H2
-            as={motion.h1}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            style={{ marginTop: 25, textAlign: "center" }}
-          >
+          <System.H2 as="h1" style={{ marginTop: 25, textAlign: "center" }}>
             Welcome to Slate, {viewer.username}
           </System.H2>
           <System.P1
             as={motion.p}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05, duration: 0.4, ease: "easeInOut" }}
+            transition={{ delay: 0.4, duration: 0.4, ease: "easeInOut" }}
             style={{ marginTop: 5, textAlign: "center" }}
           >
             Slate is your personal search engine for the web. <br /> Use Slate for moodboards,
@@ -125,7 +119,7 @@ function WelcomeOnboarding({ viewer }) {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.4, ease: "easeInOut" }}
+            transition={{ delay: 0.42, duration: 0.4, ease: "easeInOut" }}
             style={{ marginTop: 38 }}
           >
             <System.ButtonSecondary onClick={goToNextStep} style={{ boxShadow: "none" }}>
@@ -184,9 +178,11 @@ function ExtensionOnboarding({ isMobile }) {
     <ModalPortal>
       <MobileJumper.AnimatePresence>
         {isMobile ? (
-          <MobileJumper.Root>
+          <MobileJumper.Root withDismissButton={false}>
             <MobileJumper.Header>{header}</MobileJumper.Header>
-            <MobileJumper.Content style={{ padding: 0 }}>{body}</MobileJumper.Content>
+            <MobileJumper.Content style={{ padding: 0, marginTop: 28 }}>
+              {body}
+            </MobileJumper.Content>
             <MobileJumper.Footer style={{ display: "flex" }}>{actions}</MobileJumper.Footer>
           </MobileJumper.Root>
         ) : null}
@@ -225,8 +221,6 @@ const STYLES_JUMPER_FOOTER = (theme) => css`
     background-color: ${theme.semantic.bgBlurLight};
   }
 `;
-
-const PROTO_SCHOOL_CID = "https://proto.school/anatomy-of-a-cid/01";
 
 const STYLES_UPLOAD_BUTTON = (theme) => css`
   display: inline-flex;
