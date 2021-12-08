@@ -366,6 +366,7 @@ const STYLES_SUMMARY_ACTION = css`
 function Summary({ uploadSummary }) {
   const { retry, cancel } = useUploadStore((store) => store.handlers);
 
+  console.log(uploadSummary);
   return (
     <div css={STYLES_SUMMARY}>
       {uploadSummary.map((file) => (
@@ -376,10 +377,10 @@ function Summary({ uploadSummary }) {
             css={Styles.HORIZONTAL_CONTAINER_CENTERED}
           >
             <div css={STYLES_PREVIEW_WRAPPER}>
-              {file.cid ? (
-                <ObjectBoxPreview file={file.blob} placeholderRatio={2.4} />
-              ) : (
+              {file.isBlob ? (
                 <BlobObjectPreview file={file} placeholderRatio={2.4} />
+              ) : (
+                <ObjectBoxPreview file={file.blob} placeholderRatio={2.4} />
               )}
             </div>
 

@@ -142,6 +142,7 @@ export function createUploadProvider({
     if (!files || !files.length) return;
 
     for (let i = 0; i < files.length; i++) {
+      files[i].isBlob = true;
       const fileKey = getFileKey(files[i]);
       const doesQueueIncludeFile = getUploadQueue().some(
         ({ file }) => fileKey === getFileKey(file)
@@ -209,6 +210,8 @@ export function createUploadProvider({
       name: url,
       filename: url,
       type: "link",
+      isBlob: true,
+      isLink: true,
       size: getLinkSize(url),
       lastModified: "",
     };
