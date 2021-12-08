@@ -100,36 +100,38 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
 
   return (
     <SignUpPopover logoStyle={{ width: 56, height: 56 }} title={title}>
-      <Field
-        autoFocus
-        label="Enter the 6 digit code sent to your email"
-        full
-        icon={
-          isSubmitting
-            ? () => (
-                <div
-                  style={{ width: 24, height: 24, marginRight: 4 }}
-                  css={Styles.CONTAINER_CENTERED}
-                >
-                  <LoaderSpinner height="16px" />
-                </div>
-              )
-            : ArrowButton
-        }
-        textStyle={{ width: "100% !important" }}
-        containerStyle={{ marginTop: "28px" }}
-        style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-        name="pin"
-        type="pin"
-        {...getFieldProps()}
-      />
-      <AnimateSharedLayout>
-        <motion.div layout>
-          <System.P1 css={STYLES_HELPER}>
-            Didn’t receive an email? <ResendButton onResend={onResend} />
-          </System.P1>
-        </motion.div>
-      </AnimateSharedLayout>
+      <div style={{ marginTop: 40 }}>
+        <Field
+          autoFocus
+          label="Enter the 6 digit code sent to your email"
+          full
+          icon={
+            isSubmitting
+              ? () => (
+                  <div
+                    style={{ width: 24, height: 24, marginRight: 4 }}
+                    css={Styles.CONTAINER_CENTERED}
+                  >
+                    <LoaderSpinner height="16px" />
+                  </div>
+                )
+              : ArrowButton
+          }
+          textStyle={{ width: "100% !important" }}
+          containerStyle={{ marginTop: "28px" }}
+          style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+          name="pin"
+          type="pin"
+          {...getFieldProps()}
+        />
+        <AnimateSharedLayout>
+          <motion.div layout>
+            <System.P1 css={STYLES_HELPER}>
+              Didn’t receive an email? <ResendButton onResend={onResend} />
+            </System.P1>
+          </motion.div>
+        </AnimateSharedLayout>
+      </div>
     </SignUpPopover>
   );
 }

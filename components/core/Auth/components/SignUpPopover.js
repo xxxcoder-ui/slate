@@ -46,15 +46,12 @@ const STYLES_POPOVER = (theme) => css`
   animation: authentication-popover-fade-in 400ms ease;
 `;
 
-const STYLES_POPOVER_BODY = (theme) => css`
+const STYLES_POPOVER_BODY = css`
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: flex-start;
   flex-grow: 1;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    justify-content: center;
-  }
 `;
 export default function SignUpPopover({ children, title, logoStyle, titleStyle, props }) {
   return (

@@ -46,7 +46,7 @@ const STYLES_LINK_ITEM = (theme) => css`
 const STYLES_SPACER = (theme) => css`
   height: 20px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    height: 10vh;
+    height: 40px;
   }
 `;
 
