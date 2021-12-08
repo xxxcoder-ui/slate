@@ -56,11 +56,8 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   }
 `;
 
-export function Sidebar({ viewer, onAction, data, page, isMobile }) {
+export function Sidebar({ viewer, onAction, data, page, isMobile, isProfilePage }) {
   const [{ sidebarState }] = useFilterContext();
-  const isProfilePage =
-    (page.id === "NAV_SLATE" && data?.ownerId !== viewer?.id) ||
-    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id);
 
   if ((!isProfilePage || isMobile) && (!sidebarState.isVisible || isMobile)) return null;
 
@@ -92,6 +89,13 @@ export function Sidebar({ viewer, onAction, data, page, isMobile }) {
       <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
         <Filters.Library page={page} onAction={onAction} />
         <Filters.Tags
+          page={page}
+          onAction={onAction}
+          data={data}
+          viewer={viewer}
+          style={{ marginTop: 12 }}
+        />
+        <Filters.Following
           page={page}
           onAction={onAction}
           data={data}

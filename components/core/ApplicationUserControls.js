@@ -182,20 +182,20 @@ export class ApplicationUserControlsPopup extends React.Component {
           text: (
             <div css={STYLES_SECTION_ITEM_HOVER}>
               <Link href={`/$/user/${this.props.viewer.id}`} onAction={this._handleAction}>
-                Profile
+                Home
               </Link>
             </div>
           ),
         },
-        {
-          text: (
-            <div css={STYLES_SECTION_ITEM_HOVER}>
-              <Link href={"/_/directory"} onAction={this._handleAction}>
-                Directory
-              </Link>
-            </div>
-          ),
-        },
+        // {
+        //   text: (
+        //     <div css={STYLES_SECTION_ITEM_HOVER}>
+        //       <Link href={"/_/directory"} onAction={this._handleAction}>
+        //         Directory
+        //       </Link>
+        //     </div>
+        //   ),
+        // },
       ],
       [
         {
@@ -207,8 +207,6 @@ export class ApplicationUserControlsPopup extends React.Component {
             </div>
           ),
         },
-      ],
-      [
         {
           text: (
             <div css={STYLES_SECTION_ITEM_HOVER}>

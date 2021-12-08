@@ -24,7 +24,7 @@ import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
 import SceneAuth from "~/scenes/SceneAuth";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
-import SceneDirectory from "~/scenes/SceneDirectory";
+// import SceneDirectory from "~/scenes/SceneDirectory";
 import SceneProfile from "~/scenes/SceneProfile";
 
 // NOTE(jim):
@@ -71,7 +71,7 @@ const SCENES = {
   NAV_ERROR: <SceneError />,
   NAV_SIGN_IN: <SceneAuth />,
   ...(Environment.ACTIVITY_FEATURE_FLAG ? { NAV_ACTIVITY: <SceneActivity /> } : {}),
-  NAV_DIRECTORY: <SceneDirectory />,
+  // NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
   NAV_SLATE: <SceneSlate />,
@@ -374,6 +374,11 @@ export default class ApplicationPage extends React.Component {
       data = response.data;
       pathname = `/${data.owner.username}/${data.slatename}${search}`;
     } else if (page?.id === "NAV_PROFILE") {
+      if (details.id === this.state.viewer?.id) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({ href: "/_/data", redirect: true });
+        return;
+      }
       let response = await Actions.getSerializedProfile(details);
       if (!response || response.error) {
         this.setState({ loading: false });
@@ -381,6 +386,15 @@ export default class ApplicationPage extends React.Component {
         return;
       }
       data = response.data;
+      if (data.slates?.length) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({
+          href: `/${data.username}/${data.slates[0].slatename}`,
+          redirect: true,
+        });
+        return;
+      }
+
       pathname = `/${data.username}${search}`;
     }
 
@@ -473,7 +487,7 @@ export default class ApplicationPage extends React.Component {
 
     const isProfilePage =
       (page.id === "NAV_SLATE" && this.state.data?.ownerId !== this.state.viewer?.id) ||
-      (page.id === "NAV_PROFILE" && this.state.data?.id !== this.state.viewer?.id);
+      page.id === "NAV_PROFILE";
 
     // if (!this.state.loaded) {
     //   return (
@@ -505,7 +519,7 @@ export default class ApplicationPage extends React.Component {
           viewer={this.state.viewer}
         >
           <Filter
-            // isActive={isProfilePage || !!this.state.viewer}
+            isProfilePage={isProfilePage}
             isActive={true}
             viewer={this.state.viewer}
             page={page}

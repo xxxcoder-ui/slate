@@ -165,12 +165,12 @@ export const navigation = [
   //   pathname: "/_/search",
   // mainNav: true,
   // },
-  {
-    id: "NAV_DIRECTORY",
-    name: "Directory",
-    pageTitle: "Your Following",
-    pathname: "/_/directory",
-  },
+  // {
+  //   id: "NAV_DIRECTORY",
+  //   name: "Directory",
+  //   pageTitle: "Your Following",
+  //   pathname: "/_/directory",
+  // },
   slatePage,
   {
     id: "NAV_API",

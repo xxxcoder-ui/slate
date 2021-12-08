@@ -113,7 +113,16 @@ const STYLES_FILTER_CONTENT = (theme) => css`
   ${"" /* margin-top: ${theme.sizes.filterNavbar}px; */}
 `;
 
-export default function Filter({ isActive, viewer, onAction, page, data, isMobile, children }) {
+export default function Filter({
+  isActive,
+  viewer,
+  onAction,
+  page,
+  data,
+  isMobile,
+  children,
+  isProfilePage,
+}) {
   const { results, isSearching } = useSearchStore();
   const showSearchResult = isSearching && !!results;
 
@@ -124,10 +133,6 @@ export default function Filter({ isActive, viewer, onAction, page, data, isMobil
       children
     );
   }
-
-  const isProfilePage =
-    (page.id === "NAV_SLATE" && data?.ownerId !== viewer?.id) ||
-    (page.id === "NAV_PROFILE" && data?.id !== viewer?.id);
 
   return (
     <Provider>
@@ -152,6 +157,7 @@ export default function Filter({ isActive, viewer, onAction, page, data, isMobil
               data={data}
               page={page}
               isMobile={isMobile}
+              isProfilePage={isProfilePage}
             />
           </div>
 
@@ -175,7 +181,14 @@ export default function Filter({ isActive, viewer, onAction, page, data, isMobil
         </div>
       </div>
       <div css={STYLES_FILTER_CONTENT}>
-        <Sidebar viewer={viewer} onAction={onAction} data={data} page={page} isMobile={isMobile} />
+        <Sidebar
+          viewer={viewer}
+          onAction={onAction}
+          data={data}
+          page={page}
+          isMobile={isMobile}
+          isProfilePage={isProfilePage}
+        />
         <div style={{ flexGrow: 1 }}>
           {showSearchResult ? (
             <Search.Content viewer={viewer} page={page} onAction={onAction} />

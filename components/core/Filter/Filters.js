@@ -49,11 +49,12 @@ const STYLES_FILTERS_GROUP = css`
   }
 `;
 
-const FilterButton = ({ children, Icon, isSelected, ...props }) => (
+const FilterButton = ({ children, Icon, image, isSelected, ...props }) => (
   <li>
     <Link {...props}>
       <span as="span" css={[STYLES_FILTER_BUTTON, isSelected && STYLES_FILTER_BUTTON_HIGHLIGHTED]}>
-        <Icon height={16} width={16} style={{ flexShrink: 0 }} />
+        {Icon ? <Icon height={16} width={16} style={{ flexShrink: 0 }} /> : null}
+        {image ? image : null}
         <Typography.P2 as="span" nbrOflines={1} style={{ marginLeft: 6 }}>
           {children}
         </Typography.P2>
@@ -114,6 +115,28 @@ function Tags({ viewer, data, onAction, ...props }) {
           onClick={hidePopup}
         >
           {slate.slatename}
+        </FilterButton>
+      ))}
+    </FilterSection>
+  );
+}
+
+function Following({ viewer, data, onAction, ...props }) {
+  const [, { hidePopup }] = useFilterContext();
+
+  return (
+    <FilterSection title="Following" {...props}>
+      {viewer.following.map((user) => (
+        <FilterButton
+          key={user.id}
+          href={`/${user.username}`}
+          isSelected={false}
+          onAction={onAction}
+          // Icon={SVG.ProfileUser}
+          image={<ProfilePhoto user={user} style={{ borderRadius: "8px" }} size={20} />}
+          onClick={hidePopup}
+        >
+          {user.username}
         </FilterButton>
       ))}
     </FilterSection>
@@ -230,4 +253,4 @@ function ProfileTags({ viewer, data, page, onAction, ...props }) {
   );
 }
 
-export { Library, Tags, Profile, ProfileTags };
+export { Library, Tags, Following, Profile, ProfileTags };

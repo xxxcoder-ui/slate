@@ -147,36 +147,36 @@ export default class SceneProfile extends React.Component {
   render() {
     const viewer = this.props.viewer;
     let user = this.props.data;
-    if (!user) {
-      return (
-        <WebsitePrototypeWrapper
-          title={`${this.props.page.pageTitle} • Slate`}
-          url={`${Constants.hostname}${this.props.page.pathname}`}
-        >
-          <ScenePage>
-            <EmptyState>
-              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              <div>We were unable to locate that user profile</div>
-            </EmptyState>
-          </ScenePage>
-        </WebsitePrototypeWrapper>
-      );
-    }
-    if (!user.slates?.length) {
-      return (
-        <WebsitePrototypeWrapper
-          title={`${this.props.page.pageTitle} • Slate`}
-          url={`${Constants.hostname}${this.props.page.pathname}`}
-        >
-          <ScenePage>
-            <EmptyState>
-              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              <div>This user doesn't have any public content</div>
-            </EmptyState>
-          </ScenePage>
-        </WebsitePrototypeWrapper>
-      );
-    }
+    // if (!user) {
+    //   return (
+    //     <WebsitePrototypeWrapper
+    //       title={`${this.props.page.pageTitle} • Slate`}
+    //       url={`${Constants.hostname}${this.props.page.pathname}`}
+    //     >
+    //       <ScenePage>
+    //         <EmptyState>
+    //           <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+    //           <div>We were unable to locate that user profile</div>
+    //         </EmptyState>
+    //       </ScenePage>
+    //     </WebsitePrototypeWrapper>
+    //   );
+    // }
+    // if (!user.slates?.length) {
+    return (
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <EmptyState>
+            <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+            <div>This user doesn't have any public content</div>
+          </EmptyState>
+        </ScenePage>
+      </WebsitePrototypeWrapper>
+    );
+    // }
     const isOwner = user.id === viewer?.id;
     let name = user.name || `@${user.username}`;
     let description, title;
