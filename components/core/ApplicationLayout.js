@@ -213,7 +213,7 @@ export default class ApplicationLayout extends React.Component {
           )}
           <Alert
             noWarning={
-              this.props.page?.id === "NAV_SIGN_IN" || this.props.page?.id === "NAV_SURVEY"
+              this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.onboarding?.survey
                 ? true
                 : !!this.props.viewer
             }

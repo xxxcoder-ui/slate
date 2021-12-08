@@ -12,6 +12,7 @@ import { css } from "@emotion/react";
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { useCheckIfExtensionIsInstalled, useIsomorphicLayoutEffect } from "~/common/hooks";
 import { DynamicIcon } from "~/components/core/DynamicIcon";
+import { motion } from "framer-motion";
 
 import ProfilePhoto from "~/components/core/ProfilePhoto";
 import OnboardingPopup from "~/components/core/Onboarding/Popup";
@@ -102,19 +103,35 @@ function WelcomeOnboarding({ viewer }) {
       <div css={STYLES_WELCOME_WRAPPER}>
         <div css={Styles.VERTICAL_CONTAINER_CENTERED}>
           <ProfilePhoto user={viewer} style={{ borderRadius: "12px" }} size={64} />
-          <System.H2 style={{ marginTop: 25, textAlign: "center" }} as="h1">
+          <System.H2
+            as={motion.h1}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            style={{ marginTop: 25, textAlign: "center" }}
+          >
             Welcome to Slate, {viewer.username}
           </System.H2>
-          <System.P1 style={{ marginTop: 5, textAlign: "center" }}>
+          <System.P1
+            as={motion.p}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05, duration: 0.4, ease: "easeInOut" }}
+            style={{ marginTop: 5, textAlign: "center" }}
+          >
             Slate is your personal search engine for the web. <br /> Use Slate for moodboards,
             research, personal storage etc.
           </System.P1>
-          <System.ButtonSecondary
-            onClick={goToNextStep}
-            style={{ marginTop: 38, boxShadow: "none" }}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4, ease: "easeInOut" }}
+            style={{ marginTop: 38 }}
           >
-            Get Started
-          </System.ButtonSecondary>
+            <System.ButtonSecondary onClick={goToNextStep} style={{ boxShadow: "none" }}>
+              Get Started
+            </System.ButtonSecondary>
+          </motion.div>
         </div>
       </div>
     </ModalPortal>
@@ -244,7 +261,12 @@ function UploadWalkthrough() {
   return (
     <div>
       <OnboardingOverlay css={currentStep === steps.jumper && STYLES_OVERLAY_ZINDEX} />
-      <OnboardingPopup header="Save to Slate">
+      <OnboardingPopup
+        header="Save to Slate"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
         {currentStep === steps.trigger ? (
           <>
             <System.P2>

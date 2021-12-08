@@ -39,7 +39,7 @@ export default async (req, res) => {
     return res.status(500).send({ decorator: "SERVER_CREATE_ONBOARDING_FAILED", error: true });
   }
 
-  await ViewerManager.hydratePartial(id, { onboarding: true });
+  await ViewerManager.hydratePartial(id, { onboarding: { survey: true } });
 
   return res.status(200).send({ decorator: "SERVER_CREATE_ONBOARDING_SUCCESS" });
 };

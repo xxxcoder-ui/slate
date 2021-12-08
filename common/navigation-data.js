@@ -11,10 +11,6 @@ export const getById = (id, viewer) => {
     return { ...errorPage };
   }
 
-  if (viewer?.onboarding.survey === false) {
-    return { ...surveyPage };
-  }
-
   if (viewer && target.id === authPage.id) {
     return { ...dataPage }; //NOTE(martina): authenticated users should be redirected to the home page rather than the
   }
@@ -28,9 +24,7 @@ export const getById = (id, viewer) => {
 
 export const getByHref = (href, viewer) => {
   let pathname;
-  if (viewer?.onboarding?.survey === false) {
-    return { page: { ...surveyPage } };
-  }
+
   if (href) {
     pathname = href.split("?")[0];
   }
@@ -90,14 +84,6 @@ export const getByHref = (href, viewer) => {
     page.params = params;
   }
   return { page, details, redirected };
-};
-
-const surveyPage = {
-  id: "NAV_SURVEY",
-  name: "Onboarding Survey",
-  pageTitle: "Welcome to Slate",
-  pathname: "/_/data",
-  ignore: true,
 };
 
 const authPage = {

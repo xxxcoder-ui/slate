@@ -55,8 +55,6 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
   let objects = viewer.library;
   // const tab = page.params?.tab || "grid";
 
-  const isOnboardingActive = viewer?.onboarding?.upload && !viewer?.onboarding?.tags;
-
   return (
     <WebsitePrototypeWrapper
       title={`${page.pageTitle} • Slate`}
@@ -74,6 +72,7 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           onChange={(index) => setIndex(index)}
         />
         {objects.length > 0 ? (
+<<<<<<< HEAD
           <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <TagsOnboarding
               onAction={onAction}
@@ -81,6 +80,10 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
               isActive={isOnboardingActive}
               isMobile={isMobile}
             >
+=======
+          <div css={STYLES_DATAVIEWER_WRAPPER}>
+            <TagsOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
+>>>>>>> ee5d2c4f (feat(Onboarding): conditionally render survey onboarding)
               <DataView
                 key="scene-files-folder"
                 isOwner={true}

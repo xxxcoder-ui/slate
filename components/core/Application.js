@@ -3,9 +3,7 @@ import * as NavigationData from "~/common/navigation-data";
 import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
 import * as Styles from "~/common/styles";
-import * as Credentials from "~/common/credentials";
 import * as Constants from "~/common/constants";
-import * as Validations from "~/common/validations";
 import * as Window from "~/common/window";
 import * as Websockets from "~/common/browser-websockets";
 import * as UserBehaviors from "~/common/user-behaviors";
@@ -18,7 +16,6 @@ import * as Environment from "~/common/environment";
 import SceneError from "~/scenes/SceneError";
 import SceneEditAccount from "~/scenes/SceneEditAccount";
 import SceneFilesFolder from "~/scenes/SceneFilesFolder";
-import SceneSettings from "~/scenes/SceneSettings";
 import SceneSlates from "~/scenes/SceneSlates";
 import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
 import SceneAuth from "~/scenes/SceneAuth";
@@ -44,14 +41,12 @@ import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 // Core components to the application structure.
 import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
-import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import CTATransition from "~/components/core/CTATransition";
 import Filter from "~/components/core/Filter";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
 import { announcements } from "~/components/core/OnboardingModal";
-import { Logo } from "~/common/logo";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const SIDEBARS = {
@@ -70,7 +65,6 @@ const SCENES = {
   NAV_ERROR: <SceneError />,
   NAV_SIGN_IN: <SceneAuth />,
   ...(Environment.ACTIVITY_FEATURE_FLAG ? { NAV_ACTIVITY: <SceneActivity /> } : {}),
-  NAV_SURVEY: <SceneSurvey />,
   // NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
@@ -145,9 +139,9 @@ export default class ApplicationPage extends React.Component {
 
     //NOTE(martina): if updating viewer affects this.state.data (e.g. you're viewing your own slate), update data as well
     if (viewer?.slates?.length) {
-      const page = this.state.page;
+      const { page } = this.state;
       if (page?.id === "NAV_SLATE" && this.state.data?.ownerId === this.state.viewer.id) {
-        let data = this.state.data;
+        let { data } = this.state;
         for (let slate of viewer.slates) {
           if (slate.id === data.id) {
             data = slate;
@@ -168,6 +162,23 @@ export default class ApplicationPage extends React.Component {
         return;
       }
     }
+
+    if (viewer?.onboarding) {
+      this.setState(
+        {
+          viewer: {
+            ...this.state.viewer,
+            ...viewer,
+            onboarding: { ...this.state.viewer.onboarding, ...viewer.onboarding },
+          },
+        },
+        () => {
+          if (callback) callback();
+        }
+      );
+      return;
+    }
+
     this.setState(
       {
         viewer: { ...this.state.viewer, ...viewer },
@@ -342,6 +353,7 @@ export default class ApplicationPage extends React.Component {
     }
 
     let state = { data: null, sidebar: null, page };
+    // eslint-disable-next-line no-undef
     if (!next.ignore) {
       state.activePage = page.id;
     }
@@ -432,12 +444,11 @@ export default class ApplicationPage extends React.Component {
   };
 
   render() {
-    let page = this.state.page;
-    if (!page?.id) {
-      page = NavigationData.getById(null, this.state.viewer);
-    }
+    let { page } = this.state;
+    if (!page?.id) page = NavigationData.getById(null, this.state.viewer);
+
     let headerElement;
-    if (page.id !== "NAV_SIGN_IN" && page.id !== "NAV_SURVEY") {
+    if (page.id !== "NAV_SIGN_IN" && this.state.viewer?.onboarding.survey) {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}
@@ -465,7 +476,7 @@ export default class ApplicationPage extends React.Component {
       isMobile: this.state.isMobile,
       isMac: this.props.isMac,
       activeUsers: this.state.activeUsers,
-      external: !!!this.state.viewer,
+      external: !this.state.viewer,
     });
 
     let sidebarElement;
@@ -482,30 +493,28 @@ export default class ApplicationPage extends React.Component {
       });
     }
 
-    const title = `Slate: ${page.pageTitle}`;
-    const description = "";
-    const url = "https://slate.host/_";
-
     const isProfilePage =
       (page.id === "NAV_SLATE" && this.state.data?.ownerId !== this.state.viewer?.id) ||
       page.id === "NAV_PROFILE";
 
-    // if (!this.state.loaded) {
-    //   return (
-    //     <WebsitePrototypeWrapper description={description} title={title} url={url}>
-    //       <div
-    //         style={{
-    //           height: "100vh",
-    //           display: "flex",
-    //           alignItems: "center",
-    //           justifyContent: "center",
-    //         }}
-    //       >
-    //         <Logo style={{ width: "20vw", maxWidth: "200px" }} />
-    //       </div>
-    //     </WebsitePrototypeWrapper>
-    //   );
-    // }
+    let pageContent = null;
+    switch (true) {
+      case !this.state.viewer?.onboarding.survey:
+        pageContent = <SceneSurvey onAction={this._handleAction} />;
+        break;
+
+      case this.state.loading:
+        pageContent = (
+          <div css={Styles.CONTAINER_CENTERED} style={{ width: "100%", height: "100vh" }}>
+            <LoaderSpinner style={{ height: 32, width: 32 }} />
+          </div>
+        );
+        break;
+
+      default:
+        pageContent = scene;
+    }
+
     return (
       <React.Fragment>
         <ApplicationLayout
@@ -521,20 +530,19 @@ export default class ApplicationPage extends React.Component {
         >
           <Filter
             isProfilePage={isProfilePage}
-            isActive={!!this.state.viewer && page.id !== "NAV_SIGN_IN" && page.id !== "NAV_ERROR"}
+            isActive={
+              !!this.state.viewer &&
+              this.state.viewer?.onboarding.survey &&
+              page.id !== "NAV_SIGN_IN" &&
+              page.id !== "NAV_ERROR"
+            }
             viewer={this.state.viewer}
             page={page}
             data={this.state.data}
             isMobile={this.props.isMobile}
             onAction={this._handleAction}
           >
-            {this.state.loading ? (
-              <div css={Styles.CONTAINER_CENTERED} style={{ width: "100%", height: "100vh" }}>
-                <LoaderSpinner style={{ height: 32, width: 32 }} />
-              </div>
-            ) : (
-              scene
-            )}
+            {pageContent}
           </Filter>
         </ApplicationLayout>
         <GlobalModal />

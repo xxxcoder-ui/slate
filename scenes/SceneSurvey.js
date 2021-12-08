@@ -127,12 +127,16 @@ function SceneSurvey({ onAction }) {
         surveyResults.current.referrals = value
           .map((item) => REFERRAL_OPTIONS[item] || item)
           .join(",");
-        // call endpoint
+
+        onAction({
+          type: "UPDATE_VIEWER",
+          viewer: { onboarding: { survey: true } },
+        });
+
         const response = await Actions.createOnboarding(surveyResults.current);
         if (Events.hasError(response)) {
           return;
         }
-        onAction({ type: "NAVIGATE", href: `/_/data` });
       }}
     />
   );

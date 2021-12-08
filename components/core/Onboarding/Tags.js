@@ -147,10 +147,12 @@ function TagsWalkthrought({ isMobile }) {
   return null;
 }
 
-export function TagsOnboarding({ isActive, isMobile, onAction, viewer, children }) {
+export function TagsOnboarding({ isMobile, onAction, viewer, children }) {
+  const shouldOnboard = viewer?.onboarding?.upload && !viewer?.onboarding?.tags;
+
   return (
     <Provider viewer={viewer} onAction={onAction}>
-      {isActive ? <TagsWalkthrought isMobile={isMobile} /> : null}
+      {shouldOnboard ? <TagsWalkthrought isMobile={isMobile} /> : null}
       {children}
     </Provider>
   );
