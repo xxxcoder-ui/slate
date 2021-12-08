@@ -499,7 +499,7 @@ export default class ApplicationPage extends React.Component {
 
     let pageContent = null;
     switch (true) {
-      case !this.state.viewer?.onboarding.survey:
+      case this.state.viewer && !this.state.viewer?.onboarding.survey:
         pageContent = <SceneSurvey onAction={this._handleAction} />;
         break;
 
