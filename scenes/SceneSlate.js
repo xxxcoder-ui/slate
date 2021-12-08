@@ -268,12 +268,12 @@ const STYLES_RESET_SCENE_PAGE_PADDING = css`
   }
 `;
 
-const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
+const STYLES_DATAVIEW_WRAPPER = (theme) => css`
   width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
-  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px) - ${theme.sizes.header}px;
+  padding: 20px 20px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
-    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
+    padding: 16px 16px 44px;
   }
 `;
 
@@ -452,7 +452,7 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            <div css={STYLES_DATAVIEWER_WRAPPER}>
+            <div css={STYLES_DATAVIEW_WRAPPER}>
               <DataView
                 key="scene-files-folder"
                 type="collection"

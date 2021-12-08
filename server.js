@@ -264,23 +264,8 @@ app.prepare().then(async () => {
 
     const id = Utilities.getIdFromCookie(req);
 
-    let viewer = null;
-    if (id) {
-      viewer = await ViewerManager.getById({
-        id,
-      });
-    }
-
-    let { page, redirected } = NavigationData.getByHref(req.path, viewer);
-    if (!redirected) {
-      page.params = req.query;
-    }
-
     let user = await Data.getUserByUsername({
       username,
-      sanitize: true,
-      includeFiles: true,
-      publicOnly: true,
     });
 
     if (!user) {
@@ -291,12 +276,34 @@ app.prepare().then(async () => {
       return res.redirect("/_/404");
     }
 
+    if (user.id === id) {
+      return res.redirect("/_/data");
+    }
+
     const slates = await Data.getSlatesByUserId({
       ownerId: user.id,
       publicOnly: true,
     });
 
-    user.slates = slates;
+    if (slates && !slates.error) {
+      if (slates.length) {
+        return res.redirect(`/${username}/${slates[0].slatename}`);
+      }
+
+      user.slates = slates;
+    }
+
+    let viewer = null;
+    if (id) {
+      viewer = await Data.getUserById({
+        id,
+      });
+    }
+
+    let { page, redirected } = NavigationData.getByHref(req.path, viewer);
+    if (!redirected) {
+      page.params = req.query;
+    }
 
     return app.render(req, res, "/_", {
       viewer,

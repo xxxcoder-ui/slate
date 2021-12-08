@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
+import * as Events from "~/common/custom-events";
 import * as Typography from "~/components/system/components/Typography";
 import * as Utilities from "~/common/utilities";
 
@@ -145,11 +146,12 @@ function Profile({ viewer, data, page, onAction, ...props }) {
     setIsFollowing(updatedIsFollowing);
   }, [viewer?.following, data?.id]);
 
-  const handleFollow = async () => {
+  const handleFollow = async (newStatus) => {
     if (!isAuthenticated) {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;
     }
+    setIsFollowing(newStatus);
     await Actions.createSubscription({
       userId: data.id,
     });
@@ -182,8 +184,7 @@ function Profile({ viewer, data, page, onAction, ...props }) {
           <ButtonSecondary
             full
             onClick={() => {
-              setIsFollowing(false);
-              handleFollow();
+              handleFollow(false);
             }}
           >
             Unfollow
@@ -192,8 +193,7 @@ function Profile({ viewer, data, page, onAction, ...props }) {
           <ButtonPrimary
             full
             onClick={() => {
-              setIsFollowing(true);
-              handleFollow();
+              handleFollow(true);
             }}
           >
             Follow

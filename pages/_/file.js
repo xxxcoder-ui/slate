@@ -86,7 +86,7 @@ export default class ProfilePage extends React.Component {
             onAction={() => {}}
             isMobile={isMobile}
             // params={page.params}
-            isOwner={viewer.id === file.ownerId}
+            isOwner={viewer?.id === file.ownerId}
             index={0}
             onChange={() => {}}
           />
