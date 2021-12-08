@@ -183,7 +183,7 @@ const ToolsForm = ({ onSubmit }) => {
             Next
           </ButtonPrimary>
           <P3 style={{ marginTop: 12 }} color="textBlack">
-            1/3
+            1/<div style={{ display: "inline-block" }}>3</div>
           </P3>
         </form>
       </SignUpPopover>
@@ -233,7 +233,7 @@ const UsecasesForm = ({ onSubmit }) => {
             Next
           </ButtonPrimary>
           <P3 style={{ marginTop: 12 }} color="textBlack">
-            2/3
+            2/<div style={{ display: "inline-block" }}>3</div>
           </P3>
         </form>
       </SignUpPopover>
@@ -283,7 +283,7 @@ const ReferralForm = ({ onSubmit }) => {
             Submit
           </ButtonPrimary>
           <P3 style={{ marginTop: 12 }} color="textBlack">
-            3/3
+            3/<div style={{ display: "inline-block" }}>3</div>
           </P3>
         </form>
       </SignUpPopover>

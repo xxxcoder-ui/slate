@@ -256,7 +256,7 @@ function UploadWalkthrough() {
               button on top right.
             </System.P2>
             <System.P2 color="textGray" style={{ marginTop: 14 }}>
-              1/2
+              1/<div style={{ display: "inline-block" }}>2</div>
             </System.P2>
           </>
         ) : (
@@ -292,7 +292,7 @@ function UploadWalkthrough() {
               </button>
             </System.P2>
             <System.P2 color="textGray" style={{ marginTop: 14 }}>
-              2/2
+              2/<div style={{ display: "inline-block" }}>2</div>
             </System.P2>
           </>
         )}
