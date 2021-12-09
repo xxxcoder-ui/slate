@@ -41,6 +41,10 @@ export default async (req, res) => {
       updates.settings = { ...user.settings, ...updates.settings };
     }
 
+    if (updates.onboarding) {
+      updates.onboarding = { ...user.onboarding, ...updates.onboarding };
+    }
+
     if (updates.email && updates.email !== user.email) {
       if (!Validations.email(updates.email)) {
         return res.status(400).send({

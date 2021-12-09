@@ -302,14 +302,6 @@ export const createUser = async (data) => {
   });
 };
 
-export const updateStatus = async (data) => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/users/status-update`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 // export const checkCIDStatus = async (data) => {
 //   return await returnJSON(`/api/data/cid-status`, {
 //     ...DEFAULT_OPTIONS,
