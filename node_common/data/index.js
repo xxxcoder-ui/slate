@@ -94,12 +94,6 @@ import getVerificationByEmail from "~/node_common/data/methods/get-verification-
 import getVerificationBySid from "~/node_common/data/methods/get-verification-by-sid";
 import pruneVerifications from "~/node_common/data/methods/prune-verifications";
 
-// NOTE(amine):
-// Onboarding postgres queries
-import getOnboardingByUserId from "~/node_common/data/methods/get-onboarding-by-user-id";
-import createOnboarding from "~/node_common/data/methods/create-onboarding";
-import updateOnboardingByUserId from "~/node_common/data/methods/update-onboarding-by-id";
-
 // NOTE(jim):
 // one-offs
 import createOrphan from "~/node_common/data/methods/create-orphan";
@@ -191,8 +185,4 @@ export {
   updateTwitterToken,
   // NOTE(martina): Deals
   createDeal,
-  // NOTE(amine): Onboarding
-  createOnboarding,
-  getOnboardingByUserId,
-  updateOnboardingByUserId,
 };

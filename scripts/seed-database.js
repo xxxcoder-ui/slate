@@ -181,16 +181,6 @@ const createTwitterTokensTable = db.schema.createTable("twitterTokens", function
   table.string("verified").nullable();
 });
 
-const createOnboardingTable = db.schema.createTable("onboarding", function (table) {
-  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
-  table.uuid("userId").references("id").inTable("users");
-  table.string("prevTools").notNullable();
-  table.string("usecases").notNullable();
-  table.string("referrals").notNullable();
-  table.boolean("upload").defaultTo(false);
-  table.boolean("tags").defaultTo(false);
-});
-
 // --------------------------
 // RUN
 // --------------------------
@@ -210,7 +200,6 @@ Promise.all([
   createGlobalTable,
   createUsageTable,
   createTwitterTokensTable,
-  createOnboardingTable,
 ]);
 
 Logging.log(`FINISHED: seed-database.js`);

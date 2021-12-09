@@ -53,7 +53,9 @@ const addSettingsColumnToUsersTable = db.schema
     )
   );
 
-Promise.all([addSettingsColumnToUsersTable]);
+const dropOnboardingTable = db.schema.dropTable("onboarding");
+
+Promise.all([addSettingsColumnToUsersTable, dropOnboardingTable]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);
