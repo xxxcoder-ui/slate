@@ -1,10 +1,13 @@
+import { has } from "lodash";
 import * as React from "react";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 const UploadContext = React.createContext({});
 export const useFilterContext = () => React.useContext(UploadContext);
 
-export const Provider = ({ children }) => {
-  const [isSidebarVisible, toggleSidebar] = useFilterSidebar();
+export const Provider = ({ children, viewer }) => {
+  const [isSidebarVisible, toggleSidebar] = useFilterSidebar({ viewer });
 
   const [isPopupVisible, { hidePopup, togglePopup }] = useFilterPopup();
 
@@ -22,9 +25,21 @@ export const Provider = ({ children }) => {
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;
 };
 
-const useFilterSidebar = () => {
-  const [isSidebarVisible, setSidebarState] = React.useState(false);
-  const toggleSidebar = () => setSidebarState((prev) => !prev);
+const useFilterSidebar = ({ viewer }) => {
+  const initialState =
+    typeof viewer?.settings?.isSidebarVisible === "undefined"
+      ? true
+      : viewer.settings.isSidebarVisible;
+
+  const [isSidebarVisible, setSidebarState] = React.useState(initialState);
+  const toggleSidebar = async () => {
+    setSidebarState((prev) => !prev);
+    const response = await Actions.updateViewer({
+      user: { settings: { isSidebarVisible: !isSidebarVisible } },
+    });
+    Events.hasError(response);
+  };
+
   return [isSidebarVisible, toggleSidebar];
 };
 
