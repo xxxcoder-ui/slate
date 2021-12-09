@@ -142,6 +142,11 @@ const STYLES_BUTTON_SMALL = (theme) => css`
   }
 `;
 
+const STYLES_EXTENSION_SCREEN = css`
+  width: 100%;
+  object-fit: cover;
+`;
+
 function ExtensionOnboarding({ isMobile }) {
   const { goToNextStep } = useUploadOnboardingContext();
 
@@ -161,7 +166,7 @@ function ExtensionOnboarding({ isMobile }) {
       }
       height={isMobile ? 411 : 281}
       width={isMobile ? 390 : 640}
-      style={{ width: "100%" }}
+      css={STYLES_EXTENSION_SCREEN}
       alt="chrome extension"
     />
   );

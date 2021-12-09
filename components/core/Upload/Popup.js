@@ -366,7 +366,6 @@ const STYLES_SUMMARY_ACTION = css`
 function Summary({ uploadSummary }) {
   const { retry, cancel } = useUploadStore((store) => store.handlers);
 
-  console.log(uploadSummary);
   return (
     <div css={STYLES_SUMMARY}>
       {uploadSummary.map((file) => (
