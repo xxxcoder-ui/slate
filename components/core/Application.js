@@ -45,8 +45,6 @@ import CTATransition from "~/components/core/CTATransition";
 import Filter from "~/components/core/Filter";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
-import { OnboardingModal } from "~/components/core/OnboardingModal";
-import { announcements } from "~/components/core/OnboardingModal";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 const SIDEBARS = {
@@ -253,7 +251,7 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _withAuthenticationBehavior = (authenticate) => async (href, state, newAccount) => {
+  _withAuthenticationBehavior = (authenticate) => async (href, state) => {
     let response = await authenticate(state);
     if (Events.hasError(response)) {
       return response;
@@ -269,31 +267,6 @@ export default class ApplicationPage extends React.Component {
     this.setState({ viewer });
     await this._handleSetupWebsocket();
 
-    let unseenAnnouncements = [];
-    for (let feature of announcements) {
-      if (!viewer.onboarding || !Object.keys(viewer.onboarding).includes(feature)) {
-        unseenAnnouncements.push(feature);
-      }
-    }
-
-    if (newAccount || unseenAnnouncements.length) {
-      Events.dispatchCustomEvent({
-        name: "create-modal",
-        detail: {
-          modal: (
-            <OnboardingModal
-              onAction={this._handleAction}
-              viewer={viewer}
-              newAccount={newAccount}
-              unseenAnnouncements={unseenAnnouncements}
-            />
-          ),
-          noBoundary: true,
-        },
-      });
-    }
-
-    // let redirected = this._handleURLRedirect();
     // if (!redirected) {
     //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
     // }
