@@ -42,7 +42,18 @@ const addSlateCoverImage = db.schema.table("slates", function (table) {
   table.jsonb("coverImage").nullable();
 });
 
-Promise.all([addSlateCoverImage]);
+const addSettingsColumnToUsersTable = db.schema
+  .table("users", (table) => {
+    table.jsonb("settings").defaultTo("{}");
+  })
+  .then(() =>
+    db("users").update(
+      "settings",
+      db.raw("jsonb_build_object('filecoin', users.data -> 'settings' )")
+    )
+  );
+
+Promise.all([addSettingsColumnToUsersTable]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

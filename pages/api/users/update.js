@@ -1,7 +1,6 @@
 import * as Environment from "~/node_common/environment";
 import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
-import * as Serializers from "~/node_common/serializers";
 import * as Validations from "~/common/validations";
 import * as Social from "~/node_common/social";
 import * as ViewerManager from "~/node_common/managers/viewer";
@@ -36,6 +35,10 @@ export default async (req, res) => {
           .status(500)
           .send({ decorator: "SERVER_USER_UPDATE_USERNAME_IS_TAKEN", error: true });
       }
+    }
+
+    if (updates.settings) {
+      updates.settings = { ...user.settings, ...updates.settings };
     }
 
     if (updates.email && updates.email !== user.email) {
@@ -108,10 +111,7 @@ export default async (req, res) => {
     }
 
     try {
-      const configResponse = await b.buckets.setDefaultArchiveConfig(
-        b.bucketKey,
-        req.body.data.config
-      );
+      await b.buckets.setDefaultArchiveConfig(b.bucketKey, req.body.data.config);
     } catch (e) {
       Logging.error(e);
       Social.sendTextileSlackMessage({
