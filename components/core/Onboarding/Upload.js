@@ -10,7 +10,7 @@ import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 import { ModalPortal } from "~/components/core/ModalPortal";
-import { useCheckIfExtensionIsInstalled, useIsomorphicLayoutEffect } from "~/common/hooks";
+import { useCheckIfExtensionIsInstalled } from "~/common/hooks";
 import { DynamicIcon } from "~/components/core/DynamicIcon";
 import { motion } from "framer-motion";
 
@@ -36,7 +36,7 @@ const steps = {
 
 function Provider({ children, viewer, onAction, ...props }) {
   const [currentStep, setCurrentStep] = React.useState(
-    viewer?.onboarding?.upload ? steps.finish : steps.welcome
+    viewer?.onboarding?.uploadCompleted ? steps.finish : steps.welcome
   );
 
   const { isExtensionDownloaded } = useCheckIfExtensionIsInstalled();
@@ -44,25 +44,20 @@ function Provider({ children, viewer, onAction, ...props }) {
   const goToNextStep = React.useCallback(() => {
     if (currentStep === steps.finish) return;
 
-    const nextStep = {
+    const nextStepMapper = {
       welcome: "extension",
       extension: "trigger",
       trigger: "jumper",
       jumper: "finish",
     };
+    const nextStep = nextStepMapper[currentStep];
 
-    setCurrentStep((prev) => nextStep[prev]);
-  }, [currentStep, isExtensionDownloaded]);
-
-  useIsomorphicLayoutEffect(() => {
-    if (currentStep === steps.finish) {
-      onAction({
-        type: "UPDATE_VIEWER",
-        viewer: { onboarding: { ...viewer.onboarding, upload: true } },
-      });
-      Actions.updateOnboarding({ upload: true });
+    setCurrentStep(nextStep);
+    if (nextStep === steps.finish) {
+      onAction({ type: "UPDATE_VIEWER", viewer: { onboarding: { uploadCompleted: true } } });
+      Actions.updateViewer({ user: { onboarding: { uploadCompleted: true } } });
     }
-  }, [currentStep]);
+  }, [currentStep, isExtensionDownloaded]);
 
   return (
     <UploadOnboardingContext.Provider value={{ currentStep, steps, goToNextStep }} {...props}>

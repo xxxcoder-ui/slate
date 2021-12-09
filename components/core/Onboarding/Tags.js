@@ -4,7 +4,6 @@ import * as Actions from "~/common/actions";
 import * as SVG from "~/common/svg";
 
 import { ModalPortal } from "~/components/core/ModalPortal";
-import { useIsomorphicLayoutEffect } from "~/common/hooks";
 import { css } from "@emotion/react";
 
 import OnboardingPopup from "~/components/core/Onboarding/Popup";
@@ -24,32 +23,23 @@ const steps = {
 
 function Provider({ children, onAction, viewer, ...props }) {
   const [currentStep, setCurrentStep] = React.useState(
-    viewer?.onboarding?.tags ? steps.finish : steps.trigger
+    viewer?.onboarding?.tagsCompleted ? steps.finish : steps.trigger
   );
 
-  useIsomorphicLayoutEffect(() => {
-    if (currentStep === steps.finish) {
-      onAction({
-        type: "UPDATE_VIEWER",
-        viewer: { onboarding: { ...viewer.onboarding, tags: true } },
-      });
-      Actions.updateOnboarding({ tags: true });
+  const goToNextStep = React.useCallback(() => {
+    if (currentStep === steps.finish) return;
+
+    const nextStepMapper = { trigger: "jumper", jumper: "finish" };
+    const nextStep = nextStepMapper[currentStep];
+
+    setCurrentStep(nextStep);
+    if (nextStep === steps.finish) {
+      onAction({ type: "UPDATE_VIEWER", viewer: { onboarding: { tagsCompleted: true } } });
+      Actions.updateViewer({ user: { onboarding: { tagsCompleted: true } } });
     }
   }, [currentStep]);
 
-  const contextValue = React.useMemo(
-    () => ({
-      currentStep,
-      steps,
-      goToNextStep() {
-        if (currentStep === steps.finish) return;
-
-        const nextStep = { trigger: "jumper", jumper: "finish" };
-        setCurrentStep((prev) => nextStep[prev]);
-      },
-    }),
-    [currentStep]
-  );
+  const contextValue = React.useMemo(() => ({ currentStep, steps, goToNextStep }), [currentStep]);
 
   return (
     <TagsOnboardingContext.Provider value={contextValue} {...props}>
@@ -162,7 +152,7 @@ function TagsWalkthrought({ isMobile }) {
 }
 
 export function TagsOnboarding({ isMobile, onAction, viewer, children }) {
-  const shouldOnboard = viewer?.onboarding?.upload && !viewer?.onboarding?.tags;
+  const shouldOnboard = viewer?.onboarding?.uploadCompleted && !viewer?.onboarding?.tagsCompleted;
 
   return (
     <Provider viewer={viewer} onAction={onAction}>

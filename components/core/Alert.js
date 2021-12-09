@@ -136,7 +136,7 @@ export class Alert extends React.Component {
     this.props.onAction({
       type: "UPDATE_VIEWER",
       viewer: {
-        onboarding: { ...this.props.viewer.onboarding, hidePrivacyAlert: true },
+        onboarding: { hidePrivacyAlert: true },
       },
     });
   };

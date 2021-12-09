@@ -15,24 +15,24 @@ import { Input } from "~/components/system";
 import { AuthWrapper } from "~/components/core/Auth/components";
 
 const TOOLS_OPTIONS = {
-  Dropbox: "DROPBOX",
-  "Google Drive": "GOOGLE_DRIVE",
-  "Are.na": "ARENA",
-  Pinterest: "PINTEREST",
-  "Browser Bookmarks": "BROWSER_BOOKMARKS",
+  Dropbox: "prevToolsDropbox",
+  "Google Drive": "prevToolsGoogleDrive",
+  "Are.na": "prevToolsArena",
+  Pinterest: "prevToolsPinterest",
+  "Browser Bookmarks": "prevToolsBrowserBookmarks",
 };
 const SLATE_USECASES_OPTIONS = {
-  "Personal Storage": "PERSONAL_STORAGE",
-  "Public File Sharing": "PUBLIC_FILE_SHARING",
-  Moodboarding: "MOODBOARDING",
-  Archiving: "ARCHIVING",
-  Bookmarking: "BOOKMARKING",
+  "Personal Storage": "useCasesPersonalStorage",
+  "Public File Sharing": "useCasesPublicFileSharing",
+  Moodboarding: "useCasesMoodboarding",
+  Archiving: "useCasesArchiving",
+  Bookmarking: "useCasesBookmarking",
 };
 
 const REFERRAL_OPTIONS = {
-  Twitter: "TWITTER",
-  "IPFS/Filecoin Community": "IPFS_FILECOIN",
-  "From a friend": "FRIEND",
+  Twitter: "referralTwitter",
+  "IPFS/Filecoin Community": "referralIpfsFilecoinCommunity",
+  "From a friend": "referralFriend",
 };
 
 // NOTE(amine): form styles
@@ -90,18 +90,44 @@ const STYLES_CHECKBOX_INPUT = css`
   left: 0%;
   width: 100%;
   height: 100%;
+  font-size: 16px;
   ${Styles.HOVERABLE};
 `;
 
 function SceneSurvey({ onAction }) {
   const [step, setStep] = React.useState(1);
-  const surveyResults = React.useRef({});
+  const defaultTools = Object.entries(TOOLS_OPTIONS).reduce(
+    (acc, [, key]) => ({ ...acc, [key]: false }),
+    {}
+  );
+  const defaultUseCases = Object.entries(SLATE_USECASES_OPTIONS).reduce(
+    (acc, [, key]) => ({ ...acc, [key]: false }),
+    {}
+  );
+  const defaultReferrals = Object.entries(REFERRAL_OPTIONS).reduce(
+    (acc, [, key]) => ({ ...acc, [key]: false }),
+    {}
+  );
+
+  const surveyResults = React.useRef({ ...defaultTools, ...defaultUseCases, ...defaultReferrals });
 
   if (step === 1) {
     return (
       <ToolsForm
         onSubmit={(value) => {
-          surveyResults.current.tools = value.map((item) => TOOLS_OPTIONS[item] || item).join(",");
+          const tools = value.reduce((acc, item) => {
+            const key = TOOLS_OPTIONS[item];
+
+            if (key) acc[key] = true;
+            else acc["prevToolsOther"] = item;
+
+            return acc;
+          }, {});
+
+          surveyResults.current = {
+            ...surveyResults.current,
+            ...tools,
+          };
           setStep(2);
         }}
       />
@@ -112,9 +138,19 @@ function SceneSurvey({ onAction }) {
     return (
       <UsecasesForm
         onSubmit={(value) => {
-          surveyResults.current.useCases = value
-            .map((item) => SLATE_USECASES_OPTIONS[item] || item)
-            .join(",");
+          const useCases = value.reduce((acc, item) => {
+            const key = SLATE_USECASES_OPTIONS[item];
+
+            if (key) acc[key] = true;
+            else acc["useCasesOther"] = item;
+
+            return acc;
+          }, {});
+
+          surveyResults.current = {
+            ...surveyResults.current,
+            ...useCases,
+          };
           setStep(3);
         }}
       />
@@ -124,16 +160,29 @@ function SceneSurvey({ onAction }) {
   return (
     <ReferralForm
       onSubmit={async (value) => {
-        surveyResults.current.referrals = value
-          .map((item) => REFERRAL_OPTIONS[item] || item)
-          .join(",");
+        const referrals = value.reduce((acc, item) => {
+          const key = REFERRAL_OPTIONS[item];
+
+          if (key) acc[key] = true;
+          else acc["referralOther"] = item;
+
+          return acc;
+        }, {});
+
+        surveyResults.current = {
+          ...surveyResults.current,
+          ...referrals,
+          surveyCompleted: true,
+        };
 
         onAction({
           type: "UPDATE_VIEWER",
-          viewer: { onboarding: { survey: true } },
+          viewer: { onboarding: { ...surveyResults.current } },
         });
 
-        const response = await Actions.createOnboarding(surveyResults.current);
+        const response = await Actions.updateViewer({
+          user: { onboarding: surveyResults.current },
+        });
         if (Events.hasError(response)) {
           return;
         }
@@ -298,7 +347,9 @@ const ReferralForm = ({ onSubmit }) => {
 const Checkbox = ({ touched, value, style, isSelected, ...props }) => {
   return (
     <div style={style} css={[STYLES_CHECKBOX_WRAPPER, isSelected && STYLES_CHECKBOX_SELECTED]}>
-      <H5 color="textBlack">{value}</H5>
+      <H5 color="textBlack" style={{ fontSize: 16 }}>
+        {value}
+      </H5>
       <input value={value} css={STYLES_CHECKBOX_INPUT} type="checkbox" {...props} />
     </div>
   );

@@ -419,7 +419,7 @@ export default class ApplicationPage extends React.Component {
     if (!page?.id) page = NavigationData.getById(null, this.state.viewer);
 
     let headerElement;
-    if (page.id !== "NAV_SIGN_IN" && this.state.viewer?.onboarding.survey) {
+    if (page.id !== "NAV_SIGN_IN" && this.state.viewer?.onboarding?.surveyCompleted) {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}
@@ -470,7 +470,7 @@ export default class ApplicationPage extends React.Component {
 
     let pageContent = null;
     switch (true) {
-      case this.state.viewer && !this.state.viewer?.onboarding.survey:
+      case this.state.viewer && !this.state.viewer?.onboarding?.surveyCompleted:
         pageContent = <SceneSurvey onAction={this._handleAction} />;
         break;
 
@@ -503,7 +503,7 @@ export default class ApplicationPage extends React.Component {
             isProfilePage={isProfilePage}
             isActive={
               !!this.state.viewer &&
-              this.state.viewer?.onboarding.survey &&
+              this.state.viewer?.onboarding?.surveyCompleted &&
               page.id !== "NAV_SIGN_IN" &&
               page.id !== "NAV_ERROR"
             }
