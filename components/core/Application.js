@@ -520,7 +520,7 @@ export default class ApplicationPage extends React.Component {
         >
           <Filter
             isProfilePage={isProfilePage}
-            isActive={true}
+            isActive={page.id !== "NAV_SIGN_IN" && page.id !== "NAV_ERROR"}
             viewer={this.state.viewer}
             page={page}
             data={this.state.data}

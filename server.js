@@ -295,7 +295,7 @@ app.prepare().then(async () => {
 
     let viewer = null;
     if (id) {
-      viewer = await Data.getUserById({
+      viewer = await ViewerManager.getById({
         id,
       });
     }

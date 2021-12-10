@@ -204,10 +204,12 @@ export default class SceneSlate extends React.Component {
           url={`${Constants.hostname}${this.props.page.pathname}`}
         >
           <ScenePage>
-            <EmptyState>
-              <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
-              <div>We were unable to locate that collection</div>
-            </EmptyState>
+            <div css={Styles.PAGE_CONTENT_WRAPPER}>
+              <EmptyState>
+                <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
+                <div>We were unable to locate that collection</div>
+              </EmptyState>
+            </div>
           </ScenePage>
         </WebsitePrototypeWrapper>
       );
@@ -265,15 +267,6 @@ const STYLES_RESET_SCENE_PAGE_PADDING = css`
   padding: 0px;
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 0px;
-  }
-`;
-
-const STYLES_DATAVIEW_WRAPPER = (theme) => css`
-  width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px) - ${theme.sizes.header}px;
-  padding: 20px 20px 44px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: 16px 16px 44px;
   }
 `;
 
@@ -452,7 +445,7 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            <div css={STYLES_DATAVIEW_WRAPPER}>
+            <div css={Styles.PAGE_CONTENT_WRAPPER}>
               <DataView
                 key="scene-files-folder"
                 type="collection"
@@ -467,7 +460,7 @@ class SlatePage extends React.Component {
             </div>
           </>
         ) : isOwner ? (
-          <div>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <EmptyState>
               <FileTypeGroup />
               <div style={{ marginTop: 24 }}>
@@ -476,7 +469,7 @@ class SlatePage extends React.Component {
             </EmptyState>
           </div>
         ) : (
-          <div>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <EmptyState>There's nothing here :)</EmptyState>
           </div>
         )}

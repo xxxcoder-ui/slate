@@ -23,15 +23,6 @@ const STYLES_LOADER = css`
   width: 100%;
 `;
 
-const STYLES_DATAVIEW_WRAPPER = (theme) => css`
-  width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px) - ${theme.sizes.header}px;
-  padding: 20px 20px 44px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: 16px 16px 44px;
-  }
-`;
-
 export default class SceneProfile extends React.Component {
   state = {
     notFound: false,
@@ -169,10 +160,12 @@ export default class SceneProfile extends React.Component {
         url={`${Constants.hostname}${this.props.page.pathname}`}
       >
         <ScenePage>
-          <EmptyState>
-            <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-            <div>This user doesn't have any public content</div>
-          </EmptyState>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
+            <EmptyState>
+              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+              <div>This user doesn't have any public content</div>
+            </EmptyState>
+          </div>
         </ScenePage>
       </WebsitePrototypeWrapper>
     );
@@ -199,7 +192,7 @@ export default class SceneProfile extends React.Component {
         url={`${Constants.hostname}${this.props.page.pathname}`}
         image={image}
       >
-        <div css={STYLES_DATAVIEW_WRAPPER}>
+        <div css={Styles.PAGE_CONTENT_WRAPPER}>
           {user.library?.length ? (
             <DataView
               key="scene-files-folder"

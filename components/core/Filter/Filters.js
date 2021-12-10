@@ -153,7 +153,7 @@ function Profile({ viewer, data, page, onAction, ...props }) {
   const isOwner = viewer?.id === data.id;
 
   const [isFollowing, setIsFollowing] = React.useState(() =>
-    isOwner
+    isOwner || !viewer
       ? false
       : !!viewer?.following.some((entry) => {
           return entry.id === data.id;
@@ -161,11 +161,12 @@ function Profile({ viewer, data, page, onAction, ...props }) {
   );
 
   React.useEffect(() => {
-    let updatedIsFollowing = isOwner
-      ? false
-      : !!viewer?.following.some((entry) => {
-          return entry.id === data.id;
-        });
+    let updatedIsFollowing =
+      isOwner || !viewer
+        ? false
+        : !!viewer?.following.some((entry) => {
+            return entry.id === data.id;
+          });
     setIsFollowing(updatedIsFollowing);
   }, [viewer?.following, data?.id]);
 
