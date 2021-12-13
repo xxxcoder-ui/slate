@@ -42,7 +42,17 @@ export default async (req, res) => {
     });
   }
 
-  slate.user = owner;
+  let slates = await Data.getSlatesByUserId({
+    ownerId: owner.id,
+    // includeFiles: true,
+    publicOnly: true,
+  });
+
+  if (slates && !slates.error) {
+    owner.slates = slates;
+  }
+
+  slate.owner = owner;
 
   return res.status(200).send({
     decorator: "SERVER_GET_SERIALIZED_SLATE",

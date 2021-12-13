@@ -18,7 +18,6 @@ import { Match, Switch } from "~/components/utility/Switch";
 import { Show } from "~/components/utility/Show";
 import { useMediaQuery } from "~/common/hooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { Navbar as FilterNavbar } from "~/components/core/Filter/Navbar";
 import { useSearchStore } from "~/components/core/Search/store";
 
 const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
@@ -36,9 +35,13 @@ const STYLES_APPLICATION_HEADER_BACKGROUND = (theme) => css`
   }
 `;
 
-const STYLES_APPLICATION_HEADER = css`
+const STYLES_APPLICATION_HEADER = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
-  padding: 14px 24px;
+  height: ${theme.sizes.header}px;
+  padding: 0px 24px;
+  border-bottom: 0.5px solid ${theme.semantic.borderGrayLight};
+  box-sizing: border-box;
+
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 14px 16px;
     width: 100%;
@@ -91,14 +94,6 @@ const STYLES_HEADER = (theme) => css`
   top: 0;
 `;
 
-const STYLES_FILTER_NAVBAR = (theme) => css`
-  z-index: ${theme.zindex.body};
-  width: 100vw;
-  position: fixed;
-  right: 0;
-  top: ${theme.sizes.header}px;
-`;
-
 const STYLES_UPLOAD_BUTTON = css`
   ${Styles.CONTAINER_CENTERED};
   background-color: ${Constants.semantic.bgGrayLight};
@@ -136,73 +131,62 @@ export default function ApplicationHeader({ viewer, page, data, onAction }) {
   const isSignedOut = !viewer;
 
   return (
-    <>
-      <div css={STYLES_HEADER}>
-        <header style={{ position: "relative" }}>
-          <div css={STYLES_APPLICATION_HEADER}>
-            <div css={STYLES_LEFT}>
-              <Show
-                when={viewer}
-                fallback={
-                  <Link onAction={onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
-                    <DarkSymbol style={{ height: 24, display: "block" }} />
-                  </Link>
-                }
-              >
-                <ApplicationUserControls
-                  popup={mobile ? false : state.popup}
-                  onTogglePopup={_handleTogglePopup}
-                  viewer={viewer}
+    <div css={STYLES_HEADER}>
+      <header style={{ position: "relative" }}>
+        <div css={STYLES_APPLICATION_HEADER}>
+          <div css={STYLES_LEFT}>
+            <Show
+              when={viewer}
+              fallback={
+                <Link onAction={onAction} href="/_/data" style={{ pointerEvents: "auto" }}>
+                  <DarkSymbol style={{ height: 24, display: "block" }} />
+                </Link>
+              }
+            >
+              <ApplicationUserControls
+                popup={mobile ? false : state.popup}
+                onTogglePopup={_handleTogglePopup}
+                viewer={viewer}
+                onAction={onAction}
+              />
+            </Show>
+          </div>
+          <div css={[STYLES_MIDDLE, Styles.HORIZONTAL_CONTAINER_CENTERED]}>
+            {/**TODO: update Search component */}
+            <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
+          </div>
+          <Upload.Provider page={page} data={data} viewer={viewer}>
+            <Upload.Root data={data}>
+              <div css={STYLES_RIGHT}>
+                <UserActions
+                  uploadAction={
+                    <Upload.Trigger viewer={viewer} aria-label="Upload" css={STYLES_UPLOAD_BUTTON}>
+                      <SVG.Plus height="16px" />
+                    </Upload.Trigger>
+                  }
+                  isSearching={isSearching}
+                  isSignedOut={isSignedOut}
                   onAction={onAction}
                 />
-              </Show>
-            </div>
-            <div css={STYLES_MIDDLE}>
-              {/**TODO: update Search component */}
-              <Search.Input viewer={viewer} data={data} onAction={onAction} page={page} />
-            </div>
-            <Upload.Provider page={page} data={data} viewer={viewer}>
-              <Upload.Root data={data}>
-                <div css={STYLES_RIGHT}>
-                  <UserActions
-                    uploadAction={
-                      <Upload.Trigger
-                        viewer={viewer}
-                        aria-label="Upload"
-                        css={STYLES_UPLOAD_BUTTON}
-                      >
-                        <SVG.Plus height="16px" />
-                      </Upload.Trigger>
-                    }
-                    isSearching={isSearching}
-                    isSignedOut={isSignedOut}
-                    onAction={onAction}
-                  />
-                </div>
-              </Upload.Root>
-            </Upload.Provider>
-          </div>
-          <Show when={mobile && state.popup === "profile"}>
-            <ApplicationUserControlsPopup
-              popup={state.popup}
-              onTogglePopup={_handleTogglePopup}
-              viewer={viewer}
-              onAction={onAction}
-              style={{ pointerEvents: "auto" }}
-            />
-            <div css={STYLES_BACKGROUND} />
-          </Show>
-          {/** NOTE(amine): a fix for a backdrop-filter bug where the filter doesn't take any effects.
-           *   It happens when we have two elements using backdrop-filter with a parent-child relationship */}
-          <div css={STYLES_APPLICATION_HEADER_BACKGROUND} />
-        </header>
-      </div>
-      <div css={STYLES_FILTER_NAVBAR}>
-        <Show when={!!viewer}>
-          <FilterNavbar />
+              </div>
+            </Upload.Root>
+          </Upload.Provider>
+        </div>
+        <Show when={mobile && state.popup === "profile"}>
+          <ApplicationUserControlsPopup
+            popup={state.popup}
+            onTogglePopup={_handleTogglePopup}
+            viewer={viewer}
+            onAction={onAction}
+            style={{ pointerEvents: "auto" }}
+          />
+          <div css={STYLES_BACKGROUND} />
         </Show>
-      </div>
-    </>
+        {/** NOTE(amine): a fix for a backdrop-filter bug where the filter doesn't take any effects.
+         *   It happens when we have two elements using backdrop-filter with a parent-child relationship */}
+        <div css={STYLES_APPLICATION_HEADER_BACKGROUND} />
+      </header>
+    </div>
   );
 }
 

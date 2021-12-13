@@ -2,13 +2,15 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as Search from "~/components/core/Search";
+import * as Filters from "~/components/core/Filter/Filters";
+import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
-import { NavbarPortal } from "~/components/core/Filter/Navbar";
 import { Provider } from "~/components/core/Filter/Provider";
 import { Sidebar, SidebarTrigger } from "~/components/core/Filter/Sidebar";
 import { Popup, PopupTrigger } from "~/components/core/Filter/Popup";
 import { useSearchStore } from "~/components/core/Search/store";
+import { Divider } from "~/components/system";
 
 /* -------------------------------------------------------------------------------------------------
  *  Title
@@ -20,6 +22,7 @@ function Title({ page, data }) {
     if (isSearching) return `Searching for ${query}`;
     if (page.id === "NAV_DATA") return "My library";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
+    if (page.id === "NAV_PROFILE") return "@ " + data.username;
   }, [page, data, query, isSearching]);
 
   return (
@@ -37,6 +40,42 @@ function Actions() {
   return <div />;
 }
 
+const STYLES_NAVBAR = (theme) => css`
+  box-sizing: border-box;
+  min-height: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: ${theme.shadow.lightSmall};
+  padding: 0px 24px;
+  box-sizing: border-box;
+  border-bottom: 0.5px solid ${theme.semantic.borderGrayLight};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 0px 16px;
+  }
+`;
+
+const STYLES_NAVBAR_BACKGROUND = (theme) => css`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+
+  background-color: ${theme.semantic.bgWhite};
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
+    -webkit-backdrop-filter: blur(75px);
+    backdrop-filter: blur(75px);
+    background-color: ${theme.semantic.bgBlurWhite};
+  }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 9px 16px 11px;
+  }
+`;
+
 const STYLES_FILTER_TITLE_WRAPPER = css`
   ${Styles.MOBILE_HIDDEN};
   position: absolute;
@@ -47,13 +86,21 @@ const STYLES_FILTER_TITLE_WRAPPER = css`
 
 const STYLES_FILTER_POPUP_WRAPPER = (theme) => css`
   position: absolute;
-  top: calc(${theme.sizes.filterNavbar}px + 4px);
+  top: calc(100% + 4px);
   left: 4px;
   width: 100%;
+
   @media (max-width: ${theme.sizes.mobile}px) {
-    top: ${theme.sizes.filterNavbar}px;
+    top: 100%;
     left: 0px;
   }
+`;
+
+const STYLES_PROFILE_SECTION = (theme) => css`
+  box-sizing: border-box;
+  background-color: ${theme.semantic.bgLight};
+  padding: 16px;
+  border-bottom: 0.5px solid ${theme.semantic.borderGrayLight};
 `;
 
 /* -------------------------------------------------------------------------------------------------
@@ -63,10 +110,19 @@ const STYLES_FILTER_POPUP_WRAPPER = (theme) => css`
 const STYLES_FILTER_CONTENT = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER};
   width: 100%;
-  margin-top: ${theme.sizes.filterNavbar}px;
+  ${"" /* margin-top: ${theme.sizes.filterNavbar}px; */}
 `;
 
-export default function Filter({ isActive, viewer, onAction, page, data, isMobile, children }) {
+export default function Filter({
+  isActive,
+  viewer,
+  onAction,
+  page,
+  data,
+  isMobile,
+  children,
+  isProfilePage,
+}) {
   const { results, isSearching } = useSearchStore();
   const showSearchResult = isSearching && !!results;
 
@@ -79,46 +135,68 @@ export default function Filter({ isActive, viewer, onAction, page, data, isMobil
   }
 
   return (
-    <>
-      <Provider>
-        <NavbarPortal>
+    <Provider>
+      {isProfilePage && isMobile ? (
+        <div css={STYLES_PROFILE_SECTION}>
+          <Filters.Profile page={page} data={data} viewer={viewer} onAction={onAction} />
+        </div>
+      ) : null}
+      <div
+        style={{
+          position: "sticky",
+          top: Constants.sizes.header,
+          zIndex: Constants.zindex.header - 1, //NOTE(martina): so it doesn't cover up the ApplicationUserControls
+        }}
+      >
+        <div css={STYLES_NAVBAR}>
+          <div css={STYLES_NAVBAR_BACKGROUND} />
           <div css={STYLES_FILTER_POPUP_WRAPPER}>
-            <Popup viewer={viewer} onAction={onAction} data={data} page={page} />
+            <Popup
+              viewer={viewer}
+              onAction={onAction}
+              data={data}
+              page={page}
+              isMobile={isMobile}
+              isProfilePage={isProfilePage}
+            />
           </div>
 
-          <div css={Styles.CONTAINER_CENTERED}>
-            <div css={Styles.MOBILE_HIDDEN}>
-              <SidebarTrigger />
+          {isProfilePage && !isMobile ? null : (
+            <div css={Styles.CONTAINER_CENTERED}>
+              <div css={Styles.MOBILE_HIDDEN}>
+                <SidebarTrigger />
+              </div>
+              <PopupTrigger isMobile={isMobile} style={{ marginLeft: 2 }}>
+                <span css={Styles.MOBILE_ONLY} style={{ marginRight: 8 }}>
+                  <Title page={page} data={data} />
+                </span>
+              </PopupTrigger>
             </div>
-            <PopupTrigger isMobile={isMobile} style={{ marginLeft: 2 }}>
-              <span css={Styles.MOBILE_ONLY} style={{ marginRight: 8 }}>
-                <Title page={page} data={data} />
-              </span>
-            </PopupTrigger>
-          </div>
+          )}
 
           <div css={STYLES_FILTER_TITLE_WRAPPER}>
             <Title page={page} data={data} />
           </div>
           <Actions />
-        </NavbarPortal>
-        <div css={STYLES_FILTER_CONTENT}>
-          <Sidebar
-            viewer={viewer}
-            onAction={onAction}
-            data={data}
-            page={page}
-            isMobile={isMobile}
-          />
-          <div style={{ flexGrow: 1 }}>
-            {showSearchResult ? (
-              <Search.Content viewer={viewer} page={page} onAction={onAction} />
-            ) : (
-              children
-            )}
-          </div>
         </div>
-      </Provider>
-    </>
+      </div>
+      <div css={STYLES_FILTER_CONTENT}>
+        <Sidebar
+          viewer={viewer}
+          onAction={onAction}
+          data={data}
+          page={page}
+          isMobile={isMobile}
+          isProfilePage={isProfilePage}
+        />
+        <div style={{ flexGrow: 1 }}>
+          {showSearchResult ? (
+            <Search.Content viewer={viewer} page={page} onAction={onAction} />
+          ) : (
+            children
+          )}
+        </div>
+      </div>
+    </Provider>
   );
 }

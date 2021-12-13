@@ -24,7 +24,7 @@ import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
 import SceneAuth from "~/scenes/SceneAuth";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
-import SceneDirectory from "~/scenes/SceneDirectory";
+// import SceneDirectory from "~/scenes/SceneDirectory";
 import SceneProfile from "~/scenes/SceneProfile";
 
 // NOTE(jim):
@@ -44,7 +44,6 @@ import SidebarEditTags from "~/components/sidebars/SidebarEditTags";
 import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import PortalsProvider from "~/components/core/PortalsProvider";
 import CTATransition from "~/components/core/CTATransition";
 import Filter from "~/components/core/Filter";
 
@@ -72,7 +71,7 @@ const SCENES = {
   NAV_ERROR: <SceneError />,
   NAV_SIGN_IN: <SceneAuth />,
   ...(Environment.ACTIVITY_FEATURE_FLAG ? { NAV_ACTIVITY: <SceneActivity /> } : {}),
-  NAV_DIRECTORY: <SceneDirectory />,
+  // NAV_DIRECTORY: <SceneDirectory />,
   NAV_PROFILE: <SceneProfile />,
   NAV_DATA: <SceneFilesFolder />,
   NAV_SLATE: <SceneSlate />,
@@ -345,22 +344,23 @@ export default class ApplicationPage extends React.Component {
       state.activePage = page.id;
     }
 
-    let body = document.documentElement || document.body;
     if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
       state.loading = true;
       state.data = { id: details.id };
     }
-    this.setState(state, () => {
-      if (!popstate) {
-        body.scrollTo(0, 0);
-      }
-      if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
-        this.updateDataAndPathname({ page, details });
-      }
-    });
+    if (page.id === "NAV_SLATE" || page.id === "NAV_PROFILE") {
+      this.updateDataAndPathname({ page, details, state, popstate });
+    } else {
+      this.setState(state, () => {
+        let body = document.documentElement || document.body;
+        if (!popstate) {
+          body.scrollTo(0, 0);
+        }
+      });
+    }
   };
 
-  updateDataAndPathname = async ({ page, details }) => {
+  updateDataAndPathname = async ({ page, details, state, popstate }) => {
     let pathname = page.pathname.split("?")[0];
     let search = Strings.getQueryStringFromParams(page.params);
     let data;
@@ -372,8 +372,13 @@ export default class ApplicationPage extends React.Component {
         return;
       }
       data = response.data;
-      pathname = `/${data.user.username}/${data.slatename}${search}`;
+      pathname = `/${data.owner.username}/${data.slatename}${search}`;
     } else if (page?.id === "NAV_PROFILE") {
+      if (details.id === this.state.viewer?.id) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({ href: "/_/data", redirect: true });
+        return;
+      }
       let response = await Actions.getSerializedProfile(details);
       if (!response || response.error) {
         this.setState({ loading: false });
@@ -381,10 +386,24 @@ export default class ApplicationPage extends React.Component {
         return;
       }
       data = response.data;
+      if (data.slates?.length) {
+        this.setState({ loading: false });
+        this._handleNavigateTo({
+          href: `/${data.username}/${data.slates[0].slatename}`,
+          redirect: true,
+        });
+        return;
+      }
+
       pathname = `/${data.username}${search}`;
     }
 
-    this.setState({ data, loading: false });
+    this.setState({ ...state, data, loading: false }, () => {
+      if (!popstate) {
+        let body = document.documentElement || document.body;
+        body.scrollTo(0, 0);
+      }
+    });
 
     window.history.replaceState(null, "Slate", pathname);
   };
@@ -466,6 +485,10 @@ export default class ApplicationPage extends React.Component {
     const description = "";
     const url = "https://slate.host/_";
 
+    const isProfilePage =
+      (page.id === "NAV_SLATE" && this.state.data?.ownerId !== this.state.viewer?.id) ||
+      page.id === "NAV_PROFILE";
+
     // if (!this.state.loaded) {
     //   return (
     //     <WebsitePrototypeWrapper description={description} title={title} url={url}>
@@ -484,42 +507,41 @@ export default class ApplicationPage extends React.Component {
     // }
     return (
       <React.Fragment>
-        <PortalsProvider>
-          <ApplicationLayout
-            sidebarName={this.state.sidebar}
-            page={page}
-            onAction={this._handleAction}
-            header={headerElement}
-            sidebar={sidebarElement}
-            onDismissSidebar={this._handleDismissSidebar}
-            isMobile={this.state.isMobile}
-            isMac={this.props.isMac}
+        <ApplicationLayout
+          sidebarName={this.state.sidebar}
+          page={page}
+          onAction={this._handleAction}
+          header={headerElement}
+          sidebar={sidebarElement}
+          onDismissSidebar={this._handleDismissSidebar}
+          isMobile={this.state.isMobile}
+          isMac={this.props.isMac}
+          viewer={this.state.viewer}
+        >
+          <Filter
+            isProfilePage={isProfilePage}
+            isActive={page.id !== "NAV_SIGN_IN" && page.id !== "NAV_ERROR"}
             viewer={this.state.viewer}
+            page={page}
+            data={this.state.data}
+            isMobile={this.props.isMobile}
+            onAction={this._handleAction}
           >
-            <Filter
-              isActive={!!this.state.viewer}
-              viewer={this.state.viewer}
-              page={page}
-              data={this.state.data}
-              isMobile={this.props.isMobile}
-              onAction={this._handleAction}
-            >
-              {this.state.loading ? (
-                <div
-                  css={Styles.CONTAINER_CENTERED}
-                  style={{
-                    width: "100%",
-                    height: "100vh",
-                  }}
-                >
-                  <LoaderSpinner style={{ height: 32, width: 32 }} />
-                </div>
-              ) : (
-                scene
-              )}
-            </Filter>
-          </ApplicationLayout>
-        </PortalsProvider>
+            {this.state.loading ? (
+              <div
+                css={Styles.CONTAINER_CENTERED}
+                style={{
+                  width: "100%",
+                  height: "100vh",
+                }}
+              >
+                <LoaderSpinner style={{ height: 32, width: 32 }} />
+              </div>
+            ) : (
+              scene
+            )}
+          </Filter>
+        </ApplicationLayout>
         <GlobalModal />
         <SearchModal
           viewer={this.state.viewer}

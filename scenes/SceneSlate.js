@@ -204,10 +204,12 @@ export default class SceneSlate extends React.Component {
           url={`${Constants.hostname}${this.props.page.pathname}`}
         >
           <ScenePage>
-            <EmptyState>
-              <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
-              <div>We were unable to locate that collection</div>
-            </EmptyState>
+            <div css={Styles.PAGE_CONTENT_WRAPPER}>
+              <EmptyState>
+                <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
+                <div>We were unable to locate that collection</div>
+              </EmptyState>
+            </div>
           </ScenePage>
         </WebsitePrototypeWrapper>
       );
@@ -266,19 +268,6 @@ const STYLES_RESET_SCENE_PAGE_PADDING = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 0px;
   }
-`;
-
-const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
-  width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
-  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
-  }
-`;
-
-const STYLES_DATAVIEWER_WRAPPER_EXTERNAL = css`
-  margin-top: 40px;
 `;
 
 class SlatePage extends React.Component {
@@ -411,12 +400,12 @@ class SlatePage extends React.Component {
   };
 
   render() {
-    const { user, name, objects, body, isPublic, ownerId } = this.props.data;
+    const { owner: user, name, objects, body, isPublic, ownerId } = this.props.data;
     const isOwner = this.props.viewer ? ownerId === this.props.viewer.id : false;
 
     return (
-      <ScenePage css={!this.props.external && STYLES_RESET_SCENE_PAGE_PADDING}>
-        {this.props.external ? (
+      <ScenePage css={STYLES_RESET_SCENE_PAGE_PADDING}>
+        {/* {this.props.external ? (
           <ScenePageHeader
             wide
             title={
@@ -441,7 +430,7 @@ class SlatePage extends React.Component {
           >
             {body}
           </ScenePageHeader>
-        ) : null}
+        ) : null} */}
         {objects && objects.length ? (
           <>
             <GlobalCarousel
@@ -456,11 +445,7 @@ class SlatePage extends React.Component {
               index={this.state.index}
               onChange={(index) => this.setState({ index })}
             />
-            <div
-              css={
-                this.props.external ? STYLES_DATAVIEWER_WRAPPER_EXTERNAL : STYLES_DATAVIEWER_WRAPPER
-              }
-            >
+            <div css={Styles.PAGE_CONTENT_WRAPPER}>
               <DataView
                 key="scene-files-folder"
                 type="collection"
@@ -475,7 +460,7 @@ class SlatePage extends React.Component {
             </div>
           </>
         ) : isOwner ? (
-          <div>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <EmptyState>
               <FileTypeGroup />
               <div style={{ marginTop: 24 }}>
@@ -484,7 +469,7 @@ class SlatePage extends React.Component {
             </EmptyState>
           </div>
         ) : (
-          <div>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <EmptyState>There's nothing here :)</EmptyState>
           </div>
         )}

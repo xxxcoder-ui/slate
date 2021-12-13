@@ -66,15 +66,40 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   }
 `;
 
-export function Popup({ viewer, onAction, css, data, page, ...props }) {
+export function Popup({ viewer, onAction, css, data, page, isMobile, isProfilePage, ...props }) {
   const [{ popupState }] = useFilterContext();
 
+  if (isProfilePage && !isMobile) {
+    return null;
+  }
+
   if (!popupState.isVisible) return null;
+
+  if (isProfilePage) {
+    return (
+      <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>
+        <Filters.ProfileTags
+          page={page}
+          onAction={onAction}
+          data={data}
+          viewer={viewer}
+          style={{ marginTop: 12 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>
       <Filters.Library page={page} onAction={onAction} />
       <Filters.Tags
+        viewer={viewer}
+        data={data}
+        page={page}
+        onAction={onAction}
+        style={{ marginTop: 12 }}
+      />
+      <Filters.Following
         viewer={viewer}
         data={data}
         page={page}

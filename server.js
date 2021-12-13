@@ -264,6 +264,35 @@ app.prepare().then(async () => {
 
     const id = Utilities.getIdFromCookie(req);
 
+    let user = await Data.getUserByUsername({
+      username,
+    });
+
+    if (!user) {
+      return res.redirect("/_/404");
+    }
+
+    if (user.error) {
+      return res.redirect("/_/404");
+    }
+
+    if (user.id === id) {
+      return res.redirect("/_/data");
+    }
+
+    const slates = await Data.getSlatesByUserId({
+      ownerId: user.id,
+      publicOnly: true,
+    });
+
+    if (slates && !slates.error) {
+      if (slates.length) {
+        return res.redirect(`/${username}/${slates[0].slatename}`);
+      }
+
+      user.slates = slates;
+    }
+
     let viewer = null;
     if (id) {
       viewer = await ViewerManager.getById({
@@ -275,28 +304,6 @@ app.prepare().then(async () => {
     if (!redirected) {
       page.params = req.query;
     }
-
-    let user = await Data.getUserByUsername({
-      username,
-      sanitize: true,
-      publicOnly: true,
-    });
-
-    if (!user) {
-      return res.redirect("/_/404");
-    }
-
-    if (user.error) {
-      return res.redirect("/_/404");
-    }
-
-    const slates = await Data.getSlatesByUserId({
-      ownerId: user.id,
-      includeFiles: true,
-      publicOnly: true,
-    });
-
-    user.slates = slates;
 
     return app.render(req, res, "/_", {
       viewer,
@@ -401,20 +408,29 @@ app.prepare().then(async () => {
       return res.redirect("/_/404");
     }
 
-    const user = await Data.getUserById({
+    const owner = await Data.getUserById({
       id: slate.ownerId,
       sanitize: true,
     });
 
-    if (!user) {
+    if (!owner) {
       return res.redirect("/_/404");
     }
 
-    if (user.error) {
+    if (owner.error) {
       return res.redirect("/_/404");
     }
 
-    slate.user = user;
+    let slates = await Data.getSlatesByUserId({
+      ownerId: owner.id,
+      publicOnly: true,
+    });
+
+    if (slates && !slates.error) {
+      owner.slates = slates;
+    }
+
+    slate.owner = owner;
 
     return app.render(req, res, "/_", {
       viewer,

@@ -18,15 +18,6 @@ const STYLES_SCENE_PAGE = css`
   }
 `;
 
-const STYLES_DATAVIEWER_WRAPPER = (theme) => css`
-  width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px);
-  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
-  }
-`;
-
 export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
   const [index, setIndex] = React.useState(-1);
 
@@ -49,7 +40,7 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           index={index}
           onChange={(index) => setIndex(index)}
         />
-        <div css={STYLES_DATAVIEWER_WRAPPER}>
+        <div css={Styles.PAGE_CONTENT_WRAPPER}>
           {objects.length ? (
             <DataView
               key="scene-files-folder"

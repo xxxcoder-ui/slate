@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Strings from "~/common/strings";
+import * as Styles from "~/common/styles";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
 import * as Events from "~/common/custom-events";
@@ -9,8 +10,8 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
+import DataView from "~/components/core/DataView";
 import ScenePage from "~/components/core/ScenePage";
-import Profile from "~/components/core/Profile";
 import EmptyState from "~/components/core/EmptyState";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
@@ -135,22 +136,41 @@ export default class SceneProfile extends React.Component {
   // };
 
   render() {
+    const viewer = this.props.viewer;
     let user = this.props.data;
-    if (!user) {
-      return (
-        <WebsitePrototypeWrapper
-          title={`${this.props.page.pageTitle} • Slate`}
-          url={`${Constants.hostname}${this.props.page.pathname}`}
-        >
-          <ScenePage>
+    // if (!user) {
+    //   return (
+    //     <WebsitePrototypeWrapper
+    //       title={`${this.props.page.pageTitle} • Slate`}
+    //       url={`${Constants.hostname}${this.props.page.pathname}`}
+    //     >
+    //       <ScenePage>
+    //         <EmptyState>
+    //           <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+    //           <div>We were unable to locate that user profile</div>
+    //         </EmptyState>
+    //       </ScenePage>
+    //     </WebsitePrototypeWrapper>
+    //   );
+    // }
+    // if (!user.slates?.length) {
+    return (
+      <WebsitePrototypeWrapper
+        title={`${this.props.page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${this.props.page.pathname}`}
+      >
+        <ScenePage>
+          <div css={Styles.PAGE_CONTENT_WRAPPER}>
             <EmptyState>
               <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              <div>We were unable to locate that user profile</div>
+              <div>This user doesn't have any public content</div>
             </EmptyState>
-          </ScenePage>
-        </WebsitePrototypeWrapper>
-      );
-    }
+          </div>
+        </ScenePage>
+      </WebsitePrototypeWrapper>
+    );
+    // }
+    const isOwner = user.id === viewer?.id;
     let name = user.name || `@${user.username}`;
     let description, title;
     const image = user.photo;
@@ -172,13 +192,21 @@ export default class SceneProfile extends React.Component {
         url={`${Constants.hostname}${this.props.page.pathname}`}
         image={image}
       >
-        <Profile
-          {...this.props}
-          user={user}
-          isOwner={this.props.viewer ? user.id === this.props.viewer.id : false}
-          isAuthenticated={this.props.viewer !== null}
-          key={user.id}
-        />
+        <div css={Styles.PAGE_CONTENT_WRAPPER}>
+          {user.library?.length ? (
+            <DataView
+              key="scene-files-folder"
+              isOwner={false}
+              items={user.library}
+              onAction={this.props.onAction}
+              viewer={viewer}
+              page={this.props.page}
+              view="grid"
+            />
+          ) : (
+            <EmptyState>This user doesn't have any public content</EmptyState>
+          )}
+        </div>
       </WebsitePrototypeWrapper>
     );
 

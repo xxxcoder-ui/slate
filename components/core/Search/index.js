@@ -128,7 +128,7 @@ function Input({ viewer, data, page, onAction }) {
   useDebouncedSearch({ handleSearch });
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <InputPrimitive
         full
         containerStyle={{ height: "100%" }}
@@ -173,22 +173,13 @@ function Dismiss({ css, ...props }) {
  *  Content
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_SEARCH_CONTENT = (theme) => css`
-  width: 100%;
-  min-height: 100vh;
-  padding: calc(20px + ${theme.sizes.filterNavbar}px) 24px 44px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    padding: calc(31px + ${theme.sizes.filterNavbar}px) 16px 44px;
-  }
-`;
-
 function Content({ onAction, viewer, page }) {
   const { results } = useSearchStore();
   const { files, slates } = results;
 
   if (results.files.length === 0 && results.slates.length === 0) {
     return (
-      <div css={STYLES_SEARCH_CONTENT}>
+      <div css={Styles.PAGE_CONTENT_WRAPPER}>
         <EmptyState>
           <FileTypeGroup />
           <div style={{ marginTop: 24 }}>Sorry we couldn&apos;t find any results.</div>
@@ -198,7 +189,7 @@ function Content({ onAction, viewer, page }) {
   }
 
   return (
-    <div css={STYLES_SEARCH_CONTENT}>
+    <div css={Styles.PAGE_CONTENT_WRAPPER}>
       <DataView
         key="scene-files-folder"
         isOwner={true}

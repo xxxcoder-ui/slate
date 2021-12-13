@@ -7,7 +7,6 @@ import { css } from "@emotion/react";
 import { GlobalCarousel } from "~/components/system/components/GlobalCarousel";
 import { ButtonPrimary } from "~/components/system/components/Buttons";
 
-import Profile from "~/components/core/Profile";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import WebsitePrototypeHeader from "~/components/core/WebsitePrototypeHeader";
 import WebsitePrototypeFooter from "~/components/core/WebsitePrototypeFooter";
@@ -87,7 +86,7 @@ export default class ProfilePage extends React.Component {
             onAction={() => {}}
             isMobile={isMobile}
             // params={page.params}
-            isOwner={viewer.id === file.ownerId}
+            isOwner={viewer?.id === file.ownerId}
             index={0}
             onChange={() => {}}
           />
