@@ -182,7 +182,7 @@ function Content({ onAction, viewer, page }) {
       <div css={Styles.PAGE_CONTENT_WRAPPER}>
         <EmptyState>
           <FileTypeGroup />
-          <div style={{ marginTop: 24 }}>Sorry we couldn&apos;t find any results.</div>
+          <div style={{ marginTop: 24 }}>No results found</div>
         </EmptyState>
       </div>
     );

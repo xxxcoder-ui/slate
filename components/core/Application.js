@@ -49,8 +49,6 @@ import Filter from "~/components/core/Filter";
 
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
-import { SearchModal } from "~/components/core/SearchModal";
-import { Alert } from "~/components/core/Alert";
 import { announcements } from "~/components/core/OnboardingModal";
 import { Logo } from "~/common/logo";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
@@ -543,11 +541,6 @@ export default class ApplicationPage extends React.Component {
           </Filter>
         </ApplicationLayout>
         <GlobalModal />
-        <SearchModal
-          viewer={this.state.viewer}
-          onAction={this._handleAction}
-          isMobile={this.props.isMobile}
-        />
         <CTATransition onAction={this._handleAction} />
         {/* {!this.state.loaded ? (
             <div
