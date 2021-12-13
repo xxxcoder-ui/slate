@@ -224,16 +224,12 @@ export default class ApplicationLayout extends React.Component {
             onAction={this.props.onAction}
             id={this.props.isMobile ? "slate-mobile-alert" : null}
             viewer={this.props.viewer}
-            style={
-              this.props.isMobile
-                ? { top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : this.state.headerTop + 56 }
-                : {
-                    top: this.props.page?.id === "NAV_SIGN_IN" ? 0 : 56,
-                    paddingRight: this.props.sidebar
-                      ? `calc(${Constants.sizes.sidebar}px + 48px`
-                      : "auto",
-                  }
-            }
+            style={{
+              paddingRight:
+                !this.props.isMobile && this.props.sidebar
+                  ? `calc(${Constants.sizes.sidebar}px + 48px`
+                  : "auto",
+            }}
           />
           {this.props.children}
         </div>

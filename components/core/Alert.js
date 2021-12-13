@@ -11,7 +11,7 @@ const STYLES_ALERT = `
   box-sizing: border-box;
   z-index: ${Constants.zindex.alert};
   position: fixed;
-  top: 56px;
+  bottom: 0px;
   width: 100%;
   color: ${Constants.system.white};
   min-height: 40px;

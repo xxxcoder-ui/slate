@@ -785,20 +785,7 @@ export function CarouselContent({
 
   return (
     <>
-      <Alert
-        viewer={viewer}
-        noWarning
-        id={isMobile ? "slate-mobile-alert" : null}
-        style={
-          isMobile
-            ? null
-            : {
-                bottom: 0,
-                top: "auto",
-                paddingRight: sidebar ? `calc(${Constants.sizes.sidebar}px + 48px)` : "auto",
-              }
-        }
-      />
+      <Alert viewer={viewer} noWarning id={isMobile ? "slate-mobile-alert" : null} />
       <div css={STYLES_CONTENT} style={style} onClick={onClose}>
         <div css={STYLES_PREVIEW_WRAPPER}>
           <SlateMediaObject file={file} isMobile={isMobile} />
