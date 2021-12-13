@@ -62,6 +62,24 @@ export default async (req, res) => {
 
   Utilities.removeFromSlateCheckCoverImage(slate, fileIds);
 
+  if (fileIds.length >= slate.objects.length) {
+    let updatedSlate = await Data.getSlateById({ id: req.body.data.slateId, includeFiles: true });
+
+    if (!updatedSlate.objects.length) {
+      const deleteResponse = await Data.deleteSlateById({ id: slate.id });
+
+      if (!deleteResponse) {
+        return res.status(404).send({ decorator: "SERVER_DELETE_SLATE_FAILED", error: true });
+      }
+
+      if (deleteResponse.error) {
+        return res.status(500).send({ decorator: "SERVER_DELETE_SLATE_FAILED", error: true });
+      }
+
+      SearchManager.deleteSlate(slate);
+    }
+  }
+
   ViewerManager.hydratePartial(id, { slates: true });
 
   return res.status(200).send({
