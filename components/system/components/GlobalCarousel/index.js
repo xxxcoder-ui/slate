@@ -65,10 +65,10 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     return { isSaving: selectedFile?.status === "uploading", saveCopy: store.handlers.saveCopy };
   });
 
-  const isSaved = React.useMemo(
-    () => viewer?.libraryCids[file.cid],
-    [viewer?.libraryCids, file.cid]
-  );
+  const isSaved = React.useMemo(() => viewer?.libraryCids[file.cid], [
+    viewer?.libraryCids,
+    file.cid,
+  ]);
 
   const handleSave = async () => {
     if (!viewer) {
@@ -77,7 +77,7 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     }
 
     if (isSaved) {
-      const fileLibraryURL = `/_/data?cid=${file.cid}`;
+      const fileLibraryURL = `/_/data?id=${file.id}`;
       onAction({
         type: "NAVIGATE",
         href: fileLibraryURL,
@@ -173,17 +173,25 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
-    useCarouselJumperControls();
+  const [
+    isEditChannelsVisible,
+    { showControl: showEditChannels, hideControl: hideEditChannels },
+  ] = useCarouselJumperControls();
 
   const isJumperOpen =
     isFileDescriptionVisible ||
@@ -501,17 +509,25 @@ function CarouselHeaderMobile({
 }
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
-    useCarouselJumperControls();
+  const [
+    isEditChannelsVisible,
+    { showControl: showEditChannels, hideControl: hideEditChannels },
+  ] = useCarouselJumperControls();
   return (
     <>
       <ModalPortal>
@@ -823,10 +839,10 @@ export function CarouselContent({
  * -----------------------------------------------------------------------------------------------*/
 const useCarouselViaParams = ({ index, params, objects, onChange }) => {
   const findSelectedIndex = () => {
-    const cid = params?.cid;
-    if (!cid) return -1;
+    const id = params?.id;
+    if (!id) return -1;
 
-    let index = objects.findIndex((elem) => elem.cid === cid);
+    let index = objects.findIndex((elem) => elem.id === id);
     return index;
   };
 
@@ -835,10 +851,10 @@ const useCarouselViaParams = ({ index, params, objects, onChange }) => {
 
     const selectedIndex = findSelectedIndex();
     if (selectedIndex !== index) onChange(index);
-  }, [params?.cid]);
+  }, [params?.id]);
 
   React.useEffect(() => {
-    if (params?.cid) {
+    if (params?.id) {
       const index = findSelectedIndex();
       onChange(index);
     }
@@ -852,9 +868,9 @@ const getCarouselHandlers = ({ index, objects, params, onChange, onAction }) => 
     let nextIndex = index + 1;
     if (nextIndex >= objects.length) return;
 
-    let { cid } = objects[nextIndex];
+    let { id } = objects[nextIndex];
     onChange(nextIndex);
-    onAction({ type: "UPDATE_PARAMS", params: { ...params, cid }, redirect: true });
+    onAction({ type: "UPDATE_PARAMS", params: { ...params, id }, redirect: true });
   };
 
   const handlePrevious = (e) => {
@@ -863,16 +879,16 @@ const getCarouselHandlers = ({ index, objects, params, onChange, onAction }) => 
     let prevIndex = index - 1;
     if (prevIndex < 0) return;
 
-    let { cid } = objects[prevIndex];
+    let { id } = objects[prevIndex];
     onChange(prevIndex);
-    onAction({ type: "UPDATE_PARAMS", params: { ...params, cid }, redirect: true });
+    onAction({ type: "UPDATE_PARAMS", params: { ...params, id }, redirect: true });
   };
 
   const handleClose = (e) => {
     if (e) e.stopPropagation(), e.preventDefault();
 
     let params = { ...params };
-    delete params.cid;
+    delete params.id;
     onAction({ type: "UPDATE_PARAMS", params, redirect: true });
     onChange(-1);
   };

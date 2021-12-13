@@ -35,21 +35,19 @@ export default class ProfilePage extends React.Component {
     page: null,
   };
 
-  componentDidMount = () => {
-    console.log(this.props.data);
-    // window.onpopstate = this._handleBackForward;
-
-    // if (!Strings.isEmpty(this.props.cid)) {
-    //   let files = this.props.creator.library || [];
-    //   let index = files.findIndex((object) => object.cid === this.props.cid);
-    //   if (index !== -1) {
-    //     Events.dispatchCustomEvent({
-    //       name: "slate-global-open-carousel",
-    //       detail: { index },
-    //     });
-    //   }
-    // }
-  };
+  // componentDidMount = () => {
+  // window.onpopstate = this._handleBackForward;
+  // if (!Strings.isEmpty(this.props.cid)) {
+  //   let files = this.props.creator.library || [];
+  //   let index = files.findIndex((object) => object.cid === this.props.cid);
+  //   if (index !== -1) {
+  //     Events.dispatchCustomEvent({
+  //       name: "slate-global-open-carousel",
+  //       detail: { index },
+  //     });
+  //   }
+  // }
+  // };
 
   //   _handleBackForward = (e) => {
   //     let page = window.history.state;

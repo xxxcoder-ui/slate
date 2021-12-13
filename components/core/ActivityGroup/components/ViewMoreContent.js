@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
+import * as Utilities from "~/common/utilities";
 
 import { css } from "@emotion/react";
 import { H5 } from "~/components/system/components/Typography";
@@ -28,12 +29,6 @@ const STYLES_SHOW_MORE_PREVIEWS = (theme) => css`
   }
 `;
 
-const getImageCover = (item) => {
-  const coverImage = item?.coverImage;
-  const imageUrl = Strings.getURLfromCID(coverImage ? coverImage?.cid : item.cid);
-  return imageUrl;
-};
-
 export default function ViewMoreContent({ items, children, ...props }) {
   return (
     <button css={[Styles.HOVERABLE, STYLES_VIEW_MORE_CONTAINER]} {...props}>
@@ -49,7 +44,7 @@ export default function ViewMoreContent({ items, children, ...props }) {
                   css={[STYLES_SHOW_MORE_PREVIEWS, Styles.CONTAINER_CENTERED]}
                 >
                   {isImageFile ? (
-                    <img src={getImageCover(file)} alt="File Preview" />
+                    <img src={Utilities.getImageUrlIfExists(file)} alt="File Preview" />
                   ) : (
                     <ObjectPlaceholder ratio={0.9} file={file} />
                   )}

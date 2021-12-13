@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
+import * as Utilities from "~/common/utilities";
 import * as Strings from "~/common/strings";
 
 import { AspectRatio } from "~/components/system";
@@ -70,7 +71,7 @@ export default function ImageObjectPreview({
 
   const { type, coverImage } = file;
   const imgTag = type.split("/")[1];
-  const imageUrl = coverImage ? coverImage?.url || Strings.getURLfromCID(coverImage?.cid) : url;
+  const imageUrl = Utilities.getImageUrlIfExists(file);
   const blurhash = React.useMemo(() => {
     return file.blurhash && isBlurhashValid(file.blurhash).result
       ? file.blurhash

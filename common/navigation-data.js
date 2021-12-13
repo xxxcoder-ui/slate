@@ -80,9 +80,6 @@ export const getByHref = (href, viewer) => {
   //NOTE(martina): to transform query params into more easily usable key value pairs in page
   if (!redirected) {
     let params = Strings.getParamsFromUrl(href);
-    if (page.id === "NAV_PROFILE" && page.cid) {
-      params.tab = "FILES";
-    }
     page.params = params;
   }
   return { page, details, redirected };

@@ -216,8 +216,8 @@ export default class SceneSlate extends React.Component {
     } else {
       let title, description, file, image;
       let name = slate.name;
-      if (this.props.page.params?.cid) {
-        file = slate.objects.find((file) => file.cid === this.props.page.params.cid);
+      if (this.props.page.params?.id) {
+        file = slate.objects.find((file) => file.id === this.props.page.params.id);
       }
       if (file) {
         title = `${file.name || file.filename}`;
@@ -288,16 +288,16 @@ class SlatePage extends React.Component {
 
   componentDidMount() {
     const {
-      page: { cid },
+      page: { id },
     } = this.props;
 
     /* NOTE(daniel): If user was redirected to this page, the cid of the slate object will exist in the page props.
     We'll use the cid to open the global carousel */
-    if (Strings.isEmpty(cid)) {
+    if (Strings.isEmpty(id)) {
       return;
     }
 
-    const index = this.props.data.objects.findIndex((object) => object.cid === cid);
+    const index = this.props.data.objects.findIndex((object) => object.id === id);
     // if (index !== -1) {
     //   Events.dispatchCustomEvent({
     //     name: "slate-global-open-carousel",

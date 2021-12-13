@@ -836,7 +836,7 @@ export default class DataView extends React.Component {
                   <Link
                     key={each.id}
                     redirect
-                    params={{ ...this.props.page?.params, cid: each.cid }}
+                    params={{ ...this.props.page?.params, id: each.id }}
                     onAction={this.props.onAction}
                   >
                     <Selectable
@@ -982,7 +982,7 @@ export default class DataView extends React.Component {
             <FilePreviewBubble cid={cid} type={each.type}>
               <Link
                 redirect
-                params={{ ...this.props.page.params, cid: each.cid }}
+                params={{ ...this.props.page.params, id: each.id }}
                 onAction={this.props.onAction}
               >
                 <div css={STYLES_CONTAINER_HOVER}>
