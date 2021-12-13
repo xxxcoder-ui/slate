@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Typography from "~/components/system/components/Typography";
 import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
+import * as Utilities from "~/common/utilities";
 
 import { Logo } from "~/common/logo";
 import { useInView } from "~/common/hooks";
@@ -70,11 +71,8 @@ export default function Preview({
   }
 
   if (type === "IMAGE") {
-    const { coverImage } = file;
     const blurhash = getFileBlurHash(file);
-    const previewImage = coverImage
-      ? Strings.getURLfromCID(coverImage?.cid)
-      : Strings.getURLfromCID(file.cid);
+    const previewImage = Utilities.getImageUrlIfExists(file);
 
     return (
       <div ref={previewerRef} css={[STYLES_PREVIEW, css]} {...props}>

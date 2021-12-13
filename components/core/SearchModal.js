@@ -429,9 +429,9 @@ const getHref = (result) => {
   } else if (result.type === "USER") {
     return `/$/user/${result.data.user.id}`;
   } else if (result.type === "FILE") {
-    return `/$/user/${result.data.user.id}?cid=${result.data.file.cid}`;
+    return `/$/user/${result.data.user.id}?id=${result.data.file.id}`;
   } else if (result.type === "DATA_FILE") {
-    return `/_/data?cid=${result.data.file.cid}`;
+    return `/_/data?cid=${result.data.file.id}`;
   } else {
     Logging.error("Get href failed because result was:", result);
   }

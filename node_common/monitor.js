@@ -40,11 +40,11 @@ export const upload = ({ user, slate, files: targetFiles }) => {
         : "";
     let message;
     if (slate) {
-      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?id=${files[0].id}|${files[0].filename}>`;
       const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.name}>`;
       message = `*${userURL}* uploaded ${objectURL}${extra} to ${slateURL}`;
     } else {
-      const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+      const objectURL = `<https://slate.host/${user.username}?id=${files[0].id}|${files[0].filename}>`;
       message = `*${userURL}* uploaded ${objectURL}${extra}`;
     }
 
@@ -61,7 +61,7 @@ export const download = ({ user, files: targetFiles }) => {
   }
   try {
     const userURL = getUserURL(user);
-    const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+    const objectURL = `<https://slate.host/${user.username}?id=${files[0].id}|${files[0].filename}>`;
     const extra =
       files.length > 1
         ? ` and ${files.length - 1} other file${files.length - 1 > 1 ? "s" : ""}`
@@ -87,11 +87,11 @@ export const saveCopy = ({ slate, user, files: targetFiles }) => {
         : "";
     let message;
     if (slate) {
-      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?cid=${files[0].cid}|${files[0].filename}>`;
+      const objectURL = `<https://slate.host/${user.username}/${slate.slatename}?id=${files[0].id}|${files[0].filename}>`;
       const slateURL = `<https://slate.host/${user.username}/${slate.slatename}|${slate.name}>`;
       message = `*${userURL}* saved ${objectURL}${extra} to ${slateURL}`;
     } else {
-      const objectURL = `<https://slate.host/${user.username}?cid=${files[0].cid}|${files[0].filename}>`;
+      const objectURL = `<https://slate.host/${user.username}?id=${files[0].id}|${files[0].filename}>`;
       message = `*${userURL}* saved ${objectURL}${extra}`;
     }
 
