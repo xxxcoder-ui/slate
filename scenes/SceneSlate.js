@@ -287,9 +287,7 @@ class SlatePage extends React.Component {
   };
 
   componentDidMount() {
-    const {
-      page: { id },
-    } = this.props;
+    let id = this.props.page?.params?.id;
 
     /* NOTE(daniel): If user was redirected to this page, the cid of the slate object will exist in the page props.
     We'll use the cid to open the global carousel */
