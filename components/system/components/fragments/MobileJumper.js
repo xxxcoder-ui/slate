@@ -8,6 +8,7 @@ import { css } from "@emotion/react";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
 import { motion, AnimatePresence as FramerAnimatePresence } from "framer-motion";
 import { ModalPortal } from "~/components/core/ModalPortal";
+import { useLockScroll } from "~/common/hooks";
 
 /* -------------------------------------------------------------------------------------------------
  *  AnimatePresence
@@ -42,6 +43,8 @@ const JumperContext = React.createContext({});
 const useJumperContext = () => React.useContext(JumperContext);
 
 function Root({ children, onClose, withDismissButton = true, ...props }) {
+  useLockScroll();
+
   return (
     <ModalPortal>
       <FullHeightLayout

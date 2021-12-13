@@ -22,11 +22,23 @@ const backgroundUrl = AUTH_BACKGROUNDS[backgroundIdx];
 const STYLES_AUTH_FOOTER = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   position: fixed;
+  justify-content: flex-end;
   bottom: 0;
   left: 0;
   width: 100%;
   padding: 2px 24px;
   background-color: ${theme.semantic.bgWhite};
+  & > * + * {
+    margin-left: 24px;
+  }
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 2px 16px;
+    justify-content: center;
+    & > * + * {
+      margin-left: 16px;
+    }
+  }
 
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
@@ -64,14 +76,14 @@ export default function AuthWrapper({ children, isMobile, ...props }) {
     <div style={{ backgroundImage: `url(${backgroundUrl})`, minHeight: height }} {...props}>
       {children}
       <footer css={STYLES_AUTH_FOOTER}>
-        <System.H6 style={{ marginLeft: "auto" }} as="a" href="/terms">
+        <System.H6 as="a" href="/terms">
           Terms of service
         </System.H6>
-        <System.H6 style={{ marginLeft: 24 }} as="a" href="/guidelines">
+        <System.H6 as="a" href="/guidelines">
           Community guidelines
         </System.H6>
         {/** TODO(Amine): change discord link  */}
-        <System.H6 style={{ marginLeft: 24 }} as="a" href="/">
+        <System.H6 as="a" href="/">
           Join Discord
         </System.H6>
       </footer>

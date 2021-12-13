@@ -11,7 +11,7 @@ import {
   AnimatePresence as FramerAnimatePresence,
   motion,
 } from "framer-motion";
-import { useEscapeKey } from "~/common/hooks";
+import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 
 import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
@@ -69,6 +69,8 @@ function AnimatePresence({ children, ...props }) {
 
 function Root({ children, onClose, withDismissButton = true, ...props }) {
   useEscapeKey(onClose);
+  useLockScroll();
+
   return (
     <ModalPortal>
       <div>

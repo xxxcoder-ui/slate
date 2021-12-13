@@ -375,7 +375,7 @@ const STYLES_ROOT = css`
   background-size: cover;
 `;
 
-const STYLES_MIDDLE = css`
+const STYLES_MIDDLE = (theme) => css`
   position: relative;
   min-height: 10%;
   flex-grow: 1;
@@ -385,6 +385,11 @@ const STYLES_MIDDLE = css`
   flex-direction: column;
   text-align: left;
   padding: 24px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 24px 16px;
+    //NOTE(amine): additional scroll space for mobile
+    padding-bottom: 64px;
+  }
 `;
 
 const WithCustomWrapper = (Component) => (props) => {

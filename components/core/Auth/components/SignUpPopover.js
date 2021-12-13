@@ -12,16 +12,15 @@ const STYLES_POPOVER = (theme) => css`
   min-height: 544px;
   width: 95vw;
   border-radius: 20px;
-  padding: 36px 32px 36px 32px;
+  padding: 36px 32px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     flex-grow: 1;
     margin-bottom: auto;
-    max-width: 100%;
+    width: 100%;
   }
 
   background-color: white;
-
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background: radial-gradient(
       80.79% 80.79% at 50% 50%,
