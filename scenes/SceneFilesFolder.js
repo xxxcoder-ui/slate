@@ -72,18 +72,8 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
           onChange={(index) => setIndex(index)}
         />
         {objects.length > 0 ? (
-<<<<<<< HEAD
           <div css={Styles.PAGE_CONTENT_WRAPPER}>
-            <TagsOnboarding
-              onAction={onAction}
-              viewer={viewer}
-              isActive={isOnboardingActive}
-              isMobile={isMobile}
-            >
-=======
-          <div css={STYLES_DATAVIEWER_WRAPPER}>
             <TagsOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
->>>>>>> ee5d2c4f (feat(Onboarding): conditionally render survey onboarding)
               <DataView
                 key="scene-files-folder"
                 isOwner={true}
