@@ -282,9 +282,18 @@ export const PROFILE_PREVIEW_GRID = (theme) => css`
 
 export const PAGE_CONTENT_WRAPPER = (theme) => css`
   width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px) - ${theme.sizes.header}px;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px - ${theme.sizes.header}px);
   padding: 20px 20px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
     padding: 16px 16px 44px;
+  }
+`;
+
+export const PAGE_EMPTY_STATE_WRAPPER = (theme) => css`
+  height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px);
+  padding: 20px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 0px;
+    height: calc(100vh - ${theme.sizes.header}px - 44px);
   }
 `;

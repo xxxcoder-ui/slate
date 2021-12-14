@@ -4,9 +4,9 @@ import { css } from "@emotion/react";
 
 const STYLES_EMPTY_STATE = (theme) => css`
   position: relative;
-  width: 100%;
   height: 100%;
   min-height: 50vh;
+  padding: 20px;
   color: ${theme.semantic.textGray};
   background-color: ${theme.semantic.bgLight};
   display: flex;
@@ -14,7 +14,6 @@ const STYLES_EMPTY_STATE = (theme) => css`
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  margin-top: 48px;
 `;
 
 const STYLES_EMPTY_FRAME = (theme) => css`

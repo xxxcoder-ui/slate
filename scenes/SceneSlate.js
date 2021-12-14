@@ -232,7 +232,7 @@ export default class SceneSlate extends React.Component {
           url={`${Constants.hostname}${this.props.page.pathname}`}
         >
           <ScenePage>
-            <div css={Styles.PAGE_CONTENT_WRAPPER}>
+            <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
               <EmptyState>
                 <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
                 <div>We were unable to locate that collection</div>
@@ -486,7 +486,7 @@ class SlatePage extends React.Component {
             </div>
           </>
         ) : isOwner ? (
-          <div css={Styles.PAGE_CONTENT_WRAPPER}>
+          <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
             <EmptyState>
               <FileTypeGroup />
               <div css={STYLES_EMPTY_STATE_DEMO}>
@@ -508,9 +508,7 @@ class SlatePage extends React.Component {
             </EmptyState>
           </div>
         ) : (
-          <div>
-            <EmptyState>There's nothing here :)</EmptyState>
-          </div>
+          <EmptyState>There's nothing here :)</EmptyState>
         )}
         <input
           ref={(c) => {

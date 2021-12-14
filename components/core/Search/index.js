@@ -179,7 +179,7 @@ function Content({ onAction, viewer, page }) {
 
   if (results.files.length === 0 && results.slates.length === 0) {
     return (
-      <div css={Styles.PAGE_CONTENT_WRAPPER}>
+      <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
         <EmptyState>
           <FileTypeGroup />
           <div style={{ marginTop: 24 }}>No results found</div>
