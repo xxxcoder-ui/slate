@@ -4,6 +4,9 @@ import * as Styles from "~/common/styles";
 import * as Events from "~/common/custom-events";
 import * as Typography from "~/components/system/components/Typography";
 import * as Utilities from "~/common/utilities";
+import * as Tooltip from "~/components/system/components/fragments/Tooltip";
+import * as System from "~/components/system";
+import * as Actions from "~/common/actions";
 
 import ProfilePhoto from "~/components/core/ProfilePhoto";
 
@@ -11,6 +14,7 @@ import { css } from "@emotion/react";
 import { useFilterContext } from "~/components/core/Filter/Provider";
 import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
+import { motion } from "framer-motion";
 
 /* -------------------------------------------------------------------------------------------------
  *  Shared components between filters
@@ -40,6 +44,16 @@ const STYLES_FILTER_BUTTON = (theme) => css`
   }
 `;
 
+const STYLES_FILTER_TITLE_BUTTON = (theme) => css`
+  ${Styles.BUTTON_RESET};
+  padding: 5px 8px 3px;
+  border-radius: 8px;
+  &:hover {
+    background-color: ${theme.semantic.bgGrayLight};
+    color: ${theme.semantic.textBlack};
+  }
+`;
+
 const STYLES_FILTERS_GROUP = css`
   & > * + * {
     margin-top: 4px !important;
@@ -63,16 +77,47 @@ const FilterButton = ({ children, Icon, image, isSelected, ...props }) => (
   </li>
 );
 
-const FilterSection = ({ title, children, ...props }) => (
-  <div {...props}>
-    {title && (
-      <Typography.H6 style={{ paddingLeft: 8, marginBottom: 4 }} color="textGray">
-        {title}
-      </Typography.H6>
-    )}
-    <ul css={STYLES_FILTERS_GROUP}>{children}</ul>
-  </div>
-);
+const FilterSection = ({ title, tooltipContent, children, ...props }) => {
+  const [isExpanded, setExpanded] = React.useState(true);
+  const toggleExpandState = () => setExpanded((prev) => !prev);
+
+  const titleButtonId = `sidebar-${title}-button`;
+  return (
+    <div {...props}>
+      {title && (
+        <Tooltip.Root vertical="above" horizontal="right">
+          <Tooltip.Trigger aria-describedby={titleButtonId} aria-expanded={isExpanded}>
+            <Typography.H6
+              as={motion.button}
+              layoutId={title + "title"}
+              css={STYLES_FILTER_TITLE_BUTTON}
+              style={{ paddingLeft: 8, marginBottom: 4 }}
+              onClick={toggleExpandState}
+              color="textGray"
+            >
+              {title}
+            </Typography.H6>
+          </Tooltip.Trigger>
+          <Tooltip.Content css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginTop: -4.5 }}>
+            <System.H6 id={titleButtonId} as="p" color="textGrayDark">
+              {tooltipContent}
+            </System.H6>
+          </Tooltip.Content>
+        </Tooltip.Root>
+      )}
+      {isExpanded ? (
+        <motion.ul
+          layoutId={title + "section"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          css={STYLES_FILTERS_GROUP}
+        >
+          {children}
+        </motion.ul>
+      ) : null}
+    </div>
+  );
+};
 
 /* -------------------------------------------------------------------------------------------------
  *  InitialFilters
@@ -104,7 +149,7 @@ function Tags({ viewer, data, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <FilterSection title="Tags" {...props}>
+    <FilterSection title="Tags" tooltipContent="Click to show/hide the tags section" {...props}>
       {viewer.slates.map((slate) => (
         <FilterButton
           key={slate.id}
@@ -121,7 +166,7 @@ function Tags({ viewer, data, onAction, ...props }) {
   );
 }
 
-function Following({ viewer, data, onAction, ...props }) {
+function Following({ viewer, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
@@ -143,12 +188,11 @@ function Following({ viewer, data, onAction, ...props }) {
   );
 }
 
-function Profile({ viewer, data, page, onAction, ...props }) {
+function Profile({ viewer, data, page, ...props }) {
   if (page.id === "NAV_SLATE") {
     data = data.owner;
   }
 
-  const [, { hidePopup }] = useFilterContext();
   const isAuthenticated = !!viewer;
   const isOwner = viewer?.id === data.id;
 
@@ -228,7 +272,7 @@ function Profile({ viewer, data, page, onAction, ...props }) {
   );
 }
 
-function ProfileTags({ viewer, data, page, onAction, ...props }) {
+function ProfileTags({ data, page, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   let user = data;
