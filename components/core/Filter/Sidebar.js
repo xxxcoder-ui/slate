@@ -3,9 +3,12 @@ import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 import * as Filters from "~/components/core/Filter/Filters";
 import * as Constants from "~/common/constants";
+import * as System from "~/components/system";
+import * as Tooltip from "~/components/system/components/fragments/Tooltip";
 
 import { useFilterContext } from "~/components/core/Filter/Provider";
 import { css } from "@emotion/react";
+import { useEventListener } from "~/common/hooks";
 
 /* -------------------------------------------------------------------------------------------------
  * Sidebar trigger
@@ -22,21 +25,46 @@ const STYLES_SIDEBAR_TRIGGER = (theme) => css`
   }
 `;
 
-export function SidebarTrigger({ css }) {
+export const SidebarTrigger = React.forwardRef(({ css, isMobile, ...props }, ref) => {
   const [{ sidebarState }, { toggleSidebar }] = useFilterContext();
+
+  const handleKeyDown = (e) => {
+    if (e.key === "\\" || e.code === "Backslash") toggleSidebar();
+  };
+  useEventListener({ type: "keydown", handler: handleKeyDown, enabled: !isMobile });
+
   return (
-    <button
-      onClick={toggleSidebar}
-      css={[STYLES_SIDEBAR_TRIGGER, css]}
-      style={{
-        backgroundColor: sidebarState.isVisible ? Constants.semantic.bgGrayLight : "unset",
-        color: sidebarState.isVisible ? Constants.semantic.textBlack : Constants.semantic.textGray,
-      }}
-    >
-      <SVG.Sidebar style={{ display: "block" }} />
-    </button>
+    <Tooltip.Root vertical="below" horizontal="right">
+      <Tooltip.Trigger aria-describedby="filter-sidebar-trigger-tooltip">
+        <button
+          onClick={toggleSidebar}
+          css={[STYLES_SIDEBAR_TRIGGER, css]}
+          style={{
+            backgroundColor: sidebarState.isVisible ? Constants.semantic.bgGrayLight : "unset",
+            color: sidebarState.isVisible
+              ? Constants.semantic.textBlack
+              : Constants.semantic.textGray,
+          }}
+          ref={ref}
+          {...props}
+        >
+          <SVG.Sidebar style={{ display: "block" }} />
+        </button>
+      </Tooltip.Trigger>
+      <Tooltip.Content
+        style={{ marginTop: 4.5, marginLeft: -8 }}
+        css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+      >
+        <System.H6 id="filter-sidebar-trigger-tooltip" as="p" color="textGrayDark">
+          Click to show/hide the sidebar
+        </System.H6>
+        <System.H6 as="p" color="textGray" style={{ marginLeft: 16 }}>
+          \
+        </System.H6>
+      </Tooltip.Content>
+    </Tooltip.Root>
   );
-}
+});
 
 /* -------------------------------------------------------------------------------------------------
  *  Sidebar
@@ -47,7 +75,7 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   top: ${theme.sizes.header + theme.sizes.filterNavbar}px;
   width: 300px;
   height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
-  overflow-y: auto;
+  overflow-y: overlay;
   padding: 20px 24px calc(16px + ${theme.sizes.intercomWidget}px + ${theme.sizes.filterNavbar}px);
   background-color: ${theme.semantic.bgLight};
 
@@ -96,7 +124,6 @@ export function Sidebar({ viewer, onAction, data, page, isMobile, isProfilePage 
           style={{ marginTop: 12 }}
         />
         <Filters.Following
-          page={page}
           onAction={onAction}
           data={data}
           viewer={viewer}

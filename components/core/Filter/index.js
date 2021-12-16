@@ -163,7 +163,7 @@ export default function Filter({
           {isProfilePage && !isMobile ? null : (
             <div css={Styles.CONTAINER_CENTERED}>
               <div css={Styles.MOBILE_HIDDEN}>
-                <SidebarTrigger />
+                <SidebarTrigger isMobile={isMobile} />
               </div>
               <PopupTrigger isMobile={isMobile} style={{ marginLeft: 2 }}>
                 <span css={Styles.MOBILE_ONLY} style={{ marginRight: 8 }}>
