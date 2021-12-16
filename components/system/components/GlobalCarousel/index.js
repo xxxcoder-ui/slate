@@ -7,7 +7,7 @@ import * as Jumpers from "~/components/system/components/GlobalCarousel/jumpers"
 import * as Utilities from "~/common/utilities";
 import * as UploadUtilities from "~/common/upload-utilities";
 import * as Validations from "~/common/validations";
-import * as Actions from "~/common/actions";
+import * as Tooltip from "~/components/system/components/fragments/Tooltip";
 import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
@@ -114,6 +114,24 @@ const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+const ActionButtonTooltip = ({ label, keyTrigger, id, children }) => {
+  return (
+    <Tooltip.Root vertical="below" horizontal="center">
+      <Tooltip.Trigger aria-labelledby={id}>{children}</Tooltip.Trigger>
+      <Tooltip.Content css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginTop: 4.5 }}>
+        <System.H6 id={id} as="p" color="textGrayDark">
+          {label}
+        </System.H6>
+        <System.H6 as="p" color="textGray" style={{ marginLeft: 16 }}>
+          {keyTrigger}
+        </System.H6>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
 const useCarouselJumperControls = () => {
   const [isControlVisible, setControlVisibility] = React.useState(false);
   const showControl = () => setControlVisibility(true);
@@ -140,9 +158,14 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
   }
 `;
 
-const STYLES_ACTION_BUTTON = css`
+const STYLES_ACTION_BUTTON = (theme) => css`
   ${Styles.BUTTON_RESET};
   padding: 8px;
+  border-radius: 8px;
+  &:hover {
+    background-color: ${theme.semantic.bgGrayLight};
+    box-shadow: ${theme.shadow.lightSmall};
+  }
 `;
 
 function CarouselHeader({
@@ -193,6 +216,28 @@ function CarouselHeader({
     { showControl: showEditChannels, hideControl: hideEditChannels },
   ] = useCarouselJumperControls();
 
+  const handleKeyDown = (e) => {
+    switch (e.key) {
+      case "e":
+      case "E":
+        showEditInfo();
+        break;
+      case "t":
+      case "T":
+        showEditChannels();
+        break;
+      case "s":
+      case "S":
+        showShareFile();
+        break;
+      case "i":
+      case "I":
+        showMoreInfo();
+        break;
+    }
+  };
+  useEventListener({ type: "keyup", handler: handleKeyDown });
+
   const isJumperOpen =
     isFileDescriptionVisible ||
     isMoreInfoVisible ||
@@ -222,8 +267,10 @@ function CarouselHeader({
 
   useIsomorphicLayoutEffect(() => {
     if (isJumperOpen) {
+      showHeader();
       return;
     }
+
     hideHeader();
   }, [isJumperOpen]);
 
@@ -321,24 +368,36 @@ function CarouselHeader({
           <AnimateSharedLayout>
             <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
               {isOwner && (
-                <motion.button
-                  layoutId="jumper-desktop-edit"
-                  onClick={showEditInfo}
-                  css={STYLES_ACTION_BUTTON}
+                <ActionButtonTooltip
+                  label="Edit Info"
+                  keyTrigger="E"
+                  id="globalcarousel-editinfo-trigger-tooltip"
                 >
-                  <SVG.Edit style={{ pointerEvents: "none" }} />
-                </motion.button>
+                  <motion.button
+                    layoutId="jumper-desktop-edit"
+                    onClick={showEditInfo}
+                    css={STYLES_ACTION_BUTTON}
+                  >
+                    <SVG.Edit style={{ pointerEvents: "none" }} />
+                  </motion.button>
+                </ActionButtonTooltip>
               )}
 
               {isOwner && (
-                <motion.button
-                  layoutId="jumper-desktop-channels"
-                  onClick={showEditChannels}
-                  style={{ marginLeft: 4 }}
-                  css={STYLES_ACTION_BUTTON}
+                <ActionButtonTooltip
+                  label="Tag"
+                  keyTrigger="T"
+                  id="globalcarousel-tag-trigger-tooltip"
                 >
-                  <SVG.Hash style={{ pointerEvents: "none" }} />
-                </motion.button>
+                  <motion.button
+                    layoutId="jumper-desktop-channels"
+                    onClick={showEditChannels}
+                    style={{ marginLeft: 4 }}
+                    css={STYLES_ACTION_BUTTON}
+                  >
+                    <SVG.Hash style={{ pointerEvents: "none" }} />
+                  </motion.button>
+                </ActionButtonTooltip>
               )}
 
               {!isOwner && (
@@ -351,23 +410,35 @@ function CarouselHeader({
                 />
               )}
 
-              <motion.button
-                layoutId="jumper-desktop-share"
-                onClick={showShareFile}
-                style={{ marginLeft: 4 }}
-                css={STYLES_ACTION_BUTTON}
+              <ActionButtonTooltip
+                label="Share"
+                keyTrigger="S"
+                id="globalcarousel-share-trigger-tooltip"
               >
-                <SVG.Share style={{ pointerEvents: "none" }} />
-              </motion.button>
+                <motion.button
+                  layoutId="jumper-desktop-share"
+                  onClick={showShareFile}
+                  style={{ marginLeft: 4 }}
+                  css={STYLES_ACTION_BUTTON}
+                >
+                  <SVG.Share style={{ pointerEvents: "none" }} />
+                </motion.button>
+              </ActionButtonTooltip>
 
-              <motion.button
-                layoutId="jumper-desktop-info"
-                onClick={showMoreInfo}
-                style={{ marginLeft: 4 }}
-                css={STYLES_ACTION_BUTTON}
+              <ActionButtonTooltip
+                label="More info"
+                keyTrigger="I"
+                id="globalcarousel-info-trigger-tooltip"
               >
-                <SVG.InfoCircle style={{ pointerEvents: "none" }} />
-              </motion.button>
+                <motion.button
+                  layoutId="jumper-desktop-info"
+                  onClick={showMoreInfo}
+                  style={{ marginLeft: 4 }}
+                  css={STYLES_ACTION_BUTTON}
+                >
+                  <SVG.InfoCircle style={{ pointerEvents: "none" }} />
+                </motion.button>
+              </ActionButtonTooltip>
 
               {file.isLink ? <VisitLinkButton file={file} /> : null}
             </div>

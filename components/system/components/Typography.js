@@ -191,16 +191,16 @@ export const H5 = React.forwardRef(({ as = "h5", nbrOflines, children, color, ..
   );
 });
 
-export const H6 = ({ as = "h6", nbrOflines, children, color, ...props }) => {
+export const H6 = React.forwardRef(({ as = "h6", nbrOflines, children, color, ...props }, ref) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
   const COLOR_STYLES = useColorProp(color);
 
   return jsx(
     as,
-    { ...props, css: [Styles.H6, TRUNCATE_STYLE, COLOR_STYLES, props?.css] },
+    { ...props, css: [Styles.H6, TRUNCATE_STYLE, COLOR_STYLES, props?.css], ref },
     children
   );
-};
+});
 
 export const P1 = ({ as = "p", nbrOflines, children, color, ...props }) => {
   const TRUNCATE_STYLE = React.useMemo(() => truncateElements(nbrOflines), [nbrOflines]);
