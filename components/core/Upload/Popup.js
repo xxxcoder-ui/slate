@@ -69,8 +69,7 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   });
 
   // NOTE(amine): popup handlers
-  const showUploadPopup = () => setPopupState((prev) => ({ ...prev, isVisible: true }));
-  const hideUploadPopup = () => setPopupState((prev) => ({ ...prev, isVisible: false }));
+  const hideUploadPopup = () => setPopupState({ isSummaryExpanded: false, isVisible: false });
   const expandUploadSummary = () => setPopupState({ isVisible: true, isSummaryExpanded: true });
   const collapseUploadSummary = () => setPopupState({ isVisible: true, isSummaryExpanded: false });
 
@@ -90,6 +89,7 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   const isSummaryExpandedRef = React.useRef();
   isSummaryExpandedRef.current = popupState.isSummaryExpanded;
   React.useEffect(() => {
+    console.log("open", isSummaryExpandedRef.current, totalFilesSummary.total === 0);
     if (isSummaryExpandedRef.current || totalFilesSummary.total === 0) return;
     expandUploadSummary();
     clearTimeout(timeoutRef.current);
@@ -128,7 +128,6 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   return [
     popupState,
     {
-      showUploadPopup,
       hideUploadPopup,
       expandUploadSummary,
       collapseUploadSummary,
