@@ -1,6 +1,6 @@
 import * as React from "react";
-import * as Environment from "~/common/environment";
 import * as System from "~/components/system";
+import * as Constants from "~/common/constants";
 
 import { useCheckIfExtensionIsInstalled } from "~/common/hooks";
 import { css } from "@emotion/react";
@@ -9,14 +9,14 @@ const getExtensionBrowserAndLink = () => {
   const testUserAgent = (regex) => regex.test(window.navigator.userAgent);
 
   const isFirefox = testUserAgent(/firefox/i);
-  const firefoxLink = Environment.EXTENSION_FIREFOX;
+  const firefoxLink = Constants.extensionLink.firefox;
   if (isFirefox && firefoxLink) return { browser: "Firefox", link: firefoxLink };
 
   const isSafari = testUserAgent(/safari/i);
-  const safariLink = Environment.EXTENSION_SAFARI;
+  const safariLink = Constants.extensionLink.safari;
   if (isSafari && safariLink) return { browser: "Safari", link: safariLink };
 
-  return { browser: "Chrome", link: Environment.EXTENSION_CHROME };
+  return { browser: "Chrome", link: Constants.extensionLink.chrome };
 };
 
 const STYLES_EXTENSION_BUTTON = (theme) => css`

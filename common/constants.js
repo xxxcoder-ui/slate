@@ -239,3 +239,9 @@ export const textile = {
   mainBucket: "data",
   dealsBucket: "stage-deal",
 };
+
+export const extensionLink = {
+  chrome: "https://chrome.google.com/webstore/detail/slate/gloembacbehhbfbkcfjmloikeeaebnoc",
+  firefox: "https://addons.mozilla.org/en-US/firefox/addon/slate-for-firefox",
+  safari: "",
+};
