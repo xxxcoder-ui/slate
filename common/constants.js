@@ -141,9 +141,9 @@ export const shadow = {
 export const zindex = {
   navigation: 1,
   body: 2,
+  intercom: 2,
   alert: 3,
   header: 4,
-  intercom: 4,
   sidebar: 5,
   modal: 6,
   jumper: 7,
