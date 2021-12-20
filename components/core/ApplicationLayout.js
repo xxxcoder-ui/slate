@@ -220,16 +220,6 @@ export default class ApplicationLayout extends React.Component {
             onAction={this.props.onAction}
             id={this.props.isMobile ? "slate-mobile-alert" : null}
             viewer={this.props.viewer}
-            style={
-              this.props.isMobile
-                ? { top: isHeaderInView ? 0 : this.state.headerTop + 56 }
-                : {
-                    top: isHeaderInView ? 0 : 56,
-                    paddingRight: this.props.sidebar
-                      ? `calc(${Constants.sizes.sidebar}px + 48px`
-                      : "auto",
-                  }
-            }
           />
           {this.props.children}
         </div>
