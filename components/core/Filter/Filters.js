@@ -77,7 +77,7 @@ const FilterButton = ({ children, Icon, image, isSelected, ...props }) => (
   </li>
 );
 
-const FilterSection = ({ title, tooltipContent, children, ...props }) => {
+const FilterSection = ({ title, children, ...props }) => {
   const [isExpanded, setExpanded] = React.useState(true);
   const toggleExpandState = () => setExpanded((prev) => !prev);
 
@@ -100,7 +100,7 @@ const FilterSection = ({ title, tooltipContent, children, ...props }) => {
           </Tooltip.Trigger>
           <Tooltip.Content css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginTop: -4.5 }}>
             <System.H6 id={titleButtonId} as="p" color="textGrayDark">
-              {tooltipContent}
+              Click to show/hide the filter section
             </System.H6>
           </Tooltip.Content>
         </Tooltip.Root>
@@ -149,7 +149,7 @@ function Tags({ viewer, data, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <FilterSection title="Tags" tooltipContent="Click to show/hide the tags section" {...props}>
+    <FilterSection title="Tags" {...props}>
       {viewer.slates.map((slate) => (
         <FilterButton
           key={slate.id}
