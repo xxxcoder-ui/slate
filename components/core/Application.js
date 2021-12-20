@@ -251,29 +251,31 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _withAuthenticationBehavior = (authenticate) => async (href, state) => {
-    let response = await authenticate(state);
-    if (Events.hasError(response)) {
+  _withAuthenticationBehavior =
+    (authenticate) =>
+    async (href = "/_/data", state) => {
+      let response = await authenticate(state);
+      if (Events.hasError(response)) {
+        return response;
+      }
+      if (response.shouldMigrate) {
+        return response;
+      }
+      let viewer = await UserBehaviors.hydrate();
+      if (Events.hasError(viewer)) {
+        return viewer;
+      }
+
+      this.setState({ viewer });
+      await this._handleSetupWebsocket();
+
+      // if (!redirected) {
+      //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
+      // }
+      this._handleNavigateTo({ href, redirect: true });
+
       return response;
-    }
-    if (response.shouldMigrate) {
-      return response;
-    }
-    let viewer = await UserBehaviors.hydrate();
-    if (Events.hasError(viewer)) {
-      return viewer;
-    }
-
-    this.setState({ viewer });
-    await this._handleSetupWebsocket();
-
-    // if (!redirected) {
-    //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
-    // }
-    this._handleNavigateTo({ href, redirect: true });
-
-    return response;
-  };
+    };
 
   _handleSelectedChange = (e) => {
     this.setState({
@@ -417,9 +419,12 @@ export default class ApplicationPage extends React.Component {
   render() {
     let { page } = this.state;
     if (!page?.id) page = NavigationData.getById(null, this.state.viewer);
+    const isSurveySceneVisible =
+      this.state.viewer && !this.state.viewer?.onboarding?.surveyCompleted;
 
     let headerElement;
-    if (page.id !== "NAV_SIGN_IN" && this.state.viewer?.onboarding?.surveyCompleted) {
+    const isHeaderDisabled = page.id === "NAV_SIGN_IN" || isSurveySceneVisible;
+    if (!isHeaderDisabled) {
       headerElement = (
         <ApplicationHeader
           viewer={this.state.viewer}
@@ -501,12 +506,7 @@ export default class ApplicationPage extends React.Component {
         >
           <Filter
             isProfilePage={isProfilePage}
-            isActive={
-              !!this.state.viewer &&
-              this.state.viewer?.onboarding?.surveyCompleted &&
-              page.id !== "NAV_SIGN_IN" &&
-              page.id !== "NAV_ERROR"
-            }
+            disabled={isSurveySceneVisible || page.id === "NAV_SIGN_IN" || page.id === "NAV_ERROR"}
             viewer={this.state.viewer}
             page={page}
             data={this.state.data}

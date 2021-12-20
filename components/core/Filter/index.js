@@ -113,7 +113,7 @@ const STYLES_FILTER_CONTENT = css`
 `;
 
 export default function Filter({
-  isActive,
+  disabled,
   viewer,
   onAction,
   page,
@@ -125,7 +125,7 @@ export default function Filter({
   const { results, isSearching } = useSearchStore();
   const showSearchResult = isSearching && !!results;
 
-  if (!isActive) {
+  if (disabled) {
     return showSearchResult ? (
       <Search.Content viewer={viewer} page={page} onAction={onAction} />
     ) : (

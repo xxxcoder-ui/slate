@@ -67,7 +67,8 @@ const AuthScene = ({ onAuthenticate, onTwitterAuthenticate, page, onAction, ...p
   } = useAuthFlow();
 
   // NOTE(amine): if the redirectUrl is provided, redirect users to it when they authenticate
-  const redirectUrl = React.useRef(decodeURI(page?.params?.redirect) || "/_/data");
+  const redirectUrl = React.useRef(page?.params?.redirect && decodeURI(page?.params?.redirect));
+
   const handleAuthentication = (...params) => onAuthenticate(redirectUrl.current, ...params);
   const handleTwitterAuthentication = (...params) =>
     onTwitterAuthenticate(redirectUrl.current, ...params);
