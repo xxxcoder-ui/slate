@@ -62,6 +62,9 @@ export const hydratePartial = async (
     }
     update = {
       ...update,
+      hasCompletedSurvey: user.hasCompletedSurvey,
+      hasCompletedUploadOnboarding: user.hasCompletedUploadOnboarding,
+      hasCompletedSlatesOnboarding: user.hasCompletedSlatesOnboarding,
       username: user.username,
       email: user.email,
       library: user.library,
@@ -175,10 +178,10 @@ export const getById = async ({ id }) => {
     }
 
     cids[each.cid] = true;
-    let size = each.size;
+    let { size } = each;
     if (typeof size === "number") {
       bytes += size;
-      let type = each.type;
+      let { type } = each;
       if (type) {
         if (type.startsWith("image/")) {
           imageBytes += size;
@@ -194,7 +197,7 @@ export const getById = async ({ id }) => {
       }
     }
 
-    let coverImage = each.coverImage;
+    let { coverImage } = each;
     if (coverImage && !cids[coverImage.cid]) {
       cids[coverImage.cid] = true;
       size = coverImage.size;

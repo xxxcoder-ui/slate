@@ -169,23 +169,16 @@ function SceneSurvey({ onAction }) {
           return acc;
         }, {});
 
-        surveyResults.current = {
-          ...surveyResults.current,
-          ...referrals,
-          surveyCompleted: true,
-        };
+        const surveyAnswers = { ...surveyResults.current, ...referrals };
 
-        onAction({
-          type: "UPDATE_VIEWER",
-          viewer: { onboarding: { ...surveyResults.current } },
-        });
-
-        const response = await Actions.updateViewer({
-          user: { onboarding: surveyResults.current },
-        });
+        const response = await Actions.createSurvey(surveyAnswers);
         if (Events.hasError(response)) {
           return;
         }
+        onAction({
+          type: "UPDATE_VIEWER",
+          viewer: { hasCompletedSurvey: true },
+        });
       }}
     />
   );
@@ -344,6 +337,7 @@ const ReferralForm = ({ onSubmit }) => {
   );
 };
 
+// eslint-disable-next-line no-unused-vars
 const Checkbox = ({ touched, value, style, isSelected, ...props }) => {
   return (
     <div style={style} css={[STYLES_CHECKBOX_WRAPPER, isSelected && STYLES_CHECKBOX_SELECTED]}>

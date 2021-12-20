@@ -199,7 +199,7 @@ export default class ApplicationLayout extends React.Component {
       );
     }
     const isHeaderInView =
-      this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.onboarding?.surveyCompleted;
+      this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.hasCompletedSurvey;
 
     return (
       <React.Fragment>
@@ -213,8 +213,7 @@ export default class ApplicationLayout extends React.Component {
           )}
           <Alert
             noWarning={
-              this.props.page?.id === "NAV_SIGN_IN" ||
-              !this.props.viewer?.onboarding?.surveyCompleted
+              this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.hasCompletedSurvey
                 ? true
                 : !!this.props.viewer
             }

@@ -419,8 +419,7 @@ export default class ApplicationPage extends React.Component {
   render() {
     let { page } = this.state;
     if (!page?.id) page = NavigationData.getById(null, this.state.viewer);
-    const isSurveySceneVisible =
-      this.state.viewer && !this.state.viewer?.onboarding?.surveyCompleted;
+    const isSurveySceneVisible = this.state.viewer && !this.state.viewer?.hasCompletedSurvey;
 
     let headerElement;
     const isHeaderDisabled = page.id === "NAV_SIGN_IN" || isSurveySceneVisible;
@@ -475,7 +474,7 @@ export default class ApplicationPage extends React.Component {
 
     let pageContent = null;
     switch (true) {
-      case this.state.viewer && !this.state.viewer?.onboarding?.surveyCompleted:
+      case this.state.viewer && !this.state.viewer?.hasCompletedSurvey:
         pageContent = <SceneSurvey onAction={this._handleAction} />;
         break;
 

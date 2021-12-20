@@ -36,7 +36,7 @@ const steps = {
 
 function Provider({ children, viewer, onAction, ...props }) {
   const [currentStep, setCurrentStep] = React.useState(
-    viewer?.onboarding?.uploadCompleted ? steps.finish : steps.welcome
+    viewer?.hasCompletedUploadOnboarding ? steps.finish : steps.welcome
   );
 
   const { isExtensionDownloaded } = useCheckIfExtensionIsInstalled();
@@ -54,8 +54,8 @@ function Provider({ children, viewer, onAction, ...props }) {
 
     setCurrentStep(nextStep);
     if (nextStep === steps.finish) {
-      onAction({ type: "UPDATE_VIEWER", viewer: { onboarding: { uploadCompleted: true } } });
-      Actions.updateViewer({ user: { onboarding: { uploadCompleted: true } } });
+      onAction({ type: "UPDATE_VIEWER", viewer: { hasCompletedUploadOnboarding: true } });
+      Actions.updateViewer({ user: { hasCompletedUploadOnboarding: true } });
     }
   }, [currentStep, isExtensionDownloaded]);
 

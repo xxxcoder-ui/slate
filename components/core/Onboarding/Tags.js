@@ -23,7 +23,7 @@ const steps = {
 
 function Provider({ children, onAction, viewer, ...props }) {
   const [currentStep, setCurrentStep] = React.useState(
-    viewer?.onboarding?.tagsCompleted ? steps.finish : steps.trigger
+    viewer?.hasCompletedSlatesOnboarding ? steps.finish : steps.trigger
   );
 
   const goToNextStep = React.useCallback(() => {
@@ -34,8 +34,8 @@ function Provider({ children, onAction, viewer, ...props }) {
 
     setCurrentStep(nextStep);
     if (nextStep === steps.finish) {
-      onAction({ type: "UPDATE_VIEWER", viewer: { onboarding: { tagsCompleted: true } } });
-      Actions.updateViewer({ user: { onboarding: { tagsCompleted: true } } });
+      onAction({ type: "UPDATE_VIEWER", viewer: { hasCompletedSlatesOnboarding: true } });
+      Actions.updateViewer({ user: { hasCompletedSlatesOnboarding: true } });
     }
   }, [currentStep]);
 
@@ -152,7 +152,8 @@ function TagsWalkthrought({ isMobile }) {
 }
 
 export function TagsOnboarding({ isMobile, onAction, viewer, children }) {
-  const shouldOnboard = viewer?.onboarding?.uploadCompleted && !viewer?.onboarding?.tagsCompleted;
+  const shouldOnboard =
+    viewer?.hasCompletedUploadOnboarding && !viewer?.hasCompletedSlatesOnboarding;
 
   return (
     <Provider viewer={viewer} onAction={onAction}>
