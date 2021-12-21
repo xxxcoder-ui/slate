@@ -42,16 +42,32 @@ const addSlateCoverImage = db.schema.table("slates", function (table) {
   table.jsonb("coverImage").nullable();
 });
 
-const addSettingsColumnToUsersTable = db.schema
-  .table("users", (table) => {
-    table.jsonb("settings").defaultTo("{}");
-  })
-  .then(() =>
-    db("users").update(
-      "settings",
-      db.raw("jsonb_build_object('filecoin', users.data -> 'settings' )")
-    )
-  );
+const createSurveysTable = db.schema.table("surveys", function (table) {
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.uuid("ownerId").references("id").inTable("users");
+
+  // What do you currently use for saving things on the web?
+  table.boolean("prevToolsDropbox").defaultTo(false);
+  table.boolean("prevToolsArena").defaultTo(false);
+  table.boolean("prevToolsPinterest").defaultTo(false);
+  table.boolean("prevToolsGoogleDrive").defaultTo(false);
+  table.boolean("prevToolsBrowserBookmarks").defaultTo(false);
+  table.string("prevToolsOther").defaultTo(null);
+
+  // What are you interested in using Slate for?
+  table.boolean("useCasesPersonalStorage").defaultTo(false);
+  table.boolean("useCasesPublicFileSharing").defaultTo(false);
+  table.boolean("useCasesArchiving").defaultTo(false);
+  table.boolean("useCasesBookmarking").defaultTo(false);
+  table.boolean("useCasesMoodboarding").defaultTo(false);
+  table.string("useCasesOther").defaultTo(null);
+
+  // How did you find out about Slate?
+  table.boolean("referralFriend").defaultTo(false);
+  table.boolean("referralTwitter").defaultTo(false);
+  table.boolean("referralIpfsFilecoinCommunity").defaultTo(false);
+  table.string("referralOther").defaultTo(null);
+});
 
 const dropOnboardingTable = db.schema.dropTableIfExists("onboarding");
 const addOnboardingColumnsToUsersTable = db.schema.table("users", function (table) {
@@ -60,7 +76,7 @@ const addOnboardingColumnsToUsersTable = db.schema.table("users", function (tabl
   table.boolean("hasCompletedSlatesOnboarding").defaultTo(false);
 });
 
-Promise.all([dropOnboardingTable, addSettingsColumnToUsersTable, addOnboardingColumnsToUsersTable]);
+Promise.all([dropOnboardingTable, createSurveysTable, addOnboardingColumnsToUsersTable]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);
