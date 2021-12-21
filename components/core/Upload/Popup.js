@@ -89,7 +89,6 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   const isSummaryExpandedRef = React.useRef();
   isSummaryExpandedRef.current = popupState.isSummaryExpanded;
   React.useEffect(() => {
-    console.log("open", isSummaryExpandedRef.current, totalFilesSummary.total === 0);
     if (isSummaryExpandedRef.current || totalFilesSummary.total === 0) return;
     expandUploadSummary();
     clearTimeout(timeoutRef.current);
