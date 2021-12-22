@@ -2,10 +2,9 @@ import * as React from "react";
 import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
-
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 
-const STYLES_BUTTON = `
+const STYLES_BUTTON = css`
   box-sizing: border-box;
   border-radius: 12px;
   outline: 0;
@@ -54,18 +53,63 @@ const STYLES_BUTTON_PRIMARY_TRANSPARENT = css`
   color: ${Constants.system.blue};
 `;
 
-export const ButtonPrimary = ({
-  children,
-  css,
-  style,
-  full,
-  transparent,
-  loading,
-  label,
-  type,
-  ...props
-}) => {
-  if (loading) {
+export const ButtonPrimary = React.forwardRef(
+  ({ children, css, style, full, transparent, loading, label, type, ...props }, ref) => {
+    if (loading) {
+      return (
+        <button
+          css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
+        </button>
+      );
+    }
+
+    if (type === "label") {
+      return (
+        <label
+          css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={label}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </label>
+      );
+    }
+
+    if (type === "link") {
+      return (
+        <a
+          css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </a>
+      );
+    }
+
+    if (props.disabled) {
+      return (
+        <button
+          css={[STYLES_BUTTON_PRIMARY_DISABLED, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </button>
+      );
+    }
+
     return (
       <button
         css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
@@ -73,64 +117,15 @@ export const ButtonPrimary = ({
         type={type}
         {...props}
       >
-        <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
-      </button>
-    );
-  }
-
-  if (type === "label") {
-    return (
-      <label
-        css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        type={label}
-        {...props}
-      >
-        {children}
-      </label>
-    );
-  }
-
-  if (type === "link") {
-    return (
-      <a
-        css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        {...props}
-      >
-        {children}
-      </a>
-    );
-  }
-
-  if (props.disabled) {
-    return (
-      <button
-        css={[STYLES_BUTTON_PRIMARY_DISABLED, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        type={type}
-        {...props}
-      >
         {children}
       </button>
     );
   }
+);
 
-  return (
-    <button
-      css={[transparent ? STYLES_BUTTON_PRIMARY_TRANSPARENT : STYLES_BUTTON_PRIMARY, css]}
-      style={{ width: full ? "100%" : "auto", ...style }}
-      type={type}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-export const ButtonPrimaryFull = (props) => {
-  return <ButtonPrimary full {...props} />;
-};
+export const ButtonPrimaryFull = React.forwardRef((props, ref) => {
+  return <ButtonPrimary full ref={ref} {...props} />;
+});
 
 const STYLES_BUTTON_SECONDARY = css`
   ${STYLES_BUTTON}
@@ -157,66 +152,62 @@ const STYLES_BUTTON_SECONDARY_TRANSPARENT = css`
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonSecondary = ({
-  children,
-  css,
-  style,
-  full,
-  transparent,
-  loading,
-  label,
-  type,
-  ...props
-}) => {
-  if (loading) {
+export const ButtonSecondary = React.forwardRef(
+  ({ children, css, style, full, transparent, loading, label, type, ...props }, ref) => {
+    if (loading) {
+      return (
+        <button
+          css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          <LoaderSpinner style={{ height: 16, width: 16 }} />
+        </button>
+      );
+    }
+
+    if (type === "label") {
+      return (
+        <label
+          css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={label}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </label>
+      );
+    }
+
+    if (type === "link") {
+      return (
+        <a
+          css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </a>
+      );
+    }
+
     return (
       <button
         css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         type={type}
+        ref={ref}
         {...props}
       >
-        <LoaderSpinner style={{ height: 16, width: 16 }} />
+        {children}
       </button>
     );
   }
-
-  if (type === "label") {
-    return (
-      <label
-        css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        type={label}
-        {...props}
-      >
-        {children}
-      </label>
-    );
-  }
-
-  if (type === "link") {
-    return (
-      <a
-        css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        {...props}
-      >
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    <button
-      css={[transparent ? STYLES_BUTTON_SECONDARY_TRANSPARENT : STYLES_BUTTON_SECONDARY, css]}
-      style={{ width: full ? "100%" : "auto", ...style }}
-      type={type}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+);
 
 export const ButtonSecondaryFull = (props) => {
   return <ButtonSecondary full {...props} />;
@@ -233,11 +224,6 @@ const STYLES_BUTTON_TERTIARY = css`
   :hover {
     background-color: #fcfcfc;
   }
-
-  :focus {
-    outline: 0;
-    border: 0;
-  }
 `;
 
 const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
@@ -248,69 +234,65 @@ const STYLES_BUTTON_TERTIARY_TRANSPARENT = css`
   color: ${Constants.system.grayLight2};
 `;
 
-export const ButtonTertiary = ({
-  children,
-  css,
-  style,
-  full,
-  transparent,
-  loading,
-  label,
-  type,
-  ...props
-}) => {
-  if (loading) {
+export const ButtonTertiary = React.forwardRef(
+  ({ children, css, style, full, transparent, loading, label, type, ...props }, ref) => {
+    if (loading) {
+      return (
+        <button
+          css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          <LoaderSpinner style={{ height: 16, width: 16 }} />
+        </button>
+      );
+    }
+
+    if (type === "label") {
+      return (
+        <label
+          css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </label>
+      );
+    }
+
+    if (type === "link") {
+      return (
+        <a
+          css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </a>
+      );
+    }
+
     return (
       <button
         css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         type={type}
+        ref={ref}
         {...props}
       >
-        <LoaderSpinner style={{ height: 16, width: 16 }} />
+        {children}
       </button>
     );
   }
+);
 
-  if (type === "label") {
-    return (
-      <label
-        css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        {...props}
-      >
-        {children}
-      </label>
-    );
-  }
-
-  if (type === "link") {
-    return (
-      <a
-        css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        {...props}
-      >
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    <button
-      css={[transparent ? STYLES_BUTTON_TERTIARY_TRANSPARENT : STYLES_BUTTON_TERTIARY, css]}
-      style={{ width: full ? "100%" : "auto", ...style }}
-      type={type}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-export const ButtonTertiaryFull = (props) => {
-  return <ButtonTertiary full {...props} />;
-};
+export const ButtonTertiaryFull = React.forwardRef((props, ref) => {
+  return <ButtonTertiary full {...props} ref={ref} />;
+});
 
 const STYLES_BUTTON_DISABLED = css`
   ${STYLES_BUTTON}
@@ -332,22 +314,25 @@ const STYLES_BUTTON_DISABLED_TRANSPARENT = css`
   color: ${Constants.system.gray};
 `;
 
-export const ButtonDisabled = ({ children, css, style, full, label, ...props }) => {
-  return (
-    <button
-      css={[props.transparent ? STYLES_BUTTON_DISABLED_TRANSPARENT : STYLES_BUTTON_DISABLED, css]}
-      type={label}
-      style={{ width: full ? "100%" : "auto", ...style }}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+export const ButtonDisabled = React.forwardRef(
+  ({ children, css, style, full, label, ...props }, ref) => {
+    return (
+      <button
+        css={[props.transparent ? STYLES_BUTTON_DISABLED_TRANSPARENT : STYLES_BUTTON_DISABLED, css]}
+        type={label}
+        style={{ width: full ? "100%" : "auto", ...style }}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
 
-export const ButtonDisabledFull = (props) => {
-  return <ButtonDisabled full {...props} />;
-};
+export const ButtonDisabledFull = React.forwardRef((props, ref) => {
+  return <ButtonDisabled full ref={ref} {...props} />;
+});
 
 const STYLES_BUTTON_WARNING = css`
   ${STYLES_BUTTON}
@@ -380,69 +365,64 @@ const STYLES_BUTTON_WARNING_TRANSPARENT = css`
   color: ${Constants.system.red};
 `;
 
-export const ButtonWarning = ({
-  children,
-  css,
-  style,
-  full,
-  transparent,
-  type,
-  disabled,
-  loading,
-  label,
-  ...props
-}) => {
-  if (loading) {
+export const ButtonWarning = React.forwardRef(
+  ({ children, css, style, full, transparent, type, disabled, loading, label, ...props }, ref) => {
+    if (loading) {
+      return (
+        <button
+          css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
+        </button>
+      );
+    }
+
+    if (type === "label") {
+      return (
+        <label
+          css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={label}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </label>
+      );
+    }
+
+    if (disabled) {
+      return (
+        <button
+          css={[STYLES_BUTTON_WARNING_DISABLED, css]}
+          style={{ width: full ? "100%" : "auto", ...style }}
+          type={type}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </button>
+      );
+    }
+
     return (
       <button
         css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
         style={{ width: full ? "100%" : "auto", ...style }}
         type={type}
-        {...props}
-      >
-        <LoaderSpinner style={{ height: 16, width: 16, color: Constants.system.white }} />
-      </button>
-    );
-  }
-
-  if (type === "label") {
-    return (
-      <label
-        css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        type={label}
-        {...props}
-      >
-        {children}
-      </label>
-    );
-  }
-
-  if (disabled) {
-    return (
-      <button
-        css={[STYLES_BUTTON_WARNING_DISABLED, css]}
-        style={{ width: full ? "100%" : "auto", ...style }}
-        type={type}
+        ref={ref}
         {...props}
       >
         {children}
       </button>
     );
   }
+);
 
-  return (
-    <button
-      css={[transparent ? STYLES_BUTTON_WARNING_TRANSPARENT : STYLES_BUTTON_WARNING, css]}
-      style={{ width: full ? "100%" : "auto", ...style }}
-      type={type}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-export const ButtonWarningFull = (props) => {
-  return <ButtonWarning full {...props} />;
-};
+export const ButtonWarningFull = React.forwardRef((props, ref) => {
+  return <ButtonWarning full ref={ref} {...props} />;
+});
