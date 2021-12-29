@@ -106,10 +106,10 @@ function WelcomeOnboarding({ viewer }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.4, ease: "easeInOut" }}
-            style={{ marginTop: 5, textAlign: "center" }}
+            style={{ marginTop: 5, textAlign: "center", maxWidth: "47ch" }}
           >
-            Slate is your personal search engine for the web. <br /> Use Slate for moodboards,
-            research, personal storage etc.
+            Slate is a personal search engine that's designed to help you save and remember things
+            you care about on the web.
           </System.P1>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
