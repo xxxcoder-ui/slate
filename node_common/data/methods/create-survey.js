@@ -2,18 +2,16 @@ import { runQuery } from "~/node_common/data/utilities";
 
 export default async ({
   ownerId,
-  prevToolsDropbox,
-  prevToolsArena,
-  prevToolsPinterest,
-  prevToolsGoogleDrive,
   prevToolsBrowserBookmarks,
+  prevToolsPinterest,
+  prevToolsArena,
+  prevToolsNotesPlatform,
   prevToolsOther,
 
-  useCasesPersonalStorage,
-  useCasesPublicFileSharing,
-  useCasesArchiving,
-  useCasesBookmarking,
-  useCasesMoodboarding,
+  useCasesBookmarkingImportantPages,
+  useCasesSavingLinksToReadLater,
+  useCasesSearchingYourBrowsedPages,
+  useCasesSharingCollectionsOfLinks,
   useCasesOther,
 
   referralFriend,
@@ -26,19 +24,16 @@ export default async ({
     queryFn: async (DB) => {
       let query = await DB.insert({
         ownerId,
-
-        prevToolsDropbox,
-        prevToolsArena,
-        prevToolsPinterest,
-        prevToolsGoogleDrive,
         prevToolsBrowserBookmarks,
+        prevToolsPinterest,
+        prevToolsArena,
+        prevToolsNotesPlatform,
         prevToolsOther,
 
-        useCasesPersonalStorage,
-        useCasesPublicFileSharing,
-        useCasesArchiving,
-        useCasesBookmarking,
-        useCasesMoodboarding,
+        useCasesBookmarkingImportantPages,
+        useCasesSavingLinksToReadLater,
+        useCasesSearchingYourBrowsedPages,
+        useCasesSharingCollectionsOfLinks,
         useCasesOther,
 
         referralFriend,
