@@ -15,18 +15,16 @@ import { Input } from "~/components/system";
 import { AuthWrapper } from "~/components/core/Auth/components";
 
 const TOOLS_OPTIONS = {
-  Dropbox: "prevToolsDropbox",
-  "Google Drive": "prevToolsGoogleDrive",
-  "Are.na": "prevToolsArena",
-  Pinterest: "prevToolsPinterest",
   "Browser Bookmarks": "prevToolsBrowserBookmarks",
+  Pinterest: "prevToolsPinterest",
+  "Are.na": "prevToolsArena",
+  "Notes platform (Notion, Evernote, etc.)": "prevToolsNotesPlatform",
 };
 const SLATE_USECASES_OPTIONS = {
-  "Personal Storage": "useCasesPersonalStorage",
-  "Public File Sharing": "useCasesPublicFileSharing",
-  Moodboarding: "useCasesMoodboarding",
-  Archiving: "useCasesArchiving",
-  Bookmarking: "useCasesBookmarking",
+  "Bookmarking important pages": "useCasesBookmarkingImportantPages",
+  "Saving links to read later": "useCasesSavingLinksToReadLater",
+  "Searching your browsed pages": "useCasesSearchingYourBrowsedPages",
+  "Sharing collections of links": "useCasesSharingCollectionsOfLinks",
 };
 
 const REFERRAL_OPTIONS = {
