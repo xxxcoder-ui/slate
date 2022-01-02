@@ -19,7 +19,6 @@ import { useEventListener } from "~/common/hooks";
 
 const STYLES_CHANNEL_BUTTON = (theme) => css`
   position: relative;
-  ${Styles.BUTTON_RESET};
   padding: 5px 12px 7px;
   border: 1px solid ${theme.semantic.borderGrayLight4};
   border-radius: 12px;
@@ -34,14 +33,14 @@ const STYLES_CHANNEL_BUTTON_SELECTED = (theme) => css`
 
 function ChannelButton({ children, isSelected, css, ...props }) {
   return (
-    <button
+    <System.ButtonPrimitive
       {...props}
       css={[STYLES_CHANNEL_BUTTON, isSelected && STYLES_CHANNEL_BUTTON_SELECTED, css]}
     >
       <System.P2 nbrOflines={1} as="span">
         {children}
       </System.P2>
-    </button>
+    </System.ButtonPrimitive>
   );
 }
 
@@ -65,7 +64,7 @@ function ChannelKeyboardShortcut({ searchResults, searchQuery, onAddFileToChanne
   const selectedChannel = [...publicChannels, ...privateChannels][0];
 
   useEventListener({
-    type: "keyup",
+    type: "keydown",
     handler: (e) => {
       if (e.key === "Enter") {
         onAddFileToChannel(selectedChannel, selectedChannel.doesContainFile);
@@ -97,11 +96,17 @@ const STYLES_SEARCH_TAGS_INPUT = (theme) => css`
   background-color: transparent;
   ${theme.semantic.textGray};
   box-shadow: none;
-  height: 43px;
+  height: 52px;
   padding: 0px;
   ::placeholder {
     color: ${theme.semantic.textGray};
   }
+`;
+
+const STYLES_SEARCH_TAGS_INPUT_WRAPPER = (theme) => css`
+  color: ${theme.semantic.textGray};
+  width: 100%;
+  margin: 1px;
 `;
 
 function ChannelInput({ value, searchResults, onChange, onAddFileToChannel, ...props }) {
@@ -109,24 +114,27 @@ function ChannelInput({ value, searchResults, onChange, onAddFileToChannel, ...p
   const showShortcut = publicChannels.length + privateChannels.length === 1;
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
-      <System.Input
-        full
-        value={value}
-        onChange={onChange}
-        name="search"
-        placeholder="Search or create a new tag"
-        inputCss={STYLES_SEARCH_TAGS_INPUT}
-        {...props}
-      />
-      <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", right: 20 }}>
-        {showShortcut ? (
-          <ChannelKeyboardShortcut
-            searchQuery={value}
-            searchResults={searchResults}
-            onAddFileToChannel={onAddFileToChannel}
-          />
-        ) : null}
+    <div css={[STYLES_SEARCH_TAGS_INPUT_WRAPPER, Styles.CONTAINER_CENTERED]}>
+      <SVG.Hash width={16} />
+      <div style={{ position: "relative", width: "100%" }}>
+        <System.Input
+          full
+          value={value}
+          onChange={onChange}
+          name="search"
+          placeholder="Search or create a new tag"
+          inputCss={STYLES_SEARCH_TAGS_INPUT}
+          {...props}
+        />
+        <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", right: 20 }}>
+          {showShortcut ? (
+            <ChannelKeyboardShortcut
+              searchQuery={value}
+              searchResults={searchResults}
+              onAddFileToChannel={onAddFileToChannel}
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );
@@ -357,10 +365,6 @@ const useChannelsSearch = ({ privateChannels, publicChannels }) => {
   ];
 };
 
-const STYLES_EDIT_CHANNELS_HEADER = (theme) => css`
-  color: ${theme.semantic.textGray};
-`;
-
 export function EditChannels({ file, viewer, isOpen, onClose, ...props }) {
   const [channels, { handleAddFileToChannel, handleCreateChannel }] = useChannels({
     viewer,
@@ -386,11 +390,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, ...props }) {
     <Jumper.AnimatePresence>
       {isOpen ? (
         <Jumper.Root onClose={() => (onClose(), clearQuery())} {...props}>
-          <Jumper.Header
-            css={[STYLES_EDIT_CHANNELS_HEADER, Styles.CONTAINER_CENTERED]}
-            style={{ paddingTop: 0, paddingBottom: 0 }}
-          >
-            <SVG.Hash width={16} />
+          <Jumper.Header style={{ paddingTop: 0, paddingBottom: 0 }}>
             <ChannelInput
               value={searchQuery}
               onChange={handleQueryChange}
@@ -398,6 +398,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, ...props }) {
               autoFocus
               onAddFileToChannel={handleAddFileToChannel}
             />
+            <Jumper.Dismiss />
           </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item>
@@ -462,18 +463,15 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
     <MobileJumper.AnimatePresence>
       {isOpen ? (
         <MobileJumper.Root onClose={onClose}>
-          <MobileJumper.Header
-            style={{ paddingTop: 0, paddingBottom: 0 }}
-            css={STYLES_EDIT_CHANNELS_HEADER}
-          >
-            <SVG.Hash width={16} />
+          <MobileJumper.Header style={{ paddingTop: 0, paddingBottom: 0 }}>
             <ChannelInput
               value={searchQuery}
               onChange={handleQueryChange}
               searchResults={searchResults}
               onAddFileToChannel={handleAddFileToChannel}
-              autoFocus={viewer?.slates?.length === 0}
+              autoFocus
             />
+            <MobileJumper.Dismiss />
           </MobileJumper.Header>
           <System.Divider height={1} color="borderGrayLight4" />
           <div style={{ padding: "13px 16px 11px" }}>
@@ -502,13 +500,9 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
             </div>
           </MobileJumper.Content>
           <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-            <button
-              type="button"
-              css={Styles.BUTTON_RESET}
-              onClick={() => (onClose(), clearQuery())}
-            >
+            <System.ButtonPrimitive type="button" onClick={() => (onClose(), clearQuery())}>
               <SVG.Hash width={16} height={16} style={{ color: Constants.system.blue }} />
-            </button>
+            </System.ButtonPrimitive>
           </MobileJumper.Footer>
         </MobileJumper.Root>
       ) : null}

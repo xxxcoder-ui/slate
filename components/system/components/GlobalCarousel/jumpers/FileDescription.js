@@ -13,23 +13,27 @@ export function FileDescription({ file, isOpen, onClose }) {
       {isOpen ? (
         <Jumper.Root onClose={onClose}>
           <Jumper.Header>
-            <System.H3 as="h1" nbrOflines={1} title={file.name || file.filename}>
-              {file.name || file.filename}
-            </System.H3>
-            <Show when={file.isLink}>
-              <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                <LinkIcon file={file} width={12} height={12} />
-                <System.P2
-                  as="p"
-                  nbrOflines={1}
-                  href={file.url}
-                  css={Styles.LINK}
-                  style={{ marginLeft: 5 }}
-                >
-                  {file.url}
-                </System.P2>
-              </div>
-            </Show>
+            <div>
+              <System.H3 as="h1" nbrOflines={1} title={file.name || file.filename}>
+                {file.name || file.filename}
+              </System.H3>
+              <Show when={file.isLink}>
+                <div style={{ marginTop: 5 }} css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                  <LinkIcon file={file} width={12} height={12} />
+                  <System.P2
+                    as="a"
+                    nbrOflines={1}
+                    href={file.url}
+                    target="_blank"
+                    css={Styles.LINK}
+                    style={{ marginLeft: 5 }}
+                  >
+                    {file.url}
+                  </System.P2>
+                </div>
+              </Show>
+            </div>
+            <Jumper.Dismiss autoFocus />
           </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item>

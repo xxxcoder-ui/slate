@@ -13,9 +13,9 @@ import { css } from "@emotion/react";
 import { useUploadContext } from "~/components/core/Upload/Provider";
 import { useUploadStore } from "~/components/core/Upload/store";
 import { useUploadOnboardingContext } from "~/components/core/Onboarding/Upload";
+import { useCheckIfExtensionIsInstalled, useLocalStorage } from "~/common/hooks";
 
 import DownloadExtensionButton from "~/components/core/Extension/DownloadExtensionButton";
-import { useCheckIfExtensionIsInstalled, useLocalStorage } from "~/common/hooks";
 
 const STYLES_EXTENSION_BAR = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
@@ -43,13 +43,12 @@ function ExtensionBar() {
       <System.P2 color="textBlack">Save from anywhere on the Web</System.P2>
       <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
         <DownloadExtensionButton style={{ minHeight: 24, borderRadius: "8px" }} />
-        <button
-          css={Styles.BUTTON_RESET}
+        <System.ButtonPrimitive
           style={{ marginLeft: 16, color: Constants.semantic.textGray }}
           onClick={hideExtensionBar}
         >
           <SVG.Dismiss width={16} style={{ display: "block" }} />
-        </button>
+        </System.ButtonPrimitive>
       </div>
     </Jumper.Item>
   );
@@ -160,13 +159,27 @@ export function UploadJumper({ data }) {
   const onboardingContext = useUploadOnboardingContext();
 
   const { handleUpload } = useFileUpload({ data, onUpload: onboardingContext?.goToNextStep });
+  const handleSelectFileKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.target.click();
+      e.preventDefault();
+    }
+  };
 
   return (
     <Jumper.AnimatePresence>
       {isUploadJumperVisible ? (
-        <Jumper.Root onClose={() => (onboardingContext.goToNextStep(), hideUploadJumper())}>
+        <Jumper.Root
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="upload-jumper"
+          onClose={() => (onboardingContext.goToNextStep(), hideUploadJumper())}
+        >
           <Jumper.Header>
-            <System.H5 color="textBlack">Upload</System.H5>
+            <System.H5 color="textBlack" id="upload-jumper">
+              Upload
+            </System.H5>
+            <Jumper.Dismiss />
           </Jumper.Header>
           <Jumper.Divider />
           <ExtensionBar />
@@ -193,6 +206,8 @@ export function UploadJumper({ data }) {
               <System.ButtonTertiary
                 type="label"
                 htmlFor="file"
+                tabindex={0}
+                onKeyDown={handleSelectFileKeyDown}
                 style={{
                   marginTop: 23,
                   maxWidth: 122,
@@ -223,6 +238,7 @@ export function MobileUploadJumper({ data }) {
         <MobileJumper.Root onClose={() => (onboardingContext.goToNextStep(), hideUploadJumper())}>
           <MobileJumper.Header>
             <System.H5 color="textBlack">Upload</System.H5>
+            <MobileJumper.Dismiss />
           </MobileJumper.Header>
           <MobileJumper.Divider color="borderGrayLight" />
           <MobileJumper.Content style={{ padding: 0 }}>
