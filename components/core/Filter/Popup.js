@@ -2,6 +2,7 @@ import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 import * as Filters from "~/components/core/Filter/Filters";
+import * as System from "~/components/system";
 
 import { useFilterContext } from "~/components/core/Filter/Provider";
 import { motion } from "framer-motion";
@@ -23,16 +24,19 @@ export function PopupTrigger({ children, isMobile, ...props }) {
   if (sidebarState.isVisible && !isMobile) return null;
 
   return (
-    <button
+    <System.ButtonPrimitive
       onClick={togglePopup}
-      css={[Styles.BUTTON_RESET, Styles.HORIZONTAL_CONTAINER_CENTERED]}
+      css={Styles.HORIZONTAL_CONTAINER_CENTERED}
       {...props}
     >
       {children}
-      <motion.div initial={null} animate={{ rotateX: popupState.isVisible ? 0 : 180 }}>
+      <motion.div
+        initial={{ rotateX: popupState.isVisible ? 0 : 180 }}
+        animate={{ rotateX: popupState.isVisible ? 0 : 180 }}
+      >
         <SVG.ChevronUp style={{ display: "block" }} />
       </motion.div>
-    </button>
+    </System.ButtonPrimitive>
   );
 }
 

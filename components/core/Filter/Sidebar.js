@@ -15,7 +15,6 @@ import { useEventListener } from "~/common/hooks";
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_SIDEBAR_TRIGGER = (theme) => css`
-  ${Styles.BUTTON_RESET};
   color: ${theme.semantic.textBlack};
   border-radius: 6px;
   padding: 2px;
@@ -29,6 +28,10 @@ export const SidebarTrigger = React.forwardRef(({ css, isMobile, ...props }, ref
   const [{ sidebarState }, { toggleSidebar }] = useFilterContext();
 
   const handleKeyDown = (e) => {
+    const targetTagName = e.target.tagName;
+    if (targetTagName === "INPUT" || targetTagName === "TEXTAREA" || targetTagName === "SELECT")
+      return;
+
     if (e.key === "\\" || e.code === "Backslash") toggleSidebar();
   };
   useEventListener({ type: "keydown", handler: handleKeyDown, enabled: !isMobile });
@@ -36,7 +39,7 @@ export const SidebarTrigger = React.forwardRef(({ css, isMobile, ...props }, ref
   return (
     <Tooltip.Root vertical="below" horizontal="right">
       <Tooltip.Trigger aria-describedby="filter-sidebar-trigger-tooltip">
-        <button
+        <System.ButtonPrimitive
           onClick={toggleSidebar}
           css={[STYLES_SIDEBAR_TRIGGER, css]}
           style={{
@@ -49,7 +52,7 @@ export const SidebarTrigger = React.forwardRef(({ css, isMobile, ...props }, ref
           {...props}
         >
           <SVG.Sidebar style={{ display: "block" }} />
-        </button>
+        </System.ButtonPrimitive>
       </Tooltip.Trigger>
       <Tooltip.Content
         style={{ marginTop: 4.5, marginLeft: -8 }}

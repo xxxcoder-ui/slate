@@ -4,6 +4,7 @@ import * as Styles from "~/common/styles";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Strings from "~/common/strings";
 import * as Utilities from "~/common/utilities";
+import * as System from "~/components/system";
 
 import { PopoverNavigation } from "~/components/system";
 import { css } from "@emotion/react";
@@ -247,13 +248,13 @@ export class ApplicationUserControls extends React.Component {
     let tooltip = <ApplicationUserControlsPopup {...this.props} />;
     return (
       <div css={STYLES_HEADER}>
-        <button
-          css={[Styles.BUTTON_RESET, STYLES_PROFILE_MOBILE]}
+        <System.ButtonPrimitive
+          css={STYLES_PROFILE_MOBILE}
           onClick={() => this.props.onTogglePopup("profile")}
           style={{ position: "relative", cursor: "pointer" }}
         >
           <ProfilePhoto user={this.props.viewer} style={{ borderRadius: "8px" }} size={24} />
-        </button>
+        </System.ButtonPrimitive>
         {this.props.popup === "profile" ? tooltip : null}
       </div>
     );

@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Events from "~/common/custom-events";
+import * as System from "~/components/system";
 
 import { ModalPortal } from "../ModalPortal";
 import { Provider } from "~/components/core/Upload/Provider";
@@ -30,7 +31,7 @@ const Root = ({ children, data, isMobile }) => {
  * Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-const Trigger = ({ viewer, css, children, ...props }) => {
+const Trigger = ({ viewer, children, ...props }) => {
   const onboardingContext = useUploadOnboardingContext();
   const showUploadModal = () => {
     if (onboardingContext) onboardingContext?.goToNextStep?.call();
@@ -44,9 +45,9 @@ const Trigger = ({ viewer, css, children, ...props }) => {
 
   return (
     <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-      <button css={[Styles.BUTTON_RESET, css]} onClick={showUploadModal} {...props}>
+      <System.ButtonPrimitive onClick={showUploadModal} {...props}>
         {children}
-      </button>
+      </System.ButtonPrimitive>
     </div>
   );
 };
