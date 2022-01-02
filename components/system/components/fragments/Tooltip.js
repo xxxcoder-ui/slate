@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { css } from "@emotion/react";
 import { ModalPortal } from "~/components/core/ModalPortal";
-import { useEscapeKey, useEventListener } from "~/common/hooks";
+import { useCombinedRefs, useEscapeKey, useEventListener } from "~/common/hooks";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { motion } from "framer-motion";
 
@@ -31,10 +31,12 @@ export function Root({ children, vertical = "below", horizontal = "right" }) {
  *  Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export function Trigger({ children, ...props }) {
+export const Trigger = React.forwardRef(({ children, ...props }, forwardedRef) => {
   const { setTriggerRef, showTooltip, hideTooltip } = useTooltipContext();
 
-  const ref = React.useRef();
+  const innerRef = React.useRef();
+  const ref = useCombinedRefs(innerRef, children.ref, forwardedRef);
+
   React.useEffect(() => {
     if (ref.current) setTriggerRef(ref);
   }, []);
@@ -50,8 +52,7 @@ export function Trigger({ children, ...props }) {
     ...props,
     ref,
   });
-}
-
+});
 /* -------------------------------------------------------------------------------------------------
  *  Content
  * -----------------------------------------------------------------------------------------------*/
