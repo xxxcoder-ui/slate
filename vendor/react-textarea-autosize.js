@@ -1,10 +1,14 @@
 import * as React from "react";
 
-import calculateNodeHeight, {
-  purgeCache,
-} from "~/vendor/calculate-node-height";
+import calculateNodeHeight, { purgeCache } from "~/vendor/calculate-node-height";
+import { FocusRing } from "~/components/core/FocusRing";
+import { css } from "@emotion/react";
 
 const noop = () => {};
+
+const STYLES_TEXTAREA = css`
+  outline: 0;
+`;
 
 let uid = 0;
 
@@ -36,21 +40,28 @@ export default class TextareaAutosize extends React.Component {
       minRows,
       onHeightChange,
       useCacheForDOMMeasurements,
+      css,
       ...props
     } = this.props;
 
     props.style = { ...props.style, height: this.state.height };
 
-    const maxHeight = Math.max(
-      props.style.maxHeight || Infinity,
-      this.state.maxHeight
-    );
+    const maxHeight = Math.max(props.style.maxHeight || Infinity, this.state.maxHeight);
 
     if (maxHeight < this.state.height) {
       props.style.overflow = "hidden";
     }
 
-    return <textarea {...props} onChange={this._onChange} ref={this._onRef} />;
+    return (
+      <FocusRing>
+        <textarea
+          {...props}
+          css={[STYLES_TEXTAREA, css]}
+          onChange={this._onChange}
+          ref={this._onRef}
+        />
+      </FocusRing>
+    );
   }
 
   componentDidMount() {
@@ -123,13 +134,7 @@ export default class TextareaAutosize extends React.Component {
       return;
     }
 
-    const {
-      height,
-      minHeight,
-      maxHeight,
-      rowCount,
-      valueRowCount,
-    } = nodeHeight;
+    const { height, minHeight, maxHeight, rowCount, valueRowCount } = nodeHeight;
 
     this.rowCount = rowCount;
     this.valueRowCount = valueRowCount;

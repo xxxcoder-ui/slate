@@ -4,8 +4,8 @@ import * as SVG from "~/common/svg";
 import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
-
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
+import { FocusRing } from "~/components/core/FocusRing";
 
 const INPUT_STYLES = css`
   box-sizing: border-box;
@@ -21,10 +21,6 @@ const INPUT_STYLES = css`
   border: none;
   box-sizing: border-box;
   transition: 200ms ease all;
-
-  :focus {
-    outline: 0;
-  }
 
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -180,9 +176,9 @@ export class Input extends React.Component {
     this.props.onSubmit(e);
   };
 
-  _handleKeyUp = (e) => {
-    if (this.props.onKeyUp) {
-      this.props.onKeyUp(e);
+  _handleKeyDown = (e) => {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e);
     }
 
     if ((e.which === 13 || e.keyCode === 13) && this.props.onSubmit) {
@@ -232,72 +228,74 @@ export class Input extends React.Component {
             style={this.props.descriptionStyle}
             description={this.props.description}
           />
-          <div
-            css={[STYLES_INPUT, this.props.inputCss]}
-            style={{
-              position: "relative",
-              boxShadow: this.props.validation
-                ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${
-                    INPUT_COLOR_MAP[this.props.validation]
-                  }`
-                : null,
-              ...this.props.style,
-            }}
-          >
-            <input
-              ref={(c) => {
-                this._input = c;
-              }}
-              css={[INPUT_STYLES, this._isPin && STYLES_PIN_INPUT]}
-              autoFocus={this.props.autoFocus}
-              value={this._isPin ? this._formatPin(this.props.value) : this.props.value}
-              name={this.props.name}
-              type={this._isPin ? "text" : this.props.type}
-              placeholder={this.props.placeholder}
-              onChange={this._handleChange}
-              onFocus={
-                this.props.autoHighlight
-                  ? () => {
-                      this._input.select();
-                    }
-                  : this.props.onFocus
-              }
-              onBlur={this.props.onBlur}
-              onKeyUp={this._handleKeyUp}
-              autoComplete="off"
-              disabled={this.props.disabled}
-              readOnly={this.props.readOnly}
-              required={this.props.required}
-              maxLength={this.props.maxLength}
-              style={{
-                width: this.props.copyable || this.props.icon ? "calc(100% - 32px)" : "100%",
-                ...this.props.textStyle,
-              }}
-            />
+          <FocusRing within>
             <div
-              css={STYLES_UNIT}
-              ref={(c) => {
-                this._unit = c;
+              css={[STYLES_INPUT, this.props.inputCss]}
+              style={{
+                position: "relative",
+                boxShadow: this.props.validation
+                  ? `0 1px 4px rgba(0, 0, 0, 0.07), inset 0 0 0 2px ${
+                      INPUT_COLOR_MAP[this.props.validation]
+                    }`
+                  : null,
+                ...this.props.style,
               }}
             >
-              {this.props.unit}
+              <input
+                ref={(c) => {
+                  this._input = c;
+                }}
+                css={[INPUT_STYLES, this._isPin && STYLES_PIN_INPUT]}
+                autoFocus={this.props.autoFocus}
+                value={this._isPin ? this._formatPin(this.props.value) : this.props.value}
+                name={this.props.name}
+                type={this._isPin ? "text" : this.props.type}
+                placeholder={this.props.placeholder}
+                onChange={this._handleChange}
+                onFocus={
+                  this.props.autoHighlight
+                    ? () => {
+                        this._input.select();
+                      }
+                    : this.props.onFocus
+                }
+                onBlur={this.props.onBlur}
+                onKeyDown={this._handleKeyDown}
+                autoComplete="off"
+                disabled={this.props.disabled}
+                readOnly={this.props.readOnly}
+                required={this.props.required}
+                maxLength={this.props.maxLength}
+                style={{
+                  width: this.props.copyable || this.props.icon ? "calc(100% - 32px)" : "100%",
+                  ...this.props.textStyle,
+                }}
+              />
+              <div
+                css={STYLES_UNIT}
+                ref={(c) => {
+                  this._unit = c;
+                }}
+              >
+                {this.props.unit}
+              </div>
+              {this.props.unit ? null : this.props.icon ? (
+                <this.props.icon
+                  height="16px"
+                  css={STYLES_ICON}
+                  style={{ cursor: (this.props.onClickIcon || this.props.onSubmit) && "pointer" }}
+                  onClick={this.props.onClickIcon || this.props.onSubmit || this._handleSubmit}
+                />
+              ) : this.props.copyable ? (
+                <SVG.CopyAndPaste
+                  height="16px"
+                  css={STYLES_ICON}
+                  style={{ cursor: "pointer" }}
+                  onClick={this._handleCopy}
+                />
+              ) : null}
             </div>
-            {this.props.unit ? null : this.props.icon ? (
-              <this.props.icon
-                height="16px"
-                css={STYLES_ICON}
-                style={{ cursor: (this.props.onClickIcon || this.props.onSubmit) && "pointer" }}
-                onClick={this.props.onClickIcon || this.props.onSubmit || this._handleSubmit}
-              />
-            ) : this.props.copyable ? (
-              <SVG.CopyAndPaste
-                height="16px"
-                css={STYLES_ICON}
-                style={{ cursor: "pointer" }}
-                onClick={this._handleCopy}
-              />
-            ) : null}
-          </div>
+          </FocusRing>
         </div>
       </>
     );

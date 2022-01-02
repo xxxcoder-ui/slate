@@ -103,7 +103,7 @@ const STYLES_UPLOAD_BUTTON = css`
   height: 24px;
   cursor: pointer;
   pointer-events: auto;
-  transition: all 200ms;
+  transition: background-color 200ms;
 
   :hover {
     background-color: ${Constants.semantic.bgGrayLight4};
