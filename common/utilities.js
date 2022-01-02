@@ -1,9 +1,10 @@
-import BCrypt from "bcryptjs";
-
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Constants from "~/common/constants";
 
+import { jsx } from "@emotion/react";
+
+import BCrypt from "bcryptjs";
 import moment from "moment";
 
 //NOTE(martina): this file is for utility functions that do not involve API calls
@@ -159,7 +160,7 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
     }
     return Strings.getURLfromCID(file.cid);
   }
-  let coverImage = file.coverImage;
+  let { coverImage } = file;
   if (coverImage) {
     if (sizeLimit && coverImage.size && coverImage.size > sizeLimit) {
       return;
@@ -173,4 +174,29 @@ export const getImageUrlIfExists = (file, sizeLimit = null) => {
 
 export const getUserDisplayName = (user) => {
   return user.name || `@${user.username}`;
+};
+
+export const mergeEvents =
+  (...handlers) =>
+  (e) => {
+    handlers.forEach((handler) => handler?.call?.(e));
+  };
+
+// NOTE(amine): workaround to support css prop in cloned elements
+// SOURCE(amine): https://github.com/emotion-js/emotion/issues/1404#issuecomment-504527459
+export const cloneElementWithJsx = (element, config, ...children) => {
+  return jsx(
+    element.props["__EMOTION_TYPE_PLEASE_DO_NOT_USE__"]
+      ? element.props["__EMOTION_TYPE_PLEASE_DO_NOT_USE__"]
+      : element.type,
+    {
+      key: element.key !== null ? element.key : undefined,
+      ref: element.ref,
+      ...element.props,
+      ...config,
+      style: { ...element.props?.style, ...config?.style },
+      css: [element.props?.css, config.css],
+    },
+    ...children
+  );
 };
