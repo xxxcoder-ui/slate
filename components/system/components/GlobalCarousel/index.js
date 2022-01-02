@@ -25,6 +25,7 @@ import { ModalPortal } from "~/components/core/ModalPortal";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useUploadStore } from "~/components/core/Upload/store";
+import { useRestoreFocus, useTrapFocus } from "~/common/hooks/a11y";
 
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import LinkIcon from "~/components/core/LinkIcon";
@@ -65,10 +66,10 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     return { isSaving: selectedFile?.status === "uploading", saveCopy: store.handlers.saveCopy };
   });
 
-  const isSaved = React.useMemo(() => viewer?.libraryCids[file.cid], [
-    viewer?.libraryCids,
-    file.cid,
-  ]);
+  const isSaved = React.useMemo(
+    () => viewer?.libraryCids[file.cid],
+    [viewer?.libraryCids, file.cid]
+  );
 
   const handleSave = async () => {
     if (!viewer) {
@@ -97,7 +98,7 @@ const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
   const { handleSave, isSaved, isSaving } = useSaveHandler({ file, viewer, onAction });
 
   return (
-    <motion.button onClick={handleSave} disabled={isSaving} {...props}>
+    <System.ButtonPrimitive onClick={handleSave} disabled={isSaving} {...props}>
       {isSaving ? (
         <LoaderSpinner style={{ height: 16, width: 16 }} />
       ) : isSaved ? (
@@ -108,7 +109,7 @@ const SaveFileButton = ({ file, viewer, onAction, ...props }) => {
       ) : (
         <SVG.FilePlus height={16} style={{ pointerEvents: "none" }} />
       )}
-    </motion.button>
+    </System.ButtonPrimitive>
   );
 };
 
@@ -159,7 +160,6 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
 `;
 
 const STYLES_ACTION_BUTTON = (theme) => css`
-  ${Styles.BUTTON_RESET};
   padding: 8px;
   border-radius: 8px;
   &:hover {
@@ -196,42 +196,47 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
+
+  const moreInfoTriggerRef = React.useRef();
+  const editInfoTriggerRef = React.useRef();
+  const shareTriggerRef = React.useRef();
+  const editChannelsTriggerRef = React.useRef();
 
   const handleKeyDown = (e) => {
+    const targetTagName = e.target.tagName;
+    if (targetTagName === "INPUT" || targetTagName === "TEXTAREA" || targetTagName === "SELECT")
+      return;
+
     switch (e.key) {
       case "e":
       case "E":
+        editInfoTriggerRef.current.focus();
         showEditInfo();
         break;
       case "t":
       case "T":
+        editChannelsTriggerRef.current.focus();
         showEditChannels();
         break;
       case "s":
       case "S":
+        shareTriggerRef.current.focus();
         showShareFile();
         break;
       case "i":
       case "I":
+        moreInfoTriggerRef.current.focus();
         showMoreInfo();
         break;
     }
@@ -274,6 +279,11 @@ function CarouselHeader({
     hideHeader();
   }, [isJumperOpen]);
 
+  const headerRef = React.useRef();
+  React.useEffect(() => {
+    if (headerRef.current) headerRef.current.focus();
+  }, []);
+
   return (
     <>
       <ModalPortal>
@@ -310,18 +320,6 @@ function CarouselHeader({
         />
       </ModalPortal>
 
-      <CarouselControls
-        enableNextSlide={enableNextSlide}
-        enablePreviousSlide={enablePreviousSlide}
-        onNextSlide={onNextSlide}
-        onPreviousSlide={onPreviousSlide}
-        showControls={isHeaderVisible}
-        onClose={onClose}
-        onMouseEnter={showHeader}
-        onMouseOver={showHeader}
-        onMouseLeave={() => hideHeader()}
-      />
-
       <motion.nav
         css={STYLES_HEADER_WRAPPER}
         initial={{ opacity: 0 }}
@@ -329,12 +327,20 @@ function CarouselHeader({
         transition={{ ease: "easeInOut", duration: 0.25 }}
         onMouseEnter={showHeader}
         onMouseOver={showHeader}
-        onMouseLeave={() => hideHeader()}
+        onMouseLeave={hideHeader}
+        onFocus={showHeader}
+        onBlur={hideHeader}
         {...props}
       >
         <div>
           <div css={Styles.HORIZONTAL_CONTAINER}>
-            <System.H5 color="textBlack" as="h1">
+            <System.H5
+              color="textBlack"
+              as="h1"
+              style={{ outline: 0 }}
+              tabindex={-1}
+              ref={headerRef}
+            >
               {file?.name || file?.filename}
             </System.H5>
             <System.H5 color="textGray" as="p" style={{ marginLeft: 32 }}>
@@ -352,15 +358,11 @@ function CarouselHeader({
               {file.body}
             </System.P3>
             <Show when={isBodyOverflowing}>
-              <System.H6
-                css={Styles.BUTTON_RESET}
-                color="blue"
-                as="button"
-                onClick={showFileDescription}
-                style={{ marginTop: 1 }}
-              >
-                MORE
-              </System.H6>
+              <System.ButtonPrimitive style={{ marginTop: 1 }} onClick={showFileDescription}>
+                <System.H6 color="blue" as="span">
+                  MORE
+                </System.H6>
+              </System.ButtonPrimitive>
             </Show>
           </div>
         </div>
@@ -373,13 +375,16 @@ function CarouselHeader({
                   keyTrigger="E"
                   id="globalcarousel-editinfo-trigger-tooltip"
                 >
-                  <motion.button
+                  <System.ButtonPrimitive
+                    as={motion.button}
+                    ref={editInfoTriggerRef}
                     layoutId="jumper-desktop-edit"
                     onClick={showEditInfo}
+                    aria-label="Edit Info"
                     css={STYLES_ACTION_BUTTON}
                   >
                     <SVG.Edit style={{ pointerEvents: "none" }} />
-                  </motion.button>
+                  </System.ButtonPrimitive>
                 </ActionButtonTooltip>
               )}
 
@@ -389,14 +394,17 @@ function CarouselHeader({
                   keyTrigger="T"
                   id="globalcarousel-tag-trigger-tooltip"
                 >
-                  <motion.button
+                  <System.ButtonPrimitive
+                    as={motion.button}
+                    ref={editChannelsTriggerRef}
                     layoutId="jumper-desktop-channels"
                     onClick={showEditChannels}
                     style={{ marginLeft: 4 }}
+                    aria-label="Tag"
                     css={STYLES_ACTION_BUTTON}
                   >
                     <SVG.Hash style={{ pointerEvents: "none" }} />
-                  </motion.button>
+                  </System.ButtonPrimitive>
                 </ActionButtonTooltip>
               )}
 
@@ -415,14 +423,17 @@ function CarouselHeader({
                 keyTrigger="S"
                 id="globalcarousel-share-trigger-tooltip"
               >
-                <motion.button
+                <System.ButtonPrimitive
+                  as={motion.button}
+                  ref={shareTriggerRef}
                   layoutId="jumper-desktop-share"
                   onClick={showShareFile}
                   style={{ marginLeft: 4 }}
+                  aria-label="Share"
                   css={STYLES_ACTION_BUTTON}
                 >
                   <SVG.Share style={{ pointerEvents: "none" }} />
-                </motion.button>
+                </System.ButtonPrimitive>
               </ActionButtonTooltip>
 
               <ActionButtonTooltip
@@ -430,14 +441,17 @@ function CarouselHeader({
                 keyTrigger="I"
                 id="globalcarousel-info-trigger-tooltip"
               >
-                <motion.button
+                <System.ButtonPrimitive
+                  as={motion.button}
+                  ref={moreInfoTriggerRef}
                   layoutId="jumper-desktop-info"
                   onClick={showMoreInfo}
                   style={{ marginLeft: 4 }}
+                  aria-label="More info"
                   css={STYLES_ACTION_BUTTON}
                 >
                   <SVG.InfoCircle style={{ pointerEvents: "none" }} />
-                </motion.button>
+                </System.ButtonPrimitive>
               </ActionButtonTooltip>
 
               {file.isLink ? <VisitLinkButton file={file} /> : null}
@@ -459,13 +473,31 @@ function CarouselHeader({
             </a>
           ) : (
             <div style={{ marginLeft: 80 }}>
-              <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
+              <System.ButtonPrimitive
+                onClick={onClose}
+                css={STYLES_ACTION_BUTTON}
+                aria-label="close object preview"
+              >
                 <SVG.Dismiss />
-              </button>
+              </System.ButtonPrimitive>
             </div>
           )}
         </div>
       </motion.nav>
+
+      <CarouselControls
+        enableNextSlide={enableNextSlide}
+        enablePreviousSlide={enablePreviousSlide}
+        onNextSlide={onNextSlide}
+        onPreviousSlide={onPreviousSlide}
+        showControls={isHeaderVisible}
+        onClose={onClose}
+        onMouseEnter={showHeader}
+        onMouseOver={showHeader}
+        onMouseLeave={hideHeader}
+        onFocus={showHeader}
+        onBlur={hideHeader}
+      />
     </>
   );
 }
@@ -526,28 +558,28 @@ function CarouselHeaderMobile({
       {!isStandalone && (
         <>
           <div style={{ width: 76 }}>
-            <button
+            <System.ButtonPrimitive
               css={STYLES_ACTION_BUTTON}
+              aria-label="previous slide"
               disabled={isPreviousButtonDisabled}
               style={isPreviousButtonDisabled ? { color: Constants.system.grayLight3 } : null}
               onClick={onPreviousSlide}
             >
               <SVG.ChevronLeft width={16} height={16} />
-            </button>
-            <button
+            </System.ButtonPrimitive>
+            <System.ButtonPrimitive
+              aria-label="next slide"
               style={
                 isNextButtonDisabled
                   ? { color: Constants.system.grayLight3, marginLeft: 12 }
-                  : {
-                      marginLeft: 12,
-                    }
+                  : { marginLeft: 12 }
               }
               disabled={isNextButtonDisabled}
               css={STYLES_ACTION_BUTTON}
               onClick={onNextSlide}
             >
               <SVG.ChevronRight width={16} height={16} />
-            </button>
+            </System.ButtonPrimitive>
           </div>
 
           <System.H5 color="textGray" as="p" css={STYLES_CAROUSEL_MOBILE_SLIDE_COUNT}>
@@ -570,9 +602,13 @@ function CarouselHeaderMobile({
         </div>
       ) : (
         <div style={{ textAlign: "right" }}>
-          <button onClick={onClose} css={STYLES_ACTION_BUTTON}>
+          <System.ButtonPrimitive
+            onClick={onClose}
+            css={STYLES_ACTION_BUTTON}
+            aria-label="close object preview"
+          >
             <SVG.Dismiss />
-          </button>
+          </System.ButtonPrimitive>
         </div>
       )}
     </nav>
@@ -580,25 +616,17 @@ function CarouselHeaderMobile({
 }
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [
-    isEditInfoVisible,
-    { showControl: showEditInfo, hideControl: hideEditInfo },
-  ] = useCarouselJumperControls();
+  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isShareFileVisible,
-    { showControl: showShareFile, hideControl: hideShareFile },
-  ] = useCarouselJumperControls();
+  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
+    useCarouselJumperControls();
 
-  const [
-    isMoreInfoVisible,
-    { showControl: showMoreInfo, hideControl: hideMoreInfo },
-  ] = useCarouselJumperControls();
+  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
+    useCarouselJumperControls();
 
-  const [
-    isEditChannelsVisible,
-    { showControl: showEditChannels, hideControl: hideEditChannels },
-  ] = useCarouselJumperControls();
+  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+    useCarouselJumperControls();
   return (
     <>
       <ModalPortal>
@@ -632,24 +660,26 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
       <AnimateSharedLayout>
         <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
           {isOwner && (
-            <motion.button
+            <System.ButtonPrimitive
+              as={motion.button}
               layoutId="jumper-mobile-edit"
               css={STYLES_ACTION_BUTTON}
               onClick={showEditInfo}
             >
               <SVG.Edit />
-            </motion.button>
+            </System.ButtonPrimitive>
           )}
 
           {isOwner && (
-            <motion.button
+            <System.ButtonPrimitive
+              as={motion.button}
               layoutId="jumper-mobile-channels"
               style={{ marginLeft: 4 }}
               css={STYLES_ACTION_BUTTON}
               onClick={showEditChannels}
             >
               <SVG.Hash />
-            </motion.button>
+            </System.ButtonPrimitive>
           )}
 
           {!isOwner && (
@@ -662,23 +692,25 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
             />
           )}
 
-          <motion.button
+          <System.ButtonPrimitive
+            as={motion.button}
             layoutId="jumper-mobile-share"
             style={{ marginLeft: 4 }}
             css={STYLES_ACTION_BUTTON}
             onClick={showShareFile}
           >
             <SVG.Share />
-          </motion.button>
+          </System.ButtonPrimitive>
 
-          <motion.button
+          <System.ButtonPrimitive
+            as={motion.button}
             layoutId="jumper-mobile-info"
             style={{ marginLeft: 4 }}
             css={STYLES_ACTION_BUTTON}
             onClick={showMoreInfo}
           >
             <SVG.InfoCircle />
-          </motion.button>
+          </System.ButtonPrimitive>
           {file.isLink ? <VisitLinkButton file={file} /> : null}
         </nav>
       </AnimateSharedLayout>
@@ -724,7 +756,6 @@ const useCarouselKeyCommands = ({ handleNext, handlePrevious, handleClose }) => 
 };
 
 const STYLES_CONTROLS_BUTTON = (theme) => css`
-  ${Styles.BUTTON_RESET};
   background-color: ${theme.semantic.bgGrayLight};
   border-radius: 8px;
   border: 1px solid ${theme.semantic.borderGrayLight};
@@ -771,15 +802,17 @@ function CarouselControls({
         {...props}
       >
         {enablePreviousSlide ? (
-          <motion.button
+          <System.ButtonPrimitive
+            as={motion.button}
             onClick={onPreviousSlide}
             initial={{ opacity: 0 }}
             animate={{ opacity: showControls ? 1 : 0 }}
             transition={{ ease: "easeInOut", duration: 0.25 }}
             css={STYLES_CONTROLS_BUTTON}
+            aria-label="previous slide"
           >
             <SVG.ChevronLeft width={16} />
-          </motion.button>
+          </System.ButtonPrimitive>
         ) : null}
       </div>
       <div
@@ -788,14 +821,16 @@ function CarouselControls({
         {...props}
       >
         {enableNextSlide ? (
-          <motion.button
+          <System.ButtonPrimitive
+            as={motion.button}
             onClick={onNextSlide}
             initial={{ opacity: 0 }}
             animate={{ opacity: showControls ? 1 : 0 }}
             css={STYLES_CONTROLS_BUTTON}
+            aria-label="next slide"
           >
             <SVG.ChevronRight width={16} />
-          </motion.button>
+          </System.ButtonPrimitive>
         ) : null}
       </div>
     </>
@@ -835,16 +870,7 @@ const STYLES_PREVIEW_WRAPPER = (theme) => css`
   }
 `;
 
-export function CarouselContent({
-  objects,
-  index,
-  data,
-  isMobile,
-  viewer,
-  sidebar,
-  style,
-  onClose,
-}) {
+export function CarouselContent({ objects, index, isMobile, viewer, style, onClose }) {
   const file = objects?.[index];
 
   useLockScroll();
@@ -857,7 +883,14 @@ export function CarouselContent({
   return (
     <>
       <Alert viewer={viewer} noWarning id={isMobile ? "slate-mobile-alert" : null} />
-      <div css={STYLES_CONTENT} style={style} onClick={onClose}>
+      <div
+        css={STYLES_CONTENT}
+        style={style}
+        onClick={onClose}
+        role="group"
+        aria-roledescription="slide"
+        aria-label={file?.name || file?.filename}
+      >
         <div css={STYLES_PREVIEW_WRAPPER}>
           <SlateMediaObject file={file} isMobile={isMobile} />
         </div>
@@ -954,7 +987,6 @@ const getCarouselHandlers = ({ index, objects, params, onChange, onAction }) => 
 };
 
 const STYLES_ROOT = (theme) => css`
-  ${Styles.VERTICAL_CONTAINER};
   position: fixed;
   left: 0;
   right: 0;
@@ -989,6 +1021,12 @@ const STYLES_ROOT = (theme) => css`
   animation: global-carousel-fade-in 400ms ease;
 `;
 
+const STYLES_CAROUSEL_WRAPPER = css`
+  ${Styles.VERTICAL_CONTAINER};
+  height: 100%;
+  width: 100%;
+`;
+
 export function GlobalCarousel({
   isStandalone,
   objects,
@@ -1009,6 +1047,10 @@ export function GlobalCarousel({
 
   useCarouselViaParams({ index, params, objects, onChange });
 
+  const wrapperRef = React.useRef();
+  useTrapFocus({ ref: wrapperRef });
+  useRestoreFocus({ isEnabled: isCarouselOpen });
+
   if (!isCarouselOpen) return null;
 
   const { handleNext, handlePrevious, handleClose } = getCarouselHandlers({
@@ -1020,58 +1062,72 @@ export function GlobalCarousel({
   });
 
   return (
-    <FullHeightLayout css={STYLES_ROOT}>
-      {isMobile ? (
-        <CarouselHeaderMobile
-          isStandalone={isStandalone}
-          file={file}
-          current={index + 1}
-          total={objects.length}
-          onPreviousSlide={handlePrevious}
-          onNextSlide={handleNext}
-          onClose={handleClose}
-          enableNextSlide={index < objects.length - 1}
-          enablePreviousSlide={index > 0}
-        />
-      ) : (
-        <CarouselHeader
-          isStandalone={isStandalone}
-          viewer={viewer}
-          external={external}
-          isOwner={isOwner}
+    <FullHeightLayout
+      as="section"
+      role="dialog"
+      aria-label="Object preview"
+      aria-modal={true}
+      css={STYLES_ROOT}
+    >
+      <section
+        ref={wrapperRef}
+        aria-roledescription="carousel"
+        aria-atomic={false}
+        aria-live="polite"
+        css={STYLES_CAROUSEL_WRAPPER}
+      >
+        {isMobile ? (
+          <CarouselHeaderMobile
+            isStandalone={isStandalone}
+            file={file}
+            current={index + 1}
+            total={objects.length}
+            onPreviousSlide={handlePrevious}
+            onNextSlide={handleNext}
+            onClose={handleClose}
+            enableNextSlide={index < objects.length - 1}
+            enablePreviousSlide={index > 0}
+          />
+        ) : (
+          <CarouselHeader
+            isStandalone={isStandalone}
+            viewer={viewer}
+            external={external}
+            isOwner={isOwner}
+            data={data}
+            file={file}
+            current={index + 1}
+            total={objects.length}
+            onAction={onAction}
+            enableNextSlide={index < objects.length - 1}
+            enablePreviousSlide={index > 0}
+            onNextSlide={handleNext}
+            onPreviousSlide={handlePrevious}
+            onClose={handleClose}
+          />
+        )}
+        <CarouselContent
+          objects={objects}
+          index={index}
           data={data}
-          file={file}
-          current={index + 1}
-          total={objects.length}
-          onAction={onAction}
-          enableNextSlide={index < objects.length - 1}
-          enablePreviousSlide={index > 0}
-          onNextSlide={handleNext}
-          onPreviousSlide={handlePrevious}
+          isMobile={isMobile}
+          viewer={viewer}
+          sidebar={sidebar}
+          style={style}
           onClose={handleClose}
         />
-      )}
-      <CarouselContent
-        objects={objects}
-        index={index}
-        data={data}
-        isMobile={isMobile}
-        viewer={viewer}
-        sidebar={sidebar}
-        style={style}
-        onClose={handleClose}
-      />
 
-      {isMobile ? (
-        <CarouselFooterMobile
-          file={file}
-          viewer={viewer}
-          data={data}
-          external={external}
-          onAction={onAction}
-          isOwner={isOwner}
-        />
-      ) : null}
+        {isMobile ? (
+          <CarouselFooterMobile
+            file={file}
+            viewer={viewer}
+            data={data}
+            external={external}
+            onAction={onAction}
+            isOwner={isOwner}
+          />
+        ) : null}
+      </section>
     </FullHeightLayout>
   );
 }
