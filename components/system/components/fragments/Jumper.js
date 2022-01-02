@@ -13,6 +13,7 @@ import {
 } from "framer-motion";
 import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
+import { useRestoreFocus, useTrapFocus } from "~/common/hooks/a11y";
 
 import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
 
@@ -67,13 +68,17 @@ function AnimatePresence({ children, ...props }) {
   return <FramerAnimatePresence {...props}>{children}</FramerAnimatePresence>;
 }
 
-function Root({ children, onClose, withDismissButton = true, ...props }) {
+function Root({ children, onClose, ...props }) {
   useEscapeKey(onClose);
   useLockScroll();
 
+  const wrapperRef = React.useRef();
+  useTrapFocus({ ref: wrapperRef });
+  useRestoreFocus();
+
   return (
     <ModalPortal>
-      <div>
+      <div ref={wrapperRef}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -83,7 +88,7 @@ function Root({ children, onClose, withDismissButton = true, ...props }) {
           onClick={onClose}
         />
         <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
-          <JumperContext.Provider value={{ onClose, withDismissButton }}>
+          <JumperContext.Provider value={{ onClose }}>
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -112,24 +117,37 @@ const STYLES_JUMPER_HEADER = css`
 `;
 
 function Header({ children, style, ...props }) {
-  const { onClose, withDismissButton } = useJumperContext();
   return (
-    <div css={STYLES_JUMPER_HEADER} style={style}>
-      <div style={{ width: "100%" }} {...props}>
-        {children}
-      </div>
-      {withDismissButton && (
-        <button
-          css={Styles.BUTTON_RESET}
-          style={{ width: 24, height: 24, marginLeft: 12 }}
-          onClick={onClose}
-        >
-          <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
-        </button>
-      )}
+    <div css={STYLES_JUMPER_HEADER} style={style} {...props}>
+      {children}
     </div>
   );
 }
+
+/* -------------------------------------------------------------------------------------------------
+ *  Dismiss
+ * -----------------------------------------------------------------------------------------------*/
+
+const STYLES_DISMISS_BUTTON = css`
+  width: 24px;
+  height: 24px;
+  margin-left: 12px;
+`;
+
+const Dismiss = React.forwardRef(({ css, ...props }, ref) => {
+  const { onClose } = useJumperContext();
+
+  return (
+    <System.ButtonPrimitive
+      ref={ref}
+      css={[STYLES_DISMISS_BUTTON, css]}
+      onClick={onClose}
+      {...props}
+    >
+      <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
+    </System.ButtonPrimitive>
+  );
+});
 
 /* -------------------------------------------------------------------------------------------------
  *  Item
@@ -192,4 +210,4 @@ function ObjectPreview({ file }) {
   );
 }
 
-export { AnimatePresence, Root, Header, Item, Divider, ObjectPreview };
+export { AnimatePresence, Root, Header, Dismiss, Item, Divider, ObjectPreview };
