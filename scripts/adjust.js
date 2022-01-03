@@ -100,13 +100,33 @@ const createSurveysTable = (async () => {
 })();
 
 const dropOnboardingTable = db.schema.dropTableIfExists("onboarding");
+
 const addOnboardingColumnsToUsersTable = db.schema.table("users", function (table) {
   table.boolean("hasCompletedSurvey").defaultTo(false);
   table.boolean("hasCompletedUploadOnboarding").defaultTo(false);
   table.boolean("hasCompletedSlatesOnboarding").defaultTo(false);
 });
 
-Promise.all([dropOnboardingTable, createSurveysTable, addOnboardingColumnsToUsersTable]);
+const deleteSettingsColumnFromUserTable = (async () => {
+  const hasColumn = await db.schema.hasColumn("users", "settings");
+  if (hasColumn) {
+    return db.schema.alterTable("users", (table) => {
+      table.dropColumn("settings");
+    });
+  }
+})();
+
+const addIsFilterSidebarCollapsedToUsersTable = db.schema.table("users", function (table) {
+  table.boolean("isFilterSidebarCollapsed").defaultTo(false);
+});
+
+Promise.all([
+  dropOnboardingTable,
+  createSurveysTable,
+  addOnboardingColumnsToUsersTable,
+  deleteSettingsColumnFromUserTable,
+  addIsFilterSidebarCollapsedToUsersTable,
+]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

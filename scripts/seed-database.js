@@ -53,6 +53,10 @@ const createUsersTable = createTableIfNotExists("users", function (table) {
   table.integer("followerCount").notNullable().defaultTo(0);
   table.integer("slateCount").notNullable().defaultTo(0);
   table.integer("authVersion").notNullable().defaultTo(2);
+  table.boolean("hasCompletedSurvey").defaultTo(false);
+  table.boolean("hasCompletedUploadOnboarding").defaultTo(false);
+  table.boolean("hasCompletedSlatesOnboarding").defaultTo(false);
+  table.boolean("isFilterSidebarCollapsed").defaultTo(false);
 });
 
 const createSlatesTable = createTableIfNotExists("slates", function (table) {

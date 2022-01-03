@@ -37,10 +37,6 @@ export default async (req, res) => {
       }
     }
 
-    if (updates.settings) {
-      updates.settings = { ...user.settings, ...updates.settings };
-    }
-
     if (updates.onboarding) {
       updates.onboarding = { ...user.onboarding, ...updates.onboarding };
     }

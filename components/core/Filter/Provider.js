@@ -7,40 +7,38 @@ const UploadContext = React.createContext({});
 export const useFilterContext = () => React.useContext(UploadContext);
 
 export const Provider = ({ children, viewer }) => {
-  const [isSidebarVisible, toggleSidebar] = useFilterSidebar({ viewer });
+  const [isSidebarCollapsed, toggleSidebar] = useFilterSidebar({ viewer });
 
   const [isPopupVisible, { hidePopup, togglePopup }] = useFilterPopup();
 
   const contextValue = React.useMemo(
     () => [
       {
-        sidebarState: { isVisible: isSidebarVisible },
+        sidebarState: { isVisible: !isSidebarCollapsed },
         popupState: { isVisible: isPopupVisible },
       },
       { toggleSidebar, hidePopup, togglePopup },
     ],
-    [isSidebarVisible, isPopupVisible]
+    [isSidebarCollapsed, isPopupVisible]
   );
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;
 };
 
 const useFilterSidebar = ({ viewer }) => {
-  const initialState =
-    typeof viewer?.settings?.isSidebarVisible === "undefined"
-      ? true
-      : viewer.settings.isSidebarVisible;
+  const initialState = viewer?.isFilterSidebarCollapsed;
 
-  const [isSidebarVisible, setSidebarState] = React.useState(initialState);
+  const [isSidebarCollapsed, setSidebarState] = React.useState(initialState);
   const toggleSidebar = async () => {
-    setSidebarState((prev) => !prev);
+    const nextState = !isSidebarCollapsed;
+    setSidebarState(nextState);
     const response = await Actions.updateViewer({
-      user: { settings: { isSidebarVisible: !isSidebarVisible } },
+      user: { isFilterSidebarCollapsed: nextState },
     });
     Events.hasError(response);
   };
 
-  return [isSidebarVisible, toggleSidebar];
+  return [isSidebarCollapsed, toggleSidebar];
 };
 
 const useFilterPopup = () => {
