@@ -176,7 +176,7 @@ function Dismiss({ css, ...props }) {
  *  Content
  * -----------------------------------------------------------------------------------------------*/
 
-function Content({ onAction, viewer, page }) {
+function Content({ onAction, viewer, page, isMobile }) {
   const { results } = useSearchStore();
   const { files, slates } = results;
 
@@ -199,6 +199,7 @@ function Content({ onAction, viewer, page }) {
         items={files}
         onAction={onAction}
         viewer={viewer}
+        isMobile={isMobile}
         page={page}
         view="grid"
       />

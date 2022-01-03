@@ -69,6 +69,7 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
                 isOwner={true}
                 items={objects}
                 onAction={onAction}
+                isMobile={isMobile}
                 viewer={viewer}
                 page={page}
                 view="grid"

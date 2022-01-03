@@ -145,7 +145,7 @@ export default function Filter({
 
   if (disabled) {
     return showSearchResult ? (
-      <Search.Content viewer={viewer} page={page} onAction={onAction} />
+      <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
     ) : (
       children
     );
@@ -208,7 +208,7 @@ export default function Filter({
         />
         <div style={{ flexGrow: 1 }}>
           {showSearchResult ? (
-            <Search.Content viewer={viewer} page={page} onAction={onAction} />
+            <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
           ) : (
             children
           )}
