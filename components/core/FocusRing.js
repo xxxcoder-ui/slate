@@ -1,8 +1,7 @@
 import * as React from "react";
 
 import { css } from "@emotion/react";
-import { mergeEvents, cloneElementWithJsx } from "~/common/utilities";
-import { useCombinedRefs } from "~/common/hooks";
+import { mergeEvents, mergeRefs, cloneElementWithJsx } from "~/common/utilities";
 
 const hasElementFocus = (el) => el.matches(":focus");
 const hasElementFocusWithin = (el) => el.matches(":focus-within");
@@ -35,8 +34,7 @@ export const FocusRing = React.forwardRef(
     { children, within, style, css = STYLES_FOCUS_RING_DEFAULT, disabled, ...props },
     forwardedRef
   ) => {
-    const innerRef = React.useRef();
-    const ref = useCombinedRefs(innerRef, forwardedRef, children.ref);
+    const ref = React.useRef();
 
     const [isFocused, { enableFocusRing, disableFocusRing }] = useFocusRing({ within, ref });
 
@@ -50,7 +48,7 @@ export const FocusRing = React.forwardRef(
       onBlur: mergeEvents(disableFocusRing, children.onBlur),
       css: isFocused && !disabled ? css : null,
       style: isFocused && !disabled ? style : null,
-      ref,
+      ref: mergeRefs([ref, forwardedRef, children.ref]),
     });
   }
 );

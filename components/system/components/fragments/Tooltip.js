@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { css } from "@emotion/react";
 import { ModalPortal } from "~/components/core/ModalPortal";
-import { useCombinedRefs, useEscapeKey, useEventListener } from "~/common/hooks";
+import { mergeRefs } from "~/common/utilities";
+import { useEscapeKey, useEventListener } from "~/common/hooks";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { motion } from "framer-motion";
 
@@ -34,8 +35,7 @@ export function Root({ children, vertical = "below", horizontal = "right" }) {
 export const Trigger = React.forwardRef(({ children, ...props }, forwardedRef) => {
   const { setTriggerRef, showTooltip, hideTooltip } = useTooltipContext();
 
-  const innerRef = React.useRef();
-  const ref = useCombinedRefs(innerRef, children.ref, forwardedRef);
+  const ref = React.useRef();
 
   React.useEffect(() => {
     if (ref.current) setTriggerRef(ref);
@@ -50,7 +50,7 @@ export const Trigger = React.forwardRef(({ children, ...props }, forwardedRef) =
   return React.cloneElement(React.Children.only(children), {
     role: "tooltip",
     ...props,
-    ref,
+    ref: mergeRefs([ref, forwardedRef, children.ref]),
   });
 });
 /* -------------------------------------------------------------------------------------------------

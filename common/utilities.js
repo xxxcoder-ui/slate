@@ -182,6 +182,18 @@ export const mergeEvents =
     handlers.forEach((handler) => handler?.call?.(e));
   };
 
+export const mergeRefs = (refs) => {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        ref.current = value;
+      }
+    });
+  };
+};
+
 // NOTE(amine): workaround to support css prop in cloned elements
 // SOURCE(amine): https://github.com/emotion-js/emotion/issues/1404#issuecomment-504527459
 export const cloneElementWithJsx = (element, config, ...children) => {
