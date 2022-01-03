@@ -10,6 +10,7 @@ import * as MobileJumper from "~/components/system/components/fragments/MobileJu
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
+import * as RovingTabIndex from "~/components/core/RovingTabIndex";
 
 import { Show } from "~/components/utility/Show";
 import { css } from "@emotion/react";
@@ -31,10 +32,11 @@ const STYLES_CHANNEL_BUTTON_SELECTED = (theme) => css`
   background-color: ${theme.semantic.bgGrayLight4};
 `;
 
-function ChannelButton({ children, isSelected, css, ...props }) {
+const ChannelButton = React.forwardRef(({ children, isSelected, css, ...props }, ref) => {
   return (
     <System.ButtonPrimitive
       {...props}
+      ref={ref}
       css={[STYLES_CHANNEL_BUTTON, isSelected && STYLES_CHANNEL_BUTTON_SELECTED, css]}
     >
       <System.P2 nbrOflines={1} as="span">
@@ -42,7 +44,7 @@ function ChannelButton({ children, isSelected, css, ...props }) {
       </System.P2>
     </System.ButtonPrimitive>
   );
-}
+});
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -200,43 +202,49 @@ function Channels({
       </Show>
 
       <AnimateSharedLayout>
-        <div css={STYLES_CHANNEL_BUTTONS_WRAPPER}>
-          {channels.map((channel) => (
-            <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.id}>
-              <ChannelButton
-                isSelected={channel.doesContainFile}
-                onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
-                title={channel.slatename}
-                style={{ maxWidth: "48ch" }}
-              >
-                {channel.slatename}
-              </ChannelButton>
-            </motion.div>
-          ))}
+        <RovingTabIndex.Provider axis="horizontal">
+          <RovingTabIndex.List>
+            <div css={STYLES_CHANNEL_BUTTONS_WRAPPER}>
+              {channels.map((channel, index) => (
+                <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.id}>
+                  <RovingTabIndex.Item index={index}>
+                    <ChannelButton
+                      isSelected={channel.doesContainFile}
+                      onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
+                      title={channel.slatename}
+                      style={{ maxWidth: "48ch" }}
+                    >
+                      {channel.slatename}
+                    </ChannelButton>
+                  </RovingTabIndex.Item>
+                </motion.div>
+              ))}
 
-          <Show when={isCreatingChannel}>
-            <motion.div initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }}>
-              <ChannelButton
-                css={Styles.HORIZONTAL_CONTAINER_CENTERED}
-                onClick={(e) => (e.stopPropagation(), onCreateChannel(searchQuery))}
-                title={searchQuery}
-              >
-                <SVG.Plus
-                  width={16}
-                  height={16}
-                  style={{
-                    position: "relative",
-                    top: -1,
-                    verticalAlign: "middle",
-                    pointerEvents: "none",
-                    display: "inline",
-                  }}
-                />
-                <span style={{ marginLeft: 4 }}>{searchQuery}</span>
-              </ChannelButton>
-            </motion.div>
-          </Show>
-        </div>
+              <Show when={isCreatingChannel}>
+                <motion.div initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }}>
+                  <ChannelButton
+                    css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+                    onClick={(e) => (e.stopPropagation(), onCreateChannel(searchQuery))}
+                    title={searchQuery}
+                  >
+                    <SVG.Plus
+                      width={16}
+                      height={16}
+                      style={{
+                        position: "relative",
+                        top: -1,
+                        verticalAlign: "middle",
+                        pointerEvents: "none",
+                        display: "inline",
+                      }}
+                    />
+                    <span style={{ marginLeft: 4 }}>{searchQuery}</span>
+                  </ChannelButton>
+                </motion.div>
+              </Show>
+            </div>
+          </RovingTabIndex.List>
+        </RovingTabIndex.Provider>
       </AnimateSharedLayout>
     </div>
   ) : null;
