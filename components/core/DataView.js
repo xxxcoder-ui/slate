@@ -856,7 +856,9 @@ export default class DataView extends React.Component {
                           viewer={this.props.viewer}
                           file={each}
                           onAction={this.props.onAction}
+                          isOwner={this.props.isOwner}
                           isSelected={i in this.state.checked}
+                          isMobile={this.props.isMobile}
                         />
                         <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
                           {numChecked || this.state.hover === i || this.state.menu === each.id ? (

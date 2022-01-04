@@ -33,8 +33,8 @@ const TEXT = css`
 
 export const H1 = css`
   font-family: ${Constants.font.medium};
-  font-size: 32px;
-  line-height: 48px;
+  font-size: 2rem;
+  line-height: 1.5;
   letter-spacing: -0.021px;
 
   ${TEXT}
@@ -42,8 +42,8 @@ export const H1 = css`
 
 export const H2 = css`
   font-family: ${Constants.font.medium};
-  font-size: 24px;
-  line-height: 36px;
+  font-size: 1.5rem;
+  line-height: 1.5;
   letter-spacing: -0.019px;
 
   ${TEXT}
@@ -282,9 +282,18 @@ export const PROFILE_PREVIEW_GRID = (theme) => css`
 
 export const PAGE_CONTENT_WRAPPER = (theme) => css`
   width: 100%;
-  min-height: calc(100vh - ${theme.sizes.filterNavbar}px) - ${theme.sizes.header}px;
+  min-height: calc(100vh - ${theme.sizes.filterNavbar}px - ${theme.sizes.header}px);
   padding: 20px 20px 44px;
   @media (max-width: ${theme.sizes.mobile}px) {
     padding: 16px 16px 44px;
+  }
+`;
+
+export const PAGE_EMPTY_STATE_WRAPPER = (theme) => css`
+  height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px);
+  padding: 20px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 0px;
+    height: calc(100vh - ${theme.sizes.header}px - 44px);
   }
 `;

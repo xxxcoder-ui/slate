@@ -103,6 +103,10 @@ import getAllSendgridContacts from "~/node_common/data/methods/get-all-sendgrid-
 // Deals
 import createDeal from "~/node_common/data/methods/create-deal";
 
+// NOTE(amine):
+// Surveys
+import createSurvey from "~/node_common/data/methods/create-survey";
+
 export {
   // NOTE(jim): One-offs
   createOrphan,
@@ -185,4 +189,6 @@ export {
   updateTwitterToken,
   // NOTE(martina): Deals
   createDeal,
+  //NOTE(amine): Surveys
+  createSurvey,
 };

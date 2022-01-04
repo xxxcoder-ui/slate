@@ -1,28 +1,45 @@
 import * as React from "react";
-import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 
-const STYLES_EMPTY_STATE = css`
-  width: 100%;
+const STYLES_EMPTY_STATE = (theme) => css`
+  position: relative;
   height: 100%;
   min-height: 50vh;
-  color: ${Constants.semantic.textGray};
+  padding: 20px;
+  color: ${theme.semantic.textGray};
+  background-color: ${theme.semantic.bgLight};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-radius: 4px;
   text-align: center;
-  margin-top: 48px;
 `;
 
-export default class EmptyState extends React.Component {
-  render() {
-    return (
-      <div css={STYLES_EMPTY_STATE} style={this.props.style}>
-        {this.props.children}
-      </div>
-    );
+const STYLES_EMPTY_FRAME = (theme) => css`
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  border-left: 2px solid;
+  border-top: 2px solid;
+  border-color: ${theme.semantic.borderGrayLight4};
+
+  @media (max-width: ${theme.sizes.mobile}px) {
+    display: none;
   }
+`;
+
+export default function EmptyState({ children, css, ...props }) {
+  return (
+    <div css={[STYLES_EMPTY_STATE, css]} {...props}>
+      <div css={STYLES_EMPTY_FRAME} style={{ top: 12, left: 12 }} />
+      <div css={STYLES_EMPTY_FRAME} style={{ top: 12, right: 12, transform: "rotate(90deg)" }} />
+      <div css={STYLES_EMPTY_FRAME} style={{ bottom: 12, left: 12, transform: "rotate(270deg)" }} />
+      <div
+        css={STYLES_EMPTY_FRAME}
+        style={{ bottom: 12, right: 12, transform: "rotate(180deg)" }}
+      />
+      {children}
+    </div>
+  );
 }

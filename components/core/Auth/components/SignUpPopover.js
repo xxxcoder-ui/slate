@@ -9,24 +9,23 @@ const STYLES_POPOVER = (theme) => css`
   flex-direction: column;
   box-sizing: border-box;
   max-width: 432px;
-  height: 544px;
+  min-height: 544px;
   width: 95vw;
   border-radius: 20px;
-  padding: 36px 32px 36px 32px;
+  padding: 36px 32px;
 
   @media (max-width: ${theme.sizes.mobile}px) {
     flex-grow: 1;
     margin-bottom: auto;
-    max-width: 100%;
+    width: 100%;
   }
 
   background-color: white;
-
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background: radial-gradient(
       80.79% 80.79% at 50% 50%,
-      rgba(242, 242, 247, 0.5) 0%,
-      rgba(242, 242, 247, 0) 100%
+      rgba(242, 242, 247, 0.85) 0%,
+      rgba(242, 242, 247, 0.65) 100%
     );
     backdrop-filter: blur(75px);
   }
@@ -46,14 +45,12 @@ const STYLES_POPOVER = (theme) => css`
   animation: authentication-popover-fade-in 400ms ease;
 `;
 
-const STYLES_POPOVER_BODY = (theme) => css`
+const STYLES_POPOVER_BODY = css`
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: flex-start;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    justify-content: center;
-  }
+  flex-grow: 1;
 `;
 export default function SignUpPopover({ children, title, logoStyle, titleStyle, props }) {
   return (

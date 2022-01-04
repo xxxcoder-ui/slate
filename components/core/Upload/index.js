@@ -5,20 +5,21 @@ import * as Events from "~/common/custom-events";
 import { ModalPortal } from "../ModalPortal";
 import { Provider } from "~/components/core/Upload/Provider";
 import { Popup } from "~/components/core/Upload/Popup";
-import { UploadJumper as Jumper } from "~/components/core/Upload/Jumper";
+import { UploadJumper, MobileUploadJumper } from "~/components/core/Upload/Jumper";
+import { useUploadOnboardingContext } from "~/components/core/Onboarding/Upload";
 
 import DropIndicator from "~/components/core/Upload/DropIndicator";
 
 /* -------------------------------------------------------------------------------------------------
  * Root
  * -----------------------------------------------------------------------------------------------*/
-const Root = ({ children, data }) => {
+const Root = ({ children, data, isMobile }) => {
   return (
     <>
       {children}
-      <Jumper data={data} />
+      {isMobile ? <MobileUploadJumper data={data} /> : <UploadJumper data={data} />}
       <ModalPortal>
-        <Popup />
+        <Popup isMobile={isMobile} />
         <DropIndicator data={data} />
       </ModalPortal>
     </>
@@ -30,7 +31,10 @@ const Root = ({ children, data }) => {
  * -----------------------------------------------------------------------------------------------*/
 
 const Trigger = ({ viewer, css, children, ...props }) => {
+  const onboardingContext = useUploadOnboardingContext();
   const showUploadModal = () => {
+    if (onboardingContext) onboardingContext?.goToNextStep?.call();
+
     if (!viewer) {
       Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
       return;

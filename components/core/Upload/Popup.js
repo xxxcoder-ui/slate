@@ -22,14 +22,12 @@ import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
  * -----------------------------------------------------------------------------------------------*/
 
 const STYLES_POPUP_WRAPPER = (theme) => css`
+  width: 264px;
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: ${theme.zindex.tooltip};
-  @media (max-width: ${theme.sizes.mobile}px) {
-    right: 50%;
-    transform: translateX(50%);
-  }
+  box-shadow: ${theme.shadow.lightLarge};
 `;
 
 const STYLES_DISMISS_BUTTON = (theme) => css`
@@ -71,8 +69,7 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   });
 
   // NOTE(amine): popup handlers
-  const showUploadPopup = () => setPopupState((prev) => ({ ...prev, isVisible: true }));
-  const hideUploadPopup = () => setPopupState((prev) => ({ ...prev, isVisible: false }));
+  const hideUploadPopup = () => setPopupState({ isSummaryExpanded: false, isVisible: false });
   const expandUploadSummary = () => setPopupState({ isVisible: true, isSummaryExpanded: true });
   const collapseUploadSummary = () => setPopupState({ isVisible: true, isSummaryExpanded: false });
 
@@ -130,7 +127,6 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   return [
     popupState,
     {
-      showUploadPopup,
       hideUploadPopup,
       expandUploadSummary,
       collapseUploadSummary,
@@ -164,7 +160,7 @@ const useUploadSummary = ({ fileLoading }) =>
     };
   }, [fileLoading]);
 
-export function Popup() {
+export function Popup({ isMobile }) {
   const {
     state: { isFinished, fileLoading },
     handlers: { resetUploadState },
@@ -211,7 +207,7 @@ export function Popup() {
               collapseUploadSummary={collapseUploadSummary}
             />
           </div>
-          <Show when={isHovered && isFinished}>
+          <Show when={isFinished && (isHovered || isMobile)}>
             <button
               css={STYLES_DISMISS_BUTTON}
               onClick={() => (hideUploadPopup(), resetUploadState())}
@@ -378,10 +374,10 @@ function Summary({ uploadSummary }) {
             css={Styles.HORIZONTAL_CONTAINER_CENTERED}
           >
             <div css={STYLES_PREVIEW_WRAPPER}>
-              {file.cid ? (
-                <ObjectBoxPreview file={file.blob} placeholderRatio={2.4} />
-              ) : (
+              {file.isBlob ? (
                 <BlobObjectPreview file={file} placeholderRatio={2.4} />
+              ) : (
+                <ObjectBoxPreview file={file.blob} placeholderRatio={2.4} />
               )}
             </div>
 

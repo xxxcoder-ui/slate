@@ -5,7 +5,7 @@ import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as Window from "~/common/window";
 import * as Constants from "~/common/constants";
-import * as FileUtilities from "~/common/file-utilities";
+import * as Utilities from "~/common/utilities";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
 import * as SVG from "~/common/svg";
@@ -13,10 +13,12 @@ import * as SVG from "~/common/svg";
 import { css } from "@emotion/react";
 import { SecondaryTabGroup } from "~/components/core/TabGroup";
 import { ConfirmationModal } from "~/components/core/ConfirmationModal";
+import { useForm, useToggle } from "~/common/hooks";
 
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
+import Field from "~/components/core/Field";
 import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 const STYLES_FILE_HIDDEN = css`
@@ -41,10 +43,76 @@ const STYLES_HEADER = css`
   margin-bottom: 16px;
 `;
 
+const SecuritySection = ({ onUpdateViewer, username }) => {
+  const [passwordValidations, setPasswordValidations] = React.useState(
+    Validations.passwordForm("")
+  );
+
+  const { getFieldProps, getFormProps, isSubmitting } = useForm({
+    initialValues: { password: "" },
+    validate: ({ password }, errors) => {
+      if (!Validations.password(password)) errors.password = "Incorrect password";
+      return errors;
+    },
+    onSubmit: async ({ password }) => {
+      const userVersionResponse = await Actions.getUserVersion({ username });
+      if (Events.hasError(userVersionResponse)) return;
+
+      let hashedPassword;
+      if (userVersionResponse?.data?.version === 2) {
+        hashedPassword = await Utilities.encryptPasswordClient(password);
+      } else {
+        hashedPassword = password;
+      }
+
+      let response = await onUpdateViewer({
+        type: "CHANGE_PASSWORD",
+        password: hashedPassword,
+      });
+
+      if (Events.hasError(response)) {
+        return;
+      }
+
+      Events.dispatchMessage({ message: "Password successfully updated!", status: "INFO" });
+    },
+  });
+
+  const [showPassword, togglePasswordVisibility] = useToggle(false);
+
+  return (
+    <div>
+      <div css={STYLES_HEADER}>Change password</div>
+      <div>Passwords must be a minimum of eight characters.</div>
+      <form {...getFormProps()}>
+        <Field
+          containerStyle={{ marginTop: 24 }}
+          placeholder="Your new password"
+          validations={passwordValidations}
+          color="white"
+          {...getFieldProps("password", {
+            onChange: (e) => {
+              const validations = Validations.passwordForm(e.target.value);
+              setPasswordValidations(validations);
+            },
+          })}
+          type={showPassword ? "text" : "password"}
+          onClickIcon={togglePasswordVisibility}
+          icon={showPassword ? SVG.EyeOff : SVG.Eye}
+        />
+        <div style={{ marginTop: 24 }}>
+          <System.ButtonPrimary loading={isSubmitting} type="submit" style={{ width: "200px" }}>
+            Change password
+          </System.ButtonPrimary>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 export default class SceneEditAccount extends React.Component {
   state = {
     username: this.props.viewer.username,
-    password: "",
     confirm: "",
     body: this.props.viewer.body,
     photo: this.props.viewer.photo,
@@ -55,7 +123,6 @@ export default class SceneEditAccount extends React.Component {
     savingNameBio: false,
     changingFilecoin: false,
     modalShow: false,
-    showPassword: false,
   };
 
   _handleUpload = async (e) => {
@@ -66,7 +133,7 @@ export default class SceneEditAccount extends React.Component {
       return;
     }
 
-    const cid = file.cid;
+    const { cid } = file;
     const url = Strings.getURLfromCID(cid);
     let updateResponse = await Actions.updateViewer({
       user: {
@@ -78,7 +145,7 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingAvatar: false, photo: url });
   };
 
-  _handleSave = async (e) => {
+  _handleSave = async () => {
     if (!Validations.username(this.state.username)) {
       Events.dispatchMessage({
         message: "Please include only letters and numbers in your username",
@@ -106,30 +173,7 @@ export default class SceneEditAccount extends React.Component {
   };
 
   _handleUsernameChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value.toLowerCase() });
-  };
-
-  _handleChangePassword = async (e) => {
-    if (!Validations.password(this.state.password)) {
-      Events.dispatchMessage({
-        message: "Password does not meet requirements",
-      });
-      return;
-    }
-
-    this.setState({ changingPassword: true });
-
-    let response = await Actions.updateViewer({
-      type: "CHANGE_PASSWORD",
-      user: { password: this.state.password },
-    });
-
-    if (Events.hasError(response)) {
-      this.setState({ changingPassword: false });
-      return;
-    }
-
-    this.setState({ changingPassword: false, password: "", confirm: "" });
+    this.setState({ [e.target.name]: Strings.createUsername(e.target.value) });
   };
 
   _handleDelete = async (res) => {
@@ -222,34 +266,10 @@ export default class SceneEditAccount extends React.Component {
             </div>
           ) : null}
           {tab === "security" ? (
-            <div>
-              <div css={STYLES_HEADER}>Change password</div>
-              <div>
-                Passwords should be at least 8 characters long, contain a mix of upper and lowercase
-                letters, and have at least 1 number and 1 symbol
-              </div>
-
-              <System.Input
-                containerStyle={{ marginTop: 24 }}
-                name="password"
-                type={this.state.showPassword ? "text" : "password"}
-                value={this.state.password}
-                placeholder="Your new password"
-                onChange={this._handleChange}
-                onClickIcon={() => this.setState({ showPassword: !this.state.showPassword })}
-                icon={this.state.showPassword ? SVG.EyeOff : SVG.Eye}
-              />
-
-              <div style={{ marginTop: 24 }}>
-                <System.ButtonPrimary
-                  onClick={this._handleChangePassword}
-                  loading={this.state.changingPassword}
-                  style={{ width: "200px" }}
-                >
-                  Change password
-                </System.ButtonPrimary>
-              </div>
-            </div>
+            <SecuritySection
+              onUpdateViewer={Actions.updateViewer}
+              username={this.props.viewer.username}
+            />
           ) : null}
           {tab === "account" ? (
             <div>

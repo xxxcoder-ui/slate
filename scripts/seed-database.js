@@ -11,13 +11,19 @@ const db = knex(envConfig);
 
 Logging.log(`RUNNING:  seed-database.js`);
 
+const createTableIfNotExists = async (tableName, callback) => {
+  const exists = await db.schema.hasTable(tableName);
+  if (exists) return;
+  return db.schema.createTable(tableName, callback);
+};
+
 // --------------------------
 // SCRIPTS
 // --------------------------
 
 //replace createdat, updatedat, ownerid, owneruserid
 
-const createDealsTable = db.schema.createTable("deals", function (table) {
+const createDealsTable = createTableIfNotExists("deals", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.string("textileBucketCID").notNullable();
   table.string("pinCID").notNullable();
@@ -25,7 +31,7 @@ const createDealsTable = db.schema.createTable("deals", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createUsersTable = db.schema.createTable("users", function (table) {
+const createUsersTable = createTableIfNotExists("users", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.string("email").unique().nullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
@@ -47,9 +53,13 @@ const createUsersTable = db.schema.createTable("users", function (table) {
   table.integer("followerCount").notNullable().defaultTo(0);
   table.integer("slateCount").notNullable().defaultTo(0);
   table.integer("authVersion").notNullable().defaultTo(2);
+  table.boolean("hasCompletedSurvey").defaultTo(false);
+  table.boolean("hasCompletedUploadOnboarding").defaultTo(false);
+  table.boolean("hasCompletedSlatesOnboarding").defaultTo(false);
+  table.boolean("isFilterSidebarCollapsed").defaultTo(false);
 });
 
-const createSlatesTable = db.schema.createTable("slates", function (table) {
+const createSlatesTable = createTableIfNotExists("slates", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
@@ -63,7 +73,7 @@ const createSlatesTable = db.schema.createTable("slates", function (table) {
   table.integer("fileCount").notNullable().defaultTo(0);
 });
 
-const createKeysTable = db.schema.createTable("keys", function (table) {
+const createKeysTable = createTableIfNotExists("keys", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.string("key").unique().nullable();
   table.uuid("ownerId").notNullable();
@@ -71,7 +81,7 @@ const createKeysTable = db.schema.createTable("keys", function (table) {
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createFilesTable = db.schema.createTable("files", function (table) {
+const createFilesTable = createTableIfNotExists("files", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
@@ -101,14 +111,14 @@ const createFilesTable = db.schema.createTable("files", function (table) {
   table.boolean("isLink").notNullable().defaultTo(false);
 });
 
-const createSlateFilesTable = db.schema.createTable("slate_files", function (table) {
+const createSlateFilesTable = createTableIfNotExists("slate_files", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("fileId").references("id").inTable("files");
   table.uuid("slateId").references("id").inTable("slates");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createSubscriptionsTable = db.schema.createTable("subscriptions", function (table) {
+const createSubscriptionsTable = createTableIfNotExists("subscriptions", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.uuid("slateId").references("id").inTable("slates");
@@ -117,7 +127,7 @@ const createSubscriptionsTable = db.schema.createTable("subscriptions", function
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createActivityTable = db.schema.createTable("activity", function (table) {
+const createActivityTable = createTableIfNotExists("activity", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("ownerId").references("id").inTable("users");
   table.uuid("userId").references("id").inTable("users");
@@ -128,32 +138,32 @@ const createActivityTable = db.schema.createTable("activity", function (table) {
   table.boolean("ignore").notNullable().defaultTo(false);
 });
 
-const createStatsTable = db.schema.createTable("stats", function (table) {
+const createStatsTable = createTableIfNotExists("stats", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.jsonb("data").nullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createOrphansTable = db.schema.createTable("orphans", function (table) {
+const createOrphansTable = createTableIfNotExists("orphans", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.jsonb("data").nullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createGlobalTable = db.schema.createTable("global", function (table) {
+const createGlobalTable = createTableIfNotExists("global", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.jsonb("data").nullable();
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 
-const createUsageTable = db.schema.createTable("usage", function (table) {
+const createUsageTable = createTableIfNotExists("usage", function (table) {
   table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.uuid("userId").references("id").inTable("users");
   table.timestamp("createdAt").notNullable().defaultTo(db.raw("now()"));
 });
 //NOTE(toast): making sid pkey and letting emails dupe allows for multiple keys per user,
 //stops people from getting dos'd on verification
-const createVerificationsTable = db.schema.createTable("verifications", function (table) {
+const createVerificationsTable = createTableIfNotExists("verifications", function (table) {
   table.uuid("sid").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
   table.string("email").nullable();
   table.string("twitterToken").unique().nullable();
@@ -172,13 +182,38 @@ const createVerificationsTable = db.schema.createTable("verifications", function
   table.boolean("passwordChanged").nullable();
 });
 
-const createTwitterTokensTable = db.schema.createTable("twitterTokens", function (table) {
+const createTwitterTokensTable = createTableIfNotExists("twitterTokens", function (table) {
   table.string("token").primary().unique().notNullable();
   table.string("tokenSecret").notNullable();
   table.string("email").nullable();
   table.string("id_str").nullable();
   table.string("screen_name").nullable();
   table.string("verified").nullable();
+});
+
+const createSurveysTable = createTableIfNotExists("surveys", function (table) {
+  table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  table.uuid("ownerId").references("id").inTable("users");
+
+  // What do you currently use for saving things on the web?
+  table.boolean("prevToolsBrowserBookmarks").defaultTo(false);
+  table.boolean("prevToolsPinterest").defaultTo(false);
+  table.boolean("prevToolsArena").defaultTo(false);
+  table.boolean("prevToolsNotesPlatform").defaultTo(false);
+  table.string("prevToolsOther").defaultTo(null);
+
+  // What are you interested in using Slate for?
+  table.boolean("useCasesBookmarkingImportantPages").defaultTo(false);
+  table.boolean("useCasesSavingLinksToReadLater").defaultTo(false);
+  table.boolean("useCasesSearchingYourBrowsedPages").defaultTo(false);
+  table.boolean("useCasesSharingCollectionsOfLinks").defaultTo(false);
+  table.string("useCasesOther").defaultTo(null);
+
+  // How did you find out about Slate?
+  table.boolean("referralFriend").defaultTo(false);
+  table.boolean("referralTwitter").defaultTo(false);
+  table.boolean("referralIpfsFilecoinCommunity").defaultTo(false);
+  table.string("referralOther").defaultTo(null);
 });
 
 // --------------------------
@@ -200,6 +235,7 @@ Promise.all([
   createGlobalTable,
   createUsageTable,
   createTwitterTokensTable,
+  createSurveysTable,
 ]);
 
 Logging.log(`FINISHED: seed-database.js`);

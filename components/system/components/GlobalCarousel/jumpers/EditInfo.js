@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as System from "~/components/system";
-import * as Jumper from "~/components/core/Jumper";
+import * as Jumper from "~/components/system/components/fragments/Jumper";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/core/MobileJumper";
+import * as MobileJumper from "~/components/system/components/fragments/MobileJumper";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
@@ -181,19 +181,23 @@ export function EditInfo({ file, isOpen, onClose }) {
 }
 
 export function EditInfoMobile({ file, isOpen, onClose }) {
-  return isOpen ? (
-    <MobileJumper.Root>
-      <MobileJumper.Header>
-        <System.H5 as="p" color="textBlack">
-          Edit Info
-        </System.H5>
-      </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <div style={{ padding: "13px 16px 11px" }}>
-        <Jumper.ObjectPreview file={file} />
-      </div>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <UpdateFileForm isMobile key={file.id} file={file} onClose={onClose} />
-    </MobileJumper.Root>
-  ) : null;
+  return (
+    <MobileJumper.AnimatePresence>
+      {isOpen ? (
+        <MobileJumper.Root onClose={onClose}>
+          <MobileJumper.Header>
+            <System.H5 as="p" color="textBlack">
+              Edit Info
+            </System.H5>
+          </MobileJumper.Header>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <div style={{ padding: "13px 16px 11px" }}>
+            <Jumper.ObjectPreview file={file} />
+          </div>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <UpdateFileForm isMobile key={file.id} file={file} onClose={onClose} />
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
+  );
 }

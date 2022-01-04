@@ -1,16 +1,17 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import * as System from "~/components/system";
-import * as Actions from "~/common/actions";
-import * as Credentials from "~/common/credentials";
+import * as Styles from "~/common/styles";
+import * as Strings from "~/common/strings";
 
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { css } from "@emotion/react";
-import { Logo } from "~/common/logo";
-import { Link } from "~/components/core/Link";
+import { Alert } from "~/components/core/Alert";
+
+import AuthInitial from "~/components/core/Auth/Initial";
 
 const STYLES_BACKGROUND = css`
   z-index: ${Constants.zindex.cta};
+  ${Styles.CONTAINER_CENTERED};
   position: fixed;
   left: 0;
   right: 0;
@@ -39,8 +40,7 @@ const STYLES_BACKGROUND = css`
 `;
 
 const STYLES_TRANSITION = css`
-  margin: 15% auto 0 auto;
-  max-width: 376px;
+  max-width: 432px;
 
   @keyframes authentication-popover-fade-in {
     from {
@@ -57,34 +57,8 @@ const STYLES_TRANSITION = css`
   animation: authentication-popover-fade-in 300ms ease;
 `;
 
-const STYLES_POPOVER = css`
-  height: 424px;
-  padding: 32px 36px;
-  border-radius: 4px;
-  background: ${Constants.system.white};
-  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.05);
-`;
-
 const STYLES_EXPLAINER = css`
   color: ${Constants.system.white};
-`;
-
-const STYLES_LINK_ITEM = css`
-  display: block;
-  text-decoration: none;
-  font-weight: 400;
-  font-size: 14px;
-  font-family: ${Constants.font.semiBold};
-  user-select: none;
-  cursor: pointer;
-  margin-top: 2px;
-  color: ${Constants.system.black};
-  transition: 200ms ease all;
-  word-wrap: break-word;
-
-  :hover {
-    color: ${Constants.system.blue};
-  }
 `;
 
 export default class CTATransition extends React.Component {
@@ -116,13 +90,40 @@ export default class CTATransition extends React.Component {
     });
   };
 
+  _handleTwitterSignin = () => {
+    const currentURL = Strings.getCurrentURL(this.props.page?.params);
+    this.props.onAction({
+      type: "NAVIGATE",
+      href: `/_/auth?tab=twitter&redirect=${encodeURI(currentURL)}`,
+    });
+    this._handleClose();
+  };
+
+  _handleSignin = ({ emailOrUsername }) => {
+    const currentURL = Strings.getCurrentURL(this.props.page?.params);
+    this.props.onAction({
+      type: "NAVIGATE",
+      href: `/_/auth?tab=signin&email=${emailOrUsername}&redirect=${encodeURI(currentURL)}`,
+    });
+    this._handleClose();
+  };
+
+  _handleSignup = ({ email }) => {
+    const currentURL = Strings.getCurrentURL(this.props.page?.params);
+    this.props.onAction({
+      type: "NAVIGATE",
+      href: `/_/auth?tab=signup&email=${email}&redirect=${encodeURI(currentURL)}`,
+    });
+    this._handleClose();
+  };
+
   render() {
     return (
       this.state.visible && (
         <div>
           <div css={STYLES_BACKGROUND}>
             <div css={STYLES_TRANSITION}>
-              <div css={STYLES_EXPLAINER}>Sign up or sign in to continue</div>
+              <div css={STYLES_EXPLAINER}>Sign up or log in continue</div>
               <br />
               <Boundary
                 captureResize={true}
@@ -130,30 +131,27 @@ export default class CTATransition extends React.Component {
                 enabled
                 onOutsideRectEvent={this._handleClose}
               >
-                <div css={STYLES_POPOVER}>
-                  <Logo
-                    height="36px"
-                    style={{
-                      color: Constants.system.blueDark6,
-                      display: "block",
-                      margin: "56px auto 0px auto",
-                    }}
-                  />
-
-                  <System.P1 style={{ margin: "56px 0", textAlign: "center" }}>
-                    An open-source file sharing network for research and collaboration
-                  </System.P1>
-                  <Link href={"/_/auth?tab=signup"} onAction={this._handleAction}>
-                    <div style={{ textDecoration: `none` }}>
-                      <System.ButtonPrimary full style={{ marginBottom: 16 }}>
-                        Continue to sign up
-                      </System.ButtonPrimary>
-                    </div>
-                  </Link>
-                  <Link href={"/_/auth?tab=signin"} onAction={this._handleAction}>
-                    <div css={STYLES_LINK_ITEM}>Already have an account?</div>
-                  </Link>
-                </div>
+                <AuthInitial
+                  showTermsAndServices
+                  isSigninViaTwitter={false}
+                  onTwitterSignin={this._handleTwitterSignin}
+                  goToSigninScene={this._handleSignin}
+                  goToSignupScene={this._handleSignup}
+                  page={this.props.page}
+                />
+                <Alert
+                  noWarning
+                  id={this.props.isMobile ? "slate-mobile-alert" : null}
+                  style={
+                    this.props.isMobile
+                      ? null
+                      : {
+                          bottom: 0,
+                          left: 0,
+                          top: "auto",
+                        }
+                  }
+                />
               </Boundary>
             </div>
           </div>

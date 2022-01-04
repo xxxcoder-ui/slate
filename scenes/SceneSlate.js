@@ -67,6 +67,34 @@ const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
   color: ${theme.semantic.textGrayLight};
 `;
 
+const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
+  // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
+  height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
+  margin: 20px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    margin: 0px;
+    height: calc(100vh - ${theme.sizes.header}px - 44px);
+  }
+`;
+
+const STYLES_EMPTY_STATE_DEMO = (theme) => css`
+  margin-top: 36px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    margin-top: 65px;
+  }
+`;
+
+const STYLES_UPLOAD_BUTTON = (theme) => css`
+  ${Styles.CONTAINER_CENTERED};
+  display: inline-flex;
+  background-color: ${theme.semantic.bgGrayLight};
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  pointer-events: auto;
+  box-shadow: ${theme.shadow.lightSmall};
+`;
+
 export default class SceneSlate extends React.Component {
   state = {
     loading: true,
@@ -204,7 +232,7 @@ export default class SceneSlate extends React.Component {
           url={`${Constants.hostname}${this.props.page.pathname}`}
         >
           <ScenePage>
-            <div css={Styles.PAGE_CONTENT_WRAPPER}>
+            <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
               <EmptyState>
                 <SVG.Layers height="24px" style={{ marginBottom: 24 }} />
                 <div>We were unable to locate that collection</div>
@@ -458,18 +486,29 @@ class SlatePage extends React.Component {
             </div>
           </>
         ) : isOwner ? (
-          <div css={Styles.PAGE_CONTENT_WRAPPER}>
+          <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
             <EmptyState>
               <FileTypeGroup />
-              <div style={{ marginTop: 24 }}>
-                Drag and drop files to add them to this collection
+              <div css={STYLES_EMPTY_STATE_DEMO}>
+                <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
+                  Use
+                  <span
+                    css={STYLES_UPLOAD_BUTTON}
+                    style={{ marginLeft: 8, marginRight: 8, position: "relative", top: 2 }}
+                  >
+                    <SVG.Plus height="16px" />
+                  </span>
+                  on the top right corner <br />
+                </System.H5>
+                <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
+                  or drop files {this.props.isMobile ? <span> on desktop</span> : null} to add them
+                  to this collection
+                </System.H5>
               </div>
             </EmptyState>
           </div>
         ) : (
-          <div css={Styles.PAGE_CONTENT_WRAPPER}>
-            <EmptyState>There's nothing here :)</EmptyState>
-          </div>
+          <EmptyState>There's nothing here :)</EmptyState>
         )}
         <input
           ref={(c) => {

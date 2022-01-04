@@ -3,8 +3,8 @@ import * as Data from "~/node_common/data";
 import * as Utilities from "~/node_common/utilities";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
-import SearchManager from "~/node_common/managers/search";
 
+import SearchManager from "~/node_common/managers/search";
 import JWT from "jsonwebtoken";
 
 const COOKIE_NAME = "oauth_token";
@@ -27,6 +27,9 @@ export default async (req, res) => {
   if (!Validations.username(username)) {
     return res.status(500).send({ decorator: "SERVER_CREATE_USER_INVALID_USERNAME", error: true });
   }
+
+  const newUsername = Strings.createUsername(username);
+  const newEmail = email.toLowerCase();
 
   const storedAuthToken = req.cookies[COOKIE_NAME];
 
@@ -57,20 +60,13 @@ export default async (req, res) => {
   }
 
   // NOTE(Amine): If there is an account with the provided username
-  const userByUsername = await Data.getUserByUsername({ username });
+  const userByUsername = await Data.getUserByUsername({ username: newUsername });
   if (userByUsername) {
     return res.status(201).send({ decorator: "SERVER_CREATE_USER_USERNAME_TAKEN" });
   }
 
-  const newUsername = username.toLowerCase();
-  const newEmail = email.toLowerCase();
-
-  const {
-    textileKey,
-    textileToken,
-    textileThreadID,
-    textileBucketCID,
-  } = await Utilities.createBucket({});
+  const { textileKey, textileToken, textileThreadID, textileBucketCID } =
+    await Utilities.createBucket({});
 
   if (!textileKey || !textileToken || !textileThreadID || !textileBucketCID) {
     return res

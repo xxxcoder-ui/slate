@@ -14,7 +14,7 @@ const INPUT_STYLES = css`
   width: 100%;
   height: 40px;
   background: transparent;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 12px;
   padding: 9px 12px 11px;
   outline: 0;

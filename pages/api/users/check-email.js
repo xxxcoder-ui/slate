@@ -15,6 +15,6 @@ export default async (req, res) => {
 
   return res.status(200).send({
     decorator: "SERVER_CHECK_EMAIL",
-    data: { email: !!userByEmail.email, twitter: !!!userByEmail.password },
+    data: { email: !!userByEmail.email, twitter: !userByEmail.password },
   });
 };

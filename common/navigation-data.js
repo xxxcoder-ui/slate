@@ -24,6 +24,7 @@ export const getById = (id, viewer) => {
 
 export const getByHref = (href, viewer) => {
   let pathname;
+
   if (href) {
     pathname = href.split("?")[0];
   }
@@ -89,8 +90,8 @@ const authPage = {
   id: "NAV_SIGN_IN",
   name: "Sign in",
   pageTitle: "Sign in & Sign up",
-  ignore: true,
   pathname: "/_/auth",
+  ignore: true,
   externalAllowed: true,
 };
 

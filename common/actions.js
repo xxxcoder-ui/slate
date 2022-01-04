@@ -302,14 +302,6 @@ export const createUser = async (data) => {
   });
 };
 
-export const updateStatus = async (data) => {
-  await Websockets.checkWebsocket();
-  return await returnJSON(`/api/users/status-update`, {
-    ...DEFAULT_OPTIONS,
-    body: JSON.stringify({ data }),
-  });
-};
-
 // export const checkCIDStatus = async (data) => {
 //   return await returnJSON(`/api/data/cid-status`, {
 //     ...DEFAULT_OPTIONS,
@@ -516,6 +508,34 @@ export const resendVerification = async (data) => {
 
 export const getUserVersion = async (data) => {
   return await returnJSON(`/api/users/get-version`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const linkTwitterAccount = async (data) => {
+  return await returnJSON(`/api/twitter/link`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const linkTwitterAccountWithVerification = async (data) => {
+  return await returnJSON(`/api/twitter/link-with-verification`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const resendPasswordResetVerification = async (data) => {
+  return await returnJSON(`/api/verifications/password-reset/resend`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const createSurvey = async (data) => {
+  return await returnJSON(`/api/surveys/create`, {
     ...DEFAULT_OPTIONS,
     body: JSON.stringify({ data }),
   });

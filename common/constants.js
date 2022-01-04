@@ -21,10 +21,10 @@ export const system = {
   white: "#FFFFFF",
   grayLight6: "#F7F8F9",
   grayLight5: "#E5E8EA",
-  grayLight4: "#D1D4D6",
+  grayLight4: "#D1D1D6",
   grayLight3: "#C7CACC",
   grayLight2: "#AEB0B2",
-  gray: "#8E9093",
+  gray: "#8E8E93",
   grayDark2: "#636566",
   grayDark3: "#48494A",
   grayDark4: "#3A3B3C",
@@ -141,13 +141,13 @@ export const shadow = {
 export const zindex = {
   navigation: 1,
   body: 2,
-  sidebar: 5,
+  intercom: 2,
   alert: 3,
   header: 4,
-  intercom: 4,
+  sidebar: 5,
   modal: 6,
-  tooltip: 8,
   jumper: 7,
+  tooltip: 8,
   cta: 9,
 };
 
@@ -238,4 +238,10 @@ export const textile = {
   threadName: "buckets",
   mainBucket: "data",
   dealsBucket: "stage-deal",
+};
+
+export const extensionLink = {
+  chrome: "https://chrome.google.com/webstore/detail/slate/gloembacbehhbfbkcfjmloikeeaebnoc",
+  firefox: "https://addons.mozilla.org/en-US/firefox/addon/slate-for-firefox",
+  safari: "",
 };

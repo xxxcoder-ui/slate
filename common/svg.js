@@ -7,7 +7,7 @@ export const Loader = (props) => {
       strokeWidth="1.25"
       strokeLinecap="round"
       strokeLinejoin="round"
-      height={props.height}
+      {...props}
       style={{ display: "block", ...props.style }}
     >
       <path d="M8 1.68237V4.34904" />
@@ -2604,6 +2604,25 @@ export const Hexagon = (props) => (
   >
     <path
       d="M14 10.666V5.333a1.333 1.333 0 00-.667-1.153L8.667 1.513a1.333 1.333 0 00-1.334 0L2.667 4.18A1.333 1.333 0 002 5.333v5.333a1.333 1.333 0 00.667 1.154l4.666 2.666a1.333 1.333 0 001.334 0l4.666-2.666A1.333 1.333 0 0014 10.666z"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const Airplay = (props) => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M3.333 11.333h-.666A1.333 1.333 0 011.333 10V3.333A1.333 1.333 0 012.667 2h10.666a1.333 1.333 0 011.334 1.333V10a1.333 1.333 0 01-1.334 1.333h-.666"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M8 10l3.333 4H4.667L8 10z"
       stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"

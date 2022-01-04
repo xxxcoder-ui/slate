@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as System from "~/components/system";
-import * as Jumper from "~/components/core/Jumper";
+import * as Jumper from "~/components/system/components/fragments/Jumper";
 import * as SVG from "~/common/svg";
 import * as Utilities from "~/common/utilities";
 import * as Constants from "~/common/constants";
-import * as MobileJumper from "~/components/core/MobileJumper";
 import * as Events from "~/common/custom-events";
 import * as UserBehaviors from "~/common/user-behaviors";
+import * as MobileJumper from "~/components/system/components/fragments/MobileJumper";
 
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
@@ -173,41 +173,45 @@ export function Share({ file, data, viewer, isOpen, onClose }) {
 }
 
 export function ShareMobile({ file, data, viewer, isOpen, onClose }) {
-  return isOpen ? (
-    <MobileJumper.Root>
-      <MobileJumper.Header>
-        <System.H5 as="p" color="textBlack">
-          Share
-        </System.H5>
-      </MobileJumper.Header>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <div style={{ padding: "13px 16px 11px" }}>
-        <Jumper.ObjectPreview file={file} />
-      </div>
-      <System.Divider height={1} color="borderGrayLight4" />
-      <MobileJumper.Content>
-        <FileSharingButtons file={file} data={data} viewer={viewer} />
-      </MobileJumper.Content>
-      <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-        <button
-          type="button"
-          css={Styles.BUTTON_RESET}
-          style={{ width: 32, height: 32 }}
-          onClick={onClose}
-        >
-          <SVG.Share width={16} height={16} style={{ color: Constants.system.blue }} />
-        </button>
-        <a
-          css={[Styles.LINK, Styles.HORIZONTAL_CONTAINER_CENTERED]}
-          style={{ marginLeft: "auto", color: Constants.semantic.textGrayDark }}
-          href={PROTO_SCHOOL_CID}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SVG.InfoCircle width={16} />
-          <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
-        </a>
-      </MobileJumper.Footer>
-    </MobileJumper.Root>
-  ) : null;
+  return (
+    <MobileJumper.AnimatePresence>
+      {isOpen ? (
+        <MobileJumper.Root onClose={onClose}>
+          <MobileJumper.Header>
+            <System.H5 as="p" color="textBlack">
+              Share
+            </System.H5>
+          </MobileJumper.Header>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <div style={{ padding: "13px 16px 11px" }}>
+            <Jumper.ObjectPreview file={file} />
+          </div>
+          <System.Divider height={1} color="borderGrayLight4" />
+          <MobileJumper.Content>
+            <FileSharingButtons file={file} data={data} viewer={viewer} />
+          </MobileJumper.Content>
+          <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+            <button
+              type="button"
+              css={Styles.BUTTON_RESET}
+              style={{ width: 32, height: 32 }}
+              onClick={onClose}
+            >
+              <SVG.Share width={16} height={16} style={{ color: Constants.system.blue }} />
+            </button>
+            <a
+              css={[Styles.LINK, Styles.HORIZONTAL_CONTAINER_CENTERED]}
+              style={{ marginLeft: "auto", color: Constants.semantic.textGrayDark }}
+              href={PROTO_SCHOOL_CID}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SVG.InfoCircle width={16} />
+              <System.P2 style={{ marginLeft: 4 }}>What is CID?</System.P2>
+            </a>
+          </MobileJumper.Footer>
+        </MobileJumper.Root>
+      ) : null}
+    </MobileJumper.AnimatePresence>
+  );
 }

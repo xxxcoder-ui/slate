@@ -10,7 +10,6 @@ import { Provider } from "~/components/core/Filter/Provider";
 import { Sidebar, SidebarTrigger } from "~/components/core/Filter/Sidebar";
 import { Popup, PopupTrigger } from "~/components/core/Filter/Popup";
 import { useSearchStore } from "~/components/core/Search/store";
-import { Divider } from "~/components/system";
 
 /* -------------------------------------------------------------------------------------------------
  *  Title
@@ -107,14 +106,14 @@ const STYLES_PROFILE_SECTION = (theme) => css`
  *  Filter
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_FILTER_CONTENT = (theme) => css`
+const STYLES_FILTER_CONTENT = css`
   ${Styles.HORIZONTAL_CONTAINER};
   width: 100%;
   ${"" /* margin-top: ${theme.sizes.filterNavbar}px; */}
 `;
 
 export default function Filter({
-  isActive,
+  disabled,
   viewer,
   onAction,
   page,
@@ -126,7 +125,7 @@ export default function Filter({
   const { results, isSearching } = useSearchStore();
   const showSearchResult = isSearching && !!results;
 
-  if (!isActive) {
+  if (disabled) {
     return showSearchResult ? (
       <Search.Content viewer={viewer} page={page} onAction={onAction} />
     ) : (
@@ -135,7 +134,7 @@ export default function Filter({
   }
 
   return (
-    <Provider>
+    <Provider viewer={viewer}>
       {isProfilePage && isMobile ? (
         <div css={STYLES_PROFILE_SECTION}>
           <Filters.Profile page={page} data={data} viewer={viewer} onAction={onAction} />

@@ -230,6 +230,11 @@ export const getQueryStringFromParams = (params) => {
   return query;
 };
 
+export const getCurrentURL = (params) => {
+  const query = getQueryStringFromParams(params);
+  return window.location.pathname.concat(query);
+};
+
 //NOTE(martina): works with both url and search passed in
 export const getParamsFromUrl = (url) => {
   let startIndex = url.indexOf("?") + 1;
@@ -275,6 +280,21 @@ export const copyText = (str) => {
   document.body.removeChild(el);
 
   return true;
+};
+
+//NOTE(martina): createUsername is like createSlug, except allowing _ instead of -, and instead of replacing invalid characters it simply removes them
+export const createUsername = (text) => {
+  if (isEmpty(text)) {
+    return "";
+  }
+
+  text = text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9_]/g, "");
+
+  return text;
 };
 
 // SOURCE(jim):

@@ -11,7 +11,7 @@ import {
   AnimatePresence as FramerAnimatePresence,
   motion,
 } from "framer-motion";
-import { useEscapeKey } from "~/common/hooks";
+import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 
 import ObjectBoxPreview from "~/components/core/ObjectBoxPreview";
@@ -67,8 +67,10 @@ function AnimatePresence({ children, ...props }) {
   return <FramerAnimatePresence {...props}>{children}</FramerAnimatePresence>;
 }
 
-function Root({ children, onClose, ...props }) {
+function Root({ children, onClose, withDismissButton = true, ...props }) {
   useEscapeKey(onClose);
+  useLockScroll();
+
   return (
     <ModalPortal>
       <div>
@@ -78,9 +80,10 @@ function Root({ children, onClose, ...props }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
           css={STYLES_JUMPER_OVERLAY}
+          onClick={onClose}
         />
         <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
-          <JumperContext.Provider value={{ onClose }}>
+          <JumperContext.Provider value={{ onClose, withDismissButton }}>
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -109,19 +112,21 @@ const STYLES_JUMPER_HEADER = css`
 `;
 
 function Header({ children, style, ...props }) {
-  const { onClose } = useJumperContext();
+  const { onClose, withDismissButton } = useJumperContext();
   return (
     <div css={STYLES_JUMPER_HEADER} style={style}>
       <div style={{ width: "100%" }} {...props}>
         {children}
       </div>
-      <button
-        css={Styles.BUTTON_RESET}
-        style={{ width: 24, height: 24, marginLeft: 12 }}
-        onClick={onClose}
-      >
-        <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
-      </button>
+      {withDismissButton && (
+        <button
+          css={Styles.BUTTON_RESET}
+          style={{ width: 24, height: 24, marginLeft: 12 }}
+          onClick={onClose}
+        >
+          <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
+        </button>
+      )}
     </div>
   );
 }
@@ -145,9 +150,9 @@ function Item({ children, ...props }) {
 /* -------------------------------------------------------------------------------------------------
  *  Divider
  * -----------------------------------------------------------------------------------------------*/
-function Divider({ children, ...props }) {
+function Divider({ children, color = "borderGrayLight4", ...props }) {
   return (
-    <System.Divider height={1} color="bgGrayLight4" {...props}>
+    <System.Divider height={1} color={color} {...props}>
       {children}
     </System.Divider>
   );

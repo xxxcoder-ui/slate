@@ -17,7 +17,7 @@ const STYLES_TEXTAREA = css`
   color: ${Constants.system.black};
   border-radius: 12px;
   display: flex;
-  font-size: 14px;
+  font-size: 16px;
   align-items: center;
   justify-content: flex-start;
   outline: 0;

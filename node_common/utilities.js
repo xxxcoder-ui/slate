@@ -118,7 +118,7 @@ export const parseAuthHeader = (value) => {
 };
 
 export const getFilecoinAPIFromUserToken = async ({ user }) => {
-  const textileKey = user.textileKey;
+  const { textileKey } = user;
   const identity = await PrivateKey.fromString(textileKey);
   const filecoin = await Filecoin.withKeyInfo(TEXTILE_KEY_INFO);
   await filecoin.getToken(identity);

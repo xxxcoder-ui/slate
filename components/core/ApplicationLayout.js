@@ -32,11 +32,6 @@ const STYLES_CONTENT = css`
   min-width: 10%;
   min-height: 100vh;
   position: relative;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    padding-left: 0px;
-    padding: 0 0 88px 0;
-  }
 `;
 
 const STYLES_SIDEBAR_ELEMENTS = css`
@@ -203,6 +198,9 @@ export default class ApplicationLayout extends React.Component {
         </Boundary>
       );
     }
+    const isHeaderInView =
+      this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.hasCompletedSurvey;
+
     return (
       <React.Fragment>
         <div css={STYLES_CONTENT}>
@@ -215,21 +213,13 @@ export default class ApplicationLayout extends React.Component {
           )}
           <Alert
             noWarning={
-              this.props.page?.id === "NAV_SIGN_IN"
+              this.props.page?.id === "NAV_SIGN_IN" || !this.props.viewer?.hasCompletedSurvey
                 ? true
-                : this.props.viewer
-                ? this.props.viewer?.onboarding?.hidePrivacyAlert
-                : false
+                : !!this.props.viewer
             }
             onAction={this.props.onAction}
             id={this.props.isMobile ? "slate-mobile-alert" : null}
             viewer={this.props.viewer}
-            style={{
-              paddingRight:
-                !this.props.isMobile && this.props.sidebar
-                  ? `calc(${Constants.sizes.sidebar}px + 48px`
-                  : "auto",
-            }}
           />
           {this.props.children}
         </div>

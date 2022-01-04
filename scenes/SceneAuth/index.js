@@ -1,10 +1,17 @@
 import * as React from "react";
-import * as UserBehaviors from "~/common/user-behaviors";
+
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import { AuthWrapper } from "~/components/core/Auth/components";
 
 import { css } from "@emotion/react";
-import { Initial, Signin, Signup, TwitterSignup, ResetPassword } from "~/components/core/Auth";
-
+import {
+  Initial,
+  Signin,
+  Signup,
+  TwitterSignup,
+  TwitterLinking,
+  ResetPassword,
+} from "~/components/core/Auth";
 import {
   useAuthFlow,
   useTwitter,
@@ -13,9 +20,6 @@ import {
   usePasswordReset,
 } from "~/scenes/SceneAuth/hooks";
 
-const background_image =
-  "https://slate.textile.io/ipfs/bafybeiddgkvf5ta6y5b7wamrxl33mtst4detegleblw4gfduhwm3sdwdra";
-
 const STYLES_ROOT = css`
   display: flex;
   flex-direction: column;
@@ -23,17 +27,15 @@ const STYLES_ROOT = css`
   justify-content: space-between;
   text-align: center;
   font-size: 1rem;
-
   min-height: 100vh;
   width: 100vw;
-  position: absolute;
+  position: relative;
   overflow: hidden;
-  background-image: url(${background_image});
   background-repeat: no-repeat;
   background-size: cover;
 `;
 
-const STYLES_MIDDLE = css`
+const STYLES_MIDDLE = (theme) => css`
   position: relative;
   min-height: 10%;
   flex-grow: 1;
@@ -43,13 +45,19 @@ const STYLES_MIDDLE = css`
   flex-direction: column;
   text-align: left;
   padding: 24px;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    padding: 24px 16px;
+    //NOTE(amine): additional scroll space for mobile
+    padding-bottom: 64px;
+  }
 `;
 
-const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) => {
+const AuthScene = ({ onAuthenticate, onTwitterAuthenticate, page, onAction, ...props }) => {
   const {
     goToSigninScene,
     goToSignupScene,
     goToTwitterSignupScene,
+    goToTwitterLinkingScene,
     goToResetPassword,
     clearMessages,
     goBack,
@@ -58,19 +66,42 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
     context,
   } = useAuthFlow();
 
+  // NOTE(amine): if the redirectUrl is provided, redirect users to it when they authenticate
+  const redirectUrl = React.useRef(page?.params?.redirect && decodeURI(page?.params?.redirect));
+
+  const handleAuthentication = (...params) => onAuthenticate(redirectUrl.current, ...params);
+  const handleTwitterAuthentication = (...params) =>
+    onTwitterAuthenticate(redirectUrl.current, ...params);
+
   const signinProvider = useSignin({
-    onAuthenticate,
+    onAuthenticate: handleAuthentication,
   });
+
+  const signupProvider = useSignup({ onAuthenticate: handleAuthentication });
+
   const twitterProvider = useTwitter({
-    onAuthenticate: onTwitterAuthenticate,
+    onTwitterAuthenticate: handleTwitterAuthentication,
+    onAuthenticate: handleAuthentication,
     goToTwitterSignupScene,
   });
 
-  const signupProvider = useSignup({ onAuthenticate });
-
   const passwordResetProvider = usePasswordReset({
-    onAuthenticate,
+    onAuthenticate: handleAuthentication,
   });
+
+  // NOTE(amine): authenticate via params
+  const initialScreenRef = React.useRef();
+  React.useEffect(() => {
+    if (!initialScreenRef.current) return;
+
+    if (page?.params?.tab === "twitter") twitterProvider.signin();
+
+    if (page?.params?.tab === "signup" && page?.params?.email)
+      initialScreenRef.current.submitSignupForm();
+
+    if (page?.params?.tab === "signin" && page?.params?.email)
+      initialScreenRef.current.submitSigninField();
+  }, []);
 
   if (scene === "signin")
     return (
@@ -114,36 +145,54 @@ const SigninScene = ({ onAuthenticate, onTwitterAuthenticate, page, ...props }) 
       <TwitterSignup
         initialEmail={context.twitterEmail}
         createVerification={twitterProvider.createVerification}
-        resendEmailVerification={twitterProvider.resendEmailVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
+        goToTwitterLinkingScene={goToTwitterLinkingScene}
         onSignupWithVerification={twitterProvider.signupWithVerification}
         onSignup={twitterProvider.signup}
       />
     );
 
+  if (scene === "twitter_linking") {
+    return (
+      <TwitterLinking
+        linkAccount={twitterProvider.linkAccount}
+        linkAccountWithVerification={twitterProvider.linkAccountWithVerification}
+        resendEmailVerification={twitterProvider.resendVerification}
+        createVerification={twitterProvider.createVerification}
+      />
+    );
+  }
   // NOTE(amine): if the user goes back, we should prefill the email
   const initialEmail =
-    prevScene === "signin" && context.emailOrUsername ? context.emailOrUsername : "";
+    prevScene === "signin" && context.emailOrUsername
+      ? context.emailOrUsername
+      : page?.params?.email || "";
+
   return (
     <Initial
-      createVerification={signupProvider.createVerification}
+      ref={initialScreenRef}
+      page={page}
+      initialEmail={initialEmail}
       isSigninViaTwitter={twitterProvider.isLoggingIn}
       onTwitterSignin={twitterProvider.signin}
-      initialEmail={initialEmail}
       goToSigninScene={goToSigninScene}
       goToSignupScene={goToSignupScene}
-      page={page}
+      createVerification={signupProvider.createVerification}
+      onAction={onAction}
     />
   );
 };
 
-const WithCustomWrapper = (Component) => (props) => (
-  <WebsitePrototypeWrapper>
-    <div css={STYLES_ROOT}>
-      <div css={STYLES_MIDDLE}>
-        <Component {...props} />
-      </div>
-    </div>
-  </WebsitePrototypeWrapper>
-);
+const WithCustomWrapper = (Component) => (props) => {
+  return (
+    <WebsitePrototypeWrapper>
+      <AuthWrapper css={STYLES_ROOT} isMobile={props.isMobile}>
+        <div css={STYLES_MIDDLE}>
+          <Component {...props} />
+        </div>
+      </AuthWrapper>
+    </WebsitePrototypeWrapper>
+  );
+};
 
-export default WithCustomWrapper(SigninScene);
+export default WithCustomWrapper(AuthScene);

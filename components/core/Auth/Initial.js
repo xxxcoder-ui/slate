@@ -1,23 +1,26 @@
 import * as React from "react";
 import * as System from "~/components/system";
-import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 import * as Validations from "~/common/validations";
 import * as Events from "~/common/custom-events";
 import * as Strings from "~/common/strings";
+import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { motion, AnimateSharedLayout } from "framer-motion";
-import { useForm, useField } from "~/common/hooks";
+import { useField, useForm } from "~/common/hooks";
+import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
+import { AnimateSharedLayout, motion } from "framer-motion";
+
 import Field from "~/components/core/Field";
-import { Toggle, SignUpPopover } from "~/components/core/Auth/components";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex-grow: 1;
+  text-align: left;
 `;
+
 const STYLES_LINK_ITEM = (theme) => css`
   display: block;
   text-decoration: none;
@@ -30,11 +33,9 @@ const STYLES_LINK_ITEM = (theme) => css`
   color: ${theme.system.black};
   transition: 200ms ease all;
   word-wrap: break-word;
-
   :visited {
     color: ${theme.system.black};
   }
-
   :hover {
     color: ${theme.system.blue};
   }
@@ -42,44 +43,54 @@ const STYLES_LINK_ITEM = (theme) => css`
 
 // NOTE(amine): used to remove content jumping
 // when switching between signin/signup in mobile
-const STYLES_SPACER = (theme) => css`
-  height: 20px;
-  @media (max-width: ${theme.sizes.mobile}px) {
-    height: 10vh;
-  }
+const STYLES_SPACER = css`
+  height: 40px;
 `;
 
-const useToggler = ({ params }) => {
+const useToggler = ({ params, onAction }) => {
   const TOGGLE_OPTIONS = [
     { value: "signin", label: "Sign in" },
     { value: "signup", label: "Sign up" },
   ];
   const [state, setState] = React.useState(params?.tab || "signin");
-  const handleToggleChange = (value) => setState(value);
+  const handleToggleChange = (value) => {
+    setState(value);
+    onAction?.({ type: "UPDATE_PARAMS", params: { ...params, tab: value } });
+  };
   return { toggleValue: state, handleToggleChange, TOGGLE_OPTIONS };
 };
 
-export default function Initial({
-  isSigninViaTwitter,
-  goToSigninScene,
-  onTwitterSignin,
-  goToSignupScene,
-  createVerification,
-  initialEmail,
-  page,
-}) {
-  const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler(page);
+function Initial(
+  {
+    isSigninViaTwitter,
+    goToSigninScene,
+    onTwitterSignin,
+    goToSignupScene,
+    createVerification,
+    initialEmail,
+    showTermsAndServices = false,
+    page,
+    onAction,
+  },
+  ref
+) {
+  const { TOGGLE_OPTIONS, toggleValue, handleToggleChange } = useToggler({
+    params: page.params,
+    onAction,
+  });
 
   // NOTE(amine): Signup view form
-  const { getFieldProps, getFormProps, isSubmitting: isCheckingEmail } = useForm({
+  const {
+    getFieldProps: getSignupFielProps,
+    getFormProps: getSigninFormProps,
+    isSubmitting: isCheckingSignupEmail,
+    submitForm: submitSignupForm,
+  } = useForm({
     validateOnBlur: false,
     initialValues: { email: initialEmail || "" },
     validate: ({ email }, errors) => {
-      if (Strings.isEmpty(email)) {
-        errors.email = "Please provide an email";
-      } else if (!Validations.email(email)) {
-        errors.email = "Invalid email address";
-      }
+      if (Strings.isEmpty(email)) errors.email = "Please provide an email";
+      else if (!Validations.email(email)) errors.email = "Invalid email address";
       return errors;
     },
     onSubmit: async ({ email }) => {
@@ -98,14 +109,16 @@ export default function Initial({
         return;
       }
 
-      const verificationResponse = await createVerification({ email });
-      if (!verificationResponse) return;
+      if (createVerification) {
+        const verificationResponse = await createVerification({ email });
+        if (!verificationResponse) return;
+      }
       goToSignupScene({ email });
     },
   });
 
   // NOTE(amine): Signin view form
-  const { getFieldProps: getSigninFieldProps } = useField({
+  const { getFieldProps: getSigninFieldProps, submitField: submitSigninField } = useField({
     validateOnBlur: false,
     onSubmit: async (emailOrUsername) => goToSigninScene({ emailOrUsername }),
     validate: (emailOrUsername) => {
@@ -113,14 +126,17 @@ export default function Initial({
       if (!Validations.username(emailOrUsername) && !Validations.email(emailOrUsername))
         return "Invalid email/username";
     },
-    initialValue: "",
+    initialValue: initialEmail,
   });
 
+  // NOTE(amine): allow other components to submit this form via a ref
+  React.useImperativeHandle(ref, () => ({
+    submitSignupForm,
+    submitSigninField,
+  }));
+
   return (
-    <SignUpPopover
-      title={<>Discover, experience, share files on Slate</>}
-      style={{ paddingBottom: 24 }}
-    >
+    <SignUpPopover title={<>Your personal search engine</>} style={{ paddingBottom: 24 }}>
       <div css={STYLES_INITIAL_CONTAINER}>
         <div css={STYLES_SPACER} />
         <div
@@ -133,7 +149,7 @@ export default function Initial({
         >
           <System.ButtonPrimary
             full
-            style={{ backgroundColor: "rgb(29,161,242)" }}
+            style={{ backgroundColor: "rgb(29,161,242)", minHeight: 40 }}
             onClick={onTwitterSignin}
             loading={isSigninViaTwitter}
           >
@@ -152,78 +168,69 @@ export default function Initial({
             onChange={handleToggleChange}
           />
         </div>
-        {toggleValue === "signin" ? (
-          <>
+        {toggleValue === "signup" ? (
+          <form {...getSigninFormProps()}>
             <Field
               autoFocus
-              label="Email address or username"
-              placeholder="Email/username"
-              icon={SVG.RightArrow}
-              name="email/username"
+              label="Sign up with email"
+              placeholder="Email"
               type="text"
+              name="email"
               full
-              {...getSigninFieldProps()}
+              style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
               // NOTE(amine): the input component internally is using 16px margin top
               containerStyle={{ marginTop: "4px" }}
+              {...getSignupFielProps("email")}
             />
-
-            <div style={{ marginTop: "auto" }}>
-              <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Terms of service
-                </div>
-              </a>
-
-              <a css={STYLES_LINK_ITEM} style={{ marginTop: 4 }} href="/guidelines" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Community guidelines
-                </div>
-              </a>
-            </div>
-          </>
-        ) : (
-          <AnimateSharedLayout>
-            <form {...getFormProps()}>
-              <Field
-                autoFocus
-                label="Sign up with email"
-                placeholder="Email"
-                type="email"
-                name="email"
-                full
-                style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
-                // NOTE(amine): the input component internally is using 16px margin top
-                containerStyle={{ marginTop: "4px" }}
-                {...getFieldProps("email")}
-              />
-
-              <motion.div layout>
-                <System.ButtonPrimary
-                  full
+            <AnimateSharedLayout>
+              <motion.div
+                layoutId="auth_initial_button_primary"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <System.ButtonPrimaryFull
                   type="submit"
-                  style={{ marginTop: "8px" }}
-                  loading={isCheckingEmail}
+                  style={{ marginTop: 8, minHeight: 40 }}
+                  loading={isCheckingSignupEmail}
                 >
-                  Send verification code
-                </System.ButtonPrimary>
+                  Get verification code
+                </System.ButtonPrimaryFull>
               </motion.div>
-            </form>
-            <div style={{ marginTop: "auto" }}>
-              <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Terms of service
-                </div>
-              </a>
+            </AnimateSharedLayout>
+          </form>
+        ) : (
+          <Field
+            autoFocus
+            label="Email address or username"
+            placeholder="Email/username"
+            icon={ArrowButton}
+            name="email/username"
+            type="text"
+            full
+            {...getSigninFieldProps()}
+            // NOTE(amine): the input component internally is using 16px margin top
+            containerStyle={{ marginTop: "4px" }}
+          />
+        )}
 
-              <a css={STYLES_LINK_ITEM} style={{ marginTop: 4 }} href="/guidelines" target="_blank">
-                <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-                  <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Community guidelines
-                </div>
-              </a>
-            </div>
-          </AnimateSharedLayout>
+        {showTermsAndServices && (
+          <div style={{ marginTop: "auto" }}>
+            <a css={STYLES_LINK_ITEM} href="/terms" target="_blank">
+              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Terms of service
+              </div>
+            </a>
+
+            <a css={STYLES_LINK_ITEM} style={{ marginTop: 4 }} href="/guidelines" target="_blank">
+              <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+                <SVG.RightArrow height="16px" style={{ marginRight: 4 }} /> Community guidelines
+              </div>
+            </a>
+          </div>
         )}
       </div>
     </SignUpPopover>
   );
 }
+
+export default React.forwardRef(Initial);

@@ -48,6 +48,8 @@ export const useUploadStore = create((setUploadState) => {
             createdAt: Date.now(),
             loaded: 0,
             total: file.size,
+            isLink: file.isLink || false,
+            isBlob: file.isBlob || false,
             blob: file,
           },
         },

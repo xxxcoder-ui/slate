@@ -17,7 +17,7 @@ export const useMounted = (callback, depedencies) => {
   }, depedencies);
 };
 /** NOTE(amine):
- * useForm handles three main responsabilities
+ * useForm handles three main responsibilities
  *  - control inputs
  *  - control form
  *  - add validations
@@ -52,13 +52,33 @@ export const useForm = ({
       });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
-  const handleFieldChange = (e) =>
+  const createOnChangeHandler = (type) => (e) => {
+    const prevValue = state.values[e.target.name];
+    const fieldError = { [e.target.name]: undefined };
+    const fieldTouched = { [e.target.name]: false };
+
+    if (type === "checkbox" && Array.isArray(prevValue)) {
+      const targetValue = e.target.value;
+      const newValue = prevValue.some((value) => value === targetValue)
+        ? prevValue.filter((value) => value !== targetValue)
+        : [...prevValue, targetValue];
+
+      setState((prev) => ({
+        ...prev,
+        values: { ...prev.values, [e.target.name]: newValue },
+        errors: { ...prev.errors, ...fieldError },
+        touched: { ...prev.touched, ...fieldTouched },
+      }));
+      return;
+    }
+
     setState((prev) => ({
       ...prev,
       values: { ...prev.values, [e.target.name]: e.target.value },
-      errors: { ...prev.errors, [e.target.name]: undefined },
-      touched: { ...prev.touched, [e.target.name]: false },
+      errors: { ...prev.errors, ...fieldError },
+      touched: { ...prev.touched, ...fieldTouched },
     }));
+  };
 
   const handleOnBlur = async (e) => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
@@ -81,12 +101,12 @@ export const useForm = ({
   };
 
   // Note(Amine): this prop getter will capture the field state
-  const getFieldProps = (name, { onChange, onBlur, error } = {}) => ({
+  const getFieldProps = (name, { type = "text", onChange, onBlur, error } = {}) => ({
     name: name,
     value: state.values[name],
     error: error || state.errors[name],
-    touched: state.touched[name],
-    onChange: _mergeEventHandlers([onChange, handleFieldChange]),
+    touched: state?.touched?.[name],
+    onChange: _mergeEventHandlers([onChange, createOnChangeHandler(type)]),
     onBlur: _mergeEventHandlers([onBlur, handleOnBlur]),
   });
 
@@ -107,7 +127,7 @@ export const useForm = ({
       let errors = {};
       try {
         setInternal((prev) => ({ ...prev, isValidating: true }));
-        errors = await validate(state.values, { ...state.errors });
+        errors = await validate(state.values, {});
         if (_hasError(errors)) return;
       } catch (e) {
         Logging.error(e);
@@ -136,7 +156,7 @@ export const useForm = ({
       .catch((e) => Logging.error(e));
   };
 
-  // Note(Amine): this prop getter will overide the form onSubmit handler
+  // Note(Amine): this prop getter will override the form onSubmit handler
   const getFormProps = () => ({
     onSubmit: handleFormOnSubmit,
   });
@@ -144,6 +164,7 @@ export const useForm = ({
   return {
     getFieldProps,
     getFormProps,
+    submitForm: submitAsync,
     values: state.values,
     isSubmitting: internal.isSubmitting,
     isValidating: internal.isValidating,
@@ -227,7 +248,13 @@ export const useField = ({
     onSubmit: handleFormOnSubmit,
   });
 
-  return { getFieldProps, value: state.value, setFieldValue, isSubmitting: state.isSubmitting };
+  return {
+    getFieldProps,
+    submitField: handleFormOnSubmit,
+    value: state.value,
+    setFieldValue,
+    isSubmitting: state.isSubmitting,
+  };
 };
 
 export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
@@ -465,3 +492,28 @@ export const useCache = () => {
   const setCache = ({ key, value }) => (cache[key] = value);
   return [cache, setCache];
 };
+
+// NOTE(amine): Slate extension will notify the app that it is installed, by injecting isDownloaded class to the element with browser_extension as its id
+const checkIfExtensionIsDownloaded = () => {
+  const extensionElement = document.getElementById("browser_extension");
+  if (!extensionElement) return false;
+  return extensionElement.className.includes("isDownloaded");
+};
+export const useCheckIfExtensionIsInstalled = () => {
+  const [isExtensionDownloaded, setExtensionDownload] = React.useState(false);
+
+  React.useEffect(() => {
+    if (document) {
+      const isExtensionDownloaded = checkIfExtensionIsDownloaded();
+      setExtensionDownload(isExtensionDownloaded);
+    }
+  }, []);
+
+  return { isExtensionDownloaded };
+};
+
+export const useLocalStorage = (key) => ({
+  setItem: (value) => localStorage?.setItem(key, value),
+  getItem: () => localStorage?.getItem(key),
+  removeItem: () => localStorage?.removeItem(key),
+});

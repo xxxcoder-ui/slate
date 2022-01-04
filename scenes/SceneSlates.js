@@ -79,15 +79,17 @@ export default class SceneSlates extends React.Component {
                   ))}
                 </div>
               ) : (
-                <EmptyState>
-                  <FileTypeGroup />
-                  <div style={{ marginTop: 24 }}>
-                    Use collections to create mood boards, share files, and organize research.
-                  </div>
-                  <ButtonSecondary onClick={this._handleAdd} style={{ marginTop: 32 }}>
-                    Create collection
-                  </ButtonSecondary>
-                </EmptyState>
+                <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
+                  <EmptyState>
+                    <FileTypeGroup />
+                    <div style={{ marginTop: 24 }}>
+                      Use collections to create mood boards, share files, and organize research.
+                    </div>
+                    <ButtonSecondary onClick={this._handleAdd} style={{ marginTop: 32 }}>
+                      Create collection
+                    </ButtonSecondary>
+                  </EmptyState>
+                </div>
               )
             ) : null}
 
