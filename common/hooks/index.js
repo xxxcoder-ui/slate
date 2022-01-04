@@ -450,7 +450,8 @@ export const useImage = ({ src, maxWidth }) => {
     if (!src) setImgState({ error: true, loaded: true });
 
     const img = new Image();
-    img.src = src;
+    // NOTE(amine): setting img.src to null will redirect the app to /_/null
+    img.src = src || "";
 
     img.onload = () => {
       if (maxWidth && img.naturalWidth < maxWidth) {
