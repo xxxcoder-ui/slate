@@ -48,14 +48,14 @@ const useSearchViaParams = ({ params, handleSearch }) => {
   }, [params.s]);
 };
 
-const useDebouncedSearch = ({ handleSearch }) => {
-  const { query } = useSearchStore();
-
+const useDebouncedOnChange = ({ setQuery, handleSearch }) => {
   const timeRef = React.useRef();
-  React.useEffect(() => {
-    timeRef.current = setTimeout(() => handleSearch(query), 300);
-    return () => clearTimeout(timeRef.current);
-  }, [query]);
+  const handleChange = (e) => {
+    clearTimeout(timeRef.current);
+    const { value } = e.target;
+    timeRef.current = setTimeout(() => (setQuery(value), handleSearch(value)), 300);
+  };
+  return handleChange;
 };
 
 function Input({ viewer, data, page, onAction }) {
@@ -124,7 +124,7 @@ function Input({ viewer, data, page, onAction }) {
 
   useSearchViaParams({ params: page.params, onAction, handleSearch });
 
-  useDebouncedSearch({ handleSearch });
+  const handleChange = useDebouncedOnChange({ setQuery, handleSearch });
 
   return (
     <div
@@ -146,8 +146,7 @@ function Input({ viewer, data, page, onAction }) {
         name="search"
         placeholder={`Search ${!viewer ? "slate.host" : ""}`}
         onSubmit={() => handleSearch(query)}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleChange}
       />
     </div>
   );
