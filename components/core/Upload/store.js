@@ -161,7 +161,9 @@ export const useUploadStore = create((setUploadState) => {
     onError: handleError,
   });
 
-  const resetUploadState = () => (uploadProvider.clearUploadCache(), setUploadState(DEFAULT_STATE));
+  const resetUploadState = () => (
+    uploadProvider.clearUploadCache(), setUploadState((prev) => ({ ...prev, state: DEFAULT_STATE }))
+  );
 
   return {
     state: DEFAULT_STATE,
