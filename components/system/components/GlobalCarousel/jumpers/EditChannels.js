@@ -113,7 +113,15 @@ const STYLES_SEARCH_TAGS_INPUT_WRAPPER = (theme) => css`
 
 function ChannelInput({ value, searchResults, onChange, onAddFileToChannel, ...props }) {
   const { publicChannels, privateChannels } = searchResults;
-  const showShortcut = publicChannels.length + privateChannels.length === 1;
+  const [isShortcutVisible, setShortcutVisibility] = React.useState();
+
+  React.useEffect(() => {
+    if (value && publicChannels.length + privateChannels.length === 1) {
+      setShortcutVisibility(true);
+    } else {
+      setShortcutVisibility(false);
+    }
+  }, [value]);
 
   return (
     <div css={[STYLES_SEARCH_TAGS_INPUT_WRAPPER, Styles.CONTAINER_CENTERED]}>
@@ -129,7 +137,7 @@ function ChannelInput({ value, searchResults, onChange, onAddFileToChannel, ...p
           {...props}
         />
         <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", right: 20 }}>
-          {showShortcut ? (
+          {isShortcutVisible ? (
             <ChannelKeyboardShortcut
               searchQuery={value}
               searchResults={searchResults}
