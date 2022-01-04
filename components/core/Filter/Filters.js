@@ -108,14 +108,18 @@ const FilterSection = React.forwardRef(({ title, children, ...props }, ref) => {
         </Tooltip.Root>
       )}
       {isExpanded ? (
-        <motion.ul
-          layoutId={title + "section"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          css={STYLES_FILTERS_GROUP}
-        >
-          {children}
-        </motion.ul>
+        <RovingTabIndex.Provider axis="vertical">
+          <RovingTabIndex.List>
+            <motion.ul
+              layoutId={title + "section"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              css={STYLES_FILTERS_GROUP}
+            >
+              {children}
+            </motion.ul>
+          </RovingTabIndex.List>
+        </RovingTabIndex.Provider>
       ) : null}
     </div>
   );
@@ -151,27 +155,23 @@ function Tags({ viewer, data, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <RovingTabIndex.Provider axis="vertical">
-      <RovingTabIndex.List>
-        <FilterSection title="Tags" {...props}>
-          {viewer.slates.map((slate, index) => (
-            <li key={slate.id}>
-              <RovingTabIndex.Item index={index}>
-                <FilterButton
-                  href={`/$/slate/${slate.id}`}
-                  isSelected={slate.id === data?.id}
-                  onAction={onAction}
-                  Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
-                  onClick={hidePopup}
-                >
-                  {slate.slatename}
-                </FilterButton>
-              </RovingTabIndex.Item>
-            </li>
-          ))}
-        </FilterSection>
-      </RovingTabIndex.List>
-    </RovingTabIndex.Provider>
+    <FilterSection title="Tags" {...props}>
+      {viewer.slates.map((slate, index) => (
+        <li key={slate.id}>
+          <RovingTabIndex.Item index={index}>
+            <FilterButton
+              href={`/$/slate/${slate.id}`}
+              isSelected={slate.id === data?.id}
+              onAction={onAction}
+              Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
+              onClick={hidePopup}
+            >
+              {slate.slatename}
+            </FilterButton>
+          </RovingTabIndex.Item>
+        </li>
+      ))}
+    </FilterSection>
   );
 }
 

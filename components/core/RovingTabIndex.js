@@ -1,7 +1,8 @@
 import * as React from "react";
 
+import { jsx } from "@emotion/react";
 import { mergeRefs } from "~/common/utilities";
-import { useEventListener, useMounted } from "~/common/hooks";
+import { useEventListener } from "~/common/hooks";
 
 /* -------------------------------------------------------------------------------------------------
  * RovingTabIndex Provider
@@ -16,27 +17,36 @@ export function Provider({ axis, children }) {
   const [focusedIndex, setFocusedIndex] = React.useState(initialIndex);
 
   const registerItem = ({ index, ref }) => (focusedElementsRefs.current[index] = ref);
-  const cleanupItem = (index) => delete focusedElementsRefs.current[index];
+  const cleanupItem = (index) => {
+    if (index === focusedIndex) {
+      setFocusedIndex(initialIndex);
+    }
+    delete focusedElementsRefs.current[index];
+  };
+
+  const focusElement = (index) => {
+    const focusedElementRef = focusedElementsRefs.current[index];
+    focusedElementRef?.current?.focus();
+  };
 
   const setIndexToNextElement = () => {
     const nextIndex = focusedIndex + 1;
     const elementsExists = focusedElementsRefs.current[nextIndex];
-    setFocusedIndex(elementsExists ? nextIndex : initialIndex);
+    const nextFocusedIndex = elementsExists ? nextIndex : initialIndex;
+    setFocusedIndex(nextFocusedIndex);
+    focusElement(nextFocusedIndex);
   };
   const setIndexPreviousElement = () => {
     const prevIndex = focusedIndex - 1;
+    let prevFocusedIndex = null;
     if (prevIndex >= initialIndex) {
-      setFocusedIndex(prevIndex);
-      return;
+      prevFocusedIndex = prevIndex;
+    } else {
+      prevFocusedIndex = Math.max(...Object.keys(focusedElementsRefs.current));
     }
-    const lastIndex = Math.max(...Object.keys(focusedElementsRefs.current));
-    setFocusedIndex(lastIndex);
+    setFocusedIndex(prevFocusedIndex);
+    focusElement(prevFocusedIndex);
   };
-
-  useMounted(() => {
-    const focusedElementRef = focusedElementsRefs.current[focusedIndex];
-    focusedElementRef?.current?.focus();
-  }, [focusedIndex]);
 
   const contextValue = React.useMemo(
     () => [
@@ -71,13 +81,11 @@ const useRovingHandler = ({ ref }) => {
   });
 };
 
-export const List = React.forwardRef(({ children }, forwardedRef) => {
+export const List = React.forwardRef(({ as = "div", children, ...props }, forwardedRef) => {
   const ref = React.useRef();
   useRovingHandler({ ref });
 
-  return React.cloneElement(React.Children.only(children), {
-    ref: mergeRefs([ref, children.ref, forwardedRef]),
-  });
+  return jsx(as, { ...props, ref: mergeRefs([ref, forwardedRef]) }, children);
 });
 
 /* -------------------------------------------------------------------------------------------------

@@ -203,25 +203,25 @@ function Channels({
 
       <AnimateSharedLayout>
         <RovingTabIndex.Provider axis="horizontal">
-          <RovingTabIndex.List>
-            <div css={STYLES_CHANNEL_BUTTONS_WRAPPER}>
-              {channels.map((channel, index) => (
-                <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.id}>
-                  <RovingTabIndex.Item index={index}>
-                    <ChannelButton
-                      isSelected={channel.doesContainFile}
-                      onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
-                      title={channel.slatename}
-                      style={{ maxWidth: "48ch" }}
-                    >
-                      {channel.slatename}
-                    </ChannelButton>
-                  </RovingTabIndex.Item>
-                </motion.div>
-              ))}
+          <RovingTabIndex.List css={STYLES_CHANNEL_BUTTONS_WRAPPER}>
+            {channels.map((channel, index) => (
+              <motion.div layoutId={`jumper-${channel.id}`} initial={false} key={channel.id}>
+                <RovingTabIndex.Item index={index}>
+                  <ChannelButton
+                    isSelected={channel.doesContainFile}
+                    onClick={() => onAddFileToChannel(channel, channel.doesContainFile)}
+                    title={channel.slatename}
+                    style={{ maxWidth: "48ch" }}
+                  >
+                    {channel.slatename}
+                  </ChannelButton>
+                </RovingTabIndex.Item>
+              </motion.div>
+            ))}
 
-              <Show when={isCreatingChannel}>
-                <motion.div initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }}>
+            <Show when={isCreatingChannel}>
+              <motion.div initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }}>
+                <RovingTabIndex.Item index={channels.length}>
                   <ChannelButton
                     css={Styles.HORIZONTAL_CONTAINER_CENTERED}
                     onClick={(e) => (e.stopPropagation(), onCreateChannel(searchQuery))}
@@ -240,9 +240,9 @@ function Channels({
                     />
                     <span style={{ marginLeft: 4 }}>{searchQuery}</span>
                   </ChannelButton>
-                </motion.div>
-              </Show>
-            </div>
+                </RovingTabIndex.Item>
+              </motion.div>
+            </Show>
           </RovingTabIndex.List>
         </RovingTabIndex.Provider>
       </AnimateSharedLayout>
