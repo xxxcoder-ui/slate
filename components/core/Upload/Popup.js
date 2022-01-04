@@ -12,6 +12,7 @@ import { Show } from "~/components/utility/Show";
 import { useHover } from "~/common/hooks";
 import { clamp } from "lodash";
 import { useUploadStore } from "~/components/core/Upload/store";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import DataMeter from "~/components/core/DataMeter";
 import BlobObjectPreview from "~/components/core/BlobObjectPreview";
@@ -27,7 +28,6 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   bottom: 24px;
   right: 24px;
   z-index: ${theme.zindex.tooltip};
-  box-shadow: ${theme.shadow.lightLarge};
 `;
 
 const STYLES_DISMISS_BUTTON = (theme) => css`
@@ -391,11 +391,15 @@ function Summary({ uploadSummary }) {
                 }
               >
                 <Match when={file.status === "uploading"}>
-                  <DataMeter
-                    bytes={file.loaded}
-                    maximumBytes={file.total}
-                    style={{ maxWidth: 84, marginTop: 2 }}
-                  />
+                  {file.isLink ? (
+                    <LoaderSpinner style={{ height: 12, width: 12 }} />
+                  ) : (
+                    <DataMeter
+                      bytes={file.loaded}
+                      maximumBytes={file.total}
+                      style={{ maxWidth: 84, marginTop: 2 }}
+                    />
+                  )}
                 </Match>
                 <Match when={file.status === "failed"}>
                   <System.P3 color="red">failed</System.P3>
