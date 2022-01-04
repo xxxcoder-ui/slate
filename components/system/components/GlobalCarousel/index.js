@@ -17,7 +17,6 @@ import {
   useDetectTextOverflow,
   useEscapeKey,
   useEventListener,
-  useIsomorphicLayoutEffect,
   useLockScroll,
 } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
@@ -50,7 +49,7 @@ const VisitLinkButton = ({ file }) => {
       rel="noreferrer"
       type="link"
     >
-      <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} />
+      <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} key={file.id} />
       <span style={{ whiteSpace: "nowrap" }}>Visit site</span>
     </System.ButtonTertiary>
   );
@@ -142,7 +141,6 @@ const useCarouselJumperControls = () => {
 
 const STYLES_HEADER_WRAPPER = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
-  position: absolute;
   width: 100%;
   min-height: 64px;
   padding: 13px 24px 10px;
@@ -243,42 +241,6 @@ function CarouselHeader({
   };
   useEventListener({ type: "keyup", handler: handleKeyDown });
 
-  const isJumperOpen =
-    isFileDescriptionVisible ||
-    isMoreInfoVisible ||
-    isEditInfoVisible ||
-    isShareFileVisible ||
-    isEditChannelsVisible;
-
-  const [isHeaderVisible, setHeaderVisibility] = React.useState(true);
-  const timeoutRef = React.useRef();
-
-  const showHeader = () => {
-    clearTimeout(timeoutRef.current);
-    setHeaderVisibility(true);
-  };
-
-  const hideHeader = (ms = 1000) => {
-    timeoutRef.current = setTimeout(() => {
-      if (isJumperOpen) return;
-      setHeaderVisibility(false);
-    }, ms);
-  };
-
-  React.useEffect(() => {
-    hideHeader(3000);
-    return () => clearTimeout(timeoutRef.current);
-  }, []);
-
-  useIsomorphicLayoutEffect(() => {
-    if (isJumperOpen) {
-      showHeader();
-      return;
-    }
-
-    hideHeader();
-  }, [isJumperOpen]);
-
   const headerRef = React.useRef();
   React.useEffect(() => {
     if (headerRef.current) headerRef.current.focus();
@@ -320,18 +282,7 @@ function CarouselHeader({
         />
       </ModalPortal>
 
-      <motion.nav
-        css={STYLES_HEADER_WRAPPER}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHeaderVisible ? 1 : 0 }}
-        transition={{ ease: "easeInOut", duration: 0.25 }}
-        onMouseEnter={showHeader}
-        onMouseOver={showHeader}
-        onMouseLeave={hideHeader}
-        onFocus={showHeader}
-        onBlur={hideHeader}
-        {...props}
-      >
+      <nav css={STYLES_HEADER_WRAPPER} {...props}>
         <div>
           <div css={Styles.HORIZONTAL_CONTAINER}>
             <System.H5
@@ -483,20 +434,14 @@ function CarouselHeader({
             </div>
           )}
         </div>
-      </motion.nav>
+      </nav>
 
       <CarouselControls
         enableNextSlide={enableNextSlide}
         enablePreviousSlide={enablePreviousSlide}
         onNextSlide={onNextSlide}
         onPreviousSlide={onPreviousSlide}
-        showControls={isHeaderVisible}
         onClose={onClose}
-        onMouseEnter={showHeader}
-        onMouseOver={showHeader}
-        onMouseLeave={hideHeader}
-        onFocus={showHeader}
-        onBlur={hideHeader}
       />
     </>
   );
@@ -783,10 +728,7 @@ function CarouselControls({
   enablePreviousSlide,
   onNextSlide,
   onPreviousSlide,
-  showControls,
   onClose,
-
-  ...props
 }) {
   useCarouselKeyCommands({
     handleNext: onNextSlide,
@@ -794,19 +736,41 @@ function CarouselControls({
     handleClose: onClose,
   });
 
+  const [areControlsVisible, setCarouselVisibility] = React.useState(true);
+  const timeoutRef = React.useRef();
+
+  const showControls = () => {
+    clearTimeout(timeoutRef.current);
+    setCarouselVisibility(true);
+  };
+
+  const hideControls = (ms = 1000) => {
+    timeoutRef.current = setTimeout(() => {
+      setCarouselVisibility(false);
+    }, ms);
+  };
+
+  React.useEffect(() => {
+    hideControls(3000);
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
   return (
     <>
       <div
         css={STYLES_CONTROLS_WRAPPER}
         style={{ left: 0, justifyContent: "flex-start" }}
-        {...props}
+        onMouseEnter={showControls}
+        onMouseLeave={hideControls}
+        onFocus={showControls}
+        onBlur={hideControls}
       >
         {enablePreviousSlide ? (
           <System.ButtonPrimitive
             as={motion.button}
             onClick={onPreviousSlide}
             initial={{ opacity: 0 }}
-            animate={{ opacity: showControls ? 1 : 0 }}
+            animate={{ opacity: areControlsVisible ? 1 : 0 }}
             transition={{ ease: "easeInOut", duration: 0.25 }}
             css={STYLES_CONTROLS_BUTTON}
             aria-label="previous slide"
@@ -818,14 +782,17 @@ function CarouselControls({
       <div
         css={STYLES_CONTROLS_WRAPPER}
         style={{ right: 0, justifyContent: "flex-end" }}
-        {...props}
+        onMouseEnter={showControls}
+        onMouseLeave={hideControls}
+        onFocus={showControls}
+        onBlur={hideControls}
       >
         {enableNextSlide ? (
           <System.ButtonPrimitive
             as={motion.button}
             onClick={onNextSlide}
             initial={{ opacity: 0 }}
-            animate={{ opacity: showControls ? 1 : 0 }}
+            animate={{ opacity: areControlsVisible ? 1 : 0 }}
             css={STYLES_CONTROLS_BUTTON}
             aria-label="next slide"
           >
