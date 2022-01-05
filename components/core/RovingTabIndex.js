@@ -66,13 +66,14 @@ const useRovingHandler = ({ ref }) => {
   const [{ axis }, { setIndexToNextElement, setIndexPreviousElement }] = useRovingIndexContext();
 
   const keydownHandler = (e) => {
+    const preventDefaults = () => (e.preventDefault(), e.stopPropagation());
     if (axis === "vertical") {
-      if (e.key === "ArrowUp") e.preventDefault(), setIndexPreviousElement();
-      if (e.key === "ArrowDown") e.preventDefault(), setIndexToNextElement();
+      if (e.key === "ArrowUp") preventDefaults(), setIndexPreviousElement();
+      if (e.key === "ArrowDown") preventDefaults(), e.stopPropagation(), setIndexToNextElement();
       return;
     }
-    if (e.key === "ArrowLeft") e.preventDefault(), setIndexPreviousElement();
-    if (e.key === "ArrowRight") e.preventDefault(), setIndexToNextElement();
+    if (e.key === "ArrowLeft") preventDefaults(), setIndexPreviousElement();
+    if (e.key === "ArrowRight") preventDefaults(), setIndexToNextElement();
   };
   useEventListener({
     type: "keydown",
