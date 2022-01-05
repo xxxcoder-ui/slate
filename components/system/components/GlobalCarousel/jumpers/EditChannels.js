@@ -76,7 +76,7 @@ function ChannelKeyboardShortcut({ searchResults, searchQuery, onAddFileToChanne
   });
 
   // NOTE(amine): don't show the 'select channel ⏎' hint when the channel is created optimistically
-  if (isFileAdded || !selectedChannel.ownerId) return null;
+  if (isFileAdded || !selectedChannel?.ownerId) return null;
 
   return (
     <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
@@ -433,7 +433,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, ...props }) {
                 channels={isSearching ? searchResults.privateChannels : privateChannels}
                 searchQuery={searchQuery}
                 onAddFileToChannel={handleAddFileToChannel}
-                onCreateChannel={handleCreateChannel(false)}
+                onCreateChannel={(query) => (handleCreateChannel(false)(query), clearQuery())}
                 file={file}
                 viewer={viewer}
               />
@@ -445,7 +445,7 @@ export function EditChannels({ file, viewer, isOpen, onClose, ...props }) {
                   isCreatingChannel={isSearching && !channelAlreadyExists}
                   channels={isSearching ? searchResults.publicChannels : publicChannels}
                   onAddFileToChannel={handleAddFileToChannel}
-                  onCreateChannel={handleCreateChannel(true)}
+                  onCreateChannel={(query) => (handleCreateChannel(true)(query), clearQuery())}
                 />
               </div>
             </Jumper.Item>
@@ -501,7 +501,7 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
               channels={isSearching ? searchResults.privateChannels : privateChannels}
               searchQuery={searchQuery}
               onAddFileToChannel={handleAddFileToChannel}
-              onCreateChannel={handleCreateChannel(false)}
+              onCreateChannel={(query) => (handleCreateChannel(false)(query), clearQuery())}
             />
             <div style={{ marginTop: 20 }}>
               <Channels
@@ -511,7 +511,7 @@ export function EditChannelsMobile({ file, viewer, isOpen, onClose }) {
                 isCreatingChannel={isSearching && !channelAlreadyExists}
                 channels={isSearching ? searchResults.publicChannels : publicChannels}
                 onAddFileToChannel={handleAddFileToChannel}
-                onCreateChannel={handleCreateChannel(true)}
+                onCreateChannel={(query) => (handleCreateChannel(true)(query), clearQuery())}
               />
             </div>
           </MobileJumper.Content>
