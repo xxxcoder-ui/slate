@@ -63,7 +63,21 @@ class LinkPrimitive extends React.Component {
   };
 
   render() {
-    const { style, innerRef, css, target, href, title, children, ...props } = this.props;
+    const {
+      redirect,
+      callback,
+      params,
+      onAction,
+      onUpdate,
+      style,
+      css,
+      innerRef,
+      target,
+      href,
+      title,
+      children,
+      ...props
+    } = this.props;
     return (
       <span onClick={this._handleClick}>
         <a
