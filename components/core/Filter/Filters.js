@@ -15,8 +15,8 @@ import { css } from "@emotion/react";
 import { useFilterContext } from "~/components/core/Filter/Provider";
 import { Link } from "~/components/core/Link";
 import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
-import { motion } from "framer-motion";
 import { FocusRing } from "../FocusRing";
+import { Show } from "~/components/utility/Show";
 
 /* -------------------------------------------------------------------------------------------------
  *  Shared components between filters
@@ -77,7 +77,7 @@ const FilterButton = React.forwardRef(({ children, Icon, image, isSelected, ...p
   </Link>
 ));
 
-const FilterSection = React.forwardRef(({ title, children, ...props }, ref) => {
+const FilterSection = React.forwardRef(({ title, children, emptyState, ...props }, ref) => {
   const [isExpanded, setExpanded] = React.useState(true);
   const toggleExpandState = () => setExpanded((prev) => !prev);
 
@@ -89,7 +89,7 @@ const FilterSection = React.forwardRef(({ title, children, ...props }, ref) => {
           <Tooltip.Trigger aria-describedby={titleButtonId} aria-expanded={isExpanded}>
             <FocusRing>
               <Typography.H6
-                as={motion.button}
+                as="button"
                 layoutId={title + "title"}
                 css={STYLES_FILTER_TITLE_BUTTON}
                 style={{ paddingLeft: 8, marginBottom: 4 }}
@@ -108,25 +108,26 @@ const FilterSection = React.forwardRef(({ title, children, ...props }, ref) => {
         </Tooltip.Root>
       )}
       {isExpanded ? (
-        <RovingTabIndex.Provider axis="vertical">
-          <RovingTabIndex.List>
-            <motion.ul
-              layoutId={title + "section"}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              css={STYLES_FILTERS_GROUP}
-            >
-              {children}
-            </motion.ul>
-          </RovingTabIndex.List>
-        </RovingTabIndex.Provider>
+        Array.isArray(children) && children?.length === 0 ? (
+          <Show when={emptyState}>
+            <System.P2 color="textGrayDark" style={{ paddingLeft: "8px" }}>
+              {emptyState}
+            </System.P2>
+          </Show>
+        ) : (
+          <RovingTabIndex.Provider axis="vertical">
+            <RovingTabIndex.List>
+              <ul css={STYLES_FILTERS_GROUP}>{children}</ul>
+            </RovingTabIndex.List>
+          </RovingTabIndex.Provider>
+        )
       ) : null}
     </div>
   );
 });
 
 /* -------------------------------------------------------------------------------------------------
- *  InitialFilters
+ *  Library
  * -----------------------------------------------------------------------------------------------*/
 
 function Library({ page, onAction }) {
@@ -151,11 +152,19 @@ function Library({ page, onAction }) {
   );
 }
 
+/* -------------------------------------------------------------------------------------------------
+ *  Tags
+ * -----------------------------------------------------------------------------------------------*/
+
 function Tags({ viewer, data, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <FilterSection title="Tags" {...props}>
+    <FilterSection
+      title="Tags"
+      emptyState="when you tag a file, that tag will automatically show up here"
+      {...props}
+    >
       {viewer.slates.map((slate, index) => (
         <li key={slate.id}>
           <RovingTabIndex.Item index={index}>
@@ -175,34 +184,38 @@ function Tags({ viewer, data, onAction, ...props }) {
   );
 }
 
+/* -------------------------------------------------------------------------------------------------
+ *  Following
+ * -----------------------------------------------------------------------------------------------*/
+
 function Following({ viewer, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <RovingTabIndex.Provider axis="vertical">
-      <RovingTabIndex.List>
-        <FilterSection title="Following" {...props}>
-          {viewer.following.map((user, index) => (
-            <li key={user.id}>
-              <RovingTabIndex.Item index={index}>
-                <FilterButton
-                  href={`/${user.username}`}
-                  isSelected={false}
-                  onAction={onAction}
-                  // Icon={SVG.ProfileUser}
-                  image={<ProfilePhoto user={user} style={{ borderRadius: "8px" }} size={20} />}
-                  onClick={hidePopup}
-                >
-                  {user.username}
-                </FilterButton>
-              </RovingTabIndex.Item>
-            </li>
-          ))}
-        </FilterSection>
-      </RovingTabIndex.List>
-    </RovingTabIndex.Provider>
+    <FilterSection title="Following" emptyState="follow users to see them here" {...props}>
+      {viewer.following.map((user, index) => (
+        <li key={user.id}>
+          <RovingTabIndex.Item index={index}>
+            <FilterButton
+              href={`/${user.username}`}
+              isSelected={false}
+              onAction={onAction}
+              // Icon={SVG.ProfileUser}
+              image={<ProfilePhoto user={user} style={{ borderRadius: "8px" }} size={20} />}
+              onClick={hidePopup}
+            >
+              {user.username}
+            </FilterButton>
+          </RovingTabIndex.Item>
+        </li>
+      ))}
+    </FilterSection>
   );
 }
+
+/* -------------------------------------------------------------------------------------------------
+ *  Profile
+ * -----------------------------------------------------------------------------------------------*/
 
 function Profile({ viewer, data, page, ...props }) {
   if (page.id === "NAV_SLATE") {
@@ -288,6 +301,10 @@ function Profile({ viewer, data, page, ...props }) {
   );
 }
 
+/* -------------------------------------------------------------------------------------------------
+ *  ProfileTags
+ * -----------------------------------------------------------------------------------------------*/
+
 function ProfileTags({ data, page, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
@@ -297,27 +314,23 @@ function ProfileTags({ data, page, onAction, ...props }) {
   }
 
   return (
-    <RovingTabIndex.Provider axis="vertical">
-      <RovingTabIndex.List>
-        <FilterSection {...props}>
-          {user?.slates?.map((slate, index) => (
-            <li key={slate.id}>
-              <RovingTabIndex.Item index={index}>
-                <FilterButton
-                  href={`/$/slate/${slate.id}`}
-                  isSelected={slate.id === data?.id}
-                  onAction={onAction}
-                  Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
-                  onClick={hidePopup}
-                >
-                  {slate.slatename}
-                </FilterButton>
-              </RovingTabIndex.Item>
-            </li>
-          ))}
-        </FilterSection>
-      </RovingTabIndex.List>
-    </RovingTabIndex.Provider>
+    <FilterSection {...props}>
+      {user?.slates?.map((slate, index) => (
+        <li key={slate.id}>
+          <RovingTabIndex.Item index={index}>
+            <FilterButton
+              href={`/$/slate/${slate.id}`}
+              isSelected={slate.id === data?.id}
+              onAction={onAction}
+              Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
+              onClick={hidePopup}
+            >
+              {slate.slatename}
+            </FilterButton>
+          </RovingTabIndex.Item>
+        </li>
+      ))}
+    </FilterSection>
   );
 }
 
