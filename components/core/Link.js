@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Logging from "~/common/logging";
 
-export class Link extends React.Component {
+class LinkPrimitive extends React.Component {
   state = {
     href: this.props.href
       ? this.props.href
@@ -63,6 +63,21 @@ export class Link extends React.Component {
   };
 
   render() {
+    const {
+      redirect,
+      callback,
+      params,
+      onAction,
+      onUpdate,
+      style,
+      css,
+      innerRef,
+      target,
+      href,
+      title,
+      children,
+      ...props
+    } = this.props;
     return (
       <span onClick={this._handleClick}>
         <a
@@ -70,17 +85,20 @@ export class Link extends React.Component {
             textDecoration: "none",
             color: "inherit",
             cursor: "pointer",
-            ...this.props.style,
+            ...style,
           }}
-          css={this.props.css}
-          target={this.props.target}
-          href={this.state.href}
-          aria-label={this.props["aria-label"]}
-          title={this.props.title}
+          ref={innerRef}
+          css={css}
+          target={target}
+          href={href}
+          title={title}
+          {...props}
         >
-          {this.props.children}
+          {children}
         </a>
       </span>
     );
   }
 }
+
+export const Link = React.forwardRef((props, ref) => <LinkPrimitive {...props} innerRef={ref} />);

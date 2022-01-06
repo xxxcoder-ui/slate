@@ -482,6 +482,7 @@ class SlatePage extends React.Component {
                 view={"grid"}
                 isOwner={isOwner}
                 page={this.props.page}
+                isMobile={this.props.isMobile}
               />
             </div>
           </>

@@ -1,4 +1,3 @@
-import { has } from "lodash";
 import * as React from "react";
 import * as Actions from "~/common/actions";
 import * as Events from "~/common/custom-events";

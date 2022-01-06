@@ -2,13 +2,13 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
-import * as Constants from "~/common/constants";
 
 import { css } from "@emotion/react";
 import { FullHeightLayout } from "~/components/system/components/FullHeightLayout";
 import { motion, AnimatePresence as FramerAnimatePresence } from "framer-motion";
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { useLockScroll } from "~/common/hooks";
+import { useRestoreFocus, useTrapFocus } from "~/common/hooks/a11y";
 
 /* -------------------------------------------------------------------------------------------------
  *  AnimatePresence
@@ -42,8 +42,12 @@ const STYLES_JUMPER_MOBILE_WRAPPER = (theme) => css`
 const JumperContext = React.createContext({});
 const useJumperContext = () => React.useContext(JumperContext);
 
-function Root({ children, onClose, withDismissButton = true, ...props }) {
+function Root({ children, onClose, ...props }) {
   useLockScroll();
+
+  const wrapperRef = React.useRef();
+  useTrapFocus({ ref: wrapperRef });
+  useRestoreFocus();
 
   return (
     <ModalPortal>
@@ -54,11 +58,10 @@ function Root({ children, onClose, withDismissButton = true, ...props }) {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
         css={[STYLES_JUMPER_MOBILE_WRAPPER, css]}
+        ref={wrapperRef}
         {...props}
       >
-        <JumperContext.Provider value={{ onClose, withDismissButton }}>
-          {children}
-        </JumperContext.Provider>
+        <JumperContext.Provider value={{ onClose }}>{children}</JumperContext.Provider>
       </FullHeightLayout>
     </ModalPortal>
   );
@@ -75,26 +78,38 @@ const STYLES_JUMPER_MOBILE_HEADER = css`
 `;
 
 function Header({ children, ...props }) {
-  const { onClose, withDismissButton } = useJumperContext();
   return (
     <div css={[STYLES_JUMPER_MOBILE_HEADER, css]} {...props}>
       {children}
-      {withDismissButton && (
-        <button
-          css={[Styles.BUTTON_RESET, Styles.CONTAINER_CENTERED]}
-          style={{ width: 32, height: 32 }}
-          onClick={onClose}
-        >
-          <SVG.Dismiss
-            width={16}
-            height={16}
-            style={{ display: "block", color: Constants.semantic.textGray }}
-          />
-        </button>
-      )}
     </div>
   );
 }
+
+/* -------------------------------------------------------------------------------------------------
+ *  Dismiss
+ * -----------------------------------------------------------------------------------------------*/
+
+const STYLES_DISMISS_BUTTON = (theme) => css`
+  ${Styles.CONTAINER_CENTERED};
+  width: 32px;
+  height: 32px;
+  color: ${theme.semantic.textGray};
+`;
+
+const Dismiss = React.forwardRef(({ css, ...props }, ref) => {
+  const { onClose } = useJumperContext();
+
+  return (
+    <System.ButtonPrimitive
+      ref={ref}
+      css={[STYLES_DISMISS_BUTTON, css]}
+      onClick={onClose}
+      {...props}
+    >
+      <SVG.Dismiss width={16} height={16} />
+    </System.ButtonPrimitive>
+  );
+});
 
 /* -------------------------------------------------------------------------------------------------
  *  Divider
@@ -155,4 +170,4 @@ function Footer({ children, css, ...props }) {
   );
 }
 
-export { AnimatePresence, Root, Header, Divider, Content, Footer };
+export { AnimatePresence, Root, Header, Dismiss, Divider, Content, Footer };

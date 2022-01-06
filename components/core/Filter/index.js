@@ -10,24 +10,42 @@ import { Provider } from "~/components/core/Filter/Provider";
 import { Sidebar, SidebarTrigger } from "~/components/core/Filter/Sidebar";
 import { Popup, PopupTrigger } from "~/components/core/Filter/Popup";
 import { useSearchStore } from "~/components/core/Search/store";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 /* -------------------------------------------------------------------------------------------------
  *  Title
  * -----------------------------------------------------------------------------------------------*/
 
 function Title({ page, data }) {
-  const { query, isSearching } = useSearchStore();
+  const { query, results, isFetchingResults, isSearching } = useSearchStore();
   let title = React.useMemo(() => {
-    if (isSearching) return `Searching for ${query}`;
+    if (isFetchingResults)
+      return (
+        <div css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+          <LoaderSpinner style={{ height: 16, width: 16 }} />
+          <System.H5
+            title={title}
+            style={{ maxWidth: 400, marginLeft: 8 }}
+            as="p"
+            nbrOflines={1}
+            color="textBlack"
+          >
+            Searching: {query}
+          </System.H5>
+        </div>
+      );
+    if (results && query) return `Showing results for: "${query}"`;
     if (page.id === "NAV_DATA") return "My library";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
     if (page.id === "NAV_PROFILE") return "@ " + data.username;
-  }, [page, data, query, isSearching]);
+  }, [page, data, isFetchingResults, isSearching]);
 
-  return (
+  return typeof title === "string" ? (
     <System.H5 title={title} style={{ maxWidth: 400 }} as="p" nbrOflines={1} color="textBlack">
       {title}
     </System.H5>
+  ) : (
+    title
   );
 }
 
@@ -127,7 +145,7 @@ export default function Filter({
 
   if (disabled) {
     return showSearchResult ? (
-      <Search.Content viewer={viewer} page={page} onAction={onAction} />
+      <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
     ) : (
       children
     );
@@ -163,7 +181,7 @@ export default function Filter({
           {isProfilePage && !isMobile ? null : (
             <div css={Styles.CONTAINER_CENTERED}>
               <div css={Styles.MOBILE_HIDDEN}>
-                <SidebarTrigger />
+                <SidebarTrigger isMobile={isMobile} />
               </div>
               <PopupTrigger isMobile={isMobile} style={{ marginLeft: 2 }}>
                 <span css={Styles.MOBILE_ONLY} style={{ marginRight: 8 }}>
@@ -190,7 +208,7 @@ export default function Filter({
         />
         <div style={{ flexGrow: 1 }}>
           {showSearchResult ? (
-            <Search.Content viewer={viewer} page={page} onAction={onAction} />
+            <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
           ) : (
             children
           )}

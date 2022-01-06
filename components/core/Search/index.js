@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
+import * as System from "~/components/system";
 
 import { css } from "@emotion/react";
 import { Input as InputPrimitive } from "~/components/system/components/Input";
 import { useSearchStore } from "~/components/core/Search/store";
-import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import { Link } from "~/components/core/Link";
 
@@ -22,10 +22,10 @@ const STYLES_SEARCH_COMPONENT = (theme) => css`
   background-color: transparent;
   box-shadow: none;
   height: 100%;
+  border-radius: 0px;
   input {
     height: 100%;
     padding: 0px 4px;
-    border-radius: 0px;
   }
   &::placeholder {
     color: ${theme.semantic.textGray};
@@ -48,18 +48,18 @@ const useSearchViaParams = ({ params, handleSearch }) => {
   }, [params.s]);
 };
 
-const useDebouncedSearch = ({ handleSearch }) => {
-  const { query } = useSearchStore();
-
+const useDebouncedOnChange = ({ setQuery, handleSearch }) => {
   const timeRef = React.useRef();
-  React.useEffect(() => {
-    timeRef.current = setTimeout(() => handleSearch(query), 300);
-    return () => clearTimeout(timeRef.current);
-  }, [query]);
+  const handleChange = (e) => {
+    clearTimeout(timeRef.current);
+    const { value } = e.target;
+    timeRef.current = setTimeout(() => (setQuery(value), handleSearch(value)), 300);
+  };
+  return handleChange;
 };
 
 function Input({ viewer, data, page, onAction }) {
-  const { search, query, isFetchingResults, setQuery } = useSearchStore();
+  const { search, query, setQuery } = useSearchStore();
 
   const handleSearch = async (query) => {
     // NOTE(amine): update params with search query
@@ -93,7 +93,6 @@ function Input({ viewer, data, page, onAction }) {
 
     //NOTE(amine): searching on another user's profile
     if (page.id === "NAV_PROFILE" && data?.id !== viewer?.id) {
-      console.log(data?.id, page.id, page.id === "NAV_PROFILE", data?.id !== viewer?.id);
       search({
         types: ["SLATE", "FILE"],
         userId: data.id,
@@ -125,10 +124,21 @@ function Input({ viewer, data, page, onAction }) {
 
   useSearchViaParams({ params: page.params, onAction, handleSearch });
 
-  useDebouncedSearch({ handleSearch });
+  const handleChange = useDebouncedOnChange({ setQuery, handleSearch });
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        /**
+         * NOTE(amine): Since this input takes 100% of the parent's height, the top part of the focusRing will be hidden.
+         * To fix this we add a 2px margin-top. (2px is the width of the focusRing)
+         *  */
+        marginTop: "2px",
+        height: "calc(100% - 2px)",
+      }}
+    >
       <InputPrimitive
         full
         containerStyle={{ height: "100%" }}
@@ -136,15 +146,8 @@ function Input({ viewer, data, page, onAction }) {
         name="search"
         placeholder={`Search ${!viewer ? "slate.host" : ""}`}
         onSubmit={() => handleSearch(query)}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleChange}
       />
-
-      {isFetchingResults && (
-        <div style={{ position: "absolute", right: 0, top: 0 }}>
-          <LoaderSpinner style={{ position: "block", height: 16, width: 16 }} />
-        </div>
-      )}
     </div>
   );
 }
@@ -155,7 +158,6 @@ function Input({ viewer, data, page, onAction }) {
 
 const STYLES_DISMISS_BUTTON = (theme) => css`
   display: block;
-  ${Styles.BUTTON_RESET};
   color: ${theme.semantic.textGray};
 `;
 
@@ -163,9 +165,9 @@ function Dismiss({ css, ...props }) {
   const { clearSearch } = useSearchStore();
 
   return (
-    <button onClick={clearSearch} css={[STYLES_DISMISS_BUTTON, css]} {...props}>
+    <System.ButtonPrimitive onClick={clearSearch} css={[STYLES_DISMISS_BUTTON, css]} {...props}>
       <SVG.Dismiss style={{ display: "block" }} height={16} width={16} />
-    </button>
+    </System.ButtonPrimitive>
   );
 }
 
@@ -173,7 +175,7 @@ function Dismiss({ css, ...props }) {
  *  Content
  * -----------------------------------------------------------------------------------------------*/
 
-function Content({ onAction, viewer, page }) {
+function Content({ onAction, viewer, page, isMobile }) {
   const { results } = useSearchStore();
   const { files, slates } = results;
 
@@ -196,6 +198,7 @@ function Content({ onAction, viewer, page }) {
         items={files}
         onAction={onAction}
         viewer={viewer}
+        isMobile={isMobile}
         page={page}
         view="grid"
       />

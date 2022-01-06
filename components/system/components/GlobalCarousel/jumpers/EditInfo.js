@@ -78,6 +78,7 @@ function UpdateFileForm({ file, isMobile, onClose }) {
             <Field
               full
               inputCss={STYLES_EDIT_INFO_INPUT}
+              autoFocus
               style={{ marginTop: 6 }}
               {...getFieldProps("title")}
             />
@@ -97,14 +98,13 @@ function UpdateFileForm({ file, isMobile, onClose }) {
 
         {isMobile ? (
           <MobileJumper.Footer css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
-            <button
+            <System.ButtonPrimitive
               type="button"
-              css={Styles.BUTTON_RESET}
               style={{ width: 32, height: 32 }}
               onClick={onClose}
             >
               <SVG.Edit width={16} height={16} style={{ color: Constants.system.blue }} />
-            </button>
+            </System.ButtonPrimitive>
             <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
               <System.ButtonSecondary
                 type="button"
@@ -167,6 +167,7 @@ export function EditInfo({ file, isOpen, onClose }) {
         <Jumper.Root onClose={onClose}>
           <Jumper.Header>
             <System.H5 color="textBlack">Edit info</System.H5>
+            <Jumper.Dismiss />
           </Jumper.Header>
           <Jumper.Divider />
           <Jumper.Item>
@@ -189,6 +190,7 @@ export function EditInfoMobile({ file, isOpen, onClose }) {
             <System.H5 as="p" color="textBlack">
               Edit Info
             </System.H5>
+            <MobileJumper.Dismiss />
           </MobileJumper.Header>
           <System.Divider height={1} color="borderGrayLight4" />
           <div style={{ padding: "13px 16px 11px" }}>

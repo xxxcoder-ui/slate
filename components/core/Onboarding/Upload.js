@@ -188,7 +188,7 @@ function ExtensionOnboarding({ isMobile }) {
     <ModalPortal>
       <MobileJumper.AnimatePresence>
         {isMobile ? (
-          <MobileJumper.Root withDismissButton={false}>
+          <MobileJumper.Root>
             <MobileJumper.Header>{header}</MobileJumper.Header>
             <MobileJumper.Content style={{ padding: 0, marginTop: 28 }}>
               {body}
@@ -198,7 +198,7 @@ function ExtensionOnboarding({ isMobile }) {
         ) : null}
       </MobileJumper.AnimatePresence>
       {!isMobile ? (
-        <Jumper.Root withDismissButton={false}>
+        <Jumper.Root>
           <Jumper.Header>{header}</Jumper.Header>
           <Jumper.Item style={{ flexGrow: 1, paddingLeft: 0, paddingRight: 0, paddingBottom: 0 }}>
             {body}

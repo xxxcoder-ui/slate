@@ -26,6 +26,7 @@ import { GlobalNotification } from "~/components/system/components/GlobalNotific
 
 // NOTE(jim): Components
 import {
+  ButtonPrimitive,
   ButtonPrimary,
   ButtonPrimaryFull,
   ButtonSecondary,
@@ -124,6 +125,7 @@ export {
   // GlobalCarousel,
   GlobalNotification,
   // NOTE(jim): Components
+  ButtonPrimitive,
   ButtonPrimary,
   ButtonPrimaryFull,
   ButtonSecondary,

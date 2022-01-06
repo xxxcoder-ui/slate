@@ -250,12 +250,14 @@ export const OBJECTS_PREVIEW_GRID = (theme) => css`
 `;
 
 export const BUTTON_RESET = css`
+  ${HOVERABLE};
   padding: 0;
   margin: 0;
   background-color: unset;
   border: none;
   cursor: pointer;
-  ${HOVERABLE}
+  outline: 0;
+  border: 0;
 `;
 
 export const COLLECTIONS_PREVIEW_GRID = (theme) => css`

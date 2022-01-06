@@ -13,7 +13,7 @@ const STYLES_FULL_HEIGHT = css`
   height: var(--full-height);
 `;
 
-export function FullHeightLayout({ children, css, as = "div", ...props }) {
+export const FullHeightLayout = React.forwardRef(({ children, css, as = "div", ...props }, ref) => {
   useIsomorphicLayoutEffect(() => {
     if (typeof window === "undefined") return;
     updateCssVarFullHeight();
@@ -24,8 +24,8 @@ export function FullHeightLayout({ children, css, as = "div", ...props }) {
   const Component = as;
 
   return (
-    <Component css={[STYLES_FULL_HEIGHT, css]} {...props}>
+    <Component css={[STYLES_FULL_HEIGHT, css]} ref={ref} {...props}>
       {children}
     </Component>
   );
-}
+});

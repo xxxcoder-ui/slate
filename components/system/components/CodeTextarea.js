@@ -19,7 +19,6 @@ const STYLES_CODE_TEXTAREA = css`
   resize: none;
   font-size: 14px;
   box-sizing: border-box;
-  outline: 0;
   border: 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   scrollbar-width: none;

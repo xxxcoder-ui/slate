@@ -91,7 +91,7 @@ export default function ImageObjectPreview({
           <img
             css={STYLES_IMAGE}
             src={imageUrl}
-            alt={`${file.name} preview`}
+            alt={`${file?.name || file.filename} preview`}
             onLoad={handleOnLoaded}
           />
         )}
