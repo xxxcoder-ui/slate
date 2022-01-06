@@ -102,8 +102,6 @@ const cleanFile = ({
 };
 
 const indexObject = async (objects, cleanObject, index) => {
-  console.log("index object");
-  console.log(objects);
   try {
     if (Array.isArray(objects)) {
       let body = [];
@@ -111,11 +109,9 @@ const indexObject = async (objects, cleanObject, index) => {
         body.push({ index: { _index: index, _id: object.id } });
         body.push(cleanObject(object));
       }
-      console.log(body);
       const result = await searchClient.bulk({
         body,
       });
-      console.log(result);
     } else {
       let object = objects;
       const result = await searchClient.index({
@@ -123,7 +119,6 @@ const indexObject = async (objects, cleanObject, index) => {
         index: index,
         body: cleanObject(object),
       });
-      console.log(result);
     }
   } catch (e) {
     Logging.error(e);
@@ -143,8 +138,6 @@ export const indexFile = async (files) => {
 };
 
 const updateObject = async (objects, cleanObject, index) => {
-  console.log("update object");
-  console.log(objects);
   try {
     if (Array.isArray(objects)) {
       let body = [];
@@ -155,7 +148,6 @@ const updateObject = async (objects, cleanObject, index) => {
       const result = await searchClient.bulk({
         body,
       });
-      console.log(result);
     } else {
       let object = objects;
       const result = await searchClient.update({
@@ -165,7 +157,6 @@ const updateObject = async (objects, cleanObject, index) => {
           doc: cleanObject(object),
         },
       });
-      console.log(result);
     }
   } catch (e) {
     Logging.error(e);
@@ -185,8 +176,6 @@ export const updateFile = async (files) => {
 };
 
 const deleteObject = async (objects, index) => {
-  console.log("delete object");
-  console.log(objects);
   try {
     if (Array.isArray(objects)) {
       let body = [];
@@ -196,7 +185,6 @@ const deleteObject = async (objects, index) => {
       const result = await searchClient.bulk({
         body,
       });
-      console.log(result);
     } else {
       let object = objects;
       let result = await searchClient.delete({
