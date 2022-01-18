@@ -108,10 +108,11 @@ const STYLES_ACTION_BAR = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 4px;
+  border-radius: 12px;
   padding: 0px 32px;
   box-sizing: border-box;
-  background-color: ${Constants.semantic.textGrayDark};
+  background-color: ${Constants.system.black};
+  box-shadow: ${Constants.shadow.lightMedium};
   width: 90vw;
   max-width: 878px;
   height: 48px;
@@ -122,7 +123,7 @@ const STYLES_ACTION_BAR = css`
 
 const STYLES_ACTION_BAR_CONTAINER = css`
   position: fixed;
-  bottom: 12px;
+  bottom: 30px;
   left: 0px;
   width: 100vw;
   display: flex;
@@ -302,7 +303,7 @@ function Footer({
   saveCopy,
 }) {
   const totalFiles = `${totalSelectedFiles} ${Strings.pluralize(
-    "file",
+    "object",
     totalSelectedFiles
   )} selected`;
 
@@ -315,13 +316,24 @@ function Footer({
             <span css={STYLES_FILES_SELECTED}>{totalFiles}</span>
           </div>
           <div css={STYLES_RIGHT}>
-            <ButtonPrimary
-              transparent
-              style={{ color: Constants.system.white }}
-              onClick={addToCollection}
-            >
-              Add to collection
-            </ButtonPrimary>
+            {isOwner && !isCollectionType && (
+              <ButtonPrimary
+                transparent
+                style={{ color: Constants.system.white }}
+                onClick={addToCollection}
+              >
+                Tag
+              </ButtonPrimary>
+            )}
+            {isOwner && isCollectionType && (
+              <ButtonWarning
+                transparent
+                style={{ marginLeft: 8, color: Constants.system.white }}
+                onClick={removeFromCollection}
+              >
+                Untag
+              </ButtonWarning>
+            )}
             {/* {isOwner && !isCollectionType && (
               <ButtonPrimary
                 transparent
@@ -347,15 +359,6 @@ function Footer({
                 onClick={downloadFiles}
               >
                 Download
-              </ButtonWarning>
-            )}
-            {isOwner && isCollectionType && (
-              <ButtonWarning
-                transparent
-                style={{ marginLeft: 8, color: Constants.system.white }}
-                onClick={removeFromCollection}
-              >
-                Remove
               </ButtonWarning>
             )}
             {isOwner && (
