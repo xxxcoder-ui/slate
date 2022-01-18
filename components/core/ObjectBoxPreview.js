@@ -26,12 +26,22 @@ const STYLES_PREVIEW = css`
 
 export default function BlobObjectPreview({ file, css, placeholderRatio = 1, ...props }) {
   const isImage = Validations.isPreviewableImage(file.type);
-  const url = Strings.getURLfromCID(file.cid);
+  const isLink = file.isLink;
+  let url = Strings.getURLfromCID(file.cid);
 
   if (isImage) {
     return (
       <div css={[STYLES_PREVIEW, css]} {...props}>
         <img src={url} alt="File preview" />
+      </div>
+    );
+  }
+
+  if (isLink && (file.linkImage || file.linkFavicon)) {
+    url = file.linkImage || file.linkFavicon;
+    return (
+      <div css={[STYLES_PREVIEW, css]} {...props}>
+        <img src={url} alt="Link preview" />
       </div>
     );
   }
