@@ -217,7 +217,7 @@ function Following({ viewer, onAction, ...props }) {
  *  Profile
  * -----------------------------------------------------------------------------------------------*/
 
-function Profile({ viewer, data, page, ...props }) {
+function Profile({ viewer, onAction, data, page, ...props }) {
   if (page.id === "NAV_SLATE") {
     data = data.owner;
   }
@@ -257,9 +257,20 @@ function Profile({ viewer, data, page, ...props }) {
   const username = Utilities.getUserDisplayName(data);
   let { twitterUsername, body } = data;
 
+  let backArrow = (
+    <div style={{ display: "flex", alignItems: "flex-start", width: "100%", marginBottom: 12 }}>
+      <Link onAction={onAction} href="/_/data">
+        <div css={Styles.ICON_CONTAINER}>
+          <SVG.RightArrow height="20px" style={{ transform: "rotate(180deg)" }} />
+        </div>
+      </Link>
+    </div>
+  );
+
   return (
     <FilterSection {...props}>
       <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "12px" }}>
+        {isAuthenticated ? backArrow : null}
         <ProfilePhoto user={data} style={{ borderRadius: "20px" }} size={80} />
         <div css={Styles.VERTICAL_CONTAINER_CENTERED} style={{ gap: "4px" }}>
           <Typography.H4 color="textGrayDark" style={{ marginTop: 10 }}>
