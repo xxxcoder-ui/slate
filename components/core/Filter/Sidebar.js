@@ -59,10 +59,7 @@ export const SidebarTrigger = React.forwardRef(({ css, isMobile, ...props }, ref
         css={Styles.HORIZONTAL_CONTAINER_CENTERED}
       >
         <System.H6 id="filter-sidebar-trigger-tooltip" as="p" color="textGrayDark">
-          Click to show/hide the sidebar
-        </System.H6>
-        <System.H6 as="p" color="textGray" style={{ marginLeft: 16 }}>
-          \
+          Click to toggle the sidebar
         </System.H6>
       </Tooltip.Content>
     </Tooltip.Root>
@@ -120,7 +117,14 @@ export function Sidebar({ viewer, onAction, data, page, isMobile, isProfilePage 
     <div style={{ width: 300 }}>
       <div css={STYLES_SIDEBAR_FILTER_WRAPPER}>
         <Filters.Library page={page} onAction={onAction} />
-        <Filters.Tags
+        <Filters.PrivateTags
+          page={page}
+          onAction={onAction}
+          data={data}
+          viewer={viewer}
+          style={{ marginTop: 12 }}
+        />
+        <Filters.PublicTags
           page={page}
           onAction={onAction}
           data={data}

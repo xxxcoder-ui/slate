@@ -96,7 +96,14 @@ export function Popup({ viewer, onAction, css, data, page, isMobile, isProfilePa
   return (
     <div css={[STYLES_SIDEBAR_FILTER_WRAPPER, css]} {...props}>
       <Filters.Library page={page} onAction={onAction} />
-      <Filters.Tags
+      <Filters.PrivateTags
+        viewer={viewer}
+        data={data}
+        page={page}
+        onAction={onAction}
+        style={{ marginTop: 12 }}
+      />
+      <Filters.PublicTags
         viewer={viewer}
         data={data}
         page={page}

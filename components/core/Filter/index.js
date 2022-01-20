@@ -35,7 +35,7 @@ function Title({ page, data }) {
         </div>
       );
     if (results && query) return `Showing results for: "${query}"`;
-    if (page.id === "NAV_DATA") return "My library";
+    if (page.id === "NAV_DATA") return "Recent";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
     if (page.id === "NAV_PROFILE") return "@ " + data.username;
 

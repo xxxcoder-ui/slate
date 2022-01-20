@@ -30,8 +30,9 @@ const STYLES_FILTER_BUTTON = (theme) => css`
   display: flex;
   align-items: center;
   width: 100%;
+  height: 32px;
   ${Styles.BUTTON_RESET};
-  padding: 5px 8px 3px;
+  padding: 5px 8px 7px;
   border-radius: 8px;
   color: ${theme.semantic.textBlack};
   &:hover {
@@ -58,7 +59,7 @@ const STYLES_FILTER_TITLE_BUTTON = (theme) => css`
 
 const STYLES_FILTERS_GROUP = css`
   & > * + * {
-    margin-top: 4px !important;
+    ${"" /* margin-top: 4px !important; */}
   }
   li {
     list-style: none;
@@ -102,7 +103,7 @@ const FilterSection = React.forwardRef(({ title, children, emptyState, ...props 
           </Tooltip.Trigger>
           <Tooltip.Content css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginTop: -4.5 }}>
             <System.H6 id={titleButtonId} as="p" color="textGrayDark">
-              Click to show/hide the filter section
+              Click to toggle section
             </System.H6>
           </Tooltip.Content>
         </Tooltip.Root>
@@ -110,7 +111,7 @@ const FilterSection = React.forwardRef(({ title, children, emptyState, ...props 
       {isExpanded ? (
         Array.isArray(children) && children?.length === 0 ? (
           <Show when={emptyState}>
-            <System.P2 color="textGrayDark" style={{ paddingLeft: "8px" }}>
+            <System.P2 color="textGrayLight" style={{ paddingLeft: "8px" }}>
               {emptyState}
             </System.P2>
           </Show>
@@ -145,7 +146,7 @@ function Library({ page, onAction }) {
           Icon={SVG.Clock}
           onClick={hidePopup}
         >
-          My Library
+          Recent
         </FilterButton>
       </FilterSection>
     </>
@@ -156,23 +157,53 @@ function Library({ page, onAction }) {
  *  Tags
  * -----------------------------------------------------------------------------------------------*/
 
-function Tags({ viewer, data, onAction, ...props }) {
+function PrivateTags({ viewer, data, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
+  let tags = viewer.slates.filter((slate) => !slate.isPublic);
 
   return (
     <FilterSection
-      title="Tags"
-      emptyState="when you tag a file, that tag will automatically show up here"
+      title="Private"
+      emptyState="Tag files to see them here. Only you can see your private tags"
       {...props}
     >
-      {viewer.slates.map((slate, index) => (
+      {tags.map((slate, index) => (
         <li key={slate.id}>
           <RovingTabIndex.Item index={index}>
             <FilterButton
               href={`/$/slate/${slate.id}`}
               isSelected={slate.id === data?.id}
               onAction={onAction}
-              Icon={slate.isPublic ? SVG.Hash : SVG.SecurityLock}
+              Icon={SVG.Hash}
+              onClick={hidePopup}
+            >
+              {slate.slatename}
+            </FilterButton>
+          </RovingTabIndex.Item>
+        </li>
+      ))}
+    </FilterSection>
+  );
+}
+
+function PublicTags({ viewer, data, onAction, ...props }) {
+  const [, { hidePopup }] = useFilterContext();
+  let tags = viewer.slates.filter((slate) => slate.isPublic);
+
+  return (
+    <FilterSection
+      title="Public"
+      emptyState="Public tags are discoverable on your profile to other users"
+      {...props}
+    >
+      {tags.map((slate, index) => (
+        <li key={slate.id}>
+          <RovingTabIndex.Item index={index}>
+            <FilterButton
+              href={`/$/slate/${slate.id}`}
+              isSelected={slate.id === data?.id}
+              onAction={onAction}
+              Icon={SVG.Hash}
               onClick={hidePopup}
             >
               {slate.slatename}
@@ -192,7 +223,7 @@ function Following({ viewer, onAction, ...props }) {
   const [, { hidePopup }] = useFilterContext();
 
   return (
-    <FilterSection title="Following" emptyState="follow users to see them here" {...props}>
+    <FilterSection title="Following" emptyState="Follow users to see them here" {...props}>
       {viewer.following.map((user, index) => (
         <li key={user.id}>
           <RovingTabIndex.Item index={index}>
@@ -345,4 +376,4 @@ function ProfileTags({ data, page, onAction, ...props }) {
   );
 }
 
-export { Library, Tags, Following, Profile, ProfileTags };
+export { Library, PrivateTags, PublicTags, Following, Profile, ProfileTags };
