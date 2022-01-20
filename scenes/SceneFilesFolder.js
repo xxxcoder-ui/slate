@@ -81,7 +81,7 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
             <EmptyState>
               <FileTypeGroup />
               <div css={STYLES_EMPTY_STATE_DEMO}>
-                <System.H5 as="p" color="textDark" style={{ textAlign: "center" }}>
+                <System.H5 as="p" color="textBlack" style={{ textAlign: "center" }}>
                   Use
                   <span
                     css={STYLES_UPLOAD_BUTTON}
@@ -91,7 +91,7 @@ export default function SceneFilesFolder({ viewer, page, onAction, isMobile }) {
                   </span>
                   on the top right corner <br />
                 </System.H5>
-                <System.H5 as="p" color="textDark" style={{ marginTop: 4, textAlign: "center" }}>
+                <System.H5 as="p" color="textBlack" style={{ marginTop: 4, textAlign: "center" }}>
                   or drop files {isMobile ? <span> on desktop</span> : null} to save to Slate
                 </System.H5>
               </div>

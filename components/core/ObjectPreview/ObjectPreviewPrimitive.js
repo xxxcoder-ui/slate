@@ -9,10 +9,114 @@ import { AspectRatio } from "~/components/system";
 import { motion, useAnimation } from "framer-motion";
 import { useMounted, useMediaQuery } from "~/common/hooks";
 import { TagsButton } from "~/components/core/ObjectPreview/components";
+import { useTagsOnboardingContext } from "~/components/core/Onboarding/Tags";
 
 import ImageObjectPreview from "~/components/core/ObjectPreview/ImageObjectPreview";
-import { useTagsOnboardingContext } from "~/components/core/Onboarding/Tags";
-import { ModalPortal } from "../ModalPortal";
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const STYLES_CONTROLS_DESKTOP = css`
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+`;
+
+function DesktopControls({ file, viewer }) {
+  const onboardingContext = useTagsOnboardingContext();
+
+  const [isTagsJumperVisible, setTagsJumperVisibility] = React.useState(false);
+  const showTagsJumper = () => setTagsJumperVisibility(true);
+  const hideTagsJumper = () => setTagsJumperVisibility(false);
+
+  return (
+    <>
+      {/**  NOTE(amine): controls visibility handled by STYLES_WRAPPER*/}
+      <motion.div id="object_preview_controls" css={STYLES_CONTROLS_DESKTOP}>
+        <TagsButton onClick={() => (showTagsJumper(), onboardingContext?.goToNextStep?.call())} />
+      </motion.div>
+      <ObjectJumpers.EditChannels
+        file={file}
+        viewer={viewer}
+        isOpen={isTagsJumperVisible}
+        onClose={() => (hideTagsJumper(), onboardingContext?.goToNextStep?.call())}
+      />
+    </>
+  );
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+const STYLES_MOBILE_SHOW_CONTROLS = (theme) => css`
+  ${Styles.BUTTON_RESET};
+  z-index: 1;
+  display: flex;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px ${theme.system.grayLight5}, ${theme.shadow.lightLarge};
+
+  background-color: ${theme.semantic.bgWhite};
+  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    background-color: ${theme.semantic.bgBlurWhiteTRN};
+  }
+`;
+
+const STYLES_CONTROLS_MOBILE = css`
+  z-index: 1;
+  ${Styles.CONTAINER_CENTERED}
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+function MobileControls({ file, viewer }) {
+  const onboardingContext = useTagsOnboardingContext();
+
+  const [areControlsVisible, setShowControls] = React.useState(false);
+  const toggleControls = () => setShowControls((prev) => !prev);
+  const hideControls = () => setShowControls(false);
+
+  const [isTagsJumperVisible, setTagsJumperVisibility] = React.useState(false);
+  const showTagsJumper = () => setTagsJumperVisibility(true);
+  const hideTagsJumper = () => setTagsJumperVisibility(false);
+
+  return (
+    <>
+      <button
+        css={STYLES_MOBILE_SHOW_CONTROLS}
+        onClick={(e) => (e.preventDefault(), e.stopPropagation(), toggleControls())}
+      >
+        <SVG.MoreHorizontal style={{ display: "block" }} width={16} />
+      </button>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: areControlsVisible ? 1 : 0 }}
+        style={{ pointerEvents: areControlsVisible ? "all" : "none" }}
+        css={STYLES_CONTROLS_MOBILE}
+        onClick={(e) => (e.stopPropagation(), toggleControls())}
+      >
+        <TagsButton onClick={() => (showTagsJumper(), onboardingContext?.goToNextStep?.call())} />
+      </motion.div>
+      <ObjectJumpers.EditChannelsMobile
+        file={file}
+        viewer={viewer}
+        isOpen={isTagsJumperVisible}
+        onClose={() => (hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call())}
+      />
+    </>
+  );
+}
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const STYLES_WRAPPER = (theme) => css`
   position: relative;
@@ -22,6 +126,10 @@ const STYLES_WRAPPER = (theme) => css`
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+
+  :hover #object_preview_controls {
+    opacity: 1;
+  }
 `;
 
 const STYLES_DESCRIPTION = (theme) => css`
@@ -58,49 +166,6 @@ const STYLES_SELECTED_RING = (theme) => css`
   box-shadow: 0 0 0 2px ${theme.system.blue};
 `;
 
-const STYLES_CONTROLS = (theme) => css`
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  z-index: 1;
-  & > * + * {
-    margin-top: 8px !important;
-  }
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    ${Styles.CONTAINER_CENTERED}
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-`;
-
-const STYLES_MOBILE_SHOW_CONTROLS = (theme) => css`
-  display: none;
-  ${Styles.BUTTON_RESET};
-
-  @media (max-width: ${theme.sizes.mobile}px) {
-    z-index: 1;
-    display: flex;
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 0 0 1px ${theme.system.grayLight5}, ${theme.shadow.lightLarge};
-
-    background-color: ${theme.semantic.bgWhite};
-    @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
-      -webkit-backdrop-filter: blur(25px);
-      backdrop-filter: blur(25px);
-      background-color: ${theme.semantic.bgBlurWhiteTRN};
-    }
-  }
-`;
-
 const STYLES_UPPERCASE = css`
   text-transform: uppercase;
 `;
@@ -118,17 +183,6 @@ export default function ObjectPreviewPrimitive({
   isImage,
   onAction,
 }) {
-  const [isTagsJumperVisible, setTagsJumperVisibility] = React.useState(false);
-  const showTagsJumper = () => setTagsJumperVisibility(true);
-  const hideTagsJumper = () => setTagsJumperVisibility(false);
-  // const { save, isSaved, saveCount } = useSaveHandler({ file, viewer });
-  // const showSaveButton = viewer?.id !== file?.ownerId;
-
-  const [areControlsVisible, setShowControls] = React.useState(false);
-  const showControls = () => setShowControls(true);
-  const hideControls = () => setShowControls(false);
-  const toggleControls = () => setShowControls((prev) => !prev);
-
   const description = file?.body;
   const media = useMediaQuery();
   const { isDescriptionVisible, showDescription, hideDescription } = useShowDescription({
@@ -148,8 +202,6 @@ export default function ObjectPreviewPrimitive({
 
   const title = file.name || file.filename;
 
-  const onboardingContext = useTagsOnboardingContext();
-
   if (file?.coverImage && !isImage && !isLink) {
     return (
       <ImageObjectPreview
@@ -165,54 +217,14 @@ export default function ObjectPreviewPrimitive({
   return (
     <div css={[STYLES_WRAPPER, isSelected && STYLES_SELECTED_RING]}>
       <AspectRatio ratio={248 / 248}>
-        <div
-          css={Styles.VERTICAL_CONTAINER}
-          onMouseEnter={() => !isMobile && showControls()}
-          onMouseLeave={() => !isMobile && hideControls()}
-        >
-          {isOwner && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: areControlsVisible ? 1 : 0 }}
-              style={{ pointerEvents: areControlsVisible ? "all" : "none" }}
-              onClick={(e) => (e.stopPropagation(), isMobile && toggleControls())}
-              css={STYLES_CONTROLS}
-            >
-              <>
-                <TagsButton
-                  onClick={() => (showTagsJumper(), onboardingContext?.goToNextStep?.call())}
-                />
-                <ModalPortal>
-                  {isMobile ? (
-                    <ObjectJumpers.EditChannelsMobile
-                      file={file}
-                      viewer={viewer}
-                      isOpen={isTagsJumperVisible}
-                      onClose={() => (
-                        hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call()
-                      )}
-                    />
-                  ) : (
-                    <ObjectJumpers.EditChannels
-                      file={file}
-                      viewer={viewer}
-                      isOpen={isTagsJumperVisible}
-                      onClose={() => (
-                        hideTagsJumper(), hideControls(), onboardingContext?.goToNextStep?.call()
-                      )}
-                    />
-                  )}
-                </ModalPortal>
-              </>
-            </motion.div>
-          )}
-
-          <button
-            css={STYLES_MOBILE_SHOW_CONTROLS}
-            onClick={(e) => (e.preventDefault(), e.stopPropagation(), toggleControls())}
-          >
-            <SVG.MoreHorizontal style={{ display: "block" }} width={16} />
-          </button>
+        <div css={Styles.VERTICAL_CONTAINER}>
+          {isOwner ? (
+            isMobile ? (
+              <MobileControls file={file} viewer={viewer} />
+            ) : (
+              <DesktopControls file={file} viewer={viewer} />
+            )
+          ) : null}
 
           <div css={STYLES_PREVIEW}>{children}</div>
 

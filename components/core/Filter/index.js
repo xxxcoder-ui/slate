@@ -38,6 +38,8 @@ function Title({ page, data }) {
     if (page.id === "NAV_DATA") return "My library";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
     if (page.id === "NAV_PROFILE") return "@ " + data.username;
+
+    return null;
   }, [page, data, isFetchingResults, isSearching]);
 
   return typeof title === "string" ? (
