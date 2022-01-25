@@ -67,7 +67,7 @@ export const WebsiteFooter = (props) => {
   return (
     <div css={STYLES_ROOT}>
       <div css={STYLES_CONTAINER} style={props.style}>
-        <div>Slate your personal search engine</div>
+        <div>Slate - Your personal search engine</div>
         <div css={STYLES_HR} />
         <div css={STYLES_FLEX}>
           <div css={STYLES_CONTENT_BLOCK}>
