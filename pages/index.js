@@ -1087,7 +1087,10 @@ export default function IndexPage() {
                 placeholder="Email"
                 type="text"
                 full
-                style={{ backgroundColor: "rgba(242,242,247,0.5)" }}
+                style={{
+                  backgroundColor: "rgba(242, 242, 247,0.7)",
+                  border: "1px solid #D1D4D6",
+                }}
                 containerStyle={{ marginTop: "4px" }}
               />
               <AnimateSharedLayout>
@@ -1095,7 +1098,7 @@ export default function IndexPage() {
                   <System.ButtonPrimaryFull
                     loading={isCheckingSignupEmail}
                     type="submit"
-                    style={{ marginTop: "16px" }}
+                    style={{ marginTop: "12px" }}
                   >
                     Create account
                   </System.ButtonPrimaryFull>
