@@ -77,7 +77,7 @@ const STYLES_SIDEBAR_FILTER_WRAPPER = (theme) => css`
   height: calc(100vh - ${theme.sizes.header + theme.sizes.filterNavbar}px);
   overflow: auto;
   overflow: overlay;
-  padding: 20px 16px calc(16px + ${theme.sizes.intercomWidget}px + ${theme.sizes.filterNavbar}px);
+  padding: 20px 24px calc(16px + ${theme.sizes.intercomWidget}px + ${theme.sizes.filterNavbar}px);
   background-color: ${theme.semantic.bgLight};
 
   @media (max-width: ${theme.sizes.mobile}px) {
