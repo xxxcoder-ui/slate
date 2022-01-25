@@ -44,12 +44,14 @@ const STYLES_AUTH_FOOTER = (theme) => css`
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
     backdrop-filter: blur(75px);
-    background-color: ${theme.semantic.bgBlurWhiteTRN};
+    background-color: ${theme.semantic.bgBlurBlackTRN};
   }
   a {
     text-decoration: none;
-    ${Styles.HOVERABLE};
-    color: ${theme.semantic.textBlack};
+    color: ${theme.semantic.textGrayLight};
+  }
+  a:hover {
+    color: ${theme.semantic.textWhite};
   }
 `;
 
@@ -64,8 +66,7 @@ export default function AuthWrapper({ children, ...props }) {
         <System.H6 as="a" href="/guidelines">
           Community guidelines
         </System.H6>
-        {/** TODO(Amine): change discord link  */}
-        <System.H6 as="a" href="/">
+        <System.H6 as="a" href="https://discord.gg/NRsUjpCypr" target="_blank">
           Join Discord
         </System.H6>
       </footer>
