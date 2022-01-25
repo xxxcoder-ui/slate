@@ -72,7 +72,10 @@ export const WebsiteFooter = (props) => {
         <div css={STYLES_FLEX}>
           <div css={STYLES_CONTENT_BLOCK}>
             <div>Resources</div>
-            <a css={STYLES_LINK} href="/slate-for-chrome">
+            <a
+              css={STYLES_LINK}
+              href="https://chrome.google.com/webstore/detail/slate-web-extension/gloembacbehhbfbkcfjmloikeeaebnoc"
+            >
               Slate for Chrome
             </a>
             <br />
@@ -97,7 +100,7 @@ export const WebsiteFooter = (props) => {
         </div>
         <div css={STYLES_HR} />
         <div css={STYLES_FLEX} style={styleFlexFull}>
-          <div>MIT License</div>
+          <div />
           <div>
             <a css={STYLES_LINK} style={{ marginRight: `32px` }} href="/terms">
               Terms of service

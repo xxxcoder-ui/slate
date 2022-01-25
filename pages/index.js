@@ -19,17 +19,20 @@ const INTEGRATION = [
   {
     title: "Chrome",
     body: "Connect to your browser history and bookmarks.",
-    logo: "https://slate.textile.io/ipfs/bafkreiamdcnqxcga7dj4fur7nqd57pbey7s6znnj4o2zpbkmsydp6rspdy",
+    logo:
+      "https://slate.textile.io/ipfs/bafkreiamdcnqxcga7dj4fur7nqd57pbey7s6znnj4o2zpbkmsydp6rspdy",
   },
   {
     title: "Twitter",
     body: "Search your twitter bookmarks.",
-    logo: "https://slate.textile.io/ipfs/bafkreihtujowfnffw5jxvdo7gqazo4oy3q3q4u4z2jflx5ygmpaj7pgtnu",
+    logo:
+      "https://slate.textile.io/ipfs/bafkreihtujowfnffw5jxvdo7gqazo4oy3q3q4u4z2jflx5ygmpaj7pgtnu",
   },
   {
     title: "MetaMask",
     body: "Keep all of your NFTs in one place.",
-    logo: "https://slate.textile.io/ipfs/bafkreiecbn5pjuebdelsehul6sqmxs5kk74mijmo6ybts3hfg5tr2p4rti",
+    logo:
+      "https://slate.textile.io/ipfs/bafkreiecbn5pjuebdelsehul6sqmxs5kk74mijmo6ybts3hfg5tr2p4rti",
   },
   {
     title: "And more later",
@@ -37,171 +40,201 @@ const INTEGRATION = [
   },
 ];
 
-const WEB3 = [
-  {
-    logo: <SVGLogo.PLHorizontal height="48px" />,
-    text: "Textile is a set of open-source tools to help developers use the Filecoin network. That includes high-throughput storage APIs, permissionless storage bridges to Layer 1 blockchains, and more.",
-    link: "https://www.textile.io/",
-    action: "Learn more",
-  },
-  {
-    logo: <SVGLogo.PLHorizontal height="48px" />,
-    text: "Filecoin and IPFS are complementary protocols for storing and sharing data in the distributed web. Both systems are free, open-source, and share many building blocks, including data representation formats (IPLD) and network communication protocols (libp2p).",
-    link: "https://docs.filecoin.io/about-filecoin/ipfs-and-filecoin/",
-    action: "Learn more",
-  },
-  {
-    logo: <SVGLogo.PLHorizontal height="48px" />,
-    text: "Estuary is a decentralized data storage service built on key d-web protocols that allow you to Store and retrieve content quickly using IPFS. It allows you to Store content on Filecoin with proposition and succesful deal receipts.",
-    link: "https://estuary.tech/",
-    action: "Learn more",
-  },
-];
-
 const FAQ = [
   {
-    title: "How is Slate different from a file storage service or bookmarking tool?",
-    text: "Slate is your personal, all in one database optimized for search and recall.",
+    title: "What makes search different from other bookmarking / storage tools?",
+    text:
+      "Slate is designed to automatically save and organize things for you to help you remember things and explore things you care about in an entirely new way.",
   },
   {
-    title: "How does Slate handle data privacy?",
-    text: "We won’t monetize your data. It’s a pay subscription service. You should hold on to your sentitive data until we have an encryption solution.",
+    title: "Is my data safe / private?",
+    text:
+      "Short answer — yes. We use all the industry standards to protect your data and ensure that you have complete control over who is able to see anything in your account. We do not sell and never will sell your data to any third-party.",
   },
   {
     title: "How much does Slate cost?",
-    text: "30GB for free, with a competitive pricing plan coming soon.",
+    text:
+      "Slate is free for everyone to use. We plan on adding premium tools and functionality to enhance your internet experience some time in 2022. ",
   },
 ];
 
 const BANNER = [
   {
-    link: "https://slate.host/tara/neon-genesis-evangelion?cid=bafybeib2zzeknjmih25wivzogzupd7atrdbaxpvmsxfgutrqymlyfc2dvi",
+    link:
+      "https://slate.host/tara/neon-genesis-evangelion?cid=bafybeib2zzeknjmih25wivzogzupd7atrdbaxpvmsxfgutrqymlyfc2dvi",
     name: "@tara",
-    img: "https://slate.textile.io/ipfs/bafybeib2zzeknjmih25wivzogzupd7atrdbaxpvmsxfgutrqymlyfc2dvi",
+    img:
+      "https://slate.textile.io/ipfs/bafybeib2zzeknjmih25wivzogzupd7atrdbaxpvmsxfgutrqymlyfc2dvi",
   },
   {
-    link: "https://slate.host/biodivlibrary/the-mushroom-book?cid=bafybeigph7tfup3wb3truahl7sycaywx3unwa365jk4assrjjlzv6d7x3a",
+    link:
+      "https://slate.host/biodivlibrary/the-mushroom-book?cid=bafybeigph7tfup3wb3truahl7sycaywx3unwa365jk4assrjjlzv6d7x3a",
     name: "@biodivlibrary",
-    img: "https://slate.textile.io/ipfs/bafybeigph7tfup3wb3truahl7sycaywx3unwa365jk4assrjjlzv6d7x3a",
+    img:
+      "https://slate.textile.io/ipfs/bafybeigph7tfup3wb3truahl7sycaywx3unwa365jk4assrjjlzv6d7x3a",
   },
   {
-    link: "https://slate.host/jin/cryptovoxels-history?cid=bafybeiafrj3erh3rfqux4zqc7u2px3veqdppbtizq26p443utxunrkgonu",
+    link:
+      "https://slate.host/jin/cryptovoxels-history?cid=bafybeiafrj3erh3rfqux4zqc7u2px3veqdppbtizq26p443utxunrkgonu",
     name: "@jin",
-    img: "https://slate.textile.io/ipfs/bafybeiafrj3erh3rfqux4zqc7u2px3veqdppbtizq26p443utxunrkgonu",
+    img:
+      "https://slate.textile.io/ipfs/bafybeiafrj3erh3rfqux4zqc7u2px3veqdppbtizq26p443utxunrkgonu",
   },
   {
-    link: "https://slate.host/ng/numero?cid=bafybeibhhfgc4amvymoblaxcoe6glyyvaxhylzisl4ib2itcbhn3mrviou",
+    link:
+      "https://slate.host/ng/numero?cid=bafybeibhhfgc4amvymoblaxcoe6glyyvaxhylzisl4ib2itcbhn3mrviou",
     name: "@ng",
-    img: "https://slate.textile.io/ipfs/bafybeibhhfgc4amvymoblaxcoe6glyyvaxhylzisl4ib2itcbhn3mrviou",
+    img:
+      "https://slate.textile.io/ipfs/bafybeibhhfgc4amvymoblaxcoe6glyyvaxhylzisl4ib2itcbhn3mrviou",
   },
   {
-    link: "https://slate.host/thesimpsons/clips?cid=bafybeigce5klzr3vgzmlathvepuzhzhmwjc6bbvmsmcvu5eyisy6mnkx34",
+    link:
+      "https://slate.host/thesimpsons/clips?cid=bafybeigce5klzr3vgzmlathvepuzhzhmwjc6bbvmsmcvu5eyisy6mnkx34",
     name: "@thesimpsons",
-    img: "https://slate.textile.io/ipfs/bafybeigce5klzr3vgzmlathvepuzhzhmwjc6bbvmsmcvu5eyisy6mnkx34",
+    img:
+      "https://slate.textile.io/ipfs/bafybeigce5klzr3vgzmlathvepuzhzhmwjc6bbvmsmcvu5eyisy6mnkx34",
   },
 
   {
-    link: "https://slate.host/bitgraves/september?cid=bafybeiclkru6hwzw2ghvsyrbnaf67taxxhq2hbpcia2oqj5ufdggwhcbti",
+    link:
+      "https://slate.host/bitgraves/september?cid=bafybeiclkru6hwzw2ghvsyrbnaf67taxxhq2hbpcia2oqj5ufdggwhcbti",
     name: "@bitgraves",
-    img: "https://slate.textile.io/ipfs/bafybeiclkru6hwzw2ghvsyrbnaf67taxxhq2hbpcia2oqj5ufdggwhcbti",
+    img:
+      "https://slate.textile.io/ipfs/bafybeiclkru6hwzw2ghvsyrbnaf67taxxhq2hbpcia2oqj5ufdggwhcbti",
   },
   {
-    link: "https://slate.host/nypl/japan-kimbei-kusakabe?cid=bafkreidqz6imwffq5hpkacmxnrffagzxx5usybpitt42yuzthe6uf4idlm",
+    link:
+      "https://slate.host/nypl/japan-kimbei-kusakabe?cid=bafkreidqz6imwffq5hpkacmxnrffagzxx5usybpitt42yuzthe6uf4idlm",
     name: "@nypl",
-    img: "https://slate.textile.io/ipfs/bafkreidqz6imwffq5hpkacmxnrffagzxx5usybpitt42yuzthe6uf4idlm",
+    img:
+      "https://slate.textile.io/ipfs/bafkreidqz6imwffq5hpkacmxnrffagzxx5usybpitt42yuzthe6uf4idlm",
   },
   {
-    link: "https://slate.host/atlas/cartography?cid=bafybeid2n55qb4thosrxlszhzi3nwiorswv7xi2d5ykbudp3ph5hc54baa",
+    link:
+      "https://slate.host/atlas/cartography?cid=bafybeid2n55qb4thosrxlszhzi3nwiorswv7xi2d5ykbudp3ph5hc54baa",
     name: "@atlas",
-    img: "https://slate.textile.io/ipfs/bafybeid2n55qb4thosrxlszhzi3nwiorswv7xi2d5ykbudp3ph5hc54baa",
+    img:
+      "https://slate.textile.io/ipfs/bafybeid2n55qb4thosrxlszhzi3nwiorswv7xi2d5ykbudp3ph5hc54baa",
   },
   {
-    link: "https://slate.host/museosabiertos/palais-de-glace-fotografia?cid=bafybeigrznzuqymmfligf6mhc7adh6r7iw5gotbrzstcqeyyybaklfguki",
+    link:
+      "https://slate.host/museosabiertos/palais-de-glace-fotografia?cid=bafybeigrznzuqymmfligf6mhc7adh6r7iw5gotbrzstcqeyyybaklfguki",
     name: "@museosabiertos",
-    img: "https://slate.textile.io/ipfs/bafybeigrznzuqymmfligf6mhc7adh6r7iw5gotbrzstcqeyyybaklfguki",
+    img:
+      "https://slate.textile.io/ipfs/bafybeigrznzuqymmfligf6mhc7adh6r7iw5gotbrzstcqeyyybaklfguki",
   },
   {
-    link: "https://slate.host/gndclouds/animation?cid=bafybeigh44l3uzsgv4hslpruxrr5s43olpj5llptmsafkemxbwlu4fbdc4",
+    link:
+      "https://slate.host/gndclouds/animation?cid=bafybeigh44l3uzsgv4hslpruxrr5s43olpj5llptmsafkemxbwlu4fbdc4",
     name: "@gndclouds",
-    img: "https://slate.textile.io/ipfs/bafybeigh44l3uzsgv4hslpruxrr5s43olpj5llptmsafkemxbwlu4fbdc4",
+    img:
+      "https://slate.textile.io/ipfs/bafybeigh44l3uzsgv4hslpruxrr5s43olpj5llptmsafkemxbwlu4fbdc4",
   },
 
   {
-    link: "https://slate.host/cindy/sw-sans?cid=bafkreihazsjq7hlho6ab6k7tise6ufv2ccat5gv5f3fz7yy4cluz3e356e",
+    link:
+      "https://slate.host/cindy/sw-sans?cid=bafkreihazsjq7hlho6ab6k7tise6ufv2ccat5gv5f3fz7yy4cluz3e356e",
     name: "@cindy",
-    img: "https://slate.textile.io/ipfs/bafkreihazsjq7hlho6ab6k7tise6ufv2ccat5gv5f3fz7yy4cluz3e356e",
+    img:
+      "https://slate.textile.io/ipfs/bafkreihazsjq7hlho6ab6k7tise6ufv2ccat5gv5f3fz7yy4cluz3e356e",
   },
   {
-    link: "https://slate.host/haris/archive?cid=bafkreigcdnhxnh4fp7g2xy2gp43umhjrqyzz2a2t3ovnmcabepwusx5ldi",
+    link:
+      "https://slate.host/haris/archive?cid=bafkreigcdnhxnh4fp7g2xy2gp43umhjrqyzz2a2t3ovnmcabepwusx5ldi",
     name: "@haris",
-    img: "https://slate.textile.io/ipfs/bafkreigcdnhxnh4fp7g2xy2gp43umhjrqyzz2a2t3ovnmcabepwusx5ldi",
+    img:
+      "https://slate.textile.io/ipfs/bafkreigcdnhxnh4fp7g2xy2gp43umhjrqyzz2a2t3ovnmcabepwusx5ldi",
   },
   {
-    link: "https://slate.host/guji/%E5%8C%97%E4%BA%AC%E7%9A%87%E5%9F%8E%E5%BB%BA%E7%AD%91%E8%A3%85%E9%A5%B0?cid=bafybeiceh32ka3l6nlxniziefaxqs44ib4i47pohdftjzvlbsoem3qk6ly",
+    link:
+      "https://slate.host/guji/%E5%8C%97%E4%BA%AC%E7%9A%87%E5%9F%8E%E5%BB%BA%E7%AD%91%E8%A3%85%E9%A5%B0?cid=bafybeiceh32ka3l6nlxniziefaxqs44ib4i47pohdftjzvlbsoem3qk6ly",
     name: "@guji",
-    img: "https://slate.textile.io/ipfs/bafybeiceh32ka3l6nlxniziefaxqs44ib4i47pohdftjzvlbsoem3qk6ly",
+    img:
+      "https://slate.textile.io/ipfs/bafybeiceh32ka3l6nlxniziefaxqs44ib4i47pohdftjzvlbsoem3qk6ly",
   },
   {
-    link: "https://slate.host/martina/reaction-gifs?cid=bafybeif344hukksxizwk2dhmp6xjybnbw6x62r23m6wju2btxpsk4yluki",
+    link:
+      "https://slate.host/martina/reaction-gifs?cid=bafybeif344hukksxizwk2dhmp6xjybnbw6x62r23m6wju2btxpsk4yluki",
     name: "@martina",
-    img: "https://slate.textile.io/ipfs/bafybeif344hukksxizwk2dhmp6xjybnbw6x62r23m6wju2btxpsk4yluki",
+    img:
+      "https://slate.textile.io/ipfs/bafybeif344hukksxizwk2dhmp6xjybnbw6x62r23m6wju2btxpsk4yluki",
   },
-];
-
-const DATAMETER = [
-  { label: "Links", color: Constants.system.pink, radius: "8px 0 0 8px" },
-  { label: "Docs", color: Constants.system.yellow },
-  { label: "Books", color: Constants.system.teal },
-  { label: "Audios", color: Constants.system.orange },
-  { label: "Videos", color: Constants.system.purple },
-  { label: "Images", color: Constants.system.green },
-  { label: "30GB free storage", color: Constants.semantic.bgGrayLight4, width: "17%" },
-  { label: "Unlimited data plan", color: Constants.semantic.bgGrayLight },
 ];
 
 const OBJECTPREVIEWS = [
   {
+    title: "Nils Frahm - Old Friends New Friends",
+    link: (
+      <img
+        style={{ height: 12, marginRight: 4 }}
+        src="https://slate.textile.io/ipfs/bafkreig6vbqgunqmja4vt6rrpojbtf24dnkgt2lxcvpl4x7gtnn7rqbp4a"
+      />
+    ),
+    type: "Soundcloud",
+    preview:
+      "https://slate.textile.io/ipfs/bafkreic5z2j6kz4qn4zgcv2wakvgok7bgn2tdsrirrcbmcngbty3m4n7fi",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeicdrezbs4xtdgwmhef52fwu5dkw2bv3m6sbfbd7wikleszezufeci",
+  },
+  {
+    title: "zancan - Lushtemples",
+    link: (
+      <img
+        style={{ height: 12, marginRight: 4 }}
+        src="https://slate.textile.io/ipfs/bafkreiayzflrhnmknrbe6w6fyp6anepb2sdik23g7zid4gadmtpjizpnuu"
+      />
+    ),
+    type: "hicetnunc.art",
+    preview:
+      "https://slate.textile.io/ipfs/bafkreia7ir22cbomueh6amuypurqyggqnxsbdirapljxgeoju7m656cvve",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeig5mukv6kzfcwphudok6wksjxkglfb2akvt3yzhnqcooj2juwegiu",
+  },
+  {
     title: "OP-Z Synthesizer",
     link: <SVG.Link height={12} style={{ marginRight: 4 }} />,
-    type: "teenage.engineering",
+    type: "JPEG",
     preview:
-      "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
+      "https://slate.textile.io/ipfs/bafkreiagkyoslopcxar5pt4vum4ngkbqnqzspa4kbeyltlxpsh7a6xb3mm",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeiaaqrbqdgytuk362qe7oezw5vvkue5yhmp5oxdxw76clvnvp7w2yu",
   },
   {
-    title: "OP-Z Synthesizer",
+    title: "Hermann Hesse - Demian",
+    link: <SVG.Link height={12} style={{ marginRight: 4 }} />,
     type: "PDF",
     preview:
-      "https://slate.textile.io/ipfs/bafkreiduzx7g3ujntby42o5wfvpqtelwdhopytqopyho2b6ejfuw4lxlqe",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
+      "https://slate.textile.io/ipfs/bafkreierp2ddmptriabymjse2mu772hftl7zrl63akbthl42cl6yvsiddu",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeietqtoktbmkxlsfrhhcdodbjd7bixkjvrxxxjsy6s7tdqwuicxhw4",
   },
   {
-    title: "OP-Z Synthesizer",
-    type: "PNG",
+    title: "ASMR prime numbers",
+    link: (
+      <img
+        style={{ height: 12, marginRight: 4 }}
+        src="https://slate.textile.io/ipfs/bafkreieb7zmiss2rlnlhhkwbgxlc7szmzsq3yars7ujjflhwq6it2low5m"
+      />
+    ),
+    type: "Youtube",
     preview:
-      "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
+      "https://slate.textile.io/ipfs/bafkreiaars3ztdupanomdsy2o3ok6xr6gcjmwc2situnquggiz5x2xokgy",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeigaet3w3yvpchwup33tr3oyhpu3ckjnrbqq7a7kxoqwp3drzxsmvm",
   },
   {
-    title: "OP-Z Synthesizer",
-    type: "MP3",
+    title: "r/dostoevsky - Fyodor Dostoevsky",
+    link: (
+      <img
+        style={{ height: 12, marginRight: 4 }}
+        src="https://slate.textile.io/ipfs/bafkreigmnfr6bnermvxegkrfg2lfy7pzifopbtnttql4jn2j33vzopw4e4"
+      />
+    ),
+    type: "Reddit",
     preview:
-      "https://slate.textile.io/ipfs/bafkreighl64zbil2p2tr35omlvatur4mhrzh22j3gibjikbf5rwhtasu3m",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
-  },
-  {
-    title: "OP-Z Synthesizer",
-    type: "MP4",
-    preview:
-      "https://slate.textile.io/ipfs/bafkreifueoo5yk5ukl3ezjp2wwn6dqzjcn7ppv5yaxhni7aykhp76pjzli",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
-  },
-  {
-    title: "AUTHENTIC FONT",
-    type: "TTF",
-    preview:
-      "https://slate.textile.io/ipfs/bafkreidqoebuicx7miwrsva2raeeebmcpvavsxzbkfumry32egb47zas3y",
-    URL: "https://slate.textile.io/ipfs/bafkreifwroxchchkkgdg77uqqj5naycbjm45hnpdesrxw4cczlteye2g74",
+      "https://slate.textile.io/ipfs/bafybeiafyuacznehtudad5hxzhbri4snjucrsnna2nzjifocebazy6xkt4",
+    URL:
+      "https://slate.host/slate/objects?cid=bafybeidmxr5vebmqthxsxdy7w5laxb45y6rdg27vjhf5pauu2iyjng7b6e",
   },
 ];
 
@@ -217,7 +250,7 @@ const STYLES_ROOT = css`
 const STYLES_CONTAINER = css`
   max-width: 1080px;
   margin: 0 auto;
-  padding: 160px 24px;
+  padding: 80px 24px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     max-width: 480px;
@@ -238,11 +271,11 @@ const STYLES_CONTAINER_FLEX = css`
 
 const STYLES_HERO_TEXT = css`
   display: flex;
+  flex-direction: column;
   align-items: center;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    display: block;
-  }
+  text-align: left;
+  max-width: 640px;
+  margin: 0 auto;
 `;
 
 const STYLES_TEXT = css`
@@ -268,8 +301,7 @@ const STYLES_HEADING1 = css`
   font-size: 84px;
   line-height: 88px;
   letter-spacing: -0.05em;
-  display: flex;
-  align-items: baseline;
+  text-align: center;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: 64px;
@@ -318,11 +350,13 @@ const STYLES_HEADING3 = css`
 `;
 
 const STYLES_BODY1 = css`
-  font-family: ${Constants.font.text};
+  font-family: ${Constants.font.medium};
   font-size: 24px;
   line-height: 36px;
   letter-spacing: -0.02em;
   margin-bottom: 16px;
+  text-align: center;
+  width: 100%;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: 20px;
@@ -388,7 +422,7 @@ const STYLES_BUTTON_PRIMARY = css`
 
 const STYLES_BUTTON_PRIMARY_BIG = css`
   ${STYLES_BUTTON_PRIMARY};
-  padding: 18px 28px 18px 24px;
+  padding: 14px 32px;
   border-radius: 20px;
   font-size: 16px;
   line-height: 24px;
@@ -396,13 +430,7 @@ const STYLES_BUTTON_PRIMARY_BIG = css`
 
 const STYLES_BUTTON_PRIMARY_BIG_HERO = css`
   ${STYLES_BUTTON_PRIMARY_BIG};
-  margin-left: 50%;
-  margin-bottom: 48px;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    margin-left: 0;
-    margin-bottom: 32px;
-  }
+  margin: 0 auto 48px auto;
 `;
 
 const STYLES_BUTTON_PRIMARY_SMALL = css`
@@ -417,52 +445,10 @@ const STYLES_BUTTON_SECONDARY = css`
   background-color: ${Constants.semantic.bgGrayLight};
 `;
 
-const STYLES_BUTTON_SECONDARY_BIG = css`
-  ${STYLES_BUTTON_SECONDARY};
-  background-color: ${Constants.semantic.bgWhite};
-  padding: 18px 24px;
-  border: 2px solid ${Constants.semantic.borderGrayLight};
-  border-radius: 20px;
-  font-size: 16px;
-  line-height: 24px;
-`;
-
 const STYLES_BUTTON_SECONDARY_SMALL = css`
   ${STYLES_BUTTON_SECONDARY};
   padding: 1px 12px 3px;
   border-radius: 8px;
-`;
-
-const STYLES_DATA_METER = css`
-  border: 1px solid ${Constants.semantic.borderGrayLight4};
-  border-radius: 8px;
-  background-color: ${Constants.semantic.bgGrayLight};
-  width: 500%;
-  height: 24px;
-  overflow: hidden;
-`;
-
-const STYLES_DATA_USED = css`
-  width: 0.5%;
-  height: 100%;
-  display: inline-block;
-`;
-
-const STYLES_DATA_LABEL_GROUP = css`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    margin-top: 12px;
-    display: block;
-  }
-`;
-
-const STYLES_DATA_LABEL = css`
-  display: flex;
-  align-items: center;
-  margin: 16px 24px 0 0;
 `;
 
 const STYLES_CARD_GROUP = css`
@@ -658,20 +644,6 @@ const STYLES_CONNECT_BAR = css`
   }
 `;
 
-const STYLES_STORAGE = css`
-  ${STYLES_HEADING2}
-  color: ${Constants.semantic.textBlack};
-  background-color: ${Constants.semantic.bgGrayLight};
-  padding: 7px 16px 9px;
-  border-radius: 24px;
-  margin-left: 8px;
-`;
-
-const STYLES_STORAGE_LINE = css`
-  display: flex;
-  align-items: flex-end;
-`;
-
 const STYLES_WRAPPER = css`
   position: relative;
   background-color: ${Constants.semantic.bgLight};
@@ -707,6 +679,9 @@ const STYLES_DESCRIPTION = css`
   font-size: 14px;
   line-height: 20px;
   letter-spacing: -0.006px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const STYLES_PREVIEW = css`
@@ -762,7 +737,7 @@ const STYLES_ICON_BUTTON = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${Constants.semantic.bgGrayLight4};
+  background-color: ${Constants.semantic.bgWhite};
   border: 1px solid ${Constants.semantic.borderGrayLight4};
   box-shadow: 0px 4px 16px ${Constants.shadow.lightSmall};
   border-radius: 8px;
@@ -798,31 +773,6 @@ const ObjectPreview = (props) => {
   );
 };
 
-const DataMeter = (props) => {
-  return (
-    <div
-      css={STYLES_DATA_USED}
-      style={{
-        backgroundColor: props.color,
-        radius: props.radius,
-        width: props.width,
-      }}
-    />
-  );
-};
-
-const DataLabel = (props) => {
-  return (
-    <div css={STYLES_DATA_LABEL}>
-      <div
-        css={STYLES_DATA_METER}
-        style={{ height: 12, width: 12, backgroundColor: props.color, marginRight: 8 }}
-      />
-      {props.label}
-    </div>
-  );
-};
-
 const Integration = (props) => {
   return (
     <div style={{ width: "100%" }}>
@@ -833,7 +783,7 @@ const Integration = (props) => {
           <div css={STYLES_TOOL_ICON} />
         )}
         <div>
-          <div css={STYLES_HEADING3} style={{ marginBottom: 0 }}>
+          <div css={STYLES_HEADING3} style={{ marginBottom: 4 }}>
             {props.title}{" "}
           </div>
           <div css={STYLES_BODY2} style={{ color: Constants.semantic.textGrayDark }}>
@@ -882,7 +832,7 @@ export default function IndexPage() {
   const url = "https://slate.host/";
   const image =
     "https://slate.textile.io/ipfs/bafkreiddhzzwu5l6i7cikmydvumgnqwoml4rsurzftkopcvgcnwhndo7fa";
-
+  const signInURL = "/_/auth";
   const {
     getFieldProps: getSignupFielProps,
     getFormProps: getSigninFormProps,
@@ -905,29 +855,27 @@ export default function IndexPage() {
       <WebsiteHeader />
       <div css={STYLES_ROOT}>
         <div css={STYLES_CONTAINER}>
-          <div css={STYLES_HEADING1}>your personal</div>
-          <div css={STYLES_HEADING1} style={{ color: Constants.semantic.textGray }}>
-            search
-            <div css={STYLES_CURSOR_BLINK} />
-          </div>
           <div css={STYLES_HERO_TEXT}>
-            <div css={STYLES_HEADING1} style={{ marginBottom: 24 }}>
-              engine
+            <div css={STYLES_HEADING1}>Your personal </div>
+            <div
+              css={STYLES_HEADING1}
+              style={{ color: Constants.semantic.textGray, marginBottom: 24 }}
+            >
+              search
+              <span css={STYLES_CURSOR_BLINK} />
+              <span style={{ color: Constants.semantic.textBlack }}> engine</span>
             </div>
             <div css={STYLES_BODY1}>
-              Slate is a search tool for saving all of your files, bookmarks, and links on the web.
+              Slate is a search tool designed to help you remember and keep track of things you care
+              about on the web.
             </div>
+            <a css={STYLES_BUTTON_PRIMARY_BIG_HERO} href={signInURL}>
+              Get started
+            </a>
           </div>
-          <a css={STYLES_BUTTON_PRIMARY_BIG_HERO}>
-            <img
-              src="https://slate.textile.io/ipfs/bafkreifaspqfcywjonh4rnzdxp3gqkgtgl7gxxy274gql34h5v3ow6rqse"
-              style={{ height: "24px", width: "24px", marginRight: "12px" }}
-            />
-            Sign up
-          </a>
           <img
             css={STYLES_IMG_HERO}
-            src="https://slate.textile.io/ipfs/bafybeiatsp4eyc2dtshzweopxgekrx6ki7no3hzcz475lqq3rroneo3rwm"
+            src="https://slate.textile.io/ipfs/bafybeiczylx6qu7kwdpy6ydejki6c2cwrniyvzye2gkjxgknm2czkkf7hy"
           />
         </div>
 
@@ -944,12 +892,10 @@ export default function IndexPage() {
             ))}
           </div>
           <div css={STYLES_TEXT}>
-            <div css={STYLES_HEADING2}>
-              All of your stuff <br />
-              in one place
-            </div>
+            <div css={STYLES_HEADING2}>A single place to save all your things</div>
             <div css={STYLES_BODY2}>
-              Slate gives you the power to save your bookmarks, files, and data all in one place.
+              Save anything from the web directly to Slate without worrying about how or where to
+              save it.
             </div>
           </div>
         </div>
@@ -957,48 +903,45 @@ export default function IndexPage() {
         <div css={STYLES_CONTAINER}>
           <div css={STYLES_TEXT}>
             <div css={STYLES_HEADING2}>
-              Instant <span style={{ color: Constants.semantic.textGray }}>search</span>
+              Get back to things instantly with global{" "}
+              <span style={{ color: Constants.semantic.textGray }}>search</span>
               <div css={STYLES_CURSOR_BLINK_SMALL} />
-              <br />
-              from anywhere
             </div>
             <div css={STYLES_BODY2}>
-              Your stuff is only as useful as it is accessible. Everything you save to Slate can be
-              instantly accessed in the app or from anywhere in the browser with the Slate Chrome
-              extension.
+              Find things fast with integrated search available to you anywhere in the browser.
             </div>
           </div>
           <div css={STYLES_CONTAINER_FLEX} style={{ padding: 0 }}>
             <div css={STYLES_FEATURE_CARD}>
               <div css={STYLES_FEATURE_DESCRIPTION}>
                 <div css={STYLES_HEADING3}>
-                  Access Slate anytime, anywhere when you browse the Internet.
+                  Use the Slate browser extension to search and save from anywhere.
                 </div>
                 <div css={STYLES_ICON_BUTTON}>⌥</div>
                 <div css={STYLES_ICON_BUTTON}>S</div>
               </div>
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ width: "160%", margin: "0 -30%", border: "6px solid #000000" }}
+                style={{ width: "90%", margin: "20% 24px", border: "6px solid #000000" }}
                 src="https://slate.textile.io/ipfs/bafybeihsrxgjk5ax4wzbnfnq2kyg4djylrvpsbzrhitvnmcjixupbk5qjm"
               />
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ margin: "-80% auto 48px auto" }}
-                src="https://slate.textile.io/ipfs/bafkreidm2ffwdjgk5j5w4ja2p7fjrflfeldyhak2qigkpatvhazc5rsvda"
+                style={{ width: "70%", margin: "-95% auto 48px auto" }}
+                src="https://slate.textile.io/ipfs/bafkreievp6angjfzf5awdnqeog4rr73ukz24xnlpdmajfdp2lfstzlkr24"
               />
             </div>
             <div css={STYLES_FEATURE_CARD}>
               <div css={STYLES_FEATURE_DESCRIPTION}>
                 <div css={STYLES_HEADING3}>
-                  Search for references on your personal database with Slate.
+                  Use tags and keywords to find search across all of your links and files.
                 </div>
                 <div style={{ height: 32 }}></div>
               </div>
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ margin: "0 0 0 20px", width: "110%" }}
-                src="https://slate.textile.io/ipfs/bafkreidm2ffwdjgk5j5w4ja2p7fjrflfeldyhak2qigkpatvhazc5rsvda"
+                style={{ margin: "0 0 0 20px", width: "120%" }}
+                src="https://slate.textile.io/ipfs/bafkreidllwo5j6uyx75alz5amuhrrs5uylw3slgowofy2rx7yn4rttakiq"
               />
             </div>
           </div>
@@ -1032,24 +975,15 @@ export default function IndexPage() {
               Starting with your browser, Slate integrates seamlessly with all the places you save,
               bookmark, and save things to make them searchable to you in one place.
             </div>
-            <a css={STYLES_BUTTON_SECONDARY_BIG} style={{ marginTop: 48 }}>
-              <img
-                src="https://slate.textile.io/ipfs/bafybeieslchdkdqj2ryh7wwazmsj2iumro7xcawitx2w3rze5glk5py76u"
-                style={{ height: "24px", width: "24px", marginRight: "12px" }}
-              />
-              Join waitlist
-            </a>
           </div>
         </div>
 
         <div css={STYLES_CONTAINER}>
           <div css={STYLES_TEXT}>
-            <div css={STYLES_HEADING2}>
-              Minimize <br /> organizing effort
-            </div>
+            <div css={STYLES_HEADING2}>Organize and share however you like</div>
             <div css={STYLES_BODY2}>
-              Use Slate for yourself by creating channels based on filters applied to your files and
-              data. You can publish any collection to the web for others to subscribe to and follow.
+              Add tags to create relationships and connections to help you remember things. Create
+              channels to share things publicly on the web.
             </div>
           </div>
 
@@ -1057,104 +991,38 @@ export default function IndexPage() {
             <div css={STYLES_FEATURE_CARD}>
               <div css={STYLES_FEATURE_DESCRIPTION}>
                 <div css={STYLES_HEADING3}>
-                  No folders,
-                  <br />
-                  just tags
+                  Use tags to help you organize your things on the fly.
                 </div>
                 <div css={STYLES_ICON_BUTTON}>#</div>
               </div>
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ border: "6px solid #000000", marginTop: 48 }}
+                style={{ width: "90%", margin: "20% 24px", border: "6px solid #000000" }}
                 src="https://slate.textile.io/ipfs/bafybeia7eclwk2zk6jv2agfwjj4fs57yhxz7vgwchaa6w34wf7xwohq7ky"
               />
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ width: "75%", margin: "-72% auto 48px auto" }}
-                src="https://slate.textile.io/ipfs/bafkreigl7t3sobz5rmgpqoptzh7bozwmygmxzgskpwdovchkvs2yiws2vu"
+                style={{ width: "70%", margin: "-100% auto 48px auto" }}
+                src="https://slate.textile.io/ipfs/bafkreiaopgorx45iriyjzl2fcdygt3fma2s47m6z7vi323pbpdmhx3m64u"
               />
             </div>
             <div css={STYLES_FEATURE_CARD}>
               <div css={STYLES_FEATURE_DESCRIPTION}>
                 <div css={STYLES_HEADING3}>
-                  Public tags for sharing,
-                  <br />
-                  private tags for yourself
+                  Create channels to share collections, topics or archives of things publicly on the
+                  web.
                 </div>
                 <div style={{ height: 32 }}></div>
               </div>
               <img
                 css={STYLES_FEATURE_IMG}
-                style={{ margin: "0 0 0 20px", width: "110%" }}
-                src="https://slate.textile.io/ipfs/bafkreid33v3lktc3xicfqwhx55yssu2vo22dgax4pmax3bpgdfie4upy7e"
+                style={{ margin: "0 0 0 20px", width: "120%" }}
+                src="https://slate.textile.io/ipfs/bafybeiffx4fuhmne56yul3z24w6sh5ciumgy6dymdf6m3izdr6dknakhzy"
               />
             </div>
           </div>
         </div>
 
-        <div css={STYLES_CONTAINER}>
-          <div css={STYLES_TEXT}>
-            <div css={STYLES_STORAGE_LINE}>
-              <div css={STYLES_HEADING2} style={{ marginBottom: 8, minWidth: 0 }}>
-                Affordable
-              </div>
-              <div>
-                <div
-                  css={STYLES_STORAGE}
-                  style={{ marginBottom: 2, color: Constants.semantic.textGrayLight }}
-                >
-                  storage
-                </div>
-                <div
-                  css={STYLES_STORAGE}
-                  style={{ marginBottom: 2, color: Constants.semantic.textGray }}
-                >
-                  storage
-                </div>
-                <div css={STYLES_STORAGE} style={{ marginBottom: 0 }}>
-                  storage
-                </div>
-              </div>
-            </div>
-            <div css={STYLES_HEADING2}>for everyone</div>
-            <div css={STYLES_BODY2}>
-              With Slate, you never have to worry about storage space again. Every account comes
-              with 30GB of storage for free with a paid unlimited data plan coming soon.
-            </div>
-          </div>
-          <div css={STYLES_DATA_METER}>
-            {DATAMETER.map((each) => (
-              <DataMeter radius={each.radius} width={each.width} color={each.color} />
-            ))}
-          </div>
-          <div css={STYLES_DATA_LABEL_GROUP}>
-            {DATAMETER.map((each) => (
-              <DataLabel label={each.label} color={each.color} />
-            ))}
-          </div>
-          <a css={STYLES_BUTTON_SECONDARY_BIG} style={{ marginTop: 48 }}>
-            <img
-              src="https://slate.textile.io/ipfs/bafybeieslchdkdqj2ryh7wwazmsj2iumro7xcawitx2w3rze5glk5py76u"
-              style={{ height: "24px", width: "24px", marginRight: "12px" }}
-            />
-            Join waitlist
-          </a>
-        </div>
-
-        <div css={STYLES_CONTAINER}>
-          <div css={STYLES_TEXT}>
-            <div css={STYLES_HEADING2}>Powered by web3</div>
-            <div css={STYLES_BODY2}>
-              All of Slate is built on lasting new technologies where data storage is designed to
-              ensure the privacy, security, and portability of your data.
-            </div>
-          </div>
-          <div css={STYLES_CARD_GROUP}>
-            {WEB3.map((each) => (
-              <Card logo={each.logo} text={each.text} link={each.link} action={each.action} />
-            ))}
-          </div>
-        </div>
         <div css={STYLES_CONTAINER}>
           <div css={STYLES_TEXT}>
             <div css={STYLES_HEADING2}>FAQs</div>
@@ -1201,7 +1069,6 @@ export default function IndexPage() {
         <div css={STYLES_CONTAINER}>
           <div css={STYLES_TEXT} style={{ margin: "40px auto", textAlign: "center" }}>
             <div css={STYLES_HEADING2}>Get started for free</div>
-            <div css={STYLES_BODY2}>Get 30GB storage for free and claim your user handle.</div>
           </div>
           <div css={STYLES_AUTH_MODAL}>
             <System.ButtonPrimaryFull
@@ -1210,7 +1077,7 @@ export default function IndexPage() {
               style={{ backgroundColor: "#1DA1F2" }}
             >
               <SVGLogo.Twitter height="14px" style={{ marginRight: "16px" }} />
-              Continue with Twitter
+              Sign up with Twitter
             </System.ButtonPrimaryFull>
             <div css={STYLES_DIVIDER} />
             <form {...getSigninFormProps()} style={{ width: "100%" }}>
