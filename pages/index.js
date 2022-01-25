@@ -833,6 +833,7 @@ export default function IndexPage() {
   const image =
     "https://slate.textile.io/ipfs/bafkreifww37ypduoi5pvj2cuikz7iycp7l5h7czke6lcboukkaqkoab3t4";
   const signInURL = "/_/auth";
+  const discordURL = "https://discord.gg/NRsUjpCypr";
   const {
     getFieldProps: getSignupFielProps,
     getFormProps: getSigninFormProps,
@@ -1041,6 +1042,8 @@ export default function IndexPage() {
             <a
               css={STYLES_BUTTON_PRIMARY_BIG}
               style={{ backgroundColor: "#7289d9", marginTop: 24 }}
+              href={discordURL}
+              target="_blank"
             >
               <SVGLogo.Discord height="14px" style={{ marginRight: "16px" }} />
               Join Discord channel

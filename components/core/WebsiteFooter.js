@@ -64,6 +64,11 @@ const styleFlexFull = {
 };
 
 export const WebsiteFooter = (props) => {
+  const discordURL = "https://discord.gg/NRsUjpCypr";
+  const twitterURL = "https://twitter.com/_slate";
+  const githubURL = "https://github.com/filecoin-project/slate/issues/126";
+  const extensionURL =
+    "https://chrome.google.com/webstore/detail/slate-web-extension/gloembacbehhbfbkcfjmloikeeaebnoc";
   return (
     <div css={STYLES_ROOT}>
       <div css={STYLES_CONTAINER} style={props.style}>
@@ -72,28 +77,21 @@ export const WebsiteFooter = (props) => {
         <div css={STYLES_FLEX}>
           <div css={STYLES_CONTENT_BLOCK}>
             <div>Resources</div>
-            <a
-              css={STYLES_LINK}
-              href="https://chrome.google.com/webstore/detail/slate-web-extension/gloembacbehhbfbkcfjmloikeeaebnoc"
-            >
+            <a css={STYLES_LINK} href={extensionURL}>
               Slate for Chrome
             </a>
             <br />
-            <a
-              css={STYLES_LINK}
-              href="https://github.com/filecoin-project/slate/issues/126"
-              target="_blank"
-            >
+            <a css={STYLES_LINK} href={githubURL} target="_blank">
               Github
             </a>
           </div>
           <div css={STYLES_CONTENT_BLOCK}>
             <div>Contact & Support</div>
-            <a css={STYLES_LINK} href="https://twitter.com/_slate" target="_blank">
+            <a css={STYLES_LINK} href={twitterURL} target="_blank">
               Twitter
             </a>
             <br />
-            <a css={STYLES_LINK} href="https://github.com/filecoin-project/slate" target="_blank">
+            <a css={STYLES_LINK} href={discordURL} target="_blank">
               Discord
             </a>
           </div>
