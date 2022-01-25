@@ -242,6 +242,7 @@ function ComboboxMenuButton({ children, index, onSelect, onMouseDown, onClick, c
 const STYLES_COMBOBOX_MENU = css`
   position: relative;
   overflow-y: auto;
+  list-style: none;
 `;
 
 function ComboboxMenu({ children, css, ...props }) {
