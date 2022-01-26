@@ -585,7 +585,7 @@ function ComboboxSlatesMenu({
               index={suggestions.unapplied.length + 1}
               onSelect={createPublicState}
             >
-              create new shared tag “{filterValue}” (shows on your profile)
+              create new public tag “{filterValue}”
             </ComboboxSlatesMenuButton>
           </>
         ) : null}
