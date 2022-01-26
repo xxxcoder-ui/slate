@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { jsx } from "@emotion/react";
 import { mergeRefs } from "~/common/utilities";
-import { useEventListener } from "~/common/hooks";
+import { useEventListener, useIsomorphicLayoutEffect } from "~/common/hooks";
 
 /* -------------------------------------------------------------------------------------------------
  * RovingTabIndex Provider
@@ -16,17 +16,32 @@ export function Provider({ axis, children }) {
   const initialIndex = 0;
   const [focusedIndex, setFocusedIndex] = React.useState(initialIndex);
 
-  const registerItem = ({ index, ref }) => (focusedElementsRefs.current[index] = ref);
+  const registerItem = ({ index, ref }) => {
+    focusedElementsRefs.current[index] = ref;
+    if (ref.current === document.activeElement) setFocusedIndex(index);
+  };
+
   const cleanupItem = (index) => {
-    if (index === focusedIndex) {
-      setFocusedIndex(initialIndex);
-    }
     delete focusedElementsRefs.current[index];
+  };
+
+  const syncFocusedIndexState = ({ index, isFocused }) => {
+    if (!isFocused) return;
+    const calculatedMaxIndex = Math.max(...Object.keys(focusedElementsRefs.current));
+    const maxIndex = Number.isFinite(calculatedMaxIndex) ? calculatedMaxIndex : index;
+    const minIndex = initialIndex;
+    if (index >= maxIndex) {
+      setIndexTo(maxIndex);
+    } else if (index <= minIndex) {
+      setIndexTo(minIndex);
+    } else {
+      setIndexTo(index);
+    }
   };
 
   const focusElement = (index) => {
     const focusedElementRef = focusedElementsRefs.current[index];
-    focusedElementRef?.current?.focus();
+    focusedElementRef.current.focus();
   };
 
   const setIndexToNextElement = () => {
@@ -36,6 +51,7 @@ export function Provider({ axis, children }) {
     setFocusedIndex(nextFocusedIndex);
     focusElement(nextFocusedIndex);
   };
+
   const setIndexPreviousElement = () => {
     const prevIndex = focusedIndex - 1;
     let prevFocusedIndex = null;
@@ -48,10 +64,23 @@ export function Provider({ axis, children }) {
     focusElement(prevFocusedIndex);
   };
 
+  const setIndexTo = (index) => {
+    if (!focusedElementsRefs.current[index]) return;
+    setFocusedIndex(index);
+    focusElement(index);
+  };
+
   const contextValue = React.useMemo(
     () => [
       { focusedIndex, axis },
-      { registerItem, cleanupItem, setIndexToNextElement, setIndexPreviousElement },
+      {
+        registerItem,
+        cleanupItem,
+        syncFocusedIndexState,
+        setIndexToNextElement,
+        setIndexPreviousElement,
+        setIndexTo,
+      },
     ],
     [focusedIndex]
   );
@@ -65,7 +94,7 @@ export function Provider({ axis, children }) {
 const useRovingHandler = ({ ref }) => {
   const [{ axis }, { setIndexToNextElement, setIndexPreviousElement }] = useRovingIndexContext();
 
-  const keydownHandler = (e) => {
+  const keyUpHandler = (e) => {
     const preventDefaults = () => (e.preventDefault(), e.stopPropagation());
     if (axis === "vertical") {
       if (e.key === "ArrowUp") preventDefaults(), setIndexPreviousElement();
@@ -76,8 +105,8 @@ const useRovingHandler = ({ ref }) => {
     if (e.key === "ArrowRight") preventDefaults(), setIndexToNextElement();
   };
   useEventListener({
-    type: "keydown",
-    handler: keydownHandler,
+    type: "keyup",
+    handler: keyUpHandler,
     ref,
   });
 };
@@ -94,14 +123,37 @@ export const List = React.forwardRef(({ as = "div", children, ...props }, forwar
  * -----------------------------------------------------------------------------------------------*/
 
 export const Item = React.forwardRef(({ children, index, ...props }, forwardedRef) => {
-  const [{ focusedIndex }, { registerItem, cleanupItem }] = useRovingIndexContext();
+  const [{ focusedIndex }, { registerItem, cleanupItem, syncFocusedIndexState, setIndexTo }] =
+    useRovingIndexContext();
   const ref = React.useRef();
 
-  React.useLayoutEffect(() => {
+  const indexRef = React.useRef(index);
+  useIsomorphicLayoutEffect(() => {
+    indexRef.current = index;
     if (!ref.current) return;
+
     registerItem({ index, ref });
     return () => cleanupItem(index);
   }, [index]);
+
+  const isFocusedBeforeUnmountingRef = React.useRef();
+  React.useLayoutEffect(() => {
+    const element = ref.current;
+    return () => (isFocusedBeforeUnmountingRef.current = element === document.activeElement);
+  }, []);
+
+  React.useEffect(() => {
+    if (!ref.current) return;
+    if (children.props.autoFocus) setIndexTo(index);
+
+    // NOTE(amine): when an element is removed and is focused,move focus the next one
+    return () => {
+      syncFocusedIndexState({
+        index: indexRef.current,
+        isFocused: isFocusedBeforeUnmountingRef.current,
+      });
+    };
+  }, []);
 
   return React.cloneElement(React.Children.only(children), {
     ...props,

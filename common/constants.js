@@ -102,6 +102,7 @@ export const semantic = {
   bgBlurWhiteOP: "rgba(255, 255, 255, 0.85)",
   bgBlurWhiteTRN: "rgba(255, 255, 255, 0.3)",
   bgBlurLightTRN: "rgba(247, 248, 249, 0.3)",
+  bgBlurLightOP: "rgba(247, 248, 249, 0.85)",
   bgBlurLight6: "rgba(247, 248, 249, 0.7)",
   bgBlurLight6OP: "rgba(247, 248, 249, 0.85)",
   bgBlurLight6TRN: "rgba(247, 248, 249, 0.3)",
@@ -136,6 +137,7 @@ export const shadow = {
   darkMedium: "0px 8px 32px 0 rgba(99, 101, 102, 0.2)",
   darkLarge: "0px 12px 64px 0 rgba(99, 101, 102, 0.3)",
   card: "0px 0px 20px #E5E8EA;",
+  jumperLight: "0px 16px 64px 0 rgba(99, 101, 102, 0.7)",
 };
 
 export const zindex = {

@@ -380,7 +380,7 @@ export const useMediaQuery = () => {
   };
 };
 
-export const useEventListener = ({ type, handler, ref, enabled = true }, dependencies) => {
+export const useEventListener = ({ type, handler, ref, options, enabled = true }, dependencies) => {
   React.useEffect(() => {
     if (!enabled) return;
 
@@ -389,8 +389,8 @@ export const useEventListener = ({ type, handler, ref, enabled = true }, depende
 
     if (!element) return;
 
-    element.addEventListener(type, handler);
-    return () => element.removeEventListener(type, handler);
+    element.addEventListener(type, handler, options);
+    return () => element.removeEventListener(type, handler, options);
   }, dependencies);
 };
 
@@ -518,3 +518,12 @@ export const useLocalStorage = (key) => ({
   getItem: () => localStorage?.getItem(key),
   removeItem: () => localStorage?.removeItem(key),
 });
+
+export const usePrevious = (value) => {
+  const ref = React.useRef();
+  React.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+};

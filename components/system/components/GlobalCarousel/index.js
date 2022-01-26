@@ -12,7 +12,7 @@ import * as Events from "~/common/custom-events";
 
 import { css } from "@emotion/react";
 import { Alert } from "~/components/core/Alert";
-import { motion, AnimateSharedLayout } from "framer-motion";
+import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {
   useDetectTextOverflow,
   useEscapeKey,
@@ -160,9 +160,11 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
 const STYLES_ACTION_BUTTON = (theme) => css`
   padding: 8px;
   border-radius: 8px;
-  &:hover {
-    background-color: ${theme.semantic.bgGrayLight};
-    box-shadow: ${theme.shadow.lightSmall};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: ${theme.semantic.bgGrayLight};
+      box-shadow: ${theme.shadow.lightSmall};
+    }
   }
 `;
 
@@ -203,15 +205,22 @@ function CarouselHeader({
   const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
     useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+  const [isEditSlatesVisible, { showControl: showEditSlates, hideControl: hideEditSlates }] =
     useCarouselJumperControls();
+
+  const hideOpenJumpers = () => {
+    if (isMoreInfoVisible) hideMoreInfo();
+    if (isEditInfoVisible) hideEditInfo();
+    if (isShareFileVisible) hideShareFile();
+    if (isEditSlatesVisible) hideEditSlates();
+  };
 
   const moreInfoTriggerRef = React.useRef();
   const editInfoTriggerRef = React.useRef();
   const shareTriggerRef = React.useRef();
-  const editChannelsTriggerRef = React.useRef();
+  const editSlatesTriggerRef = React.useRef();
 
-  const handleKeyDown = (e) => {
+  const handleKeyUp = (e) => {
     const targetTagName = e.target.tagName;
     if (targetTagName === "INPUT" || targetTagName === "TEXTAREA" || targetTagName === "SELECT")
       return;
@@ -220,26 +229,30 @@ function CarouselHeader({
       case "e":
       case "E":
         editInfoTriggerRef.current.focus();
+        hideOpenJumpers();
         showEditInfo();
         break;
       case "t":
       case "T":
-        editChannelsTriggerRef.current.focus();
-        showEditChannels();
+        editSlatesTriggerRef.current.focus();
+        hideOpenJumpers();
+        showEditSlates();
         break;
       case "s":
       case "S":
         shareTriggerRef.current.focus();
+        hideOpenJumpers();
         showShareFile();
         break;
       case "i":
       case "I":
         moreInfoTriggerRef.current.focus();
+        hideOpenJumpers();
         showMoreInfo();
         break;
     }
   };
-  useEventListener({ type: "keyup", handler: handleKeyDown });
+  useEventListener({ type: "keyup", handler: handleKeyUp });
 
   const headerRef = React.useRef();
   React.useEffect(() => {
@@ -250,36 +263,38 @@ function CarouselHeader({
     <>
       <ModalPortal>
         {isOwner && (
-          <Jumpers.EditInfo file={file} isOpen={isEditInfoVisible} onClose={hideEditInfo} />
+          <AnimatePresence>
+            {isEditInfoVisible && <Jumpers.EditInfo file={file} onClose={hideEditInfo} />}
+          </AnimatePresence>
         )}
         {isOwner && (
-          <Jumpers.EditChannels
-            viewer={viewer}
-            file={file}
-            isOpen={isEditChannelsVisible}
-            onClose={hideEditChannels}
-          />
+          <AnimatePresence>
+            {isEditSlatesVisible && (
+              <Jumpers.EditSlates viewer={viewer} file={file} onClose={hideEditSlates} />
+            )}
+          </AnimatePresence>
         )}
-        <Jumpers.FileDescription
-          file={file}
-          isOpen={isFileDescriptionVisible}
-          onClose={hideFileDescription}
-        />
-        <Jumpers.MoreInfo
-          viewer={viewer}
-          external={external}
-          isOwner={isOwner}
-          file={file}
-          isOpen={isMoreInfoVisible}
-          onClose={hideMoreInfo}
-        />
-        <Jumpers.Share
-          file={file}
-          data={data}
-          viewer={viewer}
-          isOpen={isShareFileVisible}
-          onClose={hideShareFile}
-        />
+        <AnimatePresence>
+          {isFileDescriptionVisible && (
+            <Jumpers.FileDescription file={file} onClose={hideFileDescription} />
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {isMoreInfoVisible && (
+            <Jumpers.MoreInfo
+              viewer={viewer}
+              external={external}
+              isOwner={isOwner}
+              file={file}
+              onClose={hideMoreInfo}
+            />
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {isShareFileVisible && (
+            <Jumpers.Share file={file} data={data} viewer={viewer} onClose={hideShareFile} />
+          )}
+        </AnimatePresence>
       </ModalPortal>
 
       <nav css={STYLES_HEADER_WRAPPER} {...props}>
@@ -347,9 +362,9 @@ function CarouselHeader({
                 >
                   <System.ButtonPrimitive
                     as={motion.button}
-                    ref={editChannelsTriggerRef}
-                    layoutId="jumper-desktop-channels"
-                    onClick={showEditChannels}
+                    ref={editSlatesTriggerRef}
+                    layoutId="jumper-desktop-slates"
+                    onClick={showEditSlates}
                     style={{ marginLeft: 4 }}
                     aria-label="Tag"
                     css={STYLES_ACTION_BUTTON}
@@ -439,8 +454,8 @@ function CarouselHeader({
       <CarouselControls
         enableNextSlide={enableNextSlide}
         enablePreviousSlide={enablePreviousSlide}
-        onNextSlide={onNextSlide}
-        onPreviousSlide={onPreviousSlide}
+        onNextSlide={() => (hideOpenJumpers(), onNextSlide())}
+        onPreviousSlide={() => (hideOpenJumpers(), onPreviousSlide())}
         onClose={onClose}
       />
     </>
@@ -457,24 +472,6 @@ const STYLES_CAROUSEL_MOBILE_HEADER = (theme) => css`
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
     background-color: ${theme.semantic.bgBlurWhiteOP};
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-  }
-`;
-
-const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
-  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
-  justify-content: space-between;
-  z-index: 1;
-  width: 100%;
-  padding: 8px 16px;
-  border-top: 1px solid ${theme.semantic.borderGrayLight};
-  color: ${theme.semantic.textGrayDark};
-  min-height: 48px;
-
-  background-color: ${theme.semantic.bgWhite};
-  @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
-    background-color: ${theme.semantic.bgBlurWhite};
     -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
   }
@@ -560,6 +557,32 @@ function CarouselHeaderMobile({
   );
 }
 
+const MOBILE_FOOTER_HEIGHT = 52;
+
+const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  position: fixed;
+  bottom: 0;
+  justify-content: space-between;
+  z-index: ${theme.zindex.jumper + 1};
+  width: 100%;
+  padding: 8px 16px;
+  border-top: 1px solid ${theme.semantic.borderGrayLight};
+  color: ${theme.semantic.textGrayDark};
+  height: ${MOBILE_FOOTER_HEIGHT}px;
+
+  background-color: ${theme.semantic.bgWhite};
+  @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
+    background-color: ${theme.semantic.bgBlurWhite};
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+  }
+`;
+
+const STYLES_ACTION_BUTTON_SELECTED = (theme) => css`
+  background-color: ${theme.semantic.bgGrayLight4};
+`;
+
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
   const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
     useCarouselJumperControls();
@@ -570,95 +593,123 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
   const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
     useCarouselJumperControls();
 
-  const [isEditChannelsVisible, { showControl: showEditChannels, hideControl: hideEditChannels }] =
+  const [isEditSlatesVisible, { showControl: showEditSlates, hideControl: hideEditSlates }] =
     useCarouselJumperControls();
+
+  const hideOpenJumpers = () => {
+    if (isMoreInfoVisible) hideMoreInfo();
+    if (isEditInfoVisible) hideEditInfo();
+    if (isShareFileVisible) hideShareFile();
+    if (isEditSlatesVisible) hideEditSlates();
+  };
+
+  const toggleEditInfo = () =>
+    isEditInfoVisible ? hideEditInfo() : (hideOpenJumpers(), showEditInfo());
+
+  const toggleShareFile = () =>
+    isShareFileVisible ? hideShareFile() : (hideOpenJumpers(), showShareFile());
+
+  const toggleMoreInfo = () =>
+    isMoreInfoVisible ? hideMoreInfo() : (hideOpenJumpers(), showMoreInfo());
+
+  const toggleEditSlates = () =>
+    isEditSlatesVisible ? hideEditSlates() : (hideOpenJumpers(), showEditSlates());
+
   return (
     <>
-      <ModalPortal>
-        {isOwner && (
-          <Jumpers.EditInfoMobile file={file} isOpen={isEditInfoVisible} onClose={hideEditInfo} />
-        )}
-        {isOwner && (
-          <Jumpers.EditChannelsMobile
-            viewer={viewer}
-            file={file}
-            isOpen={isEditChannelsVisible}
-            onClose={hideEditChannels}
-          />
-        )}
-        <Jumpers.ShareMobile
-          file={file}
-          isOpen={isShareFileVisible}
-          data={data}
-          viewer={viewer}
-          onClose={hideShareFile}
-        />
-        <Jumpers.MoreInfoMobile
-          viewer={viewer}
-          external={external}
-          isOwner={isOwner}
-          file={file}
-          isOpen={isMoreInfoVisible}
-          onClose={hideMoreInfo}
-        />
-      </ModalPortal>
-      <AnimateSharedLayout>
-        <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
-          {isOwner && (
-            <System.ButtonPrimitive
-              as={motion.button}
-              layoutId="jumper-mobile-edit"
-              css={STYLES_ACTION_BUTTON}
-              onClick={showEditInfo}
-            >
-              <SVG.Edit />
-            </System.ButtonPrimitive>
-          )}
-
-          {isOwner && (
-            <System.ButtonPrimitive
-              as={motion.button}
-              layoutId="jumper-mobile-channels"
-              style={{ marginLeft: 4 }}
-              css={STYLES_ACTION_BUTTON}
-              onClick={showEditChannels}
-            >
-              <SVG.Hash />
-            </System.ButtonPrimitive>
-          )}
-
-          {!isOwner && (
-            <SaveFileButton
-              style={{ marginLeft: 4 }}
-              css={STYLES_ACTION_BUTTON}
+      {isOwner && (
+        <AnimatePresence>
+          {isEditInfoVisible && (
+            <Jumpers.EditInfoMobile
+              footerStyle={{ bottom: MOBILE_FOOTER_HEIGHT }}
               file={file}
-              viewer={viewer}
-              onAction={onAction}
+              onClose={hideEditInfo}
             />
           )}
+        </AnimatePresence>
+      )}
+      {isOwner && (
+        <AnimatePresence>
+          {isEditSlatesVisible && (
+            <Jumpers.EditSlatesMobile viewer={viewer} file={file} onClose={hideEditSlates} />
+          )}
+        </AnimatePresence>
+      )}
+      <AnimatePresence>
+        {isShareFileVisible && (
+          <Jumpers.ShareMobile file={file} data={data} viewer={viewer} onClose={hideShareFile} />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isMoreInfoVisible && (
+          <Jumpers.MoreInfoMobile
+            viewer={viewer}
+            external={external}
+            isOwner={isOwner}
+            file={file}
+            onClose={hideMoreInfo}
+          />
+        )}
+      </AnimatePresence>
+      <ModalPortal>
+        <AnimateSharedLayout>
+          <nav css={STYLES_CAROUSEL_MOBILE_FOOTER}>
+            {isOwner && (
+              <System.ButtonPrimitive
+                as={motion.button}
+                layoutId="jumper-mobile-edit"
+                css={[STYLES_ACTION_BUTTON, isEditInfoVisible && STYLES_ACTION_BUTTON_SELECTED]}
+                onClick={toggleEditInfo}
+              >
+                <SVG.Edit style={{ pointerEvents: "none" }} />
+              </System.ButtonPrimitive>
+            )}
 
-          <System.ButtonPrimitive
-            as={motion.button}
-            layoutId="jumper-mobile-share"
-            style={{ marginLeft: 4 }}
-            css={STYLES_ACTION_BUTTON}
-            onClick={showShareFile}
-          >
-            <SVG.Share />
-          </System.ButtonPrimitive>
+            {isOwner && (
+              <System.ButtonPrimitive
+                as={motion.button}
+                layoutId="jumper-mobile-slates"
+                style={{ marginLeft: 4 }}
+                css={[STYLES_ACTION_BUTTON, isEditSlatesVisible && STYLES_ACTION_BUTTON_SELECTED]}
+                onClick={toggleEditSlates}
+              >
+                <SVG.Hash style={{ pointerEvents: "none" }} />
+              </System.ButtonPrimitive>
+            )}
 
-          <System.ButtonPrimitive
-            as={motion.button}
-            layoutId="jumper-mobile-info"
-            style={{ marginLeft: 4 }}
-            css={STYLES_ACTION_BUTTON}
-            onClick={showMoreInfo}
-          >
-            <SVG.InfoCircle />
-          </System.ButtonPrimitive>
-          {file.isLink ? <VisitLinkButton file={file} /> : null}
-        </nav>
-      </AnimateSharedLayout>
+            {!isOwner && (
+              <SaveFileButton
+                style={{ marginLeft: 4 }}
+                css={STYLES_ACTION_BUTTON}
+                file={file}
+                viewer={viewer}
+                onAction={onAction}
+              />
+            )}
+
+            <System.ButtonPrimitive
+              as={motion.button}
+              layoutId="jumper-mobile-share"
+              style={{ marginLeft: 4 }}
+              css={[STYLES_ACTION_BUTTON, isShareFileVisible && STYLES_ACTION_BUTTON_SELECTED]}
+              onClick={toggleShareFile}
+            >
+              <SVG.Share style={{ pointerEvents: "none" }} />
+            </System.ButtonPrimitive>
+
+            <System.ButtonPrimitive
+              as={motion.button}
+              layoutId="jumper-mobile-info"
+              style={{ marginLeft: 4 }}
+              css={[STYLES_ACTION_BUTTON, isMoreInfoVisible && STYLES_ACTION_BUTTON_SELECTED]}
+              onClick={toggleMoreInfo}
+            >
+              <SVG.InfoCircle />
+            </System.ButtonPrimitive>
+            {file.isLink ? <VisitLinkButton file={file} /> : null}
+          </nav>
+        </AnimateSharedLayout>
+      </ModalPortal>
     </>
   );
 }
@@ -668,7 +719,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
  * -----------------------------------------------------------------------------------------------*/
 
 const useCarouselKeyCommands = ({ handleNext, handlePrevious, handleClose }) => {
-  const handleKeyDown = (e) => {
+  const handleKeyUp = (e) => {
     const inputs = document.querySelectorAll("input");
     for (let elem of inputs) {
       if (document.activeElement === elem) {
@@ -697,7 +748,7 @@ const useCarouselKeyCommands = ({ handleNext, handlePrevious, handleClose }) => 
 
   useEscapeKey(handleClose);
 
-  useEventListener({ type: "keydown", handler: handleKeyDown });
+  useEventListener({ type: "keyup", handler: handleKeyUp });
 };
 
 const STYLES_CONTROLS_BUTTON = (theme) => css`

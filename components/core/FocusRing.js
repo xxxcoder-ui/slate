@@ -6,7 +6,7 @@ import { mergeEvents, mergeRefs, cloneElementWithJsx } from "~/common/utilities"
 const hasElementFocus = (el) => el.matches(":focus");
 const hasElementFocusWithin = (el) => el.matches(":focus-within");
 
-let isFocusViaKeyboard = false;
+let isFocusViaKeyboard = true;
 if (typeof window !== "undefined") {
   window?.addEventListener("mousedown", () => (isFocusViaKeyboard = false));
   window?.addEventListener("keydown", () => (isFocusViaKeyboard = true));

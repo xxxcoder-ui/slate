@@ -2,15 +2,11 @@ import * as React from "react";
 import * as System from "~/components/system";
 import * as Styles from "~/common/styles";
 import * as SVG from "~/common/svg";
-import * as Constants from "~/common/constants";
+import * as Tooltip from "~/components/system/components/fragments/Tooltip";
 
 import { ModalPortal } from "~/components/core/ModalPortal";
 import { css } from "@emotion/react";
-import {
-  AnimateSharedLayout,
-  AnimatePresence as FramerAnimatePresence,
-  motion,
-} from "framer-motion";
+import { AnimatePresence as FramerAnimatePresence, motion } from "framer-motion";
 import { useEscapeKey, useLockScroll } from "~/common/hooks";
 import { Show } from "~/components/utility/Show";
 import { useRestoreFocus, useTrapFocus } from "~/common/hooks/a11y";
@@ -35,6 +31,8 @@ const STYLES_JUMPER_ROOT = (theme) => css`
   border-radius: 16px;
   border: 1px solid ${theme.semantic.borderGrayLight4};
   overflow: hidden;
+  box-shadow: ${theme.shadow.jumperLight};
+
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     -webkit-backdrop-filter: blur(75px);
@@ -49,16 +47,6 @@ const STYLES_JUMPER_ROOT = (theme) => css`
     top: 0;
     left: 0;
   }
-`;
-
-const STYLES_JUMPER_OVERLAY = (theme) => css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: ${theme.zindex.jumper};
-  background-color: ${theme.semantic.bgBlurDark};
 `;
 
 const JumperContext = React.createContext({});
@@ -79,15 +67,7 @@ function Root({ children, onClose, ...props }) {
   return (
     <ModalPortal>
       <div ref={wrapperRef}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeInOut" }}
-          css={STYLES_JUMPER_OVERLAY}
-          onClick={onClose}
-        />
-        <System.Boundary enabled={true} onOutsideRectEvent={onClose}>
+        <System.Boundary enabled={true} onOutsideRectEvent={onClose} onMouseDown>
           <JumperContext.Provider value={{ onClose }}>
             <motion.div
               initial={{ y: 10, opacity: 0 }}
@@ -138,14 +118,29 @@ const Dismiss = React.forwardRef(({ css, ...props }, ref) => {
   const { onClose } = useJumperContext();
 
   return (
-    <System.ButtonPrimitive
-      ref={ref}
-      css={[STYLES_DISMISS_BUTTON, css]}
-      onClick={onClose}
-      {...props}
-    >
-      <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
-    </System.ButtonPrimitive>
+    <Tooltip.Root vertical="below" horizontal="center">
+      <Tooltip.Trigger aria-describedby="jumper-dismiss-trigger-tooltip">
+        <System.ButtonPrimitive
+          ref={ref}
+          css={[STYLES_DISMISS_BUTTON, css]}
+          onClick={onClose}
+          {...props}
+        >
+          <SVG.Dismiss width={20} height={20} style={{ display: "block" }} />
+        </System.ButtonPrimitive>
+      </Tooltip.Trigger>
+      <Tooltip.Content
+        style={{ marginTop: 4.5, marginLeft: -8 }}
+        css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+      >
+        <System.H6 id="jumper-dismiss-trigger-tooltip" as="p" color="textGrayDark">
+          Close jumper
+        </System.H6>
+        <System.H6 as="p" color="textGray" style={{ marginLeft: 16 }}>
+          Esc
+        </System.H6>
+      </Tooltip.Content>
+    </Tooltip.Root>
   );
 });
 
@@ -153,13 +148,13 @@ const Dismiss = React.forwardRef(({ css, ...props }, ref) => {
  *  Item
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_JUMPER_ITEM = css`
+const STYLES_JUMPER_ITEM_PADDING = css`
   padding: 13px 20px 12px;
 `;
 
 function Item({ children, ...props }) {
   return (
-    <div css={[STYLES_JUMPER_ITEM, css]} {...props}>
+    <div css={[STYLES_JUMPER_ITEM_PADDING, css]} {...props}>
       {children}
     </div>
   );
@@ -177,37 +172,37 @@ function Divider({ children, color = "borderGrayLight4", ...props }) {
 }
 
 /* -------------------------------------------------------------------------------------------------
- *  ObjectPreview
+ *  ObjectInfo
  * -----------------------------------------------------------------------------------------------*/
 
-function ObjectPreview({ file }) {
+function ObjectInfo({ file, css, style, ...props }) {
   return (
     <div
-      css={Styles.HORIZONTAL_CONTAINER_CENTERED}
-      style={{ color: Constants.system.green, width: "100%" }}
+      {...props}
+      css={[Styles.HORIZONTAL_CONTAINER_CENTERED, STYLES_JUMPER_ITEM_PADDING, css]}
+      style={{ width: "100%", ...style }}
     >
       <div>
-        <SVG.CheckCircle style={{ display: "block" }} />
+        <ObjectBoxPreview
+          file={file}
+          placeholderRatio={2}
+          style={{ width: 20, height: 20, borderRadius: 4 }}
+        />
       </div>
       <div style={{ marginLeft: 12, marginRight: 12 }}>
-        <AnimateSharedLayout>
-          <motion.div layoutId={`${file.id}-title`} key={`${file.id}-title`}>
-            <System.H5 nbrOflines={1} as="h1" style={{ wordBreak: "break-all" }} color="textBlack">
-              {file?.name || file?.filename}
-            </System.H5>
-          </motion.div>
-        </AnimateSharedLayout>
-        <Show when={file?.source}>
+        <div key={`${file.id}-title`}>
+          <System.H5 nbrOflines={1} as="h1" style={{ wordBreak: "break-all" }} color="textBlack">
+            {file?.name || file?.filename}
+          </System.H5>
+        </div>
+        <Show when={file?.linkSource}>
           <System.P3 nbrOflines={1} color="textBlack" style={{ marginTop: 3 }}>
-            {file?.source}
+            {file?.linkSource}
           </System.P3>
         </Show>
-      </div>
-      <div style={{ marginLeft: "auto" }}>
-        <ObjectBoxPreview file={file} placeholderRatio={2} style={{ width: 28, height: 39 }} />
       </div>
     </div>
   );
 }
 
-export { AnimatePresence, Root, Header, Dismiss, Item, Divider, ObjectPreview };
+export { AnimatePresence, Root, Header, Dismiss, Item, Divider, ObjectInfo };
