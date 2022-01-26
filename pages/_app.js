@@ -16,6 +16,8 @@ const INTERCOM_APP_ID = "jwgbampk";
 const CustomIntercomConfig = () => {
   const { boot } = useIntercom();
   React.useLayoutEffect(() => {
+    //NOTE(amine): Don't initiate the intercom widget on the landing page
+    if (typeof window !== "undefined" && window.location.pathname === "/") return;
     boot({
       alignment: "left",
       horizontalPadding: 23,

@@ -159,14 +159,12 @@ export default class SceneProfile extends React.Component {
         title={`${this.props.page.pageTitle} • Slate`}
         url={`${Constants.hostname}${this.props.page.pathname}`}
       >
-        <ScenePage>
-          <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
-            <EmptyState>
-              <SVG.Users height="24px" style={{ marginBottom: 24 }} />
-              <div>This user doesn't have any public content</div>
-            </EmptyState>
-          </div>
-        </ScenePage>
+        <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
+          <EmptyState>
+            <SVG.Users height="24px" style={{ marginBottom: 24 }} />
+            <div>This user doesn't have any public content</div>
+          </EmptyState>
+        </div>
       </WebsitePrototypeWrapper>
     );
     // }

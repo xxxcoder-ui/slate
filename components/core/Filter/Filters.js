@@ -66,10 +66,22 @@ const STYLES_FILTERS_GROUP = css`
   }
 `;
 
+const STYLES_ICON_CONTAINER = css`
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const FilterButton = React.forwardRef(({ children, Icon, image, isSelected, ...props }, ref) => (
   <Link {...props} ref={ref}>
     <span as="span" css={[STYLES_FILTER_BUTTON, isSelected && STYLES_FILTER_BUTTON_HIGHLIGHTED]}>
-      {Icon ? <Icon height={16} width={16} style={{ flexShrink: 0 }} /> : null}
+      {Icon ? (
+        <div css={STYLES_ICON_CONTAINER}>
+          <Icon height={16} width={16} style={{ flexShrink: 0 }} />
+        </div>
+      ) : null}
       {image ? image : null}
       <Typography.P2 as="span" nbrOflines={1} style={{ marginLeft: 6 }}>
         {children}
