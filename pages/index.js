@@ -42,7 +42,7 @@ const INTEGRATION = [
 
 const FAQ = [
   {
-    title: "What makes search different from other bookmarking / storage tools?",
+    title: "What makes Slate different from other bookmarking / storage tools?",
     text:
       "Slate is designed to automatically save and organize things for you to help you remember things and explore things you care about in an entirely new way.",
   },
@@ -935,7 +935,7 @@ export default function IndexPage() {
             <div css={STYLES_FEATURE_CARD}>
               <div css={STYLES_FEATURE_DESCRIPTION}>
                 <div css={STYLES_HEADING3}>
-                  Use tags and keywords to find search across all of your links and files.
+                  Use tags and keywords to search across all of your links and files.
                 </div>
                 <div style={{ height: 32 }}></div>
               </div>
@@ -973,8 +973,8 @@ export default function IndexPage() {
               your favorite tools
             </div>
             <div css={STYLES_BODY2}>
-              Starting with your browser, Slate integrates seamlessly with all the places you save,
-              bookmark, and save things to make them searchable to you in one place.
+              Starting with your browser, Slate integrates seamlessly with all the places you save
+              and bookmark things to make them searchable to you in one place.
             </div>
           </div>
         </div>
@@ -1038,7 +1038,7 @@ export default function IndexPage() {
         <div css={STYLES_CONTAINER} style={{ paddingBottom: 24 }}>
           <div css={STYLES_TEXT}>
             <div css={STYLES_HEADING2}>Come hang out</div>
-            <div css={STYLES_BODY2}>Join our discord channel for questions, discussions.</div>
+            <div css={STYLES_BODY2}>Join our discord channel for questions and discussions.</div>
             <a
               css={STYLES_BUTTON_PRIMARY_BIG}
               style={{ backgroundColor: "#7289d9", marginTop: 24 }}
