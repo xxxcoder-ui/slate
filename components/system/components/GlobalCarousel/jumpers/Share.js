@@ -63,21 +63,29 @@ function FileSharingButtons({ file, data, viewer }) {
   return (
     <>
       <System.ButtonPrimitive css={STYLES_SHARING_BUTTON} onClick={handleTwitterSharing} autoFocus>
-        <SVG.Twitter width={20} />
+        <div style={{ padding: 2 }}>
+          <SVG.Twitter width={16} height={16} />
+        </div>
         <System.P2 style={{ marginLeft: 12 }}>Share via Twitter</System.P2>
       </System.ButtonPrimitive>
       <System.ButtonPrimitive css={STYLES_SHARING_BUTTON} onClick={handleEmailSharing}>
-        <SVG.Mail width={20} />
+        <div style={{ padding: 2 }}>
+          <SVG.Mail width={16} height={16} />
+        </div>
         <System.P2 style={{ marginLeft: 12 }}>Share via email </System.P2>
       </System.ButtonPrimitive>
       <System.ButtonPrimitive css={STYLES_SHARING_BUTTON} onClick={handleLinkCopy}>
-        <SVG.Link width={20} />
+        <div style={{ padding: 2 }}>
+          <SVG.Link width={16} height={16} />
+        </div>
         <System.P2 style={{ marginLeft: 12 }}>
           {copyState.isLinkCopied ? "Copied" : "Copy public link"}
         </System.P2>
       </System.ButtonPrimitive>
       <System.ButtonPrimitive css={STYLES_SHARING_BUTTON} onClick={handleCidCopy}>
-        <SVG.Hexagon width={20} />
+        <div style={{ padding: 2 }}>
+          <SVG.Hexagon width={16} height={16} />
+        </div>
         <System.P2 style={{ marginLeft: 12 }}>
           {copyState.isCidCopied ? "Copied" : "Copy CID "}
         </System.P2>
@@ -116,9 +124,13 @@ function DownloadButton({ file, viewer, ...props }) {
     <div ref={downloadRef}>
       <System.ButtonPrimitive css={STYLES_SHARING_BUTTON} onClick={handleDownload} {...props}>
         {isDownloading ? (
-          <LoaderSpinner style={{ height: 16, width: 16 }} />
+          <div style={{ padding: 2 }}>
+            <LoaderSpinner style={{ height: 16, width: 16 }} />
+          </div>
         ) : (
-          <SVG.Download width={16} />
+          <div style={{ padding: 2 }}>
+            <SVG.Download width={16} height={16} />
+          </div>
         )}
         <System.P2 style={{ marginLeft: 12 }}>Download file</System.P2>
       </System.ButtonPrimitive>
