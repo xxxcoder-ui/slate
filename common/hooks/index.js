@@ -527,3 +527,9 @@ export const usePrevious = (value) => {
 
   return ref.current;
 };
+
+export const useToggle = () => {
+  const [isVisible, setVisibility] = React.useState(false);
+  const toggleVisibility = () => setVisibility((prev) => !prev);
+  return [isVisible, toggleVisibility];
+};
