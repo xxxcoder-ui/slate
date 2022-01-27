@@ -49,7 +49,6 @@ const createUsersTable = createTableIfNotExists("users", function (table) {
   table.string("textileToken", 400).nullable();
   table.string("textileThreadID").nullable();
   table.string("textileBucketCID").nullable();
-  table.jsonb("onboarding").nullable();
   table.integer("followerCount").notNullable().defaultTo(0);
   table.integer("slateCount").notNullable().defaultTo(0);
   table.integer("authVersion").notNullable().defaultTo(2);

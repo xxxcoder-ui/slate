@@ -111,14 +111,41 @@ const printFilesTable = async () => {
 
 /* Add columns (including tags) */
 
-const addUserTextileColumns = async () => [
+const createSurveysTable = async () => {
+  await db.schema.createTable("surveys", function (table) {
+    table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+    table.uuid("ownerId").references("id").inTable("users");
+
+    // What do you currently use for saving things on the web?
+    table.boolean("prevToolsBrowserBookmarks").defaultTo(false);
+    table.boolean("prevToolsPinterest").defaultTo(false);
+    table.boolean("prevToolsArena").defaultTo(false);
+    table.boolean("prevToolsNotesPlatform").defaultTo(false);
+    table.string("prevToolsOther").defaultTo(null);
+
+    // What are you interested in using Slate for?
+    table.boolean("useCasesBookmarkingImportantPages").defaultTo(false);
+    table.boolean("useCasesSavingLinksToReadLater").defaultTo(false);
+    table.boolean("useCasesSearchingYourBrowsedPages").defaultTo(false);
+    table.boolean("useCasesSharingCollectionsOfLinks").defaultTo(false);
+    table.string("useCasesOther").defaultTo(null);
+
+    // How did you find out about Slate?
+    table.boolean("referralFriend").defaultTo(false);
+    table.boolean("referralTwitter").defaultTo(false);
+    table.boolean("referralIpfsFilecoinCommunity").defaultTo(false);
+    table.string("referralOther").defaultTo(null);
+  });
+};
+
+const addUserTextileColumns = async () => {
   await DB.schema.table("users", function (table) {
     table.string("textileKey").nullable();
     table.string("textileToken", 400).nullable();
     table.string("textileThreadID").nullable();
     table.string("textileBucketCID").nullable();
-  }),
-];
+  });
+};
 
 const addUserColumns = async () => {
   await DB.schema.table("users", function (table) {
@@ -127,11 +154,10 @@ const addUserColumns = async () => {
     table.string("name").nullable();
     table.string("twitterUsername").nullable();
     table.boolean("twitterVerified").notNullable().defaultTo(false);
-    // table.string("textileKey").nullable();
-    // table.string("textileToken", 400).nullable();
-    // table.string("textileThreadID").nullable();
-    // table.string("textileBucketCID").nullable();
-    table.jsonb("onboarding").nullable();
+    table.boolean("hasCompletedSurvey").defaultTo(false);
+    table.boolean("hasCompletedUploadOnboarding").defaultTo(false);
+    table.boolean("hasCompletedSlatesOnboarding").defaultTo(false);
+    table.boolean("isFilterSidebarCollapsed").defaultTo(false);
   });
 };
 
@@ -139,7 +165,7 @@ const addSlateColumns = async () => {
   await DB.schema.table("slates", function (table) {
     table.string("body", 2000).nullable();
     table.string("name").nullable();
-    table.string("coverImage").nullable();
+    table.jsonb("coverImage").nullable();
   });
 };
 
@@ -193,10 +219,6 @@ const migrateUserTable = async () => {
       body: data.body,
       photo: data.photo,
       textileKey: data.tokens?.api,
-      onboarding:
-        data.onboarding || data.status?.hidePrivacyAlert
-          ? { ...data.onboarding, hidePrivacyAlert: data.status?.hidePrivacyAlert }
-          : null,
       twitterUsername: data.twitter?.username,
       twitterVerified: data.twitter?.verified,
     };
@@ -339,6 +361,7 @@ const runScript = async () => {
   // await printSlatesTable();
   // await printFilesTable();
 
+  // await createSurveysTable();
   // await addUserTextileColumns();
   // await addUserColumns();
   // await addSlateColumns();
