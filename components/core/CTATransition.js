@@ -103,7 +103,9 @@ export default class CTATransition extends React.Component {
     const currentURL = Strings.getCurrentURL(this.props.page?.params);
     this.props.onAction({
       type: "NAVIGATE",
-      href: `/_/auth?tab=signin&email=${emailOrUsername}&redirect=${encodeURI(currentURL)}`,
+      href: `/_/auth?tab=signin&email=${encodeURIComponent(emailOrUsername)}&redirect=${encodeURI(
+        currentURL
+      )}`,
     });
     this._handleClose();
   };
@@ -112,7 +114,9 @@ export default class CTATransition extends React.Component {
     const currentURL = Strings.getCurrentURL(this.props.page?.params);
     this.props.onAction({
       type: "NAVIGATE",
-      href: `/_/auth?tab=signup&email=${email}&redirect=${encodeURI(currentURL)}`,
+      href: `/_/auth?tab=signup&email=${encodeURIComponent(email)}&redirect=${encodeURI(
+        currentURL
+      )}`,
     });
     this._handleClose();
   };

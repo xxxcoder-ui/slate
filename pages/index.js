@@ -847,7 +847,7 @@ export default function IndexPage() {
       return errors;
     },
     onSubmit: async ({ email }) => {
-      window.open(`/_/auth?tab=signup&email=${email}`, "_self");
+      window.open(`/_/auth?tab=signup&email=${encodeURIComponent(email)}`, "_self");
     },
   });
 

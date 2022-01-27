@@ -161,10 +161,9 @@ const AuthScene = ({ onAuthenticate, onTwitterAuthenticate, page, onAction, ...p
     );
   }
   // NOTE(amine): if the user goes back, we should prefill the email
+  const emailParam = page?.params?.email ? decodeURIComponent(page?.params?.email) : "";
   const initialEmail =
-    prevScene === "signin" && context.emailOrUsername
-      ? context.emailOrUsername
-      : page?.params?.email || "";
+    prevScene === "signin" && context.emailOrUsername ? context.emailOrUsername : emailParam;
 
   return (
     <Initial
