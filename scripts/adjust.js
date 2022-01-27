@@ -51,7 +51,11 @@ const addSlateCoverImage = db.schema.table("slates", function (table) {
   table.jsonb("coverImage").nullable();
 });
 
-const createSurveysTable = (async () => {
+const dropOnboardingColumn = db.schema.table("users", function (table) {
+  table.dropColumn("onboarding");
+});
+
+const createSurveysTable = async () => {
   const exists = await db.schema.hasTable("surveys");
   if (exists) {
     return Promise.all([
@@ -97,7 +101,7 @@ const createSurveysTable = (async () => {
     table.boolean("referralIpfsFilecoinCommunity").defaultTo(false);
     table.string("referralOther").defaultTo(null);
   });
-})();
+};
 
 const dropOnboardingTable = db.schema.dropTableIfExists("onboarding");
 
@@ -120,13 +124,15 @@ const addIsFilterSidebarCollapsedToUsersTable = db.schema.table("users", functio
   table.boolean("isFilterSidebarCollapsed").defaultTo(false);
 });
 
-Promise.all([
-  dropOnboardingTable,
-  createSurveysTable,
-  addOnboardingColumnsToUsersTable,
-  deleteSettingsColumnFromUserTable,
-  addIsFilterSidebarCollapsedToUsersTable,
-]);
+// Promise.all([
+//   dropOnboardingTable,
+//   createSurveysTable,
+//   addOnboardingColumnsToUsersTable,
+//   deleteSettingsColumnFromUserTable,
+//   addIsFilterSidebarCollapsedToUsersTable,
+// ]);
+
+Promise.all([dropOnboardingColumn]);
 
 Logging.log(`FINISHED: adjust.js`);
 Logging.log(`          CTRL +C to return to terminal.`);

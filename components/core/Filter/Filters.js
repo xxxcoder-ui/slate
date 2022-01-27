@@ -123,7 +123,7 @@ const FilterSection = React.forwardRef(({ title, children, emptyState, ...props 
       {isExpanded ? (
         Array.isArray(children) && children?.length === 0 ? (
           <Show when={emptyState}>
-            <System.P2 color="textGrayLight" style={{ paddingLeft: "8px" }}>
+            <System.P2 color="textGrayDark" style={{ paddingLeft: "8px" }}>
               {emptyState}
             </System.P2>
           </Show>
