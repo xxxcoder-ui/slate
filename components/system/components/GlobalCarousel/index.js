@@ -65,10 +65,10 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     return { isSaving: selectedFile?.status === "uploading", saveCopy: store.handlers.saveCopy };
   });
 
-  const isSaved = React.useMemo(
-    () => viewer?.libraryCids[file.cid],
-    [viewer?.libraryCids, file.cid]
-  );
+  const isSaved = React.useMemo(() => viewer?.libraryCids[file.cid], [
+    viewer?.libraryCids,
+    file.cid,
+  ]);
 
   const handleSave = async () => {
     if (!viewer) {
@@ -196,17 +196,25 @@ function CarouselHeader({
     { showControl: showFileDescription, hideControl: hideFileDescription },
   ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isEditSlatesVisible, { showControl: showEditSlates, hideControl: hideEditSlates }] =
-    useCarouselJumperControls();
+  const [
+    isEditSlatesVisible,
+    { showControl: showEditSlates, hideControl: hideEditSlates },
+  ] = useCarouselJumperControls();
 
   const hideOpenJumpers = () => {
     if (isMoreInfoVisible) hideMoreInfo();
@@ -584,17 +592,25 @@ const STYLES_ACTION_BUTTON_SELECTED = (theme) => css`
 `;
 
 function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer }) {
-  const [isEditInfoVisible, { showControl: showEditInfo, hideControl: hideEditInfo }] =
-    useCarouselJumperControls();
+  const [
+    isEditInfoVisible,
+    { showControl: showEditInfo, hideControl: hideEditInfo },
+  ] = useCarouselJumperControls();
 
-  const [isShareFileVisible, { showControl: showShareFile, hideControl: hideShareFile }] =
-    useCarouselJumperControls();
+  const [
+    isShareFileVisible,
+    { showControl: showShareFile, hideControl: hideShareFile },
+  ] = useCarouselJumperControls();
 
-  const [isMoreInfoVisible, { showControl: showMoreInfo, hideControl: hideMoreInfo }] =
-    useCarouselJumperControls();
+  const [
+    isMoreInfoVisible,
+    { showControl: showMoreInfo, hideControl: hideMoreInfo },
+  ] = useCarouselJumperControls();
 
-  const [isEditSlatesVisible, { showControl: showEditSlates, hideControl: hideEditSlates }] =
-    useCarouselJumperControls();
+  const [
+    isEditSlatesVisible,
+    { showControl: showEditSlates, hideControl: hideEditSlates },
+  ] = useCarouselJumperControls();
 
   const hideOpenJumpers = () => {
     if (isMoreInfoVisible) hideMoreInfo();
@@ -900,7 +916,11 @@ export function CarouselContent({ objects, index, isMobile, viewer, style, onClo
 
   return (
     <>
-      <Alert viewer={viewer} noWarning id={isMobile ? "slate-mobile-alert" : null} />
+      <Alert
+        // viewer={viewer}
+        // noWarning
+        id={isMobile ? "slate-mobile-alert" : null}
+      />
       <div
         css={STYLES_CONTENT}
         style={style}

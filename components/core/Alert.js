@@ -131,15 +131,15 @@ export class Alert extends React.Component {
     }
   };
 
-  _handleDismissPrivacyAlert = (e) => {
-    Actions.updateViewer({ onboarding: { hidePrivacyAlert: true } });
-    this.props.onAction({
-      type: "UPDATE_VIEWER",
-      viewer: {
-        onboarding: { hidePrivacyAlert: true },
-      },
-    });
-  };
+  // _handleDismissPrivacyAlert = (e) => {
+  //   Actions.updateViewer({ onboarding: { hidePrivacyAlert: true } });
+  //   this.props.onAction({
+  //     type: "UPDATE_VIEWER",
+  //     viewer: {
+  //       onboarding: { hidePrivacyAlert: true },
+  //     },
+  //   });
+  // };
 
   render() {
     //NOTE(martina): alert
@@ -155,21 +155,21 @@ export class Alert extends React.Component {
     }
 
     //NOTE(martina): don't upload sensitive info alert
-    if (this.props.viewer && !this.props.noWarning) {
-      return (
-        <div css={STYLES_MESSAGE} style={this.props.style}>
-          <div css={STYLES_MESSAGE_BOX} style={{ fontSize: 14 }}>
-            Please don't upload sensitive information to Slate yet. Private storage is coming soon.
-            <span
-              style={{ position: "absolute", right: 24, padding: 4, cursor: "pointer" }}
-              onClick={this._handleDismissPrivacyAlert}
-            >
-              <SVG.Dismiss height="20px" />
-            </span>
-          </div>
-        </div>
-      );
-    }
+    // if (this.props.viewer && !this.props.noWarning) {
+    //   return (
+    //     <div css={STYLES_MESSAGE} style={this.props.style}>
+    //       <div css={STYLES_MESSAGE_BOX} style={{ fontSize: 14 }}>
+    //         Please don't upload sensitive information to Slate yet. Private storage is coming soon.
+    //         <span
+    //           style={{ position: "absolute", right: 24, padding: 4, cursor: "pointer" }}
+    //           onClick={this._handleDismissPrivacyAlert}
+    //         >
+    //           <SVG.Dismiss height="20px" />
+    //         </span>
+    //       </div>
+    //     </div>
+    //   );
+    // }
 
     return null;
   }

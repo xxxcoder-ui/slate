@@ -37,9 +37,9 @@ export default async (req, res) => {
       }
     }
 
-    if (updates.onboarding) {
-      updates.onboarding = { ...user.onboarding, ...updates.onboarding };
-    }
+    // if (updates.onboarding) {
+    //   updates.onboarding = { ...user.onboarding, ...updates.onboarding };
+    // }
 
     if (updates.email && updates.email !== user.email) {
       if (!Validations.email(updates.email)) {

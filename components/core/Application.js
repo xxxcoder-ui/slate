@@ -161,21 +161,21 @@ export default class ApplicationPage extends React.Component {
       }
     }
 
-    if (viewer?.onboarding) {
-      this.setState(
-        {
-          viewer: {
-            ...this.state.viewer,
-            ...viewer,
-            onboarding: { ...this.state.viewer.onboarding, ...viewer.onboarding },
-          },
-        },
-        () => {
-          if (callback) callback();
-        }
-      );
-      return;
-    }
+    // if (viewer?.onboarding) {
+    //   this.setState(
+    //     {
+    //       viewer: {
+    //         ...this.state.viewer,
+    //         ...viewer,
+    //         onboarding: { ...this.state.viewer.onboarding, ...viewer.onboarding },
+    //       },
+    //     },
+    //     () => {
+    //       if (callback) callback();
+    //     }
+    //   );
+    //   return;
+    // }
 
     this.setState(
       {
@@ -251,31 +251,29 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
-  _withAuthenticationBehavior =
-    (authenticate) =>
-    async (href = "/_/data", state) => {
-      let response = await authenticate(state);
-      if (Events.hasError(response)) {
-        return response;
-      }
-      if (response.shouldMigrate) {
-        return response;
-      }
-      let viewer = await UserBehaviors.hydrate();
-      if (Events.hasError(viewer)) {
-        return viewer;
-      }
-
-      this.setState({ viewer });
-      await this._handleSetupWebsocket();
-
-      // if (!redirected) {
-      //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
-      // }
-      this._handleNavigateTo({ href, redirect: true });
-
+  _withAuthenticationBehavior = (authenticate) => async (href = "/_/data", state) => {
+    let response = await authenticate(state);
+    if (Events.hasError(response)) {
       return response;
-    };
+    }
+    if (response.shouldMigrate) {
+      return response;
+    }
+    let viewer = await UserBehaviors.hydrate();
+    if (Events.hasError(viewer)) {
+      return viewer;
+    }
+
+    this.setState({ viewer });
+    await this._handleSetupWebsocket();
+
+    // if (!redirected) {
+    //   this._handleAction({ type: "NAVIGATE", value: "NAV_DATA" });
+    // }
+    this._handleNavigateTo({ href, redirect: true });
+
+    return response;
+  };
 
   _handleSelectedChange = (e) => {
     this.setState({

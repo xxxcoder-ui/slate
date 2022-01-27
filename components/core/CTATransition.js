@@ -140,7 +140,7 @@ export default class CTATransition extends React.Component {
                   page={this.props.page}
                 />
                 <Alert
-                  noWarning
+                  // noWarning
                   id={this.props.isMobile ? "slate-mobile-alert" : null}
                   style={
                     this.props.isMobile
