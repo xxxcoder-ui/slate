@@ -239,6 +239,12 @@ const migrateUserTable = async () => {
 };
 
 const migrateSlateTable = async () => {
+  await DB("slates")
+    .whereNotExists(function () {
+      this.select("id").from("slate_files").whereRaw('"slate_files"."slateId" = "slates"."id"');
+    })
+    .del();
+
   const slateFiles = () =>
     DB.raw("coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??", [
       "files",
@@ -368,7 +374,7 @@ const runScript = async () => {
   // await addFileColumns();
 
   // await migrateUserTable();
-  await migrateSlateTable();
+  // await migrateSlateTable();
   // await migrateFileTable();
 
   // await deleteOldData();
