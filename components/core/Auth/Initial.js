@@ -8,9 +8,10 @@ import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
-import { useField, useForm } from "~/common/hooks";
+import { useField, useForm, useIsomorphicLayoutEffect } from "~/common/hooks";
 import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
 import { AnimateSharedLayout, motion } from "framer-motion";
+import { LoaderSpinner } from "~/components/system/components/Loaders";
 
 import Field from "~/components/core/Field";
 
@@ -39,6 +40,34 @@ const STYLES_LINK_ITEM = (theme) => css`
   :hover {
     color: ${theme.system.blue};
   }
+`;
+
+const STYLES_MESSAGE = (theme) => css`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 16px;
+  border: 1px solid ${theme.system.white};
+  background-color: white;
+  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+    background-color: ${theme.semantic.bgBlurWhiteTRN};
+    backdrop-filter: blur(75px);
+  }
+  padding: 8px 12px;
+  border-radius: 8px;
+  & > * + * {
+    margin-left: 16px;
+  }
+`;
+
+const STYLES_MESSAGE_PARAGRAPH = (theme) => css`
+  font-size: ${theme.typescale.lvlN1};
+  color: ${theme.system.blue};
+`;
+
+const STYLES_MESSAGE_BUTTON = (theme) => css`
+  ${Styles.BUTTON_RESET};
+  color: ${theme.semantic.textGray};
 `;
 
 // NOTE(amine): used to remove content jumping
@@ -79,12 +108,18 @@ function Initial(
     onAction,
   });
 
+  const [signinMessage, setSigninMessage] = React.useState(null);
+  const showSigninMessage = (message) => setSigninMessage(message);
+  const hideSigninMessage = () => setSigninMessage(null);
+
   // NOTE(amine): Signup view form
   const {
     getFieldProps: getSignupFielProps,
     getFormProps: getSigninFormProps,
-    isSubmitting: isCheckingSignupEmail,
+    setFormValues: setSignupFormValues,
     submitForm: submitSignupForm,
+    isSubmitting: isCheckingSignupEmail,
+    values: signupFormValues,
   } = useForm({
     validateOnBlur: false,
     initialValues: { email: initialEmail || "" },
@@ -118,9 +153,36 @@ function Initial(
   });
 
   // NOTE(amine): Signin view form
-  const { getFieldProps: getSigninFieldProps, submitField: submitSigninField } = useField({
+  const {
+    getFieldProps: getSigninFieldProps,
+    setFieldValue: setSigninFieldValue,
+    submitField: submitSigninField,
+    value: signinFormValue,
+    isSubmitting: isCheckingSigninEmail,
+  } = useField({
     validateOnBlur: false,
-    onSubmit: async (emailOrUsername) => goToSigninScene({ emailOrUsername }),
+    onSubmit: async (emailOrUsername) => {
+      let response;
+      if (Validations.email(emailOrUsername)) {
+        response = await Actions.checkEmail({ email: emailOrUsername });
+      } else {
+        response = await Actions.checkUsername({
+          username: emailOrUsername,
+        });
+      }
+      if (response?.data) {
+        goToSigninScene({ emailOrUsername });
+        return;
+      }
+      const message = (
+        <>
+          There isn't an account associated with this{" "}
+          {Validations.email(emailOrUsername) ? "email" : "username"}, <br /> please choose sign up
+          instead.
+        </>
+      );
+      showSigninMessage(message);
+    },
     validate: (emailOrUsername) => {
       if (Strings.isEmpty(emailOrUsername)) return "Please enter a username or email";
       if (!Validations.username(emailOrUsername) && !Validations.email(emailOrUsername))
@@ -128,6 +190,16 @@ function Initial(
     },
     initialValue: initialEmail,
   });
+
+  // NOTE(amine): sync signup and signin values
+  useIsomorphicLayoutEffect(() => {
+    if (toggleValue === "signup") {
+      setSignupFormValues({ name: "email", value: signinFormValue });
+    } else {
+      setSigninFieldValue(signupFormValues.email);
+    }
+    hideSigninMessage();
+  }, [toggleValue]);
 
   // NOTE(amine): allow other components to submit this form via a ref
   React.useImperativeHandle(ref, () => ({
@@ -168,6 +240,18 @@ function Initial(
             onChange={handleToggleChange}
           />
         </div>
+        {signinMessage && (
+          <div css={STYLES_MESSAGE}>
+            <System.P1 css={STYLES_MESSAGE_PARAGRAPH}>{signinMessage}</System.P1>
+            <button
+              css={STYLES_MESSAGE_BUTTON}
+              style={{ marginTop: 4 }}
+              onClick={hideSigninMessage}
+            >
+              <SVG.Dismiss height={16} width={16} />
+            </button>
+          </div>
+        )}
         {toggleValue === "signup" ? (
           <form {...getSigninFormProps()}>
             <Field
@@ -199,18 +283,34 @@ function Initial(
             </AnimateSharedLayout>
           </form>
         ) : (
-          <Field
-            autoFocus
-            label="Email address or username"
-            placeholder="Email/username"
-            icon={ArrowButton}
-            name="email/username"
-            type="text"
-            full
-            {...getSigninFieldProps()}
-            // NOTE(amine): the input component internally is using 16px margin top
-            containerStyle={{ marginTop: "4px" }}
-          />
+          <AnimateSharedLayout>
+            <motion.div layoutId="auth_signin_field">
+              <Field
+                autoFocus
+                label="Email address or username"
+                placeholder="Email/username"
+                icon={
+                  isCheckingSigninEmail
+                    ? ({ style, ...props }) => (
+                        <div
+                          style={{ width: 20, height: 20, ...style }}
+                          css={Styles.CONTAINER_CENTERED}
+                          {...props}
+                        >
+                          <LoaderSpinner height="16px" />
+                        </div>
+                      )
+                    : ArrowButton
+                }
+                name="email/username"
+                type="text"
+                full
+                {...getSigninFieldProps()}
+                // NOTE(amine): the input component internally is using 16px margin top
+                containerStyle={{ marginTop: "4px" }}
+              />
+            </motion.div>
+          </AnimateSharedLayout>
         )}
 
         {showTermsAndServices && (

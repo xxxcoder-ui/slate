@@ -107,10 +107,11 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
           full
           icon={
             isSubmitting
-              ? () => (
+              ? ({ style, ...props }) => (
                   <div
-                    style={{ width: 24, height: 24, marginRight: 4 }}
+                    style={{ width: 20, height: 20, ...style }}
                     css={Styles.CONTAINER_CENTERED}
+                    {...props}
                   >
                     <LoaderSpinner height="16px" />
                   </div>

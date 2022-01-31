@@ -51,6 +51,9 @@ export const useForm = ({
         if (event) event(e);
       });
 
+  const setFormValues = ({ name, value }) =>
+    setState((prev) => ({ ...prev, values: { ...prev.values, [name]: value } }));
+
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const createOnChangeHandler = (type) => (e) => {
     const prevValue = state.values[e.target.name];
@@ -165,6 +168,7 @@ export const useForm = ({
     getFieldProps,
     getFormProps,
     submitForm: submitAsync,
+    setFormValues,
     values: state.values,
     isSubmitting: internal.isSubmitting,
     isValidating: internal.isValidating,
