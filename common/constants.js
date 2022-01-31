@@ -149,8 +149,8 @@ export const zindex = {
   sidebar: 5,
   modal: 6,
   jumper: 7,
-  tooltip: 8,
-  cta: 9,
+  tooltip: 9,
+  cta: 11,
 };
 
 export const font = {
