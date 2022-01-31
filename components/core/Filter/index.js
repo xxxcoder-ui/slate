@@ -38,6 +38,8 @@ function Title({ page, data }) {
     if (page.id === "NAV_DATA") return "Recent";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
     if (page.id === "NAV_PROFILE") return "@ " + data.username;
+    if (page.id === "NAV_SETTINGS") return page.name;
+    if (page.id === "NAV_API") return page.name;
 
     return null;
   }, [page, data, isFetchingResults, isSearching]);
