@@ -509,7 +509,9 @@ class SlatePage extends React.Component {
             </EmptyState>
           </div>
         ) : (
-          <EmptyState>There's nothing here :)</EmptyState>
+          <div css={Styles.PAGE_EMPTY_STATE_WRAPPER}>
+            <EmptyState>There's nothing here :)</EmptyState>
+          </div>
         )}
         <input
           ref={(c) => {
