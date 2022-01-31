@@ -2269,7 +2269,7 @@ export const FileText = (props) => (
     />
     <path
       d="M9.333 1.333v4h4M10.667 8.667H5.333M10.667 11.333H5.333M6.667 6H5.333"
-      stroke="#00050A"
+      stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -2398,7 +2398,7 @@ export const FilePlus = (props) => (
     />
     <path
       d="M9.333 1.333v4h4M8 12V8M6 10h4"
-      stroke="#00050A"
+      stroke="currentColor"
       strokeWidth={1.25}
       strokeLinecap="round"
       strokeLinejoin="round"
