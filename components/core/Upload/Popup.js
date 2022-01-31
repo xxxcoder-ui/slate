@@ -304,7 +304,11 @@ function Header({ totalFilesSummary, popupState, expandUploadSummary, collapseUp
       aria-label="Upload Summary"
       onClick={popupState.isSummaryExpanded ? collapseUploadSummary : expandUploadSummary}
     >
-      <span css={Styles.HORIZONTAL_CONTAINER_CENTERED}>
+      <span
+        css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+        //NOTE(amine): fix to a bug where elements using rotate disappear in safari https://stackoverflow.com/questions/22621544/webkit-transform-breaks-z-index-on-safari
+        style={{ perspective: "1000px" }}
+      >
         <System.P2 color="textBlack" style={{ width: "5ch" }}>
           {uploadProgress}%
         </System.P2>

@@ -169,7 +169,7 @@ export default function Filter({
       >
         <div css={STYLES_NAVBAR}>
           <div css={STYLES_NAVBAR_BACKGROUND} />
-          <div css={STYLES_FILTER_POPUP_WRAPPER}>
+          <div css={STYLES_FILTER_POPUP_WRAPPER} style={{ perspective: "1000px" }}>
             <Popup
               viewer={viewer}
               onAction={onAction}
