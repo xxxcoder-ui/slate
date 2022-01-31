@@ -70,7 +70,7 @@ const STYLES_INPUT = css`
   justify-content: flex-start;
   height: 40px;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 0px 12px;
   background: ${Constants.system.white};
   text-overflow: ellipsis;
   white-space: nowrap;
