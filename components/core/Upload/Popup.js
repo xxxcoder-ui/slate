@@ -28,6 +28,8 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   bottom: 24px;
   right: 24px;
   z-index: ${theme.zindex.tooltip};
+  border-radius: 12px;
+  box-shadow: ${theme.shadow.lightLarge};
 `;
 
 const STYLES_DISMISS_BUTTON = (theme) => css`
@@ -59,7 +61,7 @@ const STYLES_POPUP_CONTENT = css`
 
 const useUploadPopup = ({ totalFilesSummary }) => {
   const {
-    state: { isFinished },
+    state: { isFinished, isUploading },
     handlers: { resetUploadState },
   } = useUploadStore();
 
@@ -75,12 +77,11 @@ const useUploadPopup = ({ totalFilesSummary }) => {
 
   const timeoutRef = React.useRef();
   //NOTE(amine): show the upload summary, then automatically collapse the upload summary after 3 seconds
-  const isStarted = totalFilesSummary.total > 0;
   React.useEffect(() => {
-    if (!isStarted) return;
+    if (!isUploading) return;
     expandUploadSummary();
     timeoutRef.current = setTimeout(collapseUploadSummary, 3000);
-  }, [isStarted]);
+  }, [isUploading]);
 
   /**
    * NOTE(amine): show the upload summary when a file fails to upload or is added to the queue,
@@ -89,7 +90,7 @@ const useUploadPopup = ({ totalFilesSummary }) => {
   const isSummaryExpandedRef = React.useRef();
   isSummaryExpandedRef.current = popupState.isSummaryExpanded;
   React.useEffect(() => {
-    if (isSummaryExpandedRef.current || totalFilesSummary.total === 0) return;
+    if (isSummaryExpandedRef.current || totalFilesSummary.total === 0 || !isUploading) return;
     expandUploadSummary();
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(collapseUploadSummary, 3000);
@@ -190,9 +191,9 @@ export function Popup({ isMobile }) {
             <AnimatePresence>
               {popupState.isSummaryExpanded ? (
                 <motion.div
-                  initial={{ y: 400 }}
-                  animate={{ y: 0 }}
-                  exit={{ y: 400 }}
+                  initial={{ willChange: "height", height: 0 }}
+                  animate={{ height: "auto" }}
+                  exit={{ height: 0 }}
                   transition={{ type: "spring", stiffness: 170, damping: 26 }}
                   onMouseEnter={cancelAutoCollapseOnMouseEnter}
                 >
