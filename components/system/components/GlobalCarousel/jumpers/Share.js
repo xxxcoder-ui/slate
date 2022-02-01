@@ -19,12 +19,16 @@ const STYLES_SHARING_BUTTON = (theme) => css`
   padding: 9px 8px 11px;
   border-radius: 12px;
   width: 100%;
+  color: ${theme.semantic.textBlack};
   :hover,
   :active {
     background-color: ${theme.semantic.bgGrayLight};
   }
   :hover {
     color: ${theme.semantic.textBlack};
+  }
+  * {
+    color: inherit;
   }
 
   @media (max-width: ${theme.sizes.mobile}px) {
@@ -175,7 +179,9 @@ export function Share({ file, data, viewer, onClose }) {
           rel="noreferrer"
         >
           <SVG.InfoCircle width={16} />
-          <System.P2 style={{ marginLeft: 4 }}>What is a CID?</System.P2>
+          <System.P2 color="textGrayDark" style={{ marginLeft: 4 }}>
+            What is a CID?
+          </System.P2>
         </a>
       </Jumper.Item>
     </Jumper.Root>

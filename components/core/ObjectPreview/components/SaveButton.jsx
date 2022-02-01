@@ -13,6 +13,7 @@ const STYLES_BUTTON_HOVER = (theme) => css`
   border-radius: 8px;
   box-shadow: 0 0 0 1px ${theme.system.grayLight5}, ${theme.shadow.lightLarge};
   transition: box-shadow 0.3s;
+  color: ${theme.semantic.textBlack};
   :hover {
     box-shadow: 0 0 0 1px ${theme.system.pink}, ${theme.shadow.lightLarge};
   }

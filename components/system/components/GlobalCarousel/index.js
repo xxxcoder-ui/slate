@@ -50,7 +50,7 @@ const VisitLinkButton = ({ file }) => {
       type="link"
     >
       <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} key={file.id} />
-      <span style={{ whiteSpace: "nowrap" }}>Visit site</span>
+      <span style={{ whiteSpace: "nowrap", color: "inherit" }}>Visit site</span>
     </System.ButtonTertiary>
   );
 };
@@ -160,6 +160,7 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
 const STYLES_ACTION_BUTTON = (theme) => css`
   padding: 8px;
   border-radius: 8px;
+  color: ${theme.semantic.textGrayDark};
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: ${theme.semantic.bgGrayLight};
@@ -757,6 +758,7 @@ const STYLES_CONTROLS_BUTTON = (theme) => css`
   border: 1px solid ${theme.semantic.borderGrayLight};
   padding: 10px;
   box-shadow: ${theme.shadow.lightMedium};
+  color: ${theme.semantic.textGrayDark};
   svg {
     display: block;
   }

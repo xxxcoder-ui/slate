@@ -12,7 +12,13 @@ import { css } from "@emotion/react";
  * Popup trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export function PopupTrigger({ children, isMobile, style, ...props }) {
+const STYLES_POPUP_TRIGGER = (theme) => css`
+  ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  perspective: 1000px;
+  color: ${theme.semantic.textBlack};
+`;
+
+export function PopupTrigger({ children, isMobile, ...props }) {
   const [{ sidebarState, popupState }, { hidePopup, togglePopup }] = useFilterContext();
 
   React.useEffect(() => {
@@ -26,13 +32,13 @@ export function PopupTrigger({ children, isMobile, style, ...props }) {
   return (
     <System.ButtonPrimitive
       onClick={togglePopup}
-      css={Styles.HORIZONTAL_CONTAINER_CENTERED}
+      css={STYLES_POPUP_TRIGGER}
       //NOTE(amine): fix to a bug where elements using rotate disappear in safari https://stackoverflow.com/questions/22621544/webkit-transform-breaks-z-index-on-safari
-      style={{ perspective: "1000px", ...style }}
       {...props}
     >
       {children}
       <motion.div
+        style={{ color: "inherit" }}
         initial={{ rotateX: popupState.isVisible ? 0 : 180 }}
         animate={{ rotateX: popupState.isVisible ? 0 : 180 }}
       >
