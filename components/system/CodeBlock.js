@@ -128,10 +128,13 @@ const STYLES_CODE_BLOCK = css`
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding: 20px 24px;
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
 
   * {
     white-space: pre-wrap;
-    overflow-wrap: break-word;
+    word-break: break-word;
     ::-webkit-scrollbar {
       -webkit-appearance: none;
       width: 0;
