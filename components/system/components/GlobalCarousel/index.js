@@ -77,7 +77,8 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     }
 
     if (isSaved) {
-      const fileLibraryURL = `/_/data?id=${file.id}`;
+      const fileId = viewer.library.find((item) => item.cid === file.cid).id;
+      const fileLibraryURL = `/_/data?id=${fileId}`;
       onAction({
         type: "NAVIGATE",
         href: fileLibraryURL,
