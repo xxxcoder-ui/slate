@@ -4,12 +4,15 @@ import * as Validations from "~/common/validations";
 import * as SVG from "~/common/svg";
 import * as Actions from "~/common/actions";
 
-import Field from "~/components/core/Field";
-
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { useForm } from "~/common/hooks";
-import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Auth/components";
+import {
+  SignUpPopover,
+  Verification,
+  AuthCheckBox,
+  AuthField,
+} from "~/components/core/Auth/components";
 
 const useSignup = () => {
   const [scene, setScene] = React.useState("verification");
@@ -94,7 +97,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
     <SignUpPopover title="Create an account">
       <AnimateSharedLayout>
         <form {...getFormProps()}>
-          <Field
+          <AuthField
             autoFocus
             containerStyle={{ marginTop: 46 }}
             placeholder="Username"
@@ -122,7 +125,7 @@ export default function Signup({ verifyEmail, createUser, resendEmailVerificatio
           />
 
           <motion.div layout>
-            <Field
+            <AuthField
               containerStyle={{ marginTop: 16 }}
               placeholder="Password"
               type={showPassword ? "text" : "password"}

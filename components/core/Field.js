@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as SVG from "~/common/svg";
 
 import { P1 } from "~/components/system/components/Typography";
 import { Input } from "~/components/system";
@@ -22,14 +21,13 @@ const STYLES_PASSWORD_VALIDATIONS = (theme) => css`
   border-radius: 12px;
 `;
 
-const STYLES_PASSWORD_VALIDATION = (theme) =>
-  css`
-    display: flex;
-    align-items: center;
-    & > * + * {
-      margin-left: 8px;
-    }
-  `;
+const STYLES_PASSWORD_VALIDATION = css`
+  display: flex;
+  align-items: center;
+  & > * + * {
+    margin-left: 8px;
+  }
+`;
 
 const STYLES_CIRCLE = (theme) => css`
   height: 8px;
@@ -42,29 +40,11 @@ const STYLES_CIRCLE_SUCCESS = (theme) => css`
   border: 1.25px solid ${theme.system.green};
 `;
 
-const STYLES_INPUT = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
-  box-shadow: ${theme.shadow.lightLarge};
-  border-radius: 12px;
-  &::placeholder {
-    color: ${theme.semantic.textGrayDark};
-  }
-`;
 const STYLES_INPUT_ERROR = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
-  border: 1px solid ${theme.system.red};
-  border-radius: 8px;
-  &::placeholder {
-    color: ${theme.semantic.textGrayDark};
-  }
+  box-shadow: 0 0 0 1px ${theme.system.red};
 `;
 const STYLES_INPUT_SUCCESS = (theme) => css`
-  background-color: rgba(242, 242, 247, 0.5);
-  border: 1px solid ${theme.system.green};
-  border-radius: 8px;
-  &::placeholder {
-    color: ${theme.semantic.textGrayDark};
-  }
+  box-shadow: 0 0 0 1px ${theme.system.green};
 `;
 
 const PasswordValidations = ({ validations }) => {
@@ -103,15 +83,16 @@ export default function Field({
   validations,
   errorAs,
   containerAs,
+  inputCss,
   ...props
 }) {
   const showError = touched && error;
   const showSuccess = touched && !error;
 
-  const STYLES = React.useMemo(() => {
+  const STYLES_VALIDATIONS = React.useMemo(() => {
     if (showError) return STYLES_INPUT_ERROR;
     if (showSuccess) return STYLES_INPUT_SUCCESS;
-    return STYLES_INPUT;
+    return null;
   }, [touched, error]);
 
   const ContainerComponent = containerAs || "div";
@@ -119,7 +100,7 @@ export default function Field({
   return (
     <div>
       <ContainerComponent>
-        <Input inputCss={STYLES} {...props} />
+        <Input inputCss={[inputCss, STYLES_VALIDATIONS]} {...props} />
       </ContainerComponent>
       {props.name === "password" && validations ? (
         <PasswordValidations validations={validations} />

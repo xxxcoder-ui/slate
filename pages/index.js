@@ -9,11 +9,11 @@ import * as Strings from "~/common/strings";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import WebsiteHeader from "~/components/core/WebsiteHeader";
 import WebsiteFooter from "~/components/core/WebsiteFooter";
-import Field from "~/components/core/Field";
 
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
 import { motion, AnimateSharedLayout } from "framer-motion";
+import { AuthField } from "~/components/core/Auth/components";
 
 const INTEGRATION = [
   {
@@ -1084,7 +1084,7 @@ export default function IndexPage() {
             </System.ButtonPrimaryFull>
             <div css={STYLES_DIVIDER} />
             <form {...getSigninFormProps()} style={{ width: "100%" }}>
-              <Field
+              <AuthField
                 {...getSignupFielProps("email")}
                 label="Sign up with email"
                 placeholder="Email"

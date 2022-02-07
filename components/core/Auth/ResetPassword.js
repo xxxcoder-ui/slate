@@ -5,14 +5,12 @@ import * as Actions from "~/common/actions";
 import * as Utilities from "~/common/utilities";
 import * as SVG from "~/common/svg";
 
-import Field from "~/components/core/Field";
-
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { P1 } from "~/components/system";
 import { useForm } from "~/common/hooks";
 import { css } from "@emotion/react";
 
-import { SignUpPopover, Verification } from "~/components/core/Auth/components";
+import { SignUpPopover, Verification, AuthField } from "~/components/core/Auth/components";
 
 const STYLES_BACK_BUTTON = css`
   background: none;
@@ -110,7 +108,7 @@ export default function ResetPassword({
     return (
       <SignUpPopover title={<>Enter new password</>}>
         <form {...getNewPasswordFormProps()} style={{ marginTop: 72 }}>
-          <Field
+          <AuthField
             autoFocus
             containerStyle={{ marginTop: 16 }}
             placeholder="New password"
@@ -153,7 +151,7 @@ export default function ResetPassword({
       }
     >
       <form {...getFormProps()} style={{ marginTop: 72 }}>
-        <Field
+        <AuthField
           autoFocus
           containerStyle={{ marginTop: 16 }}
           placeholder="Email"

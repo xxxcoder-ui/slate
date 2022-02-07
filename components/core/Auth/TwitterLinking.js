@@ -4,12 +4,15 @@ import * as Validations from "~/common/validations";
 import * as System from "~/components/system";
 import * as Strings from "~/common/strings";
 
-import Field from "~/components/core/Field";
-
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { useForm } from "~/common/hooks";
 
-import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Auth/components";
+import {
+  SignUpPopover,
+  Verification,
+  AuthCheckBox,
+  AuthField,
+} from "~/components/core/Auth/components";
 
 const useTwitterLinking = () => {
   // NOTE(amine): can be either 'account' | 'email' | 'verificatiom'
@@ -97,7 +100,7 @@ export default function TwitterLinking({
       <div>
         <SignUpPopover title={`Please add an email address for ${username}`}>
           <form {...getEmailFormProps()} style={{ marginTop: 72 }}>
-            <Field
+            <AuthField
               autoFocus
               containerStyle={{ marginTop: 16 }}
               placeholder="Email"
@@ -127,7 +130,7 @@ export default function TwitterLinking({
   return (
     <SignUpPopover title="Create an account">
       <form {...getFormProps()}>
-        <Field
+        <AuthField
           autoFocus
           containerStyle={{ marginTop: 41 }}
           placeholder="Username"
@@ -137,7 +140,7 @@ export default function TwitterLinking({
           {...getFieldProps("username")}
         />
         <AnimateSharedLayout>
-          <Field
+          <AuthField
             containerStyle={{ marginTop: 16 }}
             containerAs={MotionLayout}
             errorAs={MotionLayout}

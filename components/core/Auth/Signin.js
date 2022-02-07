@@ -6,12 +6,10 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 
-import Field from "~/components/core/Field";
-
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { useForm } from "~/common/hooks";
 import { css } from "@emotion/react";
-import { SignUpPopover, Verification } from "~/components/core/Auth/components";
+import { SignUpPopover, Verification, AuthField } from "~/components/core/Auth/components";
 
 const STYLES_BACK_BUTTON = css`
   color: ${Constants.semantic.textGrayDark};
@@ -147,7 +145,7 @@ export default function Signin({
     return (
       <SignUpPopover title={`Please add an email address for ${emailOrUsername}`}>
         <form {...getEmailFormProps()} style={{ marginTop: 72 }}>
-          <Field
+          <AuthField
             autoFocus
             containerStyle={{ marginTop: 16 }}
             placeholder="Email"
@@ -184,7 +182,7 @@ export default function Signin({
             </button>
           </div>
         )}
-        <Field
+        <AuthField
           autoFocus
           containerStyle={{ marginTop: message ? 24 : 16 }}
           placeholder="Password"

@@ -9,11 +9,9 @@ import * as Styles from "~/common/styles";
 
 import { css } from "@emotion/react";
 import { useField, useForm, useIsomorphicLayoutEffect } from "~/common/hooks";
-import { Toggle, SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
+import { Toggle, SignUpPopover, ArrowButton, AuthField } from "~/components/core/Auth/components";
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
-
-import Field from "~/components/core/Field";
 
 const STYLES_INITIAL_CONTAINER = css`
   display: flex;
@@ -254,7 +252,7 @@ function Initial(
         )}
         {toggleValue === "signup" ? (
           <form {...getSigninFormProps()}>
-            <Field
+            <AuthField
               autoFocus
               label="Sign up with email"
               placeholder="Email"
@@ -285,7 +283,7 @@ function Initial(
         ) : (
           <AnimateSharedLayout>
             <motion.div layoutId="auth_signin_field">
-              <Field
+              <AuthField
                 autoFocus
                 label="Email address or username"
                 placeholder="Email/username"
