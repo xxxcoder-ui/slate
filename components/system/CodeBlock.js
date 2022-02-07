@@ -196,7 +196,7 @@ const STYLES_LINE = css`
   justify-content: space-between;
 `;
 
-const STYLES_TOPBAR = css`
+const STYLES_TOPBAR = (theme) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -207,6 +207,11 @@ const STYLES_TOPBAR = css`
   border-top-left-radius: 4px;
   margin-bottom: -4px;
   box-sizing: border-box;
+  @media (max-width: ${theme.sizes.mobile}px) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 `;
 
 const STYLES_TOPBAR_PLAIN = css`
@@ -223,6 +228,7 @@ const STYLES_TOPBAR_PLAIN = css`
 `;
 
 const STYLES_TOPBAR_TITLE = css`
+  flex-grow: 1;
   text-transform: uppercase;
   color: ${Constants.semantic.textGray};
   font-size: ${Constants.typescale.lvlN1};
@@ -232,7 +238,6 @@ const STYLES_TOPBAR_TITLE = css`
 `;
 
 const STYLES_LANGSWITCHER = css`
-  margin-left: auto;
   display: flex;
   align-items: center;
   flex-shrink: 0;
