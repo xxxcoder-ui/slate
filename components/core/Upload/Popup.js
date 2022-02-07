@@ -32,6 +32,12 @@ const STYLES_POPUP_WRAPPER = (theme) => css`
   box-shadow: ${theme.shadow.lightLarge};
 `;
 
+const STYLES_POPUP_CAROUSEL_POSITION = (theme) => css`
+  @media (max-width: ${theme.sizes.mobile}px) {
+    bottom: ${Constants.sizes.carouselMobileFooterHeight + 16}px;
+  }
+`;
+
 const STYLES_DISMISS_BUTTON = (theme) => css`
   ${Styles.BUTTON_RESET};
   position: absolute;
@@ -161,7 +167,7 @@ const useUploadSummary = ({ fileLoading }) =>
     };
   }, [fileLoading]);
 
-export function Popup({ isMobile }) {
+export function Popup({ page, isMobile }) {
   const {
     state: { isFinished, fileLoading },
     handlers: { resetUploadState },
@@ -176,11 +182,12 @@ export function Popup({ isMobile }) {
     { hideUploadPopup, expandUploadSummary, collapseUploadSummary, cancelAutoCollapseOnMouseEnter },
   ] = useUploadPopup({ totalFilesSummary });
 
+  const isGlobalCarouselOpen = !!page.params.id;
   return (
     <AnimatePresence>
       {popupState.isVisible ? (
         <motion.div
-          css={STYLES_POPUP_WRAPPER}
+          css={[STYLES_POPUP_WRAPPER, isGlobalCarouselOpen && STYLES_POPUP_CAROUSEL_POSITION]}
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}

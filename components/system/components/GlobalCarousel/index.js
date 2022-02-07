@@ -559,8 +559,6 @@ function CarouselHeaderMobile({
   );
 }
 
-const MOBILE_FOOTER_HEIGHT = 52;
-
 const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   position: fixed;
@@ -571,7 +569,7 @@ const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
   padding: 8px 16px;
   border-top: 1px solid ${theme.semantic.borderGrayLight};
   color: ${theme.semantic.textGrayDark};
-  height: ${MOBILE_FOOTER_HEIGHT}px;
+  height: ${Constants.sizes.carouselMobileFooterHeight}px;
 
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
@@ -623,7 +621,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
         <AnimatePresence>
           {isEditInfoVisible && (
             <Jumpers.EditInfoMobile
-              footerStyle={{ bottom: MOBILE_FOOTER_HEIGHT }}
+              footerStyle={{ bottom: Constants.sizes.carouselMobileFooterHeight }}
               file={file}
               onClose={hideEditInfo}
             />

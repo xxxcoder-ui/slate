@@ -160,7 +160,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction, isMobi
           ) : (
             <UploadOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
               <Upload.Provider page={page} data={data} viewer={viewer}>
-                <Upload.Root data={data} isMobile={isMobile}>
+                <Upload.Root page={page} data={data} isMobile={isMobile}>
                   <div css={STYLES_RIGHT}>
                     <UserActions viewer={viewer} />
                   </div>
