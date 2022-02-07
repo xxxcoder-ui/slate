@@ -8,6 +8,7 @@ import { Input as InputPrimitive } from "~/components/system/components/Input";
 import { useSearchStore } from "~/components/core/Search/store";
 import { FileTypeGroup } from "~/components/core/FileTypeIcon";
 import { Link } from "~/components/core/Link";
+import { useIsomorphicLayoutEffect } from "~/common/hooks";
 
 import DataView from "~/components/core/DataView";
 import CollectionPreviewBlock from "~/components/core/CollectionPreviewBlock";
@@ -126,6 +127,12 @@ function Input({ viewer, data, page, onAction }) {
 
   const handleChange = useDebouncedOnChange({ setQuery, handleSearch });
 
+  // NOTE(amine): cleanup input's value when query is empty.
+  const inputRef = React.useRef();
+  useIsomorphicLayoutEffect(() => {
+    if (!query && inputRef.current) inputRef.current.value = "";
+  }, [query]);
+
   return (
     <div
       style={{
@@ -140,6 +147,7 @@ function Input({ viewer, data, page, onAction }) {
       }}
     >
       <InputPrimitive
+        ref={inputRef}
         full
         containerStyle={{ height: "100%" }}
         inputCss={STYLES_SEARCH_COMPONENT}

@@ -5,7 +5,7 @@ import * as Strings from "~/common/strings";
 
 import { css } from "@emotion/react";
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
-import { FocusRing } from "~/components/core/FocusRing";
+import { mergeRefs } from "~/common/utilities";
 
 const INPUT_STYLES = (theme) => css`
   box-sizing: border-box;
@@ -130,21 +130,25 @@ const INPUT_COLOR_MAP = {
 
 class InputPrimitive extends React.Component {
   _unit;
-  _input;
   _isPin = this.props.type === "pin";
+
+  constructor(props) {
+    super(props);
+    this._input = React.createRef();
+  }
 
   componentDidMount = () => {
     if (this.props.unit) {
-      this._input.style.paddingRight = `${this._unit.offsetWidth + 48}px`;
+      this._input.current.style.paddingRight = `${this._unit.offsetWidth + 48}px`;
     }
 
     if (this.props.autoFocus) {
-      this._input.focus();
+      this._input.current.focus();
     }
   };
 
   _handleCopy = (e) => {
-    this._input.select();
+    this._input.current.select();
     document.execCommand("copy");
   };
 
@@ -240,12 +244,7 @@ class InputPrimitive extends React.Component {
             }}
           >
             <input
-              ref={(c) => {
-                this._input = c;
-                if (this.props.innerRef) {
-                  this.props.innerRef?.(c);
-                }
-              }}
+              ref={mergeRefs([this._input, this.props.innerRef])}
               css={[INPUT_STYLES, this._isPin && STYLES_PIN_INPUT]}
               autoFocus={this.props.autoFocus}
               value={this._isPin ? this._formatPin(this.props.value) : this.props.value}
@@ -256,7 +255,7 @@ class InputPrimitive extends React.Component {
               onFocus={
                 this.props.autoHighlight
                   ? () => {
-                      this._input.select();
+                      this._input.current.select();
                     }
                   : this.props.onFocus
               }

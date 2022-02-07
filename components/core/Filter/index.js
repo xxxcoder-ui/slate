@@ -5,6 +5,8 @@ import * as Search from "~/components/core/Search";
 import * as Filters from "~/components/core/Filter/Filters";
 import * as Constants from "~/common/constants";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+
 import { css } from "@emotion/react";
 import { Provider } from "~/components/core/Filter/Provider";
 import { Sidebar, SidebarTrigger } from "~/components/core/Filter/Sidebar";
@@ -149,7 +151,12 @@ export default function Filter({
 
   if (disabled) {
     return showSearchResult ? (
-      <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+      <WebsitePrototypeWrapper
+        title={`${page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${page.pathname}`}
+      >
+        <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+      </WebsitePrototypeWrapper>
     ) : (
       children
     );
@@ -212,7 +219,12 @@ export default function Filter({
         />
         <div style={{ flexGrow: 1 }}>
           {showSearchResult ? (
-            <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+            <WebsitePrototypeWrapper
+              title={`${page.pageTitle} • Slate`}
+              url={`${Constants.hostname}${page.pathname}`}
+            >
+              <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+            </WebsitePrototypeWrapper>
           ) : (
             children
           )}

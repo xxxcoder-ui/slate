@@ -68,7 +68,7 @@ const STYLES_SECURITY_LOCK_WRAPPER = (theme) => css`
 `;
 
 const STYLES_EMPTY_STATE_WRAPPER = (theme) => css`
-  // NOTE(amine): 100vh - headers' height - Dataviewer's bottom padding
+  // NOTE(amine): 100vh - headers' height - Dataview's bottom padding
   height: calc(100vh - ${theme.sizes.filterNavbar + theme.sizes.header}px - 44px);
   margin: 20px;
   @media (max-width: ${theme.sizes.mobile}px) {
