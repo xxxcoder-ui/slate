@@ -48,7 +48,8 @@ const STYLES_API_KEY = css`
   background-color: ${Constants.semantic.bgLight};
   outline: none;
   border: none;
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
   font-family: ${Constants.font.code};
   padding: 0 16px;
   font-size: 14px;

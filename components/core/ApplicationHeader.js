@@ -94,10 +94,11 @@ const STYLES_HEADER = (theme) => css`
   top: 0;
 `;
 
-const STYLES_UPLOAD_BUTTON = css`
+const STYLES_UPLOAD_BUTTON = (theme) => css`
   position: relative;
   ${Styles.CONTAINER_CENTERED};
   background-color: ${Constants.semantic.bgGrayLight};
+  color: ${theme.semantic.textBlack};
   border-radius: 8px;
   width: 24px;
   height: 24px;
@@ -159,7 +160,7 @@ export default function ApplicationHeader({ viewer, page, data, onAction, isMobi
           ) : (
             <UploadOnboarding onAction={onAction} viewer={viewer} isMobile={isMobile}>
               <Upload.Provider page={page} data={data} viewer={viewer}>
-                <Upload.Root data={data} isMobile={isMobile}>
+                <Upload.Root page={page} data={data} isMobile={isMobile}>
                   <div css={STYLES_RIGHT}>
                     <UserActions viewer={viewer} />
                   </div>

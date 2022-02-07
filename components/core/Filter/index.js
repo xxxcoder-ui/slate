@@ -5,6 +5,8 @@ import * as Search from "~/components/core/Search";
 import * as Filters from "~/components/core/Filter/Filters";
 import * as Constants from "~/common/constants";
 
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+
 import { css } from "@emotion/react";
 import { Provider } from "~/components/core/Filter/Provider";
 import { Sidebar, SidebarTrigger } from "~/components/core/Filter/Sidebar";
@@ -38,6 +40,8 @@ function Title({ page, data }) {
     if (page.id === "NAV_DATA") return "Recent";
     if (page.id === "NAV_SLATE" && data?.slatename) return "# " + data?.slatename;
     if (page.id === "NAV_PROFILE") return "@ " + data.username;
+    if (page.id === "NAV_SETTINGS") return page.name;
+    if (page.id === "NAV_API") return page.name;
 
     return null;
   }, [page, data, isFetchingResults, isSearching]);
@@ -147,7 +151,12 @@ export default function Filter({
 
   if (disabled) {
     return showSearchResult ? (
-      <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+      <WebsitePrototypeWrapper
+        title={`${page.pageTitle} • Slate`}
+        url={`${Constants.hostname}${page.pathname}`}
+      >
+        <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+      </WebsitePrototypeWrapper>
     ) : (
       children
     );
@@ -169,7 +178,7 @@ export default function Filter({
       >
         <div css={STYLES_NAVBAR}>
           <div css={STYLES_NAVBAR_BACKGROUND} />
-          <div css={STYLES_FILTER_POPUP_WRAPPER}>
+          <div css={STYLES_FILTER_POPUP_WRAPPER} style={{ perspective: "1000px" }}>
             <Popup
               viewer={viewer}
               onAction={onAction}
@@ -210,7 +219,12 @@ export default function Filter({
         />
         <div style={{ flexGrow: 1 }}>
           {showSearchResult ? (
-            <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+            <WebsitePrototypeWrapper
+              title={`${page.pageTitle} • Slate`}
+              url={`${Constants.hostname}${page.pathname}`}
+            >
+              <Search.Content viewer={viewer} page={page} onAction={onAction} isMobile={isMobile} />
+            </WebsitePrototypeWrapper>
           ) : (
             children
           )}

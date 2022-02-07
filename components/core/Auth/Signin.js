@@ -6,13 +6,10 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Styles from "~/common/styles";
 
-import Field from "~/components/core/Field";
-
-import { P1 } from "~/components/system";
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { useForm } from "~/common/hooks";
 import { css } from "@emotion/react";
-import { SignUpPopover, Verification } from "~/components/core/Auth/components";
+import { SignUpPopover, Verification, AuthField } from "~/components/core/Auth/components";
 
 const STYLES_BACK_BUTTON = css`
   color: ${Constants.semantic.textGrayDark};
@@ -69,15 +66,8 @@ const STYLES_MESSAGE_PARAGRAPH = (theme) => css`
 `;
 
 const STYLES_MESSAGE_BUTTON = (theme) => css`
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  svg {
-    color: ${theme.semantic.textGrayDark};
-    height: 16px;
-    width: 16px;
-  }
+  ${Styles.BUTTON_RESET};
+  color: ${theme.semantic.textGray};
 `;
 
 const handleValidation = ({ password }, errors) => {
@@ -155,7 +145,7 @@ export default function Signin({
     return (
       <SignUpPopover title={`Please add an email address for ${emailOrUsername}`}>
         <form {...getEmailFormProps()} style={{ marginTop: 72 }}>
-          <Field
+          <AuthField
             autoFocus
             containerStyle={{ marginTop: 16 }}
             placeholder="Email"
@@ -186,13 +176,13 @@ export default function Signin({
       <form {...getFormProps()} style={{ marginTop: message ? 24 : 41 }}>
         {message && (
           <div css={STYLES_MESSAGE}>
-            <P1 css={STYLES_MESSAGE_PARAGRAPH}>{message}</P1>
-            <button css={STYLES_MESSAGE_BUTTON} onClick={clearMessages}>
-              <SVG.Dismiss />
+            <System.P1 css={STYLES_MESSAGE_PARAGRAPH}>{message}</System.P1>
+            <button css={STYLES_MESSAGE_BUTTON} style={{ marginTop: 4 }} onClick={clearMessages}>
+              <SVG.Dismiss height={16} width={16} />
             </button>
           </div>
         )}
-        <Field
+        <AuthField
           autoFocus
           containerStyle={{ marginTop: message ? 24 : 16 }}
           placeholder="Password"
@@ -215,7 +205,7 @@ export default function Signin({
               Sign in
             </System.ButtonPrimary>
             <button type="button" onClick={goToResetPassword} css={STYLES_FORGOT_PASSWORD_BUTTON}>
-              <P1 css={Styles.H5}> Forgot Password?</P1>
+              <System.P1 css={Styles.H5}> Forgot Password?</System.P1>
             </button>
           </motion.div>
         </AnimateSharedLayout>
@@ -223,7 +213,7 @@ export default function Signin({
       <button css={STYLES_BACK_BUTTON} type="button" onClick={goBack}>
         <span>
           <SVG.RightArrow height="16px" style={{ transform: "rotate(180deg)" }} />
-          <P1 css={Styles.H5}>Back</P1>
+          <System.P1 css={Styles.H5}>Back</System.P1>
         </span>
       </button>
     </SignUpPopover>

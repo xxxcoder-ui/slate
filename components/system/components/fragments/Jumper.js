@@ -108,10 +108,11 @@ function Header({ children, style, ...props }) {
  *  Dismiss
  * -----------------------------------------------------------------------------------------------*/
 
-const STYLES_DISMISS_BUTTON = css`
+const STYLES_DISMISS_BUTTON = (theme) => css`
   width: 24px;
   height: 24px;
   margin-left: 12px;
+  color: ${theme.semantic.textGrayDark};
 `;
 
 const Dismiss = React.forwardRef(({ css, ...props }, ref) => {

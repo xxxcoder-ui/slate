@@ -1,16 +1,13 @@
 import * as React from "react";
 import * as System from "~/components/system";
-import * as SVG from "~/common/svg";
 import * as Validations from "~/common/validations";
 import * as Styles from "~/common/styles";
-
-import Field from "~/components/core/Field";
 
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { useField } from "~/common/hooks";
-import { SignUpPopover, ArrowButton } from "~/components/core/Auth/components";
+import { SignUpPopover, ArrowButton, AuthField } from "~/components/core/Auth/components";
 
 const STYLES_HELPER = (theme) => css`
   text-align: center;
@@ -101,16 +98,17 @@ export default function Verification({ onVerify, title = DEFAULT_TITLE, onResend
   return (
     <SignUpPopover logoStyle={{ width: 56, height: 56 }} title={title}>
       <div style={{ marginTop: 40 }}>
-        <Field
+        <AuthField
           autoFocus
           label="Enter the 6 digit code sent to your email"
           full
           icon={
             isSubmitting
-              ? () => (
+              ? ({ style, ...props }) => (
                   <div
-                    style={{ width: 24, height: 24, marginRight: 4 }}
+                    style={{ width: 20, height: 20, ...style }}
                     css={Styles.CONTAINER_CENTERED}
+                    {...props}
                   >
                     <LoaderSpinner height="16px" />
                   </div>

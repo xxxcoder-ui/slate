@@ -6,14 +6,17 @@ import * as Actions from "~/common/actions";
 import * as Styles from "~/common/styles";
 import * as Strings from "~/common/strings";
 
-import Field from "~/components/core/Field";
-
 import { AnimateSharedLayout, motion } from "framer-motion";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { css } from "@emotion/react";
 import { useForm } from "~/common/hooks";
 
-import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Auth/components";
+import {
+  SignUpPopover,
+  Verification,
+  AuthCheckBox,
+  AuthField,
+} from "~/components/core/Auth/components";
 
 const STYLES_LINK = (theme) => css`
   padding: 0;
@@ -124,7 +127,7 @@ export default function TwitterSignup({
   return (
     <SignUpPopover title="Create an account">
       <form {...getFormProps()}>
-        <Field
+        <AuthField
           autoFocus
           containerStyle={{ marginTop: 41 }}
           placeholder="Username"
@@ -150,7 +153,7 @@ export default function TwitterSignup({
           full
         />
         <AnimateSharedLayout>
-          <Field
+          <AuthField
             containerStyle={{ marginTop: 16 }}
             containerAs={MotionLayout}
             errorAs={MotionLayout}

@@ -248,7 +248,7 @@ export function MobileUploadJumper({ data }) {
             </div>
             <MobileJumper.Divider />
             <div style={{ padding: "40px 16px", textAlign: "center" }}>
-              <SVG.Airplay color="textBlack" />
+              <SVG.Airplay style={{ color: Constants.semantic.textGrayDark }} />
               <System.H5 as="p" color="textGrayDark" style={{ marginTop: 6, textAlign: "center" }}>
                 open Slate on desktop to upload files
               </System.H5>

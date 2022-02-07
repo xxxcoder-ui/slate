@@ -50,7 +50,7 @@ const VisitLinkButton = ({ file }) => {
       type="link"
     >
       <LinkIcon file={file} width={16} height={16} style={{ marginRight: 4 }} key={file.id} />
-      <span style={{ whiteSpace: "nowrap" }}>Visit site</span>
+      <span style={{ whiteSpace: "nowrap", color: "inherit" }}>Visit site</span>
     </System.ButtonTertiary>
   );
 };
@@ -77,7 +77,8 @@ export const useSaveHandler = ({ file, viewer, onAction }) => {
     }
 
     if (isSaved) {
-      const fileLibraryURL = `/_/data?id=${file.id}`;
+      const fileId = viewer.library.find((item) => item.cid === file.cid).id;
+      const fileLibraryURL = `/_/data?id=${fileId}`;
       onAction({
         type: "NAVIGATE",
         href: fileLibraryURL,
@@ -160,6 +161,7 @@ const STYLES_HEADER_WRAPPER = (theme) => css`
 const STYLES_ACTION_BUTTON = (theme) => css`
   padding: 8px;
   border-radius: 8px;
+  color: ${theme.semantic.textGrayDark};
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: ${theme.semantic.bgGrayLight};
@@ -565,8 +567,6 @@ function CarouselHeaderMobile({
   );
 }
 
-const MOBILE_FOOTER_HEIGHT = 52;
-
 const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
   position: fixed;
@@ -577,7 +577,7 @@ const STYLES_CAROUSEL_MOBILE_FOOTER = (theme) => css`
   padding: 8px 16px;
   border-top: 1px solid ${theme.semantic.borderGrayLight};
   color: ${theme.semantic.textGrayDark};
-  height: ${MOBILE_FOOTER_HEIGHT}px;
+  height: ${Constants.sizes.carouselMobileFooterHeight}px;
 
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))) {
@@ -637,7 +637,7 @@ function CarouselFooterMobile({ file, onAction, external, isOwner, data, viewer 
         <AnimatePresence>
           {isEditInfoVisible && (
             <Jumpers.EditInfoMobile
-              footerStyle={{ bottom: MOBILE_FOOTER_HEIGHT }}
+              footerStyle={{ bottom: Constants.sizes.carouselMobileFooterHeight }}
               file={file}
               onClose={hideEditInfo}
             />
@@ -773,6 +773,7 @@ const STYLES_CONTROLS_BUTTON = (theme) => css`
   border: 1px solid ${theme.semantic.borderGrayLight};
   padding: 10px;
   box-shadow: ${theme.shadow.lightMedium};
+  color: ${theme.semantic.textGrayDark};
   svg {
     display: block;
   }

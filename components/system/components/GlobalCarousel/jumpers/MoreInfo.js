@@ -228,8 +228,11 @@ function CoverImageUpload({ file, viewer, isMobile, isFileOwner }) {
                     onChange={handleInputChange}
                     tabIndex="-1"
                   />
-                  <SVG.UploadCloud width={16} />
-                  <System.P3 style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}>
+                  <SVG.UploadCloud style={{ color: Constants.semantic.textBlack }} width={16} />
+                  <System.P3
+                    color="textBlack"
+                    style={{ maxWidth: 140, textAlign: "center", marginTop: 8 }}
+                  >
                     {isMobile
                       ? "Select an image as object preview"
                       : "Drop or select an image as object preview"}
@@ -288,7 +291,7 @@ function FileMetadata({ file, ...props }) {
         style={{ marginTop: 6, padding: "4px 0px", justifyContent: "space-between" }}
       >
         <System.P3 color="textGray">Type</System.P3>
-        <System.P3>{Strings.capitalize(file.type)}</System.P3>
+        <System.P3 color="textBlack">{Strings.capitalize(file.type)}</System.P3>
       </div>
       <System.Divider
         color="borderGrayLight4"
@@ -300,7 +303,7 @@ function FileMetadata({ file, ...props }) {
         style={{ padding: "4px 0px", justifyContent: "space-between" }}
       >
         <System.P3 color="textGray">Size</System.P3>
-        <System.P3>{Strings.bytesToSize(file.size, 0)}</System.P3>
+        <System.P3 color="textBlack">{Strings.bytesToSize(file.size, 0)}</System.P3>
       </div>
       {Validations.isPreviewableImage(file?.type || "") ? (
         <>
@@ -314,7 +317,7 @@ function FileMetadata({ file, ...props }) {
             style={{ padding: "4px 0px", justifyContent: "space-between" }}
           >
             <System.P3 color="textGray">Dimension</System.P3>
-            <System.P3>
+            <System.P3 color="textBlack">
               <ImageDimension file={file} />
             </System.P3>
           </div>
@@ -330,7 +333,7 @@ function FileMetadata({ file, ...props }) {
         style={{ padding: "4px 0px", justifyContent: "space-between" }}
       >
         <System.P3 color="textGray">Created</System.P3>
-        <System.P3>{Utilities.formatDateToString(file.createdAt)}</System.P3>
+        <System.P3 color="textBlack">{Utilities.formatDateToString(file.createdAt)}</System.P3>
       </div>
       <System.Divider
         color="borderGrayLight4"
@@ -346,6 +349,7 @@ function FileMetadata({ file, ...props }) {
       >
         <System.P3 color="textGray">CID</System.P3>
         <System.P3
+          color="textBlack"
           style={{
             wordBreak: "break-all",
             textAlign: "right",

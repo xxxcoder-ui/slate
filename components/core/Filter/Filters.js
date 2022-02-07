@@ -67,11 +67,11 @@ const STYLES_FILTERS_GROUP = css`
 `;
 
 const STYLES_ICON_CONTAINER = css`
-  height: 20px;
-  width: 20px;
+  padding: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: inherit;
 `;
 
 const FilterButton = React.forwardRef(({ children, Icon, image, isSelected, ...props }, ref) => (
@@ -83,7 +83,7 @@ const FilterButton = React.forwardRef(({ children, Icon, image, isSelected, ...p
         </div>
       ) : null}
       {image ? image : null}
-      <Typography.P2 as="span" nbrOflines={1} style={{ marginLeft: 6 }}>
+      <Typography.P2 as="span" nbrOflines={1} style={{ marginLeft: 6, color: "inherit" }}>
         {children}
       </Typography.P2>
     </span>

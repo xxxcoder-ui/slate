@@ -285,6 +285,7 @@ const STYLES_APPLIED_SLATE_BUTTON = (theme) => css`
   background-color: ${theme.semantic.bgWhite};
   border: 1px solid ${theme.semantic.borderGrayLight};
   box-shadow: ${theme.shadow.lightSmall};
+  color: ${theme.semantic.textBlack};
 `;
 
 const STYLES_APPLIED_COLOR_TEXTBLACK = (theme) => css`
@@ -423,8 +424,9 @@ const STYLES_SLATES_MENU_BUTTON_SELECTED = (theme) => css`
   background-color: ${theme.semantic.bgGrayLight4};
 `;
 
-const STYLES_SLATES_MENU_BUTTON = css`
+const STYLES_SLATES_MENU_BUTTON = (theme) => css`
   ${Styles.HORIZONTAL_CONTAINER_CENTERED};
+  color: ${theme.semantic.textBlack};
   justify-content: space-between;
   position: relative;
   padding: 9px 8px 11px;
@@ -459,9 +461,9 @@ const STYLES_SLATES_MENU_BUTTON_BLUE = (theme) => css`
   }
 `;
 const STYLES_SLATES_MENU_BUTTON_TEXTBLACK = (theme) => css`
-  color: ${theme.system.textBlack};
+  color: ${theme.semantic.textBlack};
   &:hover {
-    color: ${theme.system.textBlack};
+    color: ${theme.semantic.textBlack};
   }
 `;
 
@@ -486,21 +488,21 @@ const ComboboxSlatesMenuButton = ({
       index={index}
       {...props}
     >
-      <div>
-        {hasPublicIcon && (
-          <div style={{ position: "absolute", padding: "2px", left: "8px", top: "9x" }}>
-            <SVG.Users width={16} height={16} />
-          </div>
-        )}
-        <System.H5
-          as="span"
-          nbrOflines={isCreateAction ? 2 : 1}
-          title={children}
-          style={{ marginLeft: 32, maxWidth: "46ch" }}
+      {hasPublicIcon && (
+        <div
+          style={{ position: "absolute", color: "inherit", padding: "2px", left: "8px", top: "9x" }}
         >
-          {children}
-        </System.H5>
-      </div>
+          <SVG.Users width={16} height={16} />
+        </div>
+      )}
+      <System.H5
+        as="span"
+        nbrOflines={isCreateAction ? 2 : 1}
+        title={children}
+        style={{ marginLeft: 32, maxWidth: "46ch", color: "inherit" }}
+      >
+        {children}
+      </System.H5>
       {!isCreateAction && isSelected && (
         <div css={Styles.HORIZONTAL_CONTAINER_CENTERED} style={{ marginLeft: "auto" }}>
           <System.P3 color="textGrayDark">{isSlateApplied ? "remove tag" : "apply tag"}</System.P3>

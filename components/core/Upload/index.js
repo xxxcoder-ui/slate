@@ -14,13 +14,13 @@ import DropIndicator from "~/components/core/Upload/DropIndicator";
 /* -------------------------------------------------------------------------------------------------
  * Root
  * -----------------------------------------------------------------------------------------------*/
-const Root = ({ children, data, isMobile }) => {
+const Root = ({ children, page, data, isMobile }) => {
   return (
     <>
       {children}
       {isMobile ? <MobileUploadJumper data={data} /> : <UploadJumper data={data} />}
       <ModalPortal>
-        <Popup isMobile={isMobile} />
+        <Popup page={page} isMobile={isMobile} />
         <DropIndicator data={data} />
       </ModalPortal>
     </>

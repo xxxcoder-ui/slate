@@ -63,6 +63,7 @@ const STYLES_MOBILE_SHOW_CONTROLS = (theme) => css`
   padding: 8px;
   border-radius: 8px;
   box-shadow: 0 0 0 1px ${theme.system.grayLight5}, ${theme.shadow.lightLarge};
+  color: ${theme.semantic.textBlack};
 
   background-color: ${theme.semantic.bgWhite};
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {

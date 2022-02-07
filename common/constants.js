@@ -9,6 +9,7 @@ export const sizes = {
   intercomWidget: 60,
   sidebar: 416,
   filterNavbar: 42,
+  carouselMobileFooterHeight: 52,
   topOffset: 0, //NOTE(martina): Pushes UI down. 16 when there is a persistent announcement banner, 0 otherwise
 
   mobile: 768,
@@ -149,8 +150,8 @@ export const zindex = {
   sidebar: 5,
   modal: 6,
   jumper: 7,
-  tooltip: 8,
-  cta: 9,
+  tooltip: 9,
+  cta: 11,
 };
 
 export const font = {
