@@ -67,8 +67,7 @@ const STYLES_FILTERS_GROUP = css`
 `;
 
 const STYLES_ICON_CONTAINER = css`
-  height: 20px;
-  width: 20px;
+  padding: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
