@@ -88,7 +88,7 @@ const createFilesTable = createTableIfNotExists("files", function (table) {
   table.string("filename").nullable();
   table.boolean("isPublic").notNullable().defaultTo(false);
   table.string("name").nullable();
-  table.integer("size").notNullable().defaultTo(0);
+  table.bigInteger("size").notNullable().defaultTo(0);
   table.string("type").notNullable().defaultTo("link");
   table.string("blurhash").nullable();
   table.string("body", 2000).nullable();
@@ -99,14 +99,14 @@ const createFilesTable = createTableIfNotExists("files", function (table) {
   table.string("linkAuthor").nullable();
   table.string("linkSource").nullable();
   table.string("linkDomain").nullable();
-  table.string("linkImage").nullable();
-  table.string("linkFavicon").nullable();
+  table.string("linkImage", 2000).nullable();
+  table.string("linkFavicon", 2000).nullable();
   table.text("linkHtml").nullable();
   table.boolean("linkIFrameAllowed").nullable().defaultTo(false);
   table.jsonb("tags").nullable();
   table.integer("downloadCount").notNullable().defaultTo(0);
   table.integer("saveCount").notNullable().defaultTo(0);
-  table.string("url").nullable();
+  table.string("url", 2000).nullable();
   table.boolean("isLink").notNullable().defaultTo(false);
 });
 

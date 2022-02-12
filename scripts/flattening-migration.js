@@ -112,8 +112,8 @@ const printFilesTable = async () => {
 /* Add columns (including tags) */
 
 const createSurveysTable = async () => {
-  await db.schema.createTable("surveys", function (table) {
-    table.uuid("id").primary().unique().notNullable().defaultTo(db.raw("uuid_generate_v4()"));
+  await DB.schema.createTable("surveys", function (table) {
+    table.uuid("id").primary().unique().notNullable().defaultTo(DB.raw("uuid_generate_v4()"));
     table.uuid("ownerId").references("id").inTable("users");
 
     // What do you currently use for saving things on the web?
@@ -169,6 +169,15 @@ const addSlateColumns = async () => {
   });
 };
 
+//apply this to all other databases as well
+const alterFileColumns = async () => {
+  await DB.schema.alterTable("files", function (table) {
+    table.string("linkImage", 2000).nullable().alter();
+    table.string("url", 2000).nullable().alter();
+    table.string("linkFavicon", 2000).nullable().alter();
+  });
+};
+
 const addFileColumns = async () => {
   await DB.schema.table("files", function (table) {
     table.renameColumn("data", "oldData");
@@ -186,8 +195,8 @@ const addFileColumns = async () => {
     table.string("linkAuthor").nullable();
     table.string("linkSource").nullable();
     table.string("linkDomain").nullable();
-    table.string("linkImage").nullable();
-    table.string("linkFavicon").nullable();
+    table.string("linkImage", 2000).nullable();
+    table.string("linkFavicon", 2000).nullable();
     table.text("linkHtml").nullable();
     table.boolean("linkIFrameAllowed").nullable().defaultTo(false);
     table.jsonb("tags").nullable();
@@ -211,12 +220,16 @@ const defaultBody = ["A user of Slate.", "", "A slate."];
 
 const migrateUserTable = async () => {
   const users = await DB.select("id", "data").from("users");
+  let count = 0;
   for (let user of users) {
+    if (count % 1000 === 0) {
+      console.log(count);
+    }
+    count += 1;
     let data = user.data;
-
     let newUser = {
       name: data.name,
-      body: data.body,
+      body: data.body.slice(0, 2000),
       photo: data.photo,
       textileKey: data.tokens?.api,
       twitterUsername: data.twitter?.username,
@@ -232,19 +245,24 @@ const migrateUserTable = async () => {
       newUser.body = null;
     }
     // console.log({ data });
-    console.log({ id: user.id, newUser });
+    // console.log({ id: user.id, newUser });
     const response = await DB.from("users").where("id", user.id).update(newUser).returning("*");
     // console.log({ response });
   }
 };
 
-const migrateSlateTable = async () => {
-  await DB("slates")
+const deleteEmptySlates = async () => {
+  let emptySlates = await DB("slates")
+    .select("id")
     .whereNotExists(function () {
       this.select("id").from("slate_files").whereRaw('"slate_files"."slateId" = "slates"."id"');
-    })
-    .del();
+    });
+  for (let slate of emptySlates) {
+    await Data.deleteSlateById(slate);
+  }
+};
 
+const migrateSlateTable = async () => {
   const slateFiles = () =>
     DB.raw("coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??", [
       "files",
@@ -265,7 +283,7 @@ const migrateSlateTable = async () => {
     let data = slate.data;
     let newSlate = {
       name: data.name,
-      body: data.body,
+      body: data.body ? data.body.slice(0, 2000) : null,
       coverImage,
     };
 
@@ -281,8 +299,11 @@ const migrateSlateTable = async () => {
 };
 
 const migrateFileTable = async () => {
-  const files = await DB.select("id", "oldData").from("files");
+  const files = await DB.select("id", "oldData").from("files").where({ size: 0 });
+  let count = 0;
   for (let file of files) {
+    console.log(count);
+    count += 1;
     let data = file.oldData;
     if (!data) {
       console.log(`no data for file with id ${file.id}`);
@@ -290,18 +311,18 @@ const migrateFileTable = async () => {
     }
 
     let newFile = {
-      name: data.name,
-      body: data.body,
-      size: data.size,
+      name: data.name ? data.name.slice(0, 255) : null,
+      body: data.body ? data.body.slice(0, 2000) : null,
+      size: Math.min(data.size, 2147483647),
       type: data.type,
-      blurhash: data.blurhash,
-      linkName: data.link?.name,
-      linkBody: data.link?.body,
-      linkAuthor: data.link?.author,
-      linkSource: data.link?.source,
+      blurhash: !data.blurhash || data.blurhash.length > 40 ? null : data.blurhash,
+      linkName: data.link?.name ? data.link?.name.slice(0, 255) : null,
+      linkBody: data.link?.body ? data.link?.body.slice(0, 2000) : null,
+      linkAuthor: data.link?.author ? data.link?.author.slice(0, 255) : null,
+      linkSource: data.link?.source ? data.link?.source.slice(0, 255) : null,
       linkDomain: data.link?.domain,
-      linkImage: data.link?.image,
-      linkFavicon: data.link?.logo,
+      linkImage: !data.link?.image || data.link?.image.length > 2000 ? null : data.link?.image,
+      linkFavicon: !data.link?.logo || data.link?.logo.length > 2000 ? null : data.link?.logo,
       linkHtml: data.link?.html,
       linkIFrameAllowed: data.link?.iFrameAllowed,
     };
@@ -336,15 +357,16 @@ const migrateFileTable = async () => {
         this.select("id")
           .from("slate_files")
           .whereRaw('"slate_files"."slateId" = "slates"."id"')
-          .where({ "slate_files.fileId": fileId });
+          .where({ "slate_files.fileId": file.id });
       });
 
     if (tags?.length) {
       newFile.tags = JSON.stringify(tags);
     }
 
-    console.log({ newFile });
-    const response = await DB.from("files").where("id", file.id).update(newFile);
+    // console.log({ newFile });
+    const response = await DB.from("files").where("id", file.id).update(newFile).returning("*");
+    console.log(response);
   }
 };
 
@@ -373,7 +395,9 @@ const runScript = async () => {
   // await addSlateColumns();
   // await addFileColumns();
 
-  // await migrateUserTable();
+  // await alterFileColumns();
+  await migrateUserTable();
+  // await deleteEmptySlates();
   // await migrateSlateTable();
   // await migrateFileTable();
 
