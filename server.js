@@ -31,7 +31,7 @@ const createLimiter = limit({
   max: 5,
   message: {
     decorator: "SIGN_UP_RATE_LIMITED",
-    error: true,
+    error: false,
     message: "You have made too many requests.",
   },
 });
@@ -41,7 +41,7 @@ const loginLimiter = limit({
   max: 5,
   message: {
     decorator: "SIGN_IN_RATE_LIMITED",
-    error: true,
+    error: false,
     message: "You have made too many requests.",
   },
 });
@@ -73,12 +73,7 @@ const fetchExploreSlates = async () => {
     exploreSlates = await Data.getSlatesByIds({
       ids: [
         //NOTE(tara): slates in prod
-        "d2861ac4-fc41-4c07-8f21-d0bf06be364c",
-        "9c2c458c-d92a-4e81-a4b6-bf6ab4607470",
-        "7f461144-0647-43d7-8294-788b37ae5979",
-        "f72c2594-b8ac-41f6-91e0-b2da6788ae23",
-        "a0d6e2f2-564d-47ed-bf56-13c42634703d",
-        "0ba92c73-92e7-4b00-900e-afae4856c9ea",
+        "4c7d33d5-42bd-48cd-a17d-00745ce83f72",
       ],
       includeFiles: true,
       sanitize: true,
