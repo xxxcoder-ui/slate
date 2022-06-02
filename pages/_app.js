@@ -11,7 +11,7 @@ import {
 } from "~/common/styles/global";
 import { IntercomProvider, useIntercom } from "react-use-intercom";
 
-const INTERCOM_APP_ID = "jwgbampk";
+const INTERCOM_APP_ID = "slate";
 
 const CustomIntercomConfig = () => {
   const { boot } = useIntercom();
